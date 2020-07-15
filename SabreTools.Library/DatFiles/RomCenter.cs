@@ -22,7 +22,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public RomCenter(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -30,25 +30,18 @@ namespace SabreTools.Library.DatFiles
         /// Parse a RomCenter DAT and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Prepare all intenral variables
-            Encoding enc = Utilities.GetEncoding(filename);
-            IniReader ir = Utilities.GetIniReader(filename, false);
+            IniReader ir = filename.GetIniReader(false);
 
             // If we got a null reader, just return
             if (ir == null)
@@ -85,7 +78,7 @@ namespace SabreTools.Library.DatFiles
                                 break;
 
                             case "games":
-                                ReadGamesSection(ir, sysid, srcid, clean, remUnicode);
+                                ReadGamesSection(ir, filename, indexId);
                                 break;
 
                             // Unknown section so we ignore it
@@ -137,32 +130,37 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "author":
-                        Author = string.IsNullOrWhiteSpace(Author) ? kvp?.Value : Author;
+                        DatHeader.Author = string.IsNullOrWhiteSpace(DatHeader.Author) ? kvp?.Value : DatHeader.Author;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Version = string.IsNullOrWhiteSpace(Version) ? kvp?.Value : Version;
+                        DatHeader.Version = string.IsNullOrWhiteSpace(DatHeader.Version) ? kvp?.Value : DatHeader.Version;
                         reader.ReadNextLine();
                         break;
 
                     case "email":
-                        Email = string.IsNullOrWhiteSpace(Email) ? kvp?.Value : Email;
+                        DatHeader.Email = string.IsNullOrWhiteSpace(DatHeader.Email) ? kvp?.Value : DatHeader.Email;
                         reader.ReadNextLine();
                         break;
 
                     case "homepage":
-                        Homepage = string.IsNullOrWhiteSpace(Homepage) ? kvp?.Value : Homepage;
+                        DatHeader.Homepage = string.IsNullOrWhiteSpace(DatHeader.Homepage) ? kvp?.Value : DatHeader.Homepage;
                         reader.ReadNextLine();
                         break;
 
                     case "url":
-                        Url = string.IsNullOrWhiteSpace(Url) ? kvp?.Value : Url;
+                        DatHeader.Url = string.IsNullOrWhiteSpace(DatHeader.Url) ? kvp?.Value : DatHeader.Url;
                         reader.ReadNextLine();
                         break;
 
                     case "date":
-                        Date = string.IsNullOrWhiteSpace(Date) ? kvp?.Value : Date;
+                        DatHeader.Date = string.IsNullOrWhiteSpace(DatHeader.Date) ? kvp?.Value : DatHeader.Date;
+                        reader.ReadNextLine();
+                        break;
+
+                    case "comment":
+                        DatHeader.Comment = string.IsNullOrWhiteSpace(DatHeader.Comment) ? kvp?.Value : DatHeader.Comment;
                         reader.ReadNextLine();
                         break;
 
@@ -207,25 +205,23 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "version":
-                        string rcVersion = kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "plugin":
-                        string plugin = kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "split":
-                        if (ForceMerging == ForceMerging.None && kvp?.Value == "1")
-                            ForceMerging = ForceMerging.Split;
+                        if (DatHeader.ForceMerging == ForceMerging.None && kvp?.Value == "1")
+                            DatHeader.ForceMerging = ForceMerging.Split;
 
                         reader.ReadNextLine();
                         break;
 
                     case "merge":
-                        if (ForceMerging == ForceMerging.None && kvp?.Value == "1")
-                            ForceMerging = ForceMerging.Merged;
+                        if (DatHeader.ForceMerging == ForceMerging.None && kvp?.Value == "1")
+                            DatHeader.ForceMerging = ForceMerging.Merged;
 
                         reader.ReadNextLine();
                         break;
@@ -271,12 +267,12 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "refname":
-                        Name = string.IsNullOrWhiteSpace(Name) ? kvp?.Value : Name;
+                        DatHeader.Name = string.IsNullOrWhiteSpace(DatHeader.Name) ? kvp?.Value : DatHeader.Name;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Description = string.IsNullOrWhiteSpace(Description) ? kvp?.Value : Description;
+                        DatHeader.Description = string.IsNullOrWhiteSpace(DatHeader.Description) ? kvp?.Value : DatHeader.Description;
                         reader.ReadNextLine();
                         break;
 
@@ -292,11 +288,9 @@ namespace SabreTools.Library.DatFiles
         /// Read games information
         /// </summary>
         /// <param name="reader">IniReader to use to parse the credits</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        private void ReadGamesSection(IniReader reader, int sysid, int srcid, bool clean, bool remUnicode)
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        private void ReadGamesSection(IniReader reader, string filename, int indexId)
         {
             // If the reader is somehow null, skip it
             if (reader == null)
@@ -349,7 +343,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     Name = rominfo[5],
                     Size = size,
-                    CRC = Utilities.CleanHashData(rominfo[6], Constants.CRCLength),
+                    CRC = rominfo[6],
                     ItemStatus = ItemStatus.None,
 
                     MachineName = rominfo[3],
@@ -358,12 +352,12 @@ namespace SabreTools.Library.DatFiles
                     RomOf = rominfo[8],
                     MergeTag = rominfo[9],
 
-                    SystemID = sysid,
-                    SourceID = srcid,
+                    IndexId = indexId,
+                    IndexSource = filename,
                 };
 
                 // Now process and add the rom
-                ParseAddHelper(rom, clean, remUnicode);
+                ParseAddHelper(rom);
 
                 reader.ReadNextLine();
             }
@@ -380,7 +374,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -431,7 +425,9 @@ namespace SabreTools.Library.DatFiles
                             ((Rom)rom).Size = Constants.SizeZero;
                             ((Rom)rom).CRC = ((Rom)rom).CRC == "null" ? Constants.CRCZero : null;
                             ((Rom)rom).MD5 = ((Rom)rom).MD5 == "null" ? Constants.MD5Zero : null;
+#if NET_FRAMEWORK
                             ((Rom)rom).RIPEMD160 = ((Rom)rom).RIPEMD160 == "null" ? Constants.RIPEMD160Zero : null;
+#endif
                             ((Rom)rom).SHA1 = ((Rom)rom).SHA1 == "null" ? Constants.SHA1Zero : null;
                             ((Rom)rom).SHA256 = ((Rom)rom).SHA256 == "null" ? Constants.SHA256Zero : null;
                             ((Rom)rom).SHA384 = ((Rom)rom).SHA384 == "null" ? Constants.SHA384Zero : null;
@@ -469,18 +465,18 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 iw.WriteSection("CREDITS");
-                iw.WriteKeyValuePair("author", Author);
-                iw.WriteKeyValuePair("version", Version);
-                iw.WriteKeyValuePair("comment", Comment);
+                iw.WriteKeyValuePair("author", DatHeader.Author);
+                iw.WriteKeyValuePair("version", DatHeader.Version);
+                iw.WriteKeyValuePair("comment", DatHeader.Comment);
 
                 iw.WriteSection("DAT");
                 iw.WriteKeyValuePair("version", "2.50");
-                iw.WriteKeyValuePair("split", ForceMerging == ForceMerging.Split ? "1" : "0");
-                iw.WriteKeyValuePair("merge", ForceMerging == ForceMerging.Full || ForceMerging == ForceMerging.Merged ? "1" : "0");
+                iw.WriteKeyValuePair("split", DatHeader.ForceMerging == ForceMerging.Split ? "1" : "0");
+                iw.WriteKeyValuePair("merge", DatHeader.ForceMerging == ForceMerging.Full || DatHeader.ForceMerging == ForceMerging.Merged ? "1" : "0");
 
                 iw.WriteSection("EMULATOR");
-                iw.WriteKeyValuePair("refname", Name);
-                iw.WriteKeyValuePair("version", Description);
+                iw.WriteKeyValuePair("refname", DatHeader.Name);
+                iw.WriteKeyValuePair("version", DatHeader.Description);
 
                 iw.WriteSection("GAMES");
 
@@ -527,18 +523,18 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, true);
 
                 // Build the state based on excluded fields
-                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.MachineName, ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.MachineName, DatHeader.ExcludeFields)}");
                 if (string.IsNullOrWhiteSpace(datItem.MachineDescription))
-                    iw.WriteString($"¬{datItem.GetField(Field.MachineName, ExcludeFields)}");
+                    iw.WriteString($"¬{datItem.GetField(Field.MachineName, DatHeader.ExcludeFields)}");
                 else
-                    iw.WriteString($"¬{datItem.GetField(Field.Description, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Name, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.CRC, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Size, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.RomOf, ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Merge, ExcludeFields)}");
+                    iw.WriteString($"¬{datItem.GetField(Field.Description, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.Name, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.CRC, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.Size, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.RomOf, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.Merge, DatHeader.ExcludeFields)}");
                 iw.WriteString("¬");
                 iw.WriteLine();
 

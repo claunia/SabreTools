@@ -44,8 +44,8 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("crc")]
         public string CRC
         {
-            get { return _crc.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_crc); }
-            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(value)); }
+            get { return _crc.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_crc); }
+            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(Sanitizer.CleanCRC32(value))); }
         }
 
         /// <summary>
@@ -54,19 +54,21 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("md5")]
         public string MD5
         {
-            get { return _md5.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(value); }
+            get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
+            set { _md5 = Utilities.StringToByteArray(Sanitizer.CleanMD5(value)); }
         }
 
+#if NET_FRAMEWORK
         /// <summary>
         /// File RIPEMD160 hash
         /// </summary>
         [JsonProperty("ripemd160")]
         public string RIPEMD160
         {
-            get { return _ripemd160.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_ripemd160); }
-            set { _ripemd160 = Utilities.StringToByteArray(value); }
+            get { return _ripemd160.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_ripemd160); }
+            set { _ripemd160 = Utilities.StringToByteArray(Sanitizer.CleanRIPEMD160(value)); }
         }
+#endif
 
         /// <summary>
         /// File SHA-1 hash
@@ -74,8 +76,8 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("sha1")]
         public string SHA1
         {
-            get { return _sha1.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(value); }
+            get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
+            set { _sha1 = Utilities.StringToByteArray(Sanitizer.CleanSHA1(value)); }
         }
 
         /// <summary>
@@ -84,8 +86,8 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("sha256")]
         public string SHA256
         {
-            get { return _sha256.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_sha256); }
-            set { _sha256 = Utilities.StringToByteArray(value); }
+            get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
+            set { _sha256 = Utilities.StringToByteArray(Sanitizer.CleanSHA256(value)); }
         }
 
         /// <summary>
@@ -94,8 +96,8 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("sha384")]
         public string SHA384
         {
-            get { return _sha384.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_sha384); }
-            set { _sha384 = Utilities.StringToByteArray(value); }
+            get { return _sha384.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha384); }
+            set { _sha384 = Utilities.StringToByteArray(Sanitizer.CleanSHA384(value)); }
         }
 
         /// <summary>
@@ -104,8 +106,8 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("sha512")]
         public string SHA512
         {
-            get { return _sha512.IsNullOrWhiteSpace() ? null : Utilities.ByteArrayToString(_sha512); }
-            set { _sha512 = Utilities.StringToByteArray(value); }
+            get { return _sha512.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha512); }
+            set { _sha512 = Utilities.StringToByteArray(Sanitizer.CleanSHA512(value)); }
         }
 
         /// <summary>
@@ -166,34 +168,11 @@ namespace SabreTools.Library.DatItems
         /// <param name="name"></param>
         /// <param name="machineName"></param>
         /// <param name="omitFromScan"></param>
-        /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public Rom(string name, string machineName, Hash omitFromScan = Hash.DeepHashes)
+        public Rom(string name, string machineName)
         {
             this.Name = name;
             this.ItemType = ItemType.Rom;
             this.Size = -1;
-
-            if ((omitFromScan & Hash.CRC) == 0)
-                _crc = null;
-
-            if ((omitFromScan & Hash.MD5) == 0)
-                _md5 = null;
-
-            if ((omitFromScan & Hash.RIPEMD160) == 0)
-                _ripemd160 = null;
-
-            if ((omitFromScan & Hash.SHA1) == 0)
-                _sha1 = null;
-
-            if ((omitFromScan & Hash.SHA256) == 0)
-                _sha256 = null;
-
-            if ((omitFromScan & Hash.SHA384) == 0)
-                _sha384 = null;
-
-            if ((omitFromScan & Hash.SHA512) == 0)
-                _sha512 = null;
-
             this.ItemStatus = ItemStatus.None;
 
             _machine = new Machine
@@ -213,7 +192,9 @@ namespace SabreTools.Library.DatItems
             this.Size = baseFile.Size ?? -1;
             _crc = baseFile.CRC;
             _md5 = baseFile.MD5;
+#if NET_FRAMEWORK
             _ripemd160 = baseFile.RIPEMD160;
+#endif
             _sha1 = baseFile.SHA1;
             _sha256 = baseFile.SHA256;
             _sha384 = baseFile.SHA384;
@@ -261,10 +242,8 @@ namespace SabreTools.Library.DatItems
                 Devices = this.Devices,
                 MachineType = this.MachineType,
 
-                SystemID = this.SystemID,
-                System = this.System,
-                SourceID = this.SourceID,
-                Source = this.Source,
+                IndexId = this.IndexId,
+                IndexSource = this.IndexSource,
 
                 Size = this.Size,
                 _crc = this._crc,
@@ -297,51 +276,51 @@ namespace SabreTools.Library.DatItems
             // If all hashes are empty but they're both nodump and the names match, then they're dupes
             if ((this.ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
                 && (this.Name == newOther.Name)
-                && (this._crc.IsNullOrWhiteSpace() && newOther._crc.IsNullOrWhiteSpace())
-                && (this._md5.IsNullOrWhiteSpace() && newOther._md5.IsNullOrWhiteSpace())
-                && (this._ripemd160.IsNullOrWhiteSpace() && newOther._ripemd160.IsNullOrWhiteSpace())
-                && (this._sha1.IsNullOrWhiteSpace() && newOther._sha1.IsNullOrWhiteSpace())
-                && (this._sha256.IsNullOrWhiteSpace() && newOther._sha256.IsNullOrWhiteSpace())
-                && (this._sha384.IsNullOrWhiteSpace() && newOther._sha384.IsNullOrWhiteSpace())
-                && (this._sha512.IsNullOrWhiteSpace() && newOther._sha512.IsNullOrWhiteSpace()))
+                && (this._crc.IsNullOrEmpty() && newOther._crc.IsNullOrEmpty())
+                && (this._md5.IsNullOrEmpty() && newOther._md5.IsNullOrEmpty())
+                && (this._ripemd160.IsNullOrEmpty() && newOther._ripemd160.IsNullOrEmpty())
+                && (this._sha1.IsNullOrEmpty() && newOther._sha1.IsNullOrEmpty())
+                && (this._sha256.IsNullOrEmpty() && newOther._sha256.IsNullOrEmpty())
+                && (this._sha384.IsNullOrEmpty() && newOther._sha384.IsNullOrEmpty())
+                && (this._sha512.IsNullOrEmpty() && newOther._sha512.IsNullOrEmpty()))
             {
                 dupefound = true;
             }
 
             // If we can determine that the roms have no non-empty hashes in common, we return false
-            else if ((this._crc.IsNullOrWhiteSpace() || newOther._crc.IsNullOrWhiteSpace())
-                && (this._md5.IsNullOrWhiteSpace() || newOther._md5.IsNullOrWhiteSpace())
-                && (this._ripemd160.IsNullOrWhiteSpace() || newOther._ripemd160.IsNullOrWhiteSpace())
-                && (this._sha1.IsNullOrWhiteSpace() || newOther._sha1.IsNullOrWhiteSpace())
-                && (this._sha256.IsNullOrWhiteSpace() || newOther._sha256.IsNullOrWhiteSpace())
-                && (this._sha384.IsNullOrWhiteSpace() || newOther._sha384.IsNullOrWhiteSpace())
-                && (this._sha512.IsNullOrWhiteSpace() || newOther._sha512.IsNullOrWhiteSpace()))
+            else if ((this._crc.IsNullOrEmpty() || newOther._crc.IsNullOrEmpty())
+                && (this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty())
+                && (this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty())
+                && (this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty())
+                && (this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty())
+                && (this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty())
+                && (this._sha512.IsNullOrEmpty() || newOther._sha512.IsNullOrEmpty()))
             {
                 dupefound = false;
             }
 
             // If we have a file that has no known size, rely on the hashes only
             else if ((this.Size == -1)
-                && ((this._crc.IsNullOrWhiteSpace() || newOther._crc.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._crc, newOther._crc))
-                && ((this._md5.IsNullOrWhiteSpace() || newOther._md5.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
-                && ((this._ripemd160.IsNullOrWhiteSpace() || newOther._ripemd160.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
-                && ((this._sha1.IsNullOrWhiteSpace() || newOther._sha1.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
-                && ((this._sha256.IsNullOrWhiteSpace() || newOther._sha256.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
-                && ((this._sha384.IsNullOrWhiteSpace() || newOther._sha384.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))
-                && ((this._sha512.IsNullOrWhiteSpace() || newOther._sha512.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha512, newOther._sha512)))
+                && ((this._crc.IsNullOrEmpty() || newOther._crc.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._crc, newOther._crc))
+                && ((this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
+                && ((this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
+                && ((this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
+                && ((this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
+                && ((this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))
+                && ((this._sha512.IsNullOrEmpty() || newOther._sha512.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha512, newOther._sha512)))
             {
                 dupefound = true;
             }
 
             // Otherwise if we get a partial match
             else if ((this.Size == newOther.Size)
-                && ((this._crc.IsNullOrWhiteSpace() || newOther._crc.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._crc, newOther._crc))
-                && ((this._md5.IsNullOrWhiteSpace() || newOther._md5.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
-                && ((this._ripemd160.IsNullOrWhiteSpace() || newOther._ripemd160.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
-                && ((this._sha1.IsNullOrWhiteSpace() || newOther._sha1.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
-                && ((this._sha256.IsNullOrWhiteSpace() || newOther._sha256.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
-                && ((this._sha384.IsNullOrWhiteSpace() || newOther._sha384.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))
-                && ((this._sha512.IsNullOrWhiteSpace() || newOther._sha512.IsNullOrWhiteSpace()) || Enumerable.SequenceEqual(this._sha512, newOther._sha512)))
+                && ((this._crc.IsNullOrEmpty() || newOther._crc.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._crc, newOther._crc))
+                && ((this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
+                && ((this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
+                && ((this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
+                && ((this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
+                && ((this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))
+                && ((this._sha512.IsNullOrEmpty() || newOther._sha512.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha512, newOther._sha512)))
             {
                 dupefound = true;
             }

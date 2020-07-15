@@ -20,7 +20,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public Missfile(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -28,21 +28,15 @@ namespace SabreTools.Library.DatFiles
         /// Parse a Missfile and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // There is no consistent way to parse a missfile...
             throw new NotImplementedException();
@@ -59,7 +53,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -146,21 +140,21 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, false, forceRomName: false);
 
                 // If we're in Romba mode, the state is consistent
-                if (Romba)
+                if (DatHeader.Romba)
                 {
-                    sw.Write($"{datItem.GetField(Field.SHA1, ExcludeFields)}\n");
+                    sw.Write($"{datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)}\n");
                 }
                 // Otherwise, use any flags
                 else
                 {
-                    if (!UseRomName && datItem.MachineName != lastgame)
+                    if (!DatHeader.UseRomName && datItem.MachineName != lastgame)
                     {
-                        sw.Write($"{datItem.GetField(Field.MachineName, ExcludeFields)}\n");
+                        sw.Write($"{datItem.GetField(Field.MachineName, DatHeader.ExcludeFields)}\n");
                         lastgame = datItem.MachineName;
                     }
-                    else if (UseRomName)
+                    else if (DatHeader.UseRomName)
                     {
-                        sw.Write($"{datItem.GetField(Field.Name, ExcludeFields)}\n");
+                        sw.Write($"{datItem.GetField(Field.Name, DatHeader.ExcludeFields)}\n");
                     }
                 }
 

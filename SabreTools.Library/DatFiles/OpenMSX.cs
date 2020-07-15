@@ -14,7 +14,6 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Represents parsing and writing of a openMSX softawre list XML DAT
     /// </summary>
-    /// TODO: Verify that all write for this DatFile type is correct
     internal class OpenMSX : DatFile
     {
         /// <summary>
@@ -22,7 +21,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public OpenMSX(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -30,27 +29,18 @@ namespace SabreTools.Library.DatFiles
         /// Parse a openMSX softawre list XML DAT and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        /// <remarks>
-        /// </remarks>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Prepare all internal variables
-            Encoding enc = Utilities.GetEncoding(filename);
-            XmlReader xtr = Utilities.GetXmlTextReader(filename);
+            XmlReader xtr = filename.GetXmlTextReader();
 
             // If we got a null reader, just return
             if (xtr == null)
@@ -72,15 +62,15 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "softwaredb":
-                            Name = (string.IsNullOrWhiteSpace(Name) ? "openMSX Software List" : Name);
-                            Description = (string.IsNullOrWhiteSpace(Description) ? Name : Name);
+                            DatHeader.Name = (string.IsNullOrWhiteSpace(DatHeader.Name) ? "openMSX Software List" : DatHeader.Name);
+                            DatHeader.Description = (string.IsNullOrWhiteSpace(DatHeader.Description) ? DatHeader.Name : DatHeader.Description);
                             // string timestamp = xtr.GetAttribute("timestamp"); // CDATA
                             xtr.Read();
                             break;
 
                         // We want to process the entire subtree of the software
                         case "software":
-                            ReadSoftware(xtr.ReadSubtree(), filename, sysid, srcid, keep, clean, remUnicode);
+                            ReadSoftware(xtr.ReadSubtree(), filename, indexId);
 
                             // Skip the software now that we've processed it
                             xtr.Skip();
@@ -108,23 +98,13 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader representing a machine block</param>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         private void ReadSoftware(
             XmlReader reader,
 
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
-
-            // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            int indexId)
         {
             // If we have an empty machine, skip it
             if (reader == null)
@@ -179,7 +159,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dump":
-                        containsItems = ReadDump(reader.ReadSubtree(), machine, diskno, filename, sysid, srcid, keep, clean, remUnicode);
+                        containsItems = ReadDump(reader.ReadSubtree(), machine, diskno, filename, indexId);
                         diskno++;
 
                         // Skip the dump now that we've processed it
@@ -197,14 +177,13 @@ namespace SabreTools.Library.DatFiles
             {
                 Blank blank = new Blank()
                 {
-                    SystemID = sysid,
-                    System = filename,
-                    SourceID = srcid,
+                    IndexId = indexId,
+                    IndexSource = filename,
                 };
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(blank, clean, remUnicode);
+                ParseAddHelper(blank);
             }
         }
 
@@ -215,11 +194,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="machine">Machine information to pass to contained items</param>
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         private bool ReadDump(
             XmlReader reader,
             Machine machine,
@@ -227,13 +202,7 @@ namespace SabreTools.Library.DatFiles
 
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
-
-            // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            int indexId)
         {
             bool containsItems = false;
 
@@ -250,21 +219,21 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "rom":
-                        containsItems = ReadRom(reader.ReadSubtree(), machine, diskno, filename, sysid, srcid, keep, clean, remUnicode);
+                        containsItems = ReadRom(reader.ReadSubtree(), machine, diskno, filename, indexId);
 
                         // Skip the rom now that we've processed it
                         reader.Skip();
                         break;
 
                     case "megarom":
-                        containsItems = ReadMegaRom(reader.ReadSubtree(), machine, diskno, filename, sysid, srcid, keep, clean, remUnicode);
+                        containsItems = ReadMegaRom(reader.ReadSubtree(), machine, diskno, filename, indexId);
 
                         // Skip the megarom now that we've processed it
                         reader.Skip();
                         break;
 
                     case "sccpluscart":
-                        containsItems = ReadSccPlusCart(reader.ReadSubtree(), machine, diskno, filename, sysid, srcid, keep, clean, remUnicode);
+                        containsItems = ReadSccPlusCart(reader.ReadSubtree(), machine, diskno, filename, indexId);
 
                         // Skip the sccpluscart now that we've processed it
                         reader.Skip();
@@ -292,11 +261,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="machine">Machine information to pass to contained items</param>
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         private bool ReadRom(
             XmlReader reader,
             Machine machine,
@@ -304,15 +269,9 @@ namespace SabreTools.Library.DatFiles
 
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
-
-            // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            int indexId)
         {
-            string hash = string.Empty, offset = string.Empty, type = string.Empty, remark = string.Empty;
+            string hash = string.Empty, offset = string.Empty, remark = string.Empty;
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -337,7 +296,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "type":
-                        type = reader.ReadElementContentAsString();
+                        reader.ReadElementContentAsString();
                         break;
 
                     case "remark":
@@ -356,11 +315,14 @@ namespace SabreTools.Library.DatFiles
                 Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
                 Offset = offset,
                 Size = -1,
-                SHA1 = Utilities.CleanHashData(hash, Constants.SHA1Length),
+                SHA1 = hash,
+
+                IndexId = indexId,
+                IndexSource = filename,
             };
 
             rom.CopyMachineInformation(machine);
-            ParseAddHelper(rom, clean, remUnicode);
+            ParseAddHelper(rom);
 
             return containsItems;
         }
@@ -372,11 +334,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="machine">Machine information to pass to contained items</param>
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         private bool ReadMegaRom(
             XmlReader reader,
             Machine machine,
@@ -384,15 +342,9 @@ namespace SabreTools.Library.DatFiles
 
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
-
-            // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            int indexId)
         {
-            string hash = string.Empty, offset = string.Empty, type = string.Empty, remark = string.Empty;
+            string hash = string.Empty, offset = string.Empty, remark = string.Empty;
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -417,7 +369,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "type":
-                        type = reader.ReadElementContentAsString();
+                        reader.ReadElementContentAsString();
                         break;
 
                     case "remark":
@@ -436,11 +388,14 @@ namespace SabreTools.Library.DatFiles
                 Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
                 Offset = offset,
                 Size = -1,
-                SHA1 = Utilities.CleanHashData(hash, Constants.SHA1Length),
+                SHA1 = hash,
+
+                IndexId = indexId,
+                IndexSource = filename,
             };
 
             rom.CopyMachineInformation(machine);
-            ParseAddHelper(rom, clean, remUnicode);
+            ParseAddHelper(rom);
 
             return containsItems;
         }
@@ -452,11 +407,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="machine">Machine information to pass to contained items</param>
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         private bool ReadSccPlusCart(
             XmlReader reader,
             Machine machine,
@@ -464,15 +415,9 @@ namespace SabreTools.Library.DatFiles
 
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
-
-            // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            int indexId)
         {
-            string hash = string.Empty, boot = string.Empty, remark = string.Empty;
+            string hash = string.Empty, remark = string.Empty;
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -488,7 +433,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "boot":
-                        boot = reader.ReadElementContentAsString();
+                        reader.ReadElementContentAsString();
                         break;
 
                     case "hash":
@@ -511,11 +456,14 @@ namespace SabreTools.Library.DatFiles
             {
                 Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
                 Size = -1,
-                SHA1 = Utilities.CleanHashData(hash, Constants.SHA1Length),
+                SHA1 = hash,
+
+                IndexId = indexId,
+                IndexSource = filename,
             };
 
             rom.CopyMachineInformation(machine);
-            ParseAddHelper(rom, clean, remUnicode);
+            ParseAddHelper(rom);
 
             return containsItems;
         }
@@ -531,7 +479,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -540,10 +488,12 @@ namespace SabreTools.Library.DatFiles
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false));
-                xtw.Formatting = Formatting.Indented;
-                xtw.IndentChar = '\t';
-                xtw.Indentation = 1;
+                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                {
+                    Formatting = Formatting.Indented,
+                    IndentChar = '\t',
+                    Indentation = 1
+                };
 
                 // Write out the header
                 WriteHeader(xtw);
@@ -671,11 +621,11 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state based on excluded fields
                 xtw.WriteStartElement("software");
-                xtw.WriteElementString("title", datItem.GetField(Field.MachineName, ExcludeFields));
+                xtw.WriteElementString("title", datItem.GetField(Field.MachineName, DatHeader.ExcludeFields));
                 //xtw.WriteElementString("genmsxid", msxid);
                 //xtw.WriteElementString("system", system));
-                xtw.WriteElementString("company", datItem.GetField(Field.Manufacturer, ExcludeFields));
-                xtw.WriteElementString("year", datItem.GetField(Field.Year, ExcludeFields));
+                xtw.WriteElementString("company", datItem.GetField(Field.Manufacturer, DatHeader.ExcludeFields));
+                xtw.WriteElementString("year", datItem.GetField(Field.Year, DatHeader.ExcludeFields));
                 //xtw.WriteElementString("country", country);
 
                 xtw.Flush();
@@ -743,10 +693,10 @@ namespace SabreTools.Library.DatFiles
                         //xtw.WriteEndElement();
 
                         xtw.WriteStartElement("rom");
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, DatHeader.ExcludeFields)))
                             xtw.WriteElementString("start", rom.Offset);
                         //xtw.WriteElementString("type", "Normal");
-                        xtw.WriteElementString("hash", rom.GetField(Field.SHA1, ExcludeFields).ToLowerInvariant());
+                        xtw.WriteElementString("hash", rom.GetField(Field.SHA1, DatHeader.ExcludeFields).ToLowerInvariant());
                         //xtw.WriteElementString("remark", "");
 
                         // End rom

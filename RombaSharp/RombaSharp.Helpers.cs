@@ -8,7 +8,7 @@ using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
-using Mono.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 
 namespace RombaSharp
 {
@@ -32,7 +32,7 @@ namespace RombaSharp
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = Utilities.ByteArrayToString(Utilities.GetFileInfo(fullpath).SHA1);
+                    string sha1 = Utilities.ByteArrayToString(FileExtensions.GetInfo(fullpath).SHA1);
                     foundDats.Add(sha1, fullpath);
                 }
                 else
@@ -59,12 +59,11 @@ namespace RombaSharp
                 webdir = "web",
                 baddir = "bad",
                 dats = "dats",
-                db = "db",
-                connectionString = string.Empty;
+                db = "db";
             Dictionary<string, Tuple<long, bool>> depots = new Dictionary<string, Tuple<long, bool>>();
 
             // Get the XML text reader for the configuration file, if possible
-            XmlReader xtr = Utilities.GetXmlTextReader(_config);
+            XmlReader xtr = _config.GetXmlTextReader();
 
             // Now parse the XML file for settings
             if (xtr != null)
@@ -198,7 +197,7 @@ namespace RombaSharp
                 Directory.CreateDirectory(dats);
             
             db = $"{Path.GetFileNameWithoutExtension(db)}.sqlite";
-            connectionString = $"Data Source={db};Version = 3;";
+            string connectionString = $"Data Source={db};Version = 3;";
             foreach (string key in depots.Keys)
             {
                 if (!Directory.Exists(key))
@@ -250,12 +249,11 @@ namespace RombaSharp
 
             // Parse the Dat if possible
             Globals.Logger.User($"Adding from '{dat.Name}'");
-            DatFile tempdat = new DatFile();
-            tempdat.Parse(fullpath, 0, 0);
+            DatFile tempdat = DatFile.CreateAndParse(fullpath);
 
             // If the Dat wasn't empty, add the information
-            SqliteCommand slc = new SqliteCommand();
-            if (tempdat.Count != 0)
+            SqliteCommand slc;
+            if (tempdat.GetCount() != 0)
             {
                 string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";
                 string md5query = "INSERT OR IGNORE INTO md5 (md5) VALUES";

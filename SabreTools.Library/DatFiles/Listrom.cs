@@ -21,7 +21,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public Listrom(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -29,11 +29,8 @@ namespace SabreTools.Library.DatFiles
         /// Parse a MAME Listrom DAT and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
         /// <remarks>
         /// In a new style MAME listrom DAT, each game has the following format:
         /// 
@@ -43,20 +40,17 @@ namespace SabreTools.Library.DatFiles
         /// 6331.sound-u8                            32 BAD CRC(1d298cb0) SHA1(bb0bb62365402543e3154b9a77be9c75010e6abc) BAD_DUMP
         /// 16v8h-blue.u24                          279 NO GOOD DUMP KNOWN
         /// </remarks>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Open a file reader
-            Encoding enc = Utilities.GetEncoding(filename);
-            StreamReader sr = new StreamReader(Utilities.TryOpenRead(filename), enc);
+            Encoding enc = FileExtensions.GetEncoding(filename);
+            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
 
             string gamename = string.Empty;
             while (!sr.EndOfStream)
@@ -91,7 +85,6 @@ namespace SabreTools.Library.DatFiles
                 else
                 {
                     // First, we preprocess the line so that the rom name is consistently correct
-                    string romname = string.Empty;
                     string[] split = line.Split(new string[] { "    " }, StringSplitOptions.RemoveEmptyEntries);
 
                     // If the line doesn't have the 4 spaces of padding, check for 3
@@ -102,7 +95,7 @@ namespace SabreTools.Library.DatFiles
                     if (split.Length == 1)
                         Globals.Logger.Warning($"Possibly malformed line: '{line}'");
 
-                    romname = split[0];
+                    string romname = split[0];
                     line = line.Substring(romname.Length);
 
                     // Next we separate the ROM into pieces
@@ -114,12 +107,15 @@ namespace SabreTools.Library.DatFiles
                         Disk disk = new Disk()
                         {
                             Name = romname,
-                            SHA1 = Utilities.CleanListromHashData(split[0]),
+                            SHA1 = Sanitizer.CleanListromHashData(split[0]),
 
                             MachineName = gamename,
+
+                            IndexId = indexId,
+                            IndexSource = filename,
                         };
 
-                        ParseAddHelper(disk, clean, remUnicode);
+                        ParseAddHelper(disk);
                     }
 
                     // Baddump Disks have 4 pieces (name, BAD, sha1, BAD_DUMP)
@@ -128,13 +124,16 @@ namespace SabreTools.Library.DatFiles
                         Disk disk = new Disk()
                         {
                             Name = romname,
-                            SHA1 = Utilities.CleanListromHashData(split[1]),
+                            SHA1 = Sanitizer.CleanListromHashData(split[1]),
                             ItemStatus = ItemStatus.BadDump,
 
                             MachineName = gamename,
+
+                            IndexId = indexId,
+                            IndexSource = filename,
                         };
 
-                        ParseAddHelper(disk, clean, remUnicode);
+                        ParseAddHelper(disk);
                     }
 
                     // Standard ROMs have 4 pieces (name, size, crc, sha1)
@@ -147,13 +146,16 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = romname,
                             Size = size,
-                            CRC = Utilities.CleanListromHashData(split[1]),
-                            SHA1 = Utilities.CleanListromHashData(split[2]),
+                            CRC = Sanitizer.CleanListromHashData(split[1]),
+                            SHA1 = Sanitizer.CleanListromHashData(split[2]),
 
                             MachineName = gamename,
+
+                            IndexId = indexId,
+                            IndexSource = filename,
                         };
 
-                        ParseAddHelper(rom, clean, remUnicode);
+                        ParseAddHelper(rom);
                     }
 
                     // Nodump Disks have 5 pieces (name, NO, GOOD, DUMP, KNOWN)
@@ -165,9 +167,12 @@ namespace SabreTools.Library.DatFiles
                             ItemStatus = ItemStatus.Nodump,
 
                             MachineName = gamename,
+
+                            IndexId = indexId,
+                            IndexSource = filename,
                         };
 
-                        ParseAddHelper(disk, clean, remUnicode);
+                        ParseAddHelper(disk);
                     }
 
                     // Baddump ROMs have 6 pieces (name, size, BAD, crc, sha1, BAD_DUMP)
@@ -180,14 +185,17 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = romname,
                             Size = size,
-                            CRC = Utilities.CleanListromHashData(split[2]),
-                            SHA1 = Utilities.CleanListromHashData(split[3]),
+                            CRC = Sanitizer.CleanListromHashData(split[2]),
+                            SHA1 = Sanitizer.CleanListromHashData(split[3]),
                             ItemStatus = ItemStatus.BadDump,
 
                             MachineName = gamename,
+
+                            IndexId = indexId,
+                            IndexSource = filename,
                         };
 
-                        ParseAddHelper(rom, clean, remUnicode);
+                        ParseAddHelper(rom);
                     }
 
                     // Nodump ROMs have 6 pieces (name, size, NO, GOOD, DUMP, KNOWN)
@@ -203,9 +211,12 @@ namespace SabreTools.Library.DatFiles
                             ItemStatus = ItemStatus.Nodump,
 
                             MachineName = gamename,
+
+                            IndexId = indexId,
+                            IndexSource = filename,
                         };
 
-                        ParseAddHelper(rom, clean, remUnicode);
+                        ParseAddHelper(rom);
                     }
 
                     // If we have something else, it's invalid
@@ -216,7 +227,6 @@ namespace SabreTools.Library.DatFiles
                 }
             }
         }
-
 
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
@@ -229,7 +239,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -325,7 +335,7 @@ namespace SabreTools.Library.DatFiles
                 rom.MachineName = rom.MachineName.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
-                sw.Write($"ROMs required for driver \"{rom.GetField(Field.MachineName, ExcludeFields)}\".\n");
+                sw.Write($"ROMs required for driver \"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}\".\n");
                 sw.Write("Name                                   Size Checksum\n");
 
                 sw.Flush();
@@ -393,19 +403,19 @@ namespace SabreTools.Library.DatFiles
                             sw.Write($"{disk.Name}          ");
 
                         // If we have a baddump, put the first indicator
-                        if (!ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.BadDump)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD");
 
                         // If we have a nodump, write out the indicator
-                        if (!ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.Nodump)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.Nodump)
                             sw.Write(" NO GOOD DUMP KNOWN");
 
                         // Otherwise, write out the SHA-1 hash
-                        else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, ExcludeFields)))
+                        else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)))
                             sw.Write($" SHA1({disk.SHA1})");
 
                         // If we have a baddump, put the second indicator
-                        if (!ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.BadDump)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD_DUMP");
 
                         sw.Write("\n");
@@ -425,25 +435,25 @@ namespace SabreTools.Library.DatFiles
                             sw.Write(rom.Size);
 
                         // If we have a baddump, put the first indicator
-                        if (!ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.BadDump)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD");
 
                         // If we have a nodump, write out the indicator
-                        if (!ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.Nodump)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.Nodump)
                         {
                             sw.Write(" NO GOOD DUMP KNOWN");
                         }
                         // Otherwise, write out the CRC and SHA-1 hashes
                         else
                         {
-                            if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, ExcludeFields)))
+                            if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, DatHeader.ExcludeFields)))
                                 sw.Write($" CRC({rom.CRC})");
-                            if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, ExcludeFields)))
+                            if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)))
                                 sw.Write($" SHA1({rom.SHA1})");
                         }
 
                         // If we have a baddump, put the second indicator
-                        if (!ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.BadDump)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD_DUMP");
 
                         sw.Write("\n");

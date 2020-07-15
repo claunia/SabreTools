@@ -25,7 +25,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="datFile">Parent DatFile to copy from</param>
         /// <param name="hash">Type of hash that is associated with this DAT</param> 
         public Hashfile(DatFile datFile, Hash hash)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
             _hash = hash;
         }
@@ -34,25 +34,19 @@ namespace SabreTools.Library.DatFiles
         /// Parse a hashfile or SFV and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Open a file reader
-            Encoding enc = Utilities.GetEncoding(filename);
-            StreamReader sr = new StreamReader(Utilities.TryOpenRead(filename), enc);
+            Encoding enc = FileExtensions.GetEncoding(filename);
+            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
 
             while (!sr.EndOfStream)
             {
@@ -64,7 +58,7 @@ namespace SabreTools.Library.DatFiles
                 string hash = string.Empty;
 
                 // If we have CRC, then it's an SFV file and the name is first are
-                if ((_hash & Hash.CRC) != 0)
+                if (_hash.HasFlag(Hash.CRC))
                 {
                     name = split[0].Replace("*", String.Empty);
                     hash = split[1];
@@ -80,23 +74,25 @@ namespace SabreTools.Library.DatFiles
                 {
                     Name = name,
                     Size = -1,
-                    CRC = ((_hash & Hash.CRC) != 0 ? Utilities.CleanHashData(hash, Constants.CRCLength) : null),
-                    MD5 = ((_hash & Hash.MD5) != 0 ? Utilities.CleanHashData(hash, Constants.MD5Length) : null),
-                    RIPEMD160 = ((_hash & Hash.RIPEMD160) != 0 ? Utilities.CleanHashData(hash, Constants.RIPEMD160Length) : null),
-                    SHA1 = ((_hash & Hash.SHA1) != 0 ? Utilities.CleanHashData(hash, Constants.SHA1Length) : null),
-                    SHA256 = ((_hash & Hash.SHA256) != 0 ? Utilities.CleanHashData(hash, Constants.SHA256Length) : null),
-                    SHA384 = ((_hash & Hash.SHA384) != 0 ? Utilities.CleanHashData(hash, Constants.SHA384Length) : null),
-                    SHA512 = ((_hash & Hash.SHA512) != 0 ? Utilities.CleanHashData(hash, Constants.SHA512Length) : null),
+                    CRC = (_hash.HasFlag(Hash.CRC) ? hash : null),
+                    MD5 = (_hash.HasFlag(Hash.MD5) ? hash : null),
+#if NET_FRAMEWORK
+                    RIPEMD160 = (_hash.HasFlag(Hash.RIPEMD160) ? hash : null),
+#endif
+                    SHA1 = (_hash.HasFlag(Hash.SHA1) ? hash : null),
+                    SHA256 = (_hash.HasFlag(Hash.SHA256) ? hash : null),
+                    SHA384 = (_hash.HasFlag(Hash.SHA384) ? hash : null),
+                    SHA512 = (_hash.HasFlag(Hash.SHA512) ? hash : null),
                     ItemStatus = ItemStatus.None,
 
                     MachineName = Path.GetFileNameWithoutExtension(filename),
 
-                    SystemID = sysid,
-                    SourceID = srcid,
+                    IndexId = indexId,
+                    IndexSource = filename,
                 };
 
                 // Now process and add the rom
-                ParseAddHelper(rom, clean, remUnicode);
+                ParseAddHelper(rom);
             }
 
             sr.Dispose();
@@ -113,7 +109,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -122,10 +118,12 @@ namespace SabreTools.Library.DatFiles
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false));
-                svw.Quotes = false;
-                svw.Separator = ' ';
-                svw.VerifyFieldCount = true;
+                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
+                {
+                    Quotes = false,
+                    Separator = ' ',
+                    VerifyFieldCount = true
+                };
 
                 // Get a properly sorted set of keys
                 List<string> keys = Keys;
@@ -200,40 +198,42 @@ namespace SabreTools.Library.DatFiles
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
                                 fields[0] = string.Empty;
-                                if (GameName)
-                                    fields[0] = $"{rom.GetField(Field.MachineName, ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[0] += rom.GetField(Field.Name, ExcludeFields);
-                                fields[1] = rom.GetField(Field.CRC, ExcludeFields);
+                                if (DatHeader.GameName)
+                                    fields[0] = $"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}{Path.DirectorySeparatorChar}";
+                                fields[0] += rom.GetField(Field.Name, DatHeader.ExcludeFields);
+                                fields[1] = rom.GetField(Field.CRC, DatHeader.ExcludeFields);
                                 break;
                         }
                         break;
 
                     case Hash.MD5:
+#if NET_FRAMEWORK
                     case Hash.RIPEMD160:
+#endif
                     case Hash.SHA1:
                     case Hash.SHA256:
                     case Hash.SHA384:
                     case Hash.SHA512:
-                        Field hashField = Utilities.GetFieldFromHash(_hash);
+                        Field hashField = _hash.AsField();
 
                         switch (datItem.ItemType)
                         {
                             case ItemType.Disk:
                                 var disk = datItem as Disk;
-                                fields[0] = disk.GetField(hashField, ExcludeFields);
+                                fields[0] = disk.GetField(hashField, DatHeader.ExcludeFields);
                                 fields[1] = string.Empty;
-                                if (GameName)
-                                    fields[1] = $"{disk.GetField(Field.MachineName, ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[1] += disk.GetField(Field.Name, ExcludeFields);
+                                if (DatHeader.GameName)
+                                    fields[1] = $"{disk.GetField(Field.MachineName, DatHeader.ExcludeFields)}{Path.DirectorySeparatorChar}";
+                                fields[1] += disk.GetField(Field.Name, DatHeader.ExcludeFields);
                                 break;
 
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
-                                fields[0] = rom.GetField(hashField, ExcludeFields);
+                                fields[0] = rom.GetField(hashField, DatHeader.ExcludeFields);
                                 fields[1] = string.Empty;
-                                if (GameName)
-                                    fields[1] = $"{rom.GetField(Field.MachineName, ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[1] += rom.GetField(Field.Name, ExcludeFields);
+                                if (DatHeader.GameName)
+                                    fields[1] = $"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}{Path.DirectorySeparatorChar}";
+                                fields[1] += rom.GetField(Field.Name, DatHeader.ExcludeFields);
                                 break;
                         }
                         break;

@@ -179,6 +179,7 @@ Options:
 	  -nr160, --skip-ripemd160	Don't include RIPEMD160 in output
 		  This allows the user to skip calculating the RIPEMD160 for each of
 		  the files which will speed up the creation of the DAT.
+		  .NET Framework 4.8 only.
 
 	  -ns, --skip-sha1			Don't include SHA-1 in output
 		  This allows the user to skip calculating the SHA-1 for each of the
@@ -227,7 +228,7 @@ Options:
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
-		  ripemd160         - RIPEMD160
+		  ripemd160         - RIPEMD160 (.NET Framework 4.8 only)
 		  sd, sabredat		- SabreDat XML
 		  sfv				- SFV
 		  sha1				- SHA1
@@ -423,13 +424,13 @@ Options:
 		  Include only items with this RIPEMD160 hash in the output.
 		  Additionally, the user can specify an exact match or full C#-style
 		  regex for pattern matching. Multiple instances of this flag are
-		  allowed.
+		  allowed. .NET Framework 4.8 only.
 
 	  -nripemd160=, --not-ripemd160=	Filter by not RIPEMD160 hash
 		  Include only items without this RIPEMD160 hash in the output.
 		  Additionally, the user can specify an exact match or full C#-style
 		  regex for pattern matching. Multiple instances of this flag are
-		  allowed.
+		  allowed. .NET Framework 4.8 only
 
 	  -sha1=, --sha1=			 Filter by SHA-1 hash
 		  Include only items with this SHA-1 hash in the output. Additionally,
@@ -660,12 +661,11 @@ Options:
 		  format but with custom header information. This is currently unused
 		  by any major application.
 
-	  -txz, --torrent-xz		  Enable Torrent XZ output [UNSUPPORTED]
+	  -txz, --torrent-xz		  Enable Torrent XZ output [UNIMPLEMENTED]
 		  Instead of outputting files to folder, files will be rebuilt to
 		  Torrent XZ (TXZ) files. This format is based on the LZMA container
-		  format XZ, but with custom header information. This is currently
-		  unused by any major application. Currently does not produce proper
-		  Torrent-compatible outputs.
+		  format XZ, but with a file name replaced by the SHA-1 of the file
+		  inside. This is currently unused by any major application.
 
 	  -tzip, --torrent-zip		Enable Torrent Zip output
 		  Instead of outputting files to folder, files will be rebuilt to
@@ -693,21 +693,6 @@ Options:
 		  rebuilding, this flag allows for either all copier headers (using string.Empty)
 		  or specific copier headers by name (such as "fds.xml") to determine
 		  if a file matches or not.
-
-	  -7z=, --7z=				 Set scanning level for 7zip archives (default 1)
-	  -gz=, --gz=				 Set scanning level for GZip archives (default 1)
-	  -rar=, --rar=			   Set scanning level for RAR archives (default 1)
-	  -zip=, --zip=			   Set scanning level for Zip archives (default 1)
-		  Scan archives in one of the following ways:
-		  0 - Hash both archive and its contents
-		  1 - Only hash contents of the archive
-		  2 - Only hash archive itself (treat like a regular file)
-
-	  -sa, --scan-all			 Set scanning levels for all archives to 0
-		  This flag is the short equivalent to -7z=0 -gz=0 -rar=0 -zip=0
-		  wrapped up. Generally this will be helpful in all cases where the
-		  content of the rebuild folder is not entirely known or is known to be
-		  mixed.
 
 	  -dm, --dat-merged		   Force creating merged sets
 		  Preprocess the DAT to have parent sets contain all items from the
@@ -766,7 +751,7 @@ Options:
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
-		  ripemd160			- RIPEMD160
+		  ripemd160			- RIPEMD160 (.NET Framework 4.8 only)
 		  sd, sabredat		- SabreDat XML
 		  sfv				- SFV
 		  sha1				- SHA1
@@ -941,7 +926,7 @@ Options:
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
-		  ripemd160			- RIPEMD160
+		  ripemd160			- RIPEMD160 (.NET Framework 4.8 only)
 		  sd, sabredat		- SabreDat XML
 		  sfv				- SFV
 		  sha1				- SHA1
@@ -967,7 +952,7 @@ Options:
 			  - %publisher% - Replaced with game Publisher
 			  - %crc% - Replaced with the CRC
 			  - %md5% - Replaced with the MD5
-			  - %ripemd160% - Replaced with the RIPEMD160
+			  - %ripemd160% - Replaced with the RIPEMD160 (.NET Framework 4.8 only)
 			  - %sha1% - Replaced with the SHA-1
 			  - %sha256% - Replaced with the SHA-256
 			  - %sha384% - Replaced with the SHA-384
@@ -1381,13 +1366,13 @@ Options:
 		  Include only items with this RIPEMD160 hash in the output.
 		  Additionally, the user can specify an exact match or full C#-style
 		  regex for pattern matching. Multiple instances of this flag are
-		  allowed.
+		  allowed. .NET Framework 4.8 only.
 
 	  -nripemd160=, --not-ripemd160=  Filter by not RIPEMD160 hash
 		  Include only items without this RIPEMD160 hash in the output.
 		  Additionally, the user can specify an exact match or full C#-style
 		  regex for pattern matching. Multiple instances of this flag are
-		  allowed.
+		  allowed. .NET Framework 4.8 only.
 
 	  -sha1=, --sha1=			 Filter by SHA-1 hash
 		  Include only items with this SHA-1 hash in the output. Additionally,
@@ -1638,13 +1623,13 @@ Options:
 		  Include only items with this RIPEMD160 hash in the output.
 		  Additionally, the user can specify an exact match or full C#-style
 		  regex for pattern matching. Multiple instances of this flag are
-		  allowed.
+		  allowed. .NET Framework 4.8 only.
 
 	  -nripemd160=, --not-ripemd160=  Filter by not RIPEMD160 hash
 		  Include only items without this RIPEMD160 hash in the output.
 		  Additionally, the user can specify an exact match or full C#-style
 		  regex for pattern matching. Multiple instances of this flag are
-		  allowed.
+		  allowed. .NET Framework 4.8 only.
 
 	  -sha1=, --sha1=			 Filter by SHA-1 hash
 		  Include only items with this SHA-1 hash in the output. Additionally,
@@ -1802,9 +1787,9 @@ attributed to the site and/or person(s) that originally wrote the code. All
 code written by project members is licensed under GPL v3. See LICENSE for
 more details.
 
-** Section 20.0 - TEMPORARY REMAPPINGS
+** Section 20.0 - REMAPPINGS
 
-This section contains remappings from old flag names to new ones for the purposes of testing
+This section contains remappings from old flag names to new ones.
 
 -ab, --add-blank -> -ab, --add-blank-files
 -ae, --add-ext -> -ae, --add-extension

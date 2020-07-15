@@ -21,7 +21,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public EverdriveSMDB(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -29,25 +29,19 @@ namespace SabreTools.Library.DatFiles
         /// Parse an Everdrive SMDB file and return all found games within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Open a file reader
-            Encoding enc = Utilities.GetEncoding(filename);
-            StreamReader sr = new StreamReader(Utilities.TryOpenRead(filename), enc);
+            Encoding enc = FileExtensions.GetEncoding(filename);
+            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
 
             while (!sr.EndOfStream)
             {
@@ -69,18 +63,21 @@ namespace SabreTools.Library.DatFiles
                 {
                     Name = gameinfo[1].Substring(fullname[0].Length + 1),
                     Size = -1, // No size provided, but we don't want the size being 0
-                    CRC = Utilities.CleanHashData(gameinfo[4], Constants.CRCLength),
-                    MD5 = Utilities.CleanHashData(gameinfo[3], Constants.MD5Length),
-                    SHA1 = Utilities.CleanHashData(gameinfo[2], Constants.SHA1Length),
-                    SHA256 = Utilities.CleanHashData(gameinfo[0], Constants.SHA256Length),
+                    CRC = gameinfo[4],
+                    MD5 = gameinfo[3],
+                    SHA1 = gameinfo[2],
+                    SHA256 = gameinfo[0],
                     ItemStatus = ItemStatus.None,
 
                     MachineName = fullname[0],
                     MachineDescription = fullname[0],
+
+                    IndexId = indexId,
+                    IndexSource = filename,
                 };
 
                 // Now process and add the rom
-                ParseAddHelper(rom, clean, remUnicode);
+                ParseAddHelper(rom);
             }
 
             sr.Dispose();
@@ -97,7 +94,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -106,10 +103,12 @@ namespace SabreTools.Library.DatFiles
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false));
-                svw.Quotes = false;
-                svw.Separator = '\t';
-                svw.VerifyFieldCount = true;
+                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
+                {
+                    Quotes = false,
+                    Separator = '\t',
+                    VerifyFieldCount = true
+                };
 
                 // Get a properly sorted set of keys
                 List<string> keys = Keys;
@@ -189,12 +188,12 @@ namespace SabreTools.Library.DatFiles
 
                         string[] fields = new string[]
                         {
-                            rom.GetField(Field.SHA256, ExcludeFields),
-                            $"{rom.GetField(Field.MachineName, ExcludeFields)}/",
-                            rom.GetField(Field.Name, ExcludeFields),
-                            rom.GetField(Field.SHA1, ExcludeFields),
-                            rom.GetField(Field.MD5, ExcludeFields),
-                            rom.GetField(Field.CRC, ExcludeFields),
+                            rom.GetField(Field.SHA256, DatHeader.ExcludeFields),
+                            $"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}/",
+                            rom.GetField(Field.Name, DatHeader.ExcludeFields),
+                            rom.GetField(Field.SHA1, DatHeader.ExcludeFields),
+                            rom.GetField(Field.MD5, DatHeader.ExcludeFields),
+                            rom.GetField(Field.CRC, DatHeader.ExcludeFields),
                         };
 
                         svw.WriteValues(fields);

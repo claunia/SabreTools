@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -8,7 +7,7 @@ using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Help;
 using SabreTools.Library.Tools;
-using Mono.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 
 namespace RombaSharp
 {
@@ -17,7 +16,7 @@ namespace RombaSharp
         #region Private Flag features
 
         public const string CopyValue = "copy";
-        private static Feature copyFlag
+        private static Feature CopyFlag
         {
             get
             {
@@ -30,7 +29,7 @@ namespace RombaSharp
         } // Unique to RombaSharp
 
         public const string FixdatOnlyValue = "fixdat-only";
-        private static Feature fixdatOnlyFlag
+        private static Feature FixdatOnlyFlag
         {
             get
             {
@@ -43,7 +42,7 @@ namespace RombaSharp
         }
 
         public const string LogOnlyValue = "log-only";
-        private static Feature logOnlyFlag
+        private static Feature LogOnlyFlag
         {
             get
             {
@@ -56,7 +55,7 @@ namespace RombaSharp
         }
 
         public const string NoDbValue = "no-db";
-        private static Feature noDbFlag
+        private static Feature NoDbFlag
         {
             get
             {
@@ -69,7 +68,7 @@ namespace RombaSharp
         }
 
         public const string OnlyNeededValue = "only-needed";
-        private static Feature onlyNeededFlag
+        private static Feature OnlyNeededFlag
         {
             get
             {
@@ -82,7 +81,7 @@ namespace RombaSharp
         }
 
         public const string SkipInitialScanValue = "skip-initial-scan";
-        private static Feature skipInitialScanFlag
+        private static Feature SkipInitialScanFlag
         {
             get
             {
@@ -95,7 +94,7 @@ namespace RombaSharp
         }
 
         public const string UseGolangZipValue = "use-golang-zip";
-        private static Feature useGolangZipFlag
+        private static Feature UseGolangZipFlag
         {
             get
             {
@@ -112,7 +111,7 @@ namespace RombaSharp
         #region Private Int32 features
 
         public const string Include7ZipsInt32Value = "include-7zips";
-        private static Feature include7ZipsInt32Input
+        private static Feature Include7ZipsInt32Input
         {
             get
             {
@@ -125,7 +124,7 @@ namespace RombaSharp
         }
 
         public const string IncludeGZipsInt32Value = "include-gzips";
-        private static Feature includeGZipsInt32Input
+        private static Feature IncludeGZipsInt32Input
         {
             get
             {
@@ -138,7 +137,7 @@ namespace RombaSharp
         }
 
         public const string IncludeZipsInt32Value = "include-zips";
-        private static Feature includeZipsInt32Input
+        private static Feature IncludeZipsInt32Input
         {
             get
             {
@@ -151,7 +150,7 @@ namespace RombaSharp
         }
 
         public const string SubworkersInt32Value = "subworkers";
-        private static Feature subworkersInt32Input
+        private static Feature SubworkersInt32Input
         {
             get
             {
@@ -164,7 +163,7 @@ namespace RombaSharp
         } // Defaults to Workers count in config
 
         public const string WorkersInt32Value = "workers";
-        private static Feature workersInt32Input
+        private static Feature WorkersInt32Input
         {
             get
             {
@@ -181,7 +180,7 @@ namespace RombaSharp
         #region Private Int64 features
 
         public const string SizeInt64Value = "size";
-        private static Feature sizeInt64Input
+        private static Feature SizeInt64Input
         {
             get
             {
@@ -198,7 +197,7 @@ namespace RombaSharp
         #region Private List<String> features
 
         public const string DatsListStringValue = "dats";
-        private static Feature datsListStringInput
+        private static Feature DatsListStringInput
         {
             get
             {
@@ -211,7 +210,7 @@ namespace RombaSharp
         }
 
         public const string DepotListStringValue = "depot";
-        private static Feature depotListStringInput
+        private static Feature DepotListStringInput
         {
             get
             {
@@ -228,7 +227,7 @@ namespace RombaSharp
         #region Private String features
 
         public const string BackupStringValue = "backup";
-        private static Feature backupStringInput
+        private static Feature BackupStringInput
         {
             get
             {
@@ -241,7 +240,7 @@ namespace RombaSharp
         }
 
         public const string DescriptionStringValue = "description";
-        private static Feature descriptionStringInput
+        private static Feature DescriptionStringInput
         {
             get
             {
@@ -254,7 +253,7 @@ namespace RombaSharp
         }
 
         public const string MissingSha1sStringValue = "missing-sha1s";
-        private static Feature missingSha1sStringInput
+        private static Feature MissingSha1sStringInput
         {
             get
             {
@@ -267,7 +266,7 @@ namespace RombaSharp
         }
 
         public const string NameStringValue = "name";
-        private static Feature nameStringInput
+        private static Feature NameStringInput
         {
             get
             {
@@ -280,7 +279,7 @@ namespace RombaSharp
         }
 
         public const string NewStringValue = "new";
-        private static Feature newStringInput
+        private static Feature NewStringInput
         {
             get
             {
@@ -293,7 +292,7 @@ namespace RombaSharp
         }
 
         public const string OldStringValue = "old";
-        private static Feature oldStringInput
+        private static Feature OldStringInput
         {
             get
             {
@@ -306,7 +305,7 @@ namespace RombaSharp
         }
 
         public const string OutStringValue = "out";
-        private static Feature outStringInput
+        private static Feature OutStringInput
         {
             get
             {
@@ -319,7 +318,7 @@ namespace RombaSharp
         }
 
         public const string ResumeStringValue = "resume";
-        private static Feature resumeStringInput
+        private static Feature ResumeStringInput
         {
             get
             {
@@ -332,7 +331,7 @@ namespace RombaSharp
         }
 
         public const string SourceStringValue = "source";
-        private static Feature sourceStringInput
+        private static Feature SourceStringInput
         {
             get
             {
@@ -415,30 +414,24 @@ If -only-needed is set, only those files are put in the ROM archive that
 have a current entry in the DAT index.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(onlyNeededFlag);
-                AddFeature(resumeStringInput);
-                AddFeature(includeZipsInt32Input); // Defaults to 0
-                AddFeature(workersInt32Input);
-                AddFeature(includeGZipsInt32Input); // Defaults to 0
-                AddFeature(include7ZipsInt32Input); // Defaults to 0
-                AddFeature(skipInitialScanFlag);
-                AddFeature(useGolangZipFlag);
-                AddFeature(noDbFlag);
+                AddFeature(OnlyNeededFlag);
+                AddFeature(ResumeStringInput);
+                AddFeature(IncludeZipsInt32Input); // Defaults to 0
+                AddFeature(WorkersInt32Input);
+                AddFeature(IncludeGZipsInt32Input); // Defaults to 0
+                AddFeature(Include7ZipsInt32Input); // Defaults to 0
+                AddFeature(SkipInitialScanFlag);
+                AddFeature(UseGolangZipFlag);
+                AddFeature(NoDbFlag);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
                 // Get the archive scanning level
+                // TODO: Remove usage
                 int sevenzip = GetInt32(features, Include7ZipsInt32Value);
-                sevenzip = sevenzip == Int32.MinValue ? 1 : sevenzip;
-
                 int gz = GetInt32(features, IncludeGZipsInt32Value);
-                gz = gz == Int32.MinValue ? 1 : gz;
-
                 int zip = GetInt32(features, IncludeZipsInt32Value);
-                zip = zip == Int32.MinValue ? 1 : zip;
-
-                var asl = Utilities.GetArchiveScanLevelFromNumbers(sevenzip, gz, 2, zip);
 
                 // Get feature flags
                 bool noDb = GetBoolean(features, NoDbValue);
@@ -453,7 +446,7 @@ have a current entry in the DAT index.";
                 }
 
                 // Then process all of the input directories into an internal DAT
-                DatFile df = new DatFile();
+                DatFile df = DatFile.Create();
                 foreach (string dir in onlyDirs)
                 {
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
@@ -462,7 +455,7 @@ have a current entry in the DAT index.";
                 }
 
                 // Create an empty Dat for files that need to be rebuilt
-                DatFile need = new DatFile();
+                DatFile need = DatFile.Create();
 
                 // Open the database connection
                 SqliteConnection dbc = new SqliteConnection(_connectionString);
@@ -582,7 +575,7 @@ have a current entry in the DAT index.";
 
                 // Create the sorting object to use and rebuild the needed files
                 need.RebuildGeneric(onlyDirs, _depots.Keys.ToList()[0], false /*quickScan*/, false /*date*/,
-                    false /*delete*/, false /*inverse*/, OutputFormat.TorrentGzipRomba, asl, false /*updateDat*/,
+                    false /*delete*/, false /*inverse*/, OutputFormat.TorrentGzipRomba, false /*updateDat*/,
                     null /*headerToCheckAgainst*/, true /* chdsAsFiles */);
             }
         }
@@ -602,11 +595,11 @@ output dir. The files will be placed in the specified location using a folder
 structure according to the original DAT master directory tree structure.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(outStringInput);
-                AddFeature(fixdatOnlyFlag);
-                AddFeature(copyFlag);
-                AddFeature(workersInt32Input);
-                AddFeature(subworkersInt32Input);
+                AddFeature(OutStringInput);
+                AddFeature(FixdatOnlyFlag);
+                AddFeature(CopyFlag);
+                AddFeature(WorkersInt32Input);
+                AddFeature(SubworkersInt32Input);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -626,18 +619,16 @@ structure according to the original DAT master directory tree structure.";
                 foreach (string key in foundDats.Keys)
                 {
                     // Get the DAT file associated with the key
-                    DatFile datFile = new DatFile();
-                    datFile.Parse(Path.Combine(_dats, foundDats[key]), 0, 0);
+                    DatFile datFile = DatFile.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
                     // Create the new output directory if it doesn't exist
                     string outputFolder = Path.Combine(outdat, Path.GetFileNameWithoutExtension(foundDats[key]));
-                    Utilities.EnsureOutputDirectory(outputFolder, create: true);
+                    DirectoryExtensions.Ensure(outputFolder, create: true);
 
                     // Get all online depots
                     List<string> onlineDepots = _depots.Where(d => d.Value.Item2).Select(d => d.Key).ToList();
 
                     // Now scan all of those depots and rebuild
-                    ArchiveScanLevel asl = Utilities.GetArchiveScanLevelFromNumbers(1, 1, 1, 1);
                     datFile.RebuildDepot(onlineDepots, outputFolder, false /*date*/,
                         false /*delete*/, false /*inverse*/, (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
                         false /*updateDat*/, null /*headerToCheckAgainst*/);
@@ -688,7 +679,7 @@ structure according to the original DAT master directory tree structure.";
                 }
 
                 // Now output the stats for all inputs
-                DatFile.OutputStats(Inputs, "rombasharp-datstats", null /* outDir */, true /* single */, true /* baddumpCol */, true /* nodumpCol */, StatReportFormat.Textfile);
+                DatStats.OutputStats(Inputs, "rombasharp-datstats", null /* outDir */, true /* single */, true /* baddumpCol */, true /* nodumpCol */, StatReportFormat.Textfile);
             }
         }
 
@@ -782,11 +773,11 @@ structure according to the original DAT master directory tree structure.";
 in -old DAT file. Ignores those entries in -old that are not in -new.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(outStringInput);
-                AddFeature(oldStringInput);
-                AddFeature(newStringInput);
-                AddFeature(nameStringInput);
-                AddFeature(descriptionStringInput);
+                AddFeature(OutStringInput);
+                AddFeature(OldStringInput);
+                AddFeature(NewStringInput);
+                AddFeature(NameStringInput);
+                AddFeature(DescriptionStringInput);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -799,7 +790,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 string outdat = GetString(features, OutStringValue);
 
                 // Ensure the output directory
-                Utilities.EnsureOutputDirectory(outdat, create: true);
+                DirectoryExtensions.Ensure(outdat, create: true);
 
                 // Check that all required files exist
                 if (!File.Exists(olddat))
@@ -815,11 +806,9 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 }
 
                 // Create the encapsulating datfile
-                DatFile datfile = new DatFile()
-                {
-                    Name = name,
-                    Description = description,
-                };
+                DatFile datfile = DatFile.Create();
+                datfile.SetName(name);
+                datfile.SetDescription(description);
 
                 // Create the inputs
                 List<string> dats = new List<string> { newdat };
@@ -827,8 +816,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
 
                 // Now run the diff on the inputs
                 datfile.DetermineUpdateType(dats, basedats, outdat, UpdateMode.DiffAgainst, false /* inplace */, false /* skip */,
-                    false /* clean */, false /* remUnicode */, false /* descAsName */, new Filter(), SplitType.None,
-                    new List<Field>(), false /* onlySame */);
+                    new Filter(), new List<Field>(), false /* onlySame */);
             }
         }
 
@@ -845,10 +833,10 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 this.LongDescription = "Creates a DAT file for the specified input directory and saves it to the -out filename.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(outStringInput);
-                AddFeature(sourceStringInput);
-                AddFeature(nameStringInput); // Defaults to "untitled"
-                AddFeature(descriptionStringInput);
+                AddFeature(OutStringInput);
+                AddFeature(SourceStringInput);
+                AddFeature(NameStringInput); // Defaults to "untitled"
+                AddFeature(DescriptionStringInput);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -860,7 +848,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 string outdat = GetString(features, OutStringValue);
 
                 // Ensure the output directory
-                Utilities.EnsureOutputDirectory(outdat, create: true);
+                DirectoryExtensions.Ensure(outdat, create: true);
 
                 // Check that all required directories exist
                 if (!Directory.Exists(source))
@@ -870,11 +858,9 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 }
 
                 // Create the encapsulating datfile
-                DatFile datfile = new DatFile()
-                {
-                    Name = (string.IsNullOrWhiteSpace(name) ? "untitled" : name),
-                    Description = description,
-                };
+                DatFile datfile = DatFile.Create();
+                datfile.SetName(string.IsNullOrWhiteSpace(name) ? "untitled" : name);
+                datfile.SetDescription(description);
 
                 // Now run the D2D on the input and write out
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
@@ -898,9 +884,9 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
 in -old DAT files. Ignores those entries in -old that are not in -new.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(outStringInput);
-                AddFeature(oldStringInput);
-                AddFeature(newStringInput);
+                AddFeature(OutStringInput);
+                AddFeature(OldStringInput);
+                AddFeature(NewStringInput);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -911,7 +897,7 @@ in -old DAT files. Ignores those entries in -old that are not in -new.";
                 string newdat = GetString(features, NewStringValue);
 
                 // Ensure the output directory
-                Utilities.EnsureOutputDirectory(outdat, create: true);
+                DirectoryExtensions.Ensure(outdat, create: true);
 
                 // Check that all required files exist
                 if (!File.Exists(olddat))
@@ -927,7 +913,7 @@ in -old DAT files. Ignores those entries in -old that are not in -new.";
                 }
 
                 // Create the encapsulating datfile
-                DatFile datfile = new DatFile();
+                DatFile datfile = DatFile.Create();
 
                 // Create the inputs
                 List<string> dats = new List<string> { newdat };
@@ -935,8 +921,7 @@ in -old DAT files. Ignores those entries in -old that are not in -new.";
 
                 // Now run the diff on the inputs
                 datfile.DetermineUpdateType(dats, basedats, outdat, UpdateMode.DiffAgainst, false /* inplace */, false /* skip */,
-                    false /* clean */, false /* remUnicode */, false /* descAsName */, new Filter(), SplitType.None,
-                    new List<Field>(), false /* onlySame */);
+                    new Filter(), new List<Field>(), false /* onlySame */);
             }
         }
 
@@ -960,7 +945,7 @@ in -old DAT files. Ignores those entries in -old that are not in -new.";
             {
                 SqliteConnection dbc = new SqliteConnection(_connectionString);
                 dbc.Open();
-                StreamWriter sw = new StreamWriter(Utilities.TryCreate("export.csv"));
+                StreamWriter sw = new StreamWriter(FileExtensions.TryCreate("export.csv"));
 
                 // First take care of all file hashes
                 sw.WriteLine("CRC,MD5,SHA-1"); // ,Depot
@@ -1016,10 +1001,10 @@ that DAT. If nothing is missing it doesn't create a fix DAT for that
 particular DAT.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(outStringInput);
-                AddFeature(fixdatOnlyFlag); // Enabled by default
-                AddFeature(workersInt32Input);
-                AddFeature(subworkersInt32Input);
+                AddFeature(OutStringInput);
+                AddFeature(FixdatOnlyFlag); // Enabled by default
+                AddFeature(WorkersInt32Input);
+                AddFeature(SubworkersInt32Input);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -1087,7 +1072,7 @@ particular DAT.";
                 Globals.Logger.Error("This feature is not yet implemented: import");
 
                 // First ensure the inputs and database connection
-                Inputs = Utilities.GetOnlyFilesFromInputs(Inputs);
+                Inputs = DirectoryExtensions.GetFilesOnly(Inputs);
                 SqliteConnection dbc = new SqliteConnection(_connectionString);
                 SqliteCommand slc = new SqliteCommand();
                 dbc.Open();
@@ -1095,7 +1080,7 @@ particular DAT.";
                 // Now, for each of these files, attempt to add the data found inside
                 foreach (string input in Inputs)
                 {
-                    StreamReader sr = new StreamReader(Utilities.TryOpenRead(input));
+                    StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(input));
 
                     // The first line should be the hash header
                     string line = sr.ReadLine();
@@ -1192,8 +1177,8 @@ particular DAT.";
                 this.LongDescription = "For each specified hash it looks up any available information (dat or rom).";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(sizeInt64Input); // Defaults to -1
-                AddFeature(outStringInput);
+                AddFeature(SizeInt64Input); // Defaults to -1
+                AddFeature(OutStringInput);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -1211,7 +1196,7 @@ particular DAT.";
                     string temp = string.Empty;
                     if (input.Length == Constants.CRCLength)
                     {
-                        temp = Utilities.CleanHashData(input, Constants.CRCLength);
+                        temp = Sanitizer.CleanCRC32(input);
                         if (!string.IsNullOrWhiteSpace(temp))
                         {
                             crc.Add(temp);
@@ -1219,7 +1204,7 @@ particular DAT.";
                     }
                     else if (input.Length == Constants.MD5Length)
                     {
-                        temp = Utilities.CleanHashData(input, Constants.MD5Length);
+                        temp = Sanitizer.CleanMD5(input);
                         if (!string.IsNullOrWhiteSpace(temp))
                         {
                             md5.Add(temp);
@@ -1227,7 +1212,7 @@ particular DAT.";
                     }
                     else if (input.Length == Constants.SHA1Length)
                     {
-                        temp = Utilities.CleanHashData(input, Constants.SHA1Length);
+                        temp = Sanitizer.CleanSHA1(input);
                         if (!string.IsNullOrWhiteSpace(temp))
                         {
                             sha1.Add(temp);
@@ -1346,10 +1331,10 @@ particular DAT.";
                 this.LongDescription = "Merges specified depot into current depot.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(onlyNeededFlag);
-                AddFeature(resumeStringInput);
-                AddFeature(workersInt32Input);
-                AddFeature(skipInitialScanFlag);
+                AddFeature(OnlyNeededFlag);
+                AddFeature(ResumeStringInput);
+                AddFeature(WorkersInt32Input);
+                AddFeature(SkipInitialScanFlag);
             }
 
             // TODO: Add way of specifying "current depot" since that's what Romba relies on
@@ -1364,7 +1349,7 @@ particular DAT.";
                 Globals.Logger.Error("This feature is not yet implemented: merge");
 
                 // Verify that the inputs are valid directories
-                Inputs = Utilities.GetOnlyDirectoriesFromInputs(Inputs);
+                Inputs = DirectoryExtensions.GetDirectoriesOnly(Inputs);
 
                 // Loop over all input directories
                 foreach (string input in Inputs)
@@ -1419,14 +1404,13 @@ particular DAT.";
                 Dictionary<string, string> foundDats = GetValidDats(Inputs);
 
                 // Create the new output directory if it doesn't exist
-                Utilities.EnsureOutputDirectory(Path.Combine(Globals.ExeDir, "out"), create: true);
+                DirectoryExtensions.Ensure(Path.Combine(Globals.ExeDir, "out"), create: true);
 
                 // Now that we have the dictionary, we can loop through and output to a new folder for each
                 foreach (string key in foundDats.Keys)
                 {
                     // Get the DAT file associated with the key
-                    DatFile datFile = new DatFile();
-                    datFile.Parse(Path.Combine(_dats, foundDats[key]), 0, 0);
+                    DatFile datFile = DatFile.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
                     // Now loop through and see if all of the hash combinations exist in the database
                     /* ended here */
@@ -1473,11 +1457,11 @@ a folder structure according to the original DAT master directory tree
 structure. It also deletes the specified DATs from the DAT index.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(backupStringInput);
-                AddFeature(workersInt32Input);
-                AddFeature(depotListStringInput);
-                AddFeature(datsListStringInput);
-                AddFeature(logOnlyFlag);
+                AddFeature(BackupStringInput);
+                AddFeature(WorkersInt32Input);
+                AddFeature(DepotListStringInput);
+                AddFeature(DatsListStringInput);
+                AddFeature(LogOnlyFlag);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -1511,10 +1495,10 @@ a folder structure according to the original DAT master directory tree
 structure. It also deletes the specified DATs from the DAT index.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(workersInt32Input);
-                AddFeature(depotListStringInput);
-                AddFeature(datsListStringInput);
-                AddFeature(logOnlyFlag);
+                AddFeature(WorkersInt32Input);
+                AddFeature(DepotListStringInput);
+                AddFeature(DatsListStringInput);
+                AddFeature(LogOnlyFlag);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -1545,8 +1529,8 @@ accordingly, marking deleted or overwritten dats as orphaned and updating
 contents of any changed dats.";
                 this.Features = new Dictionary<string, Feature>();
 
-                AddFeature(workersInt32Input);
-                AddFeature(missingSha1sStringInput);
+                AddFeature(WorkersInt32Input);
+                AddFeature(MissingSha1sStringInput);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
@@ -1577,10 +1561,12 @@ contents of any changed dats.";
                     Directory.CreateDirectory(_dats);
 
                 // First get a list of SHA-1's from the input DATs
-                DatFile datroot = new DatFile { Type = "SuperDAT", };
+                DatFile datroot = DatFile.Create();
+                datroot.SetType("SuperDAT");
+
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                 datroot.PopulateFromDir(_dats, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
-                datroot.BucketBy(SortedBy.SHA1, DedupeType.None);
+                datroot.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
                 // Create a List of dat hashes in the database (SHA-1)
                 List<string> databaseDats = new List<string>();
@@ -1609,7 +1595,7 @@ contents of any changed dats.";
                         unneeded.Add(hash);
                     }
                 }
-                datroot.BucketBy(SortedBy.Game, DedupeType.None, norename: true);
+                datroot.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
                 watch.Stop();
 
@@ -1704,10 +1690,10 @@ contents of any changed dats.";
                     }
 
                     // Now rescan the depot itself
-                    DatFile depot = new DatFile();
+                    DatFile depot = DatFile.Create();
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     depot.PopulateFromDir(depotname, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
-                    depot.BucketBy(SortedBy.SHA1, DedupeType.None);
+                    depot.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
                     // Set the base queries to use
                     string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";

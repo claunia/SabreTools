@@ -21,7 +21,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public AttractMode(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -29,25 +29,19 @@ namespace SabreTools.Library.DatFiles
         /// Parse an AttractMode DAT and return all found games within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Open a file reader
-            Encoding enc = Utilities.GetEncoding(filename);
-            StreamReader sr = new StreamReader(Utilities.TryOpenRead(filename), enc);
+            Encoding enc = FileExtensions.GetEncoding(filename);
+            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
 
             sr.ReadLine(); // Skip the first line since it's the header
             while (!sr.EndOfStream)
@@ -83,7 +77,9 @@ namespace SabreTools.Library.DatFiles
                     Size = Constants.SizeZero,
                     CRC = Constants.CRCZero,
                     MD5 = Constants.MD5Zero,
+#if NET_FRAMEWORK
                     RIPEMD160 = Constants.RIPEMD160Zero,
+#endif
                     SHA1 = Constants.SHA1Zero,
                     ItemStatus = ItemStatus.None,
 
@@ -93,10 +89,13 @@ namespace SabreTools.Library.DatFiles
                     Year = gameinfo[4],
                     Manufacturer = gameinfo[5],
                     Comment = gameinfo[15],
+
+                    IndexId = indexId,
+                    IndexSource = filename,
                 };
 
                 // Now process and add the rom
-                ParseAddHelper(rom, clean, remUnicode);
+                ParseAddHelper(rom);
             }
 
             sr.Dispose();
@@ -113,7 +112,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -122,10 +121,12 @@ namespace SabreTools.Library.DatFiles
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false));
-                svw.Quotes = false;
-                svw.Separator = ';';
-                svw.VerifyFieldCount = true;
+                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
+                {
+                    Quotes = false,
+                    Separator = ';',
+                    VerifyFieldCount = true
+                };
 
                 // Write out the header
                 WriteHeader(svw);
@@ -254,23 +255,23 @@ namespace SabreTools.Library.DatFiles
 
                 string[] fields = new string[]
                 {
-                    datItem.GetField(Field.MachineName, ExcludeFields),
-                    datItem.GetField(Field.Description, ExcludeFields),
-                    FileName,
-                    datItem.GetField(Field.CloneOf, ExcludeFields),
-                    datItem.GetField(Field.Year, ExcludeFields),
-                    datItem.GetField(Field.Manufacturer, ExcludeFields),
-                    string.Empty, // datItem.GetField(Field.Category, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Players, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Rotation, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Control, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Status, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.DisplayCount, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.DisplayType, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.AltRomname, ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.AltTitle, ExcludeFields)
-                    datItem.GetField(Field.Comment, ExcludeFields),
-                    string.Empty, // datItem.GetField(Field.Buttons, ExcludeFields)
+                    datItem.GetField(Field.MachineName, DatHeader.ExcludeFields),
+                    datItem.GetField(Field.Description, DatHeader.ExcludeFields),
+                    DatHeader.FileName,
+                    datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields),
+                    datItem.GetField(Field.Year, DatHeader.ExcludeFields),
+                    datItem.GetField(Field.Manufacturer, DatHeader.ExcludeFields),
+                    string.Empty, // datItem.GetField(Field.Category, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.Players, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.Rotation, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.Control, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.Status, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.DisplayCount, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.DisplayType, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.AltRomname, DatHeader.ExcludeFields)
+                    string.Empty, // datItem.GetField(Field.AltTitle, DatHeader.ExcludeFields)
+                    datItem.GetField(Field.Comment, DatHeader.ExcludeFields),
+                    string.Empty, // datItem.GetField(Field.Buttons, DatHeader.ExcludeFields)
                 };
 
                 svw.WriteValues(fields);

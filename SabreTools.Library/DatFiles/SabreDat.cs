@@ -15,7 +15,6 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Represents parsing and writing of an SabreDat XML DAT
     /// </summary>
-    /// TODO: Verify that all write for this DatFile type is correct
     internal class SabreDat : DatFile
     {
         /// <summary>
@@ -23,7 +22,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
         public SabreDat(DatFile datFile)
-            : base(datFile, cloneHeader: false)
+            : base(datFile)
         {
         }
 
@@ -31,29 +30,22 @@ namespace SabreTools.Library.DatFiles
         /// Parse an SabreDat XML DAT and return all found directories and files within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
-        public override void ParseFile(
+        protected override void ParseFile(
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Prepare all internal variables
             bool empty = true;
-            string key = string.Empty;
+            string key;
             List<string> parent = new List<string>();
 
-            Encoding enc = Utilities.GetEncoding(filename);
-            XmlReader xtr = Utilities.GetXmlTextReader(filename);
+            XmlReader xtr = filename.GetXmlTextReader();
 
             // If we got a null reader, just return
             if (xtr == null)
@@ -72,10 +64,10 @@ namespace SabreTools.Library.DatFiles
                         if (empty)
                         {
                             string tempgame = string.Join("\\", parent);
-                            Rom rom = new Rom("null", tempgame, omitFromScan: Hash.DeepHashes); // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+                            Rom rom = new Rom("null", tempgame);
 
                             // Now process and add the rom
-                            key = ParseAddHelper(rom, clean, remUnicode);
+                            key = ParseAddHelper(rom);
                         }
 
                         // Regardless, end the current folder
@@ -91,7 +83,7 @@ namespace SabreTools.Library.DatFiles
                         {
                             parent.RemoveAt(parent.Count - 1);
                             if (keep && parentcount > 1)
-                                Type = (string.IsNullOrWhiteSpace(Type) ? "SuperDAT" : Type);
+                                DatHeader.Type = (string.IsNullOrWhiteSpace(DatHeader.Type) ? "SuperDAT" : DatHeader.Type);
                         }
                     }
 
@@ -114,7 +106,7 @@ namespace SabreTools.Library.DatFiles
 
                         case "dir":
                         case "directory":
-                            empty = ReadDirectory(xtr.ReadSubtree(), parent, filename, sysid, srcid, keep, clean, remUnicode);
+                            empty = ReadDirectory(xtr.ReadSubtree(), parent, filename, indexId, keep);
 
                             // Skip the directory node now that we've processed it
                             xtr.Read();
@@ -160,55 +152,55 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Get all header items (ONLY OVERWRITE IF THERE'S NO DATA)
-                string content = string.Empty;
+                string content;
                 switch (reader.Name)
                 {
                     case "name":
                         content = reader.ReadElementContentAsString(); ;
-                        Name = (string.IsNullOrWhiteSpace(Name) ? content : Name);
+                        DatHeader.Name = (string.IsNullOrWhiteSpace(DatHeader.Name) ? content : DatHeader.Name);
                         superdat = superdat || content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Type = (string.IsNullOrWhiteSpace(Type) ? "SuperDAT" : Type);
+                            DatHeader.Type = (string.IsNullOrWhiteSpace(DatHeader.Type) ? "SuperDAT" : DatHeader.Type);
                         }
                         break;
 
                     case "description":
                         content = reader.ReadElementContentAsString();
-                        Description = (string.IsNullOrWhiteSpace(Description) ? content : Description);
+                        DatHeader.Description = (string.IsNullOrWhiteSpace(DatHeader.Description) ? content : DatHeader.Description);
                         break;
 
                     case "rootdir":
                         content = reader.ReadElementContentAsString();
-                        RootDir = (string.IsNullOrWhiteSpace(RootDir) ? content : RootDir);
+                        DatHeader.RootDir = (string.IsNullOrWhiteSpace(DatHeader.RootDir) ? content : DatHeader.RootDir);
                         break;
 
                     case "category":
                         content = reader.ReadElementContentAsString();
-                        Category = (string.IsNullOrWhiteSpace(Category) ? content : Category);
+                        DatHeader.Category = (string.IsNullOrWhiteSpace(DatHeader.Category) ? content : DatHeader.Category);
                         break;
 
                     case "version":
                         content = reader.ReadElementContentAsString();
-                        Version = (string.IsNullOrWhiteSpace(Version) ? content : Version);
+                        DatHeader.Version = (string.IsNullOrWhiteSpace(DatHeader.Version) ? content : DatHeader.Version);
                         break;
 
                     case "date":
                         content = reader.ReadElementContentAsString();
-                        Date = (string.IsNullOrWhiteSpace(Date) ? content.Replace(".", "/") : Date);
+                        DatHeader.Date = (string.IsNullOrWhiteSpace(DatHeader.Date) ? content.Replace(".", "/") : DatHeader.Date);
                         break;
 
                     case "author":
                         content = reader.ReadElementContentAsString();
-                        Author = (string.IsNullOrWhiteSpace(Author) ? content : Author);
-                        Email = (string.IsNullOrWhiteSpace(Email) ?	reader.GetAttribute("email") : Email);
-                        Homepage = (string.IsNullOrWhiteSpace(Homepage) ? reader.GetAttribute("homepage") : Homepage);
-                        Url = (string.IsNullOrWhiteSpace(Url) ? reader.GetAttribute("url") : Url);
+                        DatHeader.Author = (string.IsNullOrWhiteSpace(DatHeader.Author) ? content : DatHeader.Author);
+                        DatHeader.Email = (string.IsNullOrWhiteSpace(DatHeader.Email) ? reader.GetAttribute("email") : DatHeader.Email);
+                        DatHeader.Homepage = (string.IsNullOrWhiteSpace(DatHeader.Homepage) ? reader.GetAttribute("homepage") : DatHeader.Homepage);
+                        DatHeader.Url = (string.IsNullOrWhiteSpace(DatHeader.Url) ? reader.GetAttribute("url") : DatHeader.Url);
                         break;
 
                     case "comment":
                         content = reader.ReadElementContentAsString();
-                        Comment = (string.IsNullOrWhiteSpace(Comment) ? content : Comment);
+                        DatHeader.Comment = (string.IsNullOrWhiteSpace(DatHeader.Comment) ? content : DatHeader.Comment);
                         break;
 
                     case "flags":
@@ -230,23 +222,17 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader to use to parse the header</param>
         /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="sysid">System ID for the DAT</param>
-        /// <param name="srcid">Source ID for the DAT</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="clean">True if game names are sanitized, false otherwise (default)</param>
-        /// <param name="remUnicode">True if we should remove non-ASCII characters from output, false otherwise (default)</param>
         private bool ReadDirectory(XmlReader reader,
             List<string> parent,
 
             // Standard Dat parsing
             string filename,
-            int sysid,
-            int srcid,
+            int indexId,
 
             // Miscellaneous
-            bool keep,
-            bool clean,
-            bool remUnicode)
+            bool keep)
         {
             // Prepare all internal variables
             XmlReader flagreader;
@@ -273,10 +259,10 @@ namespace SabreTools.Library.DatFiles
                     if (empty)
                     {
                         string tempgame = string.Join("\\", parent);
-                        Rom rom = new Rom("null", tempgame, omitFromScan: Hash.DeepHashes); // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+                        Rom rom = new Rom("null", tempgame);
 
                         // Now process and add the rom
-                        key = ParseAddHelper(rom, clean, remUnicode);
+                        key = ParseAddHelper(rom);
                     }
 
                     // Regardless, end the current folder
@@ -292,7 +278,7 @@ namespace SabreTools.Library.DatFiles
                     {
                         parent.RemoveAt(parent.Count - 1);
                         if (keep && parentcount > 1)
-                            Type = (string.IsNullOrWhiteSpace(Type) ? "SuperDAT" : Type);
+                            DatHeader.Type = (string.IsNullOrWhiteSpace(DatHeader.Type) ? "SuperDAT" : DatHeader.Type);
                     }
                 }
 
@@ -310,7 +296,7 @@ namespace SabreTools.Library.DatFiles
                     // Directories can contain directories
                     case "dir":
                     case "directory":
-                        ReadDirectory(reader.ReadSubtree(), parent, filename, sysid, srcid, keep, clean, remUnicode);
+                        ReadDirectory(reader.ReadSubtree(), parent, filename, indexId, keep);
 
                         // Skip the directory node now that we've processed it
                         reader.Read();
@@ -345,7 +331,7 @@ namespace SabreTools.Library.DatFiles
                                     if (flagreader.GetAttribute("name") != null && flagreader.GetAttribute("value") != null)
                                     {
                                         content = flagreader.GetAttribute("value");
-                                        its = Utilities.GetItemStatus(flagreader.GetAttribute("name"));
+                                        its = flagreader.GetAttribute("name").AsItemStatus();
                                     }
                                     break;
                             }
@@ -354,16 +340,17 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         // If the rom has a Date attached, read it in and then sanitize it
-                        date = Utilities.GetDate(reader.GetAttribute("date"));
+                        date = Sanitizer.CleanDate(reader.GetAttribute("date"));
 
                         // Take care of hex-sized files
-                        size = Utilities.GetSize(reader.GetAttribute("size"));
+                        size = Sanitizer.CleanSize(reader.GetAttribute("size"));
 
-                        Machine dir = new Machine();
-
-                        // Get the name of the game from the parent
-                        dir.Name = string.Join("\\", parent);
-                        dir.Description = dir.Name;
+                        Machine dir = new Machine
+                        {
+                            // Get the name of the game from the parent
+                            Name = string.Join("\\", parent),
+                            Description = string.Join("\\", parent),
+                        };
 
                         DatItem datItem;
                         switch (reader.GetAttribute("type").ToLowerInvariant())
@@ -373,9 +360,8 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
 
-                                    SystemID = sysid,
-                                    System = filename,
-                                    SourceID = srcid,
+                                    IndexId = indexId,
+                                    IndexSource = filename,
                                 };
                                 break;
 
@@ -384,11 +370,10 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
                                     Description = reader.GetAttribute("description"),
-                                    Default = Utilities.GetYesNo(reader.GetAttribute("default")),
+                                    Default = reader.GetAttribute("default").AsYesNo(),
 
-                                    SystemID = sysid,
-                                    System = filename,
-                                    SourceID = srcid,
+                                    IndexId = indexId,
+                                    IndexSource = filename,
                                 };
                                 break;
 
@@ -396,17 +381,18 @@ namespace SabreTools.Library.DatFiles
                                 datItem = new Disk
                                 {
                                     Name = reader.GetAttribute("name"),
-                                    MD5 = Utilities.CleanHashData(reader.GetAttribute("md5"), Constants.MD5Length),
-                                    RIPEMD160 = Utilities.CleanHashData(reader.GetAttribute("ripemd160"), Constants.RIPEMD160Length),
-                                    SHA1 = Utilities.CleanHashData(reader.GetAttribute("sha1"), Constants.SHA1Length),
-                                    SHA256 = Utilities.CleanHashData(reader.GetAttribute("sha256"), Constants.SHA256Length),
-                                    SHA384 = Utilities.CleanHashData(reader.GetAttribute("sha384"), Constants.SHA384Length),
-                                    SHA512 = Utilities.CleanHashData(reader.GetAttribute("sha512"), Constants.SHA512Length),
+                                    MD5 = reader.GetAttribute("md5"),
+#if NET_FRAMEWORK
+                                    RIPEMD160 = reader.GetAttribute("ripemd160"),
+#endif
+                                    SHA1 = reader.GetAttribute("sha1"),
+                                    SHA256 = reader.GetAttribute("sha256"),
+                                    SHA384 =reader.GetAttribute("sha384"),
+                                    SHA512 = reader.GetAttribute("sha512"),
                                     ItemStatus = its,
 
-                                    SystemID = sysid,
-                                    System = filename,
-                                    SourceID = srcid,
+                                    IndexId = indexId,
+                                    IndexSource = filename,
                                 };
                                 break;
 
@@ -417,11 +403,10 @@ namespace SabreTools.Library.DatFiles
                                     Region = reader.GetAttribute("region"),
                                     Language = reader.GetAttribute("language"),
                                     Date = reader.GetAttribute("date"),
-                                    Default = Utilities.GetYesNo(reader.GetAttribute("default")),
+                                    Default = reader.GetAttribute("default").AsYesNo(),
 
-                                    SystemID = sysid,
-                                    System = filename,
-                                    SourceID = srcid,
+                                    IndexId = indexId,
+                                    IndexSource = filename,
                                 };
                                 break;
 
@@ -430,19 +415,20 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
                                     Size = size,
-                                    CRC = Utilities.CleanHashData(reader.GetAttribute("crc"), Constants.CRCLength),
-                                    MD5 = Utilities.CleanHashData(reader.GetAttribute("md5"), Constants.MD5Length),
-                                    RIPEMD160 = Utilities.CleanHashData(reader.GetAttribute("ripemd160"), Constants.RIPEMD160Length),
-                                    SHA1 = Utilities.CleanHashData(reader.GetAttribute("sha1"), Constants.SHA1Length),
-                                    SHA256 = Utilities.CleanHashData(reader.GetAttribute("sha256"), Constants.SHA256Length),
-                                    SHA384 = Utilities.CleanHashData(reader.GetAttribute("sha384"), Constants.SHA384Length),
-                                    SHA512 = Utilities.CleanHashData(reader.GetAttribute("sha512"), Constants.SHA512Length),
+                                    CRC = reader.GetAttribute("crc"),
+                                    MD5 = reader.GetAttribute("md5"),
+#if NET_FRAMEWORK
+                                    RIPEMD160 = reader.GetAttribute("ripemd160"),
+#endif
+                                    SHA1 = reader.GetAttribute("sha1"),
+                                    SHA256 = reader.GetAttribute("sha256"),
+                                    SHA384 = reader.GetAttribute("sha384"),
+                                    SHA512 = reader.GetAttribute("sha512"),
                                     ItemStatus = its,
                                     Date = date,
 
-                                    SystemID = sysid,
-                                    System = filename,
-                                    SourceID = srcid,
+                                    IndexId = indexId,
+                                    IndexSource = filename,
                                 };
                                 break;
 
@@ -451,9 +437,8 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
 
-                                    SystemID = sysid,
-                                    System = filename,
-                                    SourceID = srcid,
+                                    IndexId = indexId,
+                                    IndexSource = filename,
                                 };
                                 break;
 
@@ -466,7 +451,7 @@ namespace SabreTools.Library.DatFiles
                         datItem?.CopyMachineInformation(dir);
 
                         // Now process and add the rom
-                        key = ParseAddHelper(datItem, clean, remUnicode);
+                        key = ParseAddHelper(datItem);
 
                         reader.Read();
                         break;
@@ -484,7 +469,7 @@ namespace SabreTools.Library.DatFiles
         private void ReadFlags(XmlReader reader, bool superdat)
         {
             // Prepare all internal variables
-            string content = string.Empty;
+            string content;
 
             // If we somehow have a null flag section, skip it
             if (reader == null)
@@ -508,29 +493,26 @@ namespace SabreTools.Library.DatFiles
                             switch (reader.GetAttribute("name").ToLowerInvariant())
                             {
                                 case "type":
-                                    Type = (string.IsNullOrWhiteSpace(Type) ? content : Type);
+                                    DatHeader.Type = (string.IsNullOrWhiteSpace(DatHeader.Type) ? content : DatHeader.Type);
                                     superdat = superdat || content.Contains("SuperDAT");
                                     break;
 
                                 case "forcemerging":
-                                    if (ForceMerging == ForceMerging.None)
-                                    {
-                                        ForceMerging = Utilities.GetForceMerging(content);
-                                    }
+                                    if (DatHeader.ForceMerging == ForceMerging.None)
+                                        DatHeader.ForceMerging = content.AsForceMerging();
+
                                     break;
 
                                 case "forcenodump":
-                                    if (ForceNodump == ForceNodump.None)
-                                    {
-                                        ForceNodump = Utilities.GetForceNodump(content);
-                                    }
+                                    if (DatHeader.ForceNodump == ForceNodump.None)
+                                        DatHeader.ForceNodump = content.AsForceNodump();
+
                                     break;
 
                                 case "forcepacking":
-                                    if (ForcePacking == ForcePacking.None)
-                                    {
-                                        ForcePacking = Utilities.GetForcePacking(content);
-                                    }
+                                    if (DatHeader.ForcePacking == ForcePacking.None)
+                                        DatHeader.ForcePacking = content.AsForcePacking();
+
                                     break;
                             }
                         }
@@ -557,7 +539,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 Globals.Logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = Utilities.TryCreate(outfile);
+                FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
@@ -566,10 +548,12 @@ namespace SabreTools.Library.DatFiles
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false));
-                xtw.Formatting = Formatting.Indented;
-                xtw.IndentChar = '\t';
-                xtw.Indentation = 1;
+                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                {
+                    Formatting = Formatting.Indented,
+                    IndentChar = '\t',
+                    Indentation = 1
+                };
 
                 // Write out the header
                 WriteHeader(xtw);
@@ -609,7 +593,7 @@ namespace SabreTools.Library.DatFiles
 
                         // If we have a new game, output the beginning of the new item
                         if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
-                            depth = WriteStartGame(xtw, rom, newsplit, lastgame, depth, last);
+                            depth = WriteStartGame(xtw, rom, newsplit, depth, last);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
                         if (rom.ItemType == ItemType.Rom
@@ -664,31 +648,34 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("header");
 
-                xtw.WriteElementString("name", Name);
-                xtw.WriteElementString("description", Description);
-                if (!string.IsNullOrWhiteSpace(RootDir))
-                    xtw.WriteElementString("rootdir", RootDir);
-                if (!string.IsNullOrWhiteSpace(Category))
-                    xtw.WriteElementString("category", Category);
-                xtw.WriteElementString("version", Version);
-                if (!string.IsNullOrWhiteSpace(Date))
-                    xtw.WriteElementString("date", Date);
-                xtw.WriteElementString("author", Author);
-                if (!string.IsNullOrWhiteSpace(Comment))
-                    xtw.WriteElementString("comment", Comment);
-                if (!string.IsNullOrWhiteSpace(Type) || ForcePacking != ForcePacking.None || ForceMerging != ForceMerging.None || ForceNodump != ForceNodump.None)
+                xtw.WriteElementString("name", DatHeader.Name);
+                xtw.WriteElementString("description", DatHeader.Description);
+                if (!string.IsNullOrWhiteSpace(DatHeader.RootDir))
+                    xtw.WriteElementString("rootdir", DatHeader.RootDir);
+                if (!string.IsNullOrWhiteSpace(DatHeader.Category))
+                    xtw.WriteElementString("category", DatHeader.Category);
+                xtw.WriteElementString("version", DatHeader.Version);
+                if (!string.IsNullOrWhiteSpace(DatHeader.Date))
+                    xtw.WriteElementString("date", DatHeader.Date);
+                xtw.WriteElementString("author", DatHeader.Author);
+                if (!string.IsNullOrWhiteSpace(DatHeader.Comment))
+                    xtw.WriteElementString("comment", DatHeader.Comment);
+                if (!string.IsNullOrWhiteSpace(DatHeader.Type)
+                    || DatHeader.ForcePacking != ForcePacking.None
+                    || DatHeader.ForceMerging != ForceMerging.None
+                    || DatHeader.ForceNodump != ForceNodump.None)
                 {
                     xtw.WriteStartElement("flags");
 
-                    if (!string.IsNullOrWhiteSpace(Type))
+                    if (!string.IsNullOrWhiteSpace(DatHeader.Type))
                     {
                         xtw.WriteStartElement("flag");
                         xtw.WriteAttributeString("name", "type");
-                        xtw.WriteAttributeString("value", Type);
+                        xtw.WriteAttributeString("value", DatHeader.Type);
                         xtw.WriteEndElement();
                     }
-                    
-                    switch (ForcePacking)
+
+                    switch (DatHeader.ForcePacking)
                     {
                         case ForcePacking.Unzip:
                             xtw.WriteStartElement("flag");
@@ -703,8 +690,8 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                             break;
                     }
-                    
-                    switch (ForceMerging)
+
+                    switch (DatHeader.ForceMerging)
                     {
                         case ForceMerging.Full:
                             xtw.WriteStartElement("flag");
@@ -731,8 +718,8 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                             break;
                     }
-                    
-                    switch (ForceNodump)
+
+                    switch (DatHeader.ForceNodump)
                     {
                         case ForceNodump.Ignore:
                             xtw.WriteStartElement("flag");
@@ -780,11 +767,10 @@ namespace SabreTools.Library.DatFiles
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
         /// <param name="newsplit">Split path representing the parent game (SabreDAT only)</param>
-        /// <param name="lastgame">The name of the last game to be output</param>
         /// <param name="depth">Current depth to output file at (SabreDAT only)</param>
         /// <param name="last">Last known depth to cycle back from (SabreDAT only)</param>
         /// <returns>The new depth of the tag</returns>
-        private int WriteStartGame(XmlTextWriter xtw, DatItem datItem, List<string> newsplit, string lastgame, int depth, int last)
+        private int WriteStartGame(XmlTextWriter xtw, DatItem datItem, List<string> newsplit, int depth, int last)
         {
             try
             {
@@ -795,8 +781,8 @@ namespace SabreTools.Library.DatFiles
                 for (int i = (last == -1 ? 0 : last); i < newsplit.Count; i++)
                 {
                     xtw.WriteStartElement("directory");
-                    xtw.WriteAttributeString("name", !ExcludeFields[(int)Field.MachineName] ? newsplit[i] : string.Empty);
-                    xtw.WriteAttributeString("description", !ExcludeFields[(int)Field.MachineName] ? newsplit[i] : string.Empty);
+                    xtw.WriteAttributeString("name", !DatHeader.ExcludeFields[(int)Field.MachineName] ? newsplit[i] : string.Empty);
+                    xtw.WriteAttributeString("description", !DatHeader.ExcludeFields[(int)Field.MachineName] ? newsplit[i] : string.Empty);
                 }
 
                 depth = depth - (last == -1 ? 0 : last) + newsplit.Count;
@@ -886,7 +872,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Archive:
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "archive");
-                        xtw.WriteAttributeString("name", datItem.GetField(Field.Name, ExcludeFields));
+                        xtw.WriteAttributeString("name", datItem.GetField(Field.Name, DatHeader.ExcludeFields));
                         xtw.WriteEndElement();
                         break;
 
@@ -894,10 +880,10 @@ namespace SabreTools.Library.DatFiles
                         var biosSet = datItem as BiosSet;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "biosset");
-                        xtw.WriteAttributeString("name", biosSet.GetField(Field.Name, ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, ExcludeFields)))
+                        xtw.WriteAttributeString("name", biosSet.GetField(Field.Name, DatHeader.ExcludeFields));
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("description", biosSet.Description);
-                        if (!ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!DatHeader.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
                             xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -906,20 +892,22 @@ namespace SabreTools.Library.DatFiles
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "disk");
-                        xtw.WriteAttributeString("name", disk.GetField(Field.Name, ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, ExcludeFields)))
+                        xtw.WriteAttributeString("name", disk.GetField(Field.Name, DatHeader.ExcludeFields));
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, ExcludeFields)))
+#if NET_FRAMEWORK
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, ExcludeFields)))
+#endif
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
 
@@ -938,14 +926,14 @@ namespace SabreTools.Library.DatFiles
                         var release = datItem as Release;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "release");
-                        xtw.WriteAttributeString("name", release.GetField(Field.Name, ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Region, ExcludeFields)))
+                        xtw.WriteAttributeString("name", release.GetField(Field.Name, DatHeader.ExcludeFields));
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Region, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("region", release.Region);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Language, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Language, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("language", release.Language);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("date", release.Date);
-                        if (!ExcludeFields[(int)Field.Default] && release.Default != null)
+                        if (!DatHeader.ExcludeFields[(int)Field.Default] && release.Default != null)
                             xtw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -954,26 +942,28 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "rom");
-                        xtw.WriteAttributeString("name", rom.GetField(Field.Name, ExcludeFields));
-                        if (!ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        xtw.WriteAttributeString("name", rom.GetField(Field.Name, DatHeader.ExcludeFields));
+                        if (!DatHeader.ExcludeFields[(int)Field.Size] && rom.Size != -1)
                             xtw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, ExcludeFields)))
+#if NET_FRAMEWORK
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, ExcludeFields)))
+#endif
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, DatHeader.ExcludeFields)))
                             xtw.WriteAttributeString("date", rom.Date);
-                        if (!ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!DatHeader.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
 
@@ -991,7 +981,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Sample:
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "sample");
-                        xtw.WriteAttributeString("name", datItem.GetField(Field.Name, ExcludeFields));
+                        xtw.WriteAttributeString("name", datItem.GetField(Field.Name, DatHeader.ExcludeFields));
                         xtw.WriteEndElement();
                         break;
                 }

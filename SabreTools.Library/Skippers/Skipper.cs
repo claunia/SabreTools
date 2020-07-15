@@ -1,11 +1,11 @@
-﻿using System;
+﻿using SabreTools.Library.Data;
+using SabreTools.Library.FileTypes;
+using SabreTools.Library.Tools;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
-
-using SabreTools.Library.Data;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Skippers
 {
@@ -38,22 +38,15 @@ namespace SabreTools.Library.Skippers
         /// </summary>
         public string SourceFile { get; set; }
 
-        // Local paths
+        /// <summary>
+        /// Local paths
+        /// </summary>
         public static string LocalPath = Path.Combine(Globals.ExeDir, "Skippers") + Path.DirectorySeparatorChar;
 
-        // Header skippers represented by a list of skipper objects
-        private static List<Skipper> _list;
-        public static List<Skipper> List
-        {
-            get
-            {
-                if (_list == null || _list.Count == 0)
-                {
-                    PopulateSkippers();
-                }
-                return _list;
-            }
-        }
+        /// <summary>
+        /// Header skippers represented by a list of skipper objects
+        /// </summary>
+        private static List<Skipper> List;
 
         #endregion
 
@@ -80,8 +73,7 @@ namespace SabreTools.Library.Skippers
             Rules = new List<SkipperRule>();
             SourceFile = Path.GetFileNameWithoutExtension(filename);
 
-            Logger logger = new Logger();
-            XmlReader xtr = Utilities.GetXmlTextReader(filename);
+            XmlReader xtr = filename.GetXmlTextReader();
 
             if (xtr == null)
                 return;
@@ -218,13 +210,9 @@ namespace SabreTools.Library.Skippers
                                 {
                                     string offset = subreader.GetAttribute("offset");
                                     if (offset.ToLowerInvariant() == "eof")
-                                    {
                                         test.Offset = null;
-                                    }
                                     else
-                                    {
                                         test.Offset = Convert.ToInt64(offset, 16);
-                                    }
                                 }
 
                                 if (subreader.GetAttribute("value") != null)
@@ -243,16 +231,10 @@ namespace SabreTools.Library.Skippers
                                 if (subreader.GetAttribute("result") != null)
                                 {
                                     string result = subreader.GetAttribute("result");
-                                    switch (result.ToLowerInvariant())
-                                    {
-                                        case "false":
-                                            test.Result = false;
-                                            break;
-                                        case "true":
-                                        default:
-                                            test.Result = true;
-                                            break;
-                                    }
+                                    if (!bool.TryParse(result, out bool resultBool))
+                                        resultBool = true;
+
+                                    test.Result = resultBool;
                                 }
 
                                 if (subreader.GetAttribute("mask") != null)
@@ -272,18 +254,15 @@ namespace SabreTools.Library.Skippers
                                 {
                                     string size = subreader.GetAttribute("size");
                                     if (size.ToLowerInvariant() == "po2")
-                                    {
                                         test.Size = null;
-                                    }
                                     else
-                                    {
                                         test.Size = Convert.ToInt64(size, 16);
-                                    }
                                 }
 
                                 if (subreader.GetAttribute("operator") != null)
                                 {
                                     string oper = subreader.GetAttribute("operator");
+#if NET_FRAMEWORK
                                     switch (oper.ToLowerInvariant())
                                     {
                                         case "less":
@@ -297,6 +276,15 @@ namespace SabreTools.Library.Skippers
                                             test.Operator = HeaderSkipTestFileOperator.Equal;
                                             break;
                                     }
+#else
+                                    test.Operator = oper.ToLowerInvariant() switch
+                                    {
+                                        "less" => HeaderSkipTestFileOperator.Less,
+                                        "greater" => HeaderSkipTestFileOperator.Greater,
+                                        "equal" => HeaderSkipTestFileOperator.Equal,
+                                        _ => HeaderSkipTestFileOperator.Equal,
+                                    };
+#endif
                                 }
 
                                 // Add the created test to the rule
@@ -331,6 +319,14 @@ namespace SabreTools.Library.Skippers
         #region Static Methods
 
         /// <summary>
+        /// Initialize static fields
+        /// </summary>
+        public static void Init()
+        {
+            PopulateSkippers();
+        }
+
+        /// <summary>
         /// Populate the entire list of header Skippers
         /// </summary>
         /// <remarks>
@@ -339,13 +335,111 @@ namespace SabreTools.Library.Skippers
         /// </remarks>
         private static void PopulateSkippers()
         {
-            if (_list == null)
-                _list = new List<Skipper>();
+            if (List == null)
+                List = new List<Skipper>();
 
             foreach (string skipperFile in Directory.EnumerateFiles(LocalPath, "*", SearchOption.AllDirectories))
             {
-                _list.Add(new Skipper(Path.GetFullPath(skipperFile)));
+                List.Add(new Skipper(Path.GetFullPath(skipperFile)));
             }
+        }
+
+        /// <summary>
+        /// Detect header skipper compliance and create an output file
+        /// </summary>
+        /// <param name="file">Name of the file to be parsed</param>
+        /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
+        /// <param name="nostore">True if headers should not be stored in the database, false otherwise</param>
+        /// <returns>True if the output file was created, false otherwise</returns>
+        public static bool DetectTransformStore(string file, string outDir, bool nostore)
+        {
+            // Create the output directory if it doesn't exist
+            DirectoryExtensions.Ensure(outDir, create: true);
+
+            Globals.Logger.User($"\nGetting skipper information for '{file}'");
+
+            // Get the skipper rule that matches the file, if any
+            SkipperRule rule = GetMatchingRule(file, string.Empty);
+
+            // If we have an empty rule, return false
+            if (rule.Tests == null || rule.Tests.Count == 0 || rule.Operation != HeaderSkipOperation.None)
+                return false;
+
+            Globals.Logger.User("File has a valid copier header");
+
+            // Get the header bytes from the file first
+            string hstr;
+            try
+            {
+                // Extract the header as a string for the database
+#if NET_FRAMEWORK
+                using (var fs = FileExtensions.TryOpenRead(file))
+                {
+#else
+                using var fs = FileExtensions.TryOpenRead(file);
+#endif
+                byte[] hbin = new byte[(int)rule.StartOffset];
+                fs.Read(hbin, 0, (int)rule.StartOffset);
+                hstr = Utilities.ByteArrayToString(hbin);
+#if NET_FRAMEWORK
+                }
+#endif
+            }
+            catch
+            {
+                return false;
+            }
+
+            // Apply the rule to the file
+            string newfile = (string.IsNullOrWhiteSpace(outDir) ? Path.GetFullPath(file) + ".new" : Path.Combine(outDir, Path.GetFileName(file)));
+            rule.TransformFile(file, newfile);
+
+            // If the output file doesn't exist, return false
+            if (!File.Exists(newfile))
+                return false;
+
+            // Now add the information to the database if it's not already there
+            if (!nostore)
+            {
+                BaseFile baseFile = FileExtensions.GetInfo(newfile, chdsAsFiles: true);
+                DatabaseTools.AddHeaderToDatabase(hstr, Utilities.ByteArrayToString(baseFile.SHA1), rule.SourceFile);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Detect and replace header(s) to the given file
+        /// </summary>
+        /// <param name="file">Name of the file to be parsed</param>
+        /// <param name="outDir">Output directory to write the file to, empty means the same directory as the input file</param>
+        /// <returns>True if a header was found and appended, false otherwise</returns>
+        public static bool RestoreHeader(string file, string outDir)
+        {
+            // Create the output directory if it doesn't exist
+            if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+
+            // First, get the SHA-1 hash of the file
+            BaseFile baseFile = FileExtensions.GetInfo(file, chdsAsFiles: true);
+
+            // Retrieve a list of all related headers from the database
+            List<string> headers = DatabaseTools.RetrieveHeadersFromDatabase(Utilities.ByteArrayToString(baseFile.SHA1));
+
+            // If we have nothing retrieved, we return false
+            if (headers.Count == 0)
+                return false;
+
+            // Now loop through and create the reheadered files, if possible
+            for (int i = 0; i < headers.Count; i++)
+            {
+                string outputFile = (string.IsNullOrWhiteSpace(outDir) ? $"{Path.GetFullPath(file)}.new" : Path.Combine(outDir, Path.GetFileName(file))) + i;
+                Globals.Logger.User($"Creating reheadered file: {outputFile}");
+                FileExtensions.AppendBytes(file, outputFile, Utilities.StringToByteArray(headers[i]), null);
+                Globals.Logger.User("Reheadered file created!");
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -364,7 +458,7 @@ namespace SabreTools.Library.Skippers
                 return new SkipperRule();
             }
 
-            return GetMatchingRule(Utilities.TryOpenRead(input), skipperName);
+            return GetMatchingRule(FileExtensions.TryOpenRead(input), skipperName);
         }
 
         /// <summary>

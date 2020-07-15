@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
+using SabreTools.Library.FileTypes;
 using SabreTools.Library.Tools;
 using NaturalSort;
 using Newtonsoft.Json;
@@ -558,28 +559,16 @@ namespace SabreTools.Library.DatItems
         #region Source metadata information
 
         /// <summary>
-        /// Internal system ID for organization
+        /// Internal DatFile index for organization
         /// </summary>
         [JsonIgnore]
-        public int SystemID { get; set; }
+        public int IndexId { get; set; }
 
         /// <summary>
-        /// Internal system name for organization
+        /// Internal DatFile name for organization
         /// </summary>
         [JsonIgnore]
-        public string System { get; set; }
-
-        /// <summary>
-        /// Internal source ID for organization
-        /// </summary>
-        [JsonIgnore]
-        public int SourceID { get; set; }
-
-        /// <summary>
-        /// Internal source name for organization
-        /// </summary>
-        [JsonIgnore]
-        public string Source { get; set; }
+        public string IndexSource { get; set; }
 
         /// <summary>
         /// Flag if item should be removed
@@ -698,12 +687,14 @@ namespace SabreTools.Library.DatItems
                     else if (ItemType == ItemType.Rom)
                         fieldValue = (this as Rom).MD5;
                     break;
+#if NET_FRAMEWORK
                 case Field.RIPEMD160:
                     if (ItemType == ItemType.Disk)
                         fieldValue = (this as Disk).RIPEMD160;
                     else if (ItemType == ItemType.Rom)
                         fieldValue = (this as Rom).RIPEMD160;
                     break;
+#endif
                 case Field.SHA1:
                     if (ItemType == ItemType.Disk)
                         fieldValue = (this as Disk).SHA1;
@@ -805,6 +796,90 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Create a specific type of DatItem to be used based on an ItemType
+        /// </summary>
+        /// <param name="itemType">Type of the DatItem to be created</param>
+        /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
+        public static DatItem Create(ItemType itemType)
+        {
+#if NET_FRAMEWORK
+            switch (itemType)
+            {
+                case ItemType.Archive:
+                    return new Archive();
+
+                case ItemType.BiosSet:
+                    return new BiosSet();
+
+                case ItemType.Blank:
+                    return new Blank();
+
+                case ItemType.Disk:
+                    return new Disk();
+
+                case ItemType.Release:
+                    return new Release();
+
+                case ItemType.Rom:
+                    return new Rom();
+
+                case ItemType.Sample:
+                    return new Sample();
+
+                default:
+                    return new Rom();
+            }
+#else
+            return itemType switch
+            {
+                ItemType.Archive => new Archive(),
+                ItemType.BiosSet => new BiosSet(),
+                ItemType.Blank => new Blank(),
+                ItemType.Disk => new Disk(),
+                ItemType.Release => new Release(),
+                ItemType.Rom => new Rom(),
+                ItemType.Sample => new Sample(),
+                _ => new Rom(),
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Create a specific type of DatItem to be used based on a BaseFile
+        /// </summary>
+        /// <param name="baseFile">BaseFile containing information to be created</param>
+        /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
+        public static DatItem Create(BaseFile baseFile)
+        {
+            switch (baseFile.Type)
+            {
+                case FileType.CHD:
+                    return new Disk(baseFile);
+
+                case FileType.GZipArchive:
+                case FileType.LRZipArchive:
+                case FileType.LZ4Archive:
+                case FileType.None:
+                case FileType.RarArchive:
+                case FileType.SevenZipArchive:
+                case FileType.TapeArchive:
+                case FileType.XZArchive:
+                case FileType.ZipArchive:
+                case FileType.ZPAQArchive:
+                case FileType.ZstdArchive:
+                    return new Rom(baseFile);
+
+                case FileType.Folder:
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
+
         #region Cloning Methods
 
         /// <summary>
@@ -837,21 +912,17 @@ namespace SabreTools.Library.DatItems
 
         public int CompareTo(DatItem other)
         {
-            int ret = 0;
-
             try
             {
                 if (this.Name == other.Name)
-                    ret = (this.Equals(other) ? 0 : 1);
+                    return this.Equals(other) ? 0 : 1;
 
-                ret = String.Compare(this.Name, other.Name);
+                return String.Compare(this.Name, other.Name);
             }
             catch
             {
-                ret = 1;
+                return 1;
             }
-
-            return ret;
         }
 
         /// <summary>
@@ -875,7 +946,7 @@ namespace SabreTools.Library.DatItems
                 return output;
 
             // If the duplicate is external already or should be, set it
-            if ((lastItem.DupeType & DupeType.External) != 0 || lastItem.SystemID != this.SystemID || lastItem.SourceID != this.SourceID)
+            if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem.IndexId != this.IndexId)
             {
                 if (lastItem.MachineName == this.MachineName && lastItem.Name == this.Name)
                     output = DupeType.External | DupeType.All;
@@ -900,94 +971,96 @@ namespace SabreTools.Library.DatItems
         #region Sorting and Merging
 
         /// <summary>
-        /// Check if a DAT contains the given rom
+        /// Get the dictionary key that should be used for a given item and sorting type
         /// </summary>
-        /// <param name="datdata">Dat to match against</param>
-        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
-        /// <returns>True if it contains the rom, false otherwise</returns>
-        public bool HasDuplicates(DatFile datdata, bool sorted = false)
+        /// <param name="sortedBy">BucketedBy enum representing what key to get</param>
+        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        /// <returns>String representing the key to be used for the DatItem</returns>
+        public string GetKey(BucketedBy sortedBy, bool lower = true, bool norename = true)
         {
-            // Check for an empty rom list first
-            if (datdata.Count == 0)
-                return false;
+            // Set the output key as the default blank string
+            string key = string.Empty;
 
-            // We want to get the proper key for the DatItem
-            string key = SortAndGetKey(datdata, sorted);
-
-            // If the key doesn't exist, return the empty list
-            if (!datdata.Contains(key))
-                return false;
-
-            // Try to find duplicates
-            List<DatItem> roms = datdata[key];
-            return roms.Any(r => this.Equals(r));
-        }
-
-        /// <summary>
-        /// List all duplicates found in a DAT based on a rom
-        /// </summary>
-        /// <param name="datdata">Dat to match against</param>
-        /// <param name="remove">True to mark matched roms for removal from the input, false otherwise (default)</param>
-        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
-        /// <returns>List of matched DatItem objects</returns>
-        public List<DatItem> GetDuplicates(DatFile datdata, bool remove = false, bool sorted = false)
-        {
-            List<DatItem> output = new List<DatItem>();
-
-            // Check for an empty rom list first
-            if (datdata.Count == 0)
-                return output;
-
-            // We want to get the proper key for the DatItem
-            string key = SortAndGetKey(datdata, sorted);
-
-            // If the key doesn't exist, return the empty list
-            if (!datdata.Contains(key))
-                return output;
-
-            // Try to find duplicates
-            List<DatItem> roms = datdata[key];
-            List<DatItem> left = new List<DatItem>();
-            for (int i = 0; i < roms.Count; i++)
+            // Now determine what the key should be based on the sortedBy value
+            switch (sortedBy)
             {
-                DatItem datItem = roms[i];
+                case BucketedBy.CRC:
+                    key = (this.ItemType == ItemType.Rom ? ((Rom)this).CRC : Constants.CRCZero);
+                    break;
 
-                if (this.Equals(datItem))
-                {
-                    datItem.Remove = true;
-                    output.Add(datItem);
-                }
-                else
-                {
-                    left.Add(datItem);
-                }
+                case BucketedBy.Game:
+                    key = (norename ? string.Empty
+                        : this.IndexId.ToString().PadLeft(10, '0')
+                            + "-")
+                    + (string.IsNullOrWhiteSpace(this.MachineName)
+                            ? "Default"
+                            : this.MachineName);
+                    if (lower)
+                        key = key.ToLowerInvariant();
+
+                    if (key == null)
+                        key = "null";
+
+                    key = WebUtility.HtmlEncode(key);
+                    break;
+
+                case BucketedBy.MD5:
+                    key = (this.ItemType == ItemType.Rom
+                        ? ((Rom)this).MD5
+                        : (this.ItemType == ItemType.Disk
+                            ? ((Disk)this).MD5
+                            : Constants.MD5Zero));
+                    break;
+
+#if NET_FRAMEWORK
+                case BucketedBy.RIPEMD160:
+                    key = (this.ItemType == ItemType.Rom
+                        ? ((Rom)this).RIPEMD160
+                        : (this.ItemType == ItemType.Disk
+                            ? ((Disk)this).RIPEMD160
+                            : Constants.RIPEMD160Zero));
+                    break;
+#endif
+
+                case BucketedBy.SHA1:
+                    key = (this.ItemType == ItemType.Rom
+                        ? ((Rom)this).SHA1
+                        : (this.ItemType == ItemType.Disk
+                            ? ((Disk)this).SHA1
+                            : Constants.SHA1Zero));
+                    break;
+
+                case BucketedBy.SHA256:
+                    key = (this.ItemType == ItemType.Rom
+                        ? ((Rom)this).SHA256
+                        : (this.ItemType == ItemType.Disk
+                            ? ((Disk)this).SHA256
+                            : Constants.SHA256Zero));
+                    break;
+
+                case BucketedBy.SHA384:
+                    key = (this.ItemType == ItemType.Rom
+                        ? ((Rom)this).SHA384
+                        : (this.ItemType == ItemType.Disk
+                            ? ((Disk)this).SHA384
+                            : Constants.SHA384Zero));
+                    break;
+
+                case BucketedBy.SHA512:
+                    key = (this.ItemType == ItemType.Rom
+                        ? ((Rom)this).SHA512
+                        : (this.ItemType == ItemType.Disk
+                            ? ((Disk)this).SHA512
+                            : Constants.SHA512Zero));
+                    break;
             }
 
-            // If we're in removal mode, add back all roms with the proper flags
-            if (remove)
-            {
-                datdata.Remove(key);
-                datdata.AddRange(key, output);
-                datdata.AddRange(key, left);
-            }
+            // Double and triple check the key for corner cases
+            if (key == null)
+                key = string.Empty;
 
-            return output;
-        }
-
-        /// <summary>
-        /// Sort the input DAT and get the key to be used by the item
-        /// </summary>
-        /// <param name="datdata">Dat to match against</param>
-        /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
-        /// <returns>Key to try to use</returns>
-        private string SortAndGetKey(DatFile datdata, bool sorted = false)
-        {
-            // If we're not already sorted, take care of it
-            if (!sorted)
-                datdata.BucketByBestAvailable();
-
-            // Now that we have the sorted type, we get the proper key
-            return Utilities.GetKeyFromDatItem(this, datdata.SortedBy);
+            return key;
         }
 
         #endregion
@@ -1069,9 +1142,11 @@ namespace SabreTools.Library.DatItems
                             ((Rom)saveditem).MD5 = (string.IsNullOrWhiteSpace(((Rom)saveditem).MD5) && !string.IsNullOrWhiteSpace(((Rom)file).MD5)
                                 ? ((Rom)file).MD5
                                 : ((Rom)saveditem).MD5);
+#if NET_FRAMEWORK
                             ((Rom)saveditem).RIPEMD160 = (string.IsNullOrWhiteSpace(((Rom)saveditem).RIPEMD160) && !string.IsNullOrWhiteSpace(((Rom)file).RIPEMD160)
                                 ? ((Rom)file).RIPEMD160
                                 : ((Rom)saveditem).RIPEMD160);
+#endif
                             ((Rom)saveditem).SHA1 = (string.IsNullOrWhiteSpace(((Rom)saveditem).SHA1) && !string.IsNullOrWhiteSpace(((Rom)file).SHA1)
                                 ? ((Rom)file).SHA1
                                 : ((Rom)saveditem).SHA1);
@@ -1090,9 +1165,11 @@ namespace SabreTools.Library.DatItems
                             ((Disk)saveditem).MD5 = (string.IsNullOrWhiteSpace(((Disk)saveditem).MD5) && !string.IsNullOrWhiteSpace(((Disk)file).MD5)
                                 ? ((Disk)file).MD5
                                 : ((Disk)saveditem).MD5);
+#if NET_FRAMEWORK
                             ((Disk)saveditem).RIPEMD160 = (string.IsNullOrWhiteSpace(((Disk)saveditem).RIPEMD160) && !string.IsNullOrWhiteSpace(((Disk)file).RIPEMD160)
                                 ? ((Disk)file).RIPEMD160
                                 : ((Disk)saveditem).RIPEMD160);
+#endif
                             ((Disk)saveditem).SHA1 = (string.IsNullOrWhiteSpace(((Disk)saveditem).SHA1) && !string.IsNullOrWhiteSpace(((Disk)file).SHA1)
                                 ? ((Disk)file).SHA1
                                 : ((Disk)saveditem).SHA1);
@@ -1110,19 +1187,10 @@ namespace SabreTools.Library.DatItems
                         saveditem.DupeType = dupetype;
 
                         // If the current system has a lower ID than the previous, set the system accordingly
-                        if (file.SystemID < saveditem.SystemID)
+                        if (file.IndexId < saveditem.IndexId)
                         {
-                            saveditem.SystemID = file.SystemID;
-                            saveditem.System = file.System;
-                            saveditem.CopyMachineInformation(file);
-                            saveditem.Name = file.Name;
-                        }
-
-                        // If the current source has a lower ID than the previous, set the source accordingly
-                        if (file.SourceID < saveditem.SourceID)
-                        {
-                            saveditem.SourceID = file.SourceID;
-                            saveditem.Source = file.Source;
+                            saveditem.IndexId = file.IndexId;
+                            saveditem.IndexSource = file.IndexSource;
                             saveditem.CopyMachineInformation(file);
                             saveditem.Name = file.Name;
                         }
@@ -1185,7 +1253,7 @@ namespace SabreTools.Library.DatItems
                 }
 
                 // If the current item exactly matches the last item, then we don't add it
-                if ((datItem.GetDuplicateStatus(lastItem) & DupeType.All) != 0)
+                if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
                 {
                     Globals.Logger.Verbose($"Exact duplicate found for '{datItem.Name}'");
                     continue;
@@ -1199,7 +1267,11 @@ namespace SabreTools.Library.DatItems
                     if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Rom)
                     {
                         datItem.Name += GetDuplicateSuffix(datItem);
+#if NET_FRAMEWORK
                         lastrenamed = lastrenamed ?? datItem.Name;
+#else
+                        lastrenamed ??= datItem.Name;
+#endif
                     }
 
                     // If we have a conflict with the last renamed item, do the right thing
@@ -1281,47 +1353,42 @@ namespace SabreTools.Library.DatItems
                 try
                 {
                     NaturalComparer nc = new NaturalComparer();
-                    if (x.SystemID == y.SystemID)
+                    if (x.IndexId == y.IndexId)
                     {
-                        if (x.SourceID == y.SourceID)
+                        if (x.MachineName == y.MachineName)
                         {
-                            if (x.MachineName == y.MachineName)
+                            if ((x.ItemType == ItemType.Rom || x.ItemType == ItemType.Disk) && (y.ItemType == ItemType.Rom || y.ItemType == ItemType.Disk))
                             {
-                                if ((x.ItemType == ItemType.Rom || x.ItemType == ItemType.Disk) && (y.ItemType == ItemType.Rom || y.ItemType == ItemType.Disk))
+                                if (Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)) == Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)))
                                 {
-                                    if (Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.Name)) == Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.Name)))
-                                    {
-                                        return nc.Compare(Path.GetFileName(Utilities.RemovePathUnsafeCharacters(x.Name)), Path.GetFileName(Utilities.RemovePathUnsafeCharacters(y.Name)));
-                                    }
+                                    return nc.Compare(Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
+                                }
 
-                                    return nc.Compare(Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.Name)), Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.Name)));
-                                }
-                                else if ((x.ItemType == ItemType.Rom || x.ItemType == ItemType.Disk) && (y.ItemType != ItemType.Rom && y.ItemType != ItemType.Disk))
-                                {
-                                    return -1;
-                                }
-                                else if ((x.ItemType != ItemType.Rom && x.ItemType != ItemType.Disk) && (y.ItemType == ItemType.Rom || y.ItemType == ItemType.Disk))
-                                {
-                                    return 1;
-                                }
-                                else
-                                {
-                                    if (Path.GetDirectoryName(x.Name) == Path.GetDirectoryName(y.Name))
-                                    {
-                                        return nc.Compare(Path.GetFileName(x.Name), Path.GetFileName(y.Name));
-                                    }
-
-                                    return nc.Compare(Path.GetDirectoryName(x.Name), Path.GetDirectoryName(y.Name));
-                                }
+                                return nc.Compare(Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
                             }
+                            else if ((x.ItemType == ItemType.Rom || x.ItemType == ItemType.Disk) && (y.ItemType != ItemType.Rom && y.ItemType != ItemType.Disk))
+                            {
+                                return -1;
+                            }
+                            else if ((x.ItemType != ItemType.Rom && x.ItemType != ItemType.Disk) && (y.ItemType == ItemType.Rom || y.ItemType == ItemType.Disk))
+                            {
+                                return 1;
+                            }
+                            else
+                            {
+                                if (Path.GetDirectoryName(x.Name) == Path.GetDirectoryName(y.Name))
+                                {
+                                    return nc.Compare(Path.GetFileName(x.Name), Path.GetFileName(y.Name));
+                                }
 
-                            return nc.Compare(x.MachineName, y.MachineName);
+                                return nc.Compare(Path.GetDirectoryName(x.Name), Path.GetDirectoryName(y.Name));
+                            }
                         }
 
-                        return (norename ? nc.Compare(x.MachineName, y.MachineName) : x.SourceID - y.SourceID);
+                        return nc.Compare(x.MachineName, y.MachineName);
                     }
 
-                    return (norename ? nc.Compare(x.MachineName, y.MachineName) : x.SystemID - y.SystemID);
+                    return (norename ? nc.Compare(x.MachineName, y.MachineName) : x.IndexId - y.IndexId);
                 }
                 catch (Exception)
                 {
