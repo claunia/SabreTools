@@ -1,6 +1,6 @@
 # ![](images/sabretools-rect.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/c3hsfpmqhg40al35/branch/master?svg=true)](https://ci.appveyor.com/project/mnadareski/sabretools/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/c3hsfpmqhg40al35/branch/main?svg=true)](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main)
 
 ## Introduction
 
@@ -10,7 +10,7 @@ The SabreTools project started as a desktop port of some core features of Wizard
 
 ## Features
 
-For the most complete set of information, see the [README.1ST](https://raw.githubusercontent.com/SabreTools/SabreTools/master/SabreTools.Library/README.1ST) file. Currently, the SabreTools suite consists of the following programs:
+For the most complete set of information, see the [README.1ST](https://raw.githubusercontent.com/SabreTools/SabreTools/main/SabreTools.Library/README.1ST) file. Currently, the SabreTools suite consists of the following programs:
 
 ### SabreTools / SabreTools.Library
 
@@ -74,15 +74,11 @@ An in-progress tool that will try to act as a C# port of the Go-based [Romba](ht
 
 Last stable releases can be found on [the Releases tab](https://github.com/SabreTools/SabreTools/releases).
 
-Latest unstable builds can be found on [AppVeyor](https://ci.appveyor.com/project/mnadareski/sabretools/branch/master).
+Latest unstable builds can be found on [AppVeyor](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main).
 
 For older test versions, please see the old [MEGA link](https://mega.nz/#F!8JUhWZxT!h4DnCsgcBsMH3RRDKv27CA). Note that older test versions had wonky naming, didn't always include all variants, and may be feature incomplete or not working at all.
 
 ## Licensing
-
-The preceding programs use, in part or in whole, code, libraries, and/or applications from the [7-zip project](http://www.7-zip.org). 7-zip is licensed under the GNU LGPL.
-
-The preceding programs use, in part or in whole, code, libraries, and/or applications from [DotNetSharp](https://dotnetzip.codeplex.com). DotNetSharp is licensed under the Microsoft Public License of October 2006.
 
 All other external code is marked as such within the source and correctly attributed to the site and/or person(s) that originally wrote the code.
 
