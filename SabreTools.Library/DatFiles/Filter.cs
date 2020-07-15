@@ -499,7 +499,7 @@ namespace SabreTools.Library.DatFiles
         {
             Globals.Logger.User("Creating fully non-merged sets from the DAT");
 
-            // For sake of ease, the first thing we want to do is sort by game
+            // For sake of ease, the first thing we want to do is bucket by game
             datFile.BucketBy(BucketedBy.Game, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
@@ -523,7 +523,7 @@ namespace SabreTools.Library.DatFiles
         {
             Globals.Logger.User("Creating merged sets from the DAT");
 
-            // For sake of ease, the first thing we want to do is sort by game
+            // For sake of ease, the first thing we want to do is bucket by game
             datFile.BucketBy(BucketedBy.Game, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
@@ -546,7 +546,7 @@ namespace SabreTools.Library.DatFiles
         {
             Globals.Logger.User("Creating non-merged sets from the DAT");
 
-            // For sake of ease, the first thing we want to do is sort by game
+            // For sake of ease, the first thing we want to do is bucket by game
             datFile.BucketBy(BucketedBy.Game, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
@@ -569,7 +569,7 @@ namespace SabreTools.Library.DatFiles
         {
             Globals.Logger.User("Creating split sets from the DAT");
 
-            // For sake of ease, the first thing we want to do is sort by game
+            // For sake of ease, the first thing we want to do is bucket by game
             datFile.BucketBy(BucketedBy.Game, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information

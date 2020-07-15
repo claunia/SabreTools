@@ -35,7 +35,7 @@ namespace SabreTools.Library.DatFiles
         internal DatStats DatStats = new DatStats();
 
         /// <summary>
-        /// Determine the sorting key for all items
+        /// Determine the bucketing key for all items
         /// </summary>
         private BucketedBy BucketedBy;
 
@@ -137,28 +137,12 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Get total item count statistic
-        /// </summary>
-        public long GetCount()
-        {
-            return DatStats.Count;
-        }
-
-        /// <summary>
-        /// Get the FileName header value
-        /// </summary>
-        public string GetFileName()
-        {
-            return DatHeader.FileName;
-        }
-
-        /// <summary>
         /// Get the keys from the file dictionary
         /// </summary>
         /// <returns>List of the keys</returns>
         public List<string> Keys
         {
-            get { return Items.Keys.Select(item => (string)item.Clone()).ToList(); }
+            get { return Items.Keys.ToList(); }
         }
 
         /// <summary>
@@ -196,19 +180,6 @@ namespace SabreTools.Library.DatFiles
             DatStats.RemoveItem(value);
 
             Items[key].Remove(value);
-        }
-
-        /// <summary>
-        /// Remove a range of values from the file dictionary if they exists
-        /// </summary>
-        /// <param name="key">Key in the dictionary to remove from</param>
-        /// <param name="value">Value to remove from the dictionary</param>
-        public void RemoveRange(string key, List<DatItem> value)
-        {
-            foreach (DatItem item in value)
-            {
-                Remove(key, item);
-            }
         }
 
         /// <summary>
@@ -260,9 +231,9 @@ namespace SabreTools.Library.DatFiles
         #region Bucketing
 
         /// <summary>
-        /// Take the arbitrarily sorted Files Dictionary and convert to one sorted by a user-defined method
+        /// Take the arbitrarily bucketed Files Dictionary and convert to one bucketed by a user-defined method
         /// </summary>
-        /// <param name="bucketBy">BucketedBy enum representing how to sort the individual items</param>
+        /// <param name="bucketBy">BucketedBy enum representing how to bucket the individual items</param>
         /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
@@ -831,7 +802,7 @@ namespace SabreTools.Library.DatFiles
                 // If we are matching based on DatItem fields of any sort
                 if (updateFields.Intersect(datItemFields).Any())
                 {
-                    // For comparison's sake, we want to use CRC as the base ordering
+                    // For comparison's sake, we want to use CRC as the base bucketing
                     BucketBy(BucketedBy.CRC, DedupeType.Full);
                     intDat.BucketBy(BucketedBy.CRC, DedupeType.None);
 
@@ -1138,7 +1109,7 @@ namespace SabreTools.Library.DatFiles
                 // If we are matching based on Machine fields of any sort
                 if (updateFields.Intersect(machineFields).Any())
                 {
-                    // For comparison's sake, we want to use Machine Name as the base ordering
+                    // For comparison's sake, we want to use Machine Name as the base bucketing
                     BucketBy(BucketedBy.Game, DedupeType.Full);
                     intDat.BucketBy(BucketedBy.Game, DedupeType.None);
 
@@ -1253,7 +1224,7 @@ namespace SabreTools.Library.DatFiles
                 DatFile intDat = Create();
                 intDat.Parse(path, 1, keep: true);
 
-                // For comparison's sake, we want to use CRC as the base ordering
+                // For comparison's sake, we want to use CRC as the base bucketing
                 intDat.BucketBy(BucketedBy.CRC, DedupeType.Full);
 
                 // Then we do a hashwise comparison against the base DAT
@@ -1326,7 +1297,7 @@ namespace SabreTools.Library.DatFiles
             outDats = outDatsArray.ToList();
             watch.Stop();
 
-            // Then, ensure that the internal dat can be sorted in the best possible way
+            // Then, ensure that the internal dat can be bucketed in the best possible way
             BucketBy(BucketedBy.CRC, DedupeType.None);
 
             // Now, loop through the dictionary and populate the correct DATs
@@ -2253,7 +2224,7 @@ namespace SabreTools.Library.DatFiles
             if (directories.Count == 0)
                 return success;
 
-            // Now that we have a list of depots, we want to sort the input DAT by SHA-1
+            // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
             BucketBy(BucketedBy.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
@@ -2827,7 +2798,7 @@ namespace SabreTools.Library.DatFiles
             if (directories.Count == 0)
                 return success;
 
-            // Now that we have a list of depots, we want to sort the input DAT by SHA-1
+            // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
             BucketBy(BucketedBy.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
@@ -2918,7 +2889,7 @@ namespace SabreTools.Library.DatFiles
             // If we are checking hashes only, essentially diff the inputs
             if (hashOnly)
             {
-                // First we need to sort and dedupe by hash to get duplicates
+                // First we need to bucket and dedupe by hash to get duplicates
                 BucketBy(BucketedBy.CRC, DedupeType.Full);
 
                 // Then follow the same tactics as before
@@ -3244,7 +3215,7 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if split succeeded, false otherwise</returns>
         private bool SplitByLevel(string outDir, bool shortname, bool basedat)
         {
-            // First, organize by games so that we can do the right thing
+            // First, bucket by games so that we can do the right thing
             BucketBy(BucketedBy.Game, DedupeType.None, lower: false, norename: true);
 
             // Create a temporary DAT to add things to

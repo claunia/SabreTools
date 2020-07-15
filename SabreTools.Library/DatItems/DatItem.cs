@@ -971,19 +971,19 @@ namespace SabreTools.Library.DatItems
         #region Sorting and Merging
 
         /// <summary>
-        /// Get the dictionary key that should be used for a given item and sorting type
+        /// Get the dictionary key that should be used for a given item and bucketing type
         /// </summary>
-        /// <param name="sortedBy">BucketedBy enum representing what key to get</param>
+        /// <param name="bucketedBy">BucketedBy enum representing what key to get</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns>String representing the key to be used for the DatItem</returns>
-        public string GetKey(BucketedBy sortedBy, bool lower = true, bool norename = true)
+        public string GetKey(BucketedBy bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string key = string.Empty;
 
-            // Now determine what the key should be based on the sortedBy value
-            switch (sortedBy)
+            // Now determine what the key should be based on the bucketedBy value
+            switch (bucketedBy)
             {
                 case BucketedBy.CRC:
                     key = (this.ItemType == ItemType.Rom ? ((Rom)this).CRC : Constants.CRCZero);

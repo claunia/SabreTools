@@ -1595,6 +1595,7 @@ contents of any changed dats.";
                         unneeded.Add(hash);
                     }
                 }
+
                 datroot.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
                 watch.Stop();
@@ -1691,6 +1692,7 @@ contents of any changed dats.";
 
                     // Now rescan the depot itself
                     DatFile depot = DatFile.Create();
+
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     depot.PopulateFromDir(depotname, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
                     depot.BucketBy(BucketedBy.SHA1, DedupeType.None);

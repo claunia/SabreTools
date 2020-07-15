@@ -252,97 +252,102 @@ namespace RombaSharp
             DatFile tempdat = DatFile.CreateAndParse(fullpath);
 
             // If the Dat wasn't empty, add the information
-            SqliteCommand slc;
-            if (tempdat.GetCount() != 0)
+            SqliteCommand slc = null;
+            string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";
+            string md5query = "INSERT OR IGNORE INTO md5 (md5) VALUES";
+            string sha1query = "INSERT OR IGNORE INTO sha1 (sha1) VALUES";
+            string crcsha1query = "INSERT OR IGNORE INTO crcsha1 (crc, sha1) VALUES";
+            string md5sha1query = "INSERT OR IGNORE INTO md5sha1 (md5, sha1) VALUES";
+
+            // Loop through the parsed entries
+            bool hasItems = false;
+            foreach (string romkey in tempdat.Keys)
             {
-                string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";
-                string md5query = "INSERT OR IGNORE INTO md5 (md5) VALUES";
-                string sha1query = "INSERT OR IGNORE INTO sha1 (sha1) VALUES";
-                string crcsha1query = "INSERT OR IGNORE INTO crcsha1 (crc, sha1) VALUES";
-                string md5sha1query = "INSERT OR IGNORE INTO md5sha1 (md5, sha1) VALUES";
-
-                // Loop through the parsed entries
-                foreach (string romkey in tempdat.Keys)
+                foreach (DatItem datItem in tempdat[romkey])
                 {
-                    foreach (DatItem datItem in tempdat[romkey])
-                    {
-                        Globals.Logger.Verbose($"Checking and adding file '{datItem.Name}'");
+                    Globals.Logger.Verbose($"Checking and adding file '{datItem.Name}'");
 
-                        if (datItem.ItemType == ItemType.Rom)
+                    if (datItem.ItemType == ItemType.Rom)
+                    {
+                        Rom rom = (Rom)datItem;
+                        hasItems = true;
+
+                        if (!string.IsNullOrWhiteSpace(rom.CRC))
+                            crcquery += $" (\"{rom.CRC}\"),";
+
+                        if (!string.IsNullOrWhiteSpace(rom.MD5))
+                            md5query += $" (\"{rom.MD5}\"),";
+
+                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
                         {
-                            Rom rom = (Rom)datItem;
+                            sha1query += $" (\"{rom.SHA1}\"),";
 
                             if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                crcquery += $" (\"{rom.CRC}\"),";
-                            
+                                crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
+
                             if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                md5query += $" (\"{rom.MD5}\"),";
-
-                            if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                            {
-                                sha1query += $" (\"{rom.SHA1}\"),";
-
-                                if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                    crcsha1query += $" (\"{rom.CRC}\", \"{rom.SHA1}\"),";
-
-                                if (!string.IsNullOrWhiteSpace(rom.MD5))
-                                    md5sha1query += $" (\"{rom.MD5}\", \"{rom.SHA1}\"),";
-                            }
+                                md5sha1query += $" (\"{rom.MD5}\", \"{rom.SHA1}\"),";
                         }
-                        else if (datItem.ItemType == ItemType.Disk)
+                    }
+                    else if (datItem.ItemType == ItemType.Disk)
+                    {
+                        Disk disk = (Disk)datItem;
+                        hasItems = true;
+
+                        if (!string.IsNullOrWhiteSpace(disk.MD5))
+                            md5query += $" (\"{disk.MD5}\"),";
+
+                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
                         {
-                            Disk disk = (Disk)datItem;
+                            sha1query += $" (\"{disk.SHA1}\"),";
 
                             if (!string.IsNullOrWhiteSpace(disk.MD5))
-                                md5query += $" (\"{disk.MD5}\"),";
-
-                            if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            {
-                                sha1query += $" (\"{disk.SHA1}\"),";
-
-                                if (!string.IsNullOrWhiteSpace(disk.MD5))
-                                    md5sha1query += $" (\"{disk.MD5}\", \"{disk.SHA1}\"),";
-                            }
+                                md5sha1query += $" (\"{disk.MD5}\", \"{disk.SHA1}\"),";
                         }
                     }
                 }
-
-                // Now run the queries after fixing them
-                if (crcquery != "INSERT OR IGNORE INTO crc (crc) VALUES")
-                {
-                    slc = new SqliteCommand(crcquery.TrimEnd(','), dbc);
-                    slc.ExecuteNonQuery();
-                }
-
-                if (md5query != "INSERT OR IGNORE INTO md5 (md5) VALUES")
-                {
-                    slc = new SqliteCommand(md5query.TrimEnd(','), dbc);
-                    slc.ExecuteNonQuery();
-                }
-
-                if (sha1query != "INSERT OR IGNORE INTO sha1 (sha1) VALUES")
-                {
-                    slc = new SqliteCommand(sha1query.TrimEnd(','), dbc);
-                    slc.ExecuteNonQuery();
-                }
-
-                if (crcsha1query != "INSERT OR IGNORE INTO crcsha1 (crc, sha1) VALUES")
-                {
-                    slc = new SqliteCommand(crcsha1query.TrimEnd(','), dbc);
-                    slc.ExecuteNonQuery();
-                }
-
-                if (md5sha1query != "INSERT OR IGNORE INTO md5sha1 (md5, sha1) VALUES")
-                {
-                    slc = new SqliteCommand(md5sha1query.TrimEnd(','), dbc);
-                    slc.ExecuteNonQuery();
-                }
             }
 
-            string datquery = $"INSERT OR IGNORE INTO dat (hash) VALUES (\"{dat.SHA1}\")";
-            slc = new SqliteCommand(datquery, dbc);
-            slc.ExecuteNonQuery();
-            slc.Dispose();
+            // Now run the queries after fixing them
+            if (crcquery != "INSERT OR IGNORE INTO crc (crc) VALUES")
+            {
+                slc = new SqliteCommand(crcquery.TrimEnd(','), dbc);
+                slc.ExecuteNonQuery();
+            }
+
+            if (md5query != "INSERT OR IGNORE INTO md5 (md5) VALUES")
+            {
+                slc = new SqliteCommand(md5query.TrimEnd(','), dbc);
+                slc.ExecuteNonQuery();
+            }
+
+            if (sha1query != "INSERT OR IGNORE INTO sha1 (sha1) VALUES")
+            {
+                slc = new SqliteCommand(sha1query.TrimEnd(','), dbc);
+                slc.ExecuteNonQuery();
+            }
+
+            if (crcsha1query != "INSERT OR IGNORE INTO crcsha1 (crc, sha1) VALUES")
+            {
+                slc = new SqliteCommand(crcsha1query.TrimEnd(','), dbc);
+                slc.ExecuteNonQuery();
+            }
+
+            if (md5sha1query != "INSERT OR IGNORE INTO md5sha1 (md5, sha1) VALUES")
+            {
+                slc = new SqliteCommand(md5sha1query.TrimEnd(','), dbc);
+                slc.ExecuteNonQuery();
+            }
+
+            // Only add the DAT if it's non-empty
+            if (hasItems)
+            {
+                string datquery = $"INSERT OR IGNORE INTO dat (hash) VALUES (\"{dat.SHA1}\")";
+                slc = new SqliteCommand(datquery, dbc);
+                slc.ExecuteNonQuery();
+            }
+
+            slc?.Dispose();
         }
 
         #endregion

@@ -258,33 +258,33 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         public BucketedBy GetBestAvailable()
         {
-            // If all items are supposed to have a SHA-512, we sort by that
+            // If all items are supposed to have a SHA-512, we bucket by that
             if (RomCount + DiskCount - NodumpCount == SHA512Count)
                 return BucketedBy.SHA512;
 
-            // If all items are supposed to have a SHA-384, we sort by that
+            // If all items are supposed to have a SHA-384, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA384Count)
                 return BucketedBy.SHA384;
 
-            // If all items are supposed to have a SHA-256, we sort by that
+            // If all items are supposed to have a SHA-256, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA256Count)
                 return BucketedBy.SHA256;
 
-            // If all items are supposed to have a SHA-1, we sort by that
+            // If all items are supposed to have a SHA-1, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA1Count)
                 return BucketedBy.SHA1;
 
 #if NET_FRAMEWORK
-            // If all items are supposed to have a RIPEMD160, we sort by that
+            // If all items are supposed to have a RIPEMD160, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == RIPEMD160Count)
                 return BucketedBy.RIPEMD160;
 #endif
 
-            // If all items are supposed to have a MD5, we sort by that
+            // If all items are supposed to have a MD5, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == MD5Count)
                 return BucketedBy.MD5;
 
-            // Otherwise, we sort by CRC
+            // Otherwise, we bucket by CRC
             else
                 return BucketedBy.CRC;
         }

@@ -3019,9 +3019,9 @@ The following systems have headers that this program can work with:
 
                         // If we have the depot flag, respect it
                         if (depot)
-                            datdata.RebuildDepot(Inputs, Path.Combine(outDir, datdata.GetFileName()), date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
+                            datdata.RebuildDepot(Inputs, Path.Combine(outDir, datdata.DatHeader.FileName), date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
                         else
-                            datdata.RebuildGeneric(Inputs, Path.Combine(outDir, datdata.GetFileName()), quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
+                            datdata.RebuildGeneric(Inputs, Path.Combine(outDir, datdata.DatHeader.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
                     }
                 }
 
