@@ -804,11 +804,8 @@ namespace SabreTools.Library.DatFiles
                                 }
                             }
 
-                            // Lock the list and add the item back
-                            lock (newitems)
-                            {
-                                newitems.Add(item);
-                            }
+                            // Add the item to the output
+                            newitems.Add(item);
                         }
                     }
 

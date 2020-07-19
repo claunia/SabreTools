@@ -59,11 +59,15 @@ namespace SabreTools.Library.DatFiles
         {
             get
             {
-                // Ensure the key exists
-                EnsureKey(key);
+                // Explicit lock for some weird corner cases
+                lock (key)
+                {
+                    // Ensure the key exists
+                    EnsureKey(key);
 
-                // Now return the value
-                return Items[key];
+                    // Now return the value
+                    return Items[key];
+                }
             }
         }
 
@@ -74,18 +78,22 @@ namespace SabreTools.Library.DatFiles
         /// <param name="value">Value to add to the dictionary</param>
         public void Add(string key, DatItem value)
         {
-            // Ensure the key exists
-            EnsureKey(key);
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                // Ensure the key exists
+                EnsureKey(key);
 
-            // If item is null, don't add it
-            if (value == null)
-                return;
+                // If item is null, don't add it
+                if (value == null)
+                    return;
 
-            // Now add the value
-            Items[key].Add(value);
+                // Now add the value
+                Items[key].Add(value);
 
-            // Now update the statistics
-            DatStats.AddItem(value);
+                // Now update the statistics
+                DatStats.AddItem(value);
+            }
         }
 
         /// <summary>
@@ -95,16 +103,20 @@ namespace SabreTools.Library.DatFiles
         /// <param name="value">Value to add to the dictionary</param>
         public void AddRange(string key, List<DatItem> value)
         {
-            // Ensure the key exists
-            EnsureKey(key);
-
-            // Now add the value
-            Items[key].AddRange(value);
-
-            // Now update the statistics
-            foreach (DatItem item in value)
+            // Explicit lock for some weird corner cases
+            lock (key)
             {
-                DatStats.AddItem(item);
+                // Ensure the key exists
+                EnsureKey(key);
+
+                // Now add the value
+                Items[key].AddRange(value);
+
+                // Now update the statistics
+                foreach (DatItem item in value)
+                {
+                    DatStats.AddItem(item);
+                }
             }
         }
 
@@ -119,7 +131,11 @@ namespace SabreTools.Library.DatFiles
             if (key == null)
                 return false;
 
-            return Items.ContainsKey(key);
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                return Items.ContainsKey(key);
+            }
         }
 
         /// <summary>
@@ -134,8 +150,12 @@ namespace SabreTools.Library.DatFiles
             if (key == null)
                 return false;
 
-            if (Items.ContainsKey(key))
-                return Items[key].Contains(value);
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                if (Items.ContainsKey(key))
+                    return Items[key].Contains(value);
+            }
 
             return false;
         }
