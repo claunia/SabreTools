@@ -63,7 +63,7 @@ namespace SabreTools.Library.DatFiles
                 EnsureKey(key);
 
                 // Now return the value
-                return Items[key].Where(i => i != null).ToList();
+                return Items[key];
             }
         }
 
@@ -76,6 +76,10 @@ namespace SabreTools.Library.DatFiles
         {
             // Ensure the key exists
             EnsureKey(key);
+
+            // If item is null, don't add it
+            if (value == null)
+                return;
 
             // Now add the value
             Items[key].Add(value);
