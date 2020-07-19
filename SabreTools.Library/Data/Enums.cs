@@ -261,7 +261,6 @@
         Game,
     }
 
-
     /// <summary>
     /// Determines the DAT deduplication type
     /// </summary>
@@ -351,6 +350,7 @@
         NULL = 0,
 
         // Generic DatItem
+        ItemType,
         Name,
         PartName,
         PartInterface,
@@ -365,6 +365,7 @@
         Year,
         Manufacturer,
         Publisher,
+        Category,
         RomOf,
         CloneOf,
         SampleOf,

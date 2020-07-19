@@ -1269,6 +1269,20 @@ namespace SabreTools
             }
         }
 
+        public const string CategoryListValue = "category-filter";
+        private static Feature CategoryListInput
+        {
+            get
+            {
+                return new Feature(
+                    CategoryListValue,
+                    new List<string>() { "-cat", "--category-filter" },
+                    "Filter by Category",
+                    FeatureType.List,
+                    longDescription: "Include only items with this Category in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
+            }
+        }
+
         public const string CrcListValue = "crc";
         private static Feature CrcListInput
         {
@@ -1336,6 +1350,20 @@ namespace SabreTools
                     "Set extension to be included in second DAT",
                     FeatureType.List,
                     longDescription: "Set the extension to be used to populate the second DAT. Multiple instances of this flag are allowed.");
+            }
+        }
+
+        public const string FilterListValue = "filter";
+        private static Feature FilterListInput
+        {
+            get
+            {
+                return new Feature(
+                    FilterListValue,
+                    new List<string>() { "-fi", "--filter" },
+                    "Filter a game/rom field with the given value(s)",
+                    FeatureType.List,
+                    longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'key:value' or '!key:value', where the '!' signifies 'not' matching. Numeric values may also prefix the 'value' with '>', '<', or '=' accordingly. Key examples include: romof, category, and game. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
 
@@ -1421,6 +1449,20 @@ Possible values are: None, Bios, Device, Mechanical");
                     "Filter by MD5 hash",
                     FeatureType.List,
                     longDescription: "Include only items with this MD5 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
+            }
+        }
+
+        public const string NotCategoryListValue = "not-category";
+        private static Feature NotCategoryListInput
+        {
+            get
+            {
+                return new Feature(
+                    NotCategoryListValue,
+                    new List<string>() { "-ncat", "--not-category" },
+                    "Filter by not Category",
+                    FeatureType.List,
+                    longDescription: "Include only items without this Category in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
 
@@ -2055,6 +2097,7 @@ Some special strings that can be used:
 - %name% - Replaced with the Rom name
 - %manufacturer% - Replaced with game Manufacturer
 - %publisher% - Replaced with game Publisher
+- %category% - Replaced with game Category
 - %crc% - Replaced with the CRC
 - %md5% - Replaced with the MD5"
 #if NET_FRAMEWORK
@@ -2087,6 +2130,7 @@ Some special strings that can be used:
 - %name% - Replaced with the Rom name
 - %manufacturer% - Replaced with game Manufacturer
 - %publisher% - Replaced with game Publisher
+- %category% - Replaced with game Category
 - %crc% - Replaced with the CRC
 - %md5% - Replaced with the MD5
 - %sha1% - Replaced with the SHA-1
@@ -2297,106 +2341,243 @@ Some special strings that can be used:
             {
                 Filter filter = new Filter();
 
-                // Clean names
-                filter.Clean.Neutral = GetBoolean(features, CleanValue);
+                // Use the Filter flag first
+                List<string> filterPairs = GetList(features, FilterListValue);
+                filter.PopulateFromList(filterPairs);
+
+                #region Obsoleted Inputs
+
+                // Category
+                if (features.ContainsKey(NotCategoryListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotCategoryListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Category, GetList(features, NotCategoryListValue), true);
+                }
+                if (features.ContainsKey(CategoryListValue))
+                {
+                    Globals.Logger.User($"This flag '{CategoryListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Category, GetList(features, CategoryListValue), false);
+                }
 
                 // CRC
-                filter.CRC.NegativeSet.AddRange(GetList(features, NotCrcListValue));
-                filter.CRC.PositiveSet.AddRange(GetList(features, CrcListValue));
-
-                // Machine description as machine name
-                filter.DescriptionAsName.Neutral = GetBoolean(features, DescriptionAsNameValue);
-
-                // Include 'of" in game filters
-                filter.IncludeOfInGame.Neutral = GetBoolean(features, MatchOfTagsValue);
-
-                // Internal splitting
-                filter.InternalSplit.Neutral = GetSplitType(features);
+                if (features.ContainsKey(NotCrcListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotCrcListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.CRC, GetList(features, NotCrcListValue), true);
+                }
+                if (features.ContainsKey(CrcListValue))
+                {
+                    Globals.Logger.User($"This flag '{CrcListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.CRC, GetList(features, NotCrcListValue), false);
+                }
 
                 // Item name
-                filter.ItemName.NegativeSet.AddRange(GetList(features, NotItemNameListValue));
-                filter.ItemName.PositiveSet.AddRange(GetList(features, ItemNameListValue));
+                if (features.ContainsKey(NotItemNameListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotItemNameListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Name, GetList(features, NotItemNameListValue), true);
+                }
+                if (features.ContainsKey(ItemNameListValue))
+                {
+                    Globals.Logger.User($"This flag '{ItemNameListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Name, GetList(features, ItemNameListValue), false);
+                }
 
                 // Item status
-                foreach (string stat in GetList(features, NotStatusListValue))
+                if (features.ContainsKey(NotStatusListValue))
                 {
-                    filter.ItemStatuses.Negative |= stat.AsItemStatus();
+                    Globals.Logger.User($"This flag '{NotStatusListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Status, GetList(features, NotStatusListValue), true);
                 }
-                foreach (string stat in GetList(features, StatusListValue))
+                if (features.ContainsKey(StatusListValue))
                 {
-                    filter.ItemStatuses.Positive |= stat.AsItemStatus();
+                    Globals.Logger.User($"This flag '{StatusListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Status, GetList(features, StatusListValue), false);
                 }
 
                 // Item type
-                filter.ItemTypes.NegativeSet.AddRange(GetList(features, NotItemTypeListValue));
-                filter.ItemTypes.PositiveSet.AddRange(GetList(features, ItemTypeListValue));
+                if (features.ContainsKey(NotItemTypeListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotItemTypeListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.ItemType, GetList(features, NotItemTypeListValue), true);
+                }
+                if (features.ContainsKey(ItemTypeListValue))
+                {
+                    Globals.Logger.User($"This flag '{ItemTypeListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.ItemType, GetList(features, ItemTypeListValue), false);
+                }
 
                 // Machine description
-                filter.MachineDescription.NegativeSet.AddRange(GetList(features, NotGameDescriptionListValue));
-                filter.MachineDescription.PositiveSet.AddRange(GetList(features, GameDescriptionListValue));
+                if (features.ContainsKey(NotGameDescriptionListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotGameDescriptionListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Description, GetList(features, NotGameDescriptionListValue), true);
+                }
+                if (features.ContainsKey(GameDescriptionListValue))
+                {
+                    Globals.Logger.User($"This flag '{GameDescriptionListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Description, GetList(features, GameDescriptionListValue), false);
+                }
 
                 // Machine name
-                filter.MachineName.NegativeSet.AddRange(GetList(features, NotGameNameListValue));
-                filter.MachineName.PositiveSet.AddRange(GetList(features, GameNameListValue));
+                if (features.ContainsKey(NotGameNameListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotGameNameListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.MachineName, GetList(features, NotGameNameListValue), true);
+                }
+                if (features.ContainsKey(GameNameListValue))
+                {
+                    Globals.Logger.User($"This flag '{GameNameListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.MachineName, GetList(features, GameNameListValue), false);
+                }
 
                 // Machine type
-                foreach (string mach in GetList(features, NotGameTypeListValue))
+                if (features.ContainsKey(NotGameTypeListValue))
                 {
-                    filter.MachineTypes.Negative |= mach.AsMachineType();
+                    Globals.Logger.User($"This flag '{NotGameTypeListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.MachineType, GetList(features, NotGameTypeListValue), true);
                 }
-                foreach (string mach in GetList(features, GameTypeListValue))
+                if (features.ContainsKey(GameTypeListValue))
                 {
-                    filter.MachineTypes.Positive |= mach.AsMachineType();
+                    Globals.Logger.User($"This flag '{GameTypeListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.MachineType, GetList(features, GameTypeListValue), false);
                 }
 
                 // MD5
-                filter.MD5.NegativeSet.AddRange(GetList(features, NotMd5ListValue));
-                filter.MD5.PositiveSet.AddRange(GetList(features, Md5ListValue));
-
-                // Remove unicode characters
-                filter.RemoveUnicode.Neutral = GetBoolean(features, RemoveUnicodeValue);
+                if (features.ContainsKey(NotMd5ListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotMd5ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.MD5, GetList(features, NotMd5ListValue), true);
+                }
+                if (features.ContainsKey(Md5ListValue))
+                {
+                    Globals.Logger.User($"This flag '{Md5ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.MD5, GetList(features, Md5ListValue), false);
+                }
 
 #if NET_FRAMEWORK
                 // RIPEMD160
-                filter.RIPEMD160.NegativeSet.AddRange(GetList(features, NotRipeMd160ListValue));
-                filter.RIPEMD160.PositiveSet.AddRange(GetList(features, RipeMd160ListValue));
+                if (features.ContainsKey(NotRipeMd160ListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotRipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.RIPEMD160, GetList(features, NotRipeMd160ListValue), true);
+                }
+                if (features.ContainsKey(RipeMd160ListValue))
+                {
+                    Globals.Logger.User($"This flag '{RipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.RIPEMD160, GetList(features, RipeMd160ListValue), false);
+                }
 #endif
 
-                // Root directory
-                filter.Root.Neutral = GetString(features, RootDirStringValue);
-
                 // Runnable
-                if (GetBoolean(features, NotRunnableValue))
-                    filter.Runnable.Neutral = false;
-                if (GetBoolean(features, RunnableValue))
-                    filter.Runnable.Neutral = true;
+                if (features.ContainsKey(NotRunnableValue))
+                {
+                    Globals.Logger.User($"This flag '{NotRunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Runnable, string.Empty, true);
+                }
+                if (features.ContainsKey(RunnableValue))
+                {
+                    Globals.Logger.User($"This flag '{RunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.Runnable, string.Empty, false);
+                }
 
-                // SHA-1
-                filter.SHA1.NegativeSet.AddRange(GetList(features, NotSha1ListValue));
-                filter.SHA1.PositiveSet.AddRange(GetList(features, Sha1ListValue));
+                // SHA1
+                if (features.ContainsKey(NotSha1ListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotSha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA1, GetList(features, NotSha1ListValue), true);
+                }
+                if (features.ContainsKey(Sha1ListValue))
+                {
+                    Globals.Logger.User($"This flag '{Sha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA1, GetList(features, Sha1ListValue), false);
+                }
 
-                // SHA-256
-                filter.SHA256.NegativeSet.AddRange(GetList(features, NotSha256ListValue));
-                filter.SHA256.PositiveSet.AddRange(GetList(features, Sha256ListValue));
+                // SHA256
+                if (features.ContainsKey(NotSha256ListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotSha256ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA256, GetList(features, NotSha256ListValue), true);
+                }
+                if (features.ContainsKey(Sha256ListValue))
+                {
+                    Globals.Logger.User($"This flag '{Sha256ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA256, GetList(features, Sha256ListValue), false);
+                }
 
-                // SHA-384
-                filter.SHA384.NegativeSet.AddRange(GetList(features, NotSha384ListValue));
-                filter.SHA384.PositiveSet.AddRange(GetList(features, Sha384ListValue));
+                // SHA384
+                if (features.ContainsKey(NotSha384ListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotSha384ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA384, GetList(features, NotSha384ListValue), true);
+                }
+                if (features.ContainsKey(Sha384ListValue))
+                {
+                    Globals.Logger.User($"This flag '{Sha384ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA384, GetList(features, Sha384ListValue), false);
+                }
 
-                // SHA-512
-                filter.SHA512.NegativeSet.AddRange(GetList(features, NotSha512ListValue));
-                filter.SHA512.PositiveSet.AddRange(GetList(features, Sha512ListValue));
-
-                // Single game in output
-                filter.Single.Neutral = GetBoolean(features, SingleSetValue);
+                // SHA512
+                if (features.ContainsKey(NotSha512ListValue))
+                {
+                    Globals.Logger.User($"This flag '{NotSha512ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA512, GetList(features, NotSha512ListValue), true);
+                }
+                if (features.ContainsKey(Sha512ListValue))
+                {
+                    Globals.Logger.User($"This flag '{Sha512ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    filter.SetFilter(Field.SHA512, GetList(features, Sha512ListValue), false);
+                }
 
                 // Size
-                filter.Size.Negative = Sanitizer.ToSize(GetString(features, LessStringValue));
-                filter.Size.Neutral = Sanitizer.ToSize(GetString(features, EqualStringValue));
-                filter.Size.Positive = Sanitizer.ToSize(GetString(features, GreaterStringValue));
+                if (features.ContainsKey(LessStringValue))
+                {
+                    Globals.Logger.User($"This flag '{LessStringValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    var value = Sanitizer.ToSize(GetString(features, LessStringValue));
+                    filter.SetFilter(Field.Size, $"<{value}", false);
+                }
+                if (features.ContainsKey(EqualStringValue))
+                {
+                    Globals.Logger.User($"This flag '{EqualStringValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    var value = Sanitizer.ToSize(GetString(features, EqualStringValue));
+                    filter.SetFilter(Field.Size, $"={value}", false);
+                }
+                if (features.ContainsKey(GreaterStringValue))
+                {
+                    Globals.Logger.User($"This flag '{GreaterStringValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead");
+                    var value = Sanitizer.ToSize(GetString(features, GreaterStringValue));
+                    filter.SetFilter(Field.Size, $">{value}", false);
+                }
+
+                #endregion
+
+                #region Filter manipulation flags
+
+                // Clean names
+                filter.Clean = GetBoolean(features, CleanValue);
+
+                // Machine description as machine name
+                filter.DescriptionAsName = GetBoolean(features, DescriptionAsNameValue);
+
+                // Include 'of" in game filters
+                filter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
+
+                // Internal splitting
+                filter.InternalSplit = GetSplitType(features);
+
+                // Remove unicode characters
+                filter.RemoveUnicode = GetBoolean(features, RemoveUnicodeValue);
+
+                // Root directory
+                filter.Root = GetString(features, RootDirStringValue);
+
+                // Single game in output
+                filter.Single = GetBoolean(features, SingleSetValue);
 
                 // Trim to NTFS length
-                filter.Trim.Neutral = GetBoolean(features, TrimValue);
+                filter.Trim = GetBoolean(features, TrimValue);
+
+                #endregion
 
                 return filter;
             }
@@ -2714,6 +2895,9 @@ Some special strings that can be used:
                 AddFeature(CopyFilesFlag);
                 AddFeature(HeaderStringInput);
                 AddFeature(ChdsAsFilesFlag);
+                AddFeature(FilterListInput);
+                AddFeature(CategoryListInput);
+                AddFeature(NotCategoryListInput);
                 AddFeature(GameNameListInput);
                 AddFeature(NotGameNameListInput);
                 AddFeature(GameDescriptionListInput);
@@ -3238,6 +3422,9 @@ The stats that are outputted are as follows:
                 this[DiffCascadeFlag].AddFeature(SkipFirstOutputFlag);
                 AddFeature(DiffReverseCascadeFlag);
                 this[DiffReverseCascadeFlag].AddFeature(SkipFirstOutputFlag);
+                AddFeature(FilterListInput);
+                AddFeature(CategoryListInput);
+                AddFeature(NotCategoryListInput);
                 AddFeature(GameNameListInput);
                 AddFeature(NotGameNameListInput);
                 AddFeature(GameDescriptionListInput);
@@ -3369,6 +3556,9 @@ The stats that are outputted are as follows:
                 AddFeature(DatDeviceNonMergedFlag);
                 AddFeature(DatNonMergedFlag);
                 AddFeature(DatFullNonMergedFlag);
+                AddFeature(FilterListInput);
+                AddFeature(CategoryListInput);
+                AddFeature(NotCategoryListInput);
                 AddFeature(GameNameListInput);
                 AddFeature(NotGameNameListInput);
                 AddFeature(GameDescriptionListInput);
