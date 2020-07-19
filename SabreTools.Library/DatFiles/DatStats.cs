@@ -295,6 +295,10 @@ namespace SabreTools.Library.DatFiles
         /// <param name="item">Item to remove info for</param>
         public void RemoveItem(DatItem item)
         {
+            // If we have a null item, we can't do anything
+            if (item == null)
+                return;
+
             // No matter what the item is, we increate the count
             lock (_lockObject)
             {

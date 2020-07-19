@@ -63,7 +63,7 @@ namespace SabreTools.Library.DatFiles
                 EnsureKey(key);
 
                 // Now return the value
-                return Items[key];
+                return Items[key].Where(i => i != null).ToList();
             }
         }
 

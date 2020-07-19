@@ -47,7 +47,7 @@ namespace SabreTools.Library.Tools
             {
                 string filename = Path.GetFileName(path);
                 if (sanitize)
-                    filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
+                    filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
                 return filename;
             }
@@ -61,7 +61,7 @@ namespace SabreTools.Library.Tools
             {
                 string filename = Path.GetFileName(child);
                 if (sanitize)
-                    filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
+                    filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
                 return filename;
             }
@@ -71,7 +71,7 @@ namespace SabreTools.Library.Tools
             {
                 string filename = child.Remove(0, parent.Length + 1);
                 if (sanitize)
-                    filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
+                    filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
                 return filename;
             }
