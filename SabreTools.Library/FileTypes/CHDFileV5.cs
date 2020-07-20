@@ -66,7 +66,7 @@ namespace SabreTools.Library.FileTypes
 
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
             {
-                chd.tag = br.ReadCharsBigEndian(8);
+                chd.tag = br.ReadChars(8);
                 chd.length = br.ReadUInt32BigEndian();
                 chd.version = br.ReadUInt32BigEndian();
                 chd.compressors = new uint[4];
@@ -79,9 +79,11 @@ namespace SabreTools.Library.FileTypes
                 chd.metaoffset = br.ReadUInt64BigEndian();
                 chd.hunkbytes = br.ReadUInt32BigEndian();
                 chd.unitbytes = br.ReadUInt32BigEndian();
-                chd.rawsha1 = br.ReadBytesBigEndian(20);
-                chd.sha1 = br.ReadBytesBigEndian(20);
-                chd.parentsha1 = br.ReadBytesBigEndian(20);
+                chd.rawsha1 = br.ReadBytes(20);
+                chd.sha1 = br.ReadBytes(20);
+                chd.parentsha1 = br.ReadBytes(20);
+
+                chd.SHA1 = chd.sha1;
             }
 
             return chd;

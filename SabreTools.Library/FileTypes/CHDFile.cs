@@ -42,21 +42,28 @@ namespace SabreTools.Library.FileTypes
         /// <param name="chdstream">Stream representing the CHD file</param>
         public static CHDFile Create(Stream chdstream)
         {
-            // Read the standard CHD headers
-            (char[] tag, uint length, uint version) = GetHeaderValues(chdstream);
-            chdstream.Seek(-16, SeekOrigin.Current); // Seek back to start
+            try
+            {
+                // Read the standard CHD headers
+                (char[] tag, uint length, uint version) = GetHeaderValues(chdstream);
+                chdstream.Seek(-16, SeekOrigin.Current); // Seek back to start
 
-            // Validate that this is actually a valid CHD
-            uint validatedVersion = ValidateHeader(tag, length, version);
-            if (validatedVersion == 0)
+                // Validate that this is actually a valid CHD
+                uint validatedVersion = ValidateHeader(tag, length, version);
+                if (validatedVersion == 0)
+                    return null;
+
+                // Read and retrun the current CHD
+                CHDFile generated = ReadAsVersion(chdstream, version);
+                if (generated != null)
+                    generated.Type = FileType.CHD;
+
+                return generated;
+            }
+            catch
+            {
                 return null;
-
-            // Read and retrun the current CHD
-            CHDFile generated = ReadAsVersion(chdstream, version);
-            if (generated != null)
-                generated.Type = FileType.CHD;
-
-            return generated;
+            }
         }
 
         #endregion
@@ -85,7 +92,7 @@ namespace SabreTools.Library.FileTypes
 
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
             {
-                parsedTag = br.ReadCharsBigEndian(8);
+                parsedTag = br.ReadChars(8);
                 parsedLength = br.ReadUInt32BigEndian();
                 parsedVersion = br.ReadUInt32BigEndian();
             }

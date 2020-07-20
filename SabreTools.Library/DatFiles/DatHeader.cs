@@ -4,6 +4,7 @@ using System.IO;
 
 using SabreTools.Library.Data;
 using Newtonsoft.Json;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -770,7 +771,11 @@ namespace SabreTools.Library.DatFiles
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
             string filename = (string.IsNullOrWhiteSpace(FileName) ? Description : FileName);
-            filename = Path.GetFileNameWithoutExtension(filename);
+
+            // Strip off the extension if it's a holdover from the DAT
+            if (PathExtensions.HasValidDatExtension(filename))
+                filename = Path.GetFileNameWithoutExtension(filename);
+
             string outfile = $"{outDir}{filename}{extension}";
             outfile = outfile.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", Path.DirectorySeparatorChar.ToString());
 

@@ -2939,6 +2939,10 @@ Some special strings that can be used:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
+                // Set threading flag, if necessary
+                if (features.ContainsKey(ThreadsInt32Value))
+                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+
                 // Get feature flags
                 bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
                 bool addFileDates = GetBoolean(features, AddDateValue);
@@ -3168,6 +3172,10 @@ The following systems have headers that this program can work with:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
+                // Set threading flag, if necessary
+                if (features.ContainsKey(ThreadsInt32Value))
+                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+
                 // Get feature flags
                 bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
                 bool date = GetBoolean(features, AddDateValue);
@@ -3466,6 +3474,10 @@ The stats that are outputted are as follows:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
+                // Set threading flag, if necessary
+                if (features.ContainsKey(ThreadsInt32Value))
+                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+
                 // Get feature flags
                 var datHeader = GetDatHeader(features);
                 var updateFields = GetUpdateFields(features);

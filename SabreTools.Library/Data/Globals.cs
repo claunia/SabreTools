@@ -15,7 +15,6 @@ namespace SabreTools.Library.Data
         #region Private implementations
 
         private static Logger _logger = null;
-        private static int _maxDegreeOfParallelism = System.Environment.ProcessorCount;
 
         #endregion
 
@@ -33,37 +32,18 @@ namespace SabreTools.Library.Data
             set { _logger = value; }
         }
 
-        public static int MaxThreads
-        {
-            get { return _maxDegreeOfParallelism; }
-            set { _maxDegreeOfParallelism = value; }
-        }
+        public static int MaxThreads { get; set; } = Environment.ProcessorCount;
 
-        public static ParallelOptions ParallelOptions
+        public static ParallelOptions ParallelOptions => new ParallelOptions()
         {
-            get
-            {
-                return new ParallelOptions()
-                {
-                    MaxDegreeOfParallelism = _maxDegreeOfParallelism
-                };
-            }
-        }
+            MaxDegreeOfParallelism = MaxThreads
+        };
 
-        public static string ExeName
-        {
-            get { return new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath; }
-        }
+        public static string ExeName => new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
 
-        public static string ExeDir
-        {
-            get { return Path.GetDirectoryName(ExeName); }
-        }
+        public static string ExeDir => Path.GetDirectoryName(ExeName);
 
-        public static string CommandLineArgs
-        {
-            get { return string.Join(" ", Environment.GetCommandLineArgs()); }
-        }
+        public static string CommandLineArgs => string.Join(" ", Environment.GetCommandLineArgs());
 
         #endregion
     }
