@@ -310,6 +310,13 @@ namespace SabreTools.Library.DatFiles
         {
             foreach (string filterPair in filters)
             {
+                // If we don't even have a possible filter pair
+                if (!filterPair.Contains(":"))
+                {
+                    Globals.Logger.Warning($"'{filterPair}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                    continue;
+                }
+
                 string filterPairTrimmed = filterPair.Trim('"', ' ', '\t');
                 bool negate = filterPairTrimmed.StartsWith("!")
                     || filterPairTrimmed.StartsWith("~")
