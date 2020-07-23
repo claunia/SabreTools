@@ -280,7 +280,7 @@ namespace SabreTools.Library.DatFiles
 
                 // First do the initial sort of all of the roms inplace
                 List<string> oldkeys = Keys;
-                Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
+                for (int k = 0; k < oldkeys.Count; k++)
                 {
                     string key = oldkeys[k];
 
@@ -291,6 +291,8 @@ namespace SabreTools.Library.DatFiles
                     for (int i = 0; i < items.Count; i++)
                     {
                         DatItem item = items[i];
+                        if (item == null)
+                            continue;
 
                         // We want to get the key most appropriate for the given sorting type
                         string newkey = item.GetKey(bucketBy, lower, norename);
@@ -303,7 +305,11 @@ namespace SabreTools.Library.DatFiles
                             i--; // This make sure that the pointer stays on the correct since one was removed
                         }
                     }
-                });
+
+                    // If the key is now empty, remove it
+                    if (this[key].Count == 0)
+                        Remove(key);
+                }
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly

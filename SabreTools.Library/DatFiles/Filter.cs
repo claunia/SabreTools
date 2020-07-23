@@ -784,6 +784,9 @@ namespace SabreTools.Library.DatFiles
                     foreach (string key in datFile.Keys)
                     {
                         List<DatItem> items = datFile[key];
+                        if (items == null)
+                            continue;
+
                         List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
 
                         datFile.Remove(key);
@@ -890,6 +893,9 @@ namespace SabreTools.Library.DatFiles
                     foreach (string key in outDat.Keys)
                     {
                         List<DatItem> items = outDat[key];
+                        if (items == null)
+                            continue;
+
                         List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
 
                         outDat.Remove(key);
