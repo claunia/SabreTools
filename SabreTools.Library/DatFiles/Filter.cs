@@ -767,6 +767,30 @@ namespace SabreTools.Library.DatFiles
         {
             try
             {
+                // Process description to machine name
+                if (this.DescriptionAsName)
+                    MachineDescriptionToName(datFile);
+
+                // If we are using tags from the DAT, set the proper input for split type unless overridden
+                if (useTags && this.InternalSplit == SplitType.None)
+                    this.InternalSplit = datFile.DatHeader.ForceMerging.AsSplitType();
+
+                // Run internal splitting
+                ProcessSplitType(datFile, this.InternalSplit);
+
+                // We remove any blanks, if we aren't supposed to have any
+                if (!datFile.DatHeader.KeepEmptyGames)
+                {
+                    foreach (string key in datFile.Keys)
+                    {
+                        List<DatItem> items = datFile[key];
+                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
+
+                        datFile.Remove(key);
+                        datFile.AddRange(key, newitems);
+                    }
+                }
+
                 // Loop over every key in the dictionary
                 List<string> keys = datFile.Keys;
                 foreach (string key in keys)
@@ -818,30 +842,6 @@ namespace SabreTools.Library.DatFiles
 
                     datFile.Remove(key);
                     datFile.AddRange(key, newitems);
-                }
-
-                // Process description to machine name
-                if (this.DescriptionAsName)
-                    MachineDescriptionToName(datFile);
-
-                // If we are using tags from the DAT, set the proper input for split type unless overridden
-                if (useTags && this.InternalSplit == SplitType.None)
-                    this.InternalSplit = datFile.DatHeader.ForceMerging.AsSplitType();
-
-                // Run internal splitting
-                ProcessSplitType(datFile, this.InternalSplit);
-
-                // We remove any blanks, if we aren't supposed to have any
-                if (!datFile.DatHeader.KeepEmptyGames)
-                {
-                    foreach (string key in datFile.Keys)
-                    {
-                        List<DatItem> items = datFile[key];
-                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
-
-                        datFile.Remove(key);
-                        datFile.AddRange(key, newitems);
-                    }
                 }
 
                 // If we are removing scene dates, do that now
@@ -1879,6 +1879,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     item.CloneOf = null;
                     item.RomOf = null;
+                    item.SampleOf = null;
                 }
             }
         }
