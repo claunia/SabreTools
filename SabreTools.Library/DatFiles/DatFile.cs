@@ -732,10 +732,10 @@ namespace SabreTools.Library.DatFiles
             watch.Stop();
 
             watch.Start("Populating internal DAT");
-            Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>
+            for (int i = 0; i < inputs.Count; i++)
             {
                 AddFromExisting(datFiles[i], true);
-            });
+            }
 
             // Now that we have a merged DAT, filter it
             filter.FilterDatFile(this, false /* useTags */);
