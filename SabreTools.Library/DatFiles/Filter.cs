@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using NaturalSort;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
@@ -1525,6 +1525,8 @@ namespace SabreTools.Library.DatFiles
         private void AddRomsFromBios(DatFile datFile)
         {
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1567,6 +1569,8 @@ namespace SabreTools.Library.DatFiles
         {
             bool foundnew = false;
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 // If the game doesn't have items, we continue
@@ -1665,6 +1669,8 @@ namespace SabreTools.Library.DatFiles
         private void AddRomsFromParent(DatFile datFile)
         {
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1715,6 +1721,8 @@ namespace SabreTools.Library.DatFiles
         private void AddRomsFromChildren(DatFile datFile)
         {
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1735,34 +1743,84 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> items = datFile[game];
                 foreach (DatItem item in items)
                 {
-                    // If the disk doesn't have a valid merge tag OR the merged file doesn't exist in the parent, then add it
-                    if (item.ItemType == ItemType.Disk && (((Disk)item).MergeTag == null || !datFile[parent].Select(i => i.Name).Contains(((Disk)item).MergeTag)))
+                    // Special disk handling
+                    if (item.ItemType == ItemType.Disk)
                     {
-                        // Rename the child so it's in a subfolder
-                        item.Name = $"{item.MachineName}\\{item.Name}";
+                        Disk disk = item as Disk;
 
-                        // Update the machine to be the new parent
-                        item.CopyMachineInformation(copyFrom);
+                        // If the merge tag exists and the parent already contains it, skip
+                        if (disk.MergeTag != null && datFile[parent].Select(i => i.Name).Contains(disk.MergeTag))
+                        {
+                            continue;
+                        }
 
-                        // Add the rom to the parent set
-                        datFile.Add(parent, item);
+                        // If the merge tag exists but the parent doesn't contain it, add
+                        else if (disk.MergeTag != null && !datFile[parent].Select(i => i.Name).Contains(disk.MergeTag))
+                        {
+                            // Rename the child so it's in a subfolder
+                            item.Name = $"{item.MachineName}\\{item.Name}";
+
+                            // Update the machine to be the new parent
+                            item.CopyMachineInformation(copyFrom);
+
+                            // Add the rom to the parent set
+                            datFile.Add(parent, item);
+                        }
+
+                        // If the parent doesn't already contain this item, add it
+                        else if (!datFile[parent].Contains(item))
+                        {
+                            // Rename the child so it's in a subfolder
+                            item.Name = $"{item.MachineName}\\{item.Name}";
+
+                            // Update the machine to be the new parent
+                            item.CopyMachineInformation(copyFrom);
+
+                            // Add the rom to the parent set
+                            datFile.Add(parent, item);
+                        }
                     }
 
-                    // If the rom doesn't have a valid merge tag OR the merged file doesn't exist in the parent, then add it
-                    else if (item.ItemType == ItemType.Rom && (((Rom)item).MergeTag == null || !datFile[parent].Select(i => i.Name).Contains(((Rom)item).MergeTag)))
+                    // Special rom handling
+                    else if (item.ItemType == ItemType.Rom)
                     {
-                        // Rename the child so it's in a subfolder
-                        item.Name = $"{item.MachineName}\\{item.Name}";
+                        Rom rom = item as Rom;
 
-                        // Update the machine to be the new parent
-                        item.CopyMachineInformation(copyFrom);
+                        // If the merge tag exists and the parent already contains it, skip
+                        if (rom.MergeTag != null && datFile[parent].Select(i => i.Name).Contains(rom.MergeTag))
+                        {
+                            continue;
+                        }
 
-                        // Add the rom to the parent set
-                        datFile.Add(parent, item);
+                        // If the merge tag exists but the parent doesn't contain it, add
+                        else if (rom.MergeTag != null && !datFile[parent].Select(i => i.Name).Contains(rom.MergeTag))
+                        {
+                            // Rename the child so it's in a subfolder
+                            item.Name = $"{item.MachineName}\\{item.Name}";
+
+                            // Update the machine to be the new parent
+                            item.CopyMachineInformation(copyFrom);
+
+                            // Add the rom to the parent set
+                            datFile.Add(parent, item);
+                        }
+
+                        // If the parent doesn't already contain this item, add it
+                        else if (!datFile[parent].Contains(item))
+                        {
+                            // Rename the child so it's in a subfolder
+                            item.Name = $"{item.MachineName}\\{item.Name}";
+
+                            // Update the machine to be the new parent
+                            item.CopyMachineInformation(copyFrom);
+
+                            // Add the rom to the parent set
+                            datFile.Add(parent, item);
+                        }
                     }
 
-                    // Otherwise, if the parent doesn't already contain the non-disk (or a merge-equivalent), add it
-                    else if (item.ItemType != ItemType.Disk && !datFile[parent].Contains(item))
+                    // All other that would be missing
+                    else if (!datFile[parent].Contains(item))
                     {
                         // Rename the child so it's in a subfolder
                         item.Name = $"{item.MachineName}\\{item.Name}";
@@ -1787,6 +1845,8 @@ namespace SabreTools.Library.DatFiles
         private void RemoveBiosAndDeviceSets(DatFile datFile)
         {
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 if (datFile[game].Count > 0
@@ -1807,6 +1867,8 @@ namespace SabreTools.Library.DatFiles
         {
             // Loop through the romof tags
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1850,6 +1912,8 @@ namespace SabreTools.Library.DatFiles
         private void RemoveRomsFromChild(DatFile datFile)
         {
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 // If the game has no items in it, we want to continue
@@ -1897,6 +1961,8 @@ namespace SabreTools.Library.DatFiles
         private void RemoveTagsFromChild(DatFile datFile)
         {
             List<string> games = datFile.Keys;
+            games = games.OrderBy(g => g, NaturalComparer.Default).ToList();
+
             foreach (string game in games)
             {
                 List<DatItem> items = datFile[game];
