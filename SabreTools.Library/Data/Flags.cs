@@ -407,7 +407,7 @@ namespace SabreTools.Library.Data
         // Special combinations
         Standard = CRC | MD5 | SHA1,
 #if NET_FRAMEWORK
-        DeepHashes = SHA256 | SHA384 | SHA512,
+        DeepHashes = RIPEMD160 | SHA256 | SHA384 | SHA512,
         SecureHashes = MD5 | RIPEMD160 | SHA1 | SHA256 | SHA384 | SHA512,
 #else
         DeepHashes = SHA256 | SHA384 | SHA512,
