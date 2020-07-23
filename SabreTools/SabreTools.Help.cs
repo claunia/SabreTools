@@ -3321,10 +3321,22 @@ The stats that are outputted are as follows:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
+                string filename = GetDatHeader(features).FileName;
+                string outputDir = GetString(features, OutputDirStringValue);
+                if (Path.GetFileName(filename) != filename)
+                {
+                    if (string.IsNullOrWhiteSpace(outputDir))
+                        outputDir = Path.GetDirectoryName(filename);
+                    else
+                        outputDir = Path.Combine(outputDir, Path.GetDirectoryName(filename));
+
+                    filename = Path.GetFileName(filename);
+                }
+
                 DatStats.OutputStats(
                     Inputs,
-                    GetDatHeader(features).FileName,
-                    GetString(features, OutputDirStringValue),
+                    filename,
+                    outputDir,
                     GetBoolean(features, IndividualValue),
                     GetBoolean(features, BaddumpColumnValue),
                     GetBoolean(features, NodumpColumnValue),

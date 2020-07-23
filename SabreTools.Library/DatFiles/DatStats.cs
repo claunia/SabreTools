@@ -426,7 +426,7 @@ namespace SabreTools.Library.DatFiles
             outDir = DirectoryExtensions.Ensure(outDir);
 
             // Get the dictionary of desired output report names
-            Dictionary<StatReportFormat, string> outputs = DatStats.CreateOutStatsNames(outDir, statDatFormat, reportName);
+            Dictionary<StatReportFormat, string> outputs = CreateOutStatsNames(outDir, statDatFormat, reportName);
 
             // Make sure we have all files and then order them
             List<string> files = DirectoryExtensions.GetFilesOnly(inputs);
@@ -551,8 +551,7 @@ Please check the log folder if the stats scrolled offscreen", false);
                 outDir += Path.DirectorySeparatorChar;
 
             // For each output format, get the appropriate stream writer
-            if (statDatFormat.HasFlag(StatReportFormat.None))
-                output.Add(StatReportFormat.None, CreateOutStatsNamesHelper(outDir, ".null", reportName, overwrite));
+            output.Add(StatReportFormat.None, CreateOutStatsNamesHelper(outDir, ".null", reportName, overwrite));
 
             if (statDatFormat.HasFlag(StatReportFormat.Textfile))
                 output.Add(StatReportFormat.Textfile, CreateOutStatsNamesHelper(outDir, ".txt", reportName, overwrite));

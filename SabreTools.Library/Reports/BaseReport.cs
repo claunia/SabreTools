@@ -29,7 +29,10 @@ namespace SabreTools.Library.Reports
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         public BaseReport(string filename, bool baddumpCol = false, bool nodumpCol = false)
         {
-            _writer = new StreamWriter(FileExtensions.TryCreate(filename));
+            var fs = FileExtensions.TryCreate(filename);
+            if (fs != null)
+                _writer = new StreamWriter(fs);
+
             _baddumpCol = baddumpCol;
             _nodumpCol = nodumpCol;
         }
