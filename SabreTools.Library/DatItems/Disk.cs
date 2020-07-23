@@ -15,7 +15,9 @@ namespace SabreTools.Library.DatItems
         #region Private instance variables
 
         private byte[] _md5; // 16 bytes
+#if NET_FRAMEWORK
         private byte[] _ripemd160; // 20 bytes
+#endif
         private byte[] _sha1; // 20 bytes
         private byte[] _sha256; // 32 bytes
         private byte[] _sha384; // 48 bytes
@@ -200,7 +202,9 @@ namespace SabreTools.Library.DatItems
                 IndexSource = this.IndexSource,
 
                 _md5 = this._md5,
+#if NET_FRAMEWORK
                 _ripemd160 = this._ripemd160,
+#endif
                 _sha1 = this._sha1,
                 _sha256 = this._sha256,
                 _sha384 = this._sha384,
@@ -289,7 +293,9 @@ namespace SabreTools.Library.DatItems
             if ((this.ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
                 && (this.Name == newOther.Name)
                 && (this._md5.IsNullOrEmpty() && newOther._md5.IsNullOrEmpty())
+#if NET_FRAMEWORK
                 && (this._ripemd160.IsNullOrEmpty() && newOther._ripemd160.IsNullOrEmpty())
+#endif
                 && (this._sha1.IsNullOrEmpty() && newOther._sha1.IsNullOrEmpty())
                 && (this._sha256.IsNullOrEmpty() && newOther._sha256.IsNullOrEmpty())
                 && (this._sha384.IsNullOrEmpty() && newOther._sha384.IsNullOrEmpty())
@@ -300,7 +306,9 @@ namespace SabreTools.Library.DatItems
 
             // If we can determine that the disks have no non-empty hashes in common, we return false
             else if ((this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty())
+#if NET_FRAMEWORK
                 && (this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty())
+#endif
                 && (this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty())
                 && (this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty())
                 && (this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty())
@@ -311,7 +319,9 @@ namespace SabreTools.Library.DatItems
 
             // Otherwise if we get a partial match
             else if (((this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
+#if NET_FRAMEWORK
                 && ((this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
+#endif
                 && ((this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
                 && ((this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
                 && ((this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))

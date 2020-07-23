@@ -1574,7 +1574,7 @@ namespace SabreTools.Library.DatFiles
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
-                if (dev ^ (datFile[game][0].MachineType.HasFlag(Data.MachineType.Device)))
+                if (dev ^ (datFile[game][0].MachineType.HasFlag(MachineType.Device)))
                     continue;
 
                 // If the game has no devices, we continue
@@ -1736,14 +1736,33 @@ namespace SabreTools.Library.DatFiles
                 foreach (DatItem item in items)
                 {
                     // If the disk doesn't have a valid merge tag OR the merged file doesn't exist in the parent, then add it
-                    if (item.ItemType == Data.ItemType.Disk && (((Disk)item).MergeTag == null || !datFile[parent].Select(i => i.Name).Contains(((Disk)item).MergeTag)))
+                    if (item.ItemType == ItemType.Disk && (((Disk)item).MergeTag == null || !datFile[parent].Select(i => i.Name).Contains(((Disk)item).MergeTag)))
                     {
+                        // Rename the child so it's in a subfolder
+                        item.Name = $"{item.MachineName}\\{item.Name}";
+
+                        // Update the machine to be the new parent
                         item.CopyMachineInformation(copyFrom);
+
+                        // Add the rom to the parent set
+                        datFile.Add(parent, item);
+                    }
+
+                    // If the rom doesn't have a valid merge tag OR the merged file doesn't exist in the parent, then add it
+                    else if (item.ItemType == ItemType.Rom && (((Rom)item).MergeTag == null || !datFile[parent].Select(i => i.Name).Contains(((Rom)item).MergeTag)))
+                    {
+                        // Rename the child so it's in a subfolder
+                        item.Name = $"{item.MachineName}\\{item.Name}";
+
+                        // Update the machine to be the new parent
+                        item.CopyMachineInformation(copyFrom);
+
+                        // Add the rom to the parent set
                         datFile.Add(parent, item);
                     }
 
                     // Otherwise, if the parent doesn't already contain the non-disk (or a merge-equivalent), add it
-                    else if (item.ItemType != Data.ItemType.Disk && !datFile[parent].Contains(item))
+                    else if (item.ItemType != ItemType.Disk && !datFile[parent].Contains(item))
                     {
                         // Rename the child so it's in a subfolder
                         item.Name = $"{item.MachineName}\\{item.Name}";
@@ -1771,8 +1790,8 @@ namespace SabreTools.Library.DatFiles
             foreach (string game in games)
             {
                 if (datFile[game].Count > 0
-                    && (datFile[game][0].MachineType.HasFlag(Data.MachineType.Bios)
-                        || datFile[game][0].MachineType.HasFlag(Data.MachineType.Device)))
+                    && (datFile[game][0].MachineType.HasFlag(MachineType.Bios)
+                        || datFile[game][0].MachineType.HasFlag(MachineType.Device)))
                 {
                     datFile.Remove(game);
                 }
@@ -1795,7 +1814,7 @@ namespace SabreTools.Library.DatFiles
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
-                if (bios ^ datFile[game][0].MachineType.HasFlag(Data.MachineType.Bios))
+                if (bios ^ datFile[game][0].MachineType.HasFlag(MachineType.Bios))
                     continue;
 
                 // Determine if the game has a parent or not
