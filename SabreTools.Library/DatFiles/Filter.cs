@@ -873,6 +873,30 @@ namespace SabreTools.Library.DatFiles
 
             try
             {
+                // Process description to machine name
+                if (this.DescriptionAsName)
+                    MachineDescriptionToName(outDat);
+
+                // If we are using tags from the DAT, set the proper input for split type unless overridden
+                if (useTags && this.InternalSplit == SplitType.None)
+                    this.InternalSplit = outDat.DatHeader.ForceMerging.AsSplitType();
+
+                // Run internal splitting
+                ProcessSplitType(outDat, this.InternalSplit);
+
+                // We remove any blanks, if we aren't supposed to have any
+                if (!outDat.DatHeader.KeepEmptyGames)
+                {
+                    foreach (string key in outDat.Keys)
+                    {
+                        List<DatItem> items = outDat[key];
+                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
+
+                        outDat.Remove(key);
+                        outDat.AddRange(key, newitems);
+                    }
+                }
+
                 // Loop over every key in the dictionary
                 List<string> keys = datFile.Keys;
                 foreach (string key in keys)
@@ -926,30 +950,6 @@ namespace SabreTools.Library.DatFiles
                     }
 
                     outDat.AddRange(key, newitems);
-                }
-
-                // Process description to machine name
-                if (this.DescriptionAsName)
-                    MachineDescriptionToName(outDat);
-
-                // If we are using tags from the DAT, set the proper input for split type unless overridden
-                if (useTags && this.InternalSplit == SplitType.None)
-                    this.InternalSplit = outDat.DatHeader.ForceMerging.AsSplitType();
-
-                // Run internal splitting
-                ProcessSplitType(outDat, this.InternalSplit);
-
-                // We remove any blanks, if we aren't supposed to have any
-                if (!outDat.DatHeader.KeepEmptyGames)
-                {
-                    foreach (string key in outDat.Keys)
-                    {
-                        List<DatItem> items = outDat[key];
-                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
-
-                        outDat.Remove(key);
-                        outDat.AddRange(key, newitems);
-                    }
                 }
 
                 // If we are removing scene dates, do that now
