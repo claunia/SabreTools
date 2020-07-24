@@ -1754,29 +1754,17 @@ namespace SabreTools.Library.DatFiles
                             continue;
                         }
 
-                        // If the merge tag exists but the parent doesn't contain it, add
+                        // If the merge tag exists but the parent doesn't contain it, add to parent
                         else if (disk.MergeTag != null && !datFile[parent].Select(i => i.Name).Contains(disk.MergeTag))
                         {
-                            // Rename the child so it's in a subfolder
-                            item.Name = $"{item.MachineName}\\{item.Name}";
-
-                            // Update the machine to be the new parent
                             item.CopyMachineInformation(copyFrom);
-
-                            // Add the rom to the parent set
                             datFile.Add(parent, item);
                         }
 
-                        // If the parent doesn't already contain this item, add it
+                        // If the parent doesn't already contain this item, add to parent
                         else if (!datFile[parent].Contains(item))
                         {
-                            // Rename the child so it's in a subfolder
-                            item.Name = $"{item.MachineName}\\{item.Name}";
-
-                            // Update the machine to be the new parent
                             item.CopyMachineInformation(copyFrom);
-
-                            // Add the rom to the parent set
                             datFile.Add(parent, item);
                         }
                     }
@@ -1792,43 +1780,28 @@ namespace SabreTools.Library.DatFiles
                             continue;
                         }
 
-                        // If the merge tag exists but the parent doesn't contain it, add
+                        // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
                         else if (rom.MergeTag != null && !datFile[parent].Select(i => i.Name).Contains(rom.MergeTag))
                         {
-                            // Rename the child so it's in a subfolder
                             item.Name = $"{item.MachineName}\\{item.Name}";
-
-                            // Update the machine to be the new parent
                             item.CopyMachineInformation(copyFrom);
-
-                            // Add the rom to the parent set
                             datFile.Add(parent, item);
                         }
 
-                        // If the parent doesn't already contain this item, add it
+                        // If the parent doesn't already contain this item, add to subfolder of parent
                         else if (!datFile[parent].Contains(item))
                         {
-                            // Rename the child so it's in a subfolder
                             item.Name = $"{item.MachineName}\\{item.Name}";
-
-                            // Update the machine to be the new parent
                             item.CopyMachineInformation(copyFrom);
-
-                            // Add the rom to the parent set
                             datFile.Add(parent, item);
                         }
                     }
 
-                    // All other that would be missing
+                    // All other that would be missing to subfolder of parent
                     else if (!datFile[parent].Contains(item))
                     {
-                        // Rename the child so it's in a subfolder
                         item.Name = $"{item.MachineName}\\{item.Name}";
-
-                        // Update the machine to be the new parent
                         item.CopyMachineInformation(copyFrom);
-
-                        // Add the rom to the parent set
                         datFile.Add(parent, item);
                     }
                 }
