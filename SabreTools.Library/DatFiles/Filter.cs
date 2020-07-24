@@ -1761,8 +1761,8 @@ namespace SabreTools.Library.DatFiles
                             datFile.Add(parent, item);
                         }
 
-                        // If the parent doesn't already contain this item, add to parent
-                        else if (!datFile[parent].Contains(item))
+                        // If there is no merge tag, add to parent
+                        else if (disk.MergeTag == null)
                         {
                             item.CopyMachineInformation(copyFrom);
                             datFile.Add(parent, item);
