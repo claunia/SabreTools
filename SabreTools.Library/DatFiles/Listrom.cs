@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
-using NaturalSort;
 
 namespace SabreTools.Library.DatFiles
 {

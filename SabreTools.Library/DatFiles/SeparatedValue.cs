@@ -8,7 +8,6 @@ using SabreTools.Library.DatItems;
 using SabreTools.Library.Readers;
 using SabreTools.Library.Tools;
 using SabreTools.Library.Writers;
-using NaturalSort;
 
 namespace SabreTools.Library.DatFiles
 {

@@ -6,7 +6,6 @@ using System.Text;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
-using NaturalSort;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatFiles

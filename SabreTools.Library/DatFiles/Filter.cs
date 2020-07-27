@@ -779,6 +779,8 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        #region Filter Running
+
         /// <summary>
         /// Filter a DatFile using the inputs
         /// </summary>
@@ -1415,6 +1417,8 @@ namespace SabreTools.Library.DatFiles
 
             return true;
         }
+
+        #endregion
 
         #region Internal Splitting/Merging
 

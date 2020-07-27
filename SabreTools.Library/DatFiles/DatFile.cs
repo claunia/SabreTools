@@ -1350,8 +1350,20 @@ namespace SabreTools.Library.DatFiles
         /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
-        public bool PopulateFromDir(string basePath, Hash omitFromScan, bool bare, bool archivesAsFiles, SkipFileType skipFileType,
-            bool addBlanks, bool addDate, string tempDir, bool copyFiles, string headerToCheckAgainst, bool chdsAsFiles, Filter filter, bool useTags = false)
+        public bool PopulateFromDir(
+            string basePath,
+            Hash omitFromScan,
+            bool bare,
+            bool archivesAsFiles,
+            SkipFileType skipFileType,
+            bool addBlanks,
+            bool addDate,
+            string tempDir,
+            bool copyFiles,
+            string headerToCheckAgainst,
+            bool chdsAsFiles,
+            Filter filter,
+            bool useTags = false)
         {
             // If the description is defined but not the name, set the name from the description
             if (string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
@@ -1457,8 +1469,18 @@ namespace SabreTools.Library.DatFiles
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// <param name="headerToCheckAgainst">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
-        private void CheckFileForHashes(string item, string basePath, Hash omitFromScan, bool archivesAsFiles,
-            SkipFileType skipFileType, bool addBlanks, bool addDate, string tempDir, bool copyFiles, string headerToCheckAgainst, bool chdsAsFiles)
+        private void CheckFileForHashes(
+            string item,
+            string basePath,
+            Hash omitFromScan,
+            bool archivesAsFiles,
+            SkipFileType skipFileType,
+            bool addBlanks,
+            bool addDate,
+            string tempDir,
+            bool copyFiles,
+            string headerToCheckAgainst,
+            bool chdsAsFiles)
         {
             // Special case for if we are in Romba mode (all names are supposed to be SHA-1 hashes)
             if (Header.Romba)
@@ -1563,8 +1585,14 @@ namespace SabreTools.Library.DatFiles
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="headerToCheckAgainst">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
-        private void ProcessFile(string item, string parent, string basePath, Hash omitFromScan,
-            bool addDate, string headerToCheckAgainst, bool chdsAsFiles)
+        private void ProcessFile(
+            string item,
+            string parent,
+            string basePath,
+            Hash omitFromScan,
+            bool addDate,
+            string headerToCheckAgainst,
+            bool chdsAsFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = FileExtensions.GetInfo(item, omitFromScan: omitFromScan, date: addDate, header: headerToCheckAgainst, chdsAsFiles: chdsAsFiles);
@@ -2509,8 +2537,16 @@ namespace SabreTools.Library.DatFiles
         /// <param name="shortname">True if short filenames should be used, false otherwise (Level Split only)</param>
         /// <param name="basedat">True if original filenames should be used as the base for output filename, false otherwise (Level Split only)</param>
         /// <param name="radix">Long value representing the split point (Size Split only)</param>
-        public void DetermineSplitType(List<string> inputs, string outDir, bool inplace, SplittingMode splittingMode,
-            List<string> exta, List<string> extb, bool shortname, bool basedat, long radix)
+        public void DetermineSplitType(
+            List<string> inputs,
+            string outDir,
+            bool inplace,
+            SplittingMode splittingMode,
+            List<string> exta,
+            List<string> extb,
+            bool shortname,
+            bool basedat,
+            long radix)
         {
             // If we somehow have the "none" split type, return
             if (splittingMode == SplittingMode.None)
@@ -2523,6 +2559,7 @@ namespace SabreTools.Library.DatFiles
             foreach (ParentablePath file in files)
             {
                 // Create and fill the new DAT
+                DatFile internalDat = Create(Header);
                 Parse(file);
 
                 // Get the output directory
@@ -2530,25 +2567,19 @@ namespace SabreTools.Library.DatFiles
 
                 // Split and write the DAT
                 if (splittingMode.HasFlag(SplittingMode.Extension))
-                    SplitByExtension(outDir, exta, extb);
+                    internalDat.SplitByExtension(outDir, exta, extb);
 
                 if (splittingMode.HasFlag(SplittingMode.Hash))
-                    SplitByHash(outDir);
+                    internalDat.SplitByHash(outDir);
 
                 if (splittingMode.HasFlag(SplittingMode.Level))
-                    SplitByLevel(outDir, shortname, basedat);
+                    internalDat.SplitByLevel(outDir, shortname, basedat);
 
                 if (splittingMode.HasFlag(SplittingMode.Size))
-                    SplitBySize(outDir, radix);
+                    internalDat.SplitBySize(outDir, radix);
 
                 if (splittingMode.HasFlag(SplittingMode.Type))
-                    SplitByType(outDir);
-
-                // Now re-empty the DAT to make room for the next one
-                DatFormat tempFormat = Header.DatFormat;
-                Header = new DatHeader();
-                Items = new ItemDictionary();
-                Header.DatFormat = tempFormat;
+                    internalDat.SplitByType(outDir);
             }
         }
 
@@ -2559,7 +2590,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="extA">List of extensions to split on (first DAT)</param>
         /// <param name="extB">List of extensions to split on (second DAT)</param>
         /// <returns>True if split succeeded, false otherwise</returns>
-        private bool SplitByExtension(string outDir, List<string> extA, List<string> extB)
+        public bool SplitByExtension(string outDir, List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
             if (Items.TotalCount == 0)
@@ -2617,7 +2648,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outDir">Name of the directory to write the DATs out to</param>
         /// <returns>True if split succeeded, false otherwise</returns>
-        private bool SplitByHash(string outDir)
+        public bool SplitByHash(string outDir)
         {
             // Create each of the respective output DATs
             Globals.Logger.User("Creating and populating new DATs");
@@ -2759,7 +2790,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="shortname">True if short names should be used, false otherwise</param>
         /// <param name="basedat">True if original filenames should be used as the base for output filename, false otherwise</param>
         /// <returns>True if split succeeded, false otherwise</returns>
-        private bool SplitByLevel(string outDir, bool shortname, bool basedat)
+        public bool SplitByLevel(string outDir, bool shortname, bool basedat)
         {
             // First, bucket by games so that we can do the right thing
             Items.BucketBy(BucketedBy.Game, DedupeType.None, lower: false, norename: true);
@@ -2819,31 +2850,31 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Helper function for SplitByLevel to clean and write out a DAT
         /// </summary>
-        /// <param name="datFile">DAT to clean and write out</param>
+        /// <param name="newDatFile">DAT to clean and write out</param>
         /// <param name="outDir">Directory to write out to</param>
         /// <param name="shortname">True if short naming scheme should be used, false otherwise</param>
         /// <param name="restore">True if original filenames should be used as the base for output filename, false otherwise</param>
-        private void SplitByLevelHelper(DatFile datFile, string outDir, bool shortname, bool restore)
+        private void SplitByLevelHelper(DatFile newDatFile, string outDir, bool shortname, bool restore)
         {
             // Get the name from the DAT to use separately
-            string name = datFile.Header.Name;
+            string name = newDatFile.Header.Name;
             string expName = name.Replace("/", " - ").Replace("\\", " - ");
 
             // Now set the new output values
-            datFile.Header.FileName = WebUtility.HtmlDecode(string.IsNullOrWhiteSpace(name)
+            newDatFile.Header.FileName = WebUtility.HtmlDecode(string.IsNullOrWhiteSpace(name)
                 ? Header.FileName
                 : (shortname
                     ? Path.GetFileName(name)
                     : expName
                     )
                 );
-            datFile.Header.FileName = (restore ? $"{Header.FileName} ({datFile.Header.FileName})" : datFile.Header.FileName);
-            datFile.Header.Name = $"{Header.Name} ({expName})";
-            datFile.Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? datFile.Header.Name : $"{Header.Description} ({expName})");
-            datFile.Header.Type = null;
+            newDatFile.Header.FileName = (restore ? $"{Header.FileName} ({newDatFile.Header.FileName})" : newDatFile.Header.FileName);
+            newDatFile.Header.Name = $"{Header.Name} ({expName})";
+            newDatFile.Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? newDatFile.Header.Name : $"{Header.Description} ({expName})");
+            newDatFile.Header.Type = null;
 
             // Write out the temporary DAT to the proper directory
-            datFile.Write(outDir);
+            newDatFile.Write(outDir);
         }
 
         /// <summary>
@@ -2852,7 +2883,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Name of the directory to write the DATs out to</param>
         /// <param name="radix">Long value representing the split point</param>
         /// <returns>True if split succeeded, false otherwise</returns>
-        private bool SplitBySize(string outDir, long radix)
+        public bool SplitBySize(string outDir, long radix)
         {
             // Create each of the respective output DATs
             Globals.Logger.User("Creating and populating new DATs");
@@ -2901,7 +2932,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outDir">Name of the directory to write the DATs out to</param>
         /// <returns>True if split succeeded, false otherwise</returns>
-        private bool SplitByType(string outDir)
+        public bool SplitByType(string outDir)
         {
             // Create each of the respective output DATs
             Globals.Logger.User("Creating and populating new DATs");
