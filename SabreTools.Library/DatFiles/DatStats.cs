@@ -411,8 +411,14 @@ namespace SabreTools.Library.DatFiles
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         /// <param name="statDatFormat" > Set the statistics output format to use</param>
-        public static void OutputStats(List<string> inputs, string reportName, string outDir, bool single,
-            bool baddumpCol, bool nodumpCol, StatReportFormat statDatFormat)
+        public static void OutputStats(
+            List<string> inputs,
+            string reportName,
+            string outDir,
+            bool single,
+            bool baddumpCol,
+            bool nodumpCol,
+            StatReportFormat statDatFormat)
         {
             // If there's no output format, set the default
             if (statDatFormat == StatReportFormat.None)
@@ -480,23 +486,23 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.Verbose($"Beginning stat collection for '{file}'", false);
                 List<string> games = new List<string>();
                 DatFile datdata = DatFile.CreateAndParse(file);
-                datdata.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
+                datdata.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
                 Globals.Logger.User($"Adding stats for file '{file}'\n", false);
                 if (single)
                 {
-                    reports.ForEach(report => report.ReplaceStatistics(datdata.DatHeader.FileName, datdata.Keys.Count, datdata.DatStats));
+                    reports.ForEach(report => report.ReplaceStatistics(datdata.DatHeader.FileName, datdata.Items.Keys.Count, datdata.Items.Statistics));
                     reports.ForEach(report => report.Write());
                 }
 
                 // Add single DAT stats to dir
-                dirStats.AddStats(datdata.DatStats);
-                dirStats.GameCount += datdata.Keys.Count();
+                dirStats.AddStats(datdata.Items.Statistics);
+                dirStats.GameCount += datdata.Items.Keys.Count();
 
                 // Add single DAT stats to totals
-                totalStats.AddStats(datdata.DatStats);
-                totalStats.GameCount += datdata.Keys.Count();
+                totalStats.AddStats(datdata.Items.Statistics);
+                totalStats.GameCount += datdata.Items.Keys.Count();
 
                 // Make sure to assign the new directory
                 lastdir = thisdir;

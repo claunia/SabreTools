@@ -468,9 +468,9 @@ have a current entry in the DAT index.";
                 string crcsha1query = "INSERT OR IGNORE INTO crcsha1 (crc, sha1) VALUES";
                 string md5sha1query = "INSERT OR IGNORE INTO md5sha1 (md5, sha1) VALUES";
 
-                foreach (string key in df.Keys)
+                foreach (string key in df.Items.Keys)
                 {
-                    List<DatItem> datItems = df[key];
+                    List<DatItem> datItems = df.Items[key];
                     foreach (Rom rom in datItems)
                     {
                         // If we care about if the file exists, check the databse first
@@ -504,7 +504,7 @@ have a current entry in the DAT index.";
                                 }
 
                                 // Add to the Dat
-                                need.Add(key, rom);
+                                need.Items.Add(key, rom);
                             }
                         }
                         // Otherwise, just add the file to the list
@@ -532,7 +532,7 @@ have a current entry in the DAT index.";
                             }
 
                             // Add to the Dat
-                            need.Add(key, rom);
+                            need.Items.Add(key, rom);
                         }
                     }
                 }
@@ -1566,7 +1566,7 @@ contents of any changed dats.";
 
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                 datroot.PopulateFromDir(_dats, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
-                datroot.BucketBy(BucketedBy.SHA1, DedupeType.None);
+                datroot.Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
                 // Create a List of dat hashes in the database (SHA-1)
                 List<string> databaseDats = new List<string>();
@@ -1585,9 +1585,9 @@ contents of any changed dats.";
                 {
                     sldr.Read();
                     string hash = sldr.GetString(0);
-                    if (datroot.Contains(hash))
+                    if (datroot.Items.ContainsKey(hash))
                     {
-                        datroot.Remove(hash);
+                        datroot.Items.Remove(hash);
                         databaseDats.Add(hash);
                     }
                     else if (!databaseDats.Contains(hash))
@@ -1596,7 +1596,7 @@ contents of any changed dats.";
                     }
                 }
 
-                datroot.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
+                datroot.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
                 watch.Stop();
 
@@ -1605,9 +1605,9 @@ contents of any changed dats.";
 
                 // Loop through the Dictionary and add all data
                 watch.Start("Adding new DAT information");
-                foreach (string key in datroot.Keys)
+                foreach (string key in datroot.Items.Keys)
                 {
-                    foreach (Rom value in datroot[key])
+                    foreach (Rom value in datroot.Items[key])
                     {
                         AddDatToDatabase(value, dbc);
                     }
@@ -1695,7 +1695,7 @@ contents of any changed dats.";
 
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     depot.PopulateFromDir(depotname, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
-                    depot.BucketBy(BucketedBy.SHA1, DedupeType.None);
+                    depot.Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
                     // Set the base queries to use
                     string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";
@@ -1706,10 +1706,10 @@ contents of any changed dats.";
 
                     // Once we have both, check for any new files
                     List<string> dupehashes = new List<string>();
-                    List<string> keys = depot.Keys;
+                    IEnumerable<string> keys = depot.Items.Keys;
                     foreach (string key in keys)
                     {
-                        List<DatItem> roms = depot[key];
+                        List<DatItem> roms = depot.Items[key];
                         foreach (Rom rom in roms)
                         {
                             if (hashes.Contains(rom.SHA1))

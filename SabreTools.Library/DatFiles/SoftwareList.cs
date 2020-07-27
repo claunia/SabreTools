@@ -375,14 +375,14 @@ namespace SabreTools.Library.DatFiles
                         // If the rom is continue or ignore, add the size to the previous rom
                         if (reader.GetAttribute("loadflag") == "continue" || reader.GetAttribute("loadflag") == "ignore")
                         {
-                            int index = this[key].Count - 1;
-                            DatItem lastrom = this[key][index];
+                            int index = Items[key].Count - 1;
+                            DatItem lastrom = Items[key][index];
                             if (lastrom.ItemType == ItemType.Rom)
                             {
                                 ((Rom)lastrom).Size += Sanitizer.CleanSize(reader.GetAttribute("size"));
                             }
-                            this[key].RemoveAt(index);
-                            this[key].Add(lastrom);
+                            Items[key].RemoveAt(index);
+                            Items[key].Add(lastrom);
                             reader.Read();
                             continue;
                         }
@@ -555,9 +555,9 @@ namespace SabreTools.Library.DatFiles
                 string lastgame = null;
 
                 // Use a sorted list of games to output
-                foreach (string key in SortedKeys)
+                foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> roms = this[key];
+                    List<DatItem> roms = Items[key];
 
                     // Resolve the names in the block
                     roms = DatItem.ResolveNames(roms);

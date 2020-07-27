@@ -126,9 +126,9 @@ namespace SabreTools.Library.DatFiles
                 };
 
                 // Use a sorted list of games to output
-                foreach (string key in SortedKeys)
+                foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> roms = this[key];
+                    List<DatItem> roms = Items[key];
 
                     // Resolve the names in the block
                     roms = DatItem.ResolveNames(roms);

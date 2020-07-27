@@ -261,9 +261,9 @@ namespace RombaSharp
 
             // Loop through the parsed entries
             bool hasItems = false;
-            foreach (string romkey in tempdat.Keys)
+            foreach (string romkey in tempdat.Items.Keys)
             {
-                foreach (DatItem datItem in tempdat[romkey])
+                foreach (DatItem datItem in tempdat.Items[romkey])
                 {
                     Globals.Logger.Verbose($"Checking and adding file '{datItem.Name}'");
 
