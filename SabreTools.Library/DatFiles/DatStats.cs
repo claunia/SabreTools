@@ -435,10 +435,10 @@ namespace SabreTools.Library.DatFiles
             Dictionary<StatReportFormat, string> outputs = CreateOutStatsNames(outDir, statDatFormat, reportName);
 
             // Make sure we have all files and then order them
-            List<string> files = DirectoryExtensions.GetFilesOnly(inputs);
+            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(inputs);
             files = files
-                .OrderBy(i => Path.GetDirectoryName(i))
-                .ThenBy(i => Path.GetFileName(i))
+                .OrderBy(i => Path.GetDirectoryName(i.CurrentPath))
+                .ThenBy(i => Path.GetFileName(i.CurrentPath))
                 .ToList();
 
             // Get all of the writers that we need
@@ -456,11 +456,11 @@ namespace SabreTools.Library.DatFiles
             DatStats dirStats = new DatStats();
 
             // Now process each of the input files
-            foreach (string file in files)
+            foreach (ParentablePath file in files)
             {
                 // Get the directory for the current file
-                string thisdir = Path.GetDirectoryName(file);
-                basepath = Path.GetDirectoryName(Path.GetDirectoryName(file));
+                string thisdir = Path.GetDirectoryName(file.CurrentPath);
+                basepath = Path.GetDirectoryName(Path.GetDirectoryName(file.CurrentPath));
 
                 // If we don't have the first file and the directory has changed, show the previous directory stats and reset
                 if (lastdir != null && thisdir != lastdir)
@@ -485,7 +485,7 @@ namespace SabreTools.Library.DatFiles
 
                 Globals.Logger.Verbose($"Beginning stat collection for '{file}'", false);
                 List<string> games = new List<string>();
-                DatFile datdata = DatFile.CreateAndParse(file);
+                DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
                 datdata.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)

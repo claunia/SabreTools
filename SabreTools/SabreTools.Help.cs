@@ -2948,10 +2948,10 @@ The following systems have headers that this program can work with:
                 string outDir = GetString(features, OutputDirStringValue);
 
                 // Get only files from the inputs
-                List<string> files = DirectoryExtensions.GetFilesOnly(Inputs);
-                foreach (string file in files)
+                List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
+                foreach (ParentablePath file in files)
                 {
-                    Skipper.DetectTransformStore(file, outDir, nostore);
+                    Skipper.DetectTransformStore(file.CurrentPath, outDir, nostore);
                 }
             }
         }
@@ -3020,10 +3020,10 @@ The following systems have headers that this program can work with:
                 string outDir = GetString(features, OutputDirStringValue);
 
                 // Get only files from the inputs
-                List<string> files = DirectoryExtensions.GetFilesOnly(Inputs);
-                foreach (string file in files)
+                List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
+                foreach (ParentablePath file in files)
                 {
-                    Skipper.RestoreHeader(file, outDir);
+                    Skipper.RestoreHeader(file.CurrentPath, outDir);
                 }
             }
         }
@@ -3116,12 +3116,12 @@ The following systems have headers that this program can work with:
 
                 // Get a list of files from the input datfiles
                 var datfiles = GetList(features, DatListValue);
-                datfiles = DirectoryExtensions.GetFilesOnly(datfiles);
+                var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
                 // If we are in individual mode, process each DAT on their own, appending the DAT name to the output dir
                 if (GetBoolean(features, IndividualValue))
                 {
-                    foreach (string datfile in datfiles)
+                    foreach (ParentablePath datfile in datfilePaths)
                     {
                         DatFile datdata = DatFile.Create();
                         datdata.Parse(datfile, 99, keep: true);
@@ -3141,7 +3141,7 @@ The following systems have headers that this program can work with:
 
                     // Add all of the input DATs into one huge internal DAT
                     DatFile datdata = DatFile.Create();
-                    foreach (string datfile in datfiles)
+                    foreach (ParentablePath datfile in datfilePaths)
                     {
                         datdata.Parse(datfile, 99, keep: true);
                     }
@@ -3540,7 +3540,7 @@ The stats that are outputted are as follows:
             {
                 // Get a list of files from the input datfiles
                 var datfiles = GetList(features, DatListValue);
-                datfiles = DirectoryExtensions.GetFilesOnly(datfiles);
+                var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
                 // Get feature flags
                 bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
@@ -3553,7 +3553,7 @@ The stats that are outputted are as follows:
                 // If we are in individual mode, process each DAT on their own
                 if (GetBoolean(features, IndividualValue))
                 {
-                    foreach (string datfile in datfiles)
+                    foreach (ParentablePath datfile in datfilePaths)
                     {
                         DatFile datdata = DatFile.Create();
                         datdata.Parse(datfile, 99, keep: true);
@@ -3573,7 +3573,7 @@ The stats that are outputted are as follows:
 
                     // Add all of the input DATs into one huge internal DAT
                     DatFile datdata = DatFile.Create();
-                    foreach (string datfile in datfiles)
+                    foreach (ParentablePath datfile in datfilePaths)
                     {
                         datdata.Parse(datfile, 99, keep: true);
                         filter.FilterDatFile(datdata, true);
