@@ -290,11 +290,8 @@ namespace SabreTools.Library.DatFiles
                 // Write out each of the machines and roms
                 string lastgame = null;
 
-                // Get a properly sorted set of keys
-                List<string> keys = Keys;
-                keys.Sort(new NaturalComparer());
-
-                foreach (string key in keys)
+                // Use a sorted list of games to output
+                foreach (string key in SortedKeys)
                 {
                     List<DatItem> roms = this[key];
 

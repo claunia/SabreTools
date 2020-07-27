@@ -125,11 +125,8 @@ namespace SabreTools.Library.DatFiles
                     VerifyFieldCount = true
                 };
 
-                // Get a properly sorted set of keys
-                List<string> keys = Keys;
-                keys.Sort(new NaturalComparer());
-
-                foreach (string key in keys)
+                // Use a sorted list of games to output
+                foreach (string key in SortedKeys)
                 {
                     List<DatItem> roms = this[key];
 

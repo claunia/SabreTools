@@ -240,6 +240,20 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Get the keys in sorted order from the file dictionary
+        /// </summary>
+        /// <returns>List of the keys in sorted order</returns>
+        public List<string> SortedKeys
+        {
+            get
+            {
+                var keys = Items.Keys.ToList();
+                keys.Sort(new NaturalComparer());
+                return keys;
+            }
+        }
+
+        /// <summary>
         /// Ensure the key exists in the items dictionary
         /// </summary>
         /// <param name="key">Key to ensure</param>
@@ -1335,8 +1349,8 @@ namespace SabreTools.Library.DatFiles
 
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating all output DATs");
-            List<string> keys = Keys;
 
+            List<string> keys = Keys;
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
                 List<DatItem> items = DatItem.Merge(this[key]);
