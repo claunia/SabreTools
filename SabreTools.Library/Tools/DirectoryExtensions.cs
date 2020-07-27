@@ -62,21 +62,24 @@ namespace SabreTools.Library.Tools
         /// Retrieve a list of just directories from inputs
         /// </summary>
         /// <param name="inputs">List of strings representing directories and files</param>
-        /// <param name="appendparent">True if the parent name should be appended after the special character "¬", false otherwise (default)</param>
+        /// <param name="appendparent">True if the parent name should be included in the ParentablePath, false otherwise (default)</param>
         /// <returns>List of strings representing just directories from the inputs</returns>
-        public static List<string> GetDirectoriesOnly(List<string> inputs, bool appendparent = false)
+        public static List<ParentablePath> GetDirectoriesOnly(List<string> inputs, bool appendparent = false)
         {
-            List<string> outputs = new List<string>();
+            List<ParentablePath> outputs = new List<ParentablePath>();
             foreach (string input in inputs)
             {
                 if (Directory.Exists(input))
                 {
+                    // Get the parent path in case of appending
+                    string parentPath = Path.GetFullPath(input);
+
                     List<string> directories = GetDirectoriesOrdered(input);
                     foreach (string dir in directories)
                     {
                         try
                         {
-                            outputs.Add(Path.GetFullPath(dir) + (appendparent ? $"¬{Path.GetFullPath(input)}" : string.Empty));
+                            outputs.Add(new ParentablePath(Path.GetFullPath(dir), appendparent ? parentPath : string.Empty));
                         }
                         catch (PathTooLongException)
                         {
@@ -130,13 +133,16 @@ namespace SabreTools.Library.Tools
         /// Retrieve a list of just files from inputs
         /// </summary>
         /// <param name="inputs">List of strings representing directories and files</param>
-        /// <param name="appendparent">True if the parent name should be appended after the special character "¬", false otherwise (default)</param>
+        /// <param name="appendparent">True if the parent name should be be included in the ParentablePath, false otherwise (default)</param>
         /// <returns>List of strings representing just files from the inputs</returns>
-        public static List<string> GetFilesOnly(List<string> inputs, bool appendparent = false)
+        public static List<ParentablePath> GetFilesOnly(List<string> inputs, bool appendparent = false)
         {
-            List<string> outputs = new List<string>();
+            List<ParentablePath> outputs = new List<ParentablePath>();
             foreach (string input in inputs)
             {
+                // Get the parent path in case of appending
+                string parentPath = Path.GetFullPath(input);
+
                 if (Directory.Exists(input))
                 {
                     List<string> files = GetFilesOrdered(input);
@@ -144,7 +150,7 @@ namespace SabreTools.Library.Tools
                     {
                         try
                         {
-                            outputs.Add(Path.GetFullPath(file) + (appendparent ? $"¬{Path.GetFullPath(input)}" : string.Empty));
+                            outputs.Add(new ParentablePath(Path.GetFullPath(file), appendparent ? parentPath : string.Empty));
                         }
                         catch (PathTooLongException)
                         {
@@ -160,7 +166,7 @@ namespace SabreTools.Library.Tools
                 {
                     try
                     {
-                        outputs.Add(Path.GetFullPath(input) + (appendparent ? $"¬{Path.GetFullPath(input)}" : string.Empty));
+                        outputs.Add(new ParentablePath(Path.GetFullPath(input), appendparent ? parentPath : string.Empty));
                     }
                     catch (PathTooLongException)
                     {

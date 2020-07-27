@@ -1072,7 +1072,7 @@ particular DAT.";
                 Globals.Logger.Error("This feature is not yet implemented: import");
 
                 // First ensure the inputs and database connection
-                Inputs = DirectoryExtensions.GetFilesOnly(Inputs);
+                Inputs = DirectoryExtensions.GetFilesOnly(Inputs).Select(p => p.CurrentPath).ToList();
                 SqliteConnection dbc = new SqliteConnection(_connectionString);
                 SqliteCommand slc = new SqliteCommand();
                 dbc.Open();
@@ -1349,7 +1349,7 @@ particular DAT.";
                 Globals.Logger.Error("This feature is not yet implemented: merge");
 
                 // Verify that the inputs are valid directories
-                Inputs = DirectoryExtensions.GetDirectoriesOnly(Inputs);
+                Inputs = DirectoryExtensions.GetDirectoriesOnly(Inputs).Select(p => p.CurrentPath).ToList();
 
                 // Loop over all input directories
                 foreach (string input in Inputs)

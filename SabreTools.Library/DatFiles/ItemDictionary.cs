@@ -36,11 +36,6 @@ namespace SabreTools.Library.DatFiles
         #region Publically available fields
 
         /// <summary>
-        /// DatStats object for reporting
-        /// </summary>
-        public DatStats Statistics { get; set; }
-
-        /// <summary>
         /// Get the keys from the file dictionary
         /// </summary>
         /// <returns>List of the keys</returns>
@@ -62,6 +57,11 @@ namespace SabreTools.Library.DatFiles
                 return keys;
             }
         }
+
+        /// <summary>
+        /// DatStats object for reporting
+        /// </summary>
+        public DatStats Statistics { get; private set; }
 
         #endregion
 
@@ -261,19 +261,6 @@ namespace SabreTools.Library.DatFiles
             items = new Dictionary<string, List<DatItem>>();
 
             Statistics = new DatStats();
-        }
-
-        /// <summary>
-        /// Constructor for statistics only
-        /// </summary>
-        /// <param name="stats">Existing statistics to pre-populate</param>
-        public ItemDictionary(DatStats stats)
-        {
-            bucketedBy = BucketedBy.Default;
-            mergedBy = DedupeType.None;
-            items = new Dictionary<string, List<DatItem>>();
-
-            Statistics = stats;
         }
 
         #endregion

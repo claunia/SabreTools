@@ -21,7 +21,7 @@ namespace SabreTools.Library.Help
         public string Name { get; protected set; }
         public List<string> Flags { get; protected set; }
         public string Description { get; protected set; }
-        public string LongDescription { get; protected set; } // TODO: Use this to generate README.1ST?
+        public string LongDescription { get; protected set; }
         public Dictionary<string, Feature> Features { get; protected set; }
 
         #endregion

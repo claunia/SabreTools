@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NaturalSort;
+
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
@@ -97,8 +97,16 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         private FilterItem<string> RebuildTo = new FilterItem<string>();
 
-        // TODO: Machine.Devices - List<string>
-        // TODO: Machine.SlotOptions - List<string>
+        /// <summary>
+        /// Include or exclude machine devices
+        /// </summary>
+        private FilterItem<string> Devices = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine slotoptions
+        /// </summary>
+        private FilterItem<string> SlotOptions = new FilterItem<string>();
+
         // TODO: Machine.Infos - List<KeyValuePair<string, string>>
 
         /// <summary>
@@ -461,6 +469,20 @@ namespace SabreTools.Library.DatFiles
                         RebuildTo.NegativeSet.Add(value);
                     else
                         RebuildTo.PositiveSet.Add(value);
+                    break;
+
+                case Field.Devices:
+                    if (negate)
+                        Devices.NegativeSet.Add(value);
+                    else
+                        Devices.PositiveSet.Add(value);
+                    break;
+
+                case Field.SlotOptions:
+                    if (negate)
+                        SlotOptions.NegativeSet.Add(value);
+                    else
+                        SlotOptions.PositiveSet.Add(value);
                     break;
 
                 case Field.MachineType:
@@ -1083,6 +1105,30 @@ namespace SabreTools.Library.DatFiles
             if (this.RebuildTo.MatchesPositiveSet(item.RebuildTo) == false)
                 return false;
             if (this.RebuildTo.MatchesNegativeSet(item.RebuildTo) == true)
+                return false;
+
+            // Filter on devices
+            bool anyPositiveDevice = false;
+            bool anyNegativeDevice = false;
+            foreach (string device in item.Devices)
+            {
+                anyPositiveDevice |= this.Devices.MatchesPositiveSet(device) == true;
+                anyNegativeDevice |= this.Devices.MatchesNegativeSet(device) == false;
+            }
+
+            if (!anyPositiveDevice || anyNegativeDevice)
+                return false;
+
+            // Filter on slot options
+            bool anyPositiveSlotOption = false;
+            bool anyNegativeSlotOption = false;
+            foreach (string device in item.SlotOptions)
+            {
+                anyPositiveSlotOption |= this.SlotOptions.MatchesPositiveSet(device) == true;
+                anyNegativeSlotOption |= this.SlotOptions.MatchesNegativeSet(device) == false;
+            }
+
+            if (!anyPositiveSlotOption || anyNegativeSlotOption)
                 return false;
 
             // Filter on machine type

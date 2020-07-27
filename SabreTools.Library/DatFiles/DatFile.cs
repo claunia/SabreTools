@@ -249,8 +249,8 @@ namespace SabreTools.Library.DatFiles
             bool onlySame)
         {
             // Ensure we only have files in the inputs
-            List<string> inputFileNames = DirectoryExtensions.GetFilesOnly(inputPaths, appendparent: true);
-            List<string> baseFileNames = DirectoryExtensions.GetFilesOnly(basePaths);
+            List<ParentablePath> inputFileNames = DirectoryExtensions.GetFilesOnly(inputPaths, appendparent: true);
+            List<ParentablePath> baseFileNames = DirectoryExtensions.GetFilesOnly(basePaths);
 
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)
@@ -318,7 +318,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Paths to DATs to parse</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>List of DatData objects representing headers</returns>
-        private List<DatHeader> PopulateUserData(List<string> inputs, Filter filter)
+        private List<DatHeader> PopulateUserData(List<ParentablePath> inputs, Filter filter)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
@@ -326,8 +326,8 @@ namespace SabreTools.Library.DatFiles
             // Parse all of the DATs into their own DatFiles in the array
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>
             {
-                string input = inputs[i];
-                Globals.Logger.User($"Adding DAT: {input.Split('¬')[0]}");
+                var input = inputs[i];
+                Globals.Logger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = Create(DatHeader.CloneFiltering());
                 datFiles[i].Parse(input, i, keep: true);
             });
@@ -358,7 +358,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
         private void BaseReplace(
-            List<string> inputFileNames,
+            List<ParentablePath> inputFileNames,
             string outDir,
             bool inplace,
             Filter filter,
@@ -423,9 +423,9 @@ namespace SabreTools.Library.DatFiles
             };
 
             // We want to try to replace each item in each input DAT from the base
-            foreach (string path in inputFileNames)
+            foreach (ParentablePath path in inputFileNames)
             {
-                Globals.Logger.User($"Replacing items in '{path.Split('¬')[0]}' from the base DAT");
+                Globals.Logger.User($"Replacing items in '{path.CurrentPath}' from the base DAT");
 
                 // First we parse in the DAT internally
                 DatFile intDat = Create(DatHeader.CloneFiltering());
@@ -844,15 +844,15 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputFileNames">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        private void DiffAgainst(List<string> inputFileNames, string outDir, bool inplace)
+        private void DiffAgainst(List<ParentablePath> inputFileNames, string outDir, bool inplace)
         {
             // For comparison's sake, we want to use CRC as the base ordering
             Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
 
             // Now we want to compare each input DAT against the base
-            foreach (string path in inputFileNames)
+            foreach (ParentablePath path in inputFileNames)
             {
-                Globals.Logger.User($"Comparing '{path.Split('¬')[0]}' to base DAT");
+                Globals.Logger.User($"Comparing '{path.CurrentPath}' to base DAT");
 
                 // First we parse in the DAT internally
                 DatFile intDat = Create();
@@ -896,7 +896,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Output directory to write the DATs to</param>
         /// <param name="inplace">True if cascaded diffs are outputted in-place, false otherwise</param>
         /// <param name="skip">True if the first cascaded diff file should be skipped on output, false otherwise</param>
-        private void DiffCascade(List<string> inputs, List<DatHeader> datHeaders, string outDir, bool inplace, bool skip)
+        private void DiffCascade(List<ParentablePath> inputs, List<DatHeader> datHeaders, string outDir, bool inplace, bool skip)
         {
             // Create a list of DatData objects representing output files
             List<DatFile> outDats = new List<DatFile>();
@@ -979,7 +979,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">List of inputs to write out from</param>
         /// <param name="outDir">Output directory to write the DATs to</param>
         /// <param name="diff">Non-zero flag for diffing mode, zero otherwise</param>
-        private void DiffNoCascade(List<string> inputs, string outDir, UpdateMode diff)
+        private void DiffNoCascade(List<ParentablePath> inputs, string outDir, UpdateMode diff)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing all output DATs");
 
@@ -1071,7 +1071,7 @@ namespace SabreTools.Library.DatFiles
                             if (diff.HasFlag(UpdateMode.DiffNoDupesOnly))
                             {
                                 DatItem newrom = item.Clone() as DatItem;
-                                newrom.MachineName += $" ({Path.GetFileNameWithoutExtension(inputs[item.IndexId].Split('¬')[0])})";
+                                newrom.MachineName += $" ({Path.GetFileNameWithoutExtension(inputs[item.IndexId].CurrentPath)})";
 
                                 outerDiffData.Items.Add(key, newrom);
                             }
@@ -1084,7 +1084,7 @@ namespace SabreTools.Library.DatFiles
                         if (item.DupeType.HasFlag(DupeType.External))
                         {
                             DatItem newrom = item.Clone() as DatItem;
-                            newrom.MachineName += $" ({Path.GetFileNameWithoutExtension(inputs[item.IndexId].Split('¬')[0])})";
+                            newrom.MachineName += $" ({Path.GetFileNameWithoutExtension(inputs[item.IndexId].CurrentPath)})";
 
                             dupeData.Items.Add(key, newrom);
                         }
@@ -1125,7 +1125,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
         /// <param name="outDir">Output directory to write the DATs to</param>
-        private void MergeNoDiff(List<string> inputs, string outDir)
+        private void MergeNoDiff(List<ParentablePath> inputs, string outDir)
         {
             // If we're in SuperDAT mode, prefix all games with their respective DATs
             if (DatHeader.Type == "SuperDAT")
@@ -1137,8 +1137,8 @@ namespace SabreTools.Library.DatFiles
                     foreach (DatItem item in items)
                     {
                         DatItem newItem = item;
-                        string filename = inputs[newItem.IndexId].Split('¬')[0];
-                        string rootpath = inputs[newItem.IndexId].Split('¬')[1];
+                        string filename = inputs[newItem.IndexId].CurrentPath;
+                        string rootpath = inputs[newItem.IndexId].ParentPath;
 
                         rootpath += (string.IsNullOrWhiteSpace(rootpath) ? string.Empty : Path.DirectorySeparatorChar.ToString());
                         filename = filename.Remove(0, rootpath.Length);
@@ -1165,13 +1165,13 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        private void Update(List<string> inputFileNames, string outDir, bool inplace, Filter filter)
+        private void Update(List<ParentablePath> inputFileNames, string outDir, bool inplace, Filter filter)
         {
             // Iterate over the files
-            foreach (string file in inputFileNames)
+            foreach (ParentablePath file in inputFileNames)
             {
                 DatFile innerDatdata = Create(DatHeader);
-                Globals.Logger.User($"Processing '{Path.GetFileName(file.Split('¬')[0])}'");
+                Globals.Logger.User($"Processing '{Path.GetFileName(file.CurrentPath)}'");
                 innerDatdata.Parse(file, keep: true,
                     keepext: innerDatdata.DatHeader.DatFormat.HasFlag(DatFormat.TSV)
                         || innerDatdata.DatHeader.DatFormat.HasFlag(DatFormat.CSV)
@@ -1197,7 +1197,7 @@ namespace SabreTools.Library.DatFiles
         public static DatFile CreateAndParse(string filename)
         {
             DatFile datFile = Create();
-            datFile.Parse(filename);
+            datFile.Parse(new ParentablePath(filename));
             return datFile;
         }
 
@@ -1208,27 +1208,26 @@ namespace SabreTools.Library.DatFiles
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
-        public void Parse(string filename, int indexId = 0, bool keep = false, bool keepext = false)
+        public void Parse(ParentablePath filename, int indexId = 0, bool keep = false, bool keepext = false)
         {
-            // Check if we have a split path and get the filename accordingly
-            if (filename.Contains("¬"))
-                filename = filename.Split('¬')[0];
+            // Get the current path from the filename
+            string currentPath = filename.CurrentPath;
 
             // Check the file extension first as a safeguard
-            if (!PathExtensions.HasValidDatExtension(filename))
+            if (!PathExtensions.HasValidDatExtension(currentPath))
                 return;
 
             // If the output filename isn't set already, get the internal filename
-            DatHeader.FileName = (string.IsNullOrWhiteSpace(DatHeader.FileName) ? (keepext ? Path.GetFileName(filename) : Path.GetFileNameWithoutExtension(filename)) : DatHeader.FileName);
+            DatHeader.FileName = (string.IsNullOrWhiteSpace(DatHeader.FileName) ? (keepext ? Path.GetFileName(currentPath) : Path.GetFileNameWithoutExtension(currentPath)) : DatHeader.FileName);
 
             // If the output type isn't set already, get the internal output type
-            DatHeader.DatFormat = (DatHeader.DatFormat == 0 ? filename.GetDatFormat() : DatHeader.DatFormat);
+            DatHeader.DatFormat = (DatHeader.DatFormat == 0 ? currentPath.GetDatFormat() : DatHeader.DatFormat);
             Items.SetBucketedBy(BucketedBy.CRC); // Setting this because it can reduce issues later
 
             // Now parse the correct type of DAT
             try
             {
-                Create(filename.GetDatFormat(), this)?.ParseFile(filename, indexId, keep);
+                Create(currentPath.GetDatFormat(), this)?.ParseFile(currentPath, indexId, keep);
             }
             catch (Exception ex)
             {
@@ -2551,10 +2550,10 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get only files from the inputs
-            List<string> files = DirectoryExtensions.GetFilesOnly(inputs, appendparent: true);
+            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(inputs, appendparent: true);
 
             // Loop over the input files
-            foreach (string file in files)
+            foreach (ParentablePath file in files)
             {
                 // Create and fill the new DAT
                 Parse(file);
@@ -3058,10 +3057,6 @@ namespace SabreTools.Library.DatFiles
                     Items.RecalculateStats();
 
                 Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
-
-                // TODO: How can the size be negative when dealing with Int64?
-                if (Items.Statistics.TotalSize < 0)
-                    Items.Statistics.TotalSize = Int64.MaxValue + Items.Statistics.TotalSize;
 
                 var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
                 consoleOutput.ReplaceStatistics(DatHeader.FileName, Items.Keys.Count(), Items.Statistics);

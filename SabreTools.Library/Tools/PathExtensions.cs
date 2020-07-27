@@ -40,36 +40,32 @@ namespace SabreTools.Library.Tools
         /// <param name="path">Input combined path to use</param>
         /// <param name="sanitize">True if path separators should be converted to '-', false otherwise</param>
         /// <returns>Subpath for the file</returns>
-        public static string GetNormalizedFileName(string path, bool sanitize)
+        public static string GetNormalizedFileName(ParentablePath path, bool sanitize)
         {
             // Check that we have a combined path first
-            if (!path.Contains("¬"))
+            if (string.IsNullOrWhiteSpace(path.ParentPath))
             {
-                string filename = Path.GetFileName(path);
+                string filename = Path.GetFileName(path.CurrentPath);
                 if (sanitize)
                     filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
                 return filename;
             }
-
-            // First separate out the parts
-            string child = path.Split('¬')[0];
-            string parent = path.Split('¬')[1];
 
             // If the parts are the same, return the filename from the first part
-            if (string.Equals(child, parent, StringComparison.Ordinal))
+            if (string.Equals(path.CurrentPath, path.ParentPath, StringComparison.Ordinal))
             {
-                string filename = Path.GetFileName(child);
+                string filename = Path.GetFileName(path.CurrentPath);
                 if (sanitize)
                     filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
                 return filename;
             }
 
-            // Otherwise, remove the parent from the child and return the remainder
+            // Otherwise, remove the path.ParentPath from the path.CurrentPath and return the remainder
             else
             {
-                string filename = child.Remove(0, parent.Length + 1);
+                string filename = path.CurrentPath.Remove(0, path.ParentPath.Length + 1);
                 if (sanitize)
                     filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
@@ -84,36 +80,34 @@ namespace SabreTools.Library.Tools
         /// <param name="inputpath">Input path to create output for</param>
         /// <param name="inplace">True if the output file should go to the same input folder, false otherwise</param>
         /// <returns>Complete output path</returns>
-        public static string GetOutputPath(string outDir, string inputpath, bool inplace)
+        public static string GetOutputPath(string outDir, ParentablePath inputPath, bool inplace)
         {
             // First, we need to ensure the output directory
             outDir = DirectoryExtensions.Ensure(outDir);
 
             // Check if we have a split path or not
-            bool splitpath = inputpath.Contains("¬");
+            bool splitpath = !string.IsNullOrWhiteSpace(inputPath.ParentPath);
 
             // If we have a split path, we need to treat the input separately
             if (splitpath)
             {
-                string[] split = inputpath.Split('¬');
-
                 // If we have an inplace output, use the directory name from the input path
                 if (inplace)
                 {
-                    outDir = Path.GetDirectoryName(split[0]);
+                    outDir = Path.GetDirectoryName(inputPath.CurrentPath);
                 }
 
                 // TODO: Should this be the default? Always create a subfolder if a folder is found?
                 // If we are processing a path that is coming from a directory and we are outputting to the current directory, we want to get the subfolder to write to
-                else if (split[0].Length != split[1].Length && outDir == Environment.CurrentDirectory)
+                else if (inputPath.CurrentPath.Length != inputPath.ParentPath.Length && outDir == Environment.CurrentDirectory)
                 {
-                    outDir = Path.GetDirectoryName(Path.Combine(outDir, split[0].Remove(0, Path.GetDirectoryName(split[1]).Length + 1)));
+                    outDir = Path.GetDirectoryName(Path.Combine(outDir, inputPath.CurrentPath.Remove(0, Path.GetDirectoryName(inputPath.ParentPath).Length + 1)));
                 }
 
                 // If we are processing a path that is coming from a directory, we want to get the subfolder to write to
-                else if (split[0].Length != split[1].Length)
+                else if (inputPath.CurrentPath.Length != inputPath.ParentPath.Length)
                 {
-                    outDir = Path.GetDirectoryName(Path.Combine(outDir, split[0].Remove(0, split[1].Length + 1)));
+                    outDir = Path.GetDirectoryName(Path.Combine(outDir, inputPath.CurrentPath.Remove(0, inputPath.ParentPath.Length + 1)));
                 }
 
                 // If we are processing a single file from the root of a directory, we just use the output directory
@@ -128,7 +122,7 @@ namespace SabreTools.Library.Tools
                 // If we have an inplace output, use the directory name from the input path
                 if (inplace)
                 {
-                    outDir = Path.GetDirectoryName(inputpath);
+                    outDir = Path.GetDirectoryName(inputPath.CurrentPath);
                 }
 
                 // Otherwise, just use the supplied output directory
