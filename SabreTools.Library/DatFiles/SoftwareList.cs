@@ -701,7 +701,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteAttributeString("cloneof", datItem.CloneOf);
 
-                if (!Header.ExcludeFields[(int)Field.Supported])
+                if (!Header.ExcludeFields.Contains(Field.Supported))
                 {
                     if (datItem.Supported == true)
                         xtw.WriteAttributeString("supported", "yes");
@@ -720,7 +720,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
                     xtw.WriteElementString("category", datItem.Category);
 
-                if (!Header.ExcludeFields[(int)Field.Infos] && datItem.Infos != null && datItem.Infos.Count > 0)
+                if (!Header.ExcludeFields.Contains(Field.Infos) && datItem.Infos != null && datItem.Infos.Count > 0)
                 {
                     foreach (KeyValuePair<string, string> kvp in datItem.Infos)
                     {
@@ -788,7 +788,7 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteAttributeString("name", datItem.GetField(Field.PartName, Header.ExcludeFields));
                 xtw.WriteAttributeString("interface", datItem.GetField(Field.PartInterface, Header.ExcludeFields));
 
-                if (!Header.ExcludeFields[(int)Field.Features] && datItem.Features != null && datItem.Features.Count > 0)
+                if (!Header.ExcludeFields.Contains(Field.Features) && datItem.Features != null && datItem.Features.Count > 0)
                 {
                     foreach (KeyValuePair<string, string> kvp in datItem.Features)
                     {
@@ -804,12 +804,12 @@ namespace SabreTools.Library.DatFiles
                 {
                     case ItemType.Disk:
                         var disk = datItem as Disk;
-                        if (!Header.ExcludeFields[(int)Field.AreaName] && string.IsNullOrWhiteSpace(areaName))
+                        if (!Header.ExcludeFields.Contains(Field.AreaName) && string.IsNullOrWhiteSpace(areaName))
                             areaName = "cdrom";
 
                         xtw.WriteStartElement("diskarea");
                         xtw.WriteAttributeString("name", areaName);
-                        if (!Header.ExcludeFields[(int)Field.AreaSize] && disk.AreaSize != null)
+                        if (!Header.ExcludeFields.Contains(Field.AreaSize) && disk.AreaSize != null)
                             xtw.WriteAttributeString("size", disk.AreaSize.ToString());
 
                         xtw.WriteStartElement("disk");
@@ -828,9 +828,9 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
                             xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", disk.ItemStatus.ToString().ToLowerInvariant());
-                        if (!Header.ExcludeFields[(int)Field.Writable] && disk.Writable != null)
+                        if (!Header.ExcludeFields.Contains(Field.Writable) && disk.Writable != null)
                             xtw.WriteAttributeString("writable", disk.Writable == true ? "yes" : "no");
                         xtw.WriteEndElement();
 
@@ -840,17 +840,17 @@ namespace SabreTools.Library.DatFiles
 
                     case ItemType.Rom:
                         var rom = datItem as Rom;
-                        if (!Header.ExcludeFields[(int)Field.AreaName] && string.IsNullOrWhiteSpace(areaName))
+                        if (!Header.ExcludeFields.Contains(Field.AreaName) && string.IsNullOrWhiteSpace(areaName))
                             areaName = "rom";
 
                         xtw.WriteStartElement("dataarea");
                         xtw.WriteAttributeString("name", areaName);
-                        if (!Header.ExcludeFields[(int)Field.AreaSize] && rom.AreaSize != null)
+                        if (!Header.ExcludeFields.Contains(Field.AreaSize) && rom.AreaSize != null)
                             xtw.WriteAttributeString("size", rom.AreaSize.ToString());
 
                         xtw.WriteStartElement("rom");
                         xtw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                             xtw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
                             xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
@@ -872,7 +872,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("offset", rom.Offset);
                         //if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Value, DatHeader.ExcludeFields)))
                         //    xtw.WriteAttributeString("value", rom.Value);
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
                         //if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Loadflag, DatHeader.ExcludeFields)))
                         //    xtw.WriteAttributeString("loadflag", rom.Loadflag);

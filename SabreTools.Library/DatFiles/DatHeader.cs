@@ -126,10 +126,10 @@ namespace SabreTools.Library.DatFiles
         public DatFormat DatFormat { get; set; }
 
         /// <summary>
-        /// List of fields in machine and items to exclude from writing
+        /// Dictionary of fields in machine and items to exclude from writing
         /// </summary>
         [JsonIgnore]
-        public bool[] ExcludeFields { get; set; } = new bool[Enum.GetNames(typeof(Field)).Length];
+        public List<Field> ExcludeFields { get; set; } = new List<Field>();
 
         /// <summary>
         /// Enable "One Rom, One Region (1G1R)" mode

@@ -450,7 +450,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        private void BaseReplace(
+        internal void BaseReplace(
             List<ParentablePath> inputs,
             string outDir,
             bool inplace,
@@ -937,7 +937,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        private void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace)
+        internal void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace)
         {
             // For comparison's sake, we want to use CRC as the base ordering
             Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
@@ -989,7 +989,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Output directory to write the DATs to</param>
         /// <param name="inplace">True if cascaded diffs are outputted in-place, false otherwise</param>
         /// <param name="skip">True if the first cascaded diff file should be skipped on output, false otherwise</param>
-        private void DiffCascade(
+        internal void DiffCascade(
             List<ParentablePath> inputs,
             List<DatHeader> datHeaders,
             string outDir,
@@ -1077,7 +1077,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">List of inputs to write out from</param>
         /// <param name="outDir">Output directory to write the DATs to</param>
         /// <param name="diff">Non-zero flag for diffing mode, zero otherwise</param>
-        private void DiffNoCascade(List<ParentablePath> inputs, string outDir, UpdateMode diff)
+        internal void DiffNoCascade(List<ParentablePath> inputs, string outDir, UpdateMode diff)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing all output DATs");
 
@@ -1223,7 +1223,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
         /// <param name="outDir">Output directory to write the DATs to</param>
-        private void MergeNoDiff(List<ParentablePath> inputs, string outDir)
+        internal void MergeNoDiff(List<ParentablePath> inputs, string outDir)
         {
             // If we're in SuperDAT mode, prefix all games with their respective DATs
             if (Header.Type == "SuperDAT")
@@ -1262,7 +1262,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Paths to DATs to parse</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>List of DatData objects representing headers</returns>
-        private List<DatHeader> PopulateUserData(List<ParentablePath> inputs, Filter filter)
+        internal List<DatHeader> PopulateUserData(List<ParentablePath> inputs, Filter filter)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
@@ -1299,7 +1299,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        private void Update(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
+        internal void Update(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
         {
             // Iterate over the files
             foreach (ParentablePath file in inputs)
@@ -1333,6 +1333,19 @@ namespace SabreTools.Library.DatFiles
             DatFile datFile = Create();
             datFile.Parse(new ParentablePath(filename));
             return datFile;
+        }
+
+        /// <summary>
+        /// Parse a DAT and return all found games and roms within
+        /// </summary>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
+        public void Parse(string filename, int indexId = 0, bool keep = false, bool keepext = false)
+        {
+            ParentablePath path = new ParentablePath(filename);
+            Parse(path, indexId, keep, keepext);
         }
 
         /// <summary>

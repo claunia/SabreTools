@@ -613,10 +613,10 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Get the value of that field as a string, if possible
         /// </summary>
-        public string GetField(Field field, bool[] excludeFields)
+        public string GetField(Field field, List<Field> excludeFields)
         {
             // If the field is to be excluded, return empty string
-            if (excludeFields[(int)field])
+            if (excludeFields.Contains(field))
                 return string.Empty;
 
             string fieldValue = null;

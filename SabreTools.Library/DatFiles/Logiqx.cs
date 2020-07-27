@@ -859,7 +859,7 @@ namespace SabreTools.Library.DatFiles
                 // Build the state based on excluded fields
                 xtw.WriteStartElement(_deprecated ? "game" : "machine");
                 xtw.WriteAttributeString("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
-                if (!Header.ExcludeFields[(int)Field.MachineType])
+                if (!Header.ExcludeFields.Contains(Field.MachineType))
                 {
                     if (datItem.MachineType.HasFlag(MachineType.Bios))
                         xtw.WriteAttributeString("isbios", "yes");
@@ -869,7 +869,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("ismechanical", "yes");
                 }
 
-                if (!Header.ExcludeFields[(int)Field.Runnable] && datItem.Runnable != null)
+                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Runnable != null)
                 {
                     if (datItem.Runnable == true)
                         xtw.WriteAttributeString("runnable", "yes");
@@ -964,7 +964,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, Header.ExcludeFields)))
                             xtw.WriteAttributeString("description", biosSet.Description);
-                        if (!Header.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
                             xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -987,7 +987,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
                             xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", disk.ItemStatus.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -1002,7 +1002,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("language", release.Language);
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             xtw.WriteAttributeString("date", release.Date);
-                        if (!Header.ExcludeFields[(int)Field.Default] && release.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
                             xtw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -1011,7 +1011,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
                         xtw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                             xtw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
                             xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
@@ -1031,7 +1031,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             xtw.WriteAttributeString("date", rom.Date);
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;

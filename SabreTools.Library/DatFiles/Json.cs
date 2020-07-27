@@ -1043,7 +1043,7 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("sampleof");
                     jtw.WriteValue(datItem.SampleOf);
                 }
-                if (!Header.ExcludeFields[(int)Field.Supported] && datItem.Supported != null)
+                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Supported != null)
                 {
                     if (datItem.Supported == true)
                     {
@@ -1061,7 +1061,7 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("sourcefile");
                     jtw.WriteValue(datItem.SourceFile);
                 }
-                if (!Header.ExcludeFields[(int)Field.Runnable] && datItem.Runnable != null)
+                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Runnable != null)
                 {
                     if (datItem.Runnable == true)
                     {
@@ -1120,7 +1120,7 @@ namespace SabreTools.Library.DatFiles
 
                     jtw.WriteEndArray();
                 }
-                if (!Header.ExcludeFields[(int)Field.MachineType])
+                if (!Header.ExcludeFields.Contains(Field.MachineType))
                 {
                     if (datItem.MachineType.HasFlag(MachineType.Bios))
                     {
@@ -1223,7 +1223,7 @@ namespace SabreTools.Library.DatFiles
                             jtw.WritePropertyName("description");
                             jtw.WriteValue(biosSet.Description);
                         }
-                        if (!Header.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
                         {
                             jtw.WritePropertyName("default");
                             jtw.WriteValue(biosSet.Default);
@@ -1287,7 +1287,7 @@ namespace SabreTools.Library.DatFiles
                             jtw.WritePropertyName("writable");
                             jtw.WriteValue(disk.Writable);
                         }
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
                         {
                             jtw.WritePropertyName("status");
                             jtw.WriteValue(disk.ItemStatus.ToString().ToLowerInvariant());
@@ -1319,7 +1319,7 @@ namespace SabreTools.Library.DatFiles
                             jtw.WritePropertyName("date");
                             jtw.WriteValue(release.Date);
                         }
-                        if (!Header.ExcludeFields[(int)Field.Default] && release.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
                         {
                             jtw.WritePropertyName("default");
                             jtw.WriteValue(release.Default);
@@ -1331,7 +1331,7 @@ namespace SabreTools.Library.DatFiles
                         jtw.WriteValue("rom");
                         jtw.WritePropertyName("name");
                         jtw.WriteValue(rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                         {
                             jtw.WritePropertyName("size");
                             jtw.WriteValue(rom.Size);
@@ -1398,7 +1398,7 @@ namespace SabreTools.Library.DatFiles
                             jtw.WritePropertyName("date");
                             jtw.WriteValue(rom.Date);
                         }
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                         {
                             jtw.WritePropertyName("status");
                             jtw.WriteValue(rom.ItemStatus.ToString().ToLowerInvariant());

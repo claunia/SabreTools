@@ -2231,7 +2231,7 @@ Some special strings that can be used:
 
                 foreach (string fieldName in GetList(features, ExcludeFieldListValue))
                 {
-                    datHeader.ExcludeFields[(int)fieldName.AsField()] = true;
+                    datHeader.ExcludeFields.Add(fieldName.AsField());
                 }
 
                 return datHeader;

@@ -468,7 +468,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("file");
                         cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                             cmpw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("date", rom.Date);

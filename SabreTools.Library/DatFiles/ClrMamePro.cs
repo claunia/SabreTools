@@ -709,7 +709,7 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
                         if (!string.IsNullOrWhiteSpace(biosSet.GetField(Field.BiosDescription, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("description", biosSet.Description);
-                        if (!Header.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
                             cmpw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -732,7 +732,7 @@ namespace SabreTools.Library.DatFiles
                             cmpw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", disk.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -747,7 +747,7 @@ namespace SabreTools.Library.DatFiles
                             cmpw.WriteAttributeString("language", release.Language);
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("date", release.Date);
-                        if (!Header.ExcludeFields[(int)Field.Default] && release.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
                             cmpw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -756,7 +756,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("rom");
                         cmpw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                             cmpw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
@@ -776,7 +776,7 @@ namespace SabreTools.Library.DatFiles
                             cmpw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("date", rom.Date);
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", rom.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;

@@ -681,7 +681,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
                     xtw.WriteElementString("sourcefile", datItem.SourceFile);
 
-                if (!Header.ExcludeFields[(int)Field.MachineType])
+                if (!Header.ExcludeFields.Contains(Field.MachineType))
                 {
                     if (datItem.MachineType.HasFlag(MachineType.Bios))
                         xtw.WriteAttributeString("isbios", "yes");
@@ -691,7 +691,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("ismechanical", "yes");
                 }
 
-                if (!Header.ExcludeFields[(int)Field.Runnable])
+                if (!Header.ExcludeFields.Contains(Field.Runnable))
                 {
                     if (datItem.Runnable == true)
                         xtw.WriteAttributeString("runnable", "yes");
@@ -715,7 +715,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
                     xtw.WriteElementString("category", datItem.Category);
 
-                if (!Header.ExcludeFields[(int)Field.Infos] && datItem.Infos != null && datItem.Infos.Count > 0)
+                if (!Header.ExcludeFields.Contains(Field.Infos) && datItem.Infos != null && datItem.Infos.Count > 0)
                 {
                     foreach (KeyValuePair<string, string> kvp in datItem.Infos)
                     {
@@ -787,7 +787,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, Header.ExcludeFields)))
                             xtw.WriteAttributeString("description", biosSet.Description);
-                        if (!Header.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
                             xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -816,11 +816,11 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("region", disk.Region);
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Index, Header.ExcludeFields)))
                             xtw.WriteAttributeString("index", disk.Index);
-                        if (!Header.ExcludeFields[(int)Field.Writable] && disk.Writable != null)
+                        if (!Header.ExcludeFields.Contains(Field.Writable) && disk.Writable != null)
                             xtw.WriteAttributeString("writable", disk.Writable == true ? "yes" : "no");
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", disk.ItemStatus.ToString());
-                        if (!Header.ExcludeFields[(int)Field.Optional] && disk.Optional != null)
+                        if (!Header.ExcludeFields.Contains(Field.Optional) && disk.Optional != null)
                             xtw.WriteAttributeString("optional", disk.Optional == true ? "yes" : "no");
                         xtw.WriteEndElement();
                         break;
@@ -829,7 +829,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
                         xtw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                             xtw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
                             xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
@@ -855,9 +855,9 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("region", rom.Region);
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
                             xtw.WriteAttributeString("offset", rom.Offset);
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
-                        if (!Header.ExcludeFields[(int)Field.Optional] && rom.Optional != null)
+                        if (!Header.ExcludeFields.Contains(Field.Optional) && rom.Optional != null)
                             xtw.WriteAttributeString("optional", rom.Optional == true ? "yes" : "no");
                         xtw.WriteEndElement();
                         break;

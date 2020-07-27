@@ -777,8 +777,8 @@ namespace SabreTools.Library.DatFiles
                 for (int i = (last == -1 ? 0 : last); i < newsplit.Count; i++)
                 {
                     xtw.WriteStartElement("directory");
-                    xtw.WriteAttributeString("name", !Header.ExcludeFields[(int)Field.MachineName] ? newsplit[i] : string.Empty);
-                    xtw.WriteAttributeString("description", !Header.ExcludeFields[(int)Field.MachineName] ? newsplit[i] : string.Empty);
+                    xtw.WriteAttributeString("name", !Header.ExcludeFields.Contains(Field.MachineName) ? newsplit[i] : string.Empty);
+                    xtw.WriteAttributeString("description", !Header.ExcludeFields.Contains(Field.MachineName) ? newsplit[i] : string.Empty);
                 }
 
                 depth = depth - (last == -1 ? 0 : last) + newsplit.Count;
@@ -879,7 +879,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, Header.ExcludeFields)))
                             xtw.WriteAttributeString("description", biosSet.Description);
-                        if (!Header.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
                             xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -903,7 +903,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
                             xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
 
@@ -929,7 +929,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("language", release.Language);
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             xtw.WriteAttributeString("date", release.Date);
-                        if (!Header.ExcludeFields[(int)Field.Default] && release.Default != null)
+                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
                             xtw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -939,7 +939,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "rom");
                         xtw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
                             xtw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
                             xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
@@ -959,7 +959,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             xtw.WriteAttributeString("date", rom.Date);
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
 

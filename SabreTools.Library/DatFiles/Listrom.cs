@@ -399,11 +399,11 @@ namespace SabreTools.Library.DatFiles
                             sw.Write($"{disk.Name}          ");
 
                         // If we have a baddump, put the first indicator
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.BadDump)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD");
 
                         // If we have a nodump, write out the indicator
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.Nodump)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus == ItemStatus.Nodump)
                             sw.Write(" NO GOOD DUMP KNOWN");
 
                         // Otherwise, write out the SHA-1 hash
@@ -411,7 +411,7 @@ namespace SabreTools.Library.DatFiles
                             sw.Write($" SHA1({disk.SHA1})");
 
                         // If we have a baddump, put the second indicator
-                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus == ItemStatus.BadDump)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD_DUMP");
 
                         sw.Write("\n");
@@ -431,11 +431,11 @@ namespace SabreTools.Library.DatFiles
                             sw.Write(rom.Size);
 
                         // If we have a baddump, put the first indicator
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.BadDump)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD");
 
                         // If we have a nodump, write out the indicator
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.Nodump)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus == ItemStatus.Nodump)
                         {
                             sw.Write(" NO GOOD DUMP KNOWN");
                         }
@@ -449,7 +449,7 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         // If we have a baddump, put the second indicator
-                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus == ItemStatus.BadDump)
+                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD_DUMP");
 
                         sw.Write("\n");

@@ -288,6 +288,12 @@ namespace SabreTools.Library.DatFiles
         public bool RemoveUnicode { get; set; }
 
         /// <summary>
+        /// Remove fields based on Header values
+        /// </summary>
+        /// TODO: Remove in lieu of relying on Header value
+        public bool RemoveFields { get; set; }
+
+        /// <summary>
         /// Include root directory when determing trim sizes
         /// </summary>
         public string Root { get; set; }
@@ -877,6 +883,10 @@ namespace SabreTools.Library.DatFiles
                 // Run the one rom per game logic, if required
                 if (datFile.Header.OneRom)
                     OneRomPerGame(datFile);
+
+                // If we are removing fields, do that now
+                if (RemoveFields)
+                    RemoveFieldsFromItems(datFile);
             }
             catch (Exception ex)
             {
@@ -987,6 +997,10 @@ namespace SabreTools.Library.DatFiles
                 // Run the one rom per game logic, if required
                 if (outDat.Header.OneRom)
                     OneRomPerGame(outDat);
+
+                // If we are removing fields, do that now
+                if (RemoveFields)
+                    RemoveFieldsFromItems(outDat);
             }
             catch (Exception ex)
             {
@@ -2058,6 +2072,220 @@ namespace SabreTools.Library.DatFiles
                     string[] splitname = items[i].Name.Split('.');
                     items[i].MachineName += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
                 }
+            });
+        }
+
+        /// <summary>
+        /// Remove fields as per the header
+        /// </summary>
+        /// <param name="datFile">DatFile to filter</param>
+        private void RemoveFieldsFromItems(DatFile datFile)
+        {
+            // Output the logging statement
+            Globals.Logger.User("Removing filtered fields");
+
+            // Get the array of fields from the header
+            List<Field> fields = datFile.Header.ExcludeFields;
+
+            // Now process all of the roms
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = datFile.Items[key];
+                for (int j = 0; j < items.Count; j++)
+                {
+                    DatItem item = items[j];
+
+                    // TODO: Switch statement
+                    foreach (Field field in fields)
+                    {
+                        // Machine Fields
+                        if (field == Field.MachineName)
+                            item.MachineName = null;
+                        if (field == Field.Comment)
+                            item.Comment = null;
+                        if (field == Field.Description)
+                            item.MachineDescription = null;
+                        if (field == Field.Year)
+                            item.Year = null;
+                        if (field == Field.Manufacturer)
+                            item.Manufacturer = null;
+                        if (field == Field.Publisher)
+                            item.Publisher = null;
+                        if (field == Field.Category)
+                            item.Category = null;
+                        if (field == Field.RomOf)
+                            item.RomOf = null;
+                        if (field == Field.CloneOf)
+                            item.CloneOf = null;
+                        if (field == Field.SampleOf)
+                            item.SampleOf = null;
+                        if (field == Field.Supported)
+                            item.Supported = null;
+                        if (field == Field.SourceFile)
+                            item.SourceFile = null;
+                        if (field == Field.Runnable)
+                            item.Runnable = null;
+                        if (field == Field.Board)
+                            item.Board = null;
+                        if (field == Field.RebuildTo)
+                            item.RebuildTo = null;
+                        if (field == Field.Devices)
+                            item.Devices = null;
+                        if (field == Field.SlotOptions)
+                            item.SlotOptions = null;
+                        if (field == Field.Infos)
+                            item.Infos = null;
+                        if (field == Field.MachineType)
+                            item.MachineType = MachineType.NULL;
+
+                        // Item Fields
+                        if (field == Field.Name)
+                            item.Name = null;
+                        if (field == Field.PartName)
+                            item.PartName = null;
+                        if (field == Field.PartInterface)
+                            item.PartInterface = null;
+                        if (field == Field.Features)
+                            item.Features = null;
+                        if (field == Field.AreaName)
+                            item.AreaName = null;
+                        if (field == Field.AreaSize)
+                            item.AreaSize = null;
+                        if (field == Field.Default)
+                        {
+                            if (item.ItemType == ItemType.BiosSet)
+                                (item as BiosSet).Default = null;
+                            else if (item.ItemType == ItemType.Release)
+                                (item as Release).Default = null;
+                        }
+                        if (field == Field.BiosDescription)
+                        {
+                            if (item.ItemType == ItemType.BiosSet)
+                                (item as BiosSet).Description = null;
+                        }
+                        if (field == Field.Size)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Size = 0;
+                        }
+                        if (field == Field.CRC)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).CRC = null;
+                        }
+                        if (field == Field.MD5)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).MD5 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).MD5 = null;
+                        }
+#if NET_FRAMEWORK
+                        if (field == Field.RIPEMD160)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).RIPEMD160 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).RIPEMD160 = null;
+                        }
+#endif
+                        if (field == Field.SHA1)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA1 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA1 = null;
+                        }
+                        if (field == Field.SHA256)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA256 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA256 = null;
+                        }
+                        if (field == Field.SHA384)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA384 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA384 = null;
+                        }
+                        if (field == Field.SHA512)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA512 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA512 = null;
+                        }
+                        if (field == Field.Merge)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).MergeTag = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).MergeTag = null;
+                        }
+                        if (field == Field.Region)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Region = null;
+                            else if (item.ItemType == ItemType.Release)
+                                (item as Release).Region = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Region = null;
+                        }
+                        if (field == Field.Index)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Index = null;
+                        }
+                        if (field == Field.Writable)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Writable = null;
+                        }
+                        if (field == Field.Optional)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Optional = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Optional = null;
+                        }
+                        if (field == Field.Status)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).ItemStatus = ItemStatus.NULL;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).ItemStatus = ItemStatus.NULL;
+                        }
+                        if (field == Field.Language)
+                        {
+                            if (item.ItemType == ItemType.Release)
+                                (item as Release).Language = null;
+                        }
+                        if (field == Field.Date)
+                        {
+                            if (item.ItemType == ItemType.Release)
+                                (item as Release).Date = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Date = null;
+                        }
+                        if (field == Field.Bios)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Bios = null;
+                        }
+                        if (field == Field.Offset)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Offset = null;
+                        }
+                    }                    
+
+                    items[j] = item;
+                }
+
+                datFile.Items.Remove(key);
+                datFile.Items.AddRange(key, items);
             });
         }
 
