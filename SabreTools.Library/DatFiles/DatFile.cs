@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
@@ -14,8 +13,6 @@ using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;
 using NaturalSort;
 
-[assembly: InternalsVisibleTo("SabreTools")]
-[assembly: InternalsVisibleTo("RombaSharp")]
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
@@ -23,13 +20,13 @@ namespace SabreTools.Library.DatFiles
     /// </summary>
     public abstract class DatFile
     {
-        #region Private instance variables
+        #region Publically available fields
 
         // Internal DatHeader values
-        internal DatHeader DatHeader = new DatHeader();
+        public DatHeader DatHeader { get; set; } = new DatHeader();
 
         // DatItems dictionary
-        internal ItemDictionary Items = new ItemDictionary();
+        public ItemDictionary Items { get; set; } = new ItemDictionary();
 
         #endregion
 

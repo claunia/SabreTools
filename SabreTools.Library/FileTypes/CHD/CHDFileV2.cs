@@ -4,12 +4,12 @@ using System.Text;
 
 using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.Library.FileTypes.CHD
 {
     /// <summary>
-    /// CHD V3 File
+    /// CHD V2 File
     /// </summary>
-    public class CHDFileV3 : CHDFile
+    internal class CHDFileV2 : CHDFile
     {
         /// <summary>
         /// CHD flags
@@ -28,7 +28,6 @@ namespace SabreTools.Library.FileTypes
         {
             CHDCOMPRESSION_NONE = 0,
             CHDCOMPRESSION_ZLIB = 1,
-            CHDCOMPRESSION_ZLIB_PLUS = 2,
         }
 
         /// <summary>
@@ -36,34 +35,31 @@ namespace SabreTools.Library.FileTypes
         /// </summary>
         public class Map
         {
-            public ulong offset;       // starting offset within the file
-            public uint crc32;         // 32-bit CRC of the uncompressed data
-            public ushort length_lo;   // lower 16 bits of length
-            public byte length_hi;     // upper 8 bits of length
-            public byte flags;         // flags, indicating compression info
+            public ulong offset;   // 44; starting offset within the file
+            public ulong length;   // 20; length of data; if == hunksize, data is uncompressed
         }
 
-        public const int HeaderSize = 120;
-        public const uint Version = 3;
+        public const int HeaderSize = 80;
+        public const uint Version = 2;
 
-        // V3-specific header values
+        // V2-specific header values
         public Flags flags;                        // flags (see above)
         public Compression compression;            // compression type
+        public uint hunksize;                      // 512-byte sectors per hunk
         public uint totalhunks;                    // total # of hunks represented
-        public ulong logicalbytes;                 // logical size of the data (in bytes)
-        public ulong metaoffset;                   // offset to the first blob of metadata
+        public uint cylinders;                     // number of cylinders on hard disk
+        public uint heads;                         // number of heads on hard disk
+        public uint sectors;                       // number of sectors on hard disk
         public byte[] md5 = new byte[16];          // MD5 checksum of raw data
         public byte[] parentmd5 = new byte[16];    // MD5 checksum of parent file
-        public uint hunkbytes;                     // number of bytes per hunk
-        public byte[] sha1 = new byte[20];         // SHA1 checksum of raw data
-        public byte[] parentsha1 = new byte[20];   // SHA1 checksum of parent file
+        public uint seclen;                        // number of bytes per sector
 
         /// <summary>
-        /// Parse and validate the header as if it's V3
+        /// Parse and validate the header as if it's V2
         /// </summary>
-        public static CHDFileV3 Deserialize(Stream stream)
+        public static CHDFileV2 Deserialize(Stream stream)
         {
-            CHDFileV3 chd = new CHDFileV3();
+            CHDFileV2 chd = new CHDFileV2();
 
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
             {
@@ -72,28 +68,27 @@ namespace SabreTools.Library.FileTypes
                 chd.version = br.ReadUInt32BigEndian();
                 chd.flags = (Flags)br.ReadUInt32BigEndian();
                 chd.compression = (Compression)br.ReadUInt32BigEndian();
+                chd.hunksize = br.ReadUInt32BigEndian();
                 chd.totalhunks = br.ReadUInt32BigEndian();
-                chd.logicalbytes = br.ReadUInt64BigEndian();
-                chd.metaoffset = br.ReadUInt64BigEndian();
+                chd.cylinders = br.ReadUInt32BigEndian();
+                chd.heads = br.ReadUInt32BigEndian();
+                chd.sectors = br.ReadUInt32BigEndian();
                 chd.md5 = br.ReadBytes(16);
                 chd.parentmd5 = br.ReadBytes(16);
-                chd.hunkbytes = br.ReadUInt32BigEndian();
-                chd.sha1 = br.ReadBytes(20);
-                chd.parentsha1 = br.ReadBytes(20);
+                chd.seclen = br.ReadUInt32BigEndian();
 
                 chd.MD5 = chd.md5;
-                chd.SHA1 = chd.sha1;
             }
 
             return chd;
         }
 
         /// <summary>
-        /// Return internal SHA1 hash
+        /// Return internal MD5 hash
         /// </summary>
         public override byte[] GetHash()
         {
-            return sha1;
+            return md5;
         }
     }
 }

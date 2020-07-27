@@ -52,7 +52,7 @@ As the core of the SabreTools suite, the C# library provides nearly all of the f
 	* Stores the header information linked to unheadered hash
 * **Rebuild From DAT** - Act as a simple rebuilder for files
 	* Two options for rebuild origin: standard folder and Romba depot
-	* Multiple output formats: unarchived, TAR, TorrentZip, 7zip, XZ, TorrentGZ
+	* Multiple output formats: unarchived, TAR, TorrentZip, 7zip, TorrentGZ
 	* Can rebuild from multiple DATs at the same time
 	* Cross-check with multiple hashing algorithms, up to SHA-512
 	* Can output a fixdat based on the rebuilt files

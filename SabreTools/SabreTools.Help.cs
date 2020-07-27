@@ -977,62 +977,6 @@ namespace SabreTools
             }
         }
 
-        public const string TorrentLrzipValue = "torrent-lrzip";
-        private static Feature TorrentLrzipFlag
-        {
-            get
-            {
-                return new Feature(
-                    TorrentLrzipValue,
-                    new List<string>() { "-tlrz", "--torrent-lrzip" },
-                    "Enable Torrent Long-Range Zip output [UNIMPLEMENTED]",
-                    FeatureType.Flag,
-                    longDescription: "Instead of outputting the files to folder, files will be rebuilt to Torrent Long-Range Zip (TLRZ) files. This format is based on the LRZip file format as defined at https://github.com/ckolivas/lrzip but with custom header information. This is currently unused by any major application.");
-            }
-        }
-
-        public const string TorrentLz4Value = "torrent-lz4";
-        private static Feature TorrentLz4Flag
-        {
-            get
-            {
-                return new Feature(
-                    TorrentLz4Value,
-                    new List<string>() { "-tlz4", "--torrent-lz4" },
-                    "Enable Torrent LZ4 output [UNIMPLEMENTED]",
-                    FeatureType.Flag,
-                    longDescription: "Instead of outputting the files to folder, files will be rebuilt to Torrent LZ4 (TLZ4) files. This format is based on the LZ4 file format as defined at https://github.com/lz4/lz4 but with custom header information. This is currently unused by any major application.");
-            }
-        }
-
-        public const string TorrentRarValue = "torrent-rar";
-        private static Feature TorrentRarFlag
-        {
-            get
-            {
-                return new Feature(
-                    TorrentRarValue,
-                    new List<string>() { "-trar", "--torrent-rar" },
-                    "Enable Torrent RAR output [UNIMPLEMENTED]",
-                    FeatureType.Flag,
-                    longDescription: "Instead of outputting files to folder, files will be rebuilt to Torrent RAR (TRAR) files. This format is based on the RAR propietary format but with custom header information. This is currently unused by any major application.");
-            }
-        }
-
-        public const string TorrentXzValue = "torrent-xz";
-        private static Feature TorrentXzFlag
-        {
-            get
-            {
-                return new Feature(
-                    TorrentXzValue,
-                    new List<string>() { "-txz", "--torrent-xz" },
-                    "Enable Torrent XZ output [UNIMPLEMENTED]",
-                    FeatureType.Flag,
-                    longDescription: "Instead of outputting files to folder, files will be rebuilt to Torrent XZ (TXZ) files. This format is based on the LZMA container format XZ, but with a file name replaced by the SHA-1 of the file inside. This is currently unused by any major application.");
-            }
-        }
-
         public const string TorrentZipValue = "torrent-zip";
         private static Feature TorrentZipFlag
         {
@@ -1044,34 +988,6 @@ namespace SabreTools
                     "Enable Torrent Zip output",
                     FeatureType.Flag,
                     longDescription: "Instead of outputting files to folder, files will be rebuilt to TorrentZip (TZip) files. This format is based on the ZIP archive format, but with custom header information. This is primarily used by external tool RomVault (http://www.romvault.com/) and is already widely used.");
-            }
-        }
-
-        public const string TorrentZpaqValue = "torrent-zpaq";
-        private static Feature TorrentZpaqFlag
-        {
-            get
-            {
-                return new Feature(
-                    TorrentZpaqValue,
-                    new List<string>() { "-tzpaq", "--torrent-zpaq" },
-                    "Enable Torrent ZPAQ output [UNIMPLEMENTED]",
-                    FeatureType.Flag,
-                    longDescription: "Instead of outputting the files to folder, files will be rebuilt to Torrent ZPAQ (TZPAQ) files. This format is based on the ZPAQ file format as defined at https://github.com/zpaq/zpaq but with custom header information. This is currently unused by any major application.");
-            }
-        }
-
-        public const string TorrentZstdValue = "torrent-zstd";
-        private static Feature TorrentZstdFlag
-        {
-            get
-            {
-                return new Feature(
-                    TorrentZstdValue,
-                    new List<string>() { "-tzstd", "--torrent-zstd" },
-                    "Enable Torrent Zstd output [UNIMPLEMENTED]",
-                    FeatureType.Flag,
-                    longDescription: "Instead of outputting the files to folder, files will be rebuilt to Torrent Zstd (TZstd) files. This format is based on the Zstd file format as defined at https://github.com/skbkontur/ZstdNet but with custom header information. This is currently unused by any major application.");
             }
         }
 
@@ -2618,20 +2534,20 @@ Some special strings that can be used:
                     return OutputFormat.Torrent7Zip;
                 else if (GetBoolean(features, TorrentGzipValue))
                     return OutputFormat.TorrentGzip;
-                else if (GetBoolean(features, TorrentLrzipValue))
-                    return OutputFormat.TorrentLRZip;
-                else if (GetBoolean(features, TorrentLz4Value))
-                    return OutputFormat.TorrentLZ4;
-                else if (GetBoolean(features, TorrentRarValue))
-                    return OutputFormat.TorrentRar;
-                else if (GetBoolean(features, TorrentXzValue))
-                    return OutputFormat.TorrentXZ;
+                //else if (GetBoolean(features, TorrentLrzipValue))
+                //    return OutputFormat.TorrentLRZip;
+                //else if (GetBoolean(features, TorrentLz4Value))
+                //    return OutputFormat.TorrentLZ4;
+                //else if (GetBoolean(features, TorrentRarValue))
+                //    return OutputFormat.TorrentRar;
+                //else if (GetBoolean(features, TorrentXzValue))
+                //    return OutputFormat.TorrentXZ;
                 else if (GetBoolean(features, TorrentZipValue))
                     return OutputFormat.TorrentZip;
-                else if (GetBoolean(features, TorrentZpaqValue))
-                    return OutputFormat.TorrentZPAQ;
-                else if (GetBoolean(features, TorrentZstdValue))
-                    return OutputFormat.TorrentZstd;
+                //else if (GetBoolean(features, TorrentZpaqValue))
+                //    return OutputFormat.TorrentZPAQ;
+                //else if (GetBoolean(features, TorrentZstdValue))
+                //    return OutputFormat.TorrentZstd;
                 else
                     return OutputFormat.Folder;
             }
@@ -3153,13 +3069,14 @@ The following systems have headers that this program can work with:
                 AddFeature(TarFlag);
                 AddFeature(TorrentGzipFlag);
                 this[TorrentGzipFlag].AddFeature(RombaFlag);
-                AddFeature(TorrentLrzipFlag);
-                AddFeature(TorrentLz4Flag);
-                AddFeature(TorrentRarFlag);
-                AddFeature(TorrentXzFlag);
+                //AddFeature(TorrentLrzipFlag);
+                //AddFeature(TorrentLz4Flag);
+                //AddFeature(TorrentRarFlag);
+                //AddFeature(TorrentXzFlag);
+                //this[TorrentXzFlag].AddFeature(RombaFlag);
                 AddFeature(TorrentZipFlag);
-                AddFeature(TorrentZpaqFlag);
-                AddFeature(TorrentZstdFlag);
+                //AddFeature(TorrentZpaqFlag);
+                //AddFeature(TorrentZstdFlag);
                 AddFeature(HeaderStringInput);
                 AddFeature(DatMergedFlag);
                 AddFeature(DatSplitFlag);

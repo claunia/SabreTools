@@ -3,12 +3,12 @@ using System.Text;
 
 using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.Library.FileTypes.CHD
 {
     /// <summary>
     /// CHD V5 File
     /// </summary>
-    public class CHDFileV5 : CHDFile
+    internal class CHDFileV5 : CHDFile
     {
         /// <summary>
         /// Uncompressed map format

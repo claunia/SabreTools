@@ -662,51 +662,12 @@ Options:
 			  and output for physical files. Where appropriate, Romba depot
 			  files will be created as well.
 
-	  -tlrz, --torrent-lrzip	  Enable Torrent Long-Range Zip output [UNIMPLEMENTED]
-		  Instead of outputting the files to folder, files will be rebuilt to
-		  Torrent Long-Range Zip (TLRZ) files. This format is based on the
-		  LRZip file format as defined at https://github.com/ckolivas/lrzip but
-		  with custom header information. This is currently unused by any major
-		  application.
-
-	  -tlz4, --torrent-lz4		Enable Torrent LZ4 output [UNIMPLEMENTED]
-		  Instead of outputting the files to folder, files will be rebuilt to
-		  Torrent LZ4 (TLZ4) files. This format is based on the LZ4 file format
-		  as defined at https://github.com/lz4/lz4 but with custom header
-		  information. This is currently unused by any major application.
-
-	  -trar, --torrent-rar		Enable Torrent RAR output [UNIMPLEMENTED]
-		  Instead of outputting files to folder, files will be rebuilt to
-		  Torrent RAR (TRAR) files. This format is based on the RAR propietary
-		  format but with custom header information. This is currently unused
-		  by any major application.
-
-	  -txz, --torrent-xz		  Enable Torrent XZ output [UNIMPLEMENTED]
-		  Instead of outputting files to folder, files will be rebuilt to
-		  Torrent XZ (TXZ) files. This format is based on the LZMA container
-		  format XZ, but with a file name replaced by the SHA-1 of the file
-		  inside. This is currently unused by any major application.
-
 	  -tzip, --torrent-zip		Enable Torrent Zip output
 		  Instead of outputting files to folder, files will be rebuilt to
 		  TorrentZip (TZip) files. This format is based on the ZIP archive
 		  format, but with custom header information. This is primarily used by
 		  external tool RomVault (http://www.romvault.com/) and is already
 		  widely used.
-
-	  -tzpaq, --torrent-zpaq	  Enable Torrent ZPAQ output [UNIMPLEMENTED]
-		  Instead of outputting the files to folder, files will be rebuilt to
-		  Torrent ZPAQ (TZPAQ) files. This format is based on the ZPAQ file
-		  format as defined at https://github.com/zpaq/zpaq but with custom
-		  header information. This is currently unused by any major
-		  application.
-
-	  -tzstd, --torrent-zstd	  Enable Torrent Zstd output [UNIMPLEMENTED]
-		  Instead of outputting the files to folder, files will be rebuilt to
-		  Torrent Zstd (TZstd) files. This format is based on the Zstd file
-		  format as defined at https://github.com/skbkontur/ZstdNet but with
-		  custom header information. This is currently unused by any major
-		  application.
 
 	  -h=, --header=			  Set a header skipper to use, blank means all
 		  Set the header special field for the output DAT(s). In file
@@ -1946,13 +1907,7 @@ This section contains remappings from old flag names to new ones.
 -t7z, --t7z -> -t7z, --torrent-7zip
 -text, --text -> -srt=text, --report-type=text
 -tgz, --tgz -> -tgz, --torrent-gzip
--tlrz, --tlrz -> -tlrz, --torrent-lrzip
--tlz4, --tlz4 -> -tlz4, --torrent-lz4
--trar, --trar -> -trar, --torrent-rar
--txz, --txz -> -txz, --torrent-xz
 -tzip, --tzip -> -tzip, --torrent-zip
--tzpaq, --tzpaq -> -tzpaq, --torrent-zpaq
--tzstd, --tzstd -> -tzstd, --torrent-zstd
 -udd, --update-desc -> -udd, --update-description
 -um, --update-manu -> -um, --update-manufacturer
 -xof, --exclude-of -> (-ef=romof -ef=cloneof -ef=sampleof

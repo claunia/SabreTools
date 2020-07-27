@@ -4,12 +4,12 @@ using System.Text;
 
 using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.Library.FileTypes.CHD
 {
     /// <summary>
     /// CHD V1 File
     /// </summary>
-    public class CHDFileV1 : CHDFile
+    internal class CHDFileV1 : CHDFile
     {
         /// <summary>
         /// CHD flags

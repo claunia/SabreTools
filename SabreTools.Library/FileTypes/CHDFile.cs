@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.FileTypes.CHD;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.FileTypes
