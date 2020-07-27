@@ -175,7 +175,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        #region Instsnce methods
+        #region Instance methods
 
         #region Accessors
 
@@ -916,7 +916,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        #endregion
+        #endregion // Instance methods
 
         #region Static methods
 
@@ -1126,6 +1126,6 @@ Please check the log folder if the stats scrolled offscreen", false);
 
         #endregion
 
-        #endregion
+        #endregion // Static methods
     }
 }
