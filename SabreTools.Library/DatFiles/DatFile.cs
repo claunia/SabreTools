@@ -190,7 +190,65 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        #region Converting and Updating
+        #region Determination Helpers
+
+        /// <summary>
+        /// Split a set of input DATs based on the given information
+        /// </summary>
+        /// <param name="inputs">List of inputs to be used</param>
+        /// <param name="outDir">Output directory for the split files</param>
+        /// <param name="inplace">True if files should be written to the source folders, false otherwise</param>
+        /// <param name="splittingMode">Type of split to perform, if any</param>
+        /// <param name="exta">First extension to split on (Extension Split only)</param>
+        /// <param name="extb">Second extension to split on (Extension Split only)</param>
+        /// <param name="shortname">True if short filenames should be used, false otherwise (Level Split only)</param>
+        /// <param name="basedat">True if original filenames should be used as the base for output filename, false otherwise (Level Split only)</param>
+        /// <param name="radix">Long value representing the split point (Size Split only)</param>
+        public void DetermineSplitType(
+            List<string> inputs,
+            string outDir,
+            bool inplace,
+            SplittingMode splittingMode,
+            List<string> exta,
+            List<string> extb,
+            bool shortname,
+            bool basedat,
+            long radix)
+        {
+            // If we somehow have the "none" split type, return
+            if (splittingMode == SplittingMode.None)
+                return;
+
+            // Get only files from the inputs
+            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(inputs, appendparent: true);
+
+            // Loop over the input files
+            foreach (ParentablePath file in files)
+            {
+                // Create and fill the new DAT
+                DatFile internalDat = Create(Header);
+                Parse(file);
+
+                // Get the output directory
+                outDir = file.GetOutputPath(outDir, inplace);
+
+                // Split and write the DAT
+                if (splittingMode.HasFlag(SplittingMode.Extension))
+                    internalDat.SplitByExtension(outDir, exta, extb);
+
+                if (splittingMode.HasFlag(SplittingMode.Hash))
+                    internalDat.SplitByHash(outDir);
+
+                if (splittingMode.HasFlag(SplittingMode.Level))
+                    internalDat.SplitByLevel(outDir, shortname, basedat);
+
+                if (splittingMode.HasFlag(SplittingMode.Size))
+                    internalDat.SplitBySize(outDir, radix);
+
+                if (splittingMode.HasFlag(SplittingMode.Type))
+                    internalDat.SplitByType(outDir);
+            }
+        }
 
         /// <summary>
         /// Determine if input files should be merged, diffed, or processed invidually
@@ -279,53 +337,121 @@ namespace SabreTools.Library.DatFiles
             return;
         }
 
+        #endregion
+
+        #region Converting and Updating
+
+        /// <summary>
+        /// Replace item values from the base set represented by the current DAT
+        /// </summary>
+        /// <param name="inputs">Names of the input files</param>
+        /// <param name="outDir">Optional param for output directory</param>
+        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="filter">Filter object to be passed to the DatItem level</param>
+        /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
+        /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
+        public void BaseReplace(
+            List<string> inputs,
+            string outDir,
+            bool inplace,
+            Filter filter,
+            List<Field> updateFields,
+            bool onlySame)
+        {
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            BaseReplace(paths, outDir, inplace, filter, updateFields, onlySame);
+        }
+
+        /// <summary>
+        /// Output diffs against a base set represented by the current DAT
+        /// </summary>
+        /// <param name="inputs">Names of the input files</param>
+        /// <param name="outDir">Optional param for output directory</param>
+        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        public void DiffAgainst(List<string> inputs, string outDir, bool inplace)
+        {
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            DiffAgainst(paths, outDir, inplace);
+        }
+
+        /// <summary>
+        /// Output cascading diffs
+        /// </summary>
+        /// <param name="inputs">List of inputs to write out from</param>
+        /// <param name="datHeaders">Dat headers used optionally</param>
+        /// <param name="outDir">Output directory to write the DATs to</param>
+        /// <param name="inplace">True if cascaded diffs are outputted in-place, false otherwise</param>
+        /// <param name="skip">True if the first cascaded diff file should be skipped on output, false otherwise</param>
+        public void DiffCascade(
+            List<string> inputs,
+            List<DatHeader> datHeaders,
+            string outDir,
+            bool inplace,
+            bool skip)
+        {
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            DiffCascade(paths, datHeaders, outDir, inplace, skip);
+        }
+
+        /// <summary>
+        /// Output non-cascading diffs
+        /// </summary>
+        /// <param name="inputs">List of inputs to write out from</param>
+        /// <param name="outDir">Output directory to write the DATs to</param>
+        /// <param name="diff">Non-zero flag for diffing mode, zero otherwise</param>
+        public void DiffNoCascade(List<string> inputs, string outDir, UpdateMode diff)
+        {
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            DiffNoCascade(paths, outDir, diff);
+        }
+
+        /// <summary>
+        /// Output user defined merge
+        /// </summary>
+        /// <param name="inputs">List of inputs to write out from</param>
+        /// <param name="outDir">Output directory to write the DATs to</param>
+        public void MergeNoDiff(List<string> inputs, string outDir)
+        {
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            MergeNoDiff(paths, outDir);
+        }
+
         /// <summary>
         /// Populate the user DatData object from the input files
         /// </summary>
         /// <param name="inputs">Paths to DATs to parse</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>List of DatData objects representing headers</returns>
-        private List<DatHeader> PopulateUserData(List<ParentablePath> inputs, Filter filter)
+        public List<DatHeader> PopulateUserData(List<string> inputs, Filter filter)
         {
-            DatFile[] datFiles = new DatFile[inputs.Count];
-            InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            return PopulateUserData(paths, filter);
+        }
 
-            // Parse all of the DATs into their own DatFiles in the array
-            Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>
-            {
-                var input = inputs[i];
-                Globals.Logger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = Create(Header.CloneFiltering());
-                datFiles[i].Parse(input, i, keep: true);
-            });
-
-            watch.Stop();
-
-            watch.Start("Populating internal DAT");
-            for (int i = 0; i < inputs.Count; i++)
-            {
-                AddFromExisting(datFiles[i], true);
-            }
-
-            // Now that we have a merged DAT, filter it
-            filter.FilterDatFile(this, false /* useTags */);
-
-            watch.Stop();
-
-            return datFiles.Select(d => d.Header).ToList();
+        /// <summary>
+        /// Convert, update, and filter a DAT file or set of files
+        /// </summary>
+        /// <param name="inputs">Names of the input files and/or folders</param>
+        /// <param name="outDir">Optional param for output directory</param>
+        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="filter">Filter object to be passed to the DatItem level</param>
+        public void Update(List<string> inputs, string outDir, bool inplace, Filter filter)
+        {
+            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
+            Update(paths, outDir, inplace, filter);
         }
 
         /// <summary>
         /// Replace item values from the base set represented by the current DAT
         /// </summary>
-        /// <param name="inputFileNames">Names of the input files</param>
+        /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
         private void BaseReplace(
-            List<ParentablePath> inputFileNames,
+            List<ParentablePath> inputs,
             string outDir,
             bool inplace,
             Filter filter,
@@ -390,7 +516,7 @@ namespace SabreTools.Library.DatFiles
             };
 
             // We want to try to replace each item in each input DAT from the base
-            foreach (ParentablePath path in inputFileNames)
+            foreach (ParentablePath path in inputs)
             {
                 Globals.Logger.User($"Replacing items in '{path.CurrentPath}' from the base DAT");
 
@@ -808,16 +934,16 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Output diffs against a base set represented by the current DAT
         /// </summary>
-        /// <param name="inputFileNames">Names of the input files</param>
+        /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        private void DiffAgainst(List<ParentablePath> inputFileNames, string outDir, bool inplace)
+        private void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace)
         {
             // For comparison's sake, we want to use CRC as the base ordering
             Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
 
             // Now we want to compare each input DAT against the base
-            foreach (ParentablePath path in inputFileNames)
+            foreach (ParentablePath path in inputs)
             {
                 Globals.Logger.User($"Comparing '{path.CurrentPath}' to base DAT");
 
@@ -863,7 +989,12 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Output directory to write the DATs to</param>
         /// <param name="inplace">True if cascaded diffs are outputted in-place, false otherwise</param>
         /// <param name="skip">True if the first cascaded diff file should be skipped on output, false otherwise</param>
-        private void DiffCascade(List<ParentablePath> inputs, List<DatHeader> datHeaders, string outDir, bool inplace, bool skip)
+        private void DiffCascade(
+            List<ParentablePath> inputs,
+            List<DatHeader> datHeaders,
+            string outDir,
+            bool inplace,
+            bool skip)
         {
             // Create a list of DatData objects representing output files
             List<DatFile> outDats = new List<DatFile>();
@@ -1126,16 +1257,52 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Populate the user DatData object from the input files
+        /// </summary>
+        /// <param name="inputs">Paths to DATs to parse</param>
+        /// <param name="filter">Filter object to be passed to the DatItem level</param>
+        /// <returns>List of DatData objects representing headers</returns>
+        private List<DatHeader> PopulateUserData(List<ParentablePath> inputs, Filter filter)
+        {
+            DatFile[] datFiles = new DatFile[inputs.Count];
+            InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
+
+            // Parse all of the DATs into their own DatFiles in the array
+            Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>
+            {
+                var input = inputs[i];
+                Globals.Logger.User($"Adding DAT: {input.CurrentPath}");
+                datFiles[i] = Create(Header.CloneFiltering());
+                datFiles[i].Parse(input, i, keep: true);
+            });
+
+            watch.Stop();
+
+            watch.Start("Populating internal DAT");
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                AddFromExisting(datFiles[i], true);
+            }
+
+            // Now that we have a merged DAT, filter it
+            filter.FilterDatFile(this, false /* useTags */);
+
+            watch.Stop();
+
+            return datFiles.Select(d => d.Header).ToList();
+        }
+
+        /// <summary>
         /// Convert, update, and filter a DAT file or set of files
         /// </summary>
-        /// <param name="inputFileNames">Names of the input files and/or folders</param>
+        /// <param name="inputs">Names of the input files and/or folders</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        private void Update(List<ParentablePath> inputFileNames, string outDir, bool inplace, Filter filter)
+        private void Update(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
         {
             // Iterate over the files
-            foreach (ParentablePath file in inputFileNames)
+            foreach (ParentablePath file in inputs)
             {
                 DatFile innerDatdata = Create(Header);
                 Globals.Logger.User($"Processing '{Path.GetFileName(file.CurrentPath)}'");
@@ -2524,64 +2691,6 @@ namespace SabreTools.Library.DatFiles
 
         // TODO: Implement Level split
         #region Splitting
-
-        /// <summary>
-        /// Split a set of input DATs based on the given information
-        /// </summary>
-        /// <param name="inputs">List of inputs to be used</param>
-        /// <param name="outDir">Output directory for the split files</param>
-        /// <param name="inplace">True if files should be written to the source folders, false otherwise</param>
-        /// <param name="splittingMode">Type of split to perform, if any</param>
-        /// <param name="exta">First extension to split on (Extension Split only)</param>
-        /// <param name="extb">Second extension to split on (Extension Split only)</param>
-        /// <param name="shortname">True if short filenames should be used, false otherwise (Level Split only)</param>
-        /// <param name="basedat">True if original filenames should be used as the base for output filename, false otherwise (Level Split only)</param>
-        /// <param name="radix">Long value representing the split point (Size Split only)</param>
-        public void DetermineSplitType(
-            List<string> inputs,
-            string outDir,
-            bool inplace,
-            SplittingMode splittingMode,
-            List<string> exta,
-            List<string> extb,
-            bool shortname,
-            bool basedat,
-            long radix)
-        {
-            // If we somehow have the "none" split type, return
-            if (splittingMode == SplittingMode.None)
-                return;
-
-            // Get only files from the inputs
-            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(inputs, appendparent: true);
-
-            // Loop over the input files
-            foreach (ParentablePath file in files)
-            {
-                // Create and fill the new DAT
-                DatFile internalDat = Create(Header);
-                Parse(file);
-
-                // Get the output directory
-                outDir = file.GetOutputPath(outDir, inplace);
-
-                // Split and write the DAT
-                if (splittingMode.HasFlag(SplittingMode.Extension))
-                    internalDat.SplitByExtension(outDir, exta, extb);
-
-                if (splittingMode.HasFlag(SplittingMode.Hash))
-                    internalDat.SplitByHash(outDir);
-
-                if (splittingMode.HasFlag(SplittingMode.Level))
-                    internalDat.SplitByLevel(outDir, shortname, basedat);
-
-                if (splittingMode.HasFlag(SplittingMode.Size))
-                    internalDat.SplitBySize(outDir, radix);
-
-                if (splittingMode.HasFlag(SplittingMode.Type))
-                    internalDat.SplitByType(outDir);
-            }
-        }
 
         /// <summary>
         /// Split a DAT by input extensions
