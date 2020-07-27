@@ -15,7 +15,7 @@ namespace SabreTools.Library.Reports
     {
         protected string _name;
         protected long _machineCount;
-        protected DatStats _stats;
+        protected ItemDictionary _stats;
 
         protected StreamWriter _writer;
         protected bool _baddumpCol;
@@ -104,7 +104,7 @@ namespace SabreTools.Library.Reports
         /// <summary>
         /// Replace the statistics that is being output
         /// </summary>
-        public void ReplaceStatistics(string datName, long machineCount, DatStats datStats)
+        public void ReplaceStatistics(string datName, long machineCount, ItemDictionary datStats)
         {
             _name = datName;
             _machineCount = machineCount;

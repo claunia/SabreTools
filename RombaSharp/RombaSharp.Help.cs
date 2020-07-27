@@ -679,7 +679,7 @@ structure according to the original DAT master directory tree structure.";
                 }
 
                 // Now output the stats for all inputs
-                DatStats.OutputStats(Inputs, "rombasharp-datstats", null /* outDir */, true /* single */, true /* baddumpCol */, true /* nodumpCol */, StatReportFormat.Textfile);
+                ItemDictionary.OutputStats(Inputs, "rombasharp-datstats", null /* outDir */, true /* single */, true /* baddumpCol */, true /* nodumpCol */, StatReportFormat.Textfile);
             }
         }
 

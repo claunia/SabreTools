@@ -1739,7 +1739,7 @@ namespace SabreTools.Library.DatFiles
             #region Perform setup
 
             // If the DAT is not populated and inverse is not set, inform the user and quit
-            if (Items.Statistics.Count == 0 && !inverse)
+            if (Items.TotalCount == 0 && !inverse)
             {
                 Globals.Logger.User("No entries were found to rebuild, exiting...");
                 return false;
@@ -1919,7 +1919,7 @@ namespace SabreTools.Library.DatFiles
             #region Perform setup
 
             // If the DAT is not populated and inverse is not set, inform the user and quit
-            if (Items.Statistics.Count == 0 && !inverse)
+            if (Items.TotalCount == 0 && !inverse)
             {
                 Globals.Logger.User("No entries were found to rebuild, exiting...");
                 return false;
@@ -2595,7 +2595,7 @@ namespace SabreTools.Library.DatFiles
         private bool SplitByExtension(string outDir, List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
-            if (Items.Statistics.Count == 0)
+            if (Items.TotalCount == 0)
                 return false;
 
             // Make sure all of the extensions don't have a dot at the beginning
@@ -3000,7 +3000,7 @@ namespace SabreTools.Library.DatFiles
         public bool Write(string outDir = null, bool norename = true, bool stats = false, bool ignoreblanks = false, bool overwrite = true)
         {
             // If there's nothing there, abort
-            if (Items.Statistics.Count == 0)
+            if (Items.TotalCount == 0)
             {
                 Globals.Logger.User("There were no items to write out!");
                 return false;
@@ -3053,13 +3053,13 @@ namespace SabreTools.Library.DatFiles
             // Output initial statistics, for kicks
             if (stats)
             {
-                if (Items.Statistics.RomCount + Items.Statistics.DiskCount == 0)
+                if (Items.RomCount + Items.DiskCount == 0)
                     Items.RecalculateStats();
 
                 Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
                 var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
-                consoleOutput.ReplaceStatistics(DatHeader.FileName, Items.Keys.Count(), Items.Statistics);
+                consoleOutput.ReplaceStatistics(DatHeader.FileName, Items.Keys.Count(), Items);
             }
 
             // Bucket and dedupe according to the flag
@@ -3072,7 +3072,7 @@ namespace SabreTools.Library.DatFiles
             Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: norename);
 
             // Output the number of items we're going to be writing
-            Globals.Logger.User($"A total of {Items.Statistics.Count} items will be written out to '{DatHeader.FileName}'");
+            Globals.Logger.User($"A total of {Items.TotalCount} items will be written out to '{DatHeader.FileName}'");
 
             // Get the outfile names
             Dictionary<DatFormat, string> outfiles = DatHeader.CreateOutFileNames(outDir, overwrite);

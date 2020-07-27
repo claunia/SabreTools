@@ -3250,7 +3250,7 @@ The stats that are outputted are as follows:
                     filename = Path.GetFileName(filename);
                 }
 
-                DatStats.OutputStats(
+                ItemDictionary.OutputStats(
                     Inputs,
                     filename,
                     outputDir,

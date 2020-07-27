@@ -837,7 +837,7 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("configuration");
                 xtw.WriteElementString("datName", DatHeader.Name);
-                xtw.WriteElementString("datVersion", Items.Statistics.Count.ToString());
+                xtw.WriteElementString("datVersion", Items.TotalCount.ToString());
                 xtw.WriteElementString("system", "none");
                 xtw.WriteElementString("screenshotsWidth", "240");
                 xtw.WriteElementString("screenshotsHeight", "160");

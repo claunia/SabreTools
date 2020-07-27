@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
+using SabreTools.Library.Reports;
+using SabreTools.Library.Tools;
 using NaturalSort;
 
 namespace SabreTools.Library.DatFiles
@@ -35,6 +39,8 @@ namespace SabreTools.Library.DatFiles
 
         #region Publically available fields
 
+        #region Keys
+
         /// <summary>
         /// Get the keys from the file dictionary
         /// </summary>
@@ -58,12 +64,118 @@ namespace SabreTools.Library.DatFiles
             }
         }
 
+        #endregion
+
+        #region Statistics
+
         /// <summary>
-        /// DatStats object for reporting
+        /// Overall item count
         /// </summary>
-        public DatStats Statistics { get; private set; }
+        public long TotalCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Archive items
+        /// </summary>
+        public long ArchiveCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of BiosSet items
+        /// </summary>
+        public long BiosSetCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Disk items
+        /// </summary>
+        public long DiskCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Release items
+        /// </summary>
+        public long ReleaseCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Rom items
+        /// </summary>
+        public long RomCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Sample items
+        /// </summary>
+        public long SampleCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of machines
+        /// </summary>
+        /// <remarks>Special count only used by statistics output</remarks>
+        public long GameCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Total uncompressed size
+        /// </summary>
+        public long TotalSize { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with a CRC hash
+        /// </summary>
+        public long CRCCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with an MD5 hash
+        /// </summary>
+        public long MD5Count { get; private set; } = 0;
+
+#if NET_FRAMEWORK
+        /// <summary>
+        /// Number of items with a RIPEMD160 hash
+        /// </summary>
+        public long RIPEMD160Count { get; private set; } = 0;
+#endif
+
+        /// <summary>
+        /// Number of items with a SHA-1 hash
+        /// </summary>
+        public long SHA1Count { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with a SHA-256 hash
+        /// </summary>
+        public long SHA256Count { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with a SHA-384 hash
+        /// </summary>
+        public long SHA384Count { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with a SHA-512 hash
+        /// </summary>
+        public long SHA512Count { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with the baddump status
+        /// </summary>
+        public long BaddumpCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with the good status
+        /// </summary>
+        public long GoodCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with the nodump status
+        /// </summary>
+        public long NodumpCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of items with the verified status
+        /// </summary>
+        public long VerifiedCount { get; private set; } = 0;
 
         #endregion
+
+        #endregion
+
+        #region Instsnce methods
 
         #region Accessors
 
@@ -112,7 +224,7 @@ namespace SabreTools.Library.DatFiles
                 items[key].Add(value);
 
                 // Now update the statistics
-                Statistics.AddItem(value);
+                AddItemStatistics(value);
             }
         }
 
@@ -145,7 +257,7 @@ namespace SabreTools.Library.DatFiles
                 // Now update the statistics
                 foreach (DatItem item in value)
                 {
-                    Statistics.AddItem(item);
+                    AddItemStatistics(item);
                 }
             }
         }
@@ -203,7 +315,7 @@ namespace SabreTools.Library.DatFiles
             // Remove the statistics first
             foreach (DatItem item in items[key])
             {
-                Statistics.RemoveItem(item);
+                RemoveItemStatistics(item);
             }
 
             // Remove the key from the dictionary
@@ -222,7 +334,7 @@ namespace SabreTools.Library.DatFiles
                 return false;
 
             // Remove the statistics first
-            Statistics.RemoveItem(value);
+            RemoveItemStatistics(value);
 
             return items[key].Remove(value);
         }
@@ -237,6 +349,110 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Add to the statistics given a DatItem
+        /// </summary>
+        /// <param name="item">Item to add info from</param>
+        private void AddItemStatistics(DatItem item)
+        {
+            // No matter what the item is, we increate the count
+            TotalCount += 1;
+
+            // Now we do different things for each item type
+            switch (item.ItemType)
+            {
+                case ItemType.Archive:
+                    ArchiveCount += 1;
+                    break;
+                case ItemType.BiosSet:
+                    BiosSetCount += 1;
+                    break;
+                case ItemType.Disk:
+                    DiskCount += 1;
+                    if (((Disk)item).ItemStatus != ItemStatus.Nodump)
+                    {
+                        MD5Count += (string.IsNullOrWhiteSpace(((Disk)item).MD5) ? 0 : 1);
+#if NET_FRAMEWORK
+                        RIPEMD160Count += (string.IsNullOrWhiteSpace(((Disk)item).RIPEMD160) ? 0 : 1);
+#endif
+                        SHA1Count += (string.IsNullOrWhiteSpace(((Disk)item).SHA1) ? 0 : 1);
+                        SHA256Count += (string.IsNullOrWhiteSpace(((Disk)item).SHA256) ? 0 : 1);
+                        SHA384Count += (string.IsNullOrWhiteSpace(((Disk)item).SHA384) ? 0 : 1);
+                        SHA512Count += (string.IsNullOrWhiteSpace(((Disk)item).SHA512) ? 0 : 1);
+                    }
+
+                    BaddumpCount += (((Disk)item).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                    GoodCount += (((Disk)item).ItemStatus == ItemStatus.Good ? 1 : 0);
+                    NodumpCount += (((Disk)item).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                    VerifiedCount += (((Disk)item).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                    break;
+                case ItemType.Release:
+                    ReleaseCount += 1;
+                    break;
+                case ItemType.Rom:
+                    RomCount += 1;
+                    if (((Rom)item).ItemStatus != ItemStatus.Nodump)
+                    {
+                        TotalSize += ((Rom)item).Size;
+                        CRCCount += (string.IsNullOrWhiteSpace(((Rom)item).CRC) ? 0 : 1);
+                        MD5Count += (string.IsNullOrWhiteSpace(((Rom)item).MD5) ? 0 : 1);
+#if NET_FRAMEWORK
+                        RIPEMD160Count += (string.IsNullOrWhiteSpace(((Rom)item).RIPEMD160) ? 0 : 1);
+#endif
+                        SHA1Count += (string.IsNullOrWhiteSpace(((Rom)item).SHA1) ? 0 : 1);
+                        SHA256Count += (string.IsNullOrWhiteSpace(((Rom)item).SHA256) ? 0 : 1);
+                        SHA384Count += (string.IsNullOrWhiteSpace(((Rom)item).SHA384) ? 0 : 1);
+                        SHA512Count += (string.IsNullOrWhiteSpace(((Rom)item).SHA512) ? 0 : 1);
+                    }
+
+                    BaddumpCount += (((Rom)item).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                    GoodCount += (((Rom)item).ItemStatus == ItemStatus.Good ? 1 : 0);
+                    NodumpCount += (((Rom)item).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                    VerifiedCount += (((Rom)item).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                    break;
+                case ItemType.Sample:
+                    SampleCount += 1;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Add statistics from another DatStats object
+        /// </summary>
+        /// <param name="stats">DatStats object to add from</param>
+        private void AddStatistics(ItemDictionary stats)
+        {
+            TotalCount += stats.Count;
+
+            ArchiveCount += stats.ArchiveCount;
+            BiosSetCount += stats.BiosSetCount;
+            DiskCount += stats.DiskCount;
+            ReleaseCount += stats.ReleaseCount;
+            RomCount += stats.RomCount;
+            SampleCount += stats.SampleCount;
+
+            GameCount += stats.GameCount;
+
+            TotalSize += stats.TotalSize;
+
+            // Individual hash counts
+            CRCCount += stats.CRCCount;
+            MD5Count += stats.MD5Count;
+#if NET_FRAMEWORK
+            RIPEMD160Count += stats.RIPEMD160Count;
+#endif
+            SHA1Count += stats.SHA1Count;
+            SHA256Count += stats.SHA256Count;
+            SHA384Count += stats.SHA384Count;
+            SHA512Count += stats.SHA512Count;
+
+            // Individual status counts
+            BaddumpCount += stats.BaddumpCount;
+            GoodCount += stats.GoodCount;
+            NodumpCount += stats.NodumpCount;
+            VerifiedCount += stats.VerifiedCount;
+        }
+
+        /// <summary>
         /// Ensure the key exists in the items dictionary
         /// </summary>
         /// <param name="key">Key to ensure</param>
@@ -245,6 +461,78 @@ namespace SabreTools.Library.DatFiles
             // If the key is missing from the dictionary, add it
             if (!items.ContainsKey(key))
                 items.Add(key, new List<DatItem>());
+        }
+
+        /// <summary>
+        /// Remove from the statistics given a DatItem
+        /// </summary>
+        /// <param name="item">Item to remove info for</param>
+        public void RemoveItemStatistics(DatItem item)
+        {
+            // If we have a null item, we can't do anything
+            if (item == null)
+                return;
+
+            // No matter what the item is, we increate the count
+            TotalCount -= 1;
+
+            // Now we do different things for each item type
+
+            switch (item.ItemType)
+            {
+                case ItemType.Archive:
+                    ArchiveCount -= 1;
+                    break;
+                case ItemType.BiosSet:
+                    BiosSetCount -= 1;
+                    break;
+                case ItemType.Disk:
+                    DiskCount -= 1;
+                    if (((Disk)item).ItemStatus != ItemStatus.Nodump)
+                    {
+                        MD5Count -= (string.IsNullOrWhiteSpace(((Disk)item).MD5) ? 0 : 1);
+#if NET_FRAMEWORK
+                        RIPEMD160Count -= (string.IsNullOrWhiteSpace(((Disk)item).RIPEMD160) ? 0 : 1);
+#endif
+                        SHA1Count -= (string.IsNullOrWhiteSpace(((Disk)item).SHA1) ? 0 : 1);
+                        SHA256Count -= (string.IsNullOrWhiteSpace(((Disk)item).SHA256) ? 0 : 1);
+                        SHA384Count -= (string.IsNullOrWhiteSpace(((Disk)item).SHA384) ? 0 : 1);
+                        SHA512Count -= (string.IsNullOrWhiteSpace(((Disk)item).SHA512) ? 0 : 1);
+                    }
+
+                    BaddumpCount -= (((Disk)item).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                    GoodCount -= (((Disk)item).ItemStatus == ItemStatus.Good ? 1 : 0);
+                    NodumpCount -= (((Disk)item).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                    VerifiedCount -= (((Disk)item).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                    break;
+                case ItemType.Release:
+                    ReleaseCount -= 1;
+                    break;
+                case ItemType.Rom:
+                    RomCount -= 1;
+                    if (((Rom)item).ItemStatus != ItemStatus.Nodump)
+                    {
+                        TotalSize -= ((Rom)item).Size;
+                        CRCCount -= (string.IsNullOrWhiteSpace(((Rom)item).CRC) ? 0 : 1);
+                        MD5Count -= (string.IsNullOrWhiteSpace(((Rom)item).MD5) ? 0 : 1);
+#if NET_FRAMEWORK
+                        RIPEMD160Count -= (string.IsNullOrWhiteSpace(((Rom)item).RIPEMD160) ? 0 : 1);
+#endif
+                        SHA1Count -= (string.IsNullOrWhiteSpace(((Rom)item).SHA1) ? 0 : 1);
+                        SHA256Count -= (string.IsNullOrWhiteSpace(((Rom)item).SHA256) ? 0 : 1);
+                        SHA384Count -= (string.IsNullOrWhiteSpace(((Rom)item).SHA384) ? 0 : 1);
+                        SHA512Count -= (string.IsNullOrWhiteSpace(((Rom)item).SHA512) ? 0 : 1);
+                    }
+
+                    BaddumpCount -= (((Rom)item).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                    GoodCount -= (((Rom)item).ItemStatus == ItemStatus.Good ? 1 : 0);
+                    NodumpCount -= (((Rom)item).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                    VerifiedCount -= (((Rom)item).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                    break;
+                case ItemType.Sample:
+                    SampleCount -= 1;
+                    break;
+            }
         }
 
         #endregion
@@ -259,8 +547,6 @@ namespace SabreTools.Library.DatFiles
             bucketedBy = BucketedBy.Default;
             mergedBy = DedupeType.None;
             items = new Dictionary<string, List<DatItem>>();
-
-            Statistics = new DatStats();
         }
 
         #endregion
@@ -281,15 +567,15 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
-            if (this.bucketedBy != bucketBy)
+            if (bucketedBy != bucketBy)
             {
                 Globals.Logger.User($"Organizing roms by {bucketBy}");
 
                 // Set the sorted type
-                this.bucketedBy = bucketBy;
+                bucketedBy = bucketBy;
 
                 // Reset the merged type since this might change the merge
-                this.mergedBy = DedupeType.None;
+                mergedBy = DedupeType.None;
 
                 // First do the initial sort of all of the roms inplace
                 List<string> oldkeys = Keys.ToList();
@@ -326,12 +612,12 @@ namespace SabreTools.Library.DatFiles
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly
-            if (this.mergedBy != dedupeType)
+            if (mergedBy != dedupeType)
             {
                 Globals.Logger.User($"Deduping roms by {dedupeType}");
 
                 // Set the sorted type
-                this.mergedBy = dedupeType;
+                mergedBy = dedupeType;
 
                 Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
                 {
@@ -394,7 +680,7 @@ namespace SabreTools.Library.DatFiles
             List<DatItem> output = new List<DatItem>();
 
             // Check for an empty rom list first
-            if (Statistics.Count == 0)
+            if (TotalCount == 0)
                 return output;
 
             // We want to get the proper key for the DatItem
@@ -442,7 +728,7 @@ namespace SabreTools.Library.DatFiles
         public bool HasDuplicates(DatItem datItem, bool sorted = false)
         {
             // Check for an empty rom list first
-            if (Statistics.Count == 0)
+            if (TotalCount == 0)
                 return false;
 
             // We want to get the proper key for the DatItem
@@ -463,10 +749,10 @@ namespace SabreTools.Library.DatFiles
         public void RecalculateStats()
         {
             // Wipe out any stats already there
-            Statistics.Reset();
+            ResetStatistics();
 
             // If we have a blank Dat in any way, return
-            if (this == null || Statistics.Count == 0)
+            if (this == null || TotalCount == 0)
                 return;
 
             // Loop through and add
@@ -475,7 +761,7 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> datItems = items[key];
                 foreach (DatItem item in datItems)
                 {
-                    Statistics.AddItem(item);
+                    AddItemStatistics(item);
                 }
             });
         }
@@ -493,6 +779,76 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Get the highest-order BucketedBy value that represents the statistics
+        /// </summary>
+        private BucketedBy GetBestAvailable()
+        {
+            // If all items are supposed to have a SHA-512, we bucket by that
+            if (RomCount + DiskCount - NodumpCount == SHA512Count)
+                return BucketedBy.SHA512;
+
+            // If all items are supposed to have a SHA-384, we bucket by that
+            else if (RomCount + DiskCount - NodumpCount == SHA384Count)
+                return BucketedBy.SHA384;
+
+            // If all items are supposed to have a SHA-256, we bucket by that
+            else if (RomCount + DiskCount - NodumpCount == SHA256Count)
+                return BucketedBy.SHA256;
+
+            // If all items are supposed to have a SHA-1, we bucket by that
+            else if (RomCount + DiskCount - NodumpCount == SHA1Count)
+                return BucketedBy.SHA1;
+
+#if NET_FRAMEWORK
+            // If all items are supposed to have a RIPEMD160, we bucket by that
+            else if (RomCount + DiskCount - NodumpCount == RIPEMD160Count)
+                return BucketedBy.RIPEMD160;
+#endif
+
+            // If all items are supposed to have a MD5, we bucket by that
+            else if (RomCount + DiskCount - NodumpCount == MD5Count)
+                return BucketedBy.MD5;
+
+            // Otherwise, we bucket by CRC
+            else
+                return BucketedBy.CRC;
+        }
+
+        /// <summary>
+        /// Reset all statistics
+        /// </summary>
+        private void ResetStatistics()
+        {
+            TotalCount = 0;
+
+            ArchiveCount = 0;
+            BiosSetCount = 0;
+            DiskCount = 0;
+            ReleaseCount = 0;
+            RomCount = 0;
+            SampleCount = 0;
+
+            GameCount = 0;
+
+            TotalSize = 0;
+
+            CRCCount = 0;
+            MD5Count = 0;
+#if NET_FRAMEWORK
+            RIPEMD160Count = 0;
+#endif
+            SHA1Count = 0;
+            SHA256Count = 0;
+            SHA384Count = 0;
+            SHA512Count = 0;
+
+            BaddumpCount = 0;
+            GoodCount = 0;
+            NodumpCount = 0;
+            VerifiedCount = 0;
+        }
+
+        /// <summary>
         /// Sort the input DAT and get the key to be used by the item
         /// </summary>
         /// <param name="datItem">Item to try to match</param>
@@ -502,7 +858,7 @@ namespace SabreTools.Library.DatFiles
         {
             // If we're not already sorted, take care of it
             if (!sorted)
-                BucketBy(Statistics.GetBestAvailable(), DedupeType.None);
+                BucketBy(GetBestAvailable(), DedupeType.None);
 
             // Now that we have the sorted type, we get the proper key
             return datItem.GetKey(bucketedBy);
@@ -557,6 +913,218 @@ namespace SabreTools.Library.DatFiles
         {
             return ((IEnumerable)items).GetEnumerator();
         }
+
+        #endregion
+
+        #endregion
+
+        #region Static methods
+
+        #region Writing
+
+        /// <summary>
+        /// Output the stats for a list of input dats as files in a human-readable format
+        /// </summary>
+        /// <param name="inputs">List of input files and folders</param>
+        /// <param name="reportName">Name of the output file</param>
+        /// <param name="single">True if single DAT stats are output, false otherwise</param>
+        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
+        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
+        /// <param name="statDatFormat" > Set the statistics output format to use</param>
+        public static void OutputStats(
+            List<string> inputs,
+            string reportName,
+            string outDir,
+            bool single,
+            bool baddumpCol,
+            bool nodumpCol,
+            StatReportFormat statDatFormat)
+        {
+            // If there's no output format, set the default
+            if (statDatFormat == StatReportFormat.None)
+                statDatFormat = StatReportFormat.Textfile;
+
+            // Get the proper output file name
+            if (string.IsNullOrWhiteSpace(reportName))
+                reportName = "report";
+
+            // Get the proper output directory name
+            outDir = DirectoryExtensions.Ensure(outDir);
+
+            // Get the dictionary of desired output report names
+            Dictionary<StatReportFormat, string> outputs = CreateOutStatsNames(outDir, statDatFormat, reportName);
+
+            // Make sure we have all files and then order them
+            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(inputs);
+            files = files
+                .OrderBy(i => Path.GetDirectoryName(i.CurrentPath))
+                .ThenBy(i => Path.GetFileName(i.CurrentPath))
+                .ToList();
+
+            // Get all of the writers that we need
+            List<BaseReport> reports = outputs.Select(kvp => BaseReport.Create(kvp.Key, kvp.Value, baddumpCol, nodumpCol)).ToList();
+
+            // Write the header, if any
+            reports.ForEach(report => report.WriteHeader());
+
+            // Init all total variables
+            ItemDictionary totalStats = new ItemDictionary();
+
+            // Init directory-level variables
+            string lastdir = null;
+            string basepath = null;
+            ItemDictionary dirStats = new ItemDictionary();
+
+            // Now process each of the input files
+            foreach (ParentablePath file in files)
+            {
+                // Get the directory for the current file
+                string thisdir = Path.GetDirectoryName(file.CurrentPath);
+                basepath = Path.GetDirectoryName(Path.GetDirectoryName(file.CurrentPath));
+
+                // If we don't have the first file and the directory has changed, show the previous directory stats and reset
+                if (lastdir != null && thisdir != lastdir)
+                {
+                    // Output separator if needed
+                    reports.ForEach(report => report.WriteMidSeparator());
+
+                    DatFile lastdirdat = DatFile.Create();
+
+                    reports.ForEach(report => report.ReplaceStatistics($"DIR: {WebUtility.HtmlEncode(lastdir)}", dirStats.GameCount, dirStats));
+                    reports.ForEach(report => report.Write());
+
+                    // Write the mid-footer, if any
+                    reports.ForEach(report => report.WriteFooterSeparator());
+
+                    // Write the header, if any
+                    reports.ForEach(report => report.WriteMidHeader());
+
+                    // Reset the directory stats
+                    dirStats.ResetStatistics();
+                }
+
+                Globals.Logger.Verbose($"Beginning stat collection for '{file}'", false);
+                List<string> games = new List<string>();
+                DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
+                datdata.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
+
+                // Output single DAT stats (if asked)
+                Globals.Logger.User($"Adding stats for file '{file}'\n", false);
+                if (single)
+                {
+                    reports.ForEach(report => report.ReplaceStatistics(datdata.DatHeader.FileName, datdata.Items.Keys.Count, datdata.Items));
+                    reports.ForEach(report => report.Write());
+                }
+
+                // Add single DAT stats to dir
+                dirStats.AddStatistics(datdata.Items);
+                dirStats.GameCount += datdata.Items.Keys.Count();
+
+                // Add single DAT stats to totals
+                totalStats.AddStatistics(datdata.Items);
+                totalStats.GameCount += datdata.Items.Keys.Count();
+
+                // Make sure to assign the new directory
+                lastdir = thisdir;
+            }
+
+            // Output the directory stats one last time
+            reports.ForEach(report => report.WriteMidSeparator());
+
+            if (single)
+            {
+                reports.ForEach(report => report.ReplaceStatistics($"DIR: {WebUtility.HtmlEncode(lastdir)}", dirStats.GameCount, dirStats));
+                reports.ForEach(report => report.Write());
+            }
+
+            // Write the mid-footer, if any
+            reports.ForEach(report => report.WriteFooterSeparator());
+
+            // Write the header, if any
+            reports.ForEach(report => report.WriteMidHeader());
+
+            // Reset the directory stats
+            dirStats.ResetStatistics();
+
+            // Output total DAT stats
+            reports.ForEach(report => report.ReplaceStatistics("DIR: All DATs", totalStats.GameCount, totalStats));
+            reports.ForEach(report => report.Write());
+
+            // Output footer if needed
+            reports.ForEach(report => report.WriteFooter());
+
+            Globals.Logger.User(@"
+Please check the log folder if the stats scrolled offscreen", false);
+        }
+
+        /// <summary>
+        /// Get the proper extension for the stat output format
+        /// </summary>
+        /// <param name="outDir">Output path to use</param>
+        /// <param name="statDatFormat">StatDatFormat to get the extension for</param>
+        /// <param name="reportName">Name of the input file to use</param>
+        /// <returns>Dictionary of output formats mapped to file names</returns>
+        private static Dictionary<StatReportFormat, string> CreateOutStatsNames(string outDir, StatReportFormat statDatFormat, string reportName, bool overwrite = true)
+        {
+            Dictionary<StatReportFormat, string> output = new Dictionary<StatReportFormat, string>();
+
+            // First try to create the output directory if we need to
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+
+            // Double check the outDir for the end delim
+            if (!outDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                outDir += Path.DirectorySeparatorChar;
+
+            // For each output format, get the appropriate stream writer
+            output.Add(StatReportFormat.None, CreateOutStatsNamesHelper(outDir, ".null", reportName, overwrite));
+
+            if (statDatFormat.HasFlag(StatReportFormat.Textfile))
+                output.Add(StatReportFormat.Textfile, CreateOutStatsNamesHelper(outDir, ".txt", reportName, overwrite));
+
+            if (statDatFormat.HasFlag(StatReportFormat.CSV))
+                output.Add(StatReportFormat.CSV, CreateOutStatsNamesHelper(outDir, ".csv", reportName, overwrite));
+
+            if (statDatFormat.HasFlag(StatReportFormat.HTML))
+                output.Add(StatReportFormat.HTML, CreateOutStatsNamesHelper(outDir, ".html", reportName, overwrite));
+
+            if (statDatFormat.HasFlag(StatReportFormat.SSV))
+                output.Add(StatReportFormat.SSV, CreateOutStatsNamesHelper(outDir, ".ssv", reportName, overwrite));
+
+            if (statDatFormat.HasFlag(StatReportFormat.TSV))
+                output.Add(StatReportFormat.TSV, CreateOutStatsNamesHelper(outDir, ".tsv", reportName, overwrite));
+
+            return output;
+        }
+
+        /// <summary>
+        /// Help generating the outstats name
+        /// </summary>
+        /// <param name="outDir">Output directory</param>
+        /// <param name="extension">Extension to use for the file</param>
+        /// <param name="reportName">Name of the input file to use</param>
+        /// <param name="overwrite">True if we ignore existing files, false otherwise</param>
+        /// <returns>String containing the new filename</returns>
+        private static string CreateOutStatsNamesHelper(string outDir, string extension, string reportName, bool overwrite)
+        {
+            string outfile = outDir + reportName + extension;
+            outfile = outfile.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", Path.DirectorySeparatorChar.ToString());
+
+            if (!overwrite)
+            {
+                int i = 1;
+                while (File.Exists(outfile))
+                {
+                    outfile = $"{outDir}{reportName}_{i}{extension}";
+                    outfile = outfile.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", Path.DirectorySeparatorChar.ToString());
+                    i++;
+                }
+            }
+
+            return outfile;
+        }
+
+        #endregion
 
         #endregion
     }
