@@ -828,7 +828,7 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Determine the output path for the DAT
-                string interOutDir = PathExtensions.GetOutputPath(outDir, path, inplace);
+                string interOutDir = path.GetOutputPath(outDir, inplace);
 
                 // Once we're done, try writing out
                 intDat.Write(interOutDir, overwrite: inplace);
@@ -878,7 +878,7 @@ namespace SabreTools.Library.DatFiles
                 });
 
                 // Determine the output path for the DAT
-                string interOutDir = PathExtensions.GetOutputPath(outDir, path, inplace);
+                string interOutDir = path.GetOutputPath(outDir, inplace);
 
                 // Once we're done, try writing out
                 intDat.Write(interOutDir, overwrite: inplace);
@@ -907,7 +907,7 @@ namespace SabreTools.Library.DatFiles
             DatFile[] outDatsArray = new DatFile[inputs.Count];
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
             {
-                string innerpost = $" ({j} - {PathExtensions.GetNormalizedFileName(inputs[j], true)} Only)";
+                string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
                 DatFile diffData;
 
                 // If we're in inplace mode or the output directory is set, take the appropriate DatData object already stored
@@ -964,7 +964,7 @@ namespace SabreTools.Library.DatFiles
 
             Parallel.For((skip ? 1 : 0), inputs.Count, Globals.ParallelOptions, j =>
             {
-                string path = PathExtensions.GetOutputPath(outDir, inputs[j], inplace);
+                string path = inputs[j].GetOutputPath(outDir, inplace);
 
                 // Try to output the file
                 outDats[j].Write(path, overwrite: inplace);
@@ -1030,7 +1030,7 @@ namespace SabreTools.Library.DatFiles
 
                 Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
                 {
-                    string innerpost = $" ({j} - {PathExtensions.GetNormalizedFileName(inputs[j], true)} Only)";
+                    string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
                     DatFile diffData = Create(DatHeader);
                     diffData.DatHeader.FileName += innerpost;
                     diffData.DatHeader.Name += innerpost;
@@ -1110,7 +1110,7 @@ namespace SabreTools.Library.DatFiles
             {
                 Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
                 {
-                    string path = PathExtensions.GetOutputPath(outDir, inputs[j], false /* inplace */);
+                    string path = inputs[j].GetOutputPath(outDir, false /* inplace */);
 
                     // Try to output the file
                     outDats[j].Write(path, overwrite: false);
@@ -1179,7 +1179,7 @@ namespace SabreTools.Library.DatFiles
                 filter.FilterDatFile(innerDatdata, false /* useTags */);
 
                 // Get the correct output path
-                string realOutDir = PathExtensions.GetOutputPath(outDir, file, inplace);
+                string realOutDir = file.GetOutputPath(outDir, inplace);
 
                 // Try to output the file, overwriting only if it's not in the current directory
                 innerDatdata.Write(realOutDir, overwrite: inplace);
@@ -2559,7 +2559,7 @@ namespace SabreTools.Library.DatFiles
                 Parse(file);
 
                 // Get the output directory
-                outDir = PathExtensions.GetOutputPath(outDir, file, inplace);
+                outDir = file.GetOutputPath(outDir, inplace);
 
                 // Split and write the DAT
                 if (splittingMode.HasFlag(SplittingMode.Extension))
