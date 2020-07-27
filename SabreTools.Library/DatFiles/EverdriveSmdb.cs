@@ -185,12 +185,12 @@ namespace SabreTools.Library.DatFiles
 
                         string[] fields = new string[]
                         {
-                            rom.GetField(Field.SHA256, DatHeader.ExcludeFields),
-                            $"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}/",
-                            rom.GetField(Field.Name, DatHeader.ExcludeFields),
-                            rom.GetField(Field.SHA1, DatHeader.ExcludeFields),
-                            rom.GetField(Field.MD5, DatHeader.ExcludeFields),
-                            rom.GetField(Field.CRC, DatHeader.ExcludeFields),
+                            rom.GetField(Field.SHA256, Header.ExcludeFields),
+                            $"{rom.GetField(Field.MachineName, Header.ExcludeFields)}/",
+                            rom.GetField(Field.Name, Header.ExcludeFields),
+                            rom.GetField(Field.SHA1, Header.ExcludeFields),
+                            rom.GetField(Field.MD5, Header.ExcludeFields),
+                            rom.GetField(Field.CRC, Header.ExcludeFields),
                         };
 
                         svw.WriteValues(fields);

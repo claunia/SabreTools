@@ -62,8 +62,8 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "softwaredb":
-                            DatHeader.Name = (string.IsNullOrWhiteSpace(DatHeader.Name) ? "openMSX Software List" : DatHeader.Name);
-                            DatHeader.Description = (string.IsNullOrWhiteSpace(DatHeader.Description) ? DatHeader.Name : DatHeader.Description);
+                            Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? "openMSX Software List" : Header.Name);
+                            Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? Header.Name : Header.Description);
                             // string timestamp = xtr.GetAttribute("timestamp"); // CDATA
                             xtr.Read();
                             break;
@@ -618,11 +618,11 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state based on excluded fields
                 xtw.WriteStartElement("software");
-                xtw.WriteElementString("title", datItem.GetField(Field.MachineName, DatHeader.ExcludeFields));
+                xtw.WriteElementString("title", datItem.GetField(Field.MachineName, Header.ExcludeFields));
                 //xtw.WriteElementString("genmsxid", msxid);
                 //xtw.WriteElementString("system", system));
-                xtw.WriteElementString("company", datItem.GetField(Field.Manufacturer, DatHeader.ExcludeFields));
-                xtw.WriteElementString("year", datItem.GetField(Field.Year, DatHeader.ExcludeFields));
+                xtw.WriteElementString("company", datItem.GetField(Field.Manufacturer, Header.ExcludeFields));
+                xtw.WriteElementString("year", datItem.GetField(Field.Year, Header.ExcludeFields));
                 //xtw.WriteElementString("country", country);
 
                 xtw.Flush();
@@ -690,10 +690,10 @@ namespace SabreTools.Library.DatFiles
                         //xtw.WriteEndElement();
 
                         xtw.WriteStartElement("rom");
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
                             xtw.WriteElementString("start", rom.Offset);
                         //xtw.WriteElementString("type", "Normal");
-                        xtw.WriteElementString("hash", rom.GetField(Field.SHA1, DatHeader.ExcludeFields).ToLowerInvariant());
+                        xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
                         //xtw.WriteElementString("remark", "");
 
                         // End rom

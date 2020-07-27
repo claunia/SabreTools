@@ -130,37 +130,37 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "author":
-                        DatHeader.Author = string.IsNullOrWhiteSpace(DatHeader.Author) ? kvp?.Value : DatHeader.Author;
+                        Header.Author = string.IsNullOrWhiteSpace(Header.Author) ? kvp?.Value : Header.Author;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        DatHeader.Version = string.IsNullOrWhiteSpace(DatHeader.Version) ? kvp?.Value : DatHeader.Version;
+                        Header.Version = string.IsNullOrWhiteSpace(Header.Version) ? kvp?.Value : Header.Version;
                         reader.ReadNextLine();
                         break;
 
                     case "email":
-                        DatHeader.Email = string.IsNullOrWhiteSpace(DatHeader.Email) ? kvp?.Value : DatHeader.Email;
+                        Header.Email = string.IsNullOrWhiteSpace(Header.Email) ? kvp?.Value : Header.Email;
                         reader.ReadNextLine();
                         break;
 
                     case "homepage":
-                        DatHeader.Homepage = string.IsNullOrWhiteSpace(DatHeader.Homepage) ? kvp?.Value : DatHeader.Homepage;
+                        Header.Homepage = string.IsNullOrWhiteSpace(Header.Homepage) ? kvp?.Value : Header.Homepage;
                         reader.ReadNextLine();
                         break;
 
                     case "url":
-                        DatHeader.Url = string.IsNullOrWhiteSpace(DatHeader.Url) ? kvp?.Value : DatHeader.Url;
+                        Header.Url = string.IsNullOrWhiteSpace(Header.Url) ? kvp?.Value : Header.Url;
                         reader.ReadNextLine();
                         break;
 
                     case "date":
-                        DatHeader.Date = string.IsNullOrWhiteSpace(DatHeader.Date) ? kvp?.Value : DatHeader.Date;
+                        Header.Date = string.IsNullOrWhiteSpace(Header.Date) ? kvp?.Value : Header.Date;
                         reader.ReadNextLine();
                         break;
 
                     case "comment":
-                        DatHeader.Comment = string.IsNullOrWhiteSpace(DatHeader.Comment) ? kvp?.Value : DatHeader.Comment;
+                        Header.Comment = string.IsNullOrWhiteSpace(Header.Comment) ? kvp?.Value : Header.Comment;
                         reader.ReadNextLine();
                         break;
 
@@ -213,15 +213,15 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "split":
-                        if (DatHeader.ForceMerging == ForceMerging.None && kvp?.Value == "1")
-                            DatHeader.ForceMerging = ForceMerging.Split;
+                        if (Header.ForceMerging == ForceMerging.None && kvp?.Value == "1")
+                            Header.ForceMerging = ForceMerging.Split;
 
                         reader.ReadNextLine();
                         break;
 
                     case "merge":
-                        if (DatHeader.ForceMerging == ForceMerging.None && kvp?.Value == "1")
-                            DatHeader.ForceMerging = ForceMerging.Merged;
+                        if (Header.ForceMerging == ForceMerging.None && kvp?.Value == "1")
+                            Header.ForceMerging = ForceMerging.Merged;
 
                         reader.ReadNextLine();
                         break;
@@ -267,12 +267,12 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "refname":
-                        DatHeader.Name = string.IsNullOrWhiteSpace(DatHeader.Name) ? kvp?.Value : DatHeader.Name;
+                        Header.Name = string.IsNullOrWhiteSpace(Header.Name) ? kvp?.Value : Header.Name;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        DatHeader.Description = string.IsNullOrWhiteSpace(DatHeader.Description) ? kvp?.Value : DatHeader.Description;
+                        Header.Description = string.IsNullOrWhiteSpace(Header.Description) ? kvp?.Value : Header.Description;
                         reader.ReadNextLine();
                         break;
 
@@ -462,18 +462,18 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 iw.WriteSection("CREDITS");
-                iw.WriteKeyValuePair("author", DatHeader.Author);
-                iw.WriteKeyValuePair("version", DatHeader.Version);
-                iw.WriteKeyValuePair("comment", DatHeader.Comment);
+                iw.WriteKeyValuePair("author", Header.Author);
+                iw.WriteKeyValuePair("version", Header.Version);
+                iw.WriteKeyValuePair("comment", Header.Comment);
 
                 iw.WriteSection("DAT");
                 iw.WriteKeyValuePair("version", "2.50");
-                iw.WriteKeyValuePair("split", DatHeader.ForceMerging == ForceMerging.Split ? "1" : "0");
-                iw.WriteKeyValuePair("merge", DatHeader.ForceMerging == ForceMerging.Full || DatHeader.ForceMerging == ForceMerging.Merged ? "1" : "0");
+                iw.WriteKeyValuePair("split", Header.ForceMerging == ForceMerging.Split ? "1" : "0");
+                iw.WriteKeyValuePair("merge", Header.ForceMerging == ForceMerging.Full || Header.ForceMerging == ForceMerging.Merged ? "1" : "0");
 
                 iw.WriteSection("EMULATOR");
-                iw.WriteKeyValuePair("refname", DatHeader.Name);
-                iw.WriteKeyValuePair("version", DatHeader.Description);
+                iw.WriteKeyValuePair("refname", Header.Name);
+                iw.WriteKeyValuePair("version", Header.Description);
 
                 iw.WriteSection("GAMES");
 
@@ -520,18 +520,18 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, true);
 
                 // Build the state based on excluded fields
-                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.MachineName, DatHeader.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.MachineName, Header.ExcludeFields)}");
                 if (string.IsNullOrWhiteSpace(datItem.MachineDescription))
-                    iw.WriteString($"¬{datItem.GetField(Field.MachineName, DatHeader.ExcludeFields)}");
+                    iw.WriteString($"¬{datItem.GetField(Field.MachineName, Header.ExcludeFields)}");
                 else
-                    iw.WriteString($"¬{datItem.GetField(Field.Description, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Name, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.CRC, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Size, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.RomOf, DatHeader.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Merge, DatHeader.ExcludeFields)}");
+                    iw.WriteString($"¬{datItem.GetField(Field.Description, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.Name, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.CRC, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.Size, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.RomOf, Header.ExcludeFields)}");
+                iw.WriteString($"¬{datItem.GetField(Field.Merge, Header.ExcludeFields)}");
                 iw.WriteString("¬");
                 iw.WriteLine();
 

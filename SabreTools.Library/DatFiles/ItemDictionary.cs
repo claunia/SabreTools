@@ -1012,7 +1012,7 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.User($"Adding stats for file '{file}'\n", false);
                 if (single)
                 {
-                    reports.ForEach(report => report.ReplaceStatistics(datdata.DatHeader.FileName, datdata.Items.Keys.Count, datdata.Items));
+                    reports.ForEach(report => report.ReplaceStatistics(datdata.Header.FileName, datdata.Items.Keys.Count, datdata.Items));
                     reports.ForEach(report => report.Write());
                 }
 

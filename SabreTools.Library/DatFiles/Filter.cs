@@ -795,13 +795,13 @@ namespace SabreTools.Library.DatFiles
 
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
                 if (useTags && this.InternalSplit == SplitType.None)
-                    this.InternalSplit = datFile.DatHeader.ForceMerging.AsSplitType();
+                    this.InternalSplit = datFile.Header.ForceMerging.AsSplitType();
 
                 // Run internal splitting
                 ProcessSplitType(datFile, this.InternalSplit);
 
                 // We remove any blanks, if we aren't supposed to have any
-                if (!datFile.DatHeader.KeepEmptyGames)
+                if (!datFile.Header.KeepEmptyGames)
                 {
                     foreach (string key in datFile.Items.Keys)
                     {
@@ -869,11 +869,11 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // If we are removing scene dates, do that now
-                if (datFile.DatHeader.SceneDateStrip)
+                if (datFile.Header.SceneDateStrip)
                     StripSceneDatesFromItems(datFile);
 
                 // Run the one rom per game logic, if required
-                if (datFile.DatHeader.OneRom)
+                if (datFile.Header.OneRom)
                     OneRomPerGame(datFile);
             }
             catch (Exception ex)
@@ -893,7 +893,7 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if the DatFile was filtered, false on error</returns>
         public DatFile FilterTo(DatFile datFile, bool useTags)
         {
-            DatFile outDat = DatFile.Create(datFile.DatHeader);
+            DatFile outDat = DatFile.Create(datFile.Header);
 
             try
             {
@@ -903,13 +903,13 @@ namespace SabreTools.Library.DatFiles
 
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
                 if (useTags && this.InternalSplit == SplitType.None)
-                    this.InternalSplit = outDat.DatHeader.ForceMerging.AsSplitType();
+                    this.InternalSplit = outDat.Header.ForceMerging.AsSplitType();
 
                 // Run internal splitting
                 ProcessSplitType(outDat, this.InternalSplit);
 
                 // We remove any blanks, if we aren't supposed to have any
-                if (!outDat.DatHeader.KeepEmptyGames)
+                if (!outDat.Header.KeepEmptyGames)
                 {
                     foreach (string key in outDat.Items.Keys)
                     {
@@ -979,11 +979,11 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // If we are removing scene dates, do that now
-                if (outDat.DatHeader.SceneDateStrip)
+                if (outDat.Header.SceneDateStrip)
                     StripSceneDatesFromItems(outDat);
 
                 // Run the one rom per game logic, if required
-                if (outDat.DatHeader.OneRom)
+                if (outDat.Header.OneRom)
                     OneRomPerGame(outDat);
             }
             catch (Exception ex)

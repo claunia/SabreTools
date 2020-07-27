@@ -195,10 +195,10 @@ namespace SabreTools.Library.DatFiles
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
                                 fields[0] = string.Empty;
-                                if (DatHeader.GameName)
-                                    fields[0] = $"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[0] += rom.GetField(Field.Name, DatHeader.ExcludeFields);
-                                fields[1] = rom.GetField(Field.CRC, DatHeader.ExcludeFields);
+                                if (Header.GameName)
+                                    fields[0] = $"{rom.GetField(Field.MachineName, Header.ExcludeFields)}{Path.DirectorySeparatorChar}";
+                                fields[0] += rom.GetField(Field.Name, Header.ExcludeFields);
+                                fields[1] = rom.GetField(Field.CRC, Header.ExcludeFields);
                                 break;
                         }
                         break;
@@ -217,20 +217,20 @@ namespace SabreTools.Library.DatFiles
                         {
                             case ItemType.Disk:
                                 var disk = datItem as Disk;
-                                fields[0] = disk.GetField(hashField, DatHeader.ExcludeFields);
+                                fields[0] = disk.GetField(hashField, Header.ExcludeFields);
                                 fields[1] = string.Empty;
-                                if (DatHeader.GameName)
-                                    fields[1] = $"{disk.GetField(Field.MachineName, DatHeader.ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[1] += disk.GetField(Field.Name, DatHeader.ExcludeFields);
+                                if (Header.GameName)
+                                    fields[1] = $"{disk.GetField(Field.MachineName, Header.ExcludeFields)}{Path.DirectorySeparatorChar}";
+                                fields[1] += disk.GetField(Field.Name, Header.ExcludeFields);
                                 break;
 
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
-                                fields[0] = rom.GetField(hashField, DatHeader.ExcludeFields);
+                                fields[0] = rom.GetField(hashField, Header.ExcludeFields);
                                 fields[1] = string.Empty;
-                                if (DatHeader.GameName)
-                                    fields[1] = $"{rom.GetField(Field.MachineName, DatHeader.ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[1] += rom.GetField(Field.Name, DatHeader.ExcludeFields);
+                                if (Header.GameName)
+                                    fields[1] = $"{rom.GetField(Field.MachineName, Header.ExcludeFields)}{Path.DirectorySeparatorChar}";
+                                fields[1] += rom.GetField(Field.Name, Header.ExcludeFields);
                                 break;
                         }
                         break;

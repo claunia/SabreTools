@@ -119,63 +119,63 @@ namespace SabreTools.Library.DatFiles
                 switch (itemKey)
                 {
                     case "name":
-                        DatHeader.Name = (string.IsNullOrWhiteSpace(DatHeader.Name) ? itemVal : DatHeader.Name);
+                        Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? itemVal : Header.Name);
                         superdat = superdat || itemVal.Contains(" - SuperDAT");
 
                         if (keep && superdat)
-                            DatHeader.Type = (string.IsNullOrWhiteSpace(DatHeader.Type) ? "SuperDAT" : DatHeader.Type);
+                            Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? "SuperDAT" : Header.Type);
 
                         break;
                     case "description":
-                        DatHeader.Description = (string.IsNullOrWhiteSpace(DatHeader.Description) ? itemVal : DatHeader.Description);
+                        Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? itemVal : Header.Description);
                         break;
                     case "rootdir":
-                        DatHeader.RootDir = (string.IsNullOrWhiteSpace(DatHeader.RootDir) ? itemVal : DatHeader.RootDir);
+                        Header.RootDir = (string.IsNullOrWhiteSpace(Header.RootDir) ? itemVal : Header.RootDir);
                         break;
                     case "category":
-                        DatHeader.Category = (string.IsNullOrWhiteSpace(DatHeader.Category) ? itemVal : DatHeader.Category);
+                        Header.Category = (string.IsNullOrWhiteSpace(Header.Category) ? itemVal : Header.Category);
                         break;
                     case "version":
-                        DatHeader.Version = (string.IsNullOrWhiteSpace(DatHeader.Version) ? itemVal : DatHeader.Version);
+                        Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? itemVal : Header.Version);
                         break;
                     case "date":
-                        DatHeader.Date = (string.IsNullOrWhiteSpace(DatHeader.Date) ? itemVal : DatHeader.Date);
+                        Header.Date = (string.IsNullOrWhiteSpace(Header.Date) ? itemVal : Header.Date);
                         break;
                     case "author":
-                        DatHeader.Author = (string.IsNullOrWhiteSpace(DatHeader.Author) ? itemVal : DatHeader.Author);
+                        Header.Author = (string.IsNullOrWhiteSpace(Header.Author) ? itemVal : Header.Author);
                         break;
                     case "email":
-                        DatHeader.Email = (string.IsNullOrWhiteSpace(DatHeader.Email) ? itemVal : DatHeader.Email);
+                        Header.Email = (string.IsNullOrWhiteSpace(Header.Email) ? itemVal : Header.Email);
                         break;
                     case "homepage":
-                        DatHeader.Homepage = (string.IsNullOrWhiteSpace(DatHeader.Homepage) ? itemVal : DatHeader.Homepage);
+                        Header.Homepage = (string.IsNullOrWhiteSpace(Header.Homepage) ? itemVal : Header.Homepage);
                         break;
                     case "url":
-                        DatHeader.Url = (string.IsNullOrWhiteSpace(DatHeader.Url) ? itemVal : DatHeader.Url);
+                        Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? itemVal : Header.Url);
                         break;
                     case "comment":
-                        DatHeader.Comment = (string.IsNullOrWhiteSpace(DatHeader.Comment) ? itemVal : DatHeader.Comment);
+                        Header.Comment = (string.IsNullOrWhiteSpace(Header.Comment) ? itemVal : Header.Comment);
                         break;
                     case "header":
-                        DatHeader.Header = (string.IsNullOrWhiteSpace(DatHeader.Header) ? itemVal : DatHeader.Header);
+                        Header.Header = (string.IsNullOrWhiteSpace(Header.Header) ? itemVal : Header.Header);
                         break;
                     case "type":
-                        DatHeader.Type = (string.IsNullOrWhiteSpace(DatHeader.Type) ? itemVal : DatHeader.Type);
+                        Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? itemVal : Header.Type);
                         superdat = superdat || itemVal.Contains("SuperDAT");
                         break;
                     case "forcemerging":
-                        if (DatHeader.ForceMerging == ForceMerging.None)
-                            DatHeader.ForceMerging = itemVal.AsForceMerging();
+                        if (Header.ForceMerging == ForceMerging.None)
+                            Header.ForceMerging = itemVal.AsForceMerging();
 
                         break;
                     case "forcezipping":
-                        if (DatHeader.ForcePacking == ForcePacking.None)
-                            DatHeader.ForcePacking = itemVal.AsForcePacking();
+                        if (Header.ForcePacking == ForcePacking.None)
+                            Header.ForcePacking = itemVal.AsForcePacking();
 
                         break;
                     case "forcepacking":
-                        if (DatHeader.ForcePacking == ForcePacking.None)
-                            DatHeader.ForcePacking = itemVal.AsForcePacking();
+                        if (Header.ForcePacking == ForcePacking.None)
+                            Header.ForcePacking = itemVal.AsForcePacking();
 
                         break;
                 }
@@ -547,24 +547,24 @@ namespace SabreTools.Library.DatFiles
             {
                 cmpw.WriteStartElement("clrmamepro");
 
-                cmpw.WriteStandalone("name", DatHeader.Name);
-                cmpw.WriteStandalone("description", DatHeader.Description);
-                if (!string.IsNullOrWhiteSpace(DatHeader.Category))
-                    cmpw.WriteStandalone("category", DatHeader.Category);
-                cmpw.WriteStandalone("version", DatHeader.Version);
-                if (!string.IsNullOrWhiteSpace(DatHeader.Date))
-                    cmpw.WriteStandalone("date", DatHeader.Date);
-                cmpw.WriteStandalone("author", DatHeader.Author);
-                if (!string.IsNullOrWhiteSpace(DatHeader.Email))
-                    cmpw.WriteStandalone("email", DatHeader.Email);
-                if (!string.IsNullOrWhiteSpace(DatHeader.Homepage))
-                    cmpw.WriteStandalone("homepage", DatHeader.Homepage);
-                if (!string.IsNullOrWhiteSpace(DatHeader.Url))
-                    cmpw.WriteStandalone("url", DatHeader.Url);
-                if (!string.IsNullOrWhiteSpace(DatHeader.Comment))
-                    cmpw.WriteStandalone("comment", DatHeader.Comment);
+                cmpw.WriteStandalone("name", Header.Name);
+                cmpw.WriteStandalone("description", Header.Description);
+                if (!string.IsNullOrWhiteSpace(Header.Category))
+                    cmpw.WriteStandalone("category", Header.Category);
+                cmpw.WriteStandalone("version", Header.Version);
+                if (!string.IsNullOrWhiteSpace(Header.Date))
+                    cmpw.WriteStandalone("date", Header.Date);
+                cmpw.WriteStandalone("author", Header.Author);
+                if (!string.IsNullOrWhiteSpace(Header.Email))
+                    cmpw.WriteStandalone("email", Header.Email);
+                if (!string.IsNullOrWhiteSpace(Header.Homepage))
+                    cmpw.WriteStandalone("homepage", Header.Homepage);
+                if (!string.IsNullOrWhiteSpace(Header.Url))
+                    cmpw.WriteStandalone("url", Header.Url);
+                if (!string.IsNullOrWhiteSpace(Header.Comment))
+                    cmpw.WriteStandalone("comment", Header.Comment);
 
-                switch (DatHeader.ForcePacking)
+                switch (Header.ForcePacking)
                 {
                     case ForcePacking.Unzip:
                         cmpw.WriteStandalone("forcezipping", "no", false);
@@ -574,7 +574,7 @@ namespace SabreTools.Library.DatFiles
                         break;
                 }
 
-                switch (DatHeader.ForceMerging)
+                switch (Header.ForceMerging)
                 {
                     case ForceMerging.Full:
                         cmpw.WriteStandalone("forcemerging", "full", false);
@@ -619,22 +619,22 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state based on excluded fields
                 cmpw.WriteStartElement(datItem.MachineType == MachineType.Bios ? "resource" : "game");
-                cmpw.WriteStandalone("name", datItem.GetField(Field.MachineName, DatHeader.ExcludeFields));
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, DatHeader.ExcludeFields)))
+                cmpw.WriteStandalone("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)))
                     cmpw.WriteStandalone("romof", datItem.RomOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)))
                     cmpw.WriteStandalone("cloneof", datItem.CloneOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)))
                     cmpw.WriteStandalone("sampleof", datItem.SampleOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
                     cmpw.WriteStandalone("description", datItem.MachineDescription);
-                else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, DatHeader.ExcludeFields)))
+                else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
                     cmpw.WriteStandalone("description", datItem.MachineName);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
                     cmpw.WriteStandalone("year", datItem.Year);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
                     cmpw.WriteStandalone("manufacturer", datItem.Manufacturer);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
                     cmpw.WriteStandalone("category", datItem.Category);
 
                 cmpw.Flush();
@@ -659,7 +659,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // Build the state based on excluded fields
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, DatHeader.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)))
                     cmpw.WriteStandalone("sampleof", datItem.SampleOf);
 
                 // End game
@@ -700,17 +700,17 @@ namespace SabreTools.Library.DatFiles
                 {
                     case ItemType.Archive:
                         cmpw.WriteStartElement("archive");
-                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, DatHeader.ExcludeFields));
+                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         cmpw.WriteStartElement("biosset");
-                        cmpw.WriteAttributeString("name", biosSet.GetField(Field.Name, DatHeader.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(biosSet.GetField(Field.BiosDescription, DatHeader.ExcludeFields)))
+                        cmpw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
+                        if (!string.IsNullOrWhiteSpace(biosSet.GetField(Field.BiosDescription, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("description", biosSet.Description);
-                        if (!DatHeader.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
+                        if (!Header.ExcludeFields[(int)Field.Default] && biosSet.Default != null)
                             cmpw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -718,22 +718,22 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         cmpw.WriteStartElement("disk");
-                        cmpw.WriteAttributeString("name", disk.GetField(Field.Name, DatHeader.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, DatHeader.ExcludeFields)))
+                        cmpw.WriteAttributeString("name", disk.GetField(Field.Name, Header.ExcludeFields));
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!DatHeader.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields[(int)Field.Status] && disk.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", disk.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -741,14 +741,14 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Release:
                         var release = datItem as Release;
                         cmpw.WriteStartElement("release");
-                        cmpw.WriteAttributeString("name", release.GetField(Field.Name, DatHeader.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Region, DatHeader.ExcludeFields)))
+                        cmpw.WriteAttributeString("name", release.GetField(Field.Name, Header.ExcludeFields));
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Region, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("region", release.Region);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Language, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Language, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("language", release.Language);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("date", release.Date);
-                        if (!DatHeader.ExcludeFields[(int)Field.Default] && release.Default != null)
+                        if (!Header.ExcludeFields[(int)Field.Default] && release.Default != null)
                             cmpw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -756,35 +756,35 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("rom");
-                        cmpw.WriteAttributeString("name", rom.GetField(Field.Name, DatHeader.ExcludeFields));
-                        if (!DatHeader.ExcludeFields[(int)Field.Size] && rom.Size != -1)
+                        cmpw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
+                        if (!Header.ExcludeFields[(int)Field.Size] && rom.Size != -1)
                             cmpw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, DatHeader.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
                             cmpw.WriteAttributeString("date", rom.Date);
-                        if (!DatHeader.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
+                        if (!Header.ExcludeFields[(int)Field.Status] && rom.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", rom.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.Sample:
                         cmpw.WriteStartElement("sample");
-                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, DatHeader.ExcludeFields));
+                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
                         cmpw.WriteEndElement();
                         break;
                 }

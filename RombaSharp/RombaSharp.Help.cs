@@ -807,8 +807,8 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
 
                 // Create the encapsulating datfile
                 DatFile datfile = DatFile.Create();
-                datfile.SetName(name);
-                datfile.SetDescription(description);
+                datfile.Header.Name = name;
+                datfile.Header.Description = description;
 
                 // Create the inputs
                 List<string> dats = new List<string> { newdat };
@@ -859,8 +859,8 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
 
                 // Create the encapsulating datfile
                 DatFile datfile = DatFile.Create();
-                datfile.SetName(string.IsNullOrWhiteSpace(name) ? "untitled" : name);
-                datfile.SetDescription(description);
+                datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
+                datfile.Header.Description = description;
 
                 // Now run the D2D on the input and write out
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
@@ -1562,7 +1562,7 @@ contents of any changed dats.";
 
                 // First get a list of SHA-1's from the input DATs
                 DatFile datroot = DatFile.Create();
-                datroot.SetType("SuperDAT");
+                datroot.Header.Type = "SuperDAT";
 
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                 datroot.PopulateFromDir(_dats, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);

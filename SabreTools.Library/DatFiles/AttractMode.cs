@@ -252,12 +252,12 @@ namespace SabreTools.Library.DatFiles
 
                 string[] fields = new string[]
                 {
-                    datItem.GetField(Field.MachineName, DatHeader.ExcludeFields),
-                    datItem.GetField(Field.Description, DatHeader.ExcludeFields),
-                    DatHeader.FileName,
-                    datItem.GetField(Field.CloneOf, DatHeader.ExcludeFields),
-                    datItem.GetField(Field.Year, DatHeader.ExcludeFields),
-                    datItem.GetField(Field.Manufacturer, DatHeader.ExcludeFields),
+                    datItem.GetField(Field.MachineName, Header.ExcludeFields),
+                    datItem.GetField(Field.Description, Header.ExcludeFields),
+                    Header.FileName,
+                    datItem.GetField(Field.CloneOf, Header.ExcludeFields),
+                    datItem.GetField(Field.Year, Header.ExcludeFields),
+                    datItem.GetField(Field.Manufacturer, Header.ExcludeFields),
                     string.Empty, // datItem.GetField(Field.Category, DatHeader.ExcludeFields)
                     string.Empty, // datItem.GetField(Field.Players, DatHeader.ExcludeFields)
                     string.Empty, // datItem.GetField(Field.Rotation, DatHeader.ExcludeFields)
@@ -267,7 +267,7 @@ namespace SabreTools.Library.DatFiles
                     string.Empty, // datItem.GetField(Field.DisplayType, DatHeader.ExcludeFields)
                     string.Empty, // datItem.GetField(Field.AltRomname, DatHeader.ExcludeFields)
                     string.Empty, // datItem.GetField(Field.AltTitle, DatHeader.ExcludeFields)
-                    datItem.GetField(Field.Comment, DatHeader.ExcludeFields),
+                    datItem.GetField(Field.Comment, Header.ExcludeFields),
                     string.Empty, // datItem.GetField(Field.Buttons, DatHeader.ExcludeFields)
                 };
 

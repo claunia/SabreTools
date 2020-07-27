@@ -137,21 +137,21 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, false, forceRomName: false);
 
                 // If we're in Romba mode, the state is consistent
-                if (DatHeader.Romba)
+                if (Header.Romba)
                 {
-                    sw.Write($"{datItem.GetField(Field.SHA1, DatHeader.ExcludeFields)}\n");
+                    sw.Write($"{datItem.GetField(Field.SHA1, Header.ExcludeFields)}\n");
                 }
                 // Otherwise, use any flags
                 else
                 {
-                    if (!DatHeader.UseRomName && datItem.MachineName != lastgame)
+                    if (!Header.UseRomName && datItem.MachineName != lastgame)
                     {
-                        sw.Write($"{datItem.GetField(Field.MachineName, DatHeader.ExcludeFields)}\n");
+                        sw.Write($"{datItem.GetField(Field.MachineName, Header.ExcludeFields)}\n");
                         lastgame = datItem.MachineName;
                     }
-                    else if (DatHeader.UseRomName)
+                    else if (Header.UseRomName)
                     {
-                        sw.Write($"{datItem.GetField(Field.Name, DatHeader.ExcludeFields)}\n");
+                        sw.Write($"{datItem.GetField(Field.Name, Header.ExcludeFields)}\n");
                     }
                 }
 
