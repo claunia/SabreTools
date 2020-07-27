@@ -9,7 +9,6 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents the information specific to a set/game/machine
     /// </summary>
-    /// TODO: Can this be rewritten as a Dictionary?
     public class Machine : ICloneable
     {
         #region Publicly facing variables

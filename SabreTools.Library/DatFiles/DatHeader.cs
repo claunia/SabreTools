@@ -11,7 +11,6 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Represents all possible DAT header information
     /// </summary>
-    /// TODO: Can this be rewritten as a Dictionary?
     public class DatHeader : ICloneable
     {
         #region Publicly facing variables

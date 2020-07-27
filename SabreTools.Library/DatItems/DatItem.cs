@@ -15,7 +15,6 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Base class for all items included in a set
     /// </summary>
-    /// TODO: Can this be rewritten as a Dictionary?
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
         #region Protected instance variables
