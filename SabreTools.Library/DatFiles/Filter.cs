@@ -1970,12 +1970,13 @@ namespace SabreTools.Library.DatFiles
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
 
-            // Then we want to get a mapping of all games to parents
+            // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
             foreach (string key in datFile.Items.Keys)
             {
                 DatItem item = datFile.Items[key][0];
 
+                // Match on CloneOf first
                 if (!string.IsNullOrEmpty(item.CloneOf))
                 {
                     if (!parents.ContainsKey(item.CloneOf.ToLowerInvariant()))
@@ -1983,6 +1984,8 @@ namespace SabreTools.Library.DatFiles
 
                     parents[item.CloneOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
                 }
+
+                // Then by RomOf
                 else if (!string.IsNullOrEmpty(item.RomOf))
                 {
                     if (!parents.ContainsKey(item.RomOf.ToLowerInvariant()))
@@ -1990,6 +1993,8 @@ namespace SabreTools.Library.DatFiles
 
                     parents[item.RomOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
                 }
+
+                // Otherwise, treat it as a parent
                 else
                 {
                     if (!parents.ContainsKey(item.MachineName.ToLowerInvariant()))
@@ -2004,44 +2009,27 @@ namespace SabreTools.Library.DatFiles
             if (regions == null)
                 regions = new List<string>();
 
-            // Once we have the full list of mappings, get a list of game names to keep
-            List<string> keepMachines = new List<string>();
+            // Once we have the full list of mappings, filter out games to keep
             foreach (string key in parents.Keys)
             {
-                string keepMachine = null;
-
-                // Loop over each region to see if we have a match first
+                // Find the first machine that matches the regions in order, if possible
+                string machine = default;
                 foreach (string region in regions)
                 {
-                    // Loop over each machine to see if we have a region match
-                    foreach (string machine in parents[key])
-                    {
-                        if (Regex.IsMatch(machine, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase))
-                        {
-                            keepMachine = machine;
-                            break;
-                        }
-                    }
-
-                    // Break out further if we have something set
-                    if (keepMachine != null)
+                    machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
+                    if (machine != default)
                         break;
                 }
 
-                // If we didn't match, use the parent by default
-                if (keepMachine == null)
-                    keepMachine = key;
+                // If we didn't get a match, use the parent
+                if (machine == default)
+                    machine = key;
 
-                keepMachines.Add(keepMachine);
-            }
+                // Remove the key from the list
+                parents[key].Remove(machine);
 
-            // Now that we have a list of machines to keep, weed out the ones that don't match
-            List<string> currentKeys = datFile.Items.Keys.ToList();
-            for (int i = 0; i < currentKeys.Count; i++)
-            {
-                string key = currentKeys[i];
-                if (!keepMachines.Contains(key))
-                    datFile.Items.Remove(key);
+                // Remove the rest of the items from this key
+                parents[key].ForEach(k => datFile.Items.Remove(k));
             }
 
             // Finally, strip out the parent tags
