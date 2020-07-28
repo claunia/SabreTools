@@ -100,17 +100,32 @@ namespace SabreTools.Library.Tools
             // For everything else, we need to read it
             try
             {
-                // Get the first two non-whitespace, non-comment lines to check
-                StreamReader sr = File.OpenText(filename);
-                string first = sr.ReadLine().ToLowerInvariant();
-                while (string.IsNullOrWhiteSpace(first) || first.StartsWith("<!--"))
-                    first = sr.ReadLine().ToLowerInvariant();
+                // Get the first two non-whitespace, non-comment lines to check, if possible
+                string first = string.Empty, second = string.Empty;
 
-                string second = sr.ReadLine().ToLowerInvariant();
-                while (string.IsNullOrWhiteSpace(second) || second.StartsWith("<!--"))
-                    second = sr.ReadLine().ToLowerInvariant();
+                try
+                {
+                    using (StreamReader sr = File.OpenText(filename))
+                    {
+                        first = sr.ReadLine().ToLowerInvariant();
+                        while ((string.IsNullOrWhiteSpace(first) || first.StartsWith("<!--"))
+                            && !sr.EndOfStream)
+                        {
+                            first = sr.ReadLine().ToLowerInvariant();
+                        }
 
-                sr.Dispose();
+                        if (!sr.EndOfStream)
+                        {
+                            second = sr.ReadLine().ToLowerInvariant();
+                            while (string.IsNullOrWhiteSpace(second) || second.StartsWith("<!--")
+                                && !sr.EndOfStream)
+                            {
+                                second = sr.ReadLine().ToLowerInvariant();
+                            }
+                        }
+                    }
+                }
+                catch { }
 
                 // If we have an XML-based DAT
                 if (first.Contains("<?xml") && first.Contains("?>"))
