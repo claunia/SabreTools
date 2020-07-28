@@ -135,7 +135,19 @@ namespace SabreTools.Library.DatFiles
         /// Enable "One Rom, One Region (1G1R)" mode
         /// </summary>
         [JsonIgnore]
-        public bool OneRom { get; set; }
+        public bool OneGamePerRegion { get; set; }
+
+        /// <summary>
+        /// Ordered list of regions for "One Rom, One Region (1G1R)" mode
+        /// </summary>
+        [JsonIgnore]
+        public List<string> RegionList { get; set; }
+
+        /// <summary>
+        /// Ensure each rom is in their own game
+        /// </summary>
+        [JsonIgnore]
+        public bool OneRomPerGame { get; set; }
 
         /// <summary>
         /// Keep machines that don't contain any items
@@ -257,7 +269,9 @@ namespace SabreTools.Library.DatFiles
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
                 ExcludeFields = this.ExcludeFields,
-                OneRom = this.OneRom,
+                OneGamePerRegion = this.OneGamePerRegion,
+                RegionList = this.RegionList,
+                OneRomPerGame = this.OneRomPerGame,
                 KeepEmptyGames = this.KeepEmptyGames,
                 SceneDateStrip = this.SceneDateStrip,
                 DedupeRoms = this.DedupeRoms,
@@ -301,7 +315,9 @@ namespace SabreTools.Library.DatFiles
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
                 ExcludeFields = this.ExcludeFields,
-                OneRom = this.OneRom,
+                OneGamePerRegion = this.OneGamePerRegion,
+                RegionList = this.RegionList,
+                OneRomPerGame = this.OneRomPerGame,
                 KeepEmptyGames = this.KeepEmptyGames,
                 SceneDateStrip = this.SceneDateStrip,
                 DedupeRoms = this.DedupeRoms,
@@ -318,7 +334,7 @@ namespace SabreTools.Library.DatFiles
             {
                 DatFormat = this.DatFormat,
                 ExcludeFields = this.ExcludeFields,
-                OneRom = this.OneRom,
+                OneRomPerGame = this.OneRomPerGame,
                 KeepEmptyGames = this.KeepEmptyGames,
                 SceneDateStrip = this.SceneDateStrip,
                 DedupeRoms = this.DedupeRoms,
@@ -399,7 +415,7 @@ namespace SabreTools.Library.DatFiles
             if (datHeader.ExcludeFields != null)
                 this.ExcludeFields = datHeader.ExcludeFields;
 
-            this.OneRom = datHeader.OneRom;
+            this.OneRomPerGame = datHeader.OneRomPerGame;
             this.KeepEmptyGames = datHeader.KeepEmptyGames;
             this.SceneDateStrip = datHeader.SceneDateStrip;
             this.DedupeRoms = datHeader.DedupeRoms;

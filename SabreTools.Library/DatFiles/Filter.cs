@@ -811,7 +811,8 @@ namespace SabreTools.Library.DatFiles
                 // We remove any blanks, if we aren't supposed to have any
                 if (!datFile.Header.KeepEmptyGames)
                 {
-                    foreach (string key in datFile.Items.Keys)
+                    List<string> possiblyEmptyKeys = datFile.Items.Keys.ToList();
+                    foreach (string key in possiblyEmptyKeys)
                     {
                         List<DatItem> items = datFile.Items[key];
                         if (items == null)
@@ -825,7 +826,8 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Loop over every key in the dictionary
-                foreach (string key in datFile.Items.Keys)
+                List<string> keys = datFile.Items.Keys.ToList();
+                foreach (string key in keys)
                 {
                     // For every item in the current key
                     List<DatItem> items = datFile.Items[key];
@@ -881,7 +883,11 @@ namespace SabreTools.Library.DatFiles
                     StripSceneDatesFromItems(datFile);
 
                 // Run the one rom per game logic, if required
-                if (datFile.Header.OneRom)
+                if (datFile.Header.OneGamePerRegion)
+                    OneGamePerRegion(datFile);
+
+                // Run the one rom per game logic, if required
+                if (datFile.Header.OneRomPerGame)
                     OneRomPerGame(datFile);
 
                 // If we are removing fields, do that now
@@ -895,120 +901,6 @@ namespace SabreTools.Library.DatFiles
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Filter a DatFile outputting to a new DatFile
-        /// </summary>
-        /// <param name="datFile">DatFile to filter</param>
-        /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
-        /// <returns>True if the DatFile was filtered, false on error</returns>
-        public DatFile FilterTo(DatFile datFile, bool useTags)
-        {
-            DatFile outDat = DatFile.Create(datFile.Header);
-
-            try
-            {
-                // Process description to machine name
-                if (this.DescriptionAsName)
-                    MachineDescriptionToName(outDat);
-
-                // If we are using tags from the DAT, set the proper input for split type unless overridden
-                if (useTags && this.InternalSplit == SplitType.None)
-                    this.InternalSplit = outDat.Header.ForceMerging.AsSplitType();
-
-                // Run internal splitting
-                ProcessSplitType(outDat, this.InternalSplit);
-
-                // We remove any blanks, if we aren't supposed to have any
-                if (!outDat.Header.KeepEmptyGames)
-                {
-                    foreach (string key in outDat.Items.Keys)
-                    {
-                        List<DatItem> items = outDat.Items[key];
-                        if (items == null)
-                            continue;
-
-                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
-
-                        outDat.Items.Remove(key);
-                        outDat.Items.AddRange(key, newitems);
-                    }
-                }
-
-                // Loop over every key in the dictionary
-                foreach (string key in datFile.Items.Keys)
-                {
-                    // For every item in the current key
-                    List<DatItem> items = datFile.Items[key];
-                    List<DatItem> newitems = new List<DatItem>();
-                    foreach (DatItem item in items)
-                    {
-                        // If the rom passes the filter, include it
-                        if (ItemPasses(item))
-                        {
-                            // If we're stripping unicode characters, do so from all relevant things
-                            if (this.RemoveUnicode)
-                            {
-                                item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
-                                item.MachineName = Sanitizer.RemoveUnicodeCharacters(item.MachineName);
-                                item.MachineDescription = Sanitizer.RemoveUnicodeCharacters(item.MachineDescription);
-                            }
-
-                            // If we're in cleaning mode, do so from all relevant things
-                            if (this.Clean)
-                            {
-                                item.MachineName = Sanitizer.CleanGameName(item.MachineName);
-                                item.MachineDescription = Sanitizer.CleanGameName(item.MachineDescription);
-                            }
-
-                            // If we are in single game mode, rename all games
-                            if (this.Single)
-                                item.MachineName = "!";
-
-                            // If we are in NTFS trim mode, trim the game name
-                            if (this.Trim)
-                            {
-                                // Windows max name length is 260
-                                int usableLength = 260 - item.MachineName.Length - this.Root.Length;
-                                if (item.Name.Length > usableLength)
-                                {
-                                    string ext = Path.GetExtension(item.Name);
-                                    item.Name = item.Name.Substring(0, usableLength - ext.Length);
-                                    item.Name += ext;
-                                }
-                            }
-
-                            // Lock the list and add the item back
-                            lock (newitems)
-                            {
-                                newitems.Add(item);
-                            }
-                        }
-                    }
-
-                    outDat.Items.AddRange(key, newitems);
-                }
-
-                // If we are removing scene dates, do that now
-                if (outDat.Header.SceneDateStrip)
-                    StripSceneDatesFromItems(outDat);
-
-                // Run the one rom per game logic, if required
-                if (outDat.Header.OneRom)
-                    OneRomPerGame(outDat);
-
-                // If we are removing fields, do that now
-                if (RemoveFields)
-                    RemoveFieldsFromItems(outDat);
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                return null;
-            }
-
-            return outDat;
         }
 
         /// <summary>
@@ -1124,28 +1016,34 @@ namespace SabreTools.Library.DatFiles
                 return false;
 
             // Filter on devices
-            bool anyPositiveDevice = false;
-            bool anyNegativeDevice = false;
-            foreach (string device in item.Devices)
+            if (item.Devices != null)
             {
-                anyPositiveDevice |= this.Devices.MatchesPositiveSet(device) == true;
-                anyNegativeDevice |= this.Devices.MatchesNegativeSet(device) == false;
-            }
+                bool anyPositiveDevice = false;
+                bool anyNegativeDevice = false;
+                foreach (string device in item.Devices)
+                {
+                    anyPositiveDevice |= this.Devices.MatchesPositiveSet(device) == true;
+                    anyNegativeDevice |= this.Devices.MatchesNegativeSet(device) == false;
+                }
 
-            if (!anyPositiveDevice || anyNegativeDevice)
-                return false;
+                if (!anyPositiveDevice || anyNegativeDevice)
+                    return false;
+            }
 
             // Filter on slot options
-            bool anyPositiveSlotOption = false;
-            bool anyNegativeSlotOption = false;
-            foreach (string device in item.SlotOptions)
+            if (item.SlotOptions != null)
             {
-                anyPositiveSlotOption |= this.SlotOptions.MatchesPositiveSet(device) == true;
-                anyNegativeSlotOption |= this.SlotOptions.MatchesNegativeSet(device) == false;
-            }
+                bool anyPositiveSlotOption = false;
+                bool anyNegativeSlotOption = false;
+                foreach (string device in item.SlotOptions)
+                {
+                    anyPositiveSlotOption |= this.SlotOptions.MatchesPositiveSet(device) == true;
+                    anyNegativeSlotOption |= this.SlotOptions.MatchesNegativeSet(device) == false;
+                }
 
-            if (!anyPositiveSlotOption || anyNegativeSlotOption)
-                return false;
+                if (!anyPositiveSlotOption || anyNegativeSlotOption)
+                    return false;
+            }
 
             // Filter on machine type
             if (this.MachineTypes.MatchesPositive(MachineType.NULL, item.MachineType) == false)
@@ -1774,7 +1672,8 @@ namespace SabreTools.Library.DatFiles
         /// Use cloneof tags to add roms to the parents, removing the child sets in the process
         /// </summary>
         /// <param name="datFile">DatFile to filter</param>
-        private void AddRomsFromChildren(DatFile datFile)
+        /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
+        private void AddRomsFromChildren(DatFile datFile, bool subfolder = true)
         {
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
@@ -1837,7 +1736,9 @@ namespace SabreTools.Library.DatFiles
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
                         else if (rom.MergeTag != null && !datFile.Items[parent].Select(i => i.Name).Contains(rom.MergeTag))
                         {
-                            item.Name = $"{item.MachineName}\\{item.Name}";
+                            if (subfolder)
+                                item.Name = $"{item.MachineName}\\{item.Name}";
+
                             item.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent, item);
                         }
@@ -1845,7 +1746,9 @@ namespace SabreTools.Library.DatFiles
                         // If the parent doesn't already contain this item, add to subfolder of parent
                         else if (!datFile.Items[parent].Contains(item))
                         {
-                            item.Name = $"{item.MachineName}\\{item.Name}";
+                            if (subfolder)
+                                item.Name = $"{item.MachineName}\\{item.Name}";
+
                             item.CopyMachineInformation(copyFrom);
                             datFile.Items.Add(parent, item);
                         }
@@ -1854,7 +1757,9 @@ namespace SabreTools.Library.DatFiles
                     // All other that would be missing to subfolder of parent
                     else if (!datFile.Items[parent].Contains(item))
                     {
-                        item.Name = $"{item.MachineName}\\{item.Name}";
+                        if (subfolder)
+                            item.Name = $"{item.MachineName}\\{item.Name}";
+
                         item.CopyMachineInformation(copyFrom);
                         datFile.Items.Add(parent, item);
                     }
@@ -2057,10 +1962,96 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Filter a DAT using 1G1R logic given an ordered set of regions
+        /// </summary>
+        /// <param name="datFile">DatFile to filter</param>
+        private void OneGamePerRegion(DatFile datFile)
+        {
+            // For sake of ease, the first thing we want to do is bucket by game
+            datFile.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
+
+            // Then we want to get a mapping of all games to parents
+            Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
+            foreach (string key in datFile.Items.Keys)
+            {
+                DatItem item = datFile.Items[key][0];
+
+                if (!string.IsNullOrEmpty(item.CloneOf))
+                {
+                    if (!parents.ContainsKey(item.CloneOf.ToLowerInvariant()))
+                        parents.Add(item.CloneOf.ToLowerInvariant(), new List<string>());
+
+                    parents[item.CloneOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                }
+                else if (!string.IsNullOrEmpty(item.RomOf))
+                {
+                    if (!parents.ContainsKey(item.RomOf.ToLowerInvariant()))
+                        parents.Add(item.RomOf.ToLowerInvariant(), new List<string>());
+
+                    parents[item.RomOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                }
+                else
+                {
+                    if (!parents.ContainsKey(item.MachineName.ToLowerInvariant()))
+                        parents.Add(item.MachineName.ToLowerInvariant(), new List<string>());
+
+                    parents[item.MachineName.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                }
+            }
+
+            // If we have null region list, make it empty
+            List<string> regions = datFile.Header.RegionList;
+            if (regions == null)
+                regions = new List<string>();
+
+            // Once we have the full list of mappings, get a list of game names to keep
+            List<string> keepMachines = new List<string>();
+            foreach (string key in parents.Keys)
+            {
+                string keepMachine = null;
+
+                // Loop over each region to see if we have a match first
+                foreach (string region in regions)
+                {
+                    // Loop over each machine to see if we have a region match
+                    foreach (string machine in parents[key])
+                    {
+                        if (Regex.IsMatch(machine, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase))
+                        {
+                            keepMachine = machine;
+                            break;
+                        }
+                    }
+
+                    // Break out further if we have something set
+                    if (keepMachine != null)
+                        break;
+                }
+
+                // If we didn't match, use the parent by default
+                if (keepMachine == null)
+                    keepMachine = key;
+
+                keepMachines.Add(keepMachine);
+            }
+
+            // Now that we have a list of machines to keep, weed out the ones that don't match
+            List<string> currentKeys = datFile.Items.Keys.ToList();
+            for (int i = 0; i < currentKeys.Count; i++)
+            {
+                string key = currentKeys[i];
+                if (!keepMachines.Contains(key))
+                    datFile.Items.Remove(key);
+            }
+
+            // Finally, strip out the parent tags
+            RemoveTagsFromChild(datFile);
+        }
+
+        /// <summary>
         /// Ensure that all roms are in their own game (or at least try to ensure)
         /// </summary>
         /// <param name="datFile">DatFile to filter</param>
-        /// TODO: This is incorrect for the actual 1G1R logic... this is actually just silly
         private void OneRomPerGame(DatFile datFile)
         {
             // For each rom, we want to update the game to be "<game name>/<rom name>"

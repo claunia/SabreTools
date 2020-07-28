@@ -297,6 +297,17 @@ Options:
 		  Exclude any valid item or machine field from outputs. Examples
 		  include: romof, publisher, and offset.
 
+	  -1g1r, --one-game-per-region   Try to ensure one game per region
+		  This allows users to input a list of regions to use to filter on
+		  in order so only one game from each set of parent and clones will be
+		  included. This requires either cloneof or romof tags to function
+		  properly.
+
+  		  -reg, --region		 Add a region for 1G1R
+			  Add a region (in order) for use with 1G1R filtering. If this is
+			  not supplied, then by default, only parent sets will be included
+			  in the output. Multiple instances of this flag are allowed.
+
 	  -orpg, --one-rom-per-game   Try to ensure each rom has its own game
 		  In some cases, it is beneficial to have every rom put into its own
 		  output set as a subfolder of the original parent. This flag enables
@@ -1036,6 +1047,17 @@ Options:
 	  -ef=, --exclude-field=	  Exclude a game/rom field from outputs
 		  Exclude any valid item or machine field from outputs. Examples
 		  include: romof, publisher, and offset.
+
+	  -1g1r, --one-game-per-region   Try to ensure one game per region
+		  This allows users to input a list of regions to use to filter on
+		  in order so only one game from each set of parent and clones will be
+		  included. This requires either cloneof or romof tags to function
+		  properly.
+
+  		  -reg, --region		 Add a region for 1G1R
+			  Add a region (in order) for use with 1G1R filtering. If this is
+			  not supplied, then by default, only parent sets will be included
+			  in the output. Multiple instances of this flag are allowed.
 
 	  -orpg, --one-rom-per-game   Try to ensure each rom has its own game
 		  In some cases, it is beneficial to have every rom put into its own

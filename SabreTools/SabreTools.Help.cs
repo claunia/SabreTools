@@ -596,7 +596,20 @@ namespace SabreTools
             }
         }
 
-        // TODO: Update this later to be actual 1G1R functionality instead
+        public const string OneGamePerRegionValue = "one-game-per-region";
+        private static Feature OneGamePerRegionFlag
+        {
+            get
+            {
+                return new Feature(
+                    OneGamePerRegionValue,
+                    new List<string>() { "-1g1r", "--one-game-per-region" },
+                    "Try to ensure one game per user-defined region",
+                    FeatureType.Flag,
+                    longDescription: "This allows users to input a list of regions to use to filter on in order so only one game from each set of parent and clones will be included. This requires either cloneof or romof tags to function properly.");
+            }
+        }
+
         public const string OneRomPerGameValue = "one-rom-per-game";
         private static Feature OneRomPerGameFlag
         {
@@ -1613,6 +1626,20 @@ Possible values are:
             }
         }
 
+        public const string RegionListValue = "region";
+        private static Feature RegionListInput
+        {
+            get
+            {
+                return new Feature(
+                    RegionListValue,
+                    new List<string>() { "-reg", "--region" },
+                    "Add a region for 1G1R",
+                    FeatureType.List,
+                    longDescription: "Add a region (in order) for use with 1G1R filtering. If this is not supplied, then by default, only parent sets will be included in the output. Multiple instances of this flag are allowed.");
+            }
+        }
+
         public const string ReportTypeListValue = "report-type";
         private static Feature ReportTypeListInput
         {
@@ -2204,10 +2231,12 @@ Some special strings that can be used:
                     Homepage = GetString(features, HomepageStringValue),
                     KeepEmptyGames = GetBoolean(features, KeepEmptyGamesValue),
                     Name = GetString(features, NameStringValue),
-                    OneRom = GetBoolean(features, OneRomPerGameValue),
+                    OneGamePerRegion = GetBoolean(features, OneGamePerRegionValue),
+                    OneRomPerGame = GetBoolean(features, OneRomPerGameValue),
                     Postfix = GetString(features, PostfixStringValue),
                     Prefix = GetString(features, PrefixStringValue),
                     Quotes = GetBoolean(features, QuotesValue),
+                    RegionList = GetList(features, RegionListValue),
                     RemoveExtension = GetBoolean(features, RemoveExtensionsValue),
                     ReplaceExtension = GetString(features, ReplaceExtensionStringValue),
                     Romba = GetBoolean(features, RombaValue),
@@ -2804,6 +2833,8 @@ Some special strings that can be used:
                 AddFeature(CommentStringInput);
                 AddFeature(SuperdatFlag);
                 AddFeature(ExcludeFieldListInput);
+                AddFeature(OneGamePerRegionFlag);
+                this[OneGamePerRegionFlag].AddFeature(RegionListInput);
                 AddFeature(OneRomPerGameFlag);
                 AddFeature(SceneDateStripFlag);
                 AddFeature(AddBlankFilesFlag);
@@ -3303,6 +3334,8 @@ The stats that are outputted are as follows:
                 AddFeature(ForceNodumpStringInput);
                 AddFeature(ForcePackingStringInput);
                 AddFeature(ExcludeFieldListInput);
+                AddFeature(OneGamePerRegionFlag);
+                this[OneGamePerRegionFlag].AddFeature(RegionListInput);
                 AddFeature(OneRomPerGameFlag);
                 AddFeature(KeepEmptyGamesFlag);
                 AddFeature(SceneDateStripFlag);
