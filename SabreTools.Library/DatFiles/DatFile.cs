@@ -480,6 +480,7 @@ namespace SabreTools.Library.DatFiles
                 Field.Writable,
                 Field.Optional,
                 Field.Status,
+                Field.Inverted,
 
                 Field.CRC,
                 Field.MD5,
@@ -680,6 +681,12 @@ namespace SabreTools.Library.DatFiles
 
                                     else if (newDatItem.ItemType == ItemType.Rom)
                                         rom.ItemStatus = romDupe.ItemStatus;
+                                }
+
+                                if (updateFields.Contains(Field.Inverted))
+                                {
+                                     if (newDatItem.ItemType == ItemType.Rom)
+                                        rom.Inverted = romDupe.Inverted;
                                 }
 
                                 #endregion

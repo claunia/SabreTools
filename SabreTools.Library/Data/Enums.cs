@@ -408,6 +408,7 @@
         Size,
         CRC,
         Offset,
+        Inverted,
     }
 
     /// <summary>

@@ -492,7 +492,8 @@ namespace SabreTools.Library.DatFiles
             // Prepare internal variables
             bool? def = null,
                 writable = null,
-                optional = null;
+                optional = null,
+                inverted = null;
             long size = -1;
             long? areaSize = null;
             string name = null,
@@ -588,6 +589,7 @@ namespace SabreTools.Library.DatFiles
                         (datItem as Rom).Date = date;
                         (datItem as Rom).ItemStatus = itemStatus ?? ItemStatus.None;
                         (datItem as Rom).Optional = optional;
+                        (datItem as Rom).Inverted = inverted;
                     }
 
                     ParseAddHelper(datItem);
@@ -731,6 +733,10 @@ namespace SabreTools.Library.DatFiles
 
                     case "bios":
                         bios = jtr.ReadAsString();
+                        break;
+
+                    case "inverted":
+                        inverted = jtr.ReadAsBoolean();
                         break;
 
                     default:
@@ -1407,6 +1413,11 @@ namespace SabreTools.Library.DatFiles
                         {
                             jtw.WritePropertyName("optional");
                             jtw.WriteValue(rom.Optional);
+                        }
+                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Inverted, Header.ExcludeFields)))
+                        {
+                            jtw.WritePropertyName("inverted");
+                            jtw.WriteValue(rom.Inverted);
                         }
                         break;
 

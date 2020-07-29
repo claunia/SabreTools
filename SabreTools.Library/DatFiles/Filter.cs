@@ -254,6 +254,11 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         private FilterItem<string> Offset = new FilterItem<string>();
 
+        /// <summary>
+        /// Include or exclude offsets
+        /// </summary>
+        private FilterItem<bool?> Inverted = new FilterItem<bool?>();
+
         #endregion
 
         #endregion // Private instance variables
@@ -777,6 +782,13 @@ namespace SabreTools.Library.DatFiles
                         Offset.NegativeSet.Add(value);
                     else
                         Offset.PositiveSet.Add(value);
+                    break;
+
+                case Field.Inverted:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Inverted.Neutral = false;
+                    else
+                        Inverted.Neutral = true;
                     break;
 
                     #endregion
@@ -1316,6 +1328,10 @@ namespace SabreTools.Library.DatFiles
 
                     // Filter on optional
                     if (this.Optional.MatchesNeutral(null, rom.Optional) == false)
+                        return false;
+
+                    // Filter on inverted
+                    if (this.Inverted.MatchesNeutral(null, rom.Inverted) == false)
                         return false;
 
                     break;
@@ -2267,6 +2283,11 @@ namespace SabreTools.Library.DatFiles
                         {
                             if (item.ItemType == ItemType.Rom)
                                 (item as Rom).Offset = null;
+                        }
+                        if (field == Field.Inverted)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Inverted = null;
                         }
                     }                    
 

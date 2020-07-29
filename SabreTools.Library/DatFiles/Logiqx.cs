@@ -447,6 +447,7 @@ namespace SabreTools.Library.DatFiles
                             MergeTag = reader.GetAttribute("merge"),
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             Date = Sanitizer.CleanDate(reader.GetAttribute("date")),
+                            Inverted = reader.GetAttribute("inverted").AsYesNo(),
 
                             IndexId = indexId,
                             IndexSource = filename,
@@ -1033,6 +1034,8 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("date", rom.Date);
                         if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
+                        if (!Header.ExcludeFields.Contains(Field.Inverted) && rom.Inverted != null)
+                            xtw.WriteAttributeString("inverted", rom.Inverted.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
 

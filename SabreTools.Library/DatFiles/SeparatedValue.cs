@@ -80,7 +80,8 @@ namespace SabreTools.Library.DatFiles
 
                 bool? def = null,
                     writable = null,
-                    optional = null;
+                    optional = null,
+                    inverted = null;
                 string name = null,
                     partName = null,
                     partInterface = null,
@@ -410,6 +411,10 @@ namespace SabreTools.Library.DatFiles
                             offset = string.IsNullOrWhiteSpace(value) ? offset : value;
                             break;
 
+                        case "DatItem.Inverted":
+                            offset = string.IsNullOrWhiteSpace(value) ? inverted : value;
+                            break;
+
                         #endregion
 
                         case "INVALID":
@@ -544,6 +549,7 @@ namespace SabreTools.Library.DatFiles
                             Date = date,
                             ItemStatus = status,
                             Optional = optional,
+                            Inverted = inverted,
 
                             IndexId = indexId,
                             IndexSource = filename,
@@ -843,6 +849,9 @@ namespace SabreTools.Library.DatFiles
 
                 case "offset":
                     return "DatItem.Offset";
+
+                case "inverted":
+                    return "DatItem.Inverted";
 
                 #endregion
 

@@ -182,6 +182,8 @@ namespace SabreTools.Library.Tools
                     return Field.Index;
                 case "infos":
                     return Field.Infos;
+                case "inverted":
+                    return Field.Inverted;
                 case "itemname":
                 case "item-name":
                 case "name":
@@ -561,8 +563,10 @@ namespace SabreTools.Library.Tools
             switch (yesno?.ToLowerInvariant())
             {
                 case "yes":
+                case "true":
                     return true;
                 case "no":
+                case "false":
                     return false;
                 case "partial":
                 default:
@@ -572,7 +576,9 @@ namespace SabreTools.Library.Tools
             return yesno?.ToLowerInvariant() switch
             {
                 "yes" => true,
+                "true" => true,
                 "no" => false,
+                "false" => false,
                 "partial" => null,
                 _ => null,
             };

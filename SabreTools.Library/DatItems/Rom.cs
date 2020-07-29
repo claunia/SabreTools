@@ -148,6 +148,12 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("optional")]
         public bool? Optional { get; set; }
 
+        /// <summary>
+        /// Determine if the CRC32 hash is inverted
+        /// </summary>
+        [JsonProperty("inverted")]
+        public bool? Inverted { get; set; }
+
         #endregion
 
         #region Constructors

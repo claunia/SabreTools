@@ -810,6 +810,10 @@ namespace SabreTools.Library.DatItems
                     if (ItemType == ItemType.Rom)
                         fieldValue = (this as Rom).Offset;
                     break;
+                case Field.Inverted:
+                    if (ItemType == ItemType.Rom)
+                        fieldValue = (this as Rom).Inverted?.ToString();
+                    break;
 
                 case Field.NULL:
                 default:
