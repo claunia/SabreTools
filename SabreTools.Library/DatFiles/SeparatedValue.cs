@@ -412,7 +412,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Inverted":
-                            offset = string.IsNullOrWhiteSpace(value) ? inverted : value;
+                            inverted = value.AsYesNo();
                             break;
 
                         #endregion
