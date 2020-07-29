@@ -2068,6 +2068,9 @@ namespace SabreTools.Library.DatFiles
         /// <param name="datFile">DatFile to filter</param>
         private void OneRomPerGame(DatFile datFile)
         {
+            // Because this introduces subfolders, we need to set the SuperDAT type
+            datFile.Header.Type = "SuperDAT";
+
             // For each rom, we want to update the game to be "<game name>/<rom name>"
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
@@ -2076,6 +2079,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     string[] splitname = items[i].Name.Split('.');
                     items[i].MachineName += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+                    items[i].Name = Path.GetFileName(items[i].Name);
                 }
             });
         }
