@@ -235,7 +235,7 @@ namespace SabreTools.Library.DatFiles
             // Miscellaneous
             bool keep)
         {
-            string key, areaname, partname = string.Empty, partinterface = string.Empty;
+            string areaname, partname = string.Empty, partinterface = string.Empty;
             long? areasize = null;
             var features = new List<KeyValuePair<string, string>>();
             bool containsItems = false;
