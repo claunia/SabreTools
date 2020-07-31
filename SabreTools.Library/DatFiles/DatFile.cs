@@ -21,7 +21,7 @@ namespace SabreTools.Library.DatFiles
     /// </summary>
     public abstract class DatFile
     {
-        #region Publically available fields
+        #region Fields
 
         /// <summary>
         /// Header values
@@ -48,7 +48,7 @@ namespace SabreTools.Library.DatFiles
             if (datFile != null)
             {
                 Header = datFile.Header;
-                this.Items = datFile.Items;
+                Items = datFile.Items;
             }
         }
 
@@ -2556,8 +2556,9 @@ namespace SabreTools.Library.DatFiles
         /// Process the DAT and verify from the depots
         /// </summary>
         /// <param name="inputs">List of input directories to compare against</param>
+        /// <param name="outDir">Optional param for output directory</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyDepot(List<string> inputs)
+        public bool VerifyDepot(List<string> inputs, string outDir)
         {
             bool success = true;
 
@@ -2629,7 +2630,7 @@ namespace SabreTools.Library.DatFiles
             Header.Name = $"fixDAT_{Header.Name}";
             Header.Description = $"fixDAT_{Header.Description}";
             Items.ClearMarked();
-            Write();
+            Write(outDir, stats: true);
 
             return success;
         }
@@ -2638,13 +2639,14 @@ namespace SabreTools.Library.DatFiles
         /// Process the DAT and verify the output directory
         /// </summary>
         /// <param name="inputs">List of input directories to compare against</param>
+        /// <param name="outDir">Optional param for output directory</param>
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="headerToCheckAgainst">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(List<string> inputs, bool hashOnly, bool quickScan, string headerToCheckAgainst, bool chdsAsFiles, Filter filter)
+        public bool VerifyGeneric(List<string> inputs, string outDir, bool hashOnly, bool quickScan, string headerToCheckAgainst, bool chdsAsFiles, Filter filter)
         {
             // TODO: We want the cross section of what's the folder and what's in the DAT. Right now, it just has what's in the DAT that's not in the folder
             bool success = true;
@@ -2703,7 +2705,7 @@ namespace SabreTools.Library.DatFiles
 
             // Now output the fixdat to the main folder
             Items.ClearMarked();
-            success &= matched.Write(stats: true);
+            success &= matched.Write(outDir, stats: true);
 
             return success;
         }
@@ -3119,13 +3121,13 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>
-        /// <param name="outDir">Set the output directory (default current directory)</param>
+        /// <param name="outDir">Set the output directory (current directory on null)</param>
         /// <param name="norename">True if games should only be compared on game and file name (default), false if system and source are counted</param>
         /// <param name="stats">True if DAT statistics should be output on write, false otherwise (default)</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <param name="overwrite">True if files should be overwritten (default), false if they should be renamed instead</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public bool Write(string outDir = null, bool norename = true, bool stats = false, bool ignoreblanks = false, bool overwrite = true)
+        public bool Write(string outDir, bool norename = true, bool stats = false, bool ignoreblanks = false, bool overwrite = true)
         {
             // If there's nothing there, abort
             if (Items.TotalCount == 0)

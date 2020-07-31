@@ -1505,6 +1505,10 @@ Options:
 		  Optionally, a temp folder can be supplied in the case the default
 		  temp directory is not preferred.
 
+	  -out=, --output-dir=		Output directory
+		  This sets an output folder to be used when the files are created. If
+		  a path is not defined, the runtime directory is used instead.
+
 	  -ho, --hash-only			Check files by hash only
 		  This sets a mode where files are not checked based on name but rather
 		  hash alone. This allows verification of (possibly) incorrectly named

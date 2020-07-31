@@ -3521,6 +3521,7 @@ The stats that are outputted are as follows:
                 AddFeature(DatListInput);
                 AddFeature(DepotFlag);
                 AddFeature(TempStringInput);
+                AddFeature(OutputDirStringInput);
                 AddFeature(HashOnlyFlag);
                 AddFeature(QuickFlag);
                 AddFeature(HeaderStringInput);
@@ -3577,6 +3578,7 @@ The stats that are outputted are as follows:
                 var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
                 // Get feature flags
+                string outDir = GetString(features, OutputDirStringValue);
                 bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
                 bool depot = GetBoolean(features, DepotValue);
                 bool hashOnly = GetBoolean(features, HashOnlyValue);
@@ -3595,9 +3597,9 @@ The stats that are outputted are as follows:
 
                         // If we have the depot flag, respect it
                         if (depot)
-                            datdata.VerifyDepot(Inputs);
+                            datdata.VerifyDepot(Inputs, outDir);
                         else
-                            datdata.VerifyGeneric(Inputs, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, filter);
+                            datdata.VerifyGeneric(Inputs, outDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, filter);
                     }
                 }
                 // Otherwise, process all DATs into the same output
@@ -3617,9 +3619,9 @@ The stats that are outputted are as follows:
 
                     // If we have the depot flag, respect it
                     if (depot)
-                        datdata.VerifyDepot(Inputs);
+                        datdata.VerifyDepot(Inputs, outDir);
                     else
-                        datdata.VerifyGeneric(Inputs, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, filter);
+                        datdata.VerifyGeneric(Inputs, outDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, filter);
                 }
             }
         }
