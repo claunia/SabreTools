@@ -2982,7 +2982,7 @@ The following systems have headers that this program can work with:
                 List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
                 foreach (ParentablePath file in files)
                 {
-                    Skipper.DetectTransformStore(file.CurrentPath, outDir, nostore);
+                    Transform.DetectTransformStore(file.CurrentPath, outDir, nostore);
                 }
             }
         }
@@ -3054,7 +3054,7 @@ The following systems have headers that this program can work with:
                 List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
                 foreach (ParentablePath file in files)
                 {
-                    Skipper.RestoreHeader(file.CurrentPath, outDir);
+                    Transform.RestoreHeader(file.CurrentPath, outDir);
                 }
             }
         }

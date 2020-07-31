@@ -347,7 +347,7 @@ namespace SabreTools.Library.Tools
             BaseFile baseFile;
             if (header != null)
             {
-                SkipperRule rule = Skipper.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
+                SkipperRule rule = Transform.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
 
                 // If there's a match, get the new information from the stream
                 if (rule.Tests != null && rule.Tests.Count != 0)

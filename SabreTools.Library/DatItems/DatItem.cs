@@ -17,6 +17,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
+        // TODO: Can internal fields be mapped to Field in a more reasonable way?
         #region Protected instance variables
 
         [JsonIgnore]

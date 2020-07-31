@@ -1945,7 +1945,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Preload the Skipper list
-            Skipper.Init();
+            Transform.Init();
 
             #endregion
 
@@ -2129,7 +2129,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Preload the Skipper list
-            Skipper.Init();
+            Transform.Init();
 
             #endregion
 
@@ -2495,7 +2495,7 @@ namespace SabreTools.Library.DatFiles
                     return false;
 
                 // Check to see if we have a matching header first
-                SkipperRule rule = Skipper.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(headerToCheckAgainst));
+                SkipperRule rule = Transform.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(headerToCheckAgainst));
 
                 // If there's a match, create the new file to write
                 if (rule.Tests != null && rule.Tests.Count != 0)
