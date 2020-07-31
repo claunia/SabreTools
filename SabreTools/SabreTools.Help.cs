@@ -4,6 +4,7 @@ using System.IO;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
+using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
 using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;

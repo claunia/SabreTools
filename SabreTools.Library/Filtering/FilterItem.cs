@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.Library.Filtering
 {
     /// <summary>
     /// Represents a single filter within the overall filter

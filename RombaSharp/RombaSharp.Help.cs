@@ -5,6 +5,7 @@ using System.Linq;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
+using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
 using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;

@@ -7,10 +7,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.Library.Filtering
 {
     /// <summary>
     /// Represents the filtering operations that need to be performed on a set of items, usually a DAT
