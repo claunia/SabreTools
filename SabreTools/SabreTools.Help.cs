@@ -2206,12 +2206,309 @@ Some special strings that can be used:
 
         private class SabreToolsFeature : TopLevel
         {
-            #region Specific Extraction
+            /// <summary>
+            /// Pre-configured Filter
+            /// </summary>
+            protected Filter Filter { get; set; }
+
+            /// <summary>
+            /// Pre-configured DatHeader
+            /// </summary>
+            protected DatHeader Header { get; set; }
+
+            /// <summary>
+            /// Output directory
+            /// </summary>
+            protected string OutputDir { get; set; }
+
+            /// <summary>
+            /// Add Filter-specific features
+            /// </summary>
+            protected void AddFilteringFeatures()
+            {
+                AddFeature(FilterListInput);
+                AddFeature(CategoryListInput);
+                AddFeature(NotCategoryListInput);
+                AddFeature(GameNameListInput);
+                AddFeature(NotGameNameListInput);
+                AddFeature(GameDescriptionListInput);
+                AddFeature(NotGameDescriptionListInput);
+                AddFeature(MatchOfTagsFlag);
+                AddFeature(ItemNameListInput);
+                AddFeature(NotItemNameListInput);
+                AddFeature(ItemTypeListInput);
+                AddFeature(NotItemTypeListInput);
+                AddFeature(GreaterStringInput);
+                AddFeature(LessStringInput);
+                AddFeature(EqualStringInput);
+                AddFeature(CrcListInput);
+                AddFeature(NotCrcListInput);
+                AddFeature(Md5ListInput);
+                AddFeature(NotMd5ListInput);
+#if NET_FRAMEWORK
+                AddFeature(RipeMd160ListInput);
+                AddFeature(NotRipeMd160ListInput);
+#endif
+                AddFeature(Sha1ListInput);
+                AddFeature(NotSha1ListInput);
+                AddFeature(Sha256ListInput);
+                AddFeature(NotSha256ListInput);
+                AddFeature(Sha384ListInput);
+                AddFeature(NotSha384ListInput);
+                AddFeature(Sha512ListInput);
+                AddFeature(NotSha512ListInput);
+                AddFeature(StatusListInput);
+                AddFeature(NotStatusListInput);
+                AddFeature(GameTypeListInput);
+                AddFeature(NotGameTypeListInput);
+                AddFeature(RunnableFlag);
+                AddFeature(NotRunnableFlag);
+            }
+
+            /// <summary>
+            /// Add internal split/merge features
+            /// </summary>
+            protected void AddInternalSplitFeatures()
+            {
+                AddFeature(DatMergedFlag);
+                AddFeature(DatSplitFlag);
+                AddFeature(DatNonMergedFlag);
+                AddFeature(DatDeviceNonMergedFlag);
+                AddFeature(DatFullNonMergedFlag);
+            }
+
+            public override void ProcessFeatures(Dictionary<string, Feature> features)
+            {
+                // Generic feature flags
+                Filter = GetFilter(features);
+                Header = GetDatHeader(features);
+                OutputDir = GetString(features, OutputDirStringValue);
+
+                // Set threading flag, if necessary
+                if (features.ContainsKey(ThreadsInt32Value))
+                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+            }
+
+            #region Protected Specific Extraction
+            
+            /// <summary>
+            /// Get omit from scan from feature list
+            /// </summary>
+            protected Hash GetOmitFromScan(Dictionary<string, Feature> features)
+            {
+                Hash omitFromScan = Hash.DeepHashes; // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+
+                if (GetBoolean(features, SkipMd5Value))
+                    omitFromScan |= Hash.MD5;
+#if NET_FRAMEWORK
+                if (GetBoolean(features, SkipRipeMd160Value))
+                    omitFromScan &= ~Hash.RIPEMD160; // TODO: This needs to be inverted later
+#endif
+                if (GetBoolean(features, SkipSha1Value))
+                    omitFromScan |= Hash.SHA1;
+                if (GetBoolean(features, SkipSha256Value))
+                    omitFromScan &= ~Hash.SHA256; // TODO: This needs to be inverted later
+                if (GetBoolean(features, SkipSha384Value))
+                    omitFromScan &= ~Hash.SHA384; // TODO: This needs to be inverted later
+                if (GetBoolean(features, SkipSha512Value))
+                    omitFromScan &= ~Hash.SHA512; // TODO: This needs to be inverted later
+
+                return omitFromScan;
+            }
+
+            /// <summary>
+            /// Get OutputFormat from feature list
+            /// </summary>
+            protected OutputFormat GetOutputFormat(Dictionary<string, Feature> features)
+            {
+                if (GetBoolean(features, TarValue))
+                    return OutputFormat.TapeArchive;
+                else if (GetBoolean(features, Torrent7zipValue))
+                    return OutputFormat.Torrent7Zip;
+                else if (GetBoolean(features, TorrentGzipValue))
+                    return OutputFormat.TorrentGzip;
+                //else if (GetBoolean(features, TorrentLrzipValue))
+                //    return OutputFormat.TorrentLRZip;
+                //else if (GetBoolean(features, TorrentLz4Value))
+                //    return OutputFormat.TorrentLZ4;
+                //else if (GetBoolean(features, TorrentRarValue))
+                //    return OutputFormat.TorrentRar;
+                //else if (GetBoolean(features, TorrentXzValue))
+                //    return OutputFormat.TorrentXZ;
+                else if (GetBoolean(features, TorrentZipValue))
+                    return OutputFormat.TorrentZip;
+                //else if (GetBoolean(features, TorrentZpaqValue))
+                //    return OutputFormat.TorrentZPAQ;
+                //else if (GetBoolean(features, TorrentZstdValue))
+                //    return OutputFormat.TorrentZstd;
+                else
+                    return OutputFormat.Folder;
+            }
+
+            /// <summary>
+            /// Get SkipFileType from feature list
+            /// </summary>
+            protected SkipFileType GetSkipFileType(Dictionary<string, Feature> features)
+            {
+                if (GetBoolean(features, SkipArchivesValue))
+                    return SkipFileType.Archive;
+                else if (GetBoolean(features, SkipFilesValue))
+                    return SkipFileType.File;
+                else
+                    return SkipFileType.None;
+            }
+
+            /// <summary>
+            /// Get SplittingMode from feature list
+            /// </summary>
+            protected SplittingMode GetSplittingMode(Dictionary<string, Feature> features)
+            {
+                SplittingMode splittingMode = SplittingMode.None;
+
+                if (GetBoolean(features, ExtensionValue))
+                    splittingMode |= SplittingMode.Extension;
+                if (GetBoolean(features, HashValue))
+                    splittingMode |= SplittingMode.Hash;
+                if (GetBoolean(features, LevelValue))
+                    splittingMode |= SplittingMode.Level;
+                if (GetBoolean(features, SizeValue))
+                    splittingMode |= SplittingMode.Size;
+                if (GetBoolean(features, TypeValue))
+                    splittingMode |= SplittingMode.Type;
+
+                return splittingMode;
+            }
+
+            /// <summary>
+            /// Get StatReportFormat from feature list
+            /// </summary>
+            protected StatReportFormat GetStatReportFormat(Dictionary<string, Feature> features)
+            {
+                StatReportFormat statDatFormat = StatReportFormat.None;
+
+                foreach (string rt in GetList(features, ReportTypeListValue))
+                {
+                    statDatFormat |= rt.AsStatReportFormat();
+                }
+
+                return statDatFormat;
+            }
+
+            /// <summary>
+            /// Get update fields from feature list
+            /// </summary>
+            protected List<Field> GetUpdateFields(Dictionary<string, Feature> features)
+            {
+                List<Field> updateFields = new List<Field>();
+
+                if (GetBoolean(features, UpdateDescriptionValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateDescriptionValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.Description);
+                }
+
+                if (GetBoolean(features, UpdateGameTypeValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateGameTypeValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.MachineType);
+                }
+
+                if (GetBoolean(features, UpdateHashesValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateHashesValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.CRC);
+                    updateFields.Add(Field.MD5);
+#if NET_FRAMEWORK
+                    updateFields.Add(Field.RIPEMD160);
+#endif
+                    updateFields.Add(Field.SHA1);
+                    updateFields.Add(Field.SHA256);
+                    updateFields.Add(Field.SHA384);
+                    updateFields.Add(Field.SHA512);
+                }
+
+                if (GetBoolean(features, UpdateManufacturerValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateManufacturerValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.Manufacturer);
+                }
+
+                if (GetBoolean(features, UpdateNamesValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateNamesValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.Name);
+                }
+
+                if (GetBoolean(features, UpdateParentsValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateParentsValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.CloneOf);
+                    updateFields.Add(Field.RomOf);
+                    updateFields.Add(Field.SampleOf);
+                }
+
+                if (GetBoolean(features, UpdateYearValue))
+                {
+                    Globals.Logger.User($"This flag '{UpdateYearValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                    updateFields.Add(Field.Year);
+                }
+
+                foreach (string fieldName in GetList(features, UpdateFieldListValue))
+                {
+                    updateFields.Add(fieldName.AsField());
+                }
+
+                return updateFields;
+            }
+
+            /// <summary>
+            /// Get UpdateMode from feature list
+            /// </summary>
+            protected UpdateMode GetUpdateMode(Dictionary<string, Feature> features)
+            {
+                UpdateMode updateMode = UpdateMode.None;
+
+                if (GetBoolean(features, DiffAllValue))
+                    updateMode |= UpdateMode.AllDiffs;
+
+                if (GetBoolean(features, BaseReplaceValue))
+                    updateMode |= UpdateMode.BaseReplace;
+
+                if (GetBoolean(features, DiffAgainstValue))
+                    updateMode |= UpdateMode.DiffAgainst;
+
+                if (GetBoolean(features, DiffCascadeValue))
+                    updateMode |= UpdateMode.DiffCascade;
+
+                if (GetBoolean(features, DiffDuplicatesValue))
+                    updateMode |= UpdateMode.DiffDupesOnly;
+
+                if (GetBoolean(features, DiffIndividualsValue))
+                    updateMode |= UpdateMode.DiffIndividualsOnly;
+
+                if (GetBoolean(features, DiffNoDuplicatesValue))
+                    updateMode |= UpdateMode.DiffNoDupesOnly;
+
+                if (GetBoolean(features, DiffReverseCascadeValue))
+                    updateMode |= UpdateMode.DiffReverseCascade;
+
+                if (GetBoolean(features, MergeValue))
+                    updateMode |= UpdateMode.Merge;
+
+                if (GetBoolean(features, ReverseBaseReplaceValue))
+                    updateMode |= UpdateMode.ReverseBaseReplace;
+
+                return updateMode;
+            }
+
+            #endregion
+
+            #region Private Specific Extraction
 
             /// <summary>
             /// Get DatHeader from feature list
             /// </summary>
-            protected DatHeader GetDatHeader(Dictionary<string, Feature> features)
+            private DatHeader GetDatHeader(Dictionary<string, Feature> features)
             {
                 DatHeader datHeader = new DatHeader
                 {
@@ -2270,7 +2567,7 @@ Some special strings that can be used:
             /// <summary>
             /// Get DedupeType from feature list
             /// </summary>
-            protected DedupeType GetDedupeType(Dictionary<string, Feature> features)
+            private DedupeType GetDedupeType(Dictionary<string, Feature> features)
             {
                 if (GetBoolean(features, DedupValue))
                     return DedupeType.Full;
@@ -2283,7 +2580,7 @@ Some special strings that can be used:
             /// <summary>
             /// Get Filter from feature list
             /// </summary>
-            protected Filter GetFilter(Dictionary<string, Feature> features)
+            private Filter GetFilter(Dictionary<string, Feature> features)
             {
                 Filter filter = new Filter();
 
@@ -2529,76 +2826,9 @@ Some special strings that can be used:
             }
 
             /// <summary>
-            /// Get omit from scan from feature list
-            /// </summary>
-            protected Hash GetOmitFromScan(Dictionary<string, Feature> features)
-            {
-                Hash omitFromScan = Hash.DeepHashes; // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-
-                if (GetBoolean(features, SkipMd5Value))
-                    omitFromScan |= Hash.MD5;
-#if NET_FRAMEWORK
-                if (GetBoolean(features, SkipRipeMd160Value))
-                    omitFromScan &= ~Hash.RIPEMD160; // TODO: This needs to be inverted later
-#endif
-                if (GetBoolean(features, SkipSha1Value))
-                    omitFromScan |= Hash.SHA1;
-                if (GetBoolean(features, SkipSha256Value))
-                    omitFromScan &= ~Hash.SHA256; // TODO: This needs to be inverted later
-                if (GetBoolean(features, SkipSha384Value))
-                    omitFromScan &= ~Hash.SHA384; // TODO: This needs to be inverted later
-                if (GetBoolean(features, SkipSha512Value))
-                    omitFromScan &= ~Hash.SHA512; // TODO: This needs to be inverted later
-
-                return omitFromScan;
-            }
-
-            /// <summary>
-            /// Get OutputFormat from feature list
-            /// </summary>
-            protected OutputFormat GetOutputFormat(Dictionary<string, Feature> features)
-            {
-                if (GetBoolean(features, TarValue))
-                    return OutputFormat.TapeArchive;
-                else if (GetBoolean(features, Torrent7zipValue))
-                    return OutputFormat.Torrent7Zip;
-                else if (GetBoolean(features, TorrentGzipValue))
-                    return OutputFormat.TorrentGzip;
-                //else if (GetBoolean(features, TorrentLrzipValue))
-                //    return OutputFormat.TorrentLRZip;
-                //else if (GetBoolean(features, TorrentLz4Value))
-                //    return OutputFormat.TorrentLZ4;
-                //else if (GetBoolean(features, TorrentRarValue))
-                //    return OutputFormat.TorrentRar;
-                //else if (GetBoolean(features, TorrentXzValue))
-                //    return OutputFormat.TorrentXZ;
-                else if (GetBoolean(features, TorrentZipValue))
-                    return OutputFormat.TorrentZip;
-                //else if (GetBoolean(features, TorrentZpaqValue))
-                //    return OutputFormat.TorrentZPAQ;
-                //else if (GetBoolean(features, TorrentZstdValue))
-                //    return OutputFormat.TorrentZstd;
-                else
-                    return OutputFormat.Folder;
-            }
-
-            /// <summary>
-            /// Get SkipFileType from feature list
-            /// </summary>
-            protected SkipFileType GetSkipFileType(Dictionary<string, Feature> features)
-            {
-                if (GetBoolean(features, SkipArchivesValue))
-                    return SkipFileType.Archive;
-                else if (GetBoolean(features, SkipFilesValue))
-                    return SkipFileType.File;
-                else
-                    return SkipFileType.None;
-            }
-
-            /// <summary>
             /// Get SplitType from feature list
             /// </summary>
-            protected SplitType GetSplitType(Dictionary<string, Feature> features)
+            private SplitType GetSplitType(Dictionary<string, Feature> features)
             {
                 SplitType splitType = SplitType.None;
                 if (GetBoolean(features, DatDeviceNonMergedValue))
@@ -2613,149 +2843,6 @@ Some special strings that can be used:
                     splitType = SplitType.Split;
 
                 return splitType;
-            }
-
-            /// <summary>
-            /// Get SplittingMode from feature list
-            /// </summary>
-            protected SplittingMode GetSplittingMode(Dictionary<string, Feature> features)
-            {
-                SplittingMode splittingMode = SplittingMode.None;
-
-                if (GetBoolean(features, ExtensionValue))
-                    splittingMode |= SplittingMode.Extension;
-                if (GetBoolean(features, HashValue))
-                    splittingMode |= SplittingMode.Hash;
-                if (GetBoolean(features, LevelValue))
-                    splittingMode |= SplittingMode.Level;
-                if (GetBoolean(features, SizeValue))
-                    splittingMode |= SplittingMode.Size;
-                if (GetBoolean(features, TypeValue))
-                    splittingMode |= SplittingMode.Type;
-
-                return splittingMode;
-            }
-
-            /// <summary>
-            /// Get StatReportFormat from feature list
-            /// </summary>
-            protected StatReportFormat GetStatReportFormat(Dictionary<string, Feature> features)
-            {
-                StatReportFormat statDatFormat = StatReportFormat.None;
-
-                foreach (string rt in GetList(features, ReportTypeListValue))
-                {
-                    statDatFormat |= rt.AsStatReportFormat();
-                }
-
-                return statDatFormat;
-            }
-
-            /// <summary>
-            /// Get update fields from feature list
-            /// </summary>
-            protected List<Field> GetUpdateFields(Dictionary<string, Feature> features)
-            {
-                List<Field> updateFields = new List<Field>();
-
-                if (GetBoolean(features, UpdateDescriptionValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateDescriptionValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.Description);
-                }
-
-                if (GetBoolean(features, UpdateGameTypeValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateGameTypeValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.MachineType);
-                }
-
-                if (GetBoolean(features, UpdateHashesValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateHashesValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.CRC);
-                    updateFields.Add(Field.MD5);
-#if NET_FRAMEWORK
-                    updateFields.Add(Field.RIPEMD160);
-#endif
-                    updateFields.Add(Field.SHA1);
-                    updateFields.Add(Field.SHA256);
-                    updateFields.Add(Field.SHA384);
-                    updateFields.Add(Field.SHA512);
-                }
-
-                if (GetBoolean(features, UpdateManufacturerValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateManufacturerValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.Manufacturer);
-                }
-
-                if (GetBoolean(features, UpdateNamesValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateNamesValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.Name);
-                }
-
-                if (GetBoolean(features, UpdateParentsValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateParentsValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.CloneOf);
-                    updateFields.Add(Field.RomOf);
-                    updateFields.Add(Field.SampleOf);
-                }
-
-                if (GetBoolean(features, UpdateYearValue))
-                {
-                    Globals.Logger.User($"This flag '{UpdateYearValue}' is deprecated, please use {string.Join(", ", UpdateFieldListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                    updateFields.Add(Field.Year);
-                }
-
-                foreach (string fieldName in GetList(features, UpdateFieldListValue))
-                {
-                    updateFields.Add(fieldName.AsField());
-                }
-
-                return updateFields;
-            }
-
-            /// <summary>
-            /// Get UpdateMode from feature list
-            /// </summary>
-            protected UpdateMode GetUpdateMode(Dictionary<string, Feature> features)
-            {
-                UpdateMode updateMode = UpdateMode.None;
-
-                if (GetBoolean(features, DiffAllValue))
-                    updateMode |= UpdateMode.AllDiffs;
-
-                if (GetBoolean(features, BaseReplaceValue))
-                    updateMode |= UpdateMode.BaseReplace;
-
-                if (GetBoolean(features, DiffAgainstValue))
-                    updateMode |= UpdateMode.DiffAgainst;
-
-                if (GetBoolean(features, DiffCascadeValue))
-                    updateMode |= UpdateMode.DiffCascade;
-
-                if (GetBoolean(features, DiffDuplicatesValue))
-                    updateMode |= UpdateMode.DiffDupesOnly;
-
-                if (GetBoolean(features, DiffIndividualsValue))
-                    updateMode |= UpdateMode.DiffIndividualsOnly;
-
-                if (GetBoolean(features, DiffNoDuplicatesValue))
-                    updateMode |= UpdateMode.DiffNoDupesOnly;
-
-                if (GetBoolean(features, DiffReverseCascadeValue))
-                    updateMode |= UpdateMode.DiffReverseCascade;
-
-                if (GetBoolean(features, MergeValue))
-                    updateMode |= UpdateMode.Merge;
-
-                if (GetBoolean(features, ReverseBaseReplaceValue))
-                    updateMode |= UpdateMode.ReverseBaseReplace;
-
-                return updateMode;
             }
 
             #endregion
@@ -2843,43 +2930,7 @@ Some special strings that can be used:
                 AddFeature(CopyFilesFlag);
                 AddFeature(HeaderStringInput);
                 AddFeature(ChdsAsFilesFlag);
-                AddFeature(FilterListInput);
-                AddFeature(CategoryListInput);
-                AddFeature(NotCategoryListInput);
-                AddFeature(GameNameListInput);
-                AddFeature(NotGameNameListInput);
-                AddFeature(GameDescriptionListInput);
-                AddFeature(NotGameDescriptionListInput);
-                AddFeature(MatchOfTagsFlag);
-                AddFeature(ItemNameListInput);
-                AddFeature(NotItemNameListInput);
-                AddFeature(ItemTypeListInput);
-                AddFeature(NotItemTypeListInput);
-                AddFeature(GreaterStringInput);
-                AddFeature(LessStringInput);
-                AddFeature(EqualStringInput);
-                AddFeature(CrcListInput);
-                AddFeature(NotCrcListInput);
-                AddFeature(Md5ListInput);
-                AddFeature(NotMd5ListInput);
-#if NET_FRAMEWORK
-                AddFeature(RipeMd160ListInput);
-                AddFeature(NotRipeMd160ListInput);
-#endif
-                AddFeature(Sha1ListInput);
-                AddFeature(NotSha1ListInput);
-                AddFeature(Sha256ListInput);
-                AddFeature(NotSha256ListInput);
-                AddFeature(Sha384ListInput);
-                AddFeature(NotSha384ListInput);
-                AddFeature(Sha512ListInput);
-                AddFeature(NotSha512ListInput);
-                AddFeature(StatusListInput);
-                AddFeature(NotStatusListInput);
-                AddFeature(GameTypeListInput);
-                AddFeature(NotGameTypeListInput);
-                AddFeature(RunnableFlag);
-                AddFeature(NotRunnableFlag);
+                AddFilteringFeatures();
                 AddFeature(TempStringInput);
                 AddFeature(OutputDirStringInput);
                 AddFeature(ThreadsInt32Input);
@@ -2887,9 +2938,7 @@ Some special strings that can be used:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
-                // Set threading flag, if necessary
-                if (features.ContainsKey(ThreadsInt32Value))
-                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+                base.ProcessFeatures(features);
 
                 // Get feature flags
                 bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
@@ -2898,15 +2947,12 @@ Some special strings that can be used:
                 bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
                 bool copyFiles = GetBoolean(features, CopyFilesValue);
                 bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
-                string outDir = GetString(features, OutputDirStringValue);
                 string tempDir = GetString(features, TempStringValue);
-                var datHeader = GetDatHeader(features);
-                var filter = GetFilter(features);
                 var omitFromScan = GetOmitFromScan(features);
                 var skipFileType = GetSkipFileType(features);
 
                 // Create a new DATFromDir object and process the inputs
-                DatFile basedat = DatFile.Create(datHeader);
+                DatFile basedat = DatFile.Create(Header);
                 basedat.Header.Date = DateTime.Now.ToString("yyyy-MM-dd");
 
                 // For each input directory, create a DAT
@@ -2928,13 +2974,13 @@ Some special strings that can be used:
                             addFileDates,
                             tempDir,
                             copyFiles,
-                            datHeader.Header,
+                            Header.Header,
                             chdsAsFiles,
-                            filter);
+                            Filter);
 
                         if (success)
                         {
-                            datdata.Write(outDir);
+                            datdata.Write(OutputDir);
                         }
                         else
                         {
@@ -2975,15 +3021,16 @@ The following systems have headers that this program can work with:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
+                base.ProcessFeatures(features);
+
                 // Get feature flags
                 bool nostore = GetBoolean(features, NoStoreHeaderValue);
-                string outDir = GetString(features, OutputDirStringValue);
 
                 // Get only files from the inputs
                 List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
                 foreach (ParentablePath file in files)
                 {
-                    Transform.DetectTransformStore(file.CurrentPath, outDir, nostore);
+                    Transform.DetectTransformStore(file.CurrentPath, OutputDir, nostore);
                 }
             }
         }
@@ -3048,14 +3095,13 @@ The following systems have headers that this program can work with:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
-                // Get feature flags
-                string outDir = GetString(features, OutputDirStringValue);
+                base.ProcessFeatures(features);
 
                 // Get only files from the inputs
                 List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
                 foreach (ParentablePath file in files)
                 {
-                    Transform.RestoreHeader(file.CurrentPath, outDir);
+                    Transform.RestoreHeader(file.CurrentPath, OutputDir);
                 }
             }
         }
@@ -3097,6 +3143,8 @@ The following systems have headers that this program can work with:
                 AddFeature(ChdsAsFilesFlag);
                 AddFeature(AddDateFlag);
                 AddFeature(IndividualFlag);
+
+                // Output Formats
                 AddFeature(Torrent7zipFlag);
                 AddFeature(TarFlag);
                 AddFeature(TorrentGzipFlag);
@@ -3109,21 +3157,16 @@ The following systems have headers that this program can work with:
                 AddFeature(TorrentZipFlag);
                 //AddFeature(TorrentZpaqFlag);
                 //AddFeature(TorrentZstdFlag);
+
                 AddFeature(HeaderStringInput);
-                AddFeature(DatMergedFlag);
-                AddFeature(DatSplitFlag);
-                AddFeature(DatNonMergedFlag);
-                AddFeature(DatDeviceNonMergedFlag);
-                AddFeature(DatFullNonMergedFlag);
+                AddInternalSplitFeatures();
                 AddFeature(UpdateDatFlag);
                 AddFeature(ThreadsInt32Input);
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
-                // Set threading flag, if necessary
-                if (features.ContainsKey(ThreadsInt32Value))
-                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+                base.ProcessFeatures(features);
 
                 // Get feature flags
                 bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
@@ -3135,7 +3178,6 @@ The following systems have headers that this program can work with:
                 bool romba = GetBoolean(features, RombaValue);
                 bool updateDat = GetBoolean(features, UpdateDatValue);
                 string headerToCheckAgainst = GetString(features, HeaderStringValue);
-                string outDir = GetString(features, OutputDirStringValue);
                 var outputFormat = GetOutputFormat(features);
 
                 // If we have TorrentGzip output and the romba flag, update
@@ -3160,9 +3202,9 @@ The following systems have headers that this program can work with:
 
                         // If we have the depot flag, respect it
                         if (depot)
-                            datdata.RebuildDepot(Inputs, Path.Combine(outDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
+                            datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
                         else
-                            datdata.RebuildGeneric(Inputs, Path.Combine(outDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
+                            datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
                     }
                 }
 
@@ -3182,9 +3224,9 @@ The following systems have headers that this program can work with:
 
                     // If we have the depot flag, respect it
                     if (depot)
-                        datdata.RebuildDepot(Inputs, outDir, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
+                        datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
                     else
-                        datdata.RebuildGeneric(Inputs, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
+                        datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
                 }
             }
         }
@@ -3220,10 +3262,12 @@ The following systems have headers that this program can work with:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
-                DatFile datfile = DatFile.Create(GetDatHeader(features).DatFormat);
+                base.ProcessFeatures(features);
+
+                DatFile datfile = DatFile.Create(Header.DatFormat);
                 datfile.DetermineSplitType(
                     Inputs,
-                    GetString(features, OutputDirStringValue),
+                    OutputDir,
                     GetBoolean(features, InplaceValue),
                     GetSplittingMode(features),
                     GetList(features, ExtAListValue),
@@ -3270,14 +3314,15 @@ The stats that are outputted are as follows:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
-                string filename = GetDatHeader(features).FileName;
-                string outputDir = GetString(features, OutputDirStringValue);
+                base.ProcessFeatures(features);
+
+                string filename = Header.FileName;
                 if (Path.GetFileName(filename) != filename)
                 {
-                    if (string.IsNullOrWhiteSpace(outputDir))
-                        outputDir = Path.GetDirectoryName(filename);
+                    if (string.IsNullOrWhiteSpace(OutputDir))
+                        OutputDir = Path.GetDirectoryName(filename);
                     else
-                        outputDir = Path.Combine(outputDir, Path.GetDirectoryName(filename));
+                        OutputDir = Path.Combine(OutputDir, Path.GetDirectoryName(filename));
 
                     filename = Path.GetFileName(filename);
                 }
@@ -3285,7 +3330,7 @@ The stats that are outputted are as follows:
                 ItemDictionary.OutputStats(
                     Inputs,
                     filename,
-                    outputDir,
+                    OutputDir,
                     GetBoolean(features, IndividualValue),
                     GetBoolean(features, BaddumpColumnValue),
                     GetBoolean(features, NodumpColumnValue),
@@ -3343,11 +3388,7 @@ The stats that are outputted are as follows:
                 AddFeature(CleanFlag);
                 AddFeature(RemoveUnicodeFlag);
                 AddFeature(DescriptionAsNameFlag);
-                AddFeature(DatMergedFlag);
-                AddFeature(DatSplitFlag);
-                AddFeature(DatNonMergedFlag);
-                AddFeature(DatDeviceNonMergedFlag);
-                AddFeature(DatFullNonMergedFlag);
+                AddInternalSplitFeatures();
                 AddFeature(TrimFlag);
                 this[TrimFlag].AddFeature(RootDirStringInput);
                 AddFeature(SingleSetFlag);
@@ -3393,43 +3434,7 @@ The stats that are outputted are as follows:
                 this[DiffCascadeFlag].AddFeature(SkipFirstOutputFlag);
                 AddFeature(DiffReverseCascadeFlag);
                 this[DiffReverseCascadeFlag].AddFeature(SkipFirstOutputFlag);
-                AddFeature(FilterListInput);
-                AddFeature(CategoryListInput);
-                AddFeature(NotCategoryListInput);
-                AddFeature(GameNameListInput);
-                AddFeature(NotGameNameListInput);
-                AddFeature(GameDescriptionListInput);
-                AddFeature(NotGameDescriptionListInput);
-                AddFeature(MatchOfTagsFlag);
-                AddFeature(ItemNameListInput);
-                AddFeature(NotItemNameListInput);
-                AddFeature(ItemTypeListInput);
-                AddFeature(NotItemTypeListInput);
-                AddFeature(GreaterStringInput);
-                AddFeature(LessStringInput);
-                AddFeature(EqualStringInput);
-                AddFeature(CrcListInput);
-                AddFeature(NotCrcListInput);
-                AddFeature(Md5ListInput);
-                AddFeature(NotMd5ListInput);
-#if NET_FRAMEWORK
-                AddFeature(RipeMd160ListInput);
-                AddFeature(NotRipeMd160ListInput);
-#endif
-                AddFeature(Sha1ListInput);
-                AddFeature(NotSha1ListInput);
-                AddFeature(Sha256ListInput);
-                AddFeature(NotSha256ListInput);
-                AddFeature(Sha384ListInput);
-                AddFeature(NotSha384ListInput);
-                AddFeature(Sha512ListInput);
-                AddFeature(NotSha512ListInput);
-                AddFeature(StatusListInput);
-                AddFeature(NotStatusListInput);
-                AddFeature(GameTypeListInput);
-                AddFeature(NotGameTypeListInput);
-                AddFeature(RunnableFlag);
-                AddFeature(NotRunnableFlag);
+                AddFilteringFeatures();
                 AddFeature(OutputDirStringInput);
                 AddFeature(InplaceFlag);
                 AddFeature(ThreadsInt32Input);
@@ -3437,52 +3442,49 @@ The stats that are outputted are as follows:
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
-                // Set threading flag, if necessary
-                if (features.ContainsKey(ThreadsInt32Value))
-                    Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+                base.ProcessFeatures(features);
 
                 // Get feature flags
-                var datHeader = GetDatHeader(features);
                 var updateFields = GetUpdateFields(features);
                 var updateMode = GetUpdateMode(features);
 
                 // Normalize the extensions
-                datHeader.AddExtension = (string.IsNullOrWhiteSpace(datHeader.AddExtension) || datHeader.AddExtension.StartsWith(".")
-                    ? datHeader.AddExtension
-                    : $".{datHeader.AddExtension}");
-                datHeader.ReplaceExtension = (string.IsNullOrWhiteSpace(datHeader.ReplaceExtension) || datHeader.ReplaceExtension.StartsWith(".")
-                    ? datHeader.ReplaceExtension
-                    : $".{datHeader.ReplaceExtension}");
+                Header.AddExtension = (string.IsNullOrWhiteSpace(Header.AddExtension) || Header.AddExtension.StartsWith(".")
+                    ? Header.AddExtension
+                    : $".{Header.AddExtension}");
+                Header.ReplaceExtension = (string.IsNullOrWhiteSpace(Header.ReplaceExtension) || Header.ReplaceExtension.StartsWith(".")
+                    ? Header.ReplaceExtension
+                    : $".{Header.ReplaceExtension}");
 
                 // If we're in a special update mode and the names aren't set, set defaults
                 if (updateMode != 0)
                 {
                     // Get the values that will be used
-                    if (string.IsNullOrWhiteSpace(datHeader.Date))
-                        datHeader.Date = DateTime.Now.ToString("yyyy-MM-dd");
+                    if (string.IsNullOrWhiteSpace(Header.Date))
+                        Header.Date = DateTime.Now.ToString("yyyy-MM-dd");
 
-                    if (string.IsNullOrWhiteSpace(datHeader.Name))
+                    if (string.IsNullOrWhiteSpace(Header.Name))
                     {
-                        datHeader.Name = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
-                            + (datHeader.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
-                            + (datHeader.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty);
+                        Header.Name = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
+                            + (Header.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
+                            + (Header.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty);
                     }
 
-                    if (string.IsNullOrWhiteSpace(datHeader.Description))
+                    if (string.IsNullOrWhiteSpace(Header.Description))
                     {
-                        datHeader.Description = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
-                            + (datHeader.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
-                            + (datHeader.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty);
+                        Header.Description = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
+                            + (Header.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
+                            + (Header.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty);
 
                         if (!GetBoolean(features, NoAutomaticDateValue))
-                            datHeader.Description += $" ({datHeader.Date})";
+                            Header.Description += $" ({Header.Date})";
                     }
 
-                    if (string.IsNullOrWhiteSpace(datHeader.Category) && updateMode != 0)
-                        datHeader.Category = "DiffDAT";
+                    if (string.IsNullOrWhiteSpace(Header.Category) && updateMode != 0)
+                        Header.Category = "DiffDAT";
 
-                    if (string.IsNullOrWhiteSpace(datHeader.Author))
-                        datHeader.Author = "SabreTools";
+                    if (string.IsNullOrWhiteSpace(Header.Author))
+                        Header.Author = "SabreTools";
                 }
 
                 // If no update fields are set, default to Names
@@ -3490,16 +3492,16 @@ The stats that are outputted are as follows:
                     updateFields = new List<Field>() { Field.Name };
 
                 // Populate the DatData object
-                DatFile userInputDat = DatFile.Create(datHeader);
+                DatFile userInputDat = DatFile.Create(Header);
 
                 userInputDat.DetermineUpdateType(
                     Inputs,
                     GetList(features, BaseDatListValue),
-                    GetString(features, OutputDirStringValue),
+                    OutputDir,
                     updateMode,
                     GetBoolean(features, InplaceValue),
                     GetBoolean(features, SkipFirstOutputValue),
-                    GetFilter(features),
+                    Filter,
                     updateFields,
                     GetBoolean(features, OnlySameValue));
             }
@@ -3527,64 +3529,24 @@ The stats that are outputted are as follows:
                 AddFeature(HeaderStringInput);
                 AddFeature(ChdsAsFilesFlag);
                 AddFeature(IndividualFlag);
-                AddFeature(DatMergedFlag);
-                AddFeature(DatSplitFlag);
-                AddFeature(DatDeviceNonMergedFlag);
-                AddFeature(DatNonMergedFlag);
-                AddFeature(DatFullNonMergedFlag);
-                AddFeature(FilterListInput);
-                AddFeature(CategoryListInput);
-                AddFeature(NotCategoryListInput);
-                AddFeature(GameNameListInput);
-                AddFeature(NotGameNameListInput);
-                AddFeature(GameDescriptionListInput);
-                AddFeature(NotGameDescriptionListInput);
-                AddFeature(MatchOfTagsFlag);
-                AddFeature(ItemNameListInput);
-                AddFeature(NotItemNameListInput);
-                AddFeature(ItemTypeListInput);
-                AddFeature(NotItemTypeListInput);
-                AddFeature(GreaterStringInput);
-                AddFeature(LessStringInput);
-                AddFeature(EqualStringInput);
-                AddFeature(CrcListInput);
-                AddFeature(NotCrcListInput);
-                AddFeature(Md5ListInput);
-                AddFeature(NotMd5ListInput);
-#if NET_FRAMEWORK
-                AddFeature(RipeMd160ListInput);
-                AddFeature(NotRipeMd160ListInput);
-#endif
-                AddFeature(Sha1ListInput);
-                AddFeature(NotSha1ListInput);
-                AddFeature(Sha256ListInput);
-                AddFeature(NotSha256ListInput);
-                AddFeature(Sha384ListInput);
-                AddFeature(NotSha384ListInput);
-                AddFeature(Sha512ListInput);
-                AddFeature(NotSha512ListInput);
-                AddFeature(StatusListInput);
-                AddFeature(NotStatusListInput);
-                AddFeature(GameTypeListInput);
-                AddFeature(NotGameTypeListInput);
-                AddFeature(RunnableFlag);
-                AddFeature(NotRunnableFlag);
+                AddInternalSplitFeatures();
+                AddFilteringFeatures();
             }
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
+                base.ProcessFeatures(features);
+
                 // Get a list of files from the input datfiles
                 var datfiles = GetList(features, DatListValue);
                 var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
                 // Get feature flags
-                string outDir = GetString(features, OutputDirStringValue);
                 bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
                 bool depot = GetBoolean(features, DepotValue);
                 bool hashOnly = GetBoolean(features, HashOnlyValue);
                 bool quickScan = GetBoolean(features, QuickValue);
-                string headerToCheckAgainst = GetDatHeader(features).Header;
-                var filter = GetFilter(features);
+                string headerToCheckAgainst = Header.Header;
 
                 // If we are in individual mode, process each DAT on their own
                 if (GetBoolean(features, IndividualValue))
@@ -3593,13 +3555,13 @@ The stats that are outputted are as follows:
                     {
                         DatFile datdata = DatFile.Create();
                         datdata.Parse(datfile, 99, keep: true);
-                        filter.FilterDatFile(datdata, true);
+                        Filter.FilterDatFile(datdata, true);
 
                         // If we have the depot flag, respect it
                         if (depot)
-                            datdata.VerifyDepot(Inputs, outDir);
+                            datdata.VerifyDepot(Inputs, OutputDir);
                         else
-                            datdata.VerifyGeneric(Inputs, outDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, filter);
+                            datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, Filter);
                     }
                 }
                 // Otherwise, process all DATs into the same output
@@ -3612,16 +3574,16 @@ The stats that are outputted are as follows:
                     foreach (ParentablePath datfile in datfilePaths)
                     {
                         datdata.Parse(datfile, 99, keep: true);
-                        filter.FilterDatFile(datdata, true);
+                        Filter.FilterDatFile(datdata, true);
                     }
 
                     watch.Stop();
 
                     // If we have the depot flag, respect it
                     if (depot)
-                        datdata.VerifyDepot(Inputs, outDir);
+                        datdata.VerifyDepot(Inputs, OutputDir);
                     else
-                        datdata.VerifyGeneric(Inputs, outDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, filter);
+                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, Filter);
                 }
             }
         }
