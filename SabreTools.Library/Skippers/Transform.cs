@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -183,7 +182,6 @@ namespace SabreTools.Library.Skippers
         /// </summary>
         /// <param name="input">Name of the file to be checked</param>
         /// <param name="skipperName">Name of the skipper to be used, blank to find a matching skipper</param>
-        /// <param name="logger">Logger object for file and console output</param>
         /// <param name="keepOpen">True if the underlying stream should be kept open, false otherwise</param>
         /// <returns>The SkipperRule that matched the file</returns>
         public static SkipperRule GetMatchingRule(Stream input, string skipperName, bool keepOpen = false)
@@ -199,154 +197,27 @@ namespace SabreTools.Library.Skippers
             List<SkipperFile> tempList = new List<SkipperFile>();
             tempList.AddRange(List);
 
+            // Loop through all known SkipperFiles
             foreach (SkipperFile skipper in tempList)
             {
-                // If we're searching for the skipper OR we have a match to an inputted one
-                if (string.IsNullOrWhiteSpace(skipperName)
-                    || (!string.IsNullOrWhiteSpace(skipper.Name) && skipperName.ToLowerInvariant() == skipper.Name.ToLowerInvariant())
-                    || (!string.IsNullOrWhiteSpace(skipper.Name) && skipperName.ToLowerInvariant() == skipper.SourceFile.ToLowerInvariant()))
-                {
-                    // Loop through the rules until one is found that works
-                    BinaryReader br = new BinaryReader(input);
-
-                    foreach (SkipperRule rule in skipper.Rules)
-                    {
-                        // Always reset the stream back to the original place
-                        input.Seek(0, SeekOrigin.Begin);
-
-                        // For each rule, make sure it passes each test
-                        bool success = true;
-                        foreach (SkipperTest test in rule.Tests)
-                        {
-                            bool result = true;
-                            switch (test.Type)
-                            {
-                                case HeaderSkipTest.Data:
-                                    // First seek to the correct position
-                                    if (test.Offset == null)
-                                        input.Seek(0, SeekOrigin.End);
-                                    else if (test.Offset > 0 && test.Offset <= input.Length)
-                                        input.Seek((long)test.Offset, SeekOrigin.Begin);
-                                    else if (test.Offset < 0 && Math.Abs((long)test.Offset) <= input.Length)
-                                        input.Seek((long)test.Offset, SeekOrigin.End);
-
-                                    // Then read and compare bytewise
-                                    result = true;
-                                    for (int i = 0; i < test.Value.Length; i++)
-                                    {
-                                        try
-                                        {
-                                            if (br.ReadByte() != test.Value[i])
-                                            {
-                                                result = false;
-                                                break;
-                                            }
-                                        }
-                                        catch
-                                        {
-                                            result = false;
-                                            break;
-                                        }
-                                    }
-
-                                    // Return if the expected and actual results match
-                                    success &= (result == test.Result);
-                                    break;
-
-                                case HeaderSkipTest.Or:
-                                case HeaderSkipTest.Xor:
-                                case HeaderSkipTest.And:
-                                    // First seek to the correct position
-                                    if (test.Offset == null)
-                                        input.Seek(0, SeekOrigin.End);
-                                    else if (test.Offset > 0 && test.Offset <= input.Length)
-                                        input.Seek((long)test.Offset, SeekOrigin.Begin);
-                                    else if (test.Offset < 0 && Math.Abs((long)test.Offset) <= input.Length)
-                                        input.Seek((long)test.Offset, SeekOrigin.End);
-
-                                    result = true;
-                                    try
-                                    {
-                                        // Then apply the mask if it exists
-                                        byte[] read = br.ReadBytes(test.Mask.Length);
-                                        byte[] masked = new byte[test.Mask.Length];
-                                        for (int i = 0; i < read.Length; i++)
-                                        {
-                                            masked[i] = (byte)(test.Type == HeaderSkipTest.And ? read[i] & test.Mask[i] :
-                                                (test.Type == HeaderSkipTest.Or ? read[i] | test.Mask[i] : read[i] ^ test.Mask[i])
-                                            );
-                                        }
-
-                                        // Finally, compare it against the value
-                                        for (int i = 0; i < test.Value.Length; i++)
-                                        {
-                                            if (masked[i] != test.Value[i])
-                                            {
-                                                result = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        result = false;
-                                    }
-
-                                    // Return if the expected and actual results match
-                                    success &= (result == test.Result);
-                                    break;
-
-                                case HeaderSkipTest.File:
-                                    // First get the file size from stream
-                                    long size = input.Length;
-
-                                    // If we have a null size, check that the size is a power of 2
-                                    result = true;
-                                    if (test.Size == null)
-                                    {
-                                        // http://stackoverflow.com/questions/600293/how-to-check-if-a-number-is-a-power-of-2
-                                        result = (((ulong)size & ((ulong)size - 1)) == 0);
-                                    }
-                                    else if (test.Operator == HeaderSkipTestFileOperator.Less)
-                                    {
-                                        result = (size < test.Size);
-                                    }
-                                    else if (test.Operator == HeaderSkipTestFileOperator.Greater)
-                                    {
-                                        result = (size > test.Size);
-                                    }
-                                    else if (test.Operator == HeaderSkipTestFileOperator.Equal)
-                                    {
-                                        result = (size == test.Size);
-                                    }
-
-                                    // Return if the expected and actual results match
-                                    success &= (result == test.Result);
-                                    break;
-                            }
-                        }
-
-                        // If we still have a success, then return this rule
-                        if (success)
-                        {
-                            // If we're not keeping the stream open, dispose of the binary reader
-                            if (!keepOpen)
-                                input.Dispose();
-
-                            Globals.Logger.User(" Matching rule found!");
-                            return rule;
-                        }
-                    }
-                }
+                skipperRule = skipper.GetMatchingRule(input, skipperName);
+                if (skipperRule != null)
+                    break;
             }
 
             // If we're not keeping the stream open, dispose of the binary reader
             if (!keepOpen)
                 input.Dispose();
 
+            // If the SkipperRule is null, make it empty
+            if (skipperRule == null)
+                skipperRule = new SkipperRule();
+
             // If we have a blank rule, inform the user
             if (skipperRule.Tests == null)
                 Globals.Logger.Verbose("No matching rule found!");
+            else
+                Globals.Logger.User("Matching rule found!");
 
             return skipperRule;
         }

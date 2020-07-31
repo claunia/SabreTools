@@ -39,6 +39,23 @@ namespace SabreTools.Library.Skippers
         #endregion
 
         /// <summary>
+        /// Check if a Stream passes all tests in the SkipperRule
+        /// </summary>
+        /// <param name="input">Stream to check</param>
+        /// <returns>True if all tests passed, false otherwise</returns>
+        public bool PassesAllTests(Stream input)
+        {
+            bool success = true;
+            foreach (SkipperTest test in Tests)
+            {
+                bool result = test.Passes(input);
+                success &= result;
+            }
+
+            return success;
+        }
+
+        /// <summary>
         /// Transform an input file using the given rule
         /// </summary>
         /// <param name="input">Input file name</param>
