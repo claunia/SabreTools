@@ -2206,6 +2206,8 @@ Some special strings that can be used:
 
         private class SabreToolsFeature : TopLevel
         {
+            #region Fields
+
             /// <summary>
             /// Pre-configured Filter
             /// </summary>
@@ -2220,6 +2222,10 @@ Some special strings that can be used:
             /// Output directory
             /// </summary>
             protected string OutputDir { get; set; }
+
+            #endregion
+
+            #region Add Feature Groups
 
             /// <summary>
             /// Add Filter-specific features
@@ -2266,6 +2272,38 @@ Some special strings that can be used:
             }
 
             /// <summary>
+            /// Add Header-specific features
+            /// </summary>
+            protected void AddHeaderFeatures()
+            {
+                // Header Values
+                AddFeature(FilenameStringInput);
+                AddFeature(NameStringInput);
+                AddFeature(DescriptionStringInput);
+                AddFeature(RootStringInput);
+                AddFeature(CategoryStringInput);
+                AddFeature(VersionStringInput);
+                AddFeature(DateStringInput);
+                AddFeature(AuthorStringInput);
+                AddFeature(EmailStringInput);
+                AddFeature(HomepageStringInput);
+                AddFeature(UrlStringInput);
+                AddFeature(CommentStringInput);
+                AddFeature(HeaderStringInput);
+                AddFeature(SuperdatFlag);
+                AddFeature(ForceMergingStringInput);
+                AddFeature(ForceNodumpStringInput);
+                AddFeature(ForcePackingStringInput);
+
+                // Header Filters
+                AddFeature(ExcludeFieldListInput);
+                AddFeature(OneGamePerRegionFlag);
+                this[OneGamePerRegionFlag].AddFeature(RegionListInput);
+                AddFeature(OneRomPerGameFlag);
+                AddFeature(SceneDateStripFlag);
+            }
+
+            /// <summary>
             /// Add internal split/merge features
             /// </summary>
             protected void AddInternalSplitFeatures()
@@ -2276,6 +2314,8 @@ Some special strings that can be used:
                 AddFeature(DatDeviceNonMergedFlag);
                 AddFeature(DatFullNonMergedFlag);
             }
+
+            #endregion
 
             public override void ProcessFeatures(Dictionary<string, Feature> features)
             {
@@ -2893,6 +2933,7 @@ Some special strings that can be used:
                 this.LongDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
                 this.Features = new Dictionary<string, Feature>();
 
+                // Hash Features
                 AddFeature(SkipMd5Flag);
 #if NET_FRAMEWORK
                 AddFeature(SkipRipeMd160Flag);
@@ -2901,30 +2942,15 @@ Some special strings that can be used:
                 AddFeature(SkipSha256Flag);
                 AddFeature(SkipSha384Flag);
                 AddFeature(SkipSha512Flag);
+
                 AddFeature(NoAutomaticDateFlag);
-                AddFeature(ForcePackingStringInput);
                 AddFeature(ArchivesAsFilesFlag);
                 AddFeature(OutputTypeListInput);
                 this[OutputTypeListInput].AddFeature(DeprecatedFlag);
                 AddFeature(RombaFlag);
                 AddFeature(SkipArchivesFlag);
                 AddFeature(SkipFilesFlag);
-                AddFeature(FilenameStringInput);
-                AddFeature(NameStringInput);
-                AddFeature(DescriptionStringInput);
-                AddFeature(CategoryStringInput);
-                AddFeature(VersionStringInput);
-                AddFeature(AuthorStringInput);
-                AddFeature(EmailStringInput);
-                AddFeature(HomepageStringInput);
-                AddFeature(UrlStringInput);
-                AddFeature(CommentStringInput);
-                AddFeature(SuperdatFlag);
-                AddFeature(ExcludeFieldListInput);
-                AddFeature(OneGamePerRegionFlag);
-                this[OneGamePerRegionFlag].AddFeature(RegionListInput);
-                AddFeature(OneRomPerGameFlag);
-                AddFeature(SceneDateStripFlag);
+                AddHeaderFeatures();
                 AddFeature(AddBlankFilesFlag);
                 AddFeature(AddDateFlag);
                 AddFeature(CopyFilesFlag);
@@ -3351,6 +3377,7 @@ The stats that are outputted are as follows:
                 this.LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
                 this.Features = new Dictionary<string, Feature>();
 
+                // Output Formats
                 AddFeature(OutputTypeListInput);
                 this[OutputTypeListInput].AddFeature(PrefixStringInput);
                 this[OutputTypeListInput].AddFeature(PostfixStringInput);
@@ -3362,29 +3389,9 @@ The stats that are outputted are as follows:
                 this[OutputTypeListInput].AddFeature(RemoveExtensionsFlag);
                 this[OutputTypeListInput].AddFeature(RombaFlag);
                 this[OutputTypeListInput].AddFeature(DeprecatedFlag);
-                AddFeature(FilenameStringInput);
-                AddFeature(NameStringInput);
-                AddFeature(DescriptionStringInput);
-                AddFeature(RootStringInput);
-                AddFeature(CategoryStringInput);
-                AddFeature(VersionStringInput);
-                AddFeature(DateStringInput);
-                AddFeature(AuthorStringInput);
-                AddFeature(EmailStringInput);
-                AddFeature(HomepageStringInput);
-                AddFeature(UrlStringInput);
-                AddFeature(CommentStringInput);
-                AddFeature(HeaderStringInput);
-                AddFeature(SuperdatFlag);
-                AddFeature(ForceMergingStringInput);
-                AddFeature(ForceNodumpStringInput);
-                AddFeature(ForcePackingStringInput);
-                AddFeature(ExcludeFieldListInput);
-                AddFeature(OneGamePerRegionFlag);
-                this[OneGamePerRegionFlag].AddFeature(RegionListInput);
-                AddFeature(OneRomPerGameFlag);
+                
+                AddHeaderFeatures();
                 AddFeature(KeepEmptyGamesFlag);
-                AddFeature(SceneDateStripFlag);
                 AddFeature(CleanFlag);
                 AddFeature(RemoveUnicodeFlag);
                 AddFeature(DescriptionAsNameFlag);
