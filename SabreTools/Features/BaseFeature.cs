@@ -98,6 +98,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string ByGameValue = "by-game";
+        internal static Feature ByGameFlag
+        {
+            get
+            {
+                return new Feature(
+                    BaseReplaceValue,
+                    new List<string>() { "-bg", "--by-game" },
+                    "Diff against by game instead of hashes",
+                    FeatureType.Flag,
+                    longDescription: "By default, diffing against uses hashes to determine similar files. This flag enables using using each game as a comparision point instead.");
+            }
+        }
+
         internal const string ChdsAsFilesValue = "chds-as-files";
         internal static Feature ChdsAsFilesFlag
         {
@@ -333,20 +347,6 @@ namespace SabreTools.Features
                     "Create diffdat containing just duplicates",
                     FeatureType.Flag,
                     longDescription: "All files that have duplicates outside of the original DAT are included.");
-            }
-        }
-
-        internal const string DiffGameValue = "diff-game";
-        internal static Feature DiffGameFlag
-        {
-            get
-            {
-                return new Feature(
-                    DiffAgainstValue,
-                    new List<string>() { "-dga", "--diff-game" },
-                    "Diff all inputs by game against a set of base DATs",
-                    FeatureType.Flag,
-                    "This flag will enable a special type of diffing in which a set of base DATs are used as a comparison point for each of the input DATs by game. This allows users to get a slightly different output to cascaded diffing, which may be more useful in some cases.");
             }
         }
 
@@ -2502,9 +2502,6 @@ Some special strings that can be used:
 
             if (GetBoolean(features, DiffDuplicatesValue))
                 updateMode |= UpdateMode.DiffDupesOnly;
-
-            if (GetBoolean(features, DiffGameValue))
-                updateMode |= UpdateMode.DiffGame;
 
             if (GetBoolean(features, DiffIndividualsValue))
                 updateMode |= UpdateMode.DiffIndividualsOnly;

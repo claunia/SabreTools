@@ -257,12 +257,11 @@ namespace SabreTools.Library.Data
 
         // Base diffs
         DiffAgainst = 1 << 5,
-        DiffGame = 1 << 6,
 
         // Special update modes
-        Merge = 1 << 7,
-        BaseReplace = 1 << 8,
-        ReverseBaseReplace = 1 << 9,
+        Merge = 1 << 6,
+        BaseReplace = 1 << 7,
+        ReverseBaseReplace = 1 << 8,
 
         // Combinations
         AllDiffs = DiffDupesOnly | DiffNoDupesOnly | DiffIndividualsOnly,

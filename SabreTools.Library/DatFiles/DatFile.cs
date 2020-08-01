@@ -263,6 +263,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise [only for base replacement]</param>
+        /// <param name="byGame">True if diffing is by Game, false if diffing is by hash [only for against]</param>
         public void DetermineUpdateType(
             List<string> inputPaths,
             List<string> basePaths,
@@ -272,7 +273,8 @@ namespace SabreTools.Library.DatFiles
             bool skip,
             Filter filter,
             List<Field> updateFields,
-            bool onlySame)
+            bool onlySame,
+            bool byGame)
         {
             // Ensure we only have files in the inputs
             List<ParentablePath> inputFileNames = DirectoryExtensions.GetFilesOnly(inputPaths, appendparent: true);
@@ -319,12 +321,11 @@ namespace SabreTools.Library.DatFiles
             }
 
             // If we have a diff against mode
-            else if (updateMode.HasFlag(UpdateMode.DiffAgainst)
-                || updateMode.HasFlag(UpdateMode.DiffGame))
+            else if (updateMode.HasFlag(UpdateMode.DiffAgainst))
             {
                 // Populate the combined data
                 PopulateUserData(baseFileNames, filter);
-                DiffAgainst(inputFileNames, outDir, inplace, filter, updateMode.HasFlag(UpdateMode.DiffGame));
+                DiffAgainst(inputFileNames, outDir, inplace, filter, byGame);
             }
 
             // If we have one of the base replacement modes
