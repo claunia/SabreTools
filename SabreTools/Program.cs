@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+
+using SabreTools.Features;
 using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 using SabreTools.Library.Tools;
 
 namespace SabreTools
 {
-    /// <summary>
-    /// Entry class for the DATabase application
-    /// </summary>
-    public partial class SabreTools
+    public class Program
     {
         // Private required variables
         private static Help _help;
 
         /// <summary>
-        /// Entry class for the SabreTools application
+        /// Entry point for the SabreTools application
         /// </summary>
         /// <param name="args">String array representing command line parameters</param>
         public static void Main(string[] args)
@@ -24,7 +23,7 @@ namespace SabreTools
             Globals.Logger = new Logger(true, "sabretools.log");
 
             // Create a new Help object for this program
-            _help = SabreTools.RetrieveHelp();
+            _help = RetrieveHelp();
 
             // Get the location of the script tag, if it exists
             int scriptLocation = (new List<string>(args)).IndexOf("--script");
@@ -76,10 +75,10 @@ namespace SabreTools
             featureName = _help.GetFeatureName(featureName);
 
             // Get the associated feature
-            SabreToolsFeature feature = _help[featureName] as SabreToolsFeature;
+            BaseFeature feature = _help[featureName] as BaseFeature;
 
             // If we had the help feature first
-            if (featureName == HelpFeature.Value || featureName == DetailedHelpFeature.Value)
+            if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
             {
                 feature.ProcessArgs(args, _help);
                 Globals.Logger.Close();
@@ -98,25 +97,25 @@ namespace SabreTools
             switch (featureName)
             {
                 // No-op as these should be caught
-                case HelpFeature.Value:
-                case DetailedHelpFeature.Value:
-                case ScriptFeature.Value:
+                case DisplayHelp.Value:
+                case DisplayHelpDetailed.Value:
+                case Script.Value:
                     break;
 
                 // Require input verification
-                case DatFromDirFeature.Value:
-                case ExtractFeature.Value:
-                case RestoreFeature.Value:
-                case SplitFeature.Value:
-                case StatsFeature.Value:
-                case UpdateFeature.Value:
-                case VerifyFeature.Value:
+                case DatFromDir.Value:
+                case Extract.Value:
+                case Restore.Value:
+                case Split.Value:
+                case Stats.Value:
+                case Update.Value:
+                case Verify.Value:
                     VerifyInputs(feature.Inputs, featureName);
                     feature.ProcessFeatures(features);
                     break;
 
                 // Requires no input verification
-                case SortFeature.Value:
+                case Sort.Value:
                     feature.ProcessFeatures(features);
                     break;
 
@@ -130,6 +129,46 @@ namespace SabreTools
             return;
         }
 
+        /// <summary>
+        /// Generate a Help object for this program
+        /// </summary>
+        /// <returns></returns>
+        private static Help RetrieveHelp()
+        {
+            // Create and add the header to the Help object
+            string barrier = "-----------------------------------------";
+            List<string> helpHeader = new List<string>()
+            {
+                "SabreTools - Manipulate, convert, and use DAT files",
+                barrier,
+                "Usage: SabreTools [option] [flags] [filename|dirname] ...",
+                string.Empty
+            };
+
+            // Create the base help object with header
+            Help help = new Help(helpHeader);
+
+            // Add all of the features
+            help.Add(new DisplayHelp());
+            help.Add(new DisplayHelpDetailed());
+            help.Add(new Script());
+            help.Add(new DatFromDir());
+            help.Add(new Extract());
+            help.Add(new Restore());
+            help.Add(new Sort());
+            help.Add(new Split());
+            help.Add(new Stats());
+            help.Add(new Update());
+            help.Add(new Verify());
+
+            return help;
+        }
+
+        /// <summary>
+        /// Verify that there are inputs, show help otherwise
+        /// </summary>
+        /// <param name="inputs">List of inputs</param>
+        /// <param name="feature">Name of the current feature</param>
         private static void VerifyInputs(List<string> inputs, string feature)
         {
             if (inputs.Count == 0)

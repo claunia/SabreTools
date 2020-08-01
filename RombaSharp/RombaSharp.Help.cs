@@ -12,6 +12,7 @@ using Microsoft.Data.Sqlite;
 
 namespace RombaSharp
 {
+    // TODO: Split this like SabreTools
     public partial class RombaSharp
     {
         #region Private Flag features
