@@ -336,6 +336,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string DiffGameValue = "diff-game";
+        internal static Feature DiffGameFlag
+        {
+            get
+            {
+                return new Feature(
+                    DiffAgainstValue,
+                    new List<string>() { "-dga", "--diff-game" },
+                    "Diff all inputs by game against a set of base DATs",
+                    FeatureType.Flag,
+                    "This flag will enable a special type of diffing in which a set of base DATs are used as a comparison point for each of the input DATs by game. This allows users to get a slightly different output to cascaded diffing, which may be more useful in some cases.");
+            }
+        }
+
         internal const string DiffIndividualsValue = "diff-individuals";
         internal static Feature DiffIndividualsFlag
         {
@@ -2488,6 +2502,9 @@ Some special strings that can be used:
 
             if (GetBoolean(features, DiffDuplicatesValue))
                 updateMode |= UpdateMode.DiffDupesOnly;
+
+            if (GetBoolean(features, DiffGameValue))
+                updateMode |= UpdateMode.DiffGame;
 
             if (GetBoolean(features, DiffIndividualsValue))
                 updateMode |= UpdateMode.DiffIndividualsOnly;

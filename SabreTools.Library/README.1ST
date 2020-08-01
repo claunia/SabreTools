@@ -1205,6 +1205,16 @@ Options:
 			  Add a DAT or folder of DATs to the base set to be used for all
 			  operations. Multiple instances of this flag are allowed.
 
+	  -dga, --diff-game		Diff all inputs by game against a set of base DATs
+		  This flag will enable a special type of diffing in which a set of base
+		  DATs are used as a comparison point for each of the input DATs by game.
+		  This allows users to get a slightly different output to cascaded
+		  diffing, which may be more useful in some cases.
+
+		  -bd=, --base-dat=		   Add a base DAT for processing
+			  Add a DAT or folder of DATs to the base set to be used for all
+			  operations. Multiple instances of this flag are allowed.
+
 	  -br, --base-replace		 Replace from base DATs in order
 		  By default, no item names are changed except when there is a merge
 		  occurring. This flag enables users to define a DAT or set of base

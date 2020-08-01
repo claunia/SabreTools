@@ -56,6 +56,8 @@ namespace SabreTools.Features
             this[DiffNoDuplicatesFlag].AddFeature(NoAutomaticDateFlag);
             AddFeature(DiffAgainstFlag);
             this[DiffAgainstFlag].AddFeature(BaseDatListInput);
+            AddFeature(DiffGameFlag);
+            this[DiffGameFlag].AddFeature(BaseDatListInput);
             AddFeature(BaseReplaceFlag);
             this[BaseReplaceFlag].AddFeature(BaseDatListInput);
             this[BaseReplaceFlag].AddFeature(UpdateFieldListInput);
