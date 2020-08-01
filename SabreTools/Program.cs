@@ -132,7 +132,7 @@ namespace SabreTools
         /// <summary>
         /// Generate a Help object for this program
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Populated Help object</returns>
         private static Help RetrieveHelp()
         {
             // Create and add the header to the Help object

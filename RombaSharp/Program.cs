@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using RombaSharp.Features;
 using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 using SabreTools.Library.Tools;
@@ -15,30 +16,8 @@ namespace RombaSharp
     /// that needs to read from the depot themselves, if the depot folder cannot be found, the
     /// user is prompted to reconnect the depot OR skip that depot entirely.
     /// </remarks>
-    public partial class RombaSharp
+    public class Program
     {
-        // General settings
-        private static string _logdir;		// Log folder location
-        private static string _tmpdir;		// Temp folder location
-        private static string _webdir;		// Web frontend location
-        private static string _baddir;		// Fail-to-unpack file folder location
-        private static int _verbosity;		// Verbosity of the output
-        private static int _cores;			// Forced CPU cores
-
-        // DatRoot settings
-        private static string _dats;		// DatRoot folder location
-        private static string _db;			// Database name
-
-        // Depot settings
-        private static Dictionary<string, Tuple<long, bool>> _depots; // Folder location, Max size
-
-        // Server settings
-        private static int _port;			// Web server port
-
-        // Other private variables
-        private const string _config = "config.xml";
-        private const string _dbSchema = "rombasharp";
-        private static string _connectionString;
         private static Help _help;
 
         /// <summary>
@@ -49,11 +28,8 @@ namespace RombaSharp
             // Perform initial setup and verification
             Globals.Logger = new Logger(true, "romba.log");
 
-            InitializeConfiguration();
-            DatabaseTools.EnsureDatabase(_dbSchema, _db, _connectionString);
-
             // Create a new Help object for this program
-            _help = RombaSharp.RetrieveHelp();
+            _help = RetrieveHelp();
 
             // Get the location of the script tag, if it exists
             int scriptLocation = (new List<string>(args)).IndexOf("--script");
@@ -62,7 +38,7 @@ namespace RombaSharp
             if (!Console.IsOutputRedirected && scriptLocation == -1)
             {
                 Console.Clear();
-                Build.PrepareConsole("RombaSharp");
+                SabreTools.Library.Data.Build.PrepareConsole("RombaSharp");
             }
 
             // Now we remove the script tag because it messes things up
@@ -105,10 +81,10 @@ namespace RombaSharp
             featureName = _help.GetFeatureName(featureName);
 
             // Get the associated feature
-            RombaSharpFeature feature = _help[featureName] as RombaSharpFeature;
+            BaseFeature feature = _help[featureName] as BaseFeature;
 
             // If we had the help feature first
-            if (featureName == HelpFeature.Value || featureName == DetailedHelpFeature.Value)
+            if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
             {
                 feature.ProcessArgs(args, _help);
                 Globals.Logger.Close();
@@ -126,40 +102,40 @@ namespace RombaSharp
             Dictionary<string, Feature> features = _help.GetEnabledFeatures();
             switch (featureName)
             {
-                case DetailedHelpFeature.Value:
-                case HelpFeature.Value:
-                case ScriptFeature.Value:
+                case DisplayHelpDetailed.Value:
+                case DisplayHelp.Value:
+                case Script.Value:
                     // No-op as this should be caught
                     break;
 
                 // Require input verification
-                case ArchiveFeature.Value:
-                case BuildFeature.Value:
-                case DatStatsFeature.Value:
-                case FixdatFeature.Value:
-                case ImportFeature.Value:
-                case LookupFeature.Value:
-                case MergeFeature.Value:
-                case MissFeature.Value:
-                case RescanDepotsFeature.Value:
+                case Archive.Value:
+                case Features.Build.Value:
+                case DatStats.Value:
+                case Fixdat.Value:
+                case Import.Value:
+                case Lookup.Value:
+                case Merge.Value:
+                case Miss.Value:
+                case RescanDepots.Value:
                     VerifyInputs(feature.Inputs, featureName);
                     feature.ProcessFeatures(features);
                     break;
 
                 // Requires no input verification
-                case CancelFeature.Value:
-                case DbStatsFeature.Value:
-                case DiffdatFeature.Value:
-                case Dir2DatFeature.Value:
-                case EDiffdatFeature.Value:
-                case ExportFeature.Value:
-                case MemstatsFeature.Value:
-                case ProgressFeature.Value:
-                case PurgeBackupFeature.Value:
-                case PurgeDeleteFeature.Value:
-                case RefreshDatsFeature.Value:
-                case ShutdownFeature.Value:
-                case VersionFeature.Value:
+                case Cancel.Value:
+                case DbStats.Value:
+                case Diffdat.Value:
+                case Dir2Dat.Value:
+                case EDiffdat.Value:
+                case Export.Value:
+                case Memstats.Value:
+                case Progress.Value:
+                case PurgeBackup.Value:
+                case PurgeDelete.Value:
+                case RefreshDats.Value:
+                case Shutdown.Value:
+                case Features.Version.Value:
                     feature.ProcessFeatures(features);
                     break;
 
@@ -173,6 +149,60 @@ namespace RombaSharp
             return;
         }
 
+        /// <summary>
+        /// Generate a Help object for this program
+        /// </summary>
+        /// <returns>Populated Help object</returns>
+        private static Help RetrieveHelp()
+        {
+            // Create and add the header to the Help object
+            string barrier = "-----------------------------------------";
+            List<string> helpHeader = new List<string>()
+            {
+                "RombaSharp - C# port of the Romba rom management tool",
+                barrier,
+                "Usage: RombaSharp [option] [filename|dirname] ...",
+                string.Empty
+            };
+
+            // Create the base help object with header
+            Help help = new Help(helpHeader);
+
+            // Add all of the features
+            help.Add(new DisplayHelp());
+            help.Add(new DisplayHelpDetailed());
+            help.Add(new Script());
+            help.Add(new Archive());
+            help.Add(new Features.Build());
+            help.Add(new Cancel());
+            help.Add(new DatStats());
+            help.Add(new DbStats());
+            help.Add(new Diffdat());
+            help.Add(new Dir2Dat());
+            help.Add(new EDiffdat());
+            help.Add(new Export());
+            help.Add(new Fixdat());
+            help.Add(new Import());
+            help.Add(new Lookup());
+            help.Add(new Memstats());
+            help.Add(new Merge());
+            help.Add(new Miss());
+            help.Add(new PurgeBackup());
+            help.Add(new PurgeDelete());
+            help.Add(new RefreshDats());
+            help.Add(new RescanDepots());
+            help.Add(new Progress());
+            help.Add(new Shutdown());
+            help.Add(new Features.Version());
+
+            return help;
+        }
+
+        /// <summary>
+        /// Verify that there are inputs, show help otherwise
+        /// </summary>
+        /// <param name="inputs">List of inputs</param>
+        /// <param name="feature">Name of the current feature</param>
         private static void VerifyInputs(List<string> inputs, string feature)
         {
             if (inputs.Count == 0)

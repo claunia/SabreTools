@@ -1,0 +1,28 @@
+﻿using System.Collections.Generic;
+
+using SabreTools.Library.Data;
+using SabreTools.Library.Help;
+
+namespace RombaSharp.Features
+{
+    internal class Cancel : BaseFeature
+    {
+        public const string Value = "Cancel";
+
+        public Cancel()
+        {
+            Name = Value;
+            Flags = new List<string>() { "cancel" };
+            Description = "Cancels current long-running job";
+            _featureType = FeatureType.Flag;
+            LongDescription = "Cancels current long-running job.";
+            Features = new Dictionary<string, Feature>();
+        }
+
+        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        {
+            base.ProcessFeatures(features);
+            Globals.Logger.User("This feature is not yet implemented: cancel");
+        }
+    }
+}
