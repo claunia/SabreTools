@@ -323,7 +323,7 @@ namespace SabreTools.Library.DatFiles
             {
                 // Populate the combined data
                 PopulateUserData(baseFileNames, filter);
-                DiffAgainst(inputFileNames, outDir, inplace);
+                DiffAgainst(inputFileNames, outDir, inplace, filter);
             }
 
             // If we are in game diffing mode
@@ -377,10 +377,11 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        public void DiffAgainst(List<string> inputs, string outDir, bool inplace)
+        /// <param name="filter">Filter object to be passed to the DatItem level</param>
+        public void DiffAgainst(List<string> inputs, string outDir, bool inplace, Filter filter)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffAgainst(paths, outDir, inplace);
+            DiffAgainst(paths, outDir, inplace, filter);
         }
 
         /// <summary>
@@ -966,7 +967,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        internal void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace)
+        /// <param name="filter">Filter object to be passed to the DatItem level</param>
+        internal void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
         {
             // For comparison's sake, we want to use CRC as the base ordering
             Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
@@ -977,8 +979,9 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.User($"Comparing '{path.CurrentPath}' to base DAT");
 
                 // First we parse in the DAT internally
-                DatFile intDat = Create();
+                DatFile intDat = Create(Header.CloneFiltering());
                 intDat.Parse(path, 1, keep: true);
+                filter.FilterDatFile(intDat, false /* useTags */);
 
                 // For comparison's sake, we want to use CRC as the base bucketing
                 intDat.Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
@@ -1269,6 +1272,8 @@ namespace SabreTools.Library.DatFiles
                 DatFile intDat = Create(Header.CloneFiltering());
                 intDat.Parse(path, 1, keep: true);
                 filter.FilterDatFile(intDat, false /* useTags */);
+
+                // For comparison's sake, we want to use Game as the base bucketing
                 intDat.Items.BucketBy(BucketedBy.Game, DedupeType.None);
 
                 // TODO: Do we need to include items in base NOT in compare?
