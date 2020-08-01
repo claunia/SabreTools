@@ -533,12 +533,18 @@ namespace SabreTools.Features
         }
 
         internal const string MatchOfTagsValue = "match-of-tags";
-        internal static Feature MatchOfTagsFlag => new Feature(
+        internal static Feature MatchOfTagsFlag
+        {
+            get
+            {
+                return new Feature(
                     MatchOfTagsValue,
                     new List<string>() { "-ofg", "--match-of-tags" },
                     "Allow cloneof and romof tags to match game name filters",
                     FeatureType.Flag,
                     longDescription: "If filter or exclude by game name is used, this flag will allow those filters to be checked against the romof and cloneof tags as well. This can allow for more advanced set-building, especially in arcade-based sets.");
+            }
+        }
 
         internal const string MergeValue = "merge";
         internal static Feature MergeFlag
