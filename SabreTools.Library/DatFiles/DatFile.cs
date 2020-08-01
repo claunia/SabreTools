@@ -318,20 +318,13 @@ namespace SabreTools.Library.DatFiles
                 DiffCascade(inputFileNames, datHeaders, outDir, inplace, skip);
             }
 
-            // If we have diff against mode
-            else if (updateMode.HasFlag(UpdateMode.DiffAgainst))
+            // If we have a diff against mode
+            else if (updateMode.HasFlag(UpdateMode.DiffAgainst)
+                || updateMode.HasFlag(UpdateMode.DiffGame))
             {
                 // Populate the combined data
                 PopulateUserData(baseFileNames, filter);
-                DiffAgainst(inputFileNames, outDir, inplace, filter);
-            }
-
-            // If we are in game diffing mode
-            else if (updateMode.HasFlag(UpdateMode.DiffGame))
-            {
-                // Populate the combined data
-                PopulateUserData(baseFileNames, filter);
-                DiffGame(inputFileNames, outDir, inplace, filter);
+                DiffAgainst(inputFileNames, outDir, inplace, filter, updateMode.HasFlag(UpdateMode.DiffGame));
             }
 
             // If we have one of the base replacement modes
@@ -378,10 +371,11 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        public void DiffAgainst(List<string> inputs, string outDir, bool inplace, Filter filter)
+        /// <param name="useGames">True to diff using games, false to use hashes</param>
+        public void DiffAgainst(List<string> inputs, string outDir, bool inplace, Filter filter, bool useGames)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffAgainst(paths, outDir, inplace, filter);
+            DiffAgainst(paths, outDir, inplace, filter, useGames);
         }
 
         /// <summary>
@@ -413,19 +407,6 @@ namespace SabreTools.Library.DatFiles
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
             DiffNoCascade(paths, outDir, diff);
-        }
-
-        /// <summary>
-        /// Output games that contain different items (by name)
-        /// </summary>
-        /// <param name="inputs">Names of the input files</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        public void DiffGame(List<string> inputs, string outDir, bool inplace, Filter filter)
-        {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffGame(paths, outDir, inplace, filter);
         }
 
         /// <summary>
@@ -968,10 +949,14 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        internal void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
+        /// <param name="useGames">True to diff using games, false to use hashes</param>
+        internal void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter, bool useGames)
         {
-            // For comparison's sake, we want to use CRC as the base ordering
-            Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
+            // For comparison's sake, we want to use a base ordering
+            if (useGames)
+                Items.BucketBy(BucketedBy.Game, DedupeType.None);
+            else
+                Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
 
             // Now we want to compare each input DAT against the base
             foreach (ParentablePath path in inputs)
@@ -983,23 +968,59 @@ namespace SabreTools.Library.DatFiles
                 intDat.Parse(path, 1, keep: true);
                 filter.FilterDatFile(intDat, false /* useTags */);
 
-                // For comparison's sake, we want to use CRC as the base bucketing
-                intDat.Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
+                // For comparison's sake, we want to a the base bucketing
+                if (useGames)
+                    intDat.Items.BucketBy(BucketedBy.Game, DedupeType.None);
+                else
+                    intDat.Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
 
-                // Then we do a hashwise comparison against the base DAT
-                Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
+                // Then we compare against the base DAT
+                List<string> keys = intDat.Items.Keys.ToList();
+                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
-                    List<DatItem> datItems = intDat.Items[key];
-                    List<DatItem> keepDatItems = new List<DatItem>();
-                    foreach (DatItem datItem in datItems)
+                    // Game Against uses game names
+                    if (useGames)
                     {
-                        if (!Items.HasDuplicates(datItem, true))
-                            keepDatItems.Add(datItem);
+                        // If the base DAT doesn't contain the key, keep it
+                        if (!Items.ContainsKey(key))
+                            return;
+
+                        // If the number of items is different, then keep it
+                        if (Items[key].Count != intDat.Items[key].Count)
+                            return;
+
+                        // Otherwise, compare by name and hash the remaining files
+                        bool exactMatch = true;
+                        foreach (DatItem item in intDat.Items[key])
+                        {
+                            // TODO: Make this granular to name as well
+                            if (!Items[key].Contains(item))
+                            {
+                                exactMatch = false;
+                                break;
+                            }
+                        }
+
+                        // If we have an exact match, remove the game
+                        if (exactMatch)
+                            intDat.Items.Remove(key);
                     }
 
-                    // Now add the new list to the key
-                    intDat.Items.Remove(key);
-                    intDat.Items.AddRange(key, keepDatItems);
+                    // Standard Against uses hashes
+                    else
+                    {
+                        List<DatItem> datItems = intDat.Items[key];
+                        List<DatItem> keepDatItems = new List<DatItem>();
+                        foreach (DatItem datItem in datItems)
+                        {
+                            if (!Items.HasDuplicates(datItem, true))
+                                keepDatItems.Add(datItem);
+                        }
+
+                        // Now add the new list to the key
+                        intDat.Items.Remove(key);
+                        intDat.Items.AddRange(key, keepDatItems);
+                    }
                 });
 
                 // Determine the output path for the DAT
@@ -1248,72 +1269,6 @@ namespace SabreTools.Library.DatFiles
             }
 
             watch.Stop();
-        }
-
-        /// <summary>
-        /// Replace item values from the base set represented by the current DAT
-        /// </summary>
-        /// <param name="inputs">Names of the input files</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <remarks>TODO: Can this be wrapped into DiffAgainst?</remarks>
-        internal void DiffGame(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
-        {
-            // Order the current DAT by game first
-            Items.BucketBy(BucketedBy.Game, DedupeType.None);
-
-            // We want to try to replace each item in each input DAT from the base
-            foreach (ParentablePath path in inputs)
-            {
-                Globals.Logger.User($"Comparing items in '{path.CurrentPath}' to the base DAT");
-
-                // First we parse in the DAT internally
-                DatFile intDat = Create(Header.CloneFiltering());
-                intDat.Parse(path, 1, keep: true);
-                filter.FilterDatFile(intDat, false /* useTags */);
-
-                // For comparison's sake, we want to use Game as the base bucketing
-                intDat.Items.BucketBy(BucketedBy.Game, DedupeType.None);
-
-                // TODO: Do we need to include items in base NOT in compare?
-                List<string> games = intDat.Items.Keys.ToList();
-                foreach (string game in games)
-                {
-                    // If the base DAT doesn't contain the key, keep it
-                    if (!Items.ContainsKey(game))
-                        continue;
-
-                    // If the number of items is different, then keep it
-                    if (Items[game].Count != intDat.Items[game].Count)
-                        continue;
-
-                    // Otherwise, compare by name and hash the remaining files
-                    bool exactMatch = true;
-                    foreach (DatItem item in intDat.Items[game])
-                    {
-                        // TODO: Make this granular to name as well
-                        if (!Items[game].Contains(item))
-                        {
-                            exactMatch = false;
-                            break;
-                        }
-                    }
-
-                    // If we have an exact match, remove the game
-                    if (exactMatch)
-                        intDat.Items.Remove(game);
-                }
-
-                // Determine the output path for the DAT
-                string interOutDir = path.GetOutputPath(outDir, inplace);
-
-                // Once we're done, try writing out
-                intDat.Write(interOutDir, overwrite: inplace);
-
-                // Due to possible memory requirements, we force a garbage collection
-                GC.Collect();
-            }
         }
 
         /// <summary>
