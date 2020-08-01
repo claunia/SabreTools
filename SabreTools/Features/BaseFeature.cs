@@ -104,7 +104,7 @@ namespace SabreTools.Features
             get
             {
                 return new Feature(
-                    BaseReplaceValue,
+                    ByGameValue,
                     new List<string>() { "-bg", "--by-game" },
                     "Diff against by game instead of hashes",
                     FeatureType.Flag,
