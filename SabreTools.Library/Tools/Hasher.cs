@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 
 namespace SabreTools.Library.Tools
 {

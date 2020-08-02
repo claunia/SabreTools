@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using SabreTools.Library.Tools;
+using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.Data
 {

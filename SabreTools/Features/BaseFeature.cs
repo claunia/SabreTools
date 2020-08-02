@@ -6,6 +6,7 @@ using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
+using SabreTools.Library.Reports;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Features

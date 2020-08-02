@@ -3,8 +3,9 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Library.Logging
 {
     /// <summary>
     /// Log either to file or to the console

@@ -1,5 +1,22 @@
-﻿namespace SabreTools.Library.DatItems
+﻿using System;
+
+namespace SabreTools.Library.DatItems
 {
+    /// <summary>
+    /// Determines which type of duplicate a file is
+    /// </summary>
+    [Flags]
+    public enum DupeType
+    {
+        // Type of match
+        Hash = 1 << 0,
+        All = 1 << 1,
+
+        // Location of match
+        Internal = 1 << 2,
+        External = 1 << 3,
+    }
+
     /// <summary>
     /// List of valid field types within a DatItem/Machine
     /// </summary>
@@ -70,6 +87,24 @@
     }
 
     /// <summary>
+    /// Determine the status of the item
+    /// </summary>
+    [Flags]
+    public enum ItemStatus
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0x00,
+
+        None = 1 << 0,
+        Good = 1 << 1,
+        BadDump = 1 << 2,
+        Nodump = 1 << 3,
+        Verified = 1 << 4,
+    }
+
+    /// <summary>
     /// Determine what type of file an item is
     /// </summary>
     public enum ItemType
@@ -82,5 +117,22 @@
         Archive = 5,
 
         Blank = 99, // This is not a real type, only used internally
+    }
+
+    /// <summary>
+    /// Determine what type of machine it is
+    /// </summary>
+    [Flags]
+    public enum MachineType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0x00,
+
+        None = 1 << 0,
+        Bios = 1 << 1,
+        Device = 1 << 2,
+        Mechanical = 1 << 3,
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
 
