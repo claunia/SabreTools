@@ -739,7 +739,7 @@ namespace SabreTools.Library.DatFiles
             if (useGames)
                 Items.BucketBy(BucketedBy.Game, DedupeType.None);
             else
-                Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
+                Items.BucketBy(BucketedBy.CRC, DedupeType.None);
 
             // Now we want to compare each input DAT against the base
             foreach (ParentablePath path in inputs)

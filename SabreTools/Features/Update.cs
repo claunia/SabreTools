@@ -181,10 +181,6 @@ namespace SabreTools.Features
             else
                 datHeaders = userInputDat.PopulateUserData(inputFileNames, Filter);
 
-            // Merge all input files and write
-            if (updateMode.HasFlag(UpdateMode.Merge))
-                userInputDat.MergeNoDiff(inputFileNames, OutputDir);
-
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
                 userInputDat.DiffDuplicates(inputFileNames, OutputDir);
@@ -230,6 +226,11 @@ namespace SabreTools.Features
                     updateFields,
                     GetBoolean(features, OnlySameValue));
             }
+
+            // Merge all input files and write
+            // This has to be last due to the SuperDAT handling
+            if (updateMode.HasFlag(UpdateMode.Merge))
+                userInputDat.MergeNoDiff(inputFileNames, OutputDir);
         }
     }
 }
