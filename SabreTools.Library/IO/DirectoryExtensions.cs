@@ -6,7 +6,7 @@ using System.Linq;
 using SabreTools.Library.Data;
 using NaturalSort;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Library.IO
 {
     /// <summary>
     /// Extensions to Directory functionality

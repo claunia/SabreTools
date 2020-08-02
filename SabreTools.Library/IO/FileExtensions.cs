@@ -8,10 +8,9 @@ using System.Xml.Schema;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.IO;
 using SabreTools.Library.Skippers;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Library.IO
 {
     /// <summary>
     /// Extensions to File functionality

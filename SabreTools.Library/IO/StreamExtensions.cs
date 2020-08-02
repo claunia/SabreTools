@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
+using SabreTools.Library.Tools;
 using Compress.ThreadReaders;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Library.IO
 {
     /// <summary>
     /// Extensions to Stream functionality

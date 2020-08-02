@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.Tools;
+using SabreTools.Library.IO;
 
 namespace SabreTools.Library.Skippers
 {

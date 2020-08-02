@@ -9,6 +9,7 @@ using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
+using SabreTools.Library.IO;
 using SabreTools.Library.Reports;
 using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;

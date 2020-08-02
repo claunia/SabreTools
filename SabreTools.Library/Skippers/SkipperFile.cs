@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 
-using SabreTools.Library.Tools;
+using SabreTools.Library.IO;
 
 namespace SabreTools.Library.Skippers
 {

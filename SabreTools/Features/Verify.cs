@@ -3,6 +3,7 @@
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
+using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Features

@@ -3,6 +3,7 @@ using System.IO;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
+using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Skippers

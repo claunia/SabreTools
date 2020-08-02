@@ -2,7 +2,7 @@
 
 using SabreTools.Library.Data;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Library.IO
 {
     /// <summary>
     /// Extensions to Path functionality

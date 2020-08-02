@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
+using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 using SharpCompress.Compressors.Xz;
 

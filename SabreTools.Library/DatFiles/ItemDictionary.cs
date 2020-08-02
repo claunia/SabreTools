@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
+using SabreTools.Library.IO;
 using SabreTools.Library.Reports;
-using SabreTools.Library.Tools;
 using NaturalSort;
 
 namespace SabreTools.Library.DatFiles

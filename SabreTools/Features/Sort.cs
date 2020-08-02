@@ -4,6 +4,7 @@ using System.IO;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Help;
+using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
