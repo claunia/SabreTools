@@ -2603,7 +2603,7 @@ Some special strings that can be used:
                 ForceNodump = GetString(features, ForceNodumpStringValue).AsForceNodump(),
                 ForcePacking = GetString(features, ForcePackingStringValue).AsForcePacking(),
                 GameName = GetBoolean(features, GamePrefixValue),
-                Header = GetString(features, HeaderStringValue),
+                HeaderSkipper = GetString(features, HeaderStringValue),
                 Homepage = GetString(features, HomepageStringValue),
                 KeepEmptyGames = GetBoolean(features, KeepEmptyGamesValue),
                 Name = GetString(features, NameStringValue),

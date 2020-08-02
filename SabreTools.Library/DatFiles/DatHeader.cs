@@ -93,7 +93,7 @@ namespace SabreTools.Library.DatFiles
         /// Header skipper to be used when loading the DAT
         /// </summary>
         [JsonProperty("header")]
-        public string Header { get; set; }
+        public string HeaderSkipper { get; set; }
 
         /// <summary>
         /// Classification of the DAT. Generally only used for SuperDAT
@@ -262,7 +262,7 @@ namespace SabreTools.Library.DatFiles
                 Homepage = this.Homepage,
                 Url = this.Url,
                 Comment = this.Comment,
-                Header = this.Header,
+                HeaderSkipper = this.HeaderSkipper,
                 Type = this.Type,
                 ForceMerging = this.ForceMerging,
                 ForceNodump = this.ForceNodump,
@@ -308,7 +308,7 @@ namespace SabreTools.Library.DatFiles
                 Homepage = this.Homepage,
                 Url = this.Url,
                 Comment = this.Comment,
-                Header = this.Header,
+                HeaderSkipper = this.HeaderSkipper,
                 Type = this.Type,
                 ForceMerging = this.ForceMerging,
                 ForceNodump = this.ForceNodump,
@@ -394,8 +394,8 @@ namespace SabreTools.Library.DatFiles
             if (!string.IsNullOrWhiteSpace(datHeader.Comment))
                 this.Comment = datHeader.Comment;
 
-            if (!string.IsNullOrWhiteSpace(datHeader.Header))
-                this.Header = datHeader.Header;
+            if (!string.IsNullOrWhiteSpace(datHeader.HeaderSkipper))
+                this.HeaderSkipper = datHeader.HeaderSkipper;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Type))
                 this.Type = datHeader.Type;

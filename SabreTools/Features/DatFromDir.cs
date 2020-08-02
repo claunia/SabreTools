@@ -87,7 +87,6 @@ namespace SabreTools.Features
                         addFileDates,
                         tempDir,
                         copyFiles,
-                        Header.Header,
                         chdsAsFiles,
                         Filter);
 

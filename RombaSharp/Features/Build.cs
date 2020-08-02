@@ -62,7 +62,7 @@ structure according to the original DAT master directory tree structure.";
                 // Now scan all of those depots and rebuild
                 datFile.RebuildDepot(onlineDepots, outputFolder, false /*date*/,
                     false /*delete*/, false /*inverse*/, (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
-                    false /*updateDat*/, null /*headerToCheckAgainst*/);
+                    false /*updateDat*/);
             }
         }
     }

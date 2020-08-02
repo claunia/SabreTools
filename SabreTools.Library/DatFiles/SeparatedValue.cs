@@ -165,7 +165,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatFile.Header":
-                            Header.Header = (string.IsNullOrWhiteSpace(Header.Header) ? value : Header.Header);
+                            Header.HeaderSkipper = (string.IsNullOrWhiteSpace(Header.HeaderSkipper) ? value : Header.HeaderSkipper);
                             break;
 
                         case "DatFile.Type":

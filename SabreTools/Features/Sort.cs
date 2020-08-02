@@ -65,7 +65,6 @@ namespace SabreTools.Features
             bool quickScan = GetBoolean(features, QuickValue);
             bool romba = GetBoolean(features, RombaValue);
             bool updateDat = GetBoolean(features, UpdateDatValue);
-            string headerToCheckAgainst = GetString(features, HeaderStringValue);
             var outputFormat = GetOutputFormat(features);
 
             // If we have TorrentGzip output and the romba flag, update
@@ -87,12 +86,14 @@ namespace SabreTools.Features
                 {
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
+                    if (!string.IsNullOrEmpty(Header.HeaderSkipper))
+                        datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
                     if (depot)
-                        datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
+                        datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
                     else
-                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
+                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, chdsAsFiles);
                 }
             }
 
@@ -112,9 +113,9 @@ namespace SabreTools.Features
 
                 // If we have the depot flag, respect it
                 if (depot)
-                    datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst);
+                    datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat);
                 else
-                    datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, headerToCheckAgainst, chdsAsFiles);
+                    datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, chdsAsFiles);
             }
         }
     }

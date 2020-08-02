@@ -47,7 +47,6 @@ namespace SabreTools.Features
             bool depot = GetBoolean(features, DepotValue);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
-            string headerToCheckAgainst = Header.Header;
 
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
@@ -57,12 +56,14 @@ namespace SabreTools.Features
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
                     Filter.FilterDatFile(datdata, true);
+                    if (!string.IsNullOrEmpty(Header.HeaderSkipper))
+                        datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
                     if (depot)
                         datdata.VerifyDepot(Inputs, OutputDir);
                     else
-                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, Filter);
+                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, chdsAsFiles, Filter);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -84,7 +85,7 @@ namespace SabreTools.Features
                 if (depot)
                     datdata.VerifyDepot(Inputs, OutputDir);
                 else
-                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, headerToCheckAgainst, chdsAsFiles, Filter);
+                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, chdsAsFiles, Filter);
             }
         }
     }

@@ -218,8 +218,8 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "clrmamepro":
-                        if (string.IsNullOrWhiteSpace(Header.Header))
-                            Header.Header = reader.GetAttribute("header");
+                        if (string.IsNullOrWhiteSpace(Header.HeaderSkipper))
+                            Header.HeaderSkipper = reader.GetAttribute("header");
 
                         if (Header.ForceMerging == ForceMerging.None)
                             Header.ForceMerging = reader.GetAttribute("forcemerging").AsForceMerging();
@@ -782,7 +782,7 @@ namespace SabreTools.Library.DatFiles
                 if (Header.ForcePacking != ForcePacking.None
                     || Header.ForceMerging != ForceMerging.None
                     || Header.ForceNodump != ForceNodump.None
-                    || !string.IsNullOrWhiteSpace(Header.Header))
+                    || !string.IsNullOrWhiteSpace(Header.HeaderSkipper))
                 {
                     xtw.WriteStartElement("clrmamepro");
                     switch (Header.ForcePacking)
@@ -824,8 +824,8 @@ namespace SabreTools.Library.DatFiles
                             break;
                     }
 
-                    if (!string.IsNullOrWhiteSpace(Header.Header))
-                        xtw.WriteAttributeString("header", Header.Header);
+                    if (!string.IsNullOrWhiteSpace(Header.HeaderSkipper))
+                        xtw.WriteAttributeString("header", Header.HeaderSkipper);
 
                     // End clrmamepro
                     xtw.WriteEndElement();

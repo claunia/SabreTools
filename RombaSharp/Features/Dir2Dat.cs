@@ -55,7 +55,7 @@ namespace RombaSharp.Features
             // Now run the D2D on the input and write out
             // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
             datfile.PopulateFromDir(source, Hash.DeepHashes, true /* bare */, false /* archivesAsFiles */, SkipFileType.None, false /* addBlanks */,
-                false /* addDate */, _tmpdir, false /* copyFiles */, null /* headerToCheckAgainst */, true /* chdsAsFiles */, null /* filter */);
+                false /* addDate */, _tmpdir, false /* copyFiles */, true /* chdsAsFiles */, null /* filter */);
             datfile.Write(outDir: outdat);
         }
     }

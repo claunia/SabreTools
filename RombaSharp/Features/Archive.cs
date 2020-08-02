@@ -66,8 +66,8 @@ have a current entry in the DAT index.";
             foreach (string dir in onlyDirs)
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                df.PopulateFromDir(dir, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
-                df.PopulateFromDir(dir, Hash.DeepHashes, false, true, SkipFileType.None, false, false, _tmpdir, false, null, true, null);
+                df.PopulateFromDir(dir, Hash.DeepHashes, false, false, SkipFileType.None, false, false, _tmpdir, false, true, null);
+                df.PopulateFromDir(dir, Hash.DeepHashes, false, true, SkipFileType.None, false, false, _tmpdir, false, true, null);
             }
 
             // Create an empty Dat for files that need to be rebuilt
@@ -192,7 +192,7 @@ have a current entry in the DAT index.";
             // Create the sorting object to use and rebuild the needed files
             need.RebuildGeneric(onlyDirs, _depots.Keys.ToList()[0], false /*quickScan*/, false /*date*/,
                 false /*delete*/, false /*inverse*/, OutputFormat.TorrentGzipRomba, false /*updateDat*/,
-                null /*headerToCheckAgainst*/, true /* chdsAsFiles */);
+                true /* chdsAsFiles */);
         }
     }
 }

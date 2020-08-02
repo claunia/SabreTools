@@ -206,7 +206,7 @@ namespace SabreTools.Library.DatFiles
 
                     case "header":
                         content = jtr.ReadAsString();
-                        Header.Header = (string.IsNullOrWhiteSpace(Header.Header) ? content : Header.Header);
+                        Header.HeaderSkipper = (string.IsNullOrWhiteSpace(Header.HeaderSkipper) ? content : Header.HeaderSkipper);
                         break;
 
                     default:
@@ -963,10 +963,10 @@ namespace SabreTools.Library.DatFiles
                             break;
                     }
                 }
-                if (!string.IsNullOrWhiteSpace(Header.Header))
+                if (!string.IsNullOrWhiteSpace(Header.HeaderSkipper))
                 {
                     jtw.WritePropertyName("header");
-                    jtw.WriteValue(Header.Header);
+                    jtw.WriteValue(Header.HeaderSkipper);
                 }
 
                 // End header
