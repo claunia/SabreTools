@@ -43,7 +43,7 @@ namespace SabreTools.Features
             var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
             // Get feature flags
-            bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
+            TreatAsFiles asFiles = GetTreatAsFiles(features);
             bool depot = GetBoolean(features, DepotValue);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
@@ -65,7 +65,7 @@ namespace SabreTools.Features
                     if (depot)
                         datdata.VerifyDepot(Inputs, OutputDir);
                     else
-                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, chdsAsFiles, Filter);
+                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -91,7 +91,7 @@ namespace SabreTools.Features
                 if (depot)
                     datdata.VerifyDepot(Inputs, OutputDir);
                 else
-                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, chdsAsFiles, Filter);
+                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
             }
         }
     }

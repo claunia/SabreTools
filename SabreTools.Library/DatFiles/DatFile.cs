@@ -1487,25 +1487,23 @@ namespace SabreTools.Library.DatFiles
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="bare">True if the date should be omitted from the DAT, false otherwise</param>
-        /// <param name="archivesAsFiles">True if archives should be treated as files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="outDir">Output directory to </param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         public bool PopulateFromDir(
             string basePath,
             Hash omitFromScan,
             bool bare,
-            bool archivesAsFiles,
+            TreatAsFiles asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
             bool copyFiles,
-            bool chdsAsFiles,
             Filter filter,
             bool useTags = false)
         {
@@ -1541,8 +1539,7 @@ namespace SabreTools.Library.DatFiles
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
-                    CheckFileForHashes(item, basePath, omitFromScan, archivesAsFiles, skipFileType,
-                        addBlanks, addDate, copyFiles, chdsAsFiles);
+                    CheckFileForHashes(item, basePath, omitFromScan, asFiles, skipFileType, addBlanks, addDate, copyFiles);
                 });
 
                 // Now find all folders that are empty, if we are supposed to
@@ -1583,8 +1580,8 @@ namespace SabreTools.Library.DatFiles
             }
             else if (File.Exists(basePath))
             {
-                CheckFileForHashes(basePath, Path.GetDirectoryName(Path.GetDirectoryName(basePath)), omitFromScan, archivesAsFiles,
-                    skipFileType, addBlanks, addDate, copyFiles, chdsAsFiles);
+                CheckFileForHashes(basePath, Path.GetDirectoryName(Path.GetDirectoryName(basePath)), omitFromScan, asFiles,
+                    skipFileType, addBlanks, addDate, copyFiles);
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
@@ -1605,22 +1602,20 @@ namespace SabreTools.Library.DatFiles
         /// <param name="item">Filename of the item to be checked</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
-        /// <param name="archivesAsFiles">True if archives should be treated as files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
         private void CheckFileForHashes(
             string item,
             string basePath,
             Hash omitFromScan,
-            bool archivesAsFiles,
+            TreatAsFiles asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
-            bool copyFiles,
-            bool chdsAsFiles)
+            bool copyFiles)
         {
             // Special case for if we are in Romba mode (all names are supposed to be SHA-1 hashes)
             if (Header.Romba)
@@ -1661,7 +1656,7 @@ namespace SabreTools.Library.DatFiles
             List<BaseFile> extracted = null;
 
             // If we have an archive and we're supposed to scan it
-            if (archive != null && !archivesAsFiles)
+            if (archive != null && !asFiles.HasFlag(TreatAsFiles.Archives))
                 extracted = archive.GetChildren(omitFromScan: omitFromScan, date: addDate);
 
             // If the file should be skipped based on type, do so now
@@ -1674,7 +1669,7 @@ namespace SabreTools.Library.DatFiles
             // If the extracted list is null, just scan the item itself
             if (extracted == null)
             {
-                ProcessFile(newItem, string.Empty, newBasePath, omitFromScan, addDate, chdsAsFiles);
+                ProcessFile(newItem, string.Empty, newBasePath, omitFromScan, addDate, asFiles);
             }
             // Otherwise, add all of the found items
             else
@@ -1723,17 +1718,17 @@ namespace SabreTools.Library.DatFiles
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         private void ProcessFile(
             string item,
             string parent,
             string basePath,
             Hash omitFromScan,
             bool addDate,
-            bool chdsAsFiles)
+            TreatAsFiles asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = FileExtensions.GetInfo(item, omitFromScan: omitFromScan, date: addDate, header: Header.HeaderSkipper, chdsAsFiles: chdsAsFiles);
+            BaseFile baseFile = FileExtensions.GetInfo(item, omitFromScan: omitFromScan, date: addDate, header: Header.HeaderSkipper, chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
             ProcessFileHelper(item, DatItem.Create(baseFile), basePath, parent);
         }
 
@@ -2032,7 +2027,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildGeneric(
             List<string> inputs,
@@ -2043,7 +2038,7 @@ namespace SabreTools.Library.DatFiles
             bool inverse,
             OutputFormat outputFormat,
             bool updateDat,
-            bool chdsAsFiles)
+            TreatAsFiles asFiles)
         {
             #region Perform setup
 
@@ -2124,7 +2119,7 @@ namespace SabreTools.Library.DatFiles
                 if (File.Exists(input))
                 {
                     Globals.Logger.User($"Checking file: {input}");
-                    RebuildGenericHelper(input, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, chdsAsFiles);
+                    RebuildGenericHelper(input, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                 }
 
                 // If the input is a directory
@@ -2134,7 +2129,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
                     {
                         Globals.Logger.User($"Checking file: {file}");
-                        RebuildGenericHelper(file, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, chdsAsFiles);
+                        RebuildGenericHelper(file, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                     }
                 }
             }
@@ -2167,7 +2162,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         private void RebuildGenericHelper(
             string file,
             string outDir,
@@ -2177,7 +2172,7 @@ namespace SabreTools.Library.DatFiles
             bool inverse,
             OutputFormat outputFormat,
             bool updateDat,
-            bool chdsAsFiles)
+            TreatAsFiles asFiles)
         {
             // If we somehow have a null filename, return
             if (file == null)
@@ -2190,7 +2185,7 @@ namespace SabreTools.Library.DatFiles
 
             // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
             BaseFile externalFileInfo = FileExtensions.GetInfo(file, omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes),
-                header: Header.HeaderSkipper, chdsAsFiles: chdsAsFiles);
+                header: Header.HeaderSkipper, chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
 
             DatItem externalDatItem = null;
             if (externalFileInfo.Type == FileType.CHD)
@@ -2223,7 +2218,7 @@ namespace SabreTools.Library.DatFiles
             if (entries == null && File.Exists(file))
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                BaseFile internalFileInfo = FileExtensions.GetInfo(file, omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes), chdsAsFiles: chdsAsFiles);
+                BaseFile internalFileInfo = FileExtensions.GetInfo(file, omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes), chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
 
                 DatItem internalDatItem = null;
                 if (internalFileInfo.Type == FileType.CHD)
@@ -2583,10 +2578,10 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(List<string> inputs, string outDir, bool hashOnly, bool quickScan, bool chdsAsFiles, Filter filter)
+        public bool VerifyGeneric(List<string> inputs, string outDir, bool hashOnly, bool quickScan, TreatAsFiles asFiles, Filter filter)
         {
             // TODO: We want the cross section of what's the folder and what's in the DAT. Right now, it just has what's in the DAT that's not in the folder
             bool success = true;
@@ -2596,8 +2591,8 @@ namespace SabreTools.Library.DatFiles
             foreach (string input in inputs)
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                PopulateFromDir(input, (quickScan ? Hash.SecureHashes : Hash.DeepHashes) /* omitFromScan */, true /* bare */, false /* archivesAsFiles */,
-                    SkipFileType.None, false /* addBlanks */, false /* addDate */, false /* copyFiles */, chdsAsFiles, filter);
+                PopulateFromDir(input, (quickScan ? Hash.SecureHashes : Hash.DeepHashes) /* omitFromScan */, true /* bare */, asFiles,
+                    SkipFileType.None, false /* addBlanks */, false /* addDate */, false /* copyFiles */, filter);
             }
 
             // Setup the fixdat

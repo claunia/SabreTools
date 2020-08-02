@@ -57,7 +57,7 @@ namespace SabreTools.Features
             base.ProcessFeatures(features);
 
             // Get feature flags
-            bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
+            TreatAsFiles asFiles = GetTreatAsFiles(features);
             bool date = GetBoolean(features, AddDateValue);
             bool delete = GetBoolean(features, DeleteValue);
             bool depot = GetBoolean(features, DepotValue);
@@ -95,7 +95,7 @@ namespace SabreTools.Features
                     if (depot)
                         datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
                     else
-                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, chdsAsFiles);
+                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                 }
             }
 
@@ -121,7 +121,7 @@ namespace SabreTools.Features
                 if (depot)
                     datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat);
                 else
-                    datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, chdsAsFiles);
+                    datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
             }
         }
     }

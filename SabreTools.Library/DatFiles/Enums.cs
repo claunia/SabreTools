@@ -277,4 +277,14 @@ namespace SabreTools.Library.DatFiles
         Split,
         DeviceNonMerged
     }
+
+    /// <summary>
+    /// Determines what sort of files get externally hashed
+    /// </summary>
+    [Flags]
+    public enum TreatAsFiles
+    {
+        CHDs = 1 << 0,
+        Archives = 1 << 1,
+    }
 }

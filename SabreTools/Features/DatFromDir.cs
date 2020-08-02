@@ -56,8 +56,7 @@ namespace SabreTools.Features
             // Get feature flags
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
             bool addFileDates = GetBoolean(features, AddDateValue);
-            bool archivesAsFiles = GetBoolean(features, ArchivesAsFilesValue);
-            bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
+            TreatAsFiles asFiles = GetTreatAsFiles(features);
             bool copyFiles = GetBoolean(features, CopyFilesValue);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var omitFromScan = GetOmitFromScan(features);
@@ -80,12 +79,11 @@ namespace SabreTools.Features
                         basePath,
                         omitFromScan,
                         noAutomaticDate,
-                        archivesAsFiles,
+                        asFiles,
                         skipFileType,
                         addBlankFiles,
                         addFileDates,
                         copyFiles,
-                        chdsAsFiles,
                         Filter);
 
                     if (success)

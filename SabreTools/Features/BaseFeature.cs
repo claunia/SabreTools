@@ -2477,6 +2477,20 @@ Some special strings that can be used:
         }
 
         /// <summary>
+        /// Get TreatAsFiles from feature list
+        /// </summary>
+        protected TreatAsFiles GetTreatAsFiles(Dictionary<string, Feature> features)
+        {
+            TreatAsFiles asFiles = 0x00;
+            if (GetBoolean(features, ArchivesAsFilesValue))
+                asFiles |= TreatAsFiles.Archives;
+            if (GetBoolean(features, ChdsAsFilesValue))
+                asFiles |= TreatAsFiles.CHDs;
+
+            return asFiles;
+        }
+
+        /// <summary>
         /// Get update fields from feature list
         /// </summary>
         protected List<Field> GetUpdateFields(Dictionary<string, Feature> features)
