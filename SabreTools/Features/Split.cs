@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
@@ -73,6 +74,7 @@ namespace SabreTools.Features
                 // Level splitting
                 if (splittingMode.HasFlag(SplittingMode.Level))
                 {
+                    Globals.Logger.Warning("This feature is not implemented: level-split");
                     internalDat.SplitByLevel(
                         OutputDir,
                         GetBoolean(features, ShortValue),
