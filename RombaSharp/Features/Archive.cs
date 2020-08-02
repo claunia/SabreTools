@@ -65,9 +65,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                df.PopulateFromDir(dir, Hash.DeepHashes, false, TreatAsFiles.CHDs, SkipFileType.None, false, false, false,  null);
-                df.PopulateFromDir(dir, Hash.DeepHashes, false, TreatAsFiles.Archives | TreatAsFiles.CHDs, SkipFileType.None, false, false, false, null);
+                df.PopulateFromDir(dir, asFiles: TreatAsFiles.CHDs);
+                df.PopulateFromDir(dir, asFiles: TreatAsFiles.Archives | TreatAsFiles.CHDs);
             }
 
             // Create an empty Dat for files that need to be rebuilt

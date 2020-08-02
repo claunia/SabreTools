@@ -64,9 +64,7 @@ namespace RombaSharp.Features
 
                 // Now rescan the depot itself
                 DatFile depot = DatFile.Create();
-
-                // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                depot.PopulateFromDir(depotname, Hash.DeepHashes, false, TreatAsFiles.CHDs, SkipFileType.None, false, false, false, null);
+                depot.PopulateFromDir(depotname, asFiles: TreatAsFiles.CHDs);
                 depot.Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
                 // Set the base queries to use

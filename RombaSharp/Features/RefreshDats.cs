@@ -62,9 +62,7 @@ contents of any changed dats.";
             // First get a list of SHA-1's from the input DATs
             DatFile datroot = DatFile.Create();
             datroot.Header.Type = "SuperDAT";
-
-            // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-            datroot.PopulateFromDir(_dats, Hash.DeepHashes, false, TreatAsFiles.CHDs, SkipFileType.None, false, false, false, null);
+            datroot.PopulateFromDir(_dats, asFiles: TreatAsFiles.CHDs);
             datroot.Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
             // Create a List of dat hashes in the database (SHA-1)

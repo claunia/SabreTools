@@ -47,15 +47,11 @@ namespace RombaSharp.Features
                 return;
             }
 
-            // Create the encapsulating datfile
+            // Create and write the encapsulating datfile
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
-
-            // Now run the D2D on the input and write out
-            // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-            datfile.PopulateFromDir(source, Hash.DeepHashes, true /* bare */, TreatAsFiles.CHDs, SkipFileType.None, false /* addBlanks */,
-                false /* addDate */, false /* copyFiles */, null /* filter */);
+            datfile.PopulateFromDir(source, bare: true, asFiles: TreatAsFiles.CHDs);
             datfile.Write(outDir: outdat);
         }
     }

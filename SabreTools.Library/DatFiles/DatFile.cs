@@ -1495,16 +1495,17 @@ namespace SabreTools.Library.DatFiles
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
+        /// TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
         public bool PopulateFromDir(
             string basePath,
-            Hash omitFromScan,
-            bool bare,
-            TreatAsFiles asFiles,
-            SkipFileType skipFileType,
-            bool addBlanks,
-            bool addDate,
-            bool copyFiles,
-            Filter filter,
+            Hash omitFromScan = Hash.DeepHashes,
+            bool bare = false,
+            TreatAsFiles asFiles = 0x00,
+            SkipFileType skipFileType = SkipFileType.None,
+            bool addBlanks = false,
+            bool addDate = false,
+            bool copyFiles = false,
+            Filter filter = null,
             bool useTags = false)
         {
             // If the description is defined but not the name, set the name from the description
@@ -2591,8 +2592,12 @@ namespace SabreTools.Library.DatFiles
             foreach (string input in inputs)
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                PopulateFromDir(input, (quickScan ? Hash.SecureHashes : Hash.DeepHashes) /* omitFromScan */, true /* bare */, asFiles,
-                    SkipFileType.None, false /* addBlanks */, false /* addDate */, false /* copyFiles */, filter);
+                PopulateFromDir(
+                    input,
+                    quickScan ? Hash.SecureHashes : Hash.DeepHashes,
+                    bare: true,
+                    asFiles: asFiles,
+                    filter: filter);
             }
 
             // Setup the fixdat
