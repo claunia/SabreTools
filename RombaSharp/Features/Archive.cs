@@ -189,9 +189,12 @@ have a current entry in the DAT index.";
             }
 
             // Create the sorting object to use and rebuild the needed files
-            need.RebuildGeneric(onlyDirs, _depots.Keys.ToList()[0], false /*quickScan*/, false /*date*/,
-                false /*delete*/, false /*inverse*/, OutputFormat.TorrentGzipRomba, false /*updateDat*/,
-                TreatAsFiles.CHDs);
+            need.RebuildGeneric(
+                onlyDirs,
+                outDir: _depots.Keys.ToList()[0],
+                outputFormat: OutputFormat.TorrentGzipRomba,
+                updateDat: false,
+                asFiles: TreatAsFiles.CHDs);
         }
     }
 }

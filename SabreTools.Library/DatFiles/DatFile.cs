@@ -1850,12 +1850,12 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildDepot(
             List<string> inputs,
-            string outDir,
-            bool date,
-            bool delete,
-            bool inverse,
-            OutputFormat outputFormat,
-            bool updateDat)
+            string outDir = null,
+            bool date = false,
+            bool delete = false,
+            bool inverse = false,
+            OutputFormat outputFormat = OutputFormat.Folder,
+            bool updateDat = true)
         {
             #region Perform setup
 
@@ -2026,14 +2026,14 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildGeneric(
             List<string> inputs,
-            string outDir,
-            bool quickScan,
-            bool date,
-            bool delete,
-            bool inverse,
-            OutputFormat outputFormat,
-            bool updateDat,
-            TreatAsFiles asFiles)
+            string outDir = null,
+            bool quickScan = false,
+            bool date = false,
+            bool delete = false,
+            bool inverse = false,
+            OutputFormat outputFormat = OutputFormat.Folder,
+            bool updateDat = true,
+            TreatAsFiles asFiles = 0x00)
         {
             #region Perform setup
 
@@ -2489,7 +2489,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">List of input directories to compare against</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyDepot(List<string> inputs, string outDir)
+        public bool VerifyDepot(List<string> inputs, string outDir = null)
         {
             bool success = true;
 
@@ -2576,7 +2576,13 @@ namespace SabreTools.Library.DatFiles
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(List<string> inputs, string outDir, bool hashOnly, bool quickScan, TreatAsFiles asFiles, Filter filter)
+        public bool VerifyGeneric(
+            List<string> inputs,
+            string outDir = null,
+            bool hashOnly = false,
+            bool quickScan = false,
+            TreatAsFiles asFiles = 0x00,
+            Filter filter = null)
         {
             // TODO: We want the cross section of what's the folder and what's in the DAT. Right now, it just has what's in the DAT that's not in the folder
             bool success = true;

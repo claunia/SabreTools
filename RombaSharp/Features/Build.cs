@@ -60,9 +60,11 @@ structure according to the original DAT master directory tree structure.";
                 List<string> onlineDepots = _depots.Where(d => d.Value.Item2).Select(d => d.Key).ToList();
 
                 // Now scan all of those depots and rebuild
-                datFile.RebuildDepot(onlineDepots, outputFolder, false /*date*/,
-                    false /*delete*/, false /*inverse*/, (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
-                    false /*updateDat*/);
+                datFile.RebuildDepot(
+                    onlineDepots,
+                    outDir: outputFolder,
+                    outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
+                    updateDat: false);
             }
         }
     }
