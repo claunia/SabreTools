@@ -350,7 +350,6 @@ namespace RombaSharp.Features
 
         // General settings
         internal static string _logdir;		// Log folder location
-        internal static string _tmpdir;		// Temp folder location
         internal static string _webdir;		// Web frontend location
         internal static string _baddir;		// Fail-to-unpack file folder location
         internal static int _verbosity;		// Verbosity of the output
@@ -588,7 +587,7 @@ namespace RombaSharp.Features
             // Finally set all of the fields
             Globals.MaxThreads = workers;
             _logdir = logdir;
-            _tmpdir = tmpdir;
+            Globals.TempDir = tmpdir;
             _webdir = webdir;
             _baddir = baddir;
             _verbosity = verbosity;

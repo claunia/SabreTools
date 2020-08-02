@@ -60,7 +60,6 @@ namespace SabreTools.Features
             bool chdsAsFiles = GetBoolean(features, ChdsAsFilesValue);
             bool copyFiles = GetBoolean(features, CopyFilesValue);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
-            string tempDir = GetString(features, TempStringValue);
             var omitFromScan = GetOmitFromScan(features);
             var skipFileType = GetSkipFileType(features);
 
@@ -85,7 +84,6 @@ namespace SabreTools.Features
                         skipFileType,
                         addBlankFiles,
                         addFileDates,
-                        tempDir,
                         copyFiles,
                         chdsAsFiles,
                         Filter);

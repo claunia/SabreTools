@@ -2365,6 +2365,10 @@ Some special strings that can be used:
             // Set threading flag, if necessary
             if (features.ContainsKey(ThreadsInt32Value))
                 Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+
+            // Set temp path, if necessary
+            if (features.ContainsKey(TempStringValue))
+                Globals.TempDir = GetString(features, TempStringValue);
         }
 
         #region Protected Specific Extraction

@@ -1491,7 +1491,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
-        /// <param name="tempDir">Name of the directory to create a temp folder in (blank is current directory)</param>
         /// <param name="outDir">Output directory to </param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
@@ -1505,7 +1504,6 @@ namespace SabreTools.Library.DatFiles
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
-            string tempDir,
             bool copyFiles,
             bool chdsAsFiles,
             Filter filter,
@@ -1532,7 +1530,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Clean the temp directory path
-            tempDir = DirectoryExtensions.Ensure(tempDir, temp: true);
+            Globals.TempDir = DirectoryExtensions.Ensure(Globals.TempDir, temp: true);
 
             // Process the input
             if (Directory.Exists(basePath))
@@ -1544,7 +1542,7 @@ namespace SabreTools.Library.DatFiles
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
                     CheckFileForHashes(item, basePath, omitFromScan, archivesAsFiles, skipFileType,
-                        addBlanks, addDate, tempDir, copyFiles, chdsAsFiles);
+                        addBlanks, addDate, copyFiles, chdsAsFiles);
                 });
 
                 // Now find all folders that are empty, if we are supposed to
@@ -1586,13 +1584,13 @@ namespace SabreTools.Library.DatFiles
             else if (File.Exists(basePath))
             {
                 CheckFileForHashes(basePath, Path.GetDirectoryName(Path.GetDirectoryName(basePath)), omitFromScan, archivesAsFiles,
-                    skipFileType, addBlanks, addDate, tempDir, copyFiles, chdsAsFiles);
+                    skipFileType, addBlanks, addDate, copyFiles, chdsAsFiles);
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
             Globals.Logger.User("Cleaning temp folder");
-            if (tempDir != Path.GetTempPath())
-                DirectoryExtensions.TryDelete(tempDir);
+            if (Globals.TempDir != Path.GetTempPath())
+                DirectoryExtensions.TryDelete(Globals.TempDir);
 
             // If we have a valid filter, perform the filtering now
             if (filter != null && filter != default(Filter))
@@ -1611,7 +1609,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
-        /// <param name="tempDir">Name of the directory to create a temp folder in (blank is current directory)</param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
         private void CheckFileForHashes(
@@ -1622,7 +1619,6 @@ namespace SabreTools.Library.DatFiles
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
-            string tempDir,
             bool copyFiles,
             bool chdsAsFiles)
         {
@@ -1654,7 +1650,7 @@ namespace SabreTools.Library.DatFiles
             string newBasePath = basePath;
             if (copyFiles)
             {
-                newBasePath = Path.Combine(tempDir, Guid.NewGuid().ToString());
+                newBasePath = Path.Combine(Globals.TempDir, Guid.NewGuid().ToString());
                 newItem = Path.GetFullPath(Path.Combine(newBasePath, Path.GetFullPath(item).Remove(0, basePath.Length + 1)));
                 DirectoryExtensions.TryCreateDirectory(Path.GetDirectoryName(newItem));
                 File.Copy(item, newItem, true);
@@ -2601,7 +2597,7 @@ namespace SabreTools.Library.DatFiles
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                 PopulateFromDir(input, (quickScan ? Hash.SecureHashes : Hash.DeepHashes) /* omitFromScan */, true /* bare */, false /* archivesAsFiles */,
-                    SkipFileType.None, false /* addBlanks */, false /* addDate */, string.Empty /* tempDir */, false /* copyFiles */, chdsAsFiles, filter);
+                    SkipFileType.None, false /* addBlanks */, false /* addDate */, false /* copyFiles */, chdsAsFiles, filter);
             }
 
             // Setup the fixdat
