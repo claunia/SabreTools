@@ -24,7 +24,7 @@
 
 using System;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Library.External
 {
     public class OptimizedCRC : IDisposable
     {

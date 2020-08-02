@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 using SabreTools.Library.DatFiles;
+using SabreTools.Library.External;
 
 namespace SabreTools.Library.Tools
 {
