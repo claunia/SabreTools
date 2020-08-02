@@ -6,9 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.Readers
+namespace SabreTools.Library.IO
 {
     public class ClrMameProReader : IDisposable
     {
