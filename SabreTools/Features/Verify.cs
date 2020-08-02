@@ -56,6 +56,8 @@ namespace SabreTools.Features
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
                     Filter.FilterDatFile(datdata, true);
+
+                    // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
@@ -78,6 +80,10 @@ namespace SabreTools.Features
                     datdata.Parse(datfile, 99, keep: true);
                     Filter.FilterDatFile(datdata, true);
                 }
+
+                // If we have overridden the header skipper, set it now
+                if (!string.IsNullOrEmpty(Header.HeaderSkipper))
+                    datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                 watch.Stop();
 
