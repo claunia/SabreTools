@@ -38,7 +38,7 @@ namespace RombaSharp
             if (!Console.IsOutputRedirected && scriptLocation == -1)
             {
                 Console.Clear();
-                SabreTools.Library.Data.Build.PrepareConsole("RombaSharp");
+                Prepare.SetConsoleHeader("RombaSharp");
             }
 
             // Now we remove the script tag because it messes things up

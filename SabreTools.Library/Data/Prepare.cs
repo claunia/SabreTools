@@ -5,33 +5,18 @@ namespace SabreTools.Library.Data
     /// <summary>
     /// Generic console preparation for program output
     /// </summary>
-    public static class Build
+    public static class Prepare
     {
-        /// <summary>
-        /// Returns true if running in a Mono or .NET Core environment
-        /// </summary>
-        public static bool MonoOrCoreEnvironment
-        {
-            get
-            {
-#if NET_FRAMEWORK
-                return Type.GetType("Mono.Runtime") != null;
-#else
-                return true;
-#endif
-            }
-        }
-
         /// <summary>
         /// Readies the console and outputs the header
         /// </summary>
-        /// <param name="name">The name to be displayed as the program</param>
-        public static void PrepareConsole(string name)
+        /// <param name="program">The name to be displayed as the program</param>
+        public static void SetConsoleHeader(string program)
         {
             // Dynamically create the header string, adapted from http://stackoverflow.com/questions/8200661/how-to-align-string-in-fixed-length-string
             int width = Console.WindowWidth - 3;
             string border = $"+{new string('-', width)}+";
-            string mid = $"{name} {Constants.Version}";
+            string mid = $"{program} {Constants.Version}";
             mid = $"|{mid.PadLeft(((width - mid.Length) / 2) + mid.Length).PadRight(width)}|";
 
             // If we're outputting to console, do fancy things
@@ -49,7 +34,7 @@ namespace SabreTools.Library.Data
                     Console.BackgroundColor = ConsoleColor.Blue;
                 }
 
-                Console.Title = $"{name} {Constants.Version}";
+                Console.Title = $"{program} {Constants.Version}";
 
                 // Output the header
                 Console.WriteLine(border);
@@ -63,6 +48,21 @@ namespace SabreTools.Library.Data
                     Console.ForegroundColor = formertext;
                     Console.BackgroundColor = formerback;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if running in a Mono or .NET Core environment
+        /// </summary>
+        private static bool MonoOrCoreEnvironment
+        {
+            get
+            {
+#if NET_FRAMEWORK
+                return Type.GetType("Mono.Runtime") != null;
+#else
+                return true;
+#endif
             }
         }
     }
