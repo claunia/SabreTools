@@ -1,0 +1,98 @@
+﻿namespace SabreTools.Library.FileTypes
+{
+    /// <summary>
+    /// Compression being used in CHD
+    /// </summary>
+    public enum CHDCompression : uint
+    {
+        CHDCOMPRESSION_NONE = 0,
+        CHDCOMPRESSION_ZLIB = 1,
+        CHDCOMPRESSION_ZLIB_PLUS = 2,
+        CHDCOMPRESSION_AV = 3,
+    }
+
+    /// <summary>
+    /// Availible CHD codec formats
+    /// </summary>
+    public enum CHD_CODEC : uint
+    {
+        NONE = 0,
+
+        #region General Codecs
+
+        ZLIB = 0x7a6c6962, // zlib
+        LZMA = 0x6c7a6d61, // lzma
+        HUFFMAN = 0x68756666, // huff
+        FLAC = 0x666c6163, // flac
+
+        #endregion
+
+        #region General Codecs with CD Frontend
+
+        CD_ZLIB = 0x63647a6c, // cdzl
+        CD_LZMA = 0x63646c7a, // cdlz
+        CD_FLAC = 0x6364666c, // cdfl
+
+        #endregion
+
+        #region A/V Codecs
+
+        AVHUFF = 0x61766875, // avhu
+
+        #endregion
+
+        #region Pseudo-Codecs Returned by hunk_info
+
+        SELF = 1,  // copy of another hunk
+        PARENT = 2,  // copy of a parent's hunk
+        MINI = 3,  // legacy "mini" 8-byte repeat
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Type of file that is being looked at
+    /// </summary>
+    public enum FileType
+    {
+        // Singleton
+        None = 0,
+        CHD,
+
+        // Can contain children
+        Folder,
+        SevenZipArchive,
+        GZipArchive,
+        LRZipArchive,
+        LZ4Archive,
+        RarArchive,
+        TapeArchive,
+        XZArchive,
+        ZipArchive,
+        ZPAQArchive,
+        ZstdArchive,
+    }
+
+    /// <summary>
+    /// Output format for rebuilt files
+    /// </summary>
+    public enum OutputFormat
+    {
+        // Currently implemented
+        Folder,
+        TorrentZip,
+        TorrentGzip,
+        TorrentGzipRomba,
+        TorrentXZ,
+        TorrentXZRomba,
+        TapeArchive,
+
+        // Currently unimplemented fully
+        Torrent7Zip,
+        TorrentRar,
+        TorrentLRZip,
+        TorrentLZ4,
+        TorrentZstd,
+        TorrentZPAQ,
+    }
+}
