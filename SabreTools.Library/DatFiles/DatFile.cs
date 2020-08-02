@@ -1670,8 +1670,9 @@ namespace SabreTools.Library.DatFiles
             // If the extracted list is null, just scan the item itself
             if (extracted == null)
             {
-                ProcessFile(newItem, string.Empty, newBasePath, omitFromScan, addDate, asFiles);
+                ProcessFile(newItem, newBasePath, omitFromScan, addDate, asFiles);
             }
+
             // Otherwise, add all of the found items
             else
             {
@@ -1715,22 +1716,15 @@ namespace SabreTools.Library.DatFiles
         /// Process a single file as a file
         /// </summary>
         /// <param name="item">File to be added</param>
-        /// <param name="parent">Parent game to be used</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private void ProcessFile(
-            string item,
-            string parent,
-            string basePath,
-            Hash omitFromScan,
-            bool addDate,
-            TreatAsFiles asFiles)
+        private void ProcessFile(string item, string basePath, Hash omitFromScan, bool addDate, TreatAsFiles asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = FileExtensions.GetInfo(item, omitFromScan: omitFromScan, date: addDate, header: Header.HeaderSkipper, chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
-            ProcessFileHelper(item, DatItem.Create(baseFile), basePath, parent);
+            ProcessFileHelper(item, DatItem.Create(baseFile), basePath, string.Empty);
         }
 
         /// <summary>
