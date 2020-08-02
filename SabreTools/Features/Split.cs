@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.Help;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -38,18 +38,55 @@ namespace SabreTools.Features
         public override void ProcessFeatures(Dictionary<string, Feature> features)
         {
             base.ProcessFeatures(features);
+            SplittingMode splittingMode = GetSplittingMode(features);
 
-            DatFile datfile = DatFile.Create(Header.DatFormat);
-            datfile.DetermineSplitType(
-                Inputs,
-                OutputDir,
-                GetBoolean(features, InplaceValue),
-                GetSplittingMode(features),
-                GetList(features, ExtAListValue),
-                GetList(features, ExtBListValue),
-                GetBoolean(features, ShortValue),
-                GetBoolean(features, BaseValue),
-                GetInt64(features, RadixInt64Value));
+            // If we somehow have the "none" split type, return
+            if (splittingMode == SplittingMode.None)
+                return;
+
+            // Get only files from the inputs
+            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
+
+            // Loop over the input files
+            foreach (ParentablePath file in files)
+            {
+                // Create and fill the new DAT
+                DatFile internalDat = DatFile.Create(Header);
+                internalDat.Parse(file);
+
+                // Get the output directory
+                OutputDir = file.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+
+                // Extension splitting
+                if (splittingMode.HasFlag(SplittingMode.Extension))
+                {
+                    internalDat.SplitByExtension(
+                        OutputDir,
+                        GetList(features, ExtAListValue),
+                        GetList(features, ExtBListValue));
+                }
+
+                // Hash splitting
+                if (splittingMode.HasFlag(SplittingMode.Hash))
+                    internalDat.SplitByHash(OutputDir);
+
+                // Level splitting
+                if (splittingMode.HasFlag(SplittingMode.Level))
+                {
+                    internalDat.SplitByLevel(
+                        OutputDir,
+                        GetBoolean(features, ShortValue),
+                        GetBoolean(features, BaseValue));
+                }
+
+                // Size splitting
+                if (splittingMode.HasFlag(SplittingMode.Size))
+                    internalDat.SplitBySize(OutputDir, GetInt64(features, RadixInt64Value));
+
+                // Type splitting
+                if (splittingMode.HasFlag(SplittingMode.Type))
+                    internalDat.SplitByType(OutputDir);
+            }
         }
     }
 }

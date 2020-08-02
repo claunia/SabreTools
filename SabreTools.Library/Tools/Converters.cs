@@ -1,4 +1,6 @@
 ﻿using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
+using SabreTools.Library.DatItems;
 
 namespace SabreTools.Library.Tools
 {

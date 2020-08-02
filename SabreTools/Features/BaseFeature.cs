@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
+using SabreTools.Library.DatItems;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
 using SabreTools.Library.Tools;
@@ -10,6 +12,54 @@ namespace SabreTools.Features
 {
     internal class BaseFeature : TopLevel
     {
+        #region Enums
+
+        /// <summary>
+        /// Determines how the DAT will be split on output
+        /// </summary>
+        [Flags]
+        public enum SplittingMode
+        {
+            None = 0x00,
+
+            Extension = 1 << 0,
+            Hash = 1 << 2,
+            Level = 1 << 3,
+            Type = 1 << 4,
+            Size = 1 << 5,
+        }
+
+        /// <summary>
+        /// Determines special update modes
+        /// </summary>
+        [Flags]
+        public enum UpdateMode
+        {
+            None = 0x00,
+
+            // Standard diffs
+            DiffDupesOnly = 1 << 0,
+            DiffNoDupesOnly = 1 << 1,
+            DiffIndividualsOnly = 1 << 2,
+
+            // Cascaded diffs
+            DiffCascade = 1 << 3,
+            DiffReverseCascade = 1 << 4,
+
+            // Base diffs
+            DiffAgainst = 1 << 5,
+
+            // Special update modes
+            Merge = 1 << 6,
+            BaseReplace = 1 << 7,
+            ReverseBaseReplace = 1 << 8,
+
+            // Combinations
+            AllDiffs = DiffDupesOnly | DiffNoDupesOnly | DiffIndividualsOnly,
+        }
+
+        #endregion
+
         #region Features
 
         #region Flag features

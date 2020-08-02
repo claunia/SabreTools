@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Tools;
 using NaturalSort;

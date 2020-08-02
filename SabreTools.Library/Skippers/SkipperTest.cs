@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 
-using SabreTools.Library.Data;
-
 namespace SabreTools.Library.Skippers
 {
     /// <summary>

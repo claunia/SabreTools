@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
+using SabreTools.Library.DatItems;
 using SabreTools.Library.Help;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -142,20 +143,93 @@ namespace SabreTools.Features
             if (updateFields == null || updateFields.Count == 0)
                 updateFields = new List<Field>() { Field.Name };
 
-            // Populate the DatData object
+            // Ensure we only have files in the inputs
+            List<ParentablePath> inputFileNames = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
+            List<ParentablePath> baseFileNames = DirectoryExtensions.GetFilesOnly(GetList(features, BaseDatListValue));
+
+            // If we're in standard update mode, run through all of the inputs
+            if (updateMode == UpdateMode.None)
+            {
+                DatFile datFile = DatFile.Create(Header);
+                datFile.Update(
+                    inputFileNames,
+                    OutputDir,
+                    GetBoolean(features, InplaceValue),
+                    Filter);
+                return;
+            }
+
+            // Reverse inputs if we're in a required mode
+            if (updateMode.HasFlag(UpdateMode.DiffReverseCascade))
+            {
+                updateMode |= UpdateMode.DiffCascade;
+                inputFileNames.Reverse();
+            }
+            if (updateMode.HasFlag(UpdateMode.ReverseBaseReplace))
+            {
+                updateMode |= UpdateMode.BaseReplace;
+                baseFileNames.Reverse();
+            }
+
+            // Create a DAT to capture inputs
             DatFile userInputDat = DatFile.Create(Header);
 
-            userInputDat.DetermineUpdateType(
-                Inputs,
-                GetList(features, BaseDatListValue),
-                OutputDir,
-                updateMode,
-                GetBoolean(features, InplaceValue),
-                GetBoolean(features, SkipFirstOutputValue),
-                Filter,
-                updateFields,
-                GetBoolean(features, OnlySameValue),
-                GetBoolean(Features, ByGameValue));
+            // Populate using the correct set
+            List<DatHeader> datHeaders;
+            if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
+                datHeaders = userInputDat.PopulateUserData(baseFileNames, Filter);
+            else
+                datHeaders = userInputDat.PopulateUserData(inputFileNames, Filter);
+
+            // Merge all input files and write
+            if (updateMode.HasFlag(UpdateMode.Merge))
+                userInputDat.MergeNoDiff(inputFileNames, OutputDir);
+
+            // Output only DatItems that are duplicated across inputs
+            if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
+                userInputDat.DiffDuplicates(inputFileNames, OutputDir);
+
+            // Output only DatItems that are not duplicated across inputs
+            if (updateMode.HasFlag(UpdateMode.DiffNoDupesOnly))
+                userInputDat.DiffNoDuplicates(inputFileNames, OutputDir);
+
+            // Output only DatItems that are unique to each input
+            if (updateMode.HasFlag(UpdateMode.DiffIndividualsOnly))
+                userInputDat.DiffIndividuals(inputFileNames, OutputDir);
+
+            // Output cascaded diffs
+            if (updateMode.HasFlag(UpdateMode.DiffCascade))
+            {
+                userInputDat.DiffCascade(
+                    inputFileNames,
+                    datHeaders,
+                    OutputDir,
+                    GetBoolean(features, InplaceValue),
+                    GetBoolean(features, SkipFirstOutputValue));
+            }
+
+            // Output differences against a base DAT
+            if (updateMode.HasFlag(UpdateMode.DiffAgainst))
+            {
+                userInputDat.DiffAgainst(
+                    inputFileNames,
+                    OutputDir,
+                    GetBoolean(features, InplaceValue),
+                    Filter,
+                    GetBoolean(Features, ByGameValue));
+            }
+
+            // Output DATs after replacing fields from a base DAT
+            if (updateMode.HasFlag(UpdateMode.BaseReplace))
+            {
+                userInputDat.BaseReplace(
+                    inputFileNames,
+                    OutputDir,
+                    GetBoolean(features, InplaceValue),
+                    Filter,
+                    updateFields,
+                    GetBoolean(features, OnlySameValue));
+            }
         }
     }
 }

@@ -60,8 +60,8 @@ namespace RombaSharp.Features
             List<string> basedats = new List<string> { olddat };
 
             // Now run the diff on the inputs
-            datfile.DetermineUpdateType(dats, basedats, outdat, UpdateMode.DiffAgainst, false /* inplace */, false /* skip */,
-                new Filter(), new List<Field>(), false /* onlySame */, false /* byGame */);
+            datfile.PopulateUserData(basedats, new Filter());
+            datfile.DiffAgainst(dats, outdat, false, new Filter(), false);
         }
     }
 }
