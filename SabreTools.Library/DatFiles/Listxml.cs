@@ -680,7 +680,7 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("machine");
                 xtw.WriteAttributeString("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
-                    xtw.WriteElementString("sourcefile", datItem.SourceFile);
+                    xtw.WriteAttributeString("sourcefile", datItem.SourceFile);
 
                 if (!Header.ExcludeFields.Contains(Field.MachineType))
                 {
