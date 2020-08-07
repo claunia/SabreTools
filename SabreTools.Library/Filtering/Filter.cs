@@ -1029,13 +1029,13 @@ namespace SabreTools.Library.Filtering
                 return false;
 
             // Filter on devices
-            if (item.Devices != null)
+            if (item.Devices != null && item.Devices.Any())
             {
                 bool anyPositiveDevice = false;
                 bool anyNegativeDevice = false;
                 foreach (string device in item.Devices)
                 {
-                    anyPositiveDevice |= this.Devices.MatchesPositiveSet(device) == true;
+                    anyPositiveDevice |= this.Devices.MatchesPositiveSet(device) != false;
                     anyNegativeDevice |= this.Devices.MatchesNegativeSet(device) == false;
                 }
 
@@ -1044,14 +1044,14 @@ namespace SabreTools.Library.Filtering
             }
 
             // Filter on slot options
-            if (item.SlotOptions != null)
+            if (item.SlotOptions != null && item.SlotOptions.Any())
             {
                 bool anyPositiveSlotOption = false;
                 bool anyNegativeSlotOption = false;
-                foreach (string device in item.SlotOptions)
+                foreach (string slotOption in item.SlotOptions)
                 {
-                    anyPositiveSlotOption |= this.SlotOptions.MatchesPositiveSet(device) == true;
-                    anyNegativeSlotOption |= this.SlotOptions.MatchesNegativeSet(device) == false;
+                    anyPositiveSlotOption |= this.SlotOptions.MatchesPositiveSet(slotOption) != false;
+                    anyNegativeSlotOption |= this.SlotOptions.MatchesNegativeSet(slotOption) == false;
                 }
 
                 if (!anyPositiveSlotOption || anyNegativeSlotOption)
