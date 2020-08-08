@@ -104,18 +104,21 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Force a merging style when loaded
         /// </summary>
+        /// TODO: Make nullable
         [JsonProperty("forcemerging")]
         public ForceMerging ForceMerging { get; set; }
 
         /// <summary>
         /// Force nodump handling when loaded
         /// </summary>
+        /// TODO: Make nullable
         [JsonProperty("forcenodump")]
         public ForceNodump ForceNodump { get; set; }
 
         /// <summary>
         /// Force output packing when loaded
         /// </summary>
+        /// TODO: Make nullable
         [JsonProperty("forcepacking")]
         public ForcePacking ForcePacking { get; set; }
 

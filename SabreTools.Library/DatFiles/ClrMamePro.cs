@@ -117,48 +117,48 @@ namespace SabreTools.Library.DatFiles
                 switch (itemKey)
                 {
                     case "name":
-                        Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? itemVal : Header.Name);
+                        Header.Name = (Header.Name == null ? itemVal : Header.Name);
                         superdat = superdat || itemVal.Contains(" - SuperDAT");
 
                         if (keep && superdat)
-                            Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? "SuperDAT" : Header.Type);
+                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
 
                         break;
                     case "description":
-                        Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? itemVal : Header.Description);
+                        Header.Description = (Header.Description == null ? itemVal : Header.Description);
                         break;
                     case "rootdir":
-                        Header.RootDir = (string.IsNullOrWhiteSpace(Header.RootDir) ? itemVal : Header.RootDir);
+                        Header.RootDir = (Header.RootDir == null ? itemVal : Header.RootDir);
                         break;
                     case "category":
-                        Header.Category = (string.IsNullOrWhiteSpace(Header.Category) ? itemVal : Header.Category);
+                        Header.Category = (Header.Category == null ? itemVal : Header.Category);
                         break;
                     case "version":
-                        Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? itemVal : Header.Version);
+                        Header.Version = (Header.Version == null ? itemVal : Header.Version);
                         break;
                     case "date":
-                        Header.Date = (string.IsNullOrWhiteSpace(Header.Date) ? itemVal : Header.Date);
+                        Header.Date = (Header.Date == null ? itemVal : Header.Date);
                         break;
                     case "author":
-                        Header.Author = (string.IsNullOrWhiteSpace(Header.Author) ? itemVal : Header.Author);
+                        Header.Author = (Header.Author == null ? itemVal : Header.Author);
                         break;
                     case "email":
-                        Header.Email = (string.IsNullOrWhiteSpace(Header.Email) ? itemVal : Header.Email);
+                        Header.Email = (Header.Email == null ? itemVal : Header.Email);
                         break;
                     case "homepage":
-                        Header.Homepage = (string.IsNullOrWhiteSpace(Header.Homepage) ? itemVal : Header.Homepage);
+                        Header.Homepage = (Header.Homepage == null ? itemVal : Header.Homepage);
                         break;
                     case "url":
-                        Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? itemVal : Header.Url);
+                        Header.Url = (Header.Url == null ? itemVal : Header.Url);
                         break;
                     case "comment":
-                        Header.Comment = (string.IsNullOrWhiteSpace(Header.Comment) ? itemVal : Header.Comment);
+                        Header.Comment = (Header.Comment == null ? itemVal : Header.Comment);
                         break;
                     case "header":
-                        Header.HeaderSkipper = (string.IsNullOrWhiteSpace(Header.HeaderSkipper) ? itemVal : Header.HeaderSkipper);
+                        Header.HeaderSkipper = (Header.HeaderSkipper == null ? itemVal : Header.HeaderSkipper);
                         break;
                     case "type":
-                        Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? itemVal : Header.Type);
+                        Header.Type = (Header.Type == null ? itemVal : Header.Type);
                         superdat = superdat || itemVal.Contains("SuperDAT");
                         break;
                     case "forcemerging":

@@ -109,25 +109,25 @@ namespace SabreTools.Library.DatFiles
                 switch (itemKey)
                 {
                     case "name":
-                        Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? itemVal : Header.Name);
+                        Header.Name = (Header.Name == null ? itemVal : Header.Name);
                         break;
                     case "description":
-                        Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? itemVal : Header.Description);
+                        Header.Description = (Header.Description == null ? itemVal : Header.Description);
                         break;
                     case "dersion":
-                        Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? itemVal : Header.Version);
+                        Header.Version = (Header.Version == null ? itemVal : Header.Version);
                         break;
                     case "date":
-                        Header.Date = (string.IsNullOrWhiteSpace(Header.Date) ? itemVal : Header.Date);
+                        Header.Date = (Header.Date == null ? itemVal : Header.Date);
                         break;
                     case "author":
-                        Header.Author = (string.IsNullOrWhiteSpace(Header.Author) ? itemVal : Header.Author);
+                        Header.Author = (Header.Author == null ? itemVal : Header.Author);
                         break;
                     case "homepage":
-                        Header.Homepage = (string.IsNullOrWhiteSpace(Header.Homepage) ? itemVal : Header.Homepage);
+                        Header.Homepage = (Header.Homepage == null ? itemVal : Header.Homepage);
                         break;
                     case "comment":
-                        Header.Comment = (string.IsNullOrWhiteSpace(Header.Comment) ? itemVal : Header.Comment);
+                        Header.Comment = (Header.Comment == null ? itemVal : Header.Comment);
                         break;
                 }
             }

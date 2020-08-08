@@ -64,18 +64,18 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "mame":
-                            Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? xtr.GetAttribute("build") : Header.Name);
-                            Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? Header.Name : Header.Description);
-                            // string mame_debug = xtr.GetAttribute("debug"); // (yes|no) "no"
-                            // string mame_mameconfig = xtr.GetAttribute("mameconfig"); CDATA
+                            Header.Name = (Header.Name == null ? xtr.GetAttribute("build") : Header.Name);
+                            Header.Description = (Header.Description == null ? Header.Name : Header.Description);
+                            string mame_debug = xtr.GetAttribute("debug"); // (yes|no) "no"
+                            string mame_mameconfig = xtr.GetAttribute("mameconfig"); // CDATA
                             xtr.Read();
                             break;
 
                         // Handle M1 DATs since they're 99% the same as a SL DAT
                         case "m1":
-                            Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? "M1" : Header.Name);
-                            Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? "M1" : Header.Description);
-                            Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? xtr.GetAttribute("version") ?? string.Empty : Header.Version);
+                            Header.Name = (Header.Name == null ? "M1" : Header.Name);
+                            Header.Description = (Header.Description == null ? "M1" : Header.Description);
+                            Header.Version = (Header.Version == null ? xtr.GetAttribute("version") ?? string.Empty : Header.Version);
                             xtr.Read();
                             break;
 

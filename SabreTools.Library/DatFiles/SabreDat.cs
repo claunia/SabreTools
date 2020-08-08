@@ -157,50 +157,50 @@ namespace SabreTools.Library.DatFiles
                 {
                     case "name":
                         content = reader.ReadElementContentAsString(); ;
-                        Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? content : Header.Name);
+                        Header.Name = (Header.Name== null ? content : Header.Name);
                         superdat = superdat || content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? "SuperDAT" : Header.Type);
+                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
                         }
                         break;
 
                     case "description":
                         content = reader.ReadElementContentAsString();
-                        Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? content : Header.Description);
+                        Header.Description = (Header.Description== null ? content : Header.Description);
                         break;
 
                     case "rootdir":
                         content = reader.ReadElementContentAsString();
-                        Header.RootDir = (string.IsNullOrWhiteSpace(Header.RootDir) ? content : Header.RootDir);
+                        Header.RootDir = (Header.RootDir== null ? content : Header.RootDir);
                         break;
 
                     case "category":
                         content = reader.ReadElementContentAsString();
-                        Header.Category = (string.IsNullOrWhiteSpace(Header.Category) ? content : Header.Category);
+                        Header.Category = (Header.Category== null ? content : Header.Category);
                         break;
 
                     case "version":
                         content = reader.ReadElementContentAsString();
-                        Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? content : Header.Version);
+                        Header.Version = (Header.Version== null ? content : Header.Version);
                         break;
 
                     case "date":
                         content = reader.ReadElementContentAsString();
-                        Header.Date = (string.IsNullOrWhiteSpace(Header.Date) ? content.Replace(".", "/") : Header.Date);
+                        Header.Date = (Header.Date== null ? content.Replace(".", "/") : Header.Date);
                         break;
 
                     case "author":
                         content = reader.ReadElementContentAsString();
-                        Header.Author = (string.IsNullOrWhiteSpace(Header.Author) ? content : Header.Author);
-                        Header.Email = (string.IsNullOrWhiteSpace(Header.Email) ? reader.GetAttribute("email") : Header.Email);
-                        Header.Homepage = (string.IsNullOrWhiteSpace(Header.Homepage) ? reader.GetAttribute("homepage") : Header.Homepage);
-                        Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? reader.GetAttribute("url") : Header.Url);
+                        Header.Author = (Header.Author== null ? content : Header.Author);
+                        Header.Email = (Header.Email == null ? reader.GetAttribute("email") : Header.Email);
+                        Header.Homepage = (Header.Homepage == null ? reader.GetAttribute("homepage") : Header.Homepage);
+                        Header.Url = (Header.Url == null ? reader.GetAttribute("url") : Header.Url);
                         break;
 
                     case "comment":
                         content = reader.ReadElementContentAsString();
-                        Header.Comment = (string.IsNullOrWhiteSpace(Header.Comment) ? content : Header.Comment);
+                        Header.Comment = (Header.Comment== null ? content : Header.Comment);
                         break;
 
                     case "flags":
@@ -493,7 +493,7 @@ namespace SabreTools.Library.DatFiles
                             switch (reader.GetAttribute("name").ToLowerInvariant())
                             {
                                 case "type":
-                                    Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? content : Header.Type);
+                                    Header.Type = (Header.Type == null ? content : Header.Type);
                                     superdat = superdat || content.Contains("SuperDAT");
                                     break;
 

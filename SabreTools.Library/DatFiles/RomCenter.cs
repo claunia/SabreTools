@@ -128,37 +128,37 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "author":
-                        Header.Author = string.IsNullOrWhiteSpace(Header.Author) ? kvp?.Value : Header.Author;
+                        Header.Author = Header.Author == null ? kvp?.Value : Header.Author;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Header.Version = string.IsNullOrWhiteSpace(Header.Version) ? kvp?.Value : Header.Version;
+                        Header.Version = Header.Version == null ? kvp?.Value : Header.Version;
                         reader.ReadNextLine();
                         break;
 
                     case "email":
-                        Header.Email = string.IsNullOrWhiteSpace(Header.Email) ? kvp?.Value : Header.Email;
+                        Header.Email = Header.Email == null ? kvp?.Value : Header.Email;
                         reader.ReadNextLine();
                         break;
 
                     case "homepage":
-                        Header.Homepage = string.IsNullOrWhiteSpace(Header.Homepage) ? kvp?.Value : Header.Homepage;
+                        Header.Homepage = Header.Homepage == null ? kvp?.Value : Header.Homepage;
                         reader.ReadNextLine();
                         break;
 
                     case "url":
-                        Header.Url = string.IsNullOrWhiteSpace(Header.Url) ? kvp?.Value : Header.Url;
+                        Header.Url = Header.Url == null ? kvp?.Value : Header.Url;
                         reader.ReadNextLine();
                         break;
 
                     case "date":
-                        Header.Date = string.IsNullOrWhiteSpace(Header.Date) ? kvp?.Value : Header.Date;
+                        Header.Date = Header.Date == null ? kvp?.Value : Header.Date;
                         reader.ReadNextLine();
                         break;
 
                     case "comment":
-                        Header.Comment = string.IsNullOrWhiteSpace(Header.Comment) ? kvp?.Value : Header.Comment;
+                        Header.Comment = Header.Comment == null ? kvp?.Value : Header.Comment;
                         reader.ReadNextLine();
                         break;
 
@@ -265,12 +265,12 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "refname":
-                        Header.Name = string.IsNullOrWhiteSpace(Header.Name) ? kvp?.Value : Header.Name;
+                        Header.Name = Header.Name == null ? kvp?.Value : Header.Name;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Header.Description = string.IsNullOrWhiteSpace(Header.Description) ? kvp?.Value : Header.Description;
+                        Header.Description = Header.Description == null ? kvp?.Value : Header.Description;
                         reader.ReadNextLine();
                         break;
 

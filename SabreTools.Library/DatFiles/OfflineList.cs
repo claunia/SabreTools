@@ -124,17 +124,17 @@ namespace SabreTools.Library.DatFiles
                 {
                     case "datname":
                         content = reader.ReadElementContentAsString();
-                        Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? content : Header.Name);
+                        Header.Name = (Header.Name == null ? content : Header.Name);
                         superdat = superdat || content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? "SuperDAT" : Header.Type);
+                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
                         }
                         break;
 
                     case "datversion":
                         content = reader.ReadElementContentAsString();
-                        Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? content : Header.Version);
+                        Header.Version = (Header.Version == null ? content : Header.Version);
                         break;
 
                     case "system":

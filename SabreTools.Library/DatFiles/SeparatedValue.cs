@@ -117,59 +117,59 @@ namespace SabreTools.Library.DatFiles
                         #region DatFile
 
                         case "DatFile.FileName":
-                            Header.FileName = (string.IsNullOrWhiteSpace(Header.FileName) ? value : Header.FileName);
+                            Header.FileName = (Header.FileName== null ? value : Header.FileName);
                             break;
 
                         case "DatFile.Name":
-                            Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? value : Header.Name);
+                            Header.Name = (Header.Name== null ? value : Header.Name);
                             break;
 
                         case "DatFile.Description":
-                            Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? value : Header.Description);
+                            Header.Description = (Header.Description== null ? value : Header.Description);
                             break;
 
                         case "DatFile.RootDir":
-                            Header.RootDir = (string.IsNullOrWhiteSpace(Header.RootDir) ? value : Header.RootDir);
+                            Header.RootDir = (Header.RootDir== null ? value : Header.RootDir);
                             break;
 
                         case "DatFile.Category":
-                            Header.Category = (string.IsNullOrWhiteSpace(Header.Category) ? value : Header.Category);
+                            Header.Category = (Header.Category== null ? value : Header.Category);
                             break;
 
                         case "DatFile.Version":
-                            Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? value : Header.Version);
+                            Header.Version = (Header.Version== null ? value : Header.Version);
                             break;
 
                         case "DatFile.Date":
-                            Header.Date = (string.IsNullOrWhiteSpace(Header.Date) ? value : Header.Date);
+                            Header.Date = (Header.Date== null ? value : Header.Date);
                             break;
 
                         case "DatFile.Author":
-                            Header.Author = (string.IsNullOrWhiteSpace(Header.Author) ? value : Header.Author);
+                            Header.Author = (Header.Author== null ? value : Header.Author);
                             break;
 
                         case "DatFile.Email":
-                            Header.Email = (string.IsNullOrWhiteSpace(Header.Email) ? value : Header.Email);
+                            Header.Email = (Header.Email== null ? value : Header.Email);
                             break;
 
                         case "DatFile.Homepage":
-                            Header.Homepage = (string.IsNullOrWhiteSpace(Header.Homepage) ? value : Header.Homepage);
+                            Header.Homepage = (Header.Homepage== null ? value : Header.Homepage);
                             break;
 
                         case "DatFile.Url":
-                            Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? value : Header.Url);
+                            Header.Url = (Header.Url== null ? value : Header.Url);
                             break;
 
                         case "DatFile.Comment":
-                            Header.Comment = (string.IsNullOrWhiteSpace(Header.Comment) ? value : Header.Comment);
+                            Header.Comment = (Header.Comment== null ? value : Header.Comment);
                             break;
 
                         case "DatFile.Header":
-                            Header.HeaderSkipper = (string.IsNullOrWhiteSpace(Header.HeaderSkipper) ? value : Header.HeaderSkipper);
+                            Header.HeaderSkipper = (Header.HeaderSkipper== null ? value : Header.HeaderSkipper);
                             break;
 
                         case "DatFile.Type":
-                            Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? value : Header.Type);
+                            Header.Type = (Header.Type== null ? value : Header.Type);
                             break;
 
                         case "DatFile.ForceMerging":
@@ -292,15 +292,15 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Name":
-                            name = string.IsNullOrWhiteSpace(value) ? name : value;
+                            name = value;
                             break;
 
                         case "DatItem.PartName":
-                            partName = string.IsNullOrWhiteSpace(value) ? partName : value;
+                            partName = value;
                             break;
 
                         case "DatItem.PartInterface":
-                            partInterface = string.IsNullOrWhiteSpace(value) ? partInterface : value;
+                            partInterface = value;
                             break;
 
                         case "DatItem.Features":
@@ -315,7 +315,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.AreaName":
-                            areaName = string.IsNullOrWhiteSpace(value) ? areaName : value;
+                            areaName = value;
                             break;
 
                         case "DatItem.AreaSize":
@@ -331,7 +331,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Description":
-                            biosDescription = string.IsNullOrWhiteSpace(value) ? biosDescription : value;
+                            biosDescription = value;
                             break;
 
                         case "DatItem.Size":
@@ -371,15 +371,15 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Merge":
-                            merge = string.IsNullOrWhiteSpace(value) ? merge : value;
+                            merge = value;
                             break;
 
                         case "DatItem.Region":
-                            region = string.IsNullOrWhiteSpace(value) ? region : value;
+                            region = value;
                             break;
 
                         case "DatItem.Index":
-                            index = string.IsNullOrWhiteSpace(value) ? index : value;
+                            index = value;
                             break;
 
                         case "DatItem.Writable":
@@ -395,7 +395,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Language":
-                            language = string.IsNullOrWhiteSpace(value) ? language : value;
+                            language = value;
                             break;
 
                         case "DatItem.Date":
@@ -403,11 +403,11 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Bios":
-                            bios = string.IsNullOrWhiteSpace(value) ? bios : value;
+                            bios = value;
                             break;
 
                         case "DatItem.Offset":
-                            offset = string.IsNullOrWhiteSpace(value) ? offset : value;
+                            offset = value;
                             break;
 
                         case "DatItem.Inverted":

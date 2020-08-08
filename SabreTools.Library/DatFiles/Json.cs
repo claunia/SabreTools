@@ -122,67 +122,67 @@ namespace SabreTools.Library.DatFiles
                 {
                     case "name":
                         content = jtr.ReadAsString();
-                        Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? content : Header.Name);
+                        Header.Name = (Header.Name == null ? content : Header.Name);
                         superdat = superdat || content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? "SuperDAT" : Header.Type);
+                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
                         }
                         break;
 
                     case "description":
                         content = jtr.ReadAsString();
-                        Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? content : Header.Description);
+                        Header.Description = (Header.Description == null ? content : Header.Description);
                         break;
 
                     case "rootdir": // This is exclusive to TruRip XML
                         content = jtr.ReadAsString();
-                        Header.RootDir = (string.IsNullOrWhiteSpace(Header.RootDir) ? content : Header.RootDir);
+                        Header.RootDir = (Header.RootDir == null ? content : Header.RootDir);
                         break;
 
                     case "category":
                         content = jtr.ReadAsString();
-                        Header.Category = (string.IsNullOrWhiteSpace(Header.Category) ? content : Header.Category);
+                        Header.Category = (Header.Category == null ? content : Header.Category);
                         break;
 
                     case "version":
                         content = jtr.ReadAsString();
-                        Header.Version = (string.IsNullOrWhiteSpace(Header.Version) ? content : Header.Version);
+                        Header.Version = (Header.Version == null ? content : Header.Version);
                         break;
 
                     case "date":
                         content = jtr.ReadAsString();
-                        Header.Date = (string.IsNullOrWhiteSpace(Header.Date) ? content.Replace(".", "/") : Header.Date);
+                        Header.Date = (Header.Date == null ? content.Replace(".", "/") : Header.Date);
                         break;
 
                     case "author":
                         content = jtr.ReadAsString();
-                        Header.Author = (string.IsNullOrWhiteSpace(Header.Author) ? content : Header.Author);
+                        Header.Author = (Header.Author == null ? content : Header.Author);
                         break;
 
                     case "email":
                         content = jtr.ReadAsString();
-                        Header.Email = (string.IsNullOrWhiteSpace(Header.Email) ? content : Header.Email);
+                        Header.Email = (Header.Email == null ? content : Header.Email);
                         break;
 
                     case "homepage":
                         content = jtr.ReadAsString();
-                        Header.Homepage = (string.IsNullOrWhiteSpace(Header.Homepage) ? content : Header.Homepage);
+                        Header.Homepage = (Header.Homepage == null ? content : Header.Homepage);
                         break;
 
                     case "url":
                         content = jtr.ReadAsString();
-                        Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? content : Header.Url);
+                        Header.Url = (Header.Url == null ? content : Header.Url);
                         break;
 
                     case "comment":
                         content = jtr.ReadAsString();
-                        Header.Comment = (string.IsNullOrWhiteSpace(Header.Comment) ? content : Header.Comment);
+                        Header.Comment = (Header.Comment == null ? content : Header.Comment);
                         break;
 
                     case "type": // This is exclusive to TruRip XML
                         content = jtr.ReadAsString();
-                        Header.Type = (string.IsNullOrWhiteSpace(Header.Type) ? content : Header.Type);
+                        Header.Type = (Header.Type == null ? content : Header.Type);
                         superdat = superdat || content.Contains("SuperDAT");
                         break;
 
@@ -206,7 +206,7 @@ namespace SabreTools.Library.DatFiles
 
                     case "header":
                         content = jtr.ReadAsString();
-                        Header.HeaderSkipper = (string.IsNullOrWhiteSpace(Header.HeaderSkipper) ? content : Header.HeaderSkipper);
+                        Header.HeaderSkipper = (Header.HeaderSkipper == null ? content : Header.HeaderSkipper);
                         break;
 
                     default:

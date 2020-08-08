@@ -61,8 +61,8 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "softwaredb":
-                            Header.Name = (string.IsNullOrWhiteSpace(Header.Name) ? "openMSX Software List" : Header.Name);
-                            Header.Description = (string.IsNullOrWhiteSpace(Header.Description) ? Header.Name : Header.Description);
+                            Header.Name = (Header.Name == null ? "openMSX Software List" : Header.Name);
+                            Header.Description = (Header.Description == null ? Header.Name : Header.Description);
                             // string timestamp = xtr.GetAttribute("timestamp"); // CDATA
                             xtr.Read();
                             break;
