@@ -519,6 +519,10 @@ namespace SabreTools.Library.Help
             if (!valid)
                 valid = File.Exists(input) || Directory.Exists(input);
 
+            // If we're not valid at this point, we weant to check if the flag is a wildcarded input
+            if (!valid)
+                valid = input.Contains("*") || input.Contains("?");
+
             return valid;
         }
 

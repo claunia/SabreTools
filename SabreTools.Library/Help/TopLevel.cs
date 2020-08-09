@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Help
 {
@@ -37,6 +31,10 @@ namespace SabreTools.Library.Help
 
                 // Special precautions for files and directories
                 if (File.Exists(args[i]) || Directory.Exists(args[i]))
+                    Inputs.Add(args[i]);
+
+                // Special precautions for wildcarded inputs (potential paths)
+                if (args[i].Contains("*") || args[i].Contains("?"))
                     Inputs.Add(args[i]);
             }
 

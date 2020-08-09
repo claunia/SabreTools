@@ -55,7 +55,7 @@ namespace SabreTools.Library.IO
         public static bool HasValidArchiveExtension(string path)
         {
             // Get the extension from the path, if possible
-            string ext = PathExtensions.GetNormalizedExtension(path);
+            string ext = GetNormalizedExtension(path);
 
             // Check against the list of known archive extensions
             switch (ext)

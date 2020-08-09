@@ -67,14 +67,24 @@ namespace SabreTools.Library.IO
         public static List<ParentablePath> GetDirectoriesOnly(List<string> inputs, bool appendparent = false)
         {
             List<ParentablePath> outputs = new List<ParentablePath>();
-            foreach (string input in inputs)
+            for (int i = 0; i < inputs.Count; i++)
             {
+                string input = inputs[i];
+
+                // If we have a wildcard
+                string pattern = "*";
+                if (input.Contains("*") || input.Contains("?"))
+                {
+                    pattern = Path.GetFileName(input);
+                    input = input.Substring(0, input.Length - pattern.Length);
+                }
+
                 if (Directory.Exists(input))
                 {
                     // Get the parent path in case of appending
                     string parentPath = Path.GetFullPath(input);
 
-                    List<string> directories = GetDirectoriesOrdered(input);
+                    List<string> directories = GetDirectoriesOrdered(input, pattern);
                     foreach (string dir in directories)
                     {
                         try
@@ -100,10 +110,11 @@ namespace SabreTools.Library.IO
         /// Retrieve a list of directories from a directory recursively in proper order
         /// </summary>
         /// <param name="dir">Directory to parse</param>
+        /// <param name="pattern">Optional pattern to search for directory names</param>
         /// <returns>List with all new files</returns>
-        private static List<string> GetDirectoriesOrdered(string dir)
+        private static List<string> GetDirectoriesOrdered(string dir, string pattern = "*")
         {
-            return GetDirectoriesOrderedHelper(dir, new List<string>());
+            return GetDirectoriesOrderedHelper(dir, new List<string>(), pattern);
         }
 
         /// <summary>
@@ -111,18 +122,19 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="dir">Directory to parse</param>
         /// <param name="infiles">List representing existing files</param>
+        /// <param name="pattern">Optional pattern to search for directory names</param>
         /// <returns>List with all new files</returns>
-        private static List<string> GetDirectoriesOrderedHelper(string dir, List<string> infiles)
+        private static List<string> GetDirectoriesOrderedHelper(string dir, List<string> infiles, string pattern)
         {
             // Take care of the files in the top directory
-            List<string> toadd = Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly).ToList();
+            List<string> toadd = Directory.EnumerateDirectories(dir, pattern, SearchOption.TopDirectoryOnly).ToList();
             toadd.Sort(new NaturalComparer());
             infiles.AddRange(toadd);
 
             // Then recurse through and add from the directories
             foreach (string subDir in toadd)
             {
-                infiles = GetDirectoriesOrderedHelper(subDir, infiles);
+                infiles = GetDirectoriesOrderedHelper(subDir, infiles, pattern);
             }
 
             // Return the new list
@@ -138,14 +150,24 @@ namespace SabreTools.Library.IO
         public static List<ParentablePath> GetFilesOnly(List<string> inputs, bool appendparent = false)
         {
             List<ParentablePath> outputs = new List<ParentablePath>();
-            foreach (string input in inputs)
+            for (int i = 0; i < inputs.Count; i++)
             {
+                string input = inputs[i];
+
+                // If we have a wildcard
+                string pattern = "*";
+                if (input.Contains("*") || input.Contains("?"))
+                {
+                    pattern = Path.GetFileName(input);
+                    input = input.Substring(0, input.Length - pattern.Length);
+                }
+
                 // Get the parent path in case of appending
                 string parentPath = Path.GetFullPath(input);
 
                 if (Directory.Exists(input))
                 {
-                    List<string> files = GetFilesOrdered(input);
+                    List<string> files = GetFilesOrdered(input, pattern);
                     foreach (string file in files)
                     {
                         try
@@ -186,11 +208,11 @@ namespace SabreTools.Library.IO
         /// Retrieve a list of files from a directory recursively in proper order
         /// </summary>
         /// <param name="dir">Directory to parse</param>
-        /// <param name="infiles">List representing existing files</param>
+        /// <param name="pattern">Optional pattern to search for directory names</param>
         /// <returns>List with all new files</returns>
-        public static List<string> GetFilesOrdered(string dir)
+        public static List<string> GetFilesOrdered(string dir, string pattern = "*")
         {
-            return GetFilesOrderedHelper(dir, new List<string>());
+            return GetFilesOrderedHelper(dir, new List<string>(), pattern);
         }
 
         /// <summary>
@@ -198,20 +220,21 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="dir">Directory to parse</param>
         /// <param name="infiles">List representing existing files</param>
+        /// <param name="pattern">Optional pattern to search for directory names</param>
         /// <returns>List with all new files</returns>
-        private static List<string> GetFilesOrderedHelper(string dir, List<string> infiles)
+        private static List<string> GetFilesOrderedHelper(string dir, List<string> infiles, string pattern)
         {
             // Take care of the files in the top directory
-            List<string> toadd = Directory.EnumerateFiles(dir, "*", SearchOption.TopDirectoryOnly).ToList();
+            List<string> toadd = Directory.EnumerateFiles(dir, pattern, SearchOption.TopDirectoryOnly).ToList();
             toadd.Sort(new NaturalComparer());
             infiles.AddRange(toadd);
 
             // Then recurse through and add from the directories
-            List<string> subDirs = Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly).ToList();
+            List<string> subDirs = Directory.EnumerateDirectories(dir, pattern, SearchOption.TopDirectoryOnly).ToList();
             subDirs.Sort(new NaturalComparer());
             foreach (string subdir in subDirs)
             {
-                infiles = GetFilesOrderedHelper(subdir, infiles);
+                infiles = GetFilesOrderedHelper(subdir, infiles, pattern);
             }
 
             // Return the new list
