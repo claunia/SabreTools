@@ -1948,7 +1948,8 @@ namespace SabreTools.Library.DatFiles
             Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
-            foreach (string hash in Items.Keys)
+            var keys = Items.SortedKeys.ToList();
+            foreach (string hash in keys)
             {
                 // Pre-empt any issues that could arise from string length
                 if (hash.Length != Constants.SHA1Length)
@@ -1980,6 +1981,10 @@ namespace SabreTools.Library.DatFiles
 
                 // If the file information is null, then we continue
                 if (fileinfo == null)
+                    continue;
+
+                // If there are no items in the hash, we continue
+                if (Items[hash] == null || Items[hash].Count == 0)
                     continue;
 
                 // Otherwise, we rebuild that file to all locations that we need to
