@@ -2520,7 +2520,8 @@ namespace SabreTools.Library.DatFiles
             Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
-            foreach (string hash in Items.Keys)
+            var keys = Items.SortedKeys.ToList();
+            foreach (string hash in keys)
             {
                 // Pre-empt any issues that could arise from string length
                 if (hash.Length != Constants.SHA1Length)
@@ -2620,7 +2621,8 @@ namespace SabreTools.Library.DatFiles
                 Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
 
                 // Then follow the same tactics as before
-                foreach (string key in Items.Keys)
+                var keys = Items.SortedKeys.ToList();
+                foreach (string key in keys)
                 {
                     List<DatItem> roms = Items[key];
                     foreach (DatItem rom in roms)
