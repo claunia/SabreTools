@@ -658,7 +658,8 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         public void ClearMarked()
         {
-            foreach (string key in items.Keys)
+            var keys = items.Keys.ToList();
+            foreach (string key in keys)
             {
                 List<DatItem> oldItemList = items[key];
                 List<DatItem> newItemList = oldItemList.Where(i => !i.Remove).ToList();
