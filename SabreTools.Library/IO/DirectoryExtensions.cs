@@ -170,7 +170,7 @@ namespace SabreTools.Library.IO
                 }
                 catch (Exception ex)
                 {
-                    Globals.Logger.Error(ex.ToString());
+                    Globals.Logger.Error($"An exception occurred getting the full path for '{input}': {ex}");
                     continue;
                 }
 
@@ -189,7 +189,7 @@ namespace SabreTools.Library.IO
                         }
                         catch (Exception ex)
                         {
-                            Globals.Logger.Error(ex.ToString());
+                            Globals.Logger.Error($"An exception occurred processing '{file}': {ex}");
                         }
                     }
                 }
@@ -205,7 +205,7 @@ namespace SabreTools.Library.IO
                     }
                     catch (Exception ex)
                     {
-                        Globals.Logger.Error(ex.ToString());
+                        Globals.Logger.Error($"An exception occurred processing '{input}': {ex}");
                     }
                 }
             }
