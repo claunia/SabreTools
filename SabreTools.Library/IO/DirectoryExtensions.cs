@@ -71,6 +71,10 @@ namespace SabreTools.Library.IO
             {
                 string input = inputs[i];
 
+                // If we have a null or empty path
+                if (string.IsNullOrEmpty(input))
+                    continue;
+
                 // If we have a wildcard
                 string pattern = "*";
                 if (input.Contains("*") || input.Contains("?"))
@@ -79,11 +83,20 @@ namespace SabreTools.Library.IO
                     input = input.Substring(0, input.Length - pattern.Length);
                 }
 
+                // Get the parent path in case of appending
+                string parentPath;
+                try
+                {
+                    parentPath = Path.GetFullPath(input);
+                }
+                catch (Exception ex)
+                {
+                    Globals.Logger.Error($"An exception occurred getting the full path for '{input}': {ex}");
+                    continue;
+                }
+
                 if (Directory.Exists(input))
                 {
-                    // Get the parent path in case of appending
-                    string parentPath = Path.GetFullPath(input);
-
                     List<string> directories = GetDirectoriesOrdered(input, pattern);
                     foreach (string dir in directories)
                     {
@@ -97,7 +110,7 @@ namespace SabreTools.Library.IO
                         }
                         catch (Exception ex)
                         {
-                            Globals.Logger.Error(ex.ToString());
+                            Globals.Logger.Error($"An exception occurred processing '{dir}': {ex}");
                         }
                     }
                 }
@@ -153,6 +166,10 @@ namespace SabreTools.Library.IO
             for (int i = 0; i < inputs.Count; i++)
             {
                 string input = inputs[i];
+
+                // If we have a null or empty path
+                if (string.IsNullOrEmpty(input))
+                    continue;
 
                 // If we have a wildcard
                 string pattern = "*";
