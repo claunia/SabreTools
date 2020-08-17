@@ -583,13 +583,10 @@ namespace SabreTools.Library.DatFiles
                 {
                     string key = oldkeys[k];
 
-                    // Get the unsorted current list
-                    List<DatItem> items = this[key];
-
                     // Now add each of the roms to their respective keys
-                    for (int i = 0; i < items.Count; i++)
+                    for (int i = 0; i < this[key].Count; i++)
                     {
-                        DatItem item = items[i];
+                        DatItem item = this[key][i];
                         if (item == null)
                             continue;
 

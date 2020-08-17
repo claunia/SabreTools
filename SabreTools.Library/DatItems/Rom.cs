@@ -278,73 +278,95 @@ namespace SabreTools.Library.DatItems
             bool dupefound = false;
 
             // If we don't have a rom, return false
-            if (this.ItemType != other.ItemType)
+            if (ItemType != other.ItemType)
                 return dupefound;
 
             // Otherwise, treat it as a Rom
             Rom newOther = other as Rom;
 
             // If all hashes are empty but they're both nodump and the names match, then they're dupes
-            if ((this.ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
-                && (this.Name == newOther.Name)
-                && (this._crc.IsNullOrEmpty() && newOther._crc.IsNullOrEmpty())
-                && (this._md5.IsNullOrEmpty() && newOther._md5.IsNullOrEmpty())
-#if NET_FRAMEWORK
-                && (this._ripemd160.IsNullOrEmpty() && newOther._ripemd160.IsNullOrEmpty())
-#endif
-                && (this._sha1.IsNullOrEmpty() && newOther._sha1.IsNullOrEmpty())
-                && (this._sha256.IsNullOrEmpty() && newOther._sha256.IsNullOrEmpty())
-                && (this._sha384.IsNullOrEmpty() && newOther._sha384.IsNullOrEmpty())
-                && (this._sha512.IsNullOrEmpty() && newOther._sha512.IsNullOrEmpty()))
+            if ((ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
+                && Name == newOther.Name
+                && !HasHashes() && !newOther.HasHashes())
             {
                 dupefound = true;
             }
 
-            // If we can determine that the roms have no non-empty hashes in common, we return false
-            else if ((this._crc.IsNullOrEmpty() || newOther._crc.IsNullOrEmpty())
-                && (this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty())
-#if NET_FRAMEWORK
-                && (this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty())
-#endif
-                && (this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty())
-                && (this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty())
-                && (this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty())
-                && (this._sha512.IsNullOrEmpty() || newOther._sha512.IsNullOrEmpty()))
-            {
-                dupefound = false;
-            }
-
             // If we have a file that has no known size, rely on the hashes only
-            else if ((this.Size == -1)
-                && ((this._crc.IsNullOrEmpty() || newOther._crc.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._crc, newOther._crc))
-                && ((this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
-#if NET_FRAMEWORK
-                && ((this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
-#endif
-                && ((this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
-                && ((this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
-                && ((this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))
-                && ((this._sha512.IsNullOrEmpty() || newOther._sha512.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha512, newOther._sha512)))
+            else if (Size == -1 && HashMatch(newOther))
             {
                 dupefound = true;
             }
 
             // Otherwise if we get a partial match
-            else if ((this.Size == newOther.Size)
-                && ((this._crc.IsNullOrEmpty() || newOther._crc.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._crc, newOther._crc))
-                && ((this._md5.IsNullOrEmpty() || newOther._md5.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._md5, newOther._md5))
-#if NET_FRAMEWORK
-                && ((this._ripemd160.IsNullOrEmpty() || newOther._ripemd160.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._ripemd160, newOther._ripemd160))
-#endif
-                && ((this._sha1.IsNullOrEmpty() || newOther._sha1.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha1, newOther._sha1))
-                && ((this._sha256.IsNullOrEmpty() || newOther._sha256.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha256, newOther._sha256))
-                && ((this._sha384.IsNullOrEmpty() || newOther._sha384.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha384, newOther._sha384))
-                && ((this._sha512.IsNullOrEmpty() || newOther._sha512.IsNullOrEmpty()) || Enumerable.SequenceEqual(this._sha512, newOther._sha512)))
+            else if (Size == newOther.Size && HashMatch(newOther))
             {
                 dupefound = true;
             }
 
             return dupefound;
+        }
+
+        /// <summary>
+        /// Returns if there are no, non-empty hashes in common with another Rom
+        /// </summary>
+        /// <param name="other">Rom to compare against</param>
+        /// <returns>True if at least one hash is not mutually exclusive, false otherwise</returns>
+        private bool HasCommonHash(Rom other)
+        {
+            return !(_crc.IsNullOrEmpty() ^ other._crc.IsNullOrEmpty())
+                || !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
+#if NET_FRAMEWORK
+                || !(_ripemd160.IsNullOrEmpty() || other._ripemd160.IsNullOrEmpty())
+#endif
+                || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
+                || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty())
+                || !(_sha384.IsNullOrEmpty() ^ other._sha384.IsNullOrEmpty())
+                || !(_sha512.IsNullOrEmpty() ^ other._sha512.IsNullOrEmpty());
+        }
+
+        /// <summary>
+        /// Returns if the Rom contains any hashes
+        /// </summary>
+        /// <returns>True if any hash exists, false otherwise</returns>
+        private bool HasHashes()
+        {
+            return !_crc.IsNullOrEmpty()
+                || !_md5.IsNullOrEmpty()
+#if NET_FRAMEWORK
+                || !_ripemd160.IsNullOrEmpty()
+#endif
+                || !_sha1.IsNullOrEmpty()
+                || !_sha256.IsNullOrEmpty()
+                || !_sha384.IsNullOrEmpty()
+                || !_sha512.IsNullOrEmpty();
+        }
+
+        /// <summary>
+        /// Returns if any hashes are common with another Rom
+        /// </summary>
+        /// <param name="other">Rom to compare against</param>
+        /// <returns>True if any hashes are in common, false otherwise</returns>
+        private bool HashMatch(Rom other)
+        {
+            // If either have no hashes, we return false, otherwise this would be a false positive
+            if (!HasHashes() || !other.HasHashes())
+                return false;
+
+            // If neither have hashes in common, we return false, otherwise this would be a false positive
+            if (!HasCommonHash(other))
+                return false;
+
+            // Return if all hashes match according to merge rules
+            return ConditionalHashEquals(_crc, other._crc)
+                && ConditionalHashEquals(_md5, other._md5)
+#if NET_FRAMEWORK
+                && ConditionalHashEquals(_ripemd160, other._ripemd160)
+#endif
+                && ConditionalHashEquals(_sha1, other._sha1)
+                && ConditionalHashEquals(_sha256, other._sha256)
+                && ConditionalHashEquals(_sha384, other._sha384)
+                && ConditionalHashEquals(_sha512, other._sha512);
         }
 
         #endregion

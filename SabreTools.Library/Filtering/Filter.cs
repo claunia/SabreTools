@@ -821,23 +821,6 @@ namespace SabreTools.Library.Filtering
                 // Run internal splitting
                 ProcessSplitType(datFile, this.InternalSplit);
 
-                // We remove any blanks, if we aren't supposed to have any
-                if (!datFile.Header.KeepEmptyGames)
-                {
-                    List<string> possiblyEmptyKeys = datFile.Items.Keys.ToList();
-                    foreach (string key in possiblyEmptyKeys)
-                    {
-                        List<DatItem> items = datFile.Items[key];
-                        if (items == null)
-                            continue;
-
-                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
-
-                        datFile.Items.Remove(key);
-                        datFile.Items.AddRange(key, newitems);
-                    }
-                }
-
                 // Loop over every key in the dictionary
                 List<string> keys = datFile.Items.Keys.ToList();
                 foreach (string key in keys)
@@ -906,6 +889,26 @@ namespace SabreTools.Library.Filtering
                 // If we are removing fields, do that now
                 if (RemoveFields)
                     RemoveFieldsFromItems(datFile);
+
+                // We remove any blanks, if we aren't supposed to have any
+                if (!datFile.Header.KeepEmptyGames)
+                {
+                    List<string> possiblyEmptyKeys = datFile.Items.Keys.ToList();
+                    foreach (string key in possiblyEmptyKeys)
+                    {
+                        List<DatItem> items = datFile.Items[key];
+                        if (items == null || items.Count == 0)
+                        {
+                            datFile.Items.Remove(key);
+                            continue;
+                        }
+
+                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
+
+                        datFile.Items.Remove(key);
+                        datFile.Items.AddRange(key, newitems);
+                    }
+                }
             }
             catch (Exception ex)
             {
