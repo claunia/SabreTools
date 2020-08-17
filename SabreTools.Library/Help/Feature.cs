@@ -515,14 +515,6 @@ namespace SabreTools.Library.Help
             if (!valid && !exact)
                 valid = this.Features.Keys.Any(k => this.Features[k].ValidateInput(input));
 
-            // If we're not valid at this point, we want to check if this flag is a file or a folder
-            if (!valid)
-                valid = File.Exists(input) || Directory.Exists(input);
-
-            // If we're not valid at this point, we weant to check if the flag is a wildcarded input
-            if (!valid)
-                valid = input.Contains("*") || input.Contains("?");
-
             return valid;
         }
 

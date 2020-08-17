@@ -23,19 +23,27 @@ namespace SabreTools.Library.Help
                 // Verify that the current flag is proper for the feature
                 if (!ValidateInput(args[i]))
                 {
-                    Globals.Logger.Error($"Invalid input detected: {args[i]}");
-                    help.OutputIndividualFeature(this.Name);
-                    Globals.Logger.Close();
-                    return false;
+                    // Special precautions for files and directories
+                    if (File.Exists(args[i]) || Directory.Exists(args[i]))
+                    {
+                        Inputs.Add(args[i]);
+                    }
+
+                    // Special precautions for wildcarded inputs (potential paths)
+                    else if (args[i].Contains("*") || args[i].Contains("?"))
+                    {
+                        Inputs.Add(args[i]);
+                    }
+
+                    // Everything else isn't a file
+                    else
+                    {
+                        Globals.Logger.Error($"Invalid input detected: {args[i]}");
+                        help.OutputIndividualFeature(this.Name);
+                        Globals.Logger.Close();
+                        return false;
+                    }
                 }
-
-                // Special precautions for files and directories
-                if (File.Exists(args[i]) || Directory.Exists(args[i]))
-                    Inputs.Add(args[i]);
-
-                // Special precautions for wildcarded inputs (potential paths)
-                if (args[i].Contains("*") || args[i].Contains("?"))
-                    Inputs.Add(args[i]);
             }
 
             return true;
