@@ -163,7 +163,16 @@ namespace SabreTools.Library.IO
                 }
 
                 // Get the parent path in case of appending
-                string parentPath = Path.GetFullPath(input);
+                string parentPath;
+                try
+                {
+                    parentPath = Path.GetFullPath(input);
+                }
+                catch (Exception ex)
+                {
+                    Globals.Logger.Error(ex.ToString());
+                    continue;
+                }
 
                 if (Directory.Exists(input))
                 {
