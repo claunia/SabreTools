@@ -7,6 +7,7 @@ using System.Net;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
+using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using NaturalSort;
 using Newtonsoft.Json;
@@ -883,6 +884,201 @@ namespace SabreTools.Library.DatItems
             }
 
             return output;
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filter
+        /// </summary>
+        /// <param name="filter">Filter to check against</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        public virtual bool PassesFilter(Filter filter)
+        {
+            #region Machine Filters
+
+            // Filter on machine name
+            bool? machineNameFound = filter.MachineName.MatchesPositiveSet(MachineName);
+            if (filter.IncludeOfInGame)
+            {
+                machineNameFound |= (filter.MachineName.MatchesPositiveSet(CloneOf) == true);
+                machineNameFound |= (filter.MachineName.MatchesPositiveSet(RomOf) == true);
+            }
+            if (machineNameFound == false)
+                return false;
+
+            machineNameFound = filter.MachineName.MatchesNegativeSet(MachineName);
+            if (filter.IncludeOfInGame)
+            {
+                machineNameFound |= (filter.MachineName.MatchesNegativeSet(CloneOf) == true);
+                machineNameFound |= (filter.MachineName.MatchesNegativeSet(RomOf) == true);
+            }
+            if (machineNameFound == false)
+                return false;
+
+            // Filter on comment
+            if (filter.Comment.MatchesPositiveSet(Comment) == false)
+                return false;
+            if (filter.Comment.MatchesNegativeSet(Comment) == true)
+                return false;
+
+            // Filter on machine description
+            if (filter.MachineDescription.MatchesPositiveSet(MachineDescription) == false)
+                return false;
+            if (filter.MachineDescription.MatchesNegativeSet(MachineDescription) == true)
+                return false;
+
+            // Filter on year
+            if (filter.Year.MatchesPositiveSet(Year) == false)
+                return false;
+            if (filter.Year.MatchesNegativeSet(Year) == true)
+                return false;
+
+            // Filter on manufacturer
+            if (filter.Manufacturer.MatchesPositiveSet(Manufacturer) == false)
+                return false;
+            if (filter.Manufacturer.MatchesNegativeSet(Manufacturer) == true)
+                return false;
+
+            // Filter on publisher
+            if (filter.Publisher.MatchesPositiveSet(Publisher) == false)
+                return false;
+            if (filter.Publisher.MatchesNegativeSet(Publisher) == true)
+                return false;
+
+            // Filter on category
+            if (filter.Category.MatchesPositiveSet(Category) == false)
+                return false;
+            if (filter.Category.MatchesNegativeSet(Category) == true)
+                return false;
+
+            // Filter on romof
+            if (filter.RomOf.MatchesPositiveSet(RomOf) == false)
+                return false;
+            if (filter.RomOf.MatchesNegativeSet(RomOf) == true)
+                return false;
+
+            // Filter on cloneof
+            if (filter.CloneOf.MatchesPositiveSet(CloneOf) == false)
+                return false;
+            if (filter.CloneOf.MatchesNegativeSet(CloneOf) == true)
+                return false;
+
+            // Filter on sampleof
+            if (filter.SampleOf.MatchesPositiveSet(SampleOf) == false)
+                return false;
+            if (filter.SampleOf.MatchesNegativeSet(SampleOf) == true)
+                return false;
+
+            // Filter on supported
+            if (filter.Supported.MatchesNeutral(null, Supported) == false)
+                return false;
+
+            // Filter on source file
+            if (filter.SourceFile.MatchesPositiveSet(SourceFile) == false)
+                return false;
+            if (filter.SourceFile.MatchesNegativeSet(SourceFile) == true)
+                return false;
+
+            // Filter on runnable
+            if (filter.Runnable.MatchesNeutral(null, Runnable) == false)
+                return false;
+
+            // Filter on board
+            if (filter.Board.MatchesPositiveSet(Board) == false)
+                return false;
+            if (filter.Board.MatchesNegativeSet(Board) == true)
+                return false;
+
+            // Filter on rebuildto
+            if (filter.RebuildTo.MatchesPositiveSet(RebuildTo) == false)
+                return false;
+            if (filter.RebuildTo.MatchesNegativeSet(RebuildTo) == true)
+                return false;
+
+            // Filter on devices
+            if (Devices != null && Devices.Any())
+            {
+                bool anyPositiveDevice = false;
+                bool anyNegativeDevice = false;
+                foreach (string device in Devices)
+                {
+                    anyPositiveDevice |= filter.Devices.MatchesPositiveSet(device) != false;
+                    anyNegativeDevice |= filter.Devices.MatchesNegativeSet(device) == false;
+                }
+
+                if (!anyPositiveDevice || anyNegativeDevice)
+                    return false;
+            }
+
+            // Filter on slot options
+            if (SlotOptions != null && SlotOptions.Any())
+            {
+                bool anyPositiveSlotOption = false;
+                bool anyNegativeSlotOption = false;
+                foreach (string slotOption in SlotOptions)
+                {
+                    anyPositiveSlotOption |= filter.SlotOptions.MatchesPositiveSet(slotOption) != false;
+                    anyNegativeSlotOption |= filter.SlotOptions.MatchesNegativeSet(slotOption) == false;
+                }
+
+                if (!anyPositiveSlotOption || anyNegativeSlotOption)
+                    return false;
+            }
+
+            // Filter on machine type
+            if (filter.MachineTypes.MatchesPositive(MachineType.NULL, MachineType) == false)
+                return false;
+            if (filter.MachineTypes.MatchesNegative(MachineType.NULL, MachineType) == true)
+                return false;
+
+            #endregion
+
+            #region DatItem Filters
+
+            // Filter on item type
+            if (filter.ItemTypes.MatchesPositiveSet(ItemType.ToString()) == false)
+                return false;
+            if (filter.ItemTypes.MatchesNegativeSet(ItemType.ToString()) == true)
+                return false;
+
+            // Filter on item name
+            if (filter.ItemName.MatchesPositiveSet(Name) == false)
+                return false;
+            if (filter.ItemName.MatchesNegativeSet(Name) == true)
+                return false;
+
+            // Filter on part name
+            if (filter.PartName.MatchesPositiveSet(PartName) == false)
+                return false;
+            if (filter.PartName.MatchesNegativeSet(PartName) == true)
+                return false;
+
+            // Filter on part interface
+            if (filter.PartInterface.MatchesPositiveSet(PartInterface) == false)
+                return false;
+            if (filter.PartInterface.MatchesNegativeSet(PartInterface) == true)
+                return false;
+
+            // Filter on area name
+            if (filter.AreaName.MatchesPositiveSet(AreaName) == false)
+                return false;
+            if (filter.AreaName.MatchesNegativeSet(AreaName) == true)
+                return false;
+
+            // Filter on area size
+            if (filter.AreaSize.MatchesNeutral(null, AreaSize) == false)
+                return false;
+            else if (filter.AreaSize.MatchesPositive(null, AreaSize) == false)
+                return false;
+            else if (filter.AreaSize.MatchesNegative(null, AreaSize) == false)
+                return false;
+
+            #endregion
+
+            return true;
         }
 
         #endregion

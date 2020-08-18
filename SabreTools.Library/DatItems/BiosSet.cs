@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
@@ -131,6 +132,32 @@ namespace SabreTools.Library.DatItems
 
             // If the archive information matches
             return (this.Name == newOther.Name && this.Description == newOther.Description && this.Default == newOther.Default);
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filter
+        /// </summary>
+        /// <param name="filter">Filter to check against</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        public override bool PassesFilter(Filter filter)
+        {
+            // Check common fields first
+            if (!base.PassesFilter(filter))
+                return false;
+
+            // Filter on description
+            if (filter.Description.MatchesNeutral(null, Description) == false)
+                return false;
+
+            // Filter on default
+            if (filter.Default.MatchesNeutral(null, Default) == false)
+                return false;
+
+            return true;
         }
 
         #endregion

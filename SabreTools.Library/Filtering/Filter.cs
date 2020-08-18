@@ -19,101 +19,101 @@ namespace SabreTools.Library.Filtering
     /// TODO: Can clever use of Filtering allow for easier external splitting methods?
     public class Filter
     {
-        #region Private instance variables
+        #region Pubically facing variables
 
         #region Machine Filters
 
         /// <summary>
         /// Include or exclude machine names
         /// </summary>
-        private FilterItem<string> MachineName = new FilterItem<string>();
+        public FilterItem<string> MachineName { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine comments
         /// </summary>
-        private FilterItem<string> Comment = new FilterItem<string>();
+        public FilterItem<string> Comment { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine descriptions
         /// </summary>
-        private FilterItem<string> MachineDescription = new FilterItem<string>();
+        public FilterItem<string> MachineDescription { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine years
         /// </summary>
-        private FilterItem<string> Year = new FilterItem<string>();
+        public FilterItem<string> Year { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine manufacturers
         /// </summary>
-        private FilterItem<string> Manufacturer = new FilterItem<string>();
+        public FilterItem<string> Manufacturer { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine publishers
         /// </summary>
-        private FilterItem<string> Publisher = new FilterItem<string>();
+        public FilterItem<string> Publisher { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine categories
         /// </summary>
-        private FilterItem<string> Category = new FilterItem<string>();
+        public FilterItem<string> Category { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine romof
         /// </summary>
-        private FilterItem<string> RomOf = new FilterItem<string>();
+        public FilterItem<string> RomOf { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine cloneof
         /// </summary>
-        private FilterItem<string> CloneOf = new FilterItem<string>();
+        public FilterItem<string> CloneOf { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine sampleof
         /// </summary>
-        private FilterItem<string> SampleOf = new FilterItem<string>();
+        public FilterItem<string> SampleOf { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude items with the "Supported" tag
         /// </summary>
-        private FilterItem<bool?> Supported = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Supported { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         /// <summary>
         /// Include or exclude machine source file
         /// </summary>
-        private FilterItem<string> SourceFile = new FilterItem<string>();
+        public FilterItem<string> SourceFile { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude items with the "Runnable" tag
         /// </summary>
-        private FilterItem<bool?> Runnable = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Runnable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         /// <summary>
         /// Include or exclude machine board
         /// </summary>
-        private FilterItem<string> Board = new FilterItem<string>();
+        public FilterItem<string> Board { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine rebuildto
         /// </summary>
-        private FilterItem<string> RebuildTo = new FilterItem<string>();
+        public FilterItem<string> RebuildTo { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine devices
         /// </summary>
-        private FilterItem<string> Devices = new FilterItem<string>();
+        public FilterItem<string> Devices { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine slotoptions
         /// </summary>
-        private FilterItem<string> SlotOptions = new FilterItem<string>();
+        public FilterItem<string> SlotOptions { get; private set; } = new FilterItem<string>();
 
         // TODO: Machine.Infos - List<KeyValuePair<string, string>>
 
         /// <summary>
         /// Include or exclude machine types
         /// </summary>
-        private FilterItem<MachineType> MachineTypes = new FilterItem<MachineType>() { Positive = MachineType.NULL, Negative = MachineType.NULL };
+        public FilterItem<MachineType> MachineTypes { get; private set; } = new FilterItem<MachineType>() { Positive = MachineType.NULL, Negative = MachineType.NULL };
 
         #endregion
 
@@ -122,149 +122,145 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Include or exclude item types
         /// </summary>
-        private FilterItem<string> ItemTypes = new FilterItem<string>();
+        public FilterItem<string> ItemTypes { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude item names
         /// </summary>
-        private FilterItem<string> ItemName = new FilterItem<string>();
+        public FilterItem<string> ItemName { get; private set; } = new FilterItem<string>();
 
         // TODO: DatItem.Features - List<KeyValuePair<string, string>>
 
         /// <summary>
         /// Include or exclude part names
         /// </summary>
-        private FilterItem<string> PartName = new FilterItem<string>();
+        public FilterItem<string> PartName { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude part interfaces
         /// </summary>
-        private FilterItem<string> PartInterface = new FilterItem<string>();
+        public FilterItem<string> PartInterface { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude area names
         /// </summary>
-        private FilterItem<string> AreaName = new FilterItem<string>();
+        public FilterItem<string> AreaName { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude area sizes
         /// </summary>
         /// <remarks>Positive means "Greater than or equal", Negative means "Less than or equal", Neutral means "Equal"</remarks>
-        private FilterItem<long?> AreaSize = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
 
         /// <summary>
         /// Include or exclude items with the "Default" tag
         /// </summary>
-        private FilterItem<bool?> Default = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         /// <summary>
         /// Include or exclude descriptions
         /// </summary>
-        private FilterItem<string> Description = new FilterItem<string>();
+        public FilterItem<string> Description { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude item sizes
         /// </summary>
         /// <remarks>Positive means "Greater than or equal", Negative means "Less than or equal", Neutral means "Equal"</remarks>
-        private FilterItem<long> Size = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
+        public FilterItem<long> Size { get; private set; } = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
 
         /// <summary>
         /// Include or exclude CRC32 hashes
         /// </summary>
-        private FilterItem<string> CRC = new FilterItem<string>();
+        public FilterItem<string> CRC { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude MD5 hashes
         /// </summary>
-        private FilterItem<string> MD5 = new FilterItem<string>();
+        public FilterItem<string> MD5 { get; private set; } = new FilterItem<string>();
 
 #if NET_FRAMEWORK
         /// <summary>
         /// Include or exclude RIPEMD160 hashes
         /// </summary>
-        private FilterItem<string> RIPEMD160 = new FilterItem<string>();
+        public FilterItem<string> RIPEMD160 { get; private set; } = new FilterItem<string>();
 #endif
 
         /// <summary>
         /// Include or exclude SHA-1 hashes
         /// </summary>
-        private FilterItem<string> SHA1 = new FilterItem<string>();
+        public FilterItem<string> SHA1 { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude SHA-256 hashes
         /// </summary>
-        private FilterItem<string> SHA256 = new FilterItem<string>();
+        public FilterItem<string> SHA256 { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude SHA-384 hashes
         /// </summary>
-        private FilterItem<string> SHA384 = new FilterItem<string>();
+        public FilterItem<string> SHA384 { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude SHA-512 hashes
         /// </summary>
-        private FilterItem<string> SHA512 = new FilterItem<string>();
+        public FilterItem<string> SHA512 { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude merge tags
         /// </summary>
-        private FilterItem<string> MergeTag = new FilterItem<string>();
+        public FilterItem<string> MergeTag { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude regions
         /// </summary>
-        private FilterItem<string> Region = new FilterItem<string>();
+        public FilterItem<string> Region { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude indexes
         /// </summary>
-        private FilterItem<string> Index = new FilterItem<string>();
+        public FilterItem<string> Index { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude items with the "Writable" tag
         /// </summary>
-        private FilterItem<bool?> Writable = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Writable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         /// <summary>
         /// Include or exclude items with the "Writable" tag
         /// </summary>
-        private FilterItem<bool?> Optional = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         /// <summary>
         /// Include or exclude item statuses
         /// </summary>
-        private FilterItem<ItemStatus> Status = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
+        public FilterItem<ItemStatus> Status { get; private set; } = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
 
         /// <summary>
         /// Include or exclude languages
         /// </summary>
-        private FilterItem<string> Language = new FilterItem<string>();
+        public FilterItem<string> Language { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude dates
         /// </summary>
-        private FilterItem<string> Date = new FilterItem<string>();
+        public FilterItem<string> Date { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude bioses
         /// </summary>
-        private FilterItem<string> Bios = new FilterItem<string>();
+        public FilterItem<string> Bios { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude offsets
         /// </summary>
-        private FilterItem<string> Offset = new FilterItem<string>();
+        public FilterItem<string> Offset { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude offsets
         /// </summary>
-        private FilterItem<bool?> Inverted = new FilterItem<bool?>();
+        public FilterItem<bool?> Inverted { get; private set; } = new FilterItem<bool?>();
 
         #endregion
-
-        #endregion // Private instance variables
-
-        #region Pubically facing variables
 
         #region Manipulation Flags
 
@@ -806,20 +802,21 @@ namespace SabreTools.Library.Filtering
         /// <param name="datFile">DatFile to filter</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
+        /// TODO: Should this be inverted to be in DatFile?
         public bool FilterDatFile(DatFile datFile, bool useTags)
         {
             try
             {
                 // Process description to machine name
-                if (this.DescriptionAsName)
+                if (DescriptionAsName)
                     MachineDescriptionToName(datFile);
 
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
-                if (useTags && this.InternalSplit == SplitType.None)
-                    this.InternalSplit = datFile.Header.ForceMerging.AsSplitType();
+                if (useTags && InternalSplit == SplitType.None)
+                    InternalSplit = datFile.Header.ForceMerging.AsSplitType();
 
                 // Run internal splitting
-                ProcessSplitType(datFile, this.InternalSplit);
+                ProcessSplitType(datFile, InternalSplit);
 
                 // Loop over every key in the dictionary
                 List<string> keys = datFile.Items.Keys.ToList();
@@ -830,11 +827,15 @@ namespace SabreTools.Library.Filtering
                     List<DatItem> newitems = new List<DatItem>();
                     foreach (DatItem item in items)
                     {
+                        // If we have a null item, we can't pass it
+                        if (item == null)
+                            continue;
+
                         // If the rom passes the filter, include it
-                        if (ItemPasses(item))
+                        if (item.PassesFilter(this))
                         {
                             // If we're stripping unicode characters, do so from all relevant things
-                            if (this.RemoveUnicode)
+                            if (RemoveUnicode)
                             {
                                 item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
                                 item.MachineName = Sanitizer.RemoveUnicodeCharacters(item.MachineName);
@@ -842,21 +843,21 @@ namespace SabreTools.Library.Filtering
                             }
 
                             // If we're in cleaning mode, do so from all relevant things
-                            if (this.Clean)
+                            if (Clean)
                             {
                                 item.MachineName = Sanitizer.CleanGameName(item.MachineName);
                                 item.MachineDescription = Sanitizer.CleanGameName(item.MachineDescription);
                             }
 
                             // If we are in single game mode, rename all games
-                            if (this.Single)
+                            if (Single)
                                 item.MachineName = "!";
 
                             // If we are in NTFS trim mode, trim the game name
-                            if (this.Trim)
+                            if (Trim)
                             {
                                 // Windows max name length is 260
-                                int usableLength = 260 - item.MachineName.Length - this.Root.Length;
+                                int usableLength = 260 - item.MachineName.Length - Root.Length;
                                 if (item.Name.Length > usableLength)
                                 {
                                     string ext = Path.GetExtension(item.Name);
@@ -915,437 +916,6 @@ namespace SabreTools.Library.Filtering
                 Globals.Logger.Error(ex.ToString());
                 return false;
             }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="item">DatItem to check</param>
-        /// <returns>True if the file passed the filter, false otherwise</returns>
-        public bool ItemPasses(DatItem item)
-        {
-            // If the item is null, we automatically fail it
-            if (item == null)
-                return false;
-
-            #region Machine Filters
-
-            // Filter on machine name
-            bool? machineNameFound = this.MachineName.MatchesPositiveSet(item.MachineName);
-            if (this.IncludeOfInGame)
-            {
-                machineNameFound |= (this.MachineName.MatchesPositiveSet(item.CloneOf) == true);
-                machineNameFound |= (this.MachineName.MatchesPositiveSet(item.RomOf) == true);
-            }
-            if (machineNameFound == false)
-                return false;
-
-            machineNameFound = this.MachineName.MatchesNegativeSet(item.MachineName);
-            if (this.IncludeOfInGame)
-            {
-                machineNameFound |= (this.MachineName.MatchesNegativeSet(item.CloneOf) == true);
-                machineNameFound |= (this.MachineName.MatchesNegativeSet(item.RomOf) == true);
-            }
-            if (machineNameFound == false)
-                return false;
-
-            // Filter on comment
-            if (this.Comment.MatchesPositiveSet(item.Comment) == false)
-                return false;
-            if (this.Comment.MatchesNegativeSet(item.Comment) == true)
-                return false;
-
-            // Filter on machine description
-            if (this.MachineDescription.MatchesPositiveSet(item.MachineDescription) == false)
-                return false;
-            if (this.MachineDescription.MatchesNegativeSet(item.MachineDescription) == true)
-                return false;
-
-            // Filter on year
-            if (this.Year.MatchesPositiveSet(item.Year) == false)
-                return false;
-            if (this.Year.MatchesNegativeSet(item.Year) == true)
-                return false;
-
-            // Filter on manufacturer
-            if (this.Manufacturer.MatchesPositiveSet(item.Manufacturer) == false)
-                return false;
-            if (this.Manufacturer.MatchesNegativeSet(item.Manufacturer) == true)
-                return false;
-
-            // Filter on publisher
-            if (this.Publisher.MatchesPositiveSet(item.Publisher) == false)
-                return false;
-            if (this.Publisher.MatchesNegativeSet(item.Publisher) == true)
-                return false;
-
-            // Filter on category
-            if (this.Category.MatchesPositiveSet(item.Category) == false)
-                return false;
-            if (this.Category.MatchesNegativeSet(item.Category) == true)
-                return false;
-
-            // Filter on romof
-            if (this.RomOf.MatchesPositiveSet(item.RomOf) == false)
-                return false;
-            if (this.RomOf.MatchesNegativeSet(item.RomOf) == true)
-                return false;
-
-            // Filter on cloneof
-            if (this.CloneOf.MatchesPositiveSet(item.CloneOf) == false)
-                return false;
-            if (this.CloneOf.MatchesNegativeSet(item.CloneOf) == true)
-                return false;
-
-            // Filter on sampleof
-            if (this.SampleOf.MatchesPositiveSet(item.SampleOf) == false)
-                return false;
-            if (this.SampleOf.MatchesNegativeSet(item.SampleOf) == true)
-                return false;
-
-            // Filter on supported
-            if (this.Supported.MatchesNeutral(null, item.Supported) == false)
-                return false;
-
-            // Filter on source file
-            if (this.SourceFile.MatchesPositiveSet(item.SourceFile) == false)
-                return false;
-            if (this.SourceFile.MatchesNegativeSet(item.SourceFile) == true)
-                return false;
-
-            // Filter on runnable
-            if (this.Runnable.MatchesNeutral(null, item.Runnable) == false)
-                return false;
-
-            // Filter on board
-            if (this.Board.MatchesPositiveSet(item.Board) == false)
-                return false;
-            if (this.Board.MatchesNegativeSet(item.Board) == true)
-                return false;
-
-            // Filter on rebuildto
-            if (this.RebuildTo.MatchesPositiveSet(item.RebuildTo) == false)
-                return false;
-            if (this.RebuildTo.MatchesNegativeSet(item.RebuildTo) == true)
-                return false;
-
-            // Filter on devices
-            if (item.Devices != null && item.Devices.Any())
-            {
-                bool anyPositiveDevice = false;
-                bool anyNegativeDevice = false;
-                foreach (string device in item.Devices)
-                {
-                    anyPositiveDevice |= this.Devices.MatchesPositiveSet(device) != false;
-                    anyNegativeDevice |= this.Devices.MatchesNegativeSet(device) == false;
-                }
-
-                if (!anyPositiveDevice || anyNegativeDevice)
-                    return false;
-            }
-
-            // Filter on slot options
-            if (item.SlotOptions != null && item.SlotOptions.Any())
-            {
-                bool anyPositiveSlotOption = false;
-                bool anyNegativeSlotOption = false;
-                foreach (string slotOption in item.SlotOptions)
-                {
-                    anyPositiveSlotOption |= this.SlotOptions.MatchesPositiveSet(slotOption) != false;
-                    anyNegativeSlotOption |= this.SlotOptions.MatchesNegativeSet(slotOption) == false;
-                }
-
-                if (!anyPositiveSlotOption || anyNegativeSlotOption)
-                    return false;
-            }
-
-            // Filter on machine type
-            if (this.MachineTypes.MatchesPositive(MachineType.NULL, item.MachineType) == false)
-                return false;
-            if (this.MachineTypes.MatchesNegative(MachineType.NULL, item.MachineType) == true)
-                return false;
-
-            #endregion
-
-            #region DatItem Filters
-
-            // Filter on item type
-            // TODO: Remove default filtering at some point
-            if (this.ItemTypes.PositiveSet.Count == 0 && this.ItemTypes.NegativeSet.Count == 0
-                && item.ItemType != ItemType.Rom && item.ItemType != ItemType.Disk && item.ItemType != ItemType.Blank)
-                return false;
-            if (this.ItemTypes.MatchesPositiveSet(item.ItemType.ToString()) == false)
-                return false;
-            if (this.ItemTypes.MatchesNegativeSet(item.ItemType.ToString()) == true)
-                return false;
-
-            // Filter on item name
-            if (this.ItemName.MatchesPositiveSet(item.Name) == false)
-                return false;
-            if (this.ItemName.MatchesNegativeSet(item.Name) == true)
-                return false;
-
-            // Filter on part name
-            if (this.PartName.MatchesPositiveSet(item.PartName) == false)
-                return false;
-            if (this.PartName.MatchesNegativeSet(item.PartName) == true)
-                return false;
-
-            // Filter on part interface
-            if (this.PartInterface.MatchesPositiveSet(item.PartInterface) == false)
-                return false;
-            if (this.PartInterface.MatchesNegativeSet(item.PartInterface) == true)
-                return false;
-
-            // Filter on area name
-            if (this.AreaName.MatchesPositiveSet(item.AreaName) == false)
-                return false;
-            if (this.AreaName.MatchesNegativeSet(item.AreaName) == true)
-                return false;
-
-            // Filter on area size
-            if (this.AreaSize.MatchesNeutral(null, item.AreaSize) == false)
-                return false;
-            else if (this.AreaSize.MatchesPositive(null, item.AreaSize) == false)
-                return false;
-            else if (this.AreaSize.MatchesNegative(null, item.AreaSize) == false)
-                return false;
-
-            // Take care of item-specific differences
-            switch (item.ItemType)
-            {
-                case ItemType.Archive:
-                    // Archive has no special fields
-                    break;
-
-                case ItemType.BiosSet:
-                    BiosSet biosSet = (BiosSet)item;
-
-                    // Filter on description
-                    if (this.Description.MatchesNeutral(null, biosSet.Description) == false)
-                        return false;
-
-                    // Filter on default
-                    if (this.Default.MatchesNeutral(null, biosSet.Default) == false)
-                        return false;
-
-                    break;
-
-                case ItemType.Blank:
-                    // Blank has no special fields
-                    break;
-
-                case ItemType.Disk:
-                    Disk disk = (Disk)item;
-
-                    // Filter on MD5
-                    if (this.MD5.MatchesPositiveSet(disk.MD5) == false)
-                        return false;
-                    if (this.MD5.MatchesNegativeSet(disk.MD5) == true)
-                        return false;
-
-#if NET_FRAMEWORK
-                    // Filter on RIPEMD160
-                    if (this.RIPEMD160.MatchesPositiveSet(disk.RIPEMD160) == false)
-                        return false;
-                    if (this.RIPEMD160.MatchesNegativeSet(disk.RIPEMD160) == true)
-                        return false;
-#endif
-
-                    // Filter on SHA-1
-                    if (this.SHA1.MatchesPositiveSet(disk.SHA1) == false)
-                        return false;
-                    if (this.SHA1.MatchesNegativeSet(disk.SHA1) == true)
-                        return false;
-
-                    // Filter on SHA-256
-                    if (this.SHA256.MatchesPositiveSet(disk.SHA256) == false)
-                        return false;
-                    if (this.SHA256.MatchesNegativeSet(disk.SHA256) == true)
-                        return false;
-
-                    // Filter on SHA-384
-                    if (this.SHA384.MatchesPositiveSet(disk.SHA384) == false)
-                        return false;
-                    if (this.SHA384.MatchesNegativeSet(disk.SHA384) == true)
-                        return false;
-
-                    // Filter on SHA-512
-                    if (this.SHA512.MatchesPositiveSet(disk.SHA512) == false)
-                        return false;
-                    if (this.SHA512.MatchesNegativeSet(disk.SHA512) == true)
-                        return false;
-
-                    // Filter on merge tag
-                    if (this.MergeTag.MatchesPositiveSet(disk.MergeTag) == false)
-                        return false;
-                    if (this.MergeTag.MatchesNegativeSet(disk.MergeTag) == true)
-                        return false;
-
-                    // Filter on region
-                    if (this.Region.MatchesPositiveSet(disk.Region) == false)
-                        return false;
-                    if (this.Region.MatchesNegativeSet(disk.Region) == true)
-                        return false;
-
-                    // Filter on index
-                    if (this.Index.MatchesPositiveSet(disk.Index) == false)
-                        return false;
-                    if (this.Index.MatchesNegativeSet(disk.Index) == true)
-                        return false;
-
-                    // Filter on writable
-                    if (this.Writable.MatchesNeutral(null, disk.Writable) == false)
-                        return false;
-
-                    // Filter on status
-                    if (this.Status.MatchesPositive(ItemStatus.NULL, disk.ItemStatus) == false)
-                        return false;
-                    if (this.Status.MatchesNegative(ItemStatus.NULL, disk.ItemStatus) == true)
-                        return false;
-
-                    // Filter on optional
-                    if (this.Optional.MatchesNeutral(null, disk.Optional) == false)
-                        return false;
-
-                    break;
-
-                case ItemType.Release:
-                    Release release = (Release)item;
-
-                    // Filter on region
-                    if (this.Region.MatchesPositiveSet(release.Region) == false)
-                        return false;
-                    if (this.Region.MatchesNegativeSet(release.Region) == true)
-                        return false;
-
-                    // Filter on language
-                    if (this.Language.MatchesPositiveSet(release.Language) == false)
-                        return false;
-                    if (this.Language.MatchesNegativeSet(release.Language) == true)
-                        return false;
-
-                    // Filter on date
-                    if (this.Date.MatchesPositiveSet(release.Date) == false)
-                        return false;
-                    if (this.Date.MatchesNegativeSet(release.Date) == true)
-                        return false;
-
-                    // Filter on default
-                    if (this.Default.MatchesNeutral(null, release.Default) == false)
-                        return false;
-
-                    break;
-
-                case ItemType.Rom:
-                    Rom rom = (Rom)item;
-
-                    // Filter on bios
-                    if (this.Bios.MatchesPositiveSet(rom.Bios) == false)
-                        return false;
-                    if (this.Bios.MatchesNegativeSet(rom.Bios) == true)
-                        return false;
-
-                    // Filter on rom size
-                    if (this.Size.MatchesNeutral(-1, rom.Size) == false)
-                        return false;
-                    else if (this.Size.MatchesPositive(-1, rom.Size) == false)
-                        return false;
-                    else if (this.Size.MatchesNegative(-1, rom.Size) == false)
-                        return false;
-
-                    // Filter on CRC
-                    if (this.CRC.MatchesPositiveSet(rom.CRC) == false)
-                        return false;
-                    if (this.CRC.MatchesNegativeSet(rom.CRC) == true)
-                        return false;
-
-                    // Filter on MD5
-                    if (this.MD5.MatchesPositiveSet(rom.MD5) == false)
-                        return false;
-                    if (this.MD5.MatchesNegativeSet(rom.MD5) == true)
-                        return false;
-
-#if NET_FRAMEWORK
-                    // Filter on RIPEMD160
-                    if (this.RIPEMD160.MatchesPositiveSet(rom.RIPEMD160) == false)
-                        return false;
-                    if (this.RIPEMD160.MatchesNegativeSet(rom.RIPEMD160) == true)
-                        return false;
-#endif
-
-                    // Filter on SHA-1
-                    if (this.SHA1.MatchesPositiveSet(rom.SHA1) == false)
-                        return false;
-                    if (this.SHA1.MatchesNegativeSet(rom.SHA1) == true)
-                        return false;
-
-                    // Filter on SHA-256
-                    if (this.SHA256.MatchesPositiveSet(rom.SHA256) == false)
-                        return false;
-                    if (this.SHA256.MatchesNegativeSet(rom.SHA256) == true)
-                        return false;
-
-                    // Filter on SHA-384
-                    if (this.SHA384.MatchesPositiveSet(rom.SHA384) == false)
-                        return false;
-                    if (this.SHA384.MatchesNegativeSet(rom.SHA384) == true)
-                        return false;
-
-                    // Filter on SHA-512
-                    if (this.SHA512.MatchesPositiveSet(rom.SHA512) == false)
-                        return false;
-                    if (this.SHA512.MatchesNegativeSet(rom.SHA512) == true)
-                        return false;
-
-                    // Filter on merge tag
-                    if (this.MergeTag.MatchesPositiveSet(rom.MergeTag) == false)
-                        return false;
-                    if (this.MergeTag.MatchesNegativeSet(rom.MergeTag) == true)
-                        return false;
-
-                    // Filter on region
-                    if (this.Region.MatchesPositiveSet(rom.Region) == false)
-                        return false;
-                    if (this.Region.MatchesNegativeSet(rom.Region) == true)
-                        return false;
-
-                    // Filter on offset
-                    if (this.Offset.MatchesPositiveSet(rom.Offset) == false)
-                        return false;
-                    if (this.Offset.MatchesNegativeSet(rom.Offset) == true)
-                        return false;
-
-                    // Filter on date
-                    if (this.Date.MatchesPositiveSet(rom.Date) == false)
-                        return false;
-                    if (this.Date.MatchesNegativeSet(rom.Date) == true)
-                        return false;
-
-                    // Filter on status
-                    if (this.Status.MatchesPositive(ItemStatus.NULL, rom.ItemStatus) == false)
-                        return false;
-                    if (this.Status.MatchesNegative(ItemStatus.NULL, rom.ItemStatus) == true)
-                        return false;
-
-                    // Filter on optional
-                    if (this.Optional.MatchesNeutral(null, rom.Optional) == false)
-                        return false;
-
-                    // Filter on inverted
-                    if (this.Inverted.MatchesNeutral(null, rom.Inverted) == false)
-                        return false;
-
-                    break;
-
-                case ItemType.Sample:
-                    // Sample has no special fields
-                    break;
-            }
-
-            #endregion
 
             return true;
         }

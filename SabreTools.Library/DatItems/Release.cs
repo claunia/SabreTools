@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
@@ -159,6 +160,46 @@ namespace SabreTools.Library.DatItems
                 && this.Language == newOther.Language
                 && this.Date == newOther.Date
                 && this.Default == newOther.Default);
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filter
+        /// </summary>
+        /// <param name="filter">Filter to check against</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        public override bool PassesFilter(Filter filter)
+        {
+            // Check common fields first
+            if (!base.PassesFilter(filter))
+                return false;
+
+            // Filter on region
+            if (filter.Region.MatchesPositiveSet(Region) == false)
+                return false;
+            if (filter.Region.MatchesNegativeSet(Region) == true)
+                return false;
+
+            // Filter on language
+            if (filter.Language.MatchesPositiveSet(Language) == false)
+                return false;
+            if (filter.Language.MatchesNegativeSet(Language) == true)
+                return false;
+
+            // Filter on date
+            if (filter.Date.MatchesPositiveSet(Date) == false)
+                return false;
+            if (filter.Date.MatchesNegativeSet(Date) == true)
+                return false;
+
+            // Filter on default
+            if (filter.Default.MatchesNeutral(null, Default) == false)
+                return false;
+
+            return true;
         }
 
         #endregion

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
+using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
@@ -477,6 +478,94 @@ namespace SabreTools.Library.DatItems
                 && ConditionalHashEquals(_sha256, other._sha256)
                 && ConditionalHashEquals(_sha384, other._sha384)
                 && ConditionalHashEquals(_sha512, other._sha512);
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filter
+        /// </summary>
+        /// <param name="filter">Filter to check against</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        public override bool PassesFilter(Filter filter)
+        {
+            // Check common fields first
+            if (!base.PassesFilter(filter))
+                return false;
+
+            // Filter on MD5
+            if (filter.MD5.MatchesPositiveSet(MD5) == false)
+                return false;
+            if (filter.MD5.MatchesNegativeSet(MD5) == true)
+                return false;
+
+#if NET_FRAMEWORK
+            // Filter on RIPEMD160
+            if (filter.RIPEMD160.MatchesPositiveSet(RIPEMD160) == false)
+                return false;
+            if (filter.RIPEMD160.MatchesNegativeSet(RIPEMD160) == true)
+                return false;
+#endif
+
+            // Filter on SHA-1
+            if (filter.SHA1.MatchesPositiveSet(SHA1) == false)
+                return false;
+            if (filter.SHA1.MatchesNegativeSet(SHA1) == true)
+                return false;
+
+            // Filter on SHA-256
+            if (filter.SHA256.MatchesPositiveSet(SHA256) == false)
+                return false;
+            if (filter.SHA256.MatchesNegativeSet(SHA256) == true)
+                return false;
+
+            // Filter on SHA-384
+            if (filter.SHA384.MatchesPositiveSet(SHA384) == false)
+                return false;
+            if (filter.SHA384.MatchesNegativeSet(SHA384) == true)
+                return false;
+
+            // Filter on SHA-512
+            if (filter.SHA512.MatchesPositiveSet(SHA512) == false)
+                return false;
+            if (filter.SHA512.MatchesNegativeSet(SHA512) == true)
+                return false;
+
+            // Filter on merge tag
+            if (filter.MergeTag.MatchesPositiveSet(MergeTag) == false)
+                return false;
+            if (filter.MergeTag.MatchesNegativeSet(MergeTag) == true)
+                return false;
+
+            // Filter on region
+            if (filter.Region.MatchesPositiveSet(Region) == false)
+                return false;
+            if (filter.Region.MatchesNegativeSet(Region) == true)
+                return false;
+
+            // Filter on index
+            if (filter.Index.MatchesPositiveSet(Index) == false)
+                return false;
+            if (filter.Index.MatchesNegativeSet(Index) == true)
+                return false;
+
+            // Filter on writable
+            if (filter.Writable.MatchesNeutral(null, Writable) == false)
+                return false;
+
+            // Filter on status
+            if (filter.Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
+                return false;
+            if (filter.Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
+                return false;
+
+            // Filter on optional
+            if (filter.Optional.MatchesNeutral(null, Optional) == false)
+                return false;
+
+            return true;
         }
 
         #endregion
