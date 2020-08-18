@@ -202,6 +202,29 @@ namespace SabreTools.Library.DatItems
             return true;
         }
 
+        /// <summary>
+        /// Remove fields from the DatItem
+        /// </summary>
+        /// <param name="fields">List of Fields to remove</param>
+        public override void RemoveFields(List<Field> fields)
+        {
+            // Remove common fields first
+            base.RemoveFields(fields);
+
+            // Remove the fields
+            if (fields.Contains(Field.Region))
+                Region = null;
+
+            if (fields.Contains(Field.Language))
+                Language = null;
+
+            if (fields.Contains(Field.Date))
+                Date = null;
+
+            if (fields.Contains(Field.Default))
+                Default = null;
+        }
+
         #endregion
 
         #region Sorting and Merging
@@ -210,11 +233,11 @@ namespace SabreTools.Library.DatItems
         /// Replace fields from another item
         /// </summary>
         /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="updateFields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> updateFields)
+        /// <param name="fields">List of Fields representing what should be updated</param>
+        public override void ReplaceFields(DatItem item, List<Field> fields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, updateFields);
+            base.ReplaceFields(item, fields);
 
             // If we don't have a Release to replace from, ignore specific fields
             if (item.ItemType != ItemType.Release)
@@ -224,16 +247,16 @@ namespace SabreTools.Library.DatItems
             Release newItem = item as Release;
 
             // Replace the fields
-            if (updateFields.Contains(Field.Region))
+            if (fields.Contains(Field.Region))
                 Region = newItem.Region;
 
-            if (updateFields.Contains(Field.Language))
+            if (fields.Contains(Field.Language))
                 Language = newItem.Language;
 
-            if (updateFields.Contains(Field.Date))
+            if (fields.Contains(Field.Date))
                 Date = newItem.Date;
 
-            if (updateFields.Contains(Field.Default))
+            if (fields.Contains(Field.Default))
                 Default = newItem.Default;
         }
 

@@ -1081,6 +1081,96 @@ namespace SabreTools.Library.DatItems
             return true;
         }
 
+        /// <summary>
+        /// Remove fields from the DatItem
+        /// </summary>
+        /// <param name="fields">List of Fields to remove</param>
+        public virtual void RemoveFields(List<Field> fields)
+        {
+            #region Machine Fields
+
+            if (fields.Contains(Field.MachineName))
+                MachineName = null;
+
+            if (fields.Contains(Field.Comment))
+                Comment = null;
+
+            if (fields.Contains(Field.Description))
+                MachineDescription = null;
+
+            if (fields.Contains(Field.Year))
+                Year = null;
+
+            if (fields.Contains(Field.Manufacturer))
+                Manufacturer = null;
+
+            if (fields.Contains(Field.Publisher))
+                Publisher = null;
+
+            if (fields.Contains(Field.Category))
+                Category = null;
+
+            if (fields.Contains(Field.RomOf))
+                RomOf = null;
+
+            if (fields.Contains(Field.CloneOf))
+                CloneOf = null;
+
+            if (fields.Contains(Field.SampleOf))
+                SampleOf = null;
+
+            if (fields.Contains(Field.Supported))
+                Supported = null;
+
+            if (fields.Contains(Field.SourceFile))
+                SourceFile = null;
+
+            if (fields.Contains(Field.Runnable))
+                Runnable = null;
+
+            if (fields.Contains(Field.Board))
+                Board = null;
+
+            if (fields.Contains(Field.RebuildTo))
+                RebuildTo = null;
+
+            if (fields.Contains(Field.Devices))
+                Devices = null;
+
+            if (fields.Contains(Field.SlotOptions))
+                SlotOptions = null;
+
+            if (fields.Contains(Field.Infos))
+                Infos = null;
+
+            if (fields.Contains(Field.MachineType))
+                MachineType = MachineType.NULL;
+
+            #endregion
+
+            #region Item Fields
+
+            if (fields.Contains(Field.Name))
+                Name = null;
+
+            if (fields.Contains(Field.PartName))
+                PartName = null;
+
+            if (fields.Contains(Field.PartInterface))
+                PartInterface = null;
+
+            if (fields.Contains(Field.Features))
+                Features = null;
+
+            if (fields.Contains(Field.AreaName))
+                AreaName = null;
+
+            if (fields.Contains(Field.AreaSize))
+                AreaSize = null;
+
+            #endregion
+        }
+
         #endregion
 
         #region Sorting and Merging
@@ -1158,25 +1248,25 @@ namespace SabreTools.Library.DatItems
         /// Replace fields from another item
         /// </summary>
         /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="updateFields">List of Fields representing what should be updated</param>
-        public virtual void ReplaceFields(DatItem item, List<Field> updateFields)
+        /// <param name="fields">List of Fields representing what should be updated</param>
+        public virtual void ReplaceFields(DatItem item, List<Field> fields)
         {
-            if (updateFields.Contains(Field.Name))
+            if (fields.Contains(Field.Name))
                 Name = item.Name;
 
-            if (updateFields.Contains(Field.PartName))
+            if (fields.Contains(Field.PartName))
                 PartName = item.PartName;
 
-            if (updateFields.Contains(Field.PartInterface))
+            if (fields.Contains(Field.PartInterface))
                 PartInterface = item.PartInterface;
 
-            if (updateFields.Contains(Field.Features))
+            if (fields.Contains(Field.Features))
                 Features = item.Features;
 
-            if (updateFields.Contains(Field.AreaName))
+            if (fields.Contains(Field.AreaName))
                 AreaName = item.AreaName;
 
-            if (updateFields.Contains(Field.AreaSize))
+            if (fields.Contains(Field.AreaSize))
                 AreaSize = item.AreaSize;
         }
 
@@ -1184,68 +1274,68 @@ namespace SabreTools.Library.DatItems
         /// Replace machine fields from another item
         /// </summary>
         /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="updateFields">List of Fields representing what should be updated</param>
+        /// <param name="fields">List of Fields representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public void ReplaceMachineFields(DatItem item, List<Field> updateFields, bool onlySame)
+        public void ReplaceMachineFields(DatItem item, List<Field> fields, bool onlySame)
         {
-            if (updateFields.Contains(Field.MachineName))
+            if (fields.Contains(Field.MachineName))
                 MachineName = item.MachineName;
 
-            if (updateFields.Contains(Field.Comment))
+            if (fields.Contains(Field.Comment))
                 Comment = item.Comment;
 
-            if (updateFields.Contains(Field.Description))
+            if (fields.Contains(Field.Description))
             {
                 if (!onlySame || (onlySame && MachineName == MachineDescription))
                     MachineDescription = item.MachineDescription;
             }
 
-            if (updateFields.Contains(Field.Year))
+            if (fields.Contains(Field.Year))
                 Year = item.Year;
 
-            if (updateFields.Contains(Field.Manufacturer))
+            if (fields.Contains(Field.Manufacturer))
                 Manufacturer = item.Manufacturer;
 
-            if (updateFields.Contains(Field.Publisher))
+            if (fields.Contains(Field.Publisher))
                 Publisher = item.Publisher;
 
-            if (updateFields.Contains(Field.Category))
+            if (fields.Contains(Field.Category))
                 Category = item.Category;
 
-            if (updateFields.Contains(Field.RomOf))
+            if (fields.Contains(Field.RomOf))
                 RomOf = item.RomOf;
 
-            if (updateFields.Contains(Field.CloneOf))
+            if (fields.Contains(Field.CloneOf))
                 CloneOf = item.CloneOf;
 
-            if (updateFields.Contains(Field.SampleOf))
+            if (fields.Contains(Field.SampleOf))
                 SampleOf = item.SampleOf;
 
-            if (updateFields.Contains(Field.Supported))
+            if (fields.Contains(Field.Supported))
                 Supported = item.Supported;
 
-            if (updateFields.Contains(Field.SourceFile))
+            if (fields.Contains(Field.SourceFile))
                 SourceFile = item.SourceFile;
 
-            if (updateFields.Contains(Field.Runnable))
+            if (fields.Contains(Field.Runnable))
                 Runnable = item.Runnable;
 
-            if (updateFields.Contains(Field.Board))
+            if (fields.Contains(Field.Board))
                 Board = item.Board;
 
-            if (updateFields.Contains(Field.RebuildTo))
+            if (fields.Contains(Field.RebuildTo))
                 RebuildTo = item.RebuildTo;
 
-            if (updateFields.Contains(Field.Devices))
+            if (fields.Contains(Field.Devices))
                 Devices = item.Devices;
 
-            if (updateFields.Contains(Field.SlotOptions))
+            if (fields.Contains(Field.SlotOptions))
                 SlotOptions = item.SlotOptions;
 
-            if (updateFields.Contains(Field.Infos))
+            if (fields.Contains(Field.Infos))
                 Infos = item.Infos;
 
-            if (updateFields.Contains(Field.MachineType))
+            if (fields.Contains(Field.MachineType))
                 MachineType = item.MachineType;
         }
 

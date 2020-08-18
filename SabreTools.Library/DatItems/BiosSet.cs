@@ -160,6 +160,23 @@ namespace SabreTools.Library.DatItems
             return true;
         }
 
+        /// <summary>
+        /// Remove fields from the DatItem
+        /// </summary>
+        /// <param name="fields">List of Fields to remove</param>
+        public override void RemoveFields(List<Field> fields)
+        {
+            // Remove common fields first
+            base.RemoveFields(fields);
+
+            // Remove the fields
+            if (fields.Contains(Field.BiosDescription))
+                Description = null;
+
+            if (fields.Contains(Field.Default))
+                Default = null;
+        }
+
         #endregion
 
         #region Sorting and Merging
@@ -168,11 +185,11 @@ namespace SabreTools.Library.DatItems
         /// Replace fields from another item
         /// </summary>
         /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="updateFields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> updateFields)
+        /// <param name="fields">List of Fields representing what should be updated</param>
+        public override void ReplaceFields(DatItem item, List<Field> fields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, updateFields);
+            base.ReplaceFields(item, fields);
 
             // If we don't have a BiosSet to replace from, ignore specific fields
             if (item.ItemType != ItemType.BiosSet)
@@ -182,10 +199,10 @@ namespace SabreTools.Library.DatItems
             BiosSet newItem = item as BiosSet;
 
             // Replace the fields
-            if (updateFields.Contains(Field.BiosDescription))
+            if (fields.Contains(Field.BiosDescription))
                 Description = newItem.Description;
 
-            if (updateFields.Contains(Field.Default))
+            if (fields.Contains(Field.Default))
                 Default = newItem.Default;
         }
 

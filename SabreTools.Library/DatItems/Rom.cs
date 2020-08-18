@@ -619,6 +619,67 @@ namespace SabreTools.Library.DatItems
             return true;
         }
 
+        /// <summary>
+        /// Remove fields from the DatItem
+        /// </summary>
+        /// <param name="fields">List of Fields to remove</param>
+        public override void RemoveFields(List<Field> fields)
+        {
+            // Remove common fields first
+            base.RemoveFields(fields);
+
+            // Remove the fields
+            if (fields.Contains(Field.Bios))
+                Bios = null;
+
+            if (fields.Contains(Field.Size))
+                Size = 0;
+
+            if (fields.Contains(Field.CRC))
+                CRC = null;
+
+            if (fields.Contains(Field.MD5))
+                MD5 = null;
+
+#if NET_FRAMEWORK
+            if (fields.Contains(Field.RIPEMD160))
+                RIPEMD160 = null;
+#endif
+
+            if (fields.Contains(Field.SHA1))
+                SHA1 = null;
+
+            if (fields.Contains(Field.SHA256))
+                SHA256 = null;
+
+            if (fields.Contains(Field.SHA384))
+                SHA384 = null;
+
+            if (fields.Contains(Field.SHA512))
+                SHA512 = null;
+
+            if (fields.Contains(Field.Merge))
+                MergeTag = null;
+
+            if (fields.Contains(Field.Region))
+                Region = null;
+
+            if (fields.Contains(Field.Offset))
+                Offset = null;
+
+            if (fields.Contains(Field.Date))
+                Date = null;
+
+            if (fields.Contains(Field.Status))
+                ItemStatus = ItemStatus.NULL;
+
+            if (fields.Contains(Field.Optional))
+                Optional = null;
+
+            if (fields.Contains(Field.Inverted))
+                Inverted = null;
+        }
+
         #endregion
 
         #region Sorting and Merging
@@ -684,11 +745,11 @@ namespace SabreTools.Library.DatItems
         /// Replace fields from another item
         /// </summary>
         /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="updateFields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> updateFields)
+        /// <param name="fields">List of Fields representing what should be updated</param>
+        public override void ReplaceFields(DatItem item, List<Field> fields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, updateFields);
+            base.ReplaceFields(item, fields);
 
             // If we don't have a Rom to replace from, ignore specific fields
             if (item.ItemType != ItemType.Rom)
@@ -698,75 +759,75 @@ namespace SabreTools.Library.DatItems
             Rom newItem = item as Rom;
 
             // Replace the fields
-            if (updateFields.Contains(Field.Bios))
+            if (fields.Contains(Field.Bios))
                 Bios = newItem.Bios;
 
-            if (updateFields.Contains(Field.Size))
+            if (fields.Contains(Field.Size))
                 Size = newItem.Size;
 
-            if (updateFields.Contains(Field.CRC))
+            if (fields.Contains(Field.CRC))
             {
                 if (string.IsNullOrEmpty(CRC) && !string.IsNullOrEmpty(newItem.CRC))
                     CRC = newItem.CRC;
             }
 
-            if (updateFields.Contains(Field.MD5))
+            if (fields.Contains(Field.MD5))
             {
                 if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
                     MD5 = newItem.MD5;
             }
 
 #if NET_FRAMEWORK
-            if (updateFields.Contains(Field.RIPEMD160))
+            if (fields.Contains(Field.RIPEMD160))
             {
                 if (string.IsNullOrEmpty(RIPEMD160) && !string.IsNullOrEmpty(newItem.RIPEMD160))
                     RIPEMD160 = newItem.RIPEMD160;
             }
 #endif
 
-            if (updateFields.Contains(Field.SHA1))
+            if (fields.Contains(Field.SHA1))
             {
                 if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
                     SHA1 = newItem.SHA1;
             }
 
-            if (updateFields.Contains(Field.SHA256))
+            if (fields.Contains(Field.SHA256))
             {
                 if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
                     SHA256 = newItem.SHA256;
             }
 
-            if (updateFields.Contains(Field.SHA384))
+            if (fields.Contains(Field.SHA384))
             {
                 if (string.IsNullOrEmpty(SHA384) && !string.IsNullOrEmpty(newItem.SHA384))
                     SHA384 = newItem.SHA384;
             }
 
-            if (updateFields.Contains(Field.SHA512))
+            if (fields.Contains(Field.SHA512))
             {
                 if (string.IsNullOrEmpty(SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
                     SHA512 = newItem.SHA512;
             }
 
-            if (updateFields.Contains(Field.Merge))
+            if (fields.Contains(Field.Merge))
                 MergeTag = newItem.MergeTag;
 
-            if (updateFields.Contains(Field.Region))
+            if (fields.Contains(Field.Region))
                 Region = newItem.Region;
 
-            if (updateFields.Contains(Field.Offset))
+            if (fields.Contains(Field.Offset))
                 Offset = newItem.Offset;
 
-            if (updateFields.Contains(Field.Date))
+            if (fields.Contains(Field.Date))
                 Date = newItem.Date;
 
-            if (updateFields.Contains(Field.Status))
+            if (fields.Contains(Field.Status))
                 ItemStatus = newItem.ItemStatus;
 
-            if (updateFields.Contains(Field.Optional))
+            if (fields.Contains(Field.Optional))
                 Optional = newItem.Optional;
 
-            if (updateFields.Contains(Field.Inverted))
+            if (fields.Contains(Field.Inverted))
                 Inverted = newItem.Inverted;
         }
 
