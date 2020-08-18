@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -55,7 +54,7 @@ namespace SabreTools.Features
                 {
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
-                    Filter.FilterDatFile(datdata, true);
+                    datdata.ApplyFilter(Filter, true);
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
@@ -78,7 +77,7 @@ namespace SabreTools.Features
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     datdata.Parse(datfile, 99, keep: true);
-                    Filter.FilterDatFile(datdata, true);
+                    datdata.ApplyFilter(Filter, true);
                 }
 
                 // If we have overridden the header skipper, set it now

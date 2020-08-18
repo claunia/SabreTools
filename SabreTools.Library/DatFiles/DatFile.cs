@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
@@ -296,7 +298,7 @@ namespace SabreTools.Library.DatFiles
                 // First we parse in the DAT internally
                 DatFile intDat = Create(Header.CloneFiltering());
                 intDat.Parse(path, 1, keep: true);
-                filter.FilterDatFile(intDat, false /* useTags */);
+                intDat.ApplyFilter(filter, false /* useTags */);
 
                 // If we are matching based on DatItem fields of any sort
                 if (updateFields.Intersect(datItemFields).Any())
@@ -404,7 +406,7 @@ namespace SabreTools.Library.DatFiles
                 // First we parse in the DAT internally
                 DatFile intDat = Create(Header.CloneFiltering());
                 intDat.Parse(path, 1, keep: true);
-                filter.FilterDatFile(intDat, false /* useTags */);
+                intDat.ApplyFilter(filter, false /* useTags */);
 
                 // For comparison's sake, we want to a the base bucketing
                 if (useGames)
@@ -896,7 +898,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Now that we have a merged DAT, filter it
-            filter.FilterDatFile(this, false /* useTags */);
+            ApplyFilter(filter, false /* useTags */);
 
             watch.Stop();
 
@@ -934,13 +936,1108 @@ namespace SabreTools.Library.DatFiles
                     keepext: innerDatdata.Header.DatFormat.HasFlag(DatFormat.TSV)
                         || innerDatdata.Header.DatFormat.HasFlag(DatFormat.CSV)
                         || innerDatdata.Header.DatFormat.HasFlag(DatFormat.SSV));
-                filter.FilterDatFile(innerDatdata, false /* useTags */);
+                innerDatdata.ApplyFilter(filter, false /* useTags */);
 
                 // Get the correct output path
                 string realOutDir = file.GetOutputPath(outDir, inplace);
 
                 // Try to output the file, overwriting only if it's not in the current directory
                 innerDatdata.Write(realOutDir, overwrite: inplace);
+            }
+        }
+
+        #endregion
+
+        #region Filtering
+
+        /// <summary>
+        /// Apply a Filter on the DatFile
+        /// </summary>
+        /// <param name="filter">Filter to use</param>
+        /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
+        /// <returns>True if the DatFile was filtered, false on error</returns>
+        public bool ApplyFilter(Filter filter, bool useTags)
+        {
+            try
+            {
+                // Process description to machine name
+                if (filter.DescriptionAsName)
+                    MachineDescriptionToName();
+
+                // If we are using tags from the DAT, set the proper input for split type unless overridden
+                if (useTags && filter.InternalSplit == SplitType.None)
+                    filter.InternalSplit = Header.ForceMerging.AsSplitType();
+
+                // Run internal splitting
+                ProcessSplitType(filter.InternalSplit);
+
+                // Loop over every key in the dictionary
+                List<string> keys = Items.Keys.ToList();
+                foreach (string key in keys)
+                {
+                    // For every item in the current key
+                    List<DatItem> items = Items[key];
+                    List<DatItem> newitems = new List<DatItem>();
+                    foreach (DatItem item in items)
+                    {
+                        // If we have a null item, we can't pass it
+                        if (item == null)
+                            continue;
+
+                        // If the rom passes the filter, include it
+                        if (item.PassesFilter(filter))
+                        {
+                            // If we're stripping unicode characters, do so from all relevant things
+                            if (filter.RemoveUnicode)
+                            {
+                                item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
+                                item.MachineName = Sanitizer.RemoveUnicodeCharacters(item.MachineName);
+                                item.MachineDescription = Sanitizer.RemoveUnicodeCharacters(item.MachineDescription);
+                            }
+
+                            // If we're in cleaning mode, do so from all relevant things
+                            if (filter.Clean)
+                            {
+                                item.MachineName = Sanitizer.CleanGameName(item.MachineName);
+                                item.MachineDescription = Sanitizer.CleanGameName(item.MachineDescription);
+                            }
+
+                            // If we are in single game mode, rename all games
+                            if (filter.Single)
+                                item.MachineName = "!";
+
+                            // If we are in NTFS trim mode, trim the game name
+                            if (filter.Trim)
+                            {
+                                // Windows max name length is 260
+                                int usableLength = 260 - item.MachineName.Length - filter.Root.Length;
+                                if (item.Name.Length > usableLength)
+                                {
+                                    string ext = Path.GetExtension(item.Name);
+                                    item.Name = item.Name.Substring(0, usableLength - ext.Length);
+                                    item.Name += ext;
+                                }
+                            }
+
+                            // Add the item to the output
+                            newitems.Add(item);
+                        }
+                    }
+
+                    Items.Remove(key);
+                    Items.AddRange(key, newitems);
+                }
+
+                // If we are removing scene dates, do that now
+                if (Header.SceneDateStrip)
+                    StripSceneDatesFromItems();
+
+                // Run the one rom per game logic, if required
+                if (Header.OneGamePerRegion)
+                    OneGamePerRegion();
+
+                // Run the one rom per game logic, if required
+                if (Header.OneRomPerGame)
+                    OneRomPerGame();
+
+                // If we are removing fields, do that now
+                if (filter.RemoveFields)
+                    RemoveFieldsFromItems();
+
+                // We remove any blanks, if we aren't supposed to have any
+                if (!Header.KeepEmptyGames)
+                {
+                    List<string> possiblyEmptyKeys = Items.Keys.ToList();
+                    foreach (string key in possiblyEmptyKeys)
+                    {
+                        List<DatItem> items = Items[key];
+                        if (items == null || items.Count == 0)
+                        {
+                            Items.Remove(key);
+                            continue;
+                        }
+
+                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
+
+                        Items.Remove(key);
+                        Items.AddRange(key, newitems);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Globals.Logger.Error(ex.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Use game descriptions as names in the DAT, updating cloneof/romof/sampleof
+        /// </summary>
+        public void MachineDescriptionToName()
+        {
+            try
+            {
+                // First we want to get a mapping for all games to description
+                ConcurrentDictionary<string, string> mapping = new ConcurrentDictionary<string, string>();
+                Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+                {
+                    List<DatItem> items = Items[key];
+                    foreach (DatItem item in items)
+                    {
+                        // If the key mapping doesn't exist, add it
+                        mapping.TryAdd(item.MachineName, item.MachineDescription.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                    }
+                });
+
+                // Now we loop through every item and update accordingly
+                Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+                {
+                    List<DatItem> items = Items[key];
+                    List<DatItem> newItems = new List<DatItem>();
+                    foreach (DatItem item in items)
+                    {
+                        // Update machine name
+                        if (!string.IsNullOrWhiteSpace(item.MachineName) && mapping.ContainsKey(item.MachineName))
+                            item.MachineName = mapping[item.MachineName];
+
+                        // Update cloneof
+                        if (!string.IsNullOrWhiteSpace(item.CloneOf) && mapping.ContainsKey(item.CloneOf))
+                            item.CloneOf = mapping[item.CloneOf];
+
+                        // Update romof
+                        if (!string.IsNullOrWhiteSpace(item.RomOf) && mapping.ContainsKey(item.RomOf))
+                            item.RomOf = mapping[item.RomOf];
+
+                        // Update sampleof
+                        if (!string.IsNullOrWhiteSpace(item.SampleOf) && mapping.ContainsKey(item.SampleOf))
+                            item.SampleOf = mapping[item.SampleOf];
+
+                        // Add the new item to the output list
+                        newItems.Add(item);
+                    }
+
+                    // Replace the old list of roms with the new one
+                    Items.Remove(key);
+                    Items.AddRange(key, newItems);
+                });
+            }
+            catch (Exception ex)
+            {
+                Globals.Logger.Warning(ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Filter a DAT using 1G1R logic given an ordered set of regions
+        /// </summary>
+        /// <remarks>
+        /// In the most technical sense, the way that the region list is being used does not
+        /// confine its values to be just regions. Since it's essentially acting like a
+        /// specialized version of the machine name filter, anything that is usually encapsulated
+        /// in parenthesis would be matched on, including disc numbers, languages, editions,
+        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
+        /// solutions, this does not have the ability to contain custom mappings of parent
+        /// to clone sets based on name, nor does it have the ability to match on the 
+        /// Release DatItem type.
+        /// </remarks>
+        public void OneGamePerRegion()
+        {
+            // For sake of ease, the first thing we want to do is bucket by game
+            Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
+
+            // Then we want to get a mapping of all machines to parents
+            Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
+            foreach (string key in Items.Keys)
+            {
+                DatItem item = Items[key][0];
+
+                // Match on CloneOf first
+                if (!string.IsNullOrEmpty(item.CloneOf))
+                {
+                    if (!parents.ContainsKey(item.CloneOf.ToLowerInvariant()))
+                        parents.Add(item.CloneOf.ToLowerInvariant(), new List<string>());
+
+                    parents[item.CloneOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                }
+
+                // Then by RomOf
+                else if (!string.IsNullOrEmpty(item.RomOf))
+                {
+                    if (!parents.ContainsKey(item.RomOf.ToLowerInvariant()))
+                        parents.Add(item.RomOf.ToLowerInvariant(), new List<string>());
+
+                    parents[item.RomOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                }
+
+                // Otherwise, treat it as a parent
+                else
+                {
+                    if (!parents.ContainsKey(item.MachineName.ToLowerInvariant()))
+                        parents.Add(item.MachineName.ToLowerInvariant(), new List<string>());
+
+                    parents[item.MachineName.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                }
+            }
+
+            // If we have null region list, make it empty
+            List<string> regions = Header.RegionList;
+            if (regions == null)
+                regions = new List<string>();
+
+            // Once we have the full list of mappings, filter out games to keep
+            foreach (string key in parents.Keys)
+            {
+                // Find the first machine that matches the regions in order, if possible
+                string machine = default;
+                foreach (string region in regions)
+                {
+                    machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
+                    if (machine != default)
+                        break;
+                }
+
+                // If we didn't get a match, use the parent
+                if (machine == default)
+                    machine = key;
+
+                // Remove the key from the list
+                parents[key].Remove(machine);
+
+                // Remove the rest of the items from this key
+                parents[key].ForEach(k => Items.Remove(k));
+            }
+
+            // Finally, strip out the parent tags
+            RemoveTagsFromChild();
+        }
+
+        /// <summary>
+        /// Ensure that all roms are in their own game (or at least try to ensure)
+        /// </summary>
+        public void OneRomPerGame()
+        {
+            // Because this introduces subfolders, we need to set the SuperDAT type
+            Header.Type = "SuperDAT";
+
+            // For each rom, we want to update the game to be "<game name>/<rom name>"
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = Items[key];
+                for (int i = 0; i < items.Count; i++)
+                {
+                    string[] splitname = items[i].Name.Split('.');
+                    items[i].MachineName += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+                    items[i].Name = Path.GetFileName(items[i].Name);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Remove fields as per the header
+        /// </summary>
+        /// TODO: Move internal logic to DatItem like the rest
+        public void RemoveFieldsFromItems()
+        {
+            // Output the logging statement
+            Globals.Logger.User("Removing filtered fields");
+
+            // Get the array of fields from the header
+            List<Field> fields = Header.ExcludeFields;
+
+            // Now process all of the roms
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = Items[key];
+                for (int j = 0; j < items.Count; j++)
+                {
+                    DatItem item = items[j];
+
+                    // TODO: Switch statement
+                    foreach (Field field in fields)
+                    {
+                        // Machine Fields
+                        if (field == Field.MachineName)
+                            item.MachineName = null;
+                        if (field == Field.Comment)
+                            item.Comment = null;
+                        if (field == Field.Description)
+                            item.MachineDescription = null;
+                        if (field == Field.Year)
+                            item.Year = null;
+                        if (field == Field.Manufacturer)
+                            item.Manufacturer = null;
+                        if (field == Field.Publisher)
+                            item.Publisher = null;
+                        if (field == Field.Category)
+                            item.Category = null;
+                        if (field == Field.RomOf)
+                            item.RomOf = null;
+                        if (field == Field.CloneOf)
+                            item.CloneOf = null;
+                        if (field == Field.SampleOf)
+                            item.SampleOf = null;
+                        if (field == Field.Supported)
+                            item.Supported = null;
+                        if (field == Field.SourceFile)
+                            item.SourceFile = null;
+                        if (field == Field.Runnable)
+                            item.Runnable = null;
+                        if (field == Field.Board)
+                            item.Board = null;
+                        if (field == Field.RebuildTo)
+                            item.RebuildTo = null;
+                        if (field == Field.Devices)
+                            item.Devices = null;
+                        if (field == Field.SlotOptions)
+                            item.SlotOptions = null;
+                        if (field == Field.Infos)
+                            item.Infos = null;
+                        if (field == Field.MachineType)
+                            item.MachineType = MachineType.NULL;
+
+                        // Item Fields
+                        if (field == Field.Name)
+                            item.Name = null;
+                        if (field == Field.PartName)
+                            item.PartName = null;
+                        if (field == Field.PartInterface)
+                            item.PartInterface = null;
+                        if (field == Field.Features)
+                            item.Features = null;
+                        if (field == Field.AreaName)
+                            item.AreaName = null;
+                        if (field == Field.AreaSize)
+                            item.AreaSize = null;
+                        if (field == Field.Default)
+                        {
+                            if (item.ItemType == ItemType.BiosSet)
+                                (item as BiosSet).Default = null;
+                            else if (item.ItemType == ItemType.Release)
+                                (item as Release).Default = null;
+                        }
+                        if (field == Field.BiosDescription)
+                        {
+                            if (item.ItemType == ItemType.BiosSet)
+                                (item as BiosSet).Description = null;
+                        }
+                        if (field == Field.Size)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Size = 0;
+                        }
+                        if (field == Field.CRC)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).CRC = null;
+                        }
+                        if (field == Field.MD5)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).MD5 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).MD5 = null;
+                        }
+#if NET_FRAMEWORK
+                        if (field == Field.RIPEMD160)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).RIPEMD160 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).RIPEMD160 = null;
+                        }
+#endif
+                        if (field == Field.SHA1)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA1 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA1 = null;
+                        }
+                        if (field == Field.SHA256)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA256 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA256 = null;
+                        }
+                        if (field == Field.SHA384)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA384 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA384 = null;
+                        }
+                        if (field == Field.SHA512)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).SHA512 = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).SHA512 = null;
+                        }
+                        if (field == Field.Merge)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).MergeTag = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).MergeTag = null;
+                        }
+                        if (field == Field.Region)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Region = null;
+                            else if (item.ItemType == ItemType.Release)
+                                (item as Release).Region = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Region = null;
+                        }
+                        if (field == Field.Index)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Index = null;
+                        }
+                        if (field == Field.Writable)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Writable = null;
+                        }
+                        if (field == Field.Optional)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).Optional = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Optional = null;
+                        }
+                        if (field == Field.Status)
+                        {
+                            if (item.ItemType == ItemType.Disk)
+                                (item as Disk).ItemStatus = ItemStatus.NULL;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).ItemStatus = ItemStatus.NULL;
+                        }
+                        if (field == Field.Language)
+                        {
+                            if (item.ItemType == ItemType.Release)
+                                (item as Release).Language = null;
+                        }
+                        if (field == Field.Date)
+                        {
+                            if (item.ItemType == ItemType.Release)
+                                (item as Release).Date = null;
+                            else if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Date = null;
+                        }
+                        if (field == Field.Bios)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Bios = null;
+                        }
+                        if (field == Field.Offset)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Offset = null;
+                        }
+                        if (field == Field.Inverted)
+                        {
+                            if (item.ItemType == ItemType.Rom)
+                                (item as Rom).Inverted = null;
+                        }
+                    }
+
+                    items[j] = item;
+                }
+
+                Items.Remove(key);
+                Items.AddRange(key, items);
+            });
+        }
+
+        /// <summary>
+        /// Strip the dates from the beginning of scene-style set names
+        /// </summary>
+        public void StripSceneDatesFromItems()
+        {
+            // Output the logging statement
+            Globals.Logger.User("Stripping scene-style dates");
+
+            // Set the regex pattern to use
+            string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
+
+            // Now process all of the roms
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = Items[key];
+                for (int j = 0; j < items.Count; j++)
+                {
+                    DatItem item = items[j];
+                    if (Regex.IsMatch(item.MachineName, pattern))
+                        item.MachineName = Regex.Replace(item.MachineName, pattern, "$2");
+
+                    if (Regex.IsMatch(item.MachineDescription, pattern))
+                        item.MachineDescription = Regex.Replace(item.MachineDescription, pattern, "$2");
+
+                    items[j] = item;
+                }
+
+                Items.Remove(key);
+                Items.AddRange(key, items);
+            });
+        }
+
+        #endregion
+
+        #region Internal Splitting/Merging
+
+        /// <summary>
+        /// Process items according to SplitType
+        /// </summary>
+        /// <param name="splitType">SplitType to implement</param>
+        public void ProcessSplitType(SplitType splitType)
+        {
+            // Now we pre-process the DAT with the splitting/merging mode
+            switch (splitType)
+            {
+                case SplitType.None:
+                    // No-op
+                    break;
+                case SplitType.DeviceNonMerged:
+                    CreateDeviceNonMergedSets(DedupeType.None);
+                    break;
+                case SplitType.FullNonMerged:
+                    CreateFullyNonMergedSets(DedupeType.None);
+                    break;
+                case SplitType.NonMerged:
+                    CreateNonMergedSets(DedupeType.None);
+                    break;
+                case SplitType.Merged:
+                    CreateMergedSets(DedupeType.None);
+                    break;
+                case SplitType.Split:
+                    CreateSplitSets(DedupeType.None);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Use cdevice_ref tags to get full non-merged sets and remove parenting tags
+        /// </summary>
+        /// <param name="mergeroms">Dedupe type to be used</param>
+        private void CreateDeviceNonMergedSets(DedupeType mergeroms)
+        {
+            Globals.Logger.User("Creating device non-merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            Items.BucketBy(BucketedBy.Game, mergeroms, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            while (AddRomsFromDevices(false, false)) ;
+            while (AddRomsFromDevices(true, false)) ;
+
+            // Then, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveTagsFromChild();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create non-merged sets and remove the tags plus using the device_ref tags to get full sets
+        /// </summary>
+        /// <param name="mergeroms">Dedupe type to be used</param>
+        private void CreateFullyNonMergedSets(DedupeType mergeroms)
+        {
+            Globals.Logger.User("Creating fully non-merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            Items.BucketBy(BucketedBy.Game, mergeroms, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            while (AddRomsFromDevices(true, true)) ;
+            AddRomsFromDevices(false, true);
+            AddRomsFromParent();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            AddRomsFromBios();
+
+            // Then, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveTagsFromChild();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create merged sets and remove the tags
+        /// </summary>
+        /// <param name="mergeroms">Dedupe type to be used</param>
+        private void CreateMergedSets(DedupeType mergeroms)
+        {
+            Globals.Logger.User("Creating merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            Items.BucketBy(BucketedBy.Game, mergeroms, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            AddRomsFromChildren();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveBiosRomsFromChild(false);
+            RemoveBiosRomsFromChild(true);
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveTagsFromChild();
+        }
+
+        /// <summary>
+        /// Use cloneof tags to create non-merged sets and remove the tags
+        /// </summary>
+        /// <param name="mergeroms">Dedupe type to be used</param>
+        private void CreateNonMergedSets(DedupeType mergeroms)
+        {
+            Globals.Logger.User("Creating non-merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            Items.BucketBy(BucketedBy.Game, mergeroms, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            AddRomsFromParent();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveBiosRomsFromChild(false);
+            RemoveBiosRomsFromChild(true);
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveTagsFromChild();
+        }
+
+        /// <summary>
+        /// Use cloneof and romof tags to create split sets and remove the tags
+        /// </summary>
+        /// <param name="mergeroms">Dedupe type to be used</param>
+        private void CreateSplitSets(DedupeType mergeroms)
+        {
+            Globals.Logger.User("Creating split sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            Items.BucketBy(BucketedBy.Game, mergeroms, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            RemoveRomsFromChild();
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveBiosRomsFromChild(false);
+            RemoveBiosRomsFromChild(true);
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveTagsFromChild();
+        }
+
+        /// <summary>
+        /// Use romof tags to add roms to the children
+        /// </summary>
+        private void AddRomsFromBios()
+        {
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                if (Items[game].Count == 0)
+                    continue;
+
+                // Determine if the game has a parent or not
+                string parent = null;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].RomOf))
+                    parent = Items[game][0].RomOf;
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrWhiteSpace(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                if (Items[parent].Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                DatItem copyFrom = Items[game][0];
+                List<DatItem> parentItems = Items[parent];
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    datItem.CopyMachineInformation(copyFrom);
+                    if (Items[game].Where(i => i.Name == datItem.Name).Count() == 0 && !Items[game].Contains(datItem))
+                        Items.Add(game, datItem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use device_ref and optionally slotoption tags to add roms to the children
+        /// </summary>
+        /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
+        /// <param name="slotoptions">True if slotoptions tags are used as well, false otherwise</param>
+        private bool AddRomsFromDevices(bool dev = false, bool slotoptions = false)
+        {
+            bool foundnew = false;
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                // If the game doesn't have items, we continue
+                if (Items[game] == null || Items[game].Count == 0)
+                    continue;
+
+                // If the game (is/is not) a bios, we want to continue
+                if (dev ^ (Items[game][0].MachineType.HasFlag(MachineType.Device)))
+                    continue;
+
+                // If the game has no devices, we continue
+                if (Items[game][0].Devices == null
+                    || Items[game][0].Devices.Count == 0
+                    || (slotoptions && Items[game][0].SlotOptions == null)
+                    || (slotoptions && Items[game][0].SlotOptions.Count == 0))
+                {
+                    continue;
+                }
+
+                // Determine if the game has any devices or not
+                List<string> devices = Items[game][0].Devices;
+                List<string> newdevs = new List<string>();
+                foreach (string device in devices)
+                {
+                    // If the device doesn't exist then we continue
+                    if (Items[device].Count == 0)
+                        continue;
+
+                    // Otherwise, copy the items from the device to the current game
+                    DatItem copyFrom = Items[game][0];
+                    List<DatItem> devItems = Items[device];
+                    foreach (DatItem item in devItems)
+                    {
+                        DatItem datItem = (DatItem)item.Clone();
+                        newdevs.AddRange(datItem.Devices ?? new List<string>());
+                        datItem.CopyMachineInformation(copyFrom);
+                        if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
+                        {
+                            foundnew = true;
+                            Items.Add(game, datItem);
+                        }
+                    }
+                }
+
+                // Now that every device is accounted for, add the new list of devices, if they don't already exist
+                foreach (string device in newdevs)
+                {
+                    if (!Items[game][0].Devices.Contains(device))
+                        Items[game][0].Devices.Add(device);
+                }
+
+                // If we're checking slotoptions too
+                if (slotoptions)
+                {
+                    // Determine if the game has any slotoptions or not
+                    List<string> slotopts = Items[game][0].SlotOptions;
+                    List<string> newslotopts = new List<string>();
+                    foreach (string slotopt in slotopts)
+                    {
+                        // If the slotoption doesn't exist then we continue
+                        if (Items[slotopt].Count == 0)
+                            continue;
+
+                        // Otherwise, copy the items from the slotoption to the current game
+                        DatItem copyFrom = Items[game][0];
+                        List<DatItem> slotItems = Items[slotopt];
+                        foreach (DatItem item in slotItems)
+                        {
+                            DatItem datItem = (DatItem)item.Clone();
+                            newslotopts.AddRange(datItem.SlotOptions ?? new List<string>());
+                            datItem.CopyMachineInformation(copyFrom);
+                            if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
+                            {
+                                foundnew = true;
+                                Items.Add(game, datItem);
+                            }
+                        }
+                    }
+
+                    // Now that every slotoption is accounted for, add the new list of slotoptions, if they don't already exist
+                    foreach (string slotopt in newslotopts)
+                    {
+                        if (!Items[game][0].SlotOptions.Contains(slotopt))
+                            Items[game][0].SlotOptions.Add(slotopt);
+                    }
+                }
+            }
+
+            return foundnew;
+        }
+
+        /// <summary>
+        /// Use cloneof tags to add roms to the children, setting the new romof tag in the process
+        /// </summary>
+        private void AddRomsFromParent()
+        {
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                if (Items[game].Count == 0)
+                    continue;
+
+                // Determine if the game has a parent or not
+                string parent = null;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].CloneOf))
+                    parent = Items[game][0].CloneOf;
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrWhiteSpace(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                if (Items[parent].Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we copy the items from the parent to the current game
+                DatItem copyFrom = Items[game][0];
+                List<DatItem> parentItems = Items[parent];
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    datItem.CopyMachineInformation(copyFrom);
+                    if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0
+                        && !Items[game].Contains(datItem))
+                    {
+                        Items.Add(game, datItem);
+                    }
+                }
+
+                // Now we want to get the parent romof tag and put it in each of the items
+                List<DatItem> items = Items[game];
+                string romof = Items[parent][0].RomOf;
+                foreach (DatItem item in items)
+                {
+                    item.RomOf = romof;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use cloneof tags to add roms to the parents, removing the child sets in the process
+        /// </summary>
+        /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
+        private void AddRomsFromChildren(bool subfolder = true)
+        {
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                if (Items[game].Count == 0)
+                    continue;
+
+                // Determine if the game has a parent or not
+                string parent = null;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].CloneOf))
+                    parent = Items[game][0].CloneOf;
+
+                // If there is no parent, then we continue
+                if (string.IsNullOrWhiteSpace(parent))
+                    continue;
+
+                // Otherwise, move the items from the current game to a subfolder of the parent game
+                DatItem copyFrom = Items[parent].Count == 0 ? new Rom { MachineName = parent, MachineDescription = parent } : Items[parent][0];
+                List<DatItem> items = Items[game];
+                foreach (DatItem item in items)
+                {
+                    // Special disk handling
+                    if (item.ItemType == ItemType.Disk)
+                    {
+                        Disk disk = item as Disk;
+
+                        // If the merge tag exists and the parent already contains it, skip
+                        if (disk.MergeTag != null && Items[parent].Select(i => i.Name).Contains(disk.MergeTag))
+                        {
+                            continue;
+                        }
+
+                        // If the merge tag exists but the parent doesn't contain it, add to parent
+                        else if (disk.MergeTag != null && !Items[parent].Select(i => i.Name).Contains(disk.MergeTag))
+                        {
+                            item.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, item);
+                        }
+
+                        // If there is no merge tag, add to parent
+                        else if (disk.MergeTag == null)
+                        {
+                            item.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, item);
+                        }
+                    }
+
+                    // Special rom handling
+                    else if (item.ItemType == ItemType.Rom)
+                    {
+                        Rom rom = item as Rom;
+
+                        // If the merge tag exists and the parent already contains it, skip
+                        if (rom.MergeTag != null && Items[parent].Select(i => i.Name).Contains(rom.MergeTag))
+                        {
+                            continue;
+                        }
+
+                        // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
+                        else if (rom.MergeTag != null && !Items[parent].Select(i => i.Name).Contains(rom.MergeTag))
+                        {
+                            if (subfolder)
+                                item.Name = $"{item.MachineName}\\{item.Name}";
+
+                            item.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, item);
+                        }
+
+                        // If the parent doesn't already contain this item, add to subfolder of parent
+                        else if (!Items[parent].Contains(item))
+                        {
+                            if (subfolder)
+                                item.Name = $"{item.MachineName}\\{item.Name}";
+
+                            item.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, item);
+                        }
+                    }
+
+                    // All other that would be missing to subfolder of parent
+                    else if (!Items[parent].Contains(item))
+                    {
+                        if (subfolder)
+                            item.Name = $"{item.MachineName}\\{item.Name}";
+
+                        item.CopyMachineInformation(copyFrom);
+                        Items.Add(parent, item);
+                    }
+                }
+
+                // Then, remove the old game so it's not picked up by the writer
+                Items.Remove(game);
+            }
+        }
+
+        /// <summary>
+        /// Remove all BIOS and device sets
+        /// </summary>
+        private void RemoveBiosAndDeviceSets()
+        {
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                if (Items[game].Count > 0
+                    && (Items[game][0].MachineType.HasFlag(MachineType.Bios)
+                        || Items[game][0].MachineType.HasFlag(MachineType.Device)))
+                {
+                    Items.Remove(game);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use romof tags to remove bios roms from children
+        /// </summary>
+        /// <param name="bios">True if only child Bios sets are touched, false for non-bios sets (default)</param>
+        private void RemoveBiosRomsFromChild(bool bios = false)
+        {
+            // Loop through the romof tags
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                if (Items[game].Count == 0)
+                    continue;
+
+                // If the game (is/is not) a bios, we want to continue
+                if (bios ^ Items[game][0].MachineType.HasFlag(MachineType.Bios))
+                    continue;
+
+                // Determine if the game has a parent or not
+                string parent = null;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].RomOf))
+                    parent = Items[game][0].RomOf;
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrWhiteSpace(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                if (Items[parent].Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the items that are in the parent from the current game
+                List<DatItem> parentItems = Items[parent];
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    while (Items[game].Contains(datItem))
+                    {
+                        Items.Remove(game, datItem);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Use cloneof tags to remove roms from the children
+        /// </summary>
+        private void RemoveRomsFromChild()
+        {
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                // If the game has no items in it, we want to continue
+                if (Items[game].Count == 0)
+                    continue;
+
+                // Determine if the game has a parent or not
+                string parent = null;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].CloneOf))
+                    parent = Items[game][0].CloneOf;
+
+                // If the parent doesnt exist, we want to continue
+                if (string.IsNullOrWhiteSpace(parent))
+                    continue;
+
+                // If the parent doesn't have any items, we want to continue
+                if (Items[parent].Count == 0)
+                    continue;
+
+                // If the parent exists and has items, we remove the parent items from the current game
+                List<DatItem> parentItems = Items[parent];
+                foreach (DatItem item in parentItems)
+                {
+                    DatItem datItem = (DatItem)item.Clone();
+                    while (Items[game].Contains(datItem))
+                    {
+                        Items.Remove(game, datItem);
+                    }
+                }
+
+                // Now we want to get the parent romof tag and put it in each of the remaining items
+                List<DatItem> items = Items[game];
+                string romof = Items[parent][0].RomOf;
+                foreach (DatItem item in items)
+                {
+                    item.RomOf = romof;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all romof and cloneof tags from all games
+        /// </summary>
+        private void RemoveTagsFromChild()
+        {
+            List<string> games = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string game in games)
+            {
+                List<DatItem> items = Items[game];
+                foreach (DatItem item in items)
+                {
+                    item.CloneOf = null;
+                    item.RomOf = null;
+                    item.SampleOf = null;
+                }
             }
         }
 
@@ -1248,7 +2345,7 @@ namespace SabreTools.Library.DatFiles
 
             // If we have a valid filter, perform the filtering now
             if (filter != null && filter != default(Filter))
-                filter.FilterDatFile(this, useTags);
+                ApplyFilter(filter, useTags);
 
             return true;
         }
