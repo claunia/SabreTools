@@ -62,6 +62,8 @@ structure according to the original DAT master directory tree structure.";
                 // Now scan all of those depots and rebuild
                 datFile.RebuildDepot(
                     onlineDepots,
+                    romroot: false,
+                    rvx: false,
                     outDir: outputFolder,
                     outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
                     updateDat: false);

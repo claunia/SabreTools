@@ -22,6 +22,7 @@ namespace SabreTools.Features
 
             AddFeature(DatListInput);
             AddFeature(DepotFlag);
+            AddFeature(RomRootFlag);
             AddFeature(TempStringInput);
             AddFeature(OutputDirStringInput);
             AddFeature(HashOnlyFlag);
@@ -43,9 +44,15 @@ namespace SabreTools.Features
 
             // Get feature flags
             TreatAsFiles asFiles = GetTreatAsFiles(features);
-            bool depot = GetBoolean(features, DepotValue);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
+
+            // Depot overrides RomRoot for flags
+            bool? depot = null;
+            if (GetBoolean(features, DepotValue))
+                depot = true;
+            else if (GetBoolean(features, RomRootValue))
+                depot = false;
 
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
@@ -61,8 +68,8 @@ namespace SabreTools.Features
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
-                    if (depot)
-                        datdata.VerifyDepot(Inputs, OutputDir);
+                    if (depot != null)
+                        datdata.VerifyDepot(Inputs, depot == false, OutputDir);
                     else
                         datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
                 }
@@ -87,8 +94,8 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (depot)
-                    datdata.VerifyDepot(Inputs, OutputDir);
+                if (depot != null)
+                    datdata.VerifyDepot(Inputs, depot == false, OutputDir);
                 else
                     datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
             }

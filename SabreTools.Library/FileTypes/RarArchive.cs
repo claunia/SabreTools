@@ -284,9 +284,9 @@ namespace SabreTools.Library.FileTypes
 		/// <param name="outDir">Output directory to build to</param>
 		/// <param name="rom">DatItem representing the new information</param>
 		/// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-		/// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
+		/// <param name="romba">True if files should be output in Romba depot folders, false for RVX RomRoot folders, null otherwise</param>
 		/// <returns>True if the archive was written properly, false otherwise</returns>
-		public override bool Write(string inputFile, string outDir, Rom rom, bool date = false, bool romba = false)
+		public override bool Write(string inputFile, string outDir, Rom rom, bool date = false, bool? romba = null)
 		{
 			// Get the file stream for the file and write out
 			return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom, date, romba);
@@ -299,9 +299,9 @@ namespace SabreTools.Library.FileTypes
 		/// <param name="outDir">Output directory to build to</param>
 		/// <param name="rom">DatItem representing the new information</param>
 		/// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-		/// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
+		/// <param name="romba">True if files should be output in Romba depot folders, false for RVX RomRoot folders, null otherwise</param>
 		/// <returns>True if the archive was written properly, false otherwise</returns>
-		public override bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, bool romba = false)
+		public override bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, bool? romba = null)
 		{
 			throw new NotImplementedException();
 		}

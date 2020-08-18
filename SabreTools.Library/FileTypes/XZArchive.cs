@@ -312,10 +312,10 @@ namespace SabreTools.Library.FileTypes
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
+        /// <param name="romba">True if files should be output in Romba depot folders, false for RVX RomRoot folders, null otherwise</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public override bool Write(string inputFile, string outDir, Rom rom, bool date = false, bool romba = false)
+        public override bool Write(string inputFile, string outDir, Rom rom, bool date = false, bool? romba = null)
         {
             // Check that the input file exists
             if (!File.Exists(inputFile))
@@ -337,9 +337,9 @@ namespace SabreTools.Library.FileTypes
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
+        /// <param name="romba">True if files should be output in Romba depot folders, false for RVX RomRoot folders, null otherwise</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, bool romba = false)
+        public override bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, bool? romba = null)
         {
             bool success = false;
 
@@ -359,10 +359,19 @@ namespace SabreTools.Library.FileTypes
             // Get the output file name
             string outfile;
 
-            // If we have a romba output, add the romba path
-            if (romba)
+            // If we have a Romba output, add the depot path
+            if (romba == true)
             {
-                outfile = Path.Combine(outDir, PathExtensions.GetRombaPath(rom.SHA1)); // TODO: When updating to SHA-256, this needs to update to SHA256
+                outfile = Path.Combine(outDir, PathExtensions.GetRombaPath(rom.SHA1, false)); // TODO: When updating to SHA-256, this needs to update to SHA256
+
+                // Check to see if the folder needs to be created
+                if (!Directory.Exists(Path.GetDirectoryName(outfile)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(outfile));
+            }
+            // If we have an RVX output, add the RomRoot path
+            else if (romba == false)
+            {
+                outfile = Path.Combine(outDir, PathExtensions.GetRombaPath(rom.SHA1, true)); // TODO: When updating to SHA-256, this needs to update to SHA256
 
                 // Check to see if the folder needs to be created
                 if (!Directory.Exists(Path.GetDirectoryName(outfile)))

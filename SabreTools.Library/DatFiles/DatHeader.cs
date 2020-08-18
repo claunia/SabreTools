@@ -211,10 +211,11 @@ namespace SabreTools.Library.DatFiles
         public bool RemoveExtension { get; set; }
 
         /// <summary>
-        /// Romba output mode
+        /// Romba or RVX output mode
         /// </summary>
+        /// <remarks>Null means neither, false means RVX, true means Romba</remarks>
         [JsonIgnore]
-        public bool Romba { get; set; }
+        public bool? Romba { get; set; } = null;
 
         /// <summary>
         /// Output the machine name

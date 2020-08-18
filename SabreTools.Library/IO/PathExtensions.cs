@@ -37,14 +37,21 @@ namespace SabreTools.Library.IO
         /// Get a proper romba sub path
         /// </summary>
         /// <param name="hash">SHA-1 hash to get the path for</param>
+        /// <param name="rvx">True to only go to 2-deep, false to default to 4-deep</param>
         /// <returns>Subfolder path for the given hash</returns>
-        public static string GetRombaPath(string hash)
+        public static string GetRombaPath(string hash, bool rvx)
         {
             // If the hash isn't the right size, then we return null
             if (hash.Length != Constants.SHA1Length) // TODO: When updating to SHA-256, this needs to update to Constants.SHA256Length
                 return null;
 
-            return Path.Combine(hash.Substring(0, 2), hash.Substring(2, 2), hash.Substring(4, 2), hash.Substring(6, 2), hash + ".gz");
+            // RVX uses a 2-deep RomRoot
+            if (rvx)
+                return Path.Combine(hash.Substring(0, 2), hash.Substring(2, 2), hash + ".gz");
+
+            // Romba uses a 4-deep Depot
+            else
+                return Path.Combine(hash.Substring(0, 2), hash.Substring(2, 2), hash.Substring(4, 2), hash.Substring(6, 2), hash + ".gz");
         }
 
         /// <summary>
