@@ -1,5 +1,5 @@
-﻿using System.Linq;
-
+﻿using System.Collections.Generic;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
@@ -123,6 +123,74 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("optional")]
         public bool? Optional { get; set; }
+
+        #endregion
+
+        #region Accessors
+
+        /// <summary>
+        /// Get the value of that field as a string, if possible
+        /// </summary>
+        public override string GetField(Field field, List<Field> excludeFields)
+        {
+            // If the field is to be excluded, return empty string
+            if (excludeFields.Contains(field))
+                return string.Empty;
+
+            // Handle Disk-specific fields
+            string fieldValue;
+            switch (field)
+            {
+                case Field.MD5:
+                    fieldValue = MD5;
+                    break;
+#if NET_FRAMEWORK
+                case Field.RIPEMD160:
+                    fieldValue = RIPEMD160;
+                    break;
+#endif
+                case Field.SHA1:
+                    fieldValue = SHA1;
+                    break;
+                case Field.SHA256:
+                    fieldValue = SHA256;
+                    break;
+                case Field.SHA384:
+                    fieldValue = SHA384;
+                    break;
+                case Field.SHA512:
+                    fieldValue = SHA512;
+                    break;
+                case Field.Merge:
+                    fieldValue = MergeTag;
+                    break;
+                case Field.Region:
+                    fieldValue = Region;
+                    break;
+                case Field.Index:
+                    fieldValue = Index;
+                    break;
+                case Field.Writable:
+                    fieldValue = Writable?.ToString();
+                    break;
+                case Field.Optional:
+                    fieldValue = Optional?.ToString();
+                    break;
+                case Field.Status:
+                    fieldValue = ItemStatus.ToString();
+                    break;
+
+                // For everything else, use the base method
+                default:
+                    return base.GetField(field, excludeFields);
+            }
+
+            // Make sure we don't return null
+            if (string.IsNullOrEmpty(fieldValue))
+                fieldValue = string.Empty;
+
+            return fieldValue;
+        }
 
         #endregion
 
@@ -306,6 +374,53 @@ namespace SabreTools.Library.DatItems
         }
 
         /// <summary>
+        /// Fill any missing size and hash information from another Disk
+        /// </summary>
+        /// <param name="other">Disk to fill information from</param>
+        public void FillMissingInformation(Disk other)
+        {
+            if (_md5.IsNullOrEmpty() && !other._md5.IsNullOrEmpty())
+                _md5 = other._md5;
+
+#if NET_FRAMEWORK
+            if (_ripemd160.IsNullOrEmpty() && !other._ripemd160.IsNullOrEmpty())
+                _ripemd160 = other._ripemd160;
+#endif
+
+            if (_sha1.IsNullOrEmpty() && !other._sha1.IsNullOrEmpty())
+                _sha1 = other._sha1;
+
+            if (_sha256.IsNullOrEmpty() && !other._sha256.IsNullOrEmpty())
+                _sha256 = other._sha256;
+
+            if (_sha384.IsNullOrEmpty() && !other._sha384.IsNullOrEmpty())
+                _sha384 = other._sha384;
+
+            if (_sha512.IsNullOrEmpty() && !other._sha512.IsNullOrEmpty())
+                _sha512 = other._sha512;
+        }
+
+        /// <summary>
+        /// Get unique duplicate suffix on name collision
+        /// </summary>
+        /// <returns>String representing the suffix</returns>
+        public string GetDuplicateSuffix()
+        {
+            if (!_md5.IsNullOrEmpty())
+                return $"_{MD5}";
+            else if (!_sha1.IsNullOrEmpty())
+                return $"_{SHA1}";
+            else if (!_sha256.IsNullOrEmpty())
+                return $"_{SHA256}";
+            else if (!_sha384.IsNullOrEmpty())
+                return $"_{SHA384}";
+            else if (!_sha512.IsNullOrEmpty())
+                return $"_{SHA512}";
+            else
+                return "_1";
+        }
+
+        /// <summary>
         /// Returns if there are no, non-empty hashes in common with another Disk
         /// </summary>
         /// <param name="other">Disk to compare against</param>
@@ -362,6 +477,63 @@ namespace SabreTools.Library.DatItems
                 && ConditionalHashEquals(_sha256, other._sha256)
                 && ConditionalHashEquals(_sha384, other._sha384)
                 && ConditionalHashEquals(_sha512, other._sha512);
+        }
+
+        #endregion
+
+        #region Sorting and Merging
+
+        /// <summary>
+        /// Get the dictionary key that should be used for a given item and bucketing type
+        /// </summary>
+        /// <param name="bucketedBy">BucketedBy enum representing what key to get</param>
+        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
+        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
+        /// <returns>String representing the key to be used for the DatItem</returns>
+        public override string GetKey(BucketedBy bucketedBy, bool lower = true, bool norename = true)
+        {
+            // Set the output key as the default blank string
+            string key = string.Empty;
+
+            // Now determine what the key should be based on the bucketedBy value
+            switch (bucketedBy)
+            {
+                case BucketedBy.MD5:
+                    key = MD5;
+                    break;
+
+#if NET_FRAMEWORK
+                case BucketedBy.RIPEMD160:
+                    key = RIPEMD160;
+                    break;
+#endif
+
+                case BucketedBy.SHA1:
+                    key = SHA1;
+                    break;
+
+                case BucketedBy.SHA256:
+                    key = SHA256;
+                    break;
+
+                case BucketedBy.SHA384:
+                    key = SHA384;
+                    break;
+
+                case BucketedBy.SHA512:
+                    key = SHA512;
+                    break;
+
+                // Let the base handle generic stuff
+                default:
+                    return base.GetKey(bucketedBy, lower, norename);
+            }
+
+            // Double and triple check the key for corner cases
+            if (key == null)
+                key = string.Empty;
+
+            return key;
         }
 
         #endregion

@@ -1,6 +1,4 @@
-﻿using SabreTools.Library.Data;
-
-namespace SabreTools.Library.DatItems
+﻿namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents a (usually WAV-formatted) sample to be included for use in the set

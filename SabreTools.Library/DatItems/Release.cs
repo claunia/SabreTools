@@ -1,4 +1,4 @@
-﻿using SabreTools.Library.Data;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
@@ -33,6 +33,48 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("default")]
         public bool? Default { get; set; }
+
+        #endregion
+
+        #region Accessors
+
+        /// <summary>
+        /// Get the value of that field as a string, if possible
+        /// </summary>
+        public override string GetField(Field field, List<Field> excludeFields)
+        {
+            // If the field is to be excluded, return empty string
+            if (excludeFields.Contains(field))
+                return string.Empty;
+
+            // Handle Release-specific fields
+            string fieldValue;
+            switch (field)
+            {
+                case Field.Region:
+                    fieldValue = Region;
+                    break;
+                case Field.Language:
+                    fieldValue = Language;
+                    break;
+                case Field.Date:
+                    fieldValue = Date;
+                    break;
+                case Field.Default:
+                    fieldValue = Default?.ToString();
+                    break;
+
+                // For everything else, use the base method
+                default:
+                    return base.GetField(field, excludeFields);
+            }
+
+            // Make sure we don't return null
+            if (string.IsNullOrEmpty(fieldValue))
+                fieldValue = string.Empty;
+
+            return fieldValue;
+        }
 
         #endregion
 

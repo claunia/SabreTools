@@ -1,6 +1,4 @@
-﻿using SabreTools.Library.Data;
-
-namespace SabreTools.Library.DatItems
+﻿namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents generic archive files to be included in a set

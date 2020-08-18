@@ -5,6 +5,7 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Determines how the current dictionary is bucketed by
     /// </summary>
+    /// TODO: Can we use "Field" instead of this? How much more stupidly complex would that make things?
     public enum BucketedBy
     {
         Default = 0,
