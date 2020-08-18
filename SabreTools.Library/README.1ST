@@ -248,6 +248,11 @@ Options:
 		  output for physical files. Where appropriate, Romba depot files will
 		  be created as well.
 
+	  -rvx, --romvaultx			Treat like an RVX RomRoot (requires SHA-1)
+		  This flag allows reading and writing of DATs and output files to and
+		  from a RVX-style RomRoot. This also implies TorrentGZ input and
+		  output for physical files.
+
 	  -ska, --skip-archives	   Skip all archives
 		  Skip any files that are treated like archives
 
@@ -624,6 +629,11 @@ Options:
 		  If this flag is used, all input directories will be assumed to be
 		  romba-style depots.
 
+	  -rr, --romroot			   Assume directories are RVX RomRoots
+		  Normally, input directories will be treated with no special format.
+		  If this flag is used, all input directories will be assumed to be
+		  RVX-style RomRoots.
+
 	  -del, --delete			  Delete fully rebuilt input files
 		  Optionally, the input files, once processed and fully matched, can be
 		  deleted. This can be useful when the original file structure is no
@@ -683,6 +693,11 @@ Options:
 			  and from a Romba-style depot. This also implies TorrentGZ input
 			  and output for physical files. Where appropriate, Romba depot
 			  files will be created as well.
+
+		  -rvx, --romvaultx			Treat like an RVX RomRoot (requires SHA-1)
+			  This flag allows reading and writing of DATs and output files to
+			  and from a RVX-style RomRoot. This also implies TorrentGZ input
+			  and output for physical files.
 
 	  -tzip, --torrent-zip		Enable Torrent Zip output
 		  Instead of outputting files to folder, files will be rebuilt to
@@ -990,6 +1005,11 @@ Options:
 			  and from a Romba-style depot. This also implies TorrentGZ input
 			  and output for physical files. Where appropriate, Romba depot
 			  files will be created as well.
+
+		  -rvx, --romvaultx			Treat like an RVX RomRoot (requires SHA-1)
+			  This flag allows reading and writing of DATs and output files to
+			  and from a RVX-style RomRoot. This also implies TorrentGZ input
+			  and output for physical files.
 
 		  -dpc, --deprecated		 Output 'game' instead of 'machine'
 			  By default, Logiqx XML DATs output with the more modern "machine"
@@ -1516,6 +1536,11 @@ Options:
 		  Normally, input directories will be treated with no special format.
 		  If this flag is used, all input directories will be assumed to be
 		  romba-style depots.
+
+	  -rr, --romroot			   Assume directories are RVX RomRoots
+		  Normally, input directories will be treated with no special format.
+		  If this flag is used, all input directories will be assumed to be
+		  RVX-style RomRoots.
 
 	  -t=, --temp=				Set the temporary directory to use
 		  Optionally, a temp folder can be supplied in the case the default
