@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.Permissions;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
@@ -132,6 +131,35 @@ namespace SabreTools.Library.DatItems
 
             // If the archive information matches
             return (this.Name == newOther.Name && this.Description == newOther.Description && this.Default == newOther.Default);
+        }
+
+        #endregion
+
+        #region Sorting and Merging
+
+        /// <summary>
+        /// Replace fields from another item
+        /// </summary>
+        /// <param name="item">DatItem to pull new information from</param>
+        /// <param name="updateFields">List of Fields representing what should be updated</param>
+        public override void ReplaceFields(DatItem item, List<Field> updateFields)
+        {
+            // Replace common fields first
+            base.ReplaceFields(item, updateFields);
+
+            // If we don't have a BiosSet to replace from, ignore specific fields
+            if (item.ItemType != ItemType.BiosSet)
+                return;
+
+            // Cast for easier access
+            BiosSet newItem = item as BiosSet;
+
+            // Replace the fields
+            if (updateFields.Contains(Field.BiosDescription))
+                Description = newItem.Description;
+
+            if (updateFields.Contains(Field.Default))
+                Default = newItem.Default;
         }
 
         #endregion

@@ -162,5 +162,40 @@ namespace SabreTools.Library.DatItems
         }
 
         #endregion
+
+        #region Sorting and Merging
+
+        /// <summary>
+        /// Replace fields from another item
+        /// </summary>
+        /// <param name="item">DatItem to pull new information from</param>
+        /// <param name="updateFields">List of Fields representing what should be updated</param>
+        public override void ReplaceFields(DatItem item, List<Field> updateFields)
+        {
+            // Replace common fields first
+            base.ReplaceFields(item, updateFields);
+
+            // If we don't have a Release to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Release)
+                return;
+
+            // Cast for easier access
+            Release newItem = item as Release;
+
+            // Replace the fields
+            if (updateFields.Contains(Field.Region))
+                Region = newItem.Region;
+
+            if (updateFields.Contains(Field.Language))
+                Language = newItem.Language;
+
+            if (updateFields.Contains(Field.Date))
+                Date = newItem.Date;
+
+            if (updateFields.Contains(Field.Default))
+                Default = newItem.Default;
+        }
+
+        #endregion
     }
 }

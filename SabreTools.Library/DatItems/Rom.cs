@@ -565,6 +565,96 @@ namespace SabreTools.Library.DatItems
             return key;
         }
 
+        /// <summary>
+        /// Replace fields from another item
+        /// </summary>
+        /// <param name="item">DatItem to pull new information from</param>
+        /// <param name="updateFields">List of Fields representing what should be updated</param>
+        public override void ReplaceFields(DatItem item, List<Field> updateFields)
+        {
+            // Replace common fields first
+            base.ReplaceFields(item, updateFields);
+
+            // If we don't have a Rom to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Rom)
+                return;
+
+            // Cast for easier access
+            Rom newItem = item as Rom;
+
+            // Replace the fields
+            if (updateFields.Contains(Field.Bios))
+                Bios = newItem.Bios;
+
+            if (updateFields.Contains(Field.Size))
+                Size = newItem.Size;
+
+            if (updateFields.Contains(Field.CRC))
+            {
+                if (string.IsNullOrEmpty(CRC) && !string.IsNullOrEmpty(newItem.CRC))
+                    CRC = newItem.CRC;
+            }
+
+            if (updateFields.Contains(Field.MD5))
+            {
+                if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
+                    MD5 = newItem.MD5;
+            }
+
+#if NET_FRAMEWORK
+            if (updateFields.Contains(Field.RIPEMD160))
+            {
+                if (string.IsNullOrEmpty(RIPEMD160) && !string.IsNullOrEmpty(newItem.RIPEMD160))
+                    RIPEMD160 = newItem.RIPEMD160;
+            }
+#endif
+
+            if (updateFields.Contains(Field.SHA1))
+            {
+                if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
+                    SHA1 = newItem.SHA1;
+            }
+
+            if (updateFields.Contains(Field.SHA256))
+            {
+                if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
+                    SHA256 = newItem.SHA256;
+            }
+
+            if (updateFields.Contains(Field.SHA384))
+            {
+                if (string.IsNullOrEmpty(SHA384) && !string.IsNullOrEmpty(newItem.SHA384))
+                    SHA384 = newItem.SHA384;
+            }
+
+            if (updateFields.Contains(Field.SHA512))
+            {
+                if (string.IsNullOrEmpty(SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
+                    SHA512 = newItem.SHA512;
+            }
+
+            if (updateFields.Contains(Field.Merge))
+                MergeTag = newItem.MergeTag;
+
+            if (updateFields.Contains(Field.Region))
+                Region = newItem.Region;
+
+            if (updateFields.Contains(Field.Offset))
+                Offset = newItem.Offset;
+
+            if (updateFields.Contains(Field.Date))
+                Date = newItem.Date;
+
+            if (updateFields.Contains(Field.Status))
+                ItemStatus = newItem.ItemStatus;
+
+            if (updateFields.Contains(Field.Optional))
+                Optional = newItem.Optional;
+
+            if (updateFields.Contains(Field.Inverted))
+                Inverted = newItem.Inverted;
+        }
+
         #endregion
     }
 }

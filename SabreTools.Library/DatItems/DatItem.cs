@@ -958,6 +958,101 @@ namespace SabreTools.Library.DatItems
             return key;
         }
 
+        /// <summary>
+        /// Replace fields from another item
+        /// </summary>
+        /// <param name="item">DatItem to pull new information from</param>
+        /// <param name="updateFields">List of Fields representing what should be updated</param>
+        public virtual void ReplaceFields(DatItem item, List<Field> updateFields)
+        {
+            if (updateFields.Contains(Field.Name))
+                Name = item.Name;
+
+            if (updateFields.Contains(Field.PartName))
+                PartName = item.PartName;
+
+            if (updateFields.Contains(Field.PartInterface))
+                PartInterface = item.PartInterface;
+
+            if (updateFields.Contains(Field.Features))
+                Features = item.Features;
+
+            if (updateFields.Contains(Field.AreaName))
+                AreaName = item.AreaName;
+
+            if (updateFields.Contains(Field.AreaSize))
+                AreaSize = item.AreaSize;
+        }
+
+        /// <summary>
+        /// Replace machine fields from another item
+        /// </summary>
+        /// <param name="item">DatItem to pull new information from</param>
+        /// <param name="updateFields">List of Fields representing what should be updated</param>
+        /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
+        public void ReplaceMachineFields(DatItem item, List<Field> updateFields, bool onlySame)
+        {
+            if (updateFields.Contains(Field.MachineName))
+                MachineName = item.MachineName;
+
+            if (updateFields.Contains(Field.Comment))
+                Comment = item.Comment;
+
+            if (updateFields.Contains(Field.Description))
+            {
+                if (!onlySame || (onlySame && MachineName == MachineDescription))
+                    MachineDescription = item.MachineDescription;
+            }
+
+            if (updateFields.Contains(Field.Year))
+                Year = item.Year;
+
+            if (updateFields.Contains(Field.Manufacturer))
+                Manufacturer = item.Manufacturer;
+
+            if (updateFields.Contains(Field.Publisher))
+                Publisher = item.Publisher;
+
+            if (updateFields.Contains(Field.Category))
+                Category = item.Category;
+
+            if (updateFields.Contains(Field.RomOf))
+                RomOf = item.RomOf;
+
+            if (updateFields.Contains(Field.CloneOf))
+                CloneOf = item.CloneOf;
+
+            if (updateFields.Contains(Field.SampleOf))
+                SampleOf = item.SampleOf;
+
+            if (updateFields.Contains(Field.Supported))
+                Supported = item.Supported;
+
+            if (updateFields.Contains(Field.SourceFile))
+                SourceFile = item.SourceFile;
+
+            if (updateFields.Contains(Field.Runnable))
+                Runnable = item.Runnable;
+
+            if (updateFields.Contains(Field.Board))
+                Board = item.Board;
+
+            if (updateFields.Contains(Field.RebuildTo))
+                RebuildTo = item.RebuildTo;
+
+            if (updateFields.Contains(Field.Devices))
+                Devices = item.Devices;
+
+            if (updateFields.Contains(Field.SlotOptions))
+                SlotOptions = item.SlotOptions;
+
+            if (updateFields.Contains(Field.Infos))
+                Infos = item.Infos;
+
+            if (updateFields.Contains(Field.MachineType))
+                MachineType = item.MachineType;
+        }
+
         #endregion
 
         #endregion // Instance Methods
