@@ -607,6 +607,72 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region Static Values
+
+        /// <summary>
+        /// Fields unique to a DatItem
+        /// </summary>
+        public static readonly List<Field> DatItemFields = new List<Field>()
+        {
+            Field.Name,
+            Field.PartName,
+            Field.PartInterface,
+            Field.Features,
+            Field.AreaName,
+            Field.AreaSize,
+            Field.BiosDescription,
+            Field.Default,
+            Field.Language,
+            Field.Date,
+            Field.Bios,
+            Field.Size,
+            Field.Offset,
+            Field.Merge,
+            Field.Region,
+            Field.Index,
+            Field.Writable,
+            Field.Optional,
+            Field.Status,
+            Field.Inverted,
+
+            Field.CRC,
+            Field.MD5,
+#if NET_FRAMEWORK
+            Field.RIPEMD160,
+#endif
+            Field.SHA1,
+            Field.SHA256,
+            Field.SHA384,
+            Field.SHA512,
+        };
+
+        /// <summary>
+        /// Fields unique to a Machine
+        /// </summary>
+        public static readonly List<Field> MachineFields = new List<Field>()
+        {
+            Field.MachineName,
+            Field.Comment,
+            Field.Description,
+            Field.Year,
+            Field.Manufacturer,
+            Field.Publisher,
+            Field.RomOf,
+            Field.CloneOf,
+            Field.SampleOf,
+            Field.Supported,
+            Field.SourceFile,
+            Field.Runnable,
+            Field.Board,
+            Field.RebuildTo,
+            Field.Devices,
+            Field.SlotOptions,
+            Field.Infos,
+            Field.MachineType,
+        };
+
+        #endregion
+
         #endregion
 
         #region Instance Methods

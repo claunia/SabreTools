@@ -232,64 +232,6 @@ namespace SabreTools.Library.DatFiles
             List<Field> updateFields,
             bool onlySame)
         {
-            // Fields unique to a DatItem
-            List<Field> datItemFields = new List<Field>()
-            {
-                Field.Name,
-                Field.PartName,
-                Field.PartInterface,
-                Field.Features,
-                Field.AreaName,
-                Field.AreaSize,
-                Field.BiosDescription,
-                Field.Default,
-                Field.Language,
-                Field.Date,
-                Field.Bios,
-                Field.Size,
-                Field.Offset,
-                Field.Merge,
-                Field.Region,
-                Field.Index,
-                Field.Writable,
-                Field.Optional,
-                Field.Status,
-                Field.Inverted,
-
-                Field.CRC,
-                Field.MD5,
-#if NET_FRAMEWORK
-                Field.RIPEMD160,
-#endif
-                Field.SHA1,
-                Field.SHA256,
-                Field.SHA384,
-                Field.SHA512,
-            };
-
-            // Fields unique to a Machine
-            List<Field> machineFields = new List<Field>()
-            {
-                Field.MachineName,
-                Field.Comment,
-                Field.Description,
-                Field.Year,
-                Field.Manufacturer,
-                Field.Publisher,
-                Field.RomOf,
-                Field.CloneOf,
-                Field.SampleOf,
-                Field.Supported,
-                Field.SourceFile,
-                Field.Runnable,
-                Field.Board,
-                Field.RebuildTo,
-                Field.Devices,
-                Field.SlotOptions,
-                Field.Infos,
-                Field.MachineType,
-            };
-
             // We want to try to replace each item in each input DAT from the base
             foreach (ParentablePath path in inputs)
             {
@@ -301,7 +243,7 @@ namespace SabreTools.Library.DatFiles
                 intDat.ApplyFilter(filter, false /* useTags */);
 
                 // If we are matching based on DatItem fields of any sort
-                if (updateFields.Intersect(datItemFields).Any())
+                if (updateFields.Intersect(DatItem.DatItemFields).Any())
                 {
                     // For comparison's sake, we want to use CRC as the base bucketing
                     Items.BucketBy(BucketedBy.CRC, DedupeType.Full);
@@ -331,7 +273,7 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // If we are matching based on Machine fields of any sort
-                if (updateFields.Intersect(machineFields).Any())
+                if (updateFields.Intersect(DatItem.MachineFields).Any())
                 {
                     // For comparison's sake, we want to use Machine Name as the base bucketing
                     Items.BucketBy(BucketedBy.Game, DedupeType.Full);
