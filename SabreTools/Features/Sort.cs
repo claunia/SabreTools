@@ -25,7 +25,7 @@ namespace SabreTools.Features
             AddFeature(DatListInput);
             AddFeature(OutputDirStringInput);
             AddFeature(DepotFlag);
-            AddFeature(RomRootFlag);
+            this[DepotFlag].AddFeature(DepotDepthInt32Input);
             AddFeature(DeleteFlag);
             AddFeature(InverseFlag);
             AddFeature(QuickFlag);
@@ -38,7 +38,7 @@ namespace SabreTools.Features
             AddFeature(TarFlag);
             AddFeature(TorrentGzipFlag);
             this[TorrentGzipFlag].AddFeature(RombaFlag);
-            this[TorrentGzipFlag].AddFeature(RVXFlag);
+            this[TorrentGzipFlag][RombaFlag].AddFeature(RombaDepthInt32Input);
             //AddFeature(SharedInputs.TorrentLrzipFlag);
             //AddFeature(SharedInputs.TorrentLz4Flag);
             //AddFeature(SharedInputs.TorrentRarFlag);
@@ -62,31 +62,27 @@ namespace SabreTools.Features
             TreatAsFiles asFiles = GetTreatAsFiles(features);
             bool date = GetBoolean(features, AddDateValue);
             bool delete = GetBoolean(features, DeleteValue);
+            bool depot = GetBoolean(features, DepotValue);
             bool inverse = GetBoolean(features, InverseValue);
             bool quickScan = GetBoolean(features, QuickValue);
+            bool romba = GetBoolean(features, RombaValue);
             bool updateDat = GetBoolean(features, UpdateDatValue);
             var outputFormat = GetOutputFormat(features);
 
-            // Romba overrides RVX for flags
-            bool? romba = null;
-            if (GetBoolean(features, RombaValue))
-                romba = true;
-            else if (GetBoolean(features, RVXValue))
-                romba = false;
-
-            // Depot overrides RomRoot for flags
-            bool? depot = null;
-            if (GetBoolean(features, DepotValue))
-                depot = true;
-            else if (GetBoolean(features, RomRootValue))
-                depot = false;
+            // Get optional depths
+            int depotDepth = 4;
+            if (features.ContainsKey(DepotDepthInt32Value))
+                depotDepth = GetInt32(features, DepotDepthInt32Value);
+            int rombaDepth = 4;
+            if (features.ContainsKey(RombaDepthInt32Value))
+                rombaDepth = GetInt32(features, RombaDepthInt32Value);
 
             // If we have TorrentGzip output and the romba flag, update
-            if (romba != null && outputFormat == OutputFormat.TorrentGzip)
+            if (romba && outputFormat == OutputFormat.TorrentGzip)
                 outputFormat = OutputFormat.TorrentGzipRomba;
 
             // If we hae TorrentXZ output and the romba flag, update
-            if (romba != null && outputFormat == OutputFormat.TorrentXZ)
+            if (romba && outputFormat == OutputFormat.TorrentXZ)
                 outputFormat = OutputFormat.TorrentXZRomba;
 
             // Get a list of files from the input datfiles
@@ -106,10 +102,10 @@ namespace SabreTools.Features
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
-                    if (depot != null)
-                        datdata.RebuildDepot(Inputs, depot == false, romba == false, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
+                    if (depot)
+                        datdata.RebuildDepot(Inputs, depotDepth, rombaDepth, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
                     else
-                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), romba == false, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), rombaDepth, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                 }
             }
 
@@ -132,10 +128,10 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (depot != null)
-                    datdata.RebuildDepot(Inputs, depot == false, romba == false, OutputDir, date, delete, inverse, outputFormat, updateDat);
+                if (depot)
+                    datdata.RebuildDepot(Inputs, depotDepth, rombaDepth, OutputDir, date, delete, inverse, outputFormat, updateDat);
                 else
-                    datdata.RebuildGeneric(Inputs, OutputDir, romba == false, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                    datdata.RebuildGeneric(Inputs, OutputDir, rombaDepth, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
             }
         }
     }

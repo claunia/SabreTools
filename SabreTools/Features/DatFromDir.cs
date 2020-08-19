@@ -35,7 +35,7 @@ namespace SabreTools.Features
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
             AddFeature(RombaFlag);
-            AddFeature(RVXFlag);
+            this[RombaFlag].AddFeature(RombaDepthInt32Input);
             AddFeature(SkipArchivesFlag);
             AddFeature(SkipFilesFlag);
             AddHeaderFeatures();

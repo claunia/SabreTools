@@ -136,7 +136,7 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, false, forceRomName: false);
 
                 // Romba mode automatically uses item name
-                if (Header.Romba != null || Header.UseRomName)
+                if (Header.Romba || Header.UseRomName)
                 {
                     sw.Write($"{datItem.GetField(Field.Name, Header.ExcludeFields)}\n");
                 }

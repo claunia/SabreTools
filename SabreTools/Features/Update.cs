@@ -32,7 +32,7 @@ namespace SabreTools.Features
             this[OutputTypeListInput].AddFeature(ReplaceExtensionStringInput);
             this[OutputTypeListInput].AddFeature(RemoveExtensionsFlag);
             this[OutputTypeListInput].AddFeature(RombaFlag);
-            this[OutputTypeListInput].AddFeature(RVXFlag);
+            this[OutputTypeListInput][RombaFlag].AddFeature(RombaDepthInt32Input);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
 
             AddHeaderFeatures();

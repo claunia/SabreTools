@@ -211,11 +211,16 @@ namespace SabreTools.Library.DatFiles
         public bool RemoveExtension { get; set; }
 
         /// <summary>
-        /// Romba or RVX output mode
+        /// Romba output mode
         /// </summary>
-        /// <remarks>Null means neither, false means RVX, true means Romba</remarks>
         [JsonIgnore]
-        public bool? Romba { get; set; } = null;
+        public bool Romba { get; set; }
+
+        /// <summary>
+        /// Romba depth
+        /// </summary>
+        [JsonIgnore]
+        public int RombaDepth { get; set; } = 4;
 
         /// <summary>
         /// Output the machine name
@@ -290,6 +295,7 @@ namespace SabreTools.Library.DatFiles
                 RemoveExtension = this.RemoveExtension,
                 GameName = this.GameName,
                 Romba = this.Romba,
+                RombaDepth = this.RombaDepth,
             };
         }
 
@@ -353,6 +359,7 @@ namespace SabreTools.Library.DatFiles
                 RemoveExtension = this.RemoveExtension,
                 GameName = this.GameName,
                 Romba = this.Romba,
+                RombaDepth = this.RombaDepth,
             };
         }
 
@@ -439,6 +446,7 @@ namespace SabreTools.Library.DatFiles
 
             this.RemoveExtension = datHeader.RemoveExtension;
             this.Romba = datHeader.Romba;
+            this.RombaDepth = datHeader.RombaDepth;
             this.GameName = datHeader.GameName;
             this.Quotes = datHeader.Quotes;
             this.UseRomName = datHeader.UseRomName;

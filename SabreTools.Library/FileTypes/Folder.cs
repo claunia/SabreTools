@@ -293,13 +293,13 @@ namespace SabreTools.Library.FileTypes
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false for RVX RomRoot folders, null otherwise</param>
+        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(string inputFile, string outDir, Rom rom, bool date = false, bool? romba = null)
+        public virtual bool Write(string inputFile, string outDir, Rom rom, bool date = false, int depth = 4)
         {
             FileStream fs = FileExtensions.TryOpenRead(inputFile);
-            return Write(fs, outDir, rom, date, romba);
+            return Write(fs, outDir, rom, date, depth);
         }
 
         /// <summary>
@@ -309,10 +309,10 @@ namespace SabreTools.Library.FileTypes
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false for RVX RomRoot folders, null otherwise</param>
+        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, bool? romba = null)
+        public virtual bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, int depth = 4)
         {
             bool success = false;
 

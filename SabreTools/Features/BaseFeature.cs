@@ -794,20 +794,6 @@ namespace SabreTools.Features
             }
         }
 
-        internal const string RomRootValue = "romroot";
-        internal static Feature RomRootFlag
-        {
-            get
-            {
-                return new Feature(
-                    RomRootValue,
-                    new List<string>() { "-rr", "--romroot" },
-                    "Assume directories are RVX RomRoots",
-                    FeatureType.Flag,
-                    longDescription: "Normally, input directories will be treated with no special format. If this flag is used, all input directories will be assumed to be RVX-style RomRoots.");
-            }
-        }
-
         internal const string RomsValue = "roms";
         internal static Feature RomsFlag
         {
@@ -833,20 +819,6 @@ namespace SabreTools.Features
                     "Include only items that are marked runnable",
                     FeatureType.Flag,
                     longDescription: "This allows users to include only verified runnable games.");
-            }
-        }
-
-        internal const string RVXValue = "rvx";
-        internal static Feature RVXFlag
-        {
-            get
-            {
-                return new Feature(
-                    RVXValue,
-                    new List<string>() { "-rvx", "--romvaultx" },
-                    "Treat like an RVX RomRoot (requires SHA-1)",
-                    FeatureType.Flag,
-                    longDescription: "This flag allows reading and writing of DATs and output files to and from a RVX-style RomRoot. This also implies TorrentGZ input and output for physical files.");
             }
         }
 
@@ -1247,6 +1219,34 @@ namespace SabreTools.Features
         #endregion
 
         #region Int32 features
+
+        internal const string DepotDepthInt32Value = "depot-depth";
+        internal static Feature DepotDepthInt32Input
+        {
+            get
+            {
+                return new Feature(
+                    DepotDepthInt32Value,
+                    new List<string>() { "-depd", "--depot-depth" },
+                    "Set depth of depot for inputs",
+                    FeatureType.Int32,
+                    longDescription: "Optionally, set the depth of input depots. Defaults to 4 deep otherwise.");
+            }
+        }
+
+        internal const string RombaDepthInt32Value = "romba-depth";
+        internal static Feature RombaDepthInt32Input
+        {
+            get
+            {
+                return new Feature(
+                    RombaDepthInt32Value,
+                    new List<string>() { "-depr", "--romba-depth" },
+                    "Set depth of depot for outputs",
+                    FeatureType.Int32,
+                    longDescription: "Optionally, set the depth of output depots. Defaults to 4 deep otherwise.");
+            }
+        }
 
         internal const string ThreadsInt32Value = "threads";
         internal static Feature ThreadsInt32Input
@@ -2661,6 +2661,8 @@ Some special strings that can be used:
                 RegionList = GetList(features, RegionListValue),
                 RemoveExtension = GetBoolean(features, RemoveExtensionsValue),
                 ReplaceExtension = GetString(features, ReplaceExtensionStringValue),
+                Romba = GetBoolean(features, RombaValue),
+                RombaDepth = GetInt32(features, RombaDepthInt32Value),
                 RootDir = GetString(features, RootStringValue),
                 SceneDateStrip = GetBoolean(features, SceneDateStripValue),
                 Type = GetBoolean(features, SuperdatValue) ? "SuperDAT" : null,
@@ -2669,11 +2671,9 @@ Some special strings that can be used:
                 Version = GetString(features, VersionStringValue),
             };
 
-            // Romba overrides RVX for flags
-            if (GetBoolean(features, RombaValue))
-                datHeader.Romba = true;
-            else if (GetBoolean(features, RVXValue))
-                datHeader.Romba = false;
+            // Set a reasonable default for the Romba depth
+            if (datHeader.RombaDepth == Int32.MinValue)
+                datHeader.RombaDepth = 4;
 
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))
