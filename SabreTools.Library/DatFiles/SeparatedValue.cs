@@ -793,6 +793,7 @@ namespace SabreTools.Library.DatFiles
                 #region OfflineList
 
                 case "system":
+                case "plugin":
                     return "DatFile.System";
 
                 case "screenshotwidth":

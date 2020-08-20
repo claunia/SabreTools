@@ -220,6 +220,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// System
         /// </summary>
+        /// <remarks>Known as "plugin" in RomCenter</remarks>
         [JsonProperty("system")]
         public string System { get; set; }
 

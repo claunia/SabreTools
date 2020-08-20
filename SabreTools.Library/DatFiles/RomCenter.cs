@@ -124,7 +124,7 @@ namespace SabreTools.Library.DatFiles
                     continue;
                 }
 
-                // Get all credits items (ONLY OVERWRITE IF THERE'S NO DATA)
+                // Get all credits items
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "author":
@@ -199,7 +199,7 @@ namespace SabreTools.Library.DatFiles
                     continue;
                 }
 
-                // Get all dat items (ONLY OVERWRITE IF THERE'S NO DATA)
+                // Get all dat items
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "version":
@@ -207,6 +207,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "plugin":
+                        Header.System = (Header.System != null ? kvp?.Value : Header.System);
                         reader.ReadNextLine();
                         break;
 
@@ -473,6 +474,7 @@ namespace SabreTools.Library.DatFiles
 
                 iw.WriteSection("DAT");
                 iw.WriteKeyValuePair("version", "2.50");
+                iw.WriteKeyValuePair("plugin", Header.System);
                 iw.WriteKeyValuePair("split", Header.ForceMerging == ForceMerging.Split ? "1" : "0");
                 iw.WriteKeyValuePair("merge", Header.ForceMerging == ForceMerging.Full || Header.ForceMerging == ForceMerging.Merged ? "1" : "0");
 
