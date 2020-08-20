@@ -211,18 +211,6 @@ namespace SabreTools.Library.DatFiles
         public bool RemoveExtension { get; set; }
 
         /// <summary>
-        /// Input depot information
-        /// </summary>
-        [JsonIgnore]
-        public DepotInformation InputDepot { get; set; }
-
-        /// <summary>
-        /// Output depot information
-        /// </summary>
-        [JsonIgnore]
-        public DepotInformation OutputDepot { get; set; }
-
-        /// <summary>
         /// Output the machine name
         /// </summary>
         [JsonIgnore]
@@ -243,6 +231,22 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public bool UseRomName { get; set; }
+
+        #endregion
+
+        #region Depot Information
+
+        /// <summary>
+        /// Input depot information
+        /// </summary>
+        [JsonIgnore]
+        public DepotInformation InputDepot { get; set; }
+
+        /// <summary>
+        /// Output depot information
+        /// </summary>
+        [JsonIgnore]
+        public DepotInformation OutputDepot { get; set; }
 
         #endregion
 
