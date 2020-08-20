@@ -328,6 +328,15 @@ namespace SabreTools.Library.DatFiles
 
                     #endregion
 
+                    #region RomCenter
+
+                    case "rcversion":
+                        content = jtr.ReadAsString();
+                        Header.RomCenterVersion = (Header.RomCenterVersion == null ? content : Header.RomCenterVersion);
+                        break;
+
+                    #endregion
+
                     default:
                         break;
                 }
@@ -1191,6 +1200,16 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("romtitle");
                     jtw.WriteValue(Header.RomTitle);
+                }
+
+                #endregion
+
+                #region RomCenter
+
+                if (!string.IsNullOrWhiteSpace(Header.RomCenterVersion))
+                {
+                    jtw.WritePropertyName("rcversion");
+                    jtw.WriteValue(Header.RomCenterVersion);
                 }
 
                 #endregion

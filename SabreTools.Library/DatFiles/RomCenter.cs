@@ -6,7 +6,6 @@ using System.Text;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -203,11 +202,12 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "version":
+                        Header.RomCenterVersion = (Header.RomCenterVersion == null ? kvp?.Value : Header.RomCenterVersion);
                         reader.ReadNextLine();
                         break;
 
                     case "plugin":
-                        Header.System = (Header.System != null ? kvp?.Value : Header.System);
+                        Header.System = (Header.System == null ? kvp?.Value : Header.System);
                         reader.ReadNextLine();
                         break;
 
@@ -473,7 +473,7 @@ namespace SabreTools.Library.DatFiles
                 iw.WriteKeyValuePair("comment", Header.Comment);
 
                 iw.WriteSection("DAT");
-                iw.WriteKeyValuePair("version", "2.50");
+                iw.WriteKeyValuePair("version", Header.RomCenterVersion ?? "2.50");
                 iw.WriteKeyValuePair("plugin", Header.System);
                 iw.WriteKeyValuePair("split", Header.ForceMerging == ForceMerging.Split ? "1" : "0");
                 iw.WriteKeyValuePair("merge", Header.ForceMerging == ForceMerging.Full || Header.ForceMerging == ForceMerging.Merged ? "1" : "0");

@@ -234,10 +234,8 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "romcenter":
-                        if (reader.GetAttribute("plugin") != null)
-                        {
-                            // CDATA
-                        }
+                        if (Header.System == null)
+                            Header.System = reader.GetAttribute("plugin");
 
                         if (reader.GetAttribute("rommode") != null)
                         {
@@ -246,7 +244,7 @@ namespace SabreTools.Library.DatFiles
 
                         if (reader.GetAttribute("biosmode") != null)
                         {
-                            // merged|split|unmerged) "split"
+                            // (merged|split|unmerged) "split"
                         }
 
                         if (reader.GetAttribute("samplemode") != null)

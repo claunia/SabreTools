@@ -361,7 +361,8 @@ namespace SabreTools.Library.DatItems
         {
             return new Machine()
             {
-                // Common
+                #region Common
+
                 Name = this.Name,
                 Comment = this.Comment,
                 Description = this.Description,
@@ -373,7 +374,10 @@ namespace SabreTools.Library.DatItems
                 CloneOf = this.CloneOf,
                 SampleOf = this.SampleOf,
 
-                // AttractMode
+                #endregion
+
+                #region AttractMode
+
                 Players = this.Players,
                 Rotation = this.Rotation,
                 Control = this.Control,
@@ -382,7 +386,10 @@ namespace SabreTools.Library.DatItems
                 DisplayType = this.DisplayType,
                 Buttons = this.Buttons,
 
-                // ListXML
+                #endregion
+
+                #region ListXML
+
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
                 Devices = this.Devices,
@@ -390,12 +397,20 @@ namespace SabreTools.Library.DatItems
                 Infos = this.Infos,
                 MachineType = this.MachineType,
 
-                // Logiqx
+                #endregion
+
+                #region Logiqx
+
                 Board = this.Board,
                 RebuildTo = this.RebuildTo,
 
-                // SoftwareList
+                #endregion
+
+                #region SoftwareList
+
                 Supported = this.Supported,
+
+                #endregion
             };
         }
 

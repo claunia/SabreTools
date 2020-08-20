@@ -203,6 +203,15 @@ namespace SabreTools.Library.DatFiles
         [JsonProperty("build")]
         public string Build { get; set; }
 
+        // TODO: Implement the following header values:
+        // - romcenter.plugin
+        // - romcenter.rommode (merged|split|unmerged) "split"
+        // - romcenter.biosmode (merged|split|unmerged) "split"
+        // - romcenter.samplemode (merged|unmerged) "merged"
+        // - romcenter.lockrommode (yes|no) "no"
+        // - romcenter.lockbiosmode (yes|no) "no"
+        // - romcenter.locksamplemode (yes|no) "no"
+
         #endregion
 
         #region Missfile Fields
@@ -248,11 +257,29 @@ namespace SabreTools.Library.DatFiles
         [JsonProperty("canopen")]
         public List<string> CanOpen { get; set; }
 
+        // TODO: Implement the following header values:
+        // - newdat.datversionurl (currently reads and writes to Header.Url, not strictly correct)
+        // - newdat.daturl (currently writes to Header.Url, not strictly correct)
+        // - newdat.daturl[fileName] (currently writes to Header.FileName, not strictly correct)
+        // - newdat.imurl (currently writes to Header.Url, not strictly correct)
+        // - search[...].to.find[operation, value (Int32?)]
+        // - search[...].to[value, default (true|false), auto (true, false)]
+
         /// <summary>
         /// Rom title
         /// </summary>
         [JsonProperty("romtitle")]
         public string RomTitle { get; set; }
+
+        #endregion
+
+        #region RomCenter
+
+        /// <summary>
+        /// RomCenter DAT format version
+        /// </summary>
+        [JsonProperty("rcversion")]
+        public string RomCenterVersion { get; set; }
 
         #endregion
 

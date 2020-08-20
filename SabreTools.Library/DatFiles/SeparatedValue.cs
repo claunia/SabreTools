@@ -242,6 +242,14 @@ namespace SabreTools.Library.DatFiles
 
                         #endregion
 
+                        #region RomCenter
+
+                        case "DatFile.RomCenterVersion":
+                            Header.RomCenterVersion = (Header.RomCenterVersion == null ? value : Header.RomCenterVersion);
+                            break;
+
+                        #endregion
+
                         #endregion // DatFile
 
                         #region Machine
@@ -846,6 +854,18 @@ namespace SabreTools.Library.DatFiles
                 case "rom title":
                 case "rom-title":
                     return "DatFile.RomTitle";
+
+                #endregion
+
+                #region RomCenter
+
+                case "rcversion":
+                case "rc version":
+                case "rc-version":
+                case "romcenterversion":
+                case "romcenter version":
+                case "romcenter-version":
+                    return "DatFile.RomCenterVersion";
 
                 #endregion
 
