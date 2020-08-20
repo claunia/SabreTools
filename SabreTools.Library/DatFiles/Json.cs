@@ -293,66 +293,71 @@ namespace SabreTools.Library.DatFiles
 
                 switch (jtr.Value)
                 {
+                    // Common
                     case "name":
                         machine.Name = jtr.ReadAsString();
                         break;
-
                     case "comment":
                         machine.Comment = jtr.ReadAsString();
                         break;
-
                     case "description":
                         machine.Description = jtr.ReadAsString();
                         break;
-
                     case "year":
                         machine.Year = jtr.ReadAsString();
                         break;
-
                     case "manufacturer":
                         machine.Manufacturer = jtr.ReadAsString();
                         break;
-
                     case "publisher":
                         machine.Publisher = jtr.ReadAsString();
                         break;
-
                     case "category":
                         machine.Category = jtr.ReadAsString();
                         break;
-
                     case "romof":
                         machine.RomOf = jtr.ReadAsString();
                         break;
-
                     case "cloneof":
                         machine.CloneOf = jtr.ReadAsString();
                         break;
-
                     case "sampleof":
                         machine.SampleOf = jtr.ReadAsString();
                         break;
-
-                    case "supported":
-                        machine.Supported = jtr.ReadAsString().AsYesNo();
+                    case "items":
+                        ReadItems(sr, jtr, filename, indexId, machine);
                         break;
 
+                    // AttractMode
+                    case "players":
+                        machine.Players = jtr.ReadAsString();
+                        break;
+                    case "rotation":
+                        machine.Rotation = jtr.ReadAsString();
+                        break;
+                    case "control":
+                        machine.Control = jtr.ReadAsString();
+                        break;
+                    case "status":
+                        machine.Status = jtr.ReadAsString();
+                        break;
+                    case "displaycount":
+                        machine.DisplayCount = jtr.ReadAsString();
+                        break;
+                    case "displaytype":
+                        machine.DisplayType = jtr.ReadAsString();
+                        break;
+                    case "buttons":
+                        machine.Buttons = jtr.ReadAsString();
+                        break;
+
+                    // ListXML
                     case "sourcefile":
                         machine.SourceFile = jtr.ReadAsString();
                         break;
-
                     case "runnable":
                         machine.Runnable = jtr.ReadAsString().AsYesNo();
                         break;
-
-                    case "board":
-                        machine.Board = jtr.ReadAsString();
-                        break;
-
-                    case "rebuildto":
-                        machine.RebuildTo = jtr.ReadAsString();
-                        break;
-
                     case "devices":
                         machine.Devices = new List<string>();
                         jtr.Read(); // Start Array
@@ -362,7 +367,6 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         break;
-
                     case "slotoptions":
                         machine.SlotOptions = new List<string>();
                         jtr.Read(); // Start Array
@@ -372,7 +376,6 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         break;
-
                     case "infos":
                         machine.Infos = new List<KeyValuePair<string, string>>();
                         jtr.Read(); // Start Array
@@ -391,21 +394,18 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         break;
-
                     case "isbios":
                         string isbios = jtr.ReadAsString();
                         if (string.Equals(isbios, "yes", StringComparison.OrdinalIgnoreCase))
                             machine.MachineType &= MachineType.Bios;
 
                         break;
-
                     case "isdevice":
                         string isdevice = jtr.ReadAsString();
                         if (string.Equals(isdevice, "yes", StringComparison.OrdinalIgnoreCase))
                             machine.MachineType &= MachineType.Device;
 
                         break;
-
                     case "ismechanical":
                         string ismechanical = jtr.ReadAsString();
                         if (string.Equals(ismechanical, "yes", StringComparison.OrdinalIgnoreCase))
@@ -413,8 +413,17 @@ namespace SabreTools.Library.DatFiles
 
                         break;
 
-                    case "items":
-                        ReadItems(sr, jtr, filename, indexId, machine);
+                    // Logiqx
+                    case "board":
+                        machine.Board = jtr.ReadAsString();
+                        break;
+                    case "rebuildto":
+                        machine.RebuildTo = jtr.ReadAsString();
+                        break;
+
+                    // SoftwareList
+                    case "supported":
+                        machine.Supported = jtr.ReadAsString().AsYesNo();
                         break;
 
                     default:
@@ -1001,6 +1010,7 @@ namespace SabreTools.Library.DatFiles
                 // Build the state based on excluded fields
                 jtw.WriteStartObject();
 
+                // Common
                 jtw.WritePropertyName("name");
                 jtw.WriteValue(datItem.GetField(Field.MachineName, Header.ExcludeFields));
 
@@ -1049,19 +1059,45 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("sampleof");
                     jtw.WriteValue(datItem.Machine.SampleOf);
                 }
-                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != null)
+
+                // AttractMode
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Players, Header.ExcludeFields)))
                 {
-                    if (datItem.Machine.Supported == true)
-                    {
-                        jtw.WritePropertyName("supported");
-                        jtw.WriteValue("yes");
-                    }
-                    else if (datItem.Machine.Supported == false)
-                    {
-                        jtw.WritePropertyName("supported");
-                        jtw.WriteValue("no");
-                    }
+                    jtw.WritePropertyName("players");
+                    jtw.WriteValue(datItem.Machine.Players);
                 }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Rotation, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("rotation");
+                    jtw.WriteValue(datItem.Machine.Rotation);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Control, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("control");
+                    jtw.WriteValue(datItem.Machine.Control);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SupportStatus, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("status");
+                    jtw.WriteValue(datItem.Machine.Status);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DisplayCount, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("displaycount");
+                    jtw.WriteValue(datItem.Machine.DisplayCount);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DisplayType, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("displaytype");
+                    jtw.WriteValue(datItem.Machine.DisplayType);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Buttons, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("buttons");
+                    jtw.WriteValue(datItem.Machine.Buttons);
+                }
+
+                // ListXML
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("sourcefile");
@@ -1079,16 +1115,6 @@ namespace SabreTools.Library.DatFiles
                         jtw.WritePropertyName("runnable");
                         jtw.WriteValue("no");
                     }
-                }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Board, Header.ExcludeFields)))
-                {
-                    jtw.WritePropertyName("board");
-                    jtw.WriteValue(datItem.Machine.Board);
-                }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RebuildTo, Header.ExcludeFields)))
-                {
-                    jtw.WritePropertyName("rebuildto");
-                    jtw.WriteValue(datItem.Machine.RebuildTo);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Devices, Header.ExcludeFields)))
                 {
@@ -1142,6 +1168,33 @@ namespace SabreTools.Library.DatFiles
                     {
                         jtw.WritePropertyName("ismechanical");
                         jtw.WriteValue("yes");
+                    }
+                }
+
+                // Logiqx
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Board, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("board");
+                    jtw.WriteValue(datItem.Machine.Board);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RebuildTo, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("rebuildto");
+                    jtw.WriteValue(datItem.Machine.RebuildTo);
+                }
+
+                // SoftwareList
+                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != null)
+                {
+                    if (datItem.Machine.Supported == true)
+                    {
+                        jtw.WritePropertyName("supported");
+                        jtw.WriteValue("yes");
+                    }
+                    else if (datItem.Machine.Supported == false)
+                    {
+                        jtw.WritePropertyName("supported");
+                        jtw.WriteValue("no");
                     }
                 }
 

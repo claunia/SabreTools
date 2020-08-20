@@ -24,16 +24,9 @@ namespace SabreTools.Library.DatItems
     {
         NULL = 0,
 
-        // Generic DatItem
-        ItemType,
-        Name,
-        PartName,
-        PartInterface,
-        Features,
-        AreaName,
-        AreaSize,
+        #region Machine
 
-        // Machine
+        // Common Machine
         MachineName,
         Comment,
         Description,
@@ -44,15 +37,43 @@ namespace SabreTools.Library.DatItems
         RomOf,
         CloneOf,
         SampleOf,
-        Supported,
+
+        // AttractMode Machine
+        Players,
+        Rotation,
+        Control,
+        SupportStatus,
+        DisplayCount,
+        DisplayType,
+        Buttons,
+
+        // ListXML Machine
         SourceFile,
         Runnable,
-        Board,
-        RebuildTo,
         Devices,
         SlotOptions,
         Infos,
         MachineType,
+
+        // Logiqx Machine
+        Board,
+        RebuildTo,
+
+        // SoftwareList Machine
+        Supported,
+
+        #endregion
+
+        #region DatItem
+
+        // Common DatItem
+        ItemType,
+        Name,
+        PartName,
+        PartInterface,
+        Features,
+        AreaName,
+        AreaSize,
 
         // BiosSet
         Default,
@@ -84,6 +105,8 @@ namespace SabreTools.Library.DatItems
         CRC,
         Offset,
         Inverted,
+
+        #endregion
     }
 
     /// <summary>

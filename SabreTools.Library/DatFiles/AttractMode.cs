@@ -88,7 +88,15 @@ namespace SabreTools.Library.DatFiles
                         CloneOf = gameinfo[3],
                         Year = gameinfo[4],
                         Manufacturer = gameinfo[5],
+                        Category = gameinfo[6],
+                        Players = gameinfo[7],
+                        Rotation = gameinfo[8],
+                        Control = gameinfo[9],
+                        Status = gameinfo[10],
+                        DisplayCount = gameinfo[11],
+                        DisplayType = gameinfo[12],
                         Comment = gameinfo[15],
+                        Buttons = gameinfo[16],
                     },
 
                     Source = new Source
@@ -262,17 +270,17 @@ namespace SabreTools.Library.DatFiles
                     datItem.GetField(Field.CloneOf, Header.ExcludeFields),
                     datItem.GetField(Field.Year, Header.ExcludeFields),
                     datItem.GetField(Field.Manufacturer, Header.ExcludeFields),
-                    string.Empty, // datItem.GetField(Field.Category, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Players, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Rotation, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Control, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.Status, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.DisplayCount, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.DisplayType, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.AltRomname, DatHeader.ExcludeFields)
-                    string.Empty, // datItem.GetField(Field.AltTitle, DatHeader.ExcludeFields)
+                    datItem.GetField(Field.Category, Header.ExcludeFields),
+                    datItem.GetField(Field.Players, Header.ExcludeFields),
+                    datItem.GetField(Field.Rotation, Header.ExcludeFields),
+                    datItem.GetField(Field.Control, Header.ExcludeFields),
+                    datItem.GetField(Field.Status, Header.ExcludeFields),
+                    datItem.GetField(Field.DisplayCount, Header.ExcludeFields),
+                    datItem.GetField(Field.DisplayType, Header.ExcludeFields),
+                    string.Empty, // datItem.GetField(Field.AltRomname, Header.ExcludeFields),
+                    string.Empty, // datItem.GetField(Field.AltTitle, Header.ExcludeFields),
                     datItem.GetField(Field.Comment, Header.ExcludeFields),
-                    string.Empty, // datItem.GetField(Field.Buttons, DatHeader.ExcludeFields)
+                    datItem.GetField(Field.Buttons, Header.ExcludeFields),
                 };
 
                 svw.WriteValues(fields);

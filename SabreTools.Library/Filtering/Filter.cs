@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
@@ -13,9 +14,11 @@ namespace SabreTools.Library.Filtering
     /// TODO: Can clever use of Filtering allow for easier external splitting methods?
     public class Filter
     {
-        #region Pubically facing variables
+        #region Fields
 
         #region Machine Filters
+
+        #region Common
 
         /// <summary>
         /// Include or exclude machine names
@@ -67,10 +70,48 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<string> SampleOf { get; private set; } = new FilterItem<string>();
 
+        #endregion
+
+        #region AttractMode
+
         /// <summary>
-        /// Include or exclude items with the "Supported" tag
+        /// Include or exclude machine players
         /// </summary>
-        public FilterItem<bool?> Supported { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Players { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine rotation
+        /// </summary>
+        public FilterItem<string> Rotation { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine control
+        /// </summary>
+        public FilterItem<string> Control { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine support status
+        /// </summary>
+        public FilterItem<string> SupportStatus { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine display count
+        /// </summary>
+        public FilterItem<string> DisplayCount { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine display type
+        /// </summary>
+        public FilterItem<string> DisplayType { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine buttons
+        /// </summary>
+        public FilterItem<string> Buttons { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
+        #region ListXML
 
         /// <summary>
         /// Include or exclude machine source file
@@ -81,16 +122,6 @@ namespace SabreTools.Library.Filtering
         /// Include or exclude items with the "Runnable" tag
         /// </summary>
         public FilterItem<bool?> Runnable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        /// <summary>
-        /// Include or exclude machine board
-        /// </summary>
-        public FilterItem<string> Board { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine rebuildto
-        /// </summary>
-        public FilterItem<string> RebuildTo { get; private set; } = new FilterItem<string>();
 
         /// <summary>
         /// Include or exclude machine devices
@@ -110,6 +141,31 @@ namespace SabreTools.Library.Filtering
         public FilterItem<MachineType> MachineTypes { get; private set; } = new FilterItem<MachineType>() { Positive = MachineType.NULL, Negative = MachineType.NULL };
 
         #endregion
+
+        #region Logiqx
+
+        /// <summary>
+        /// Include or exclude machine board
+        /// </summary>
+        public FilterItem<string> Board { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine rebuildto
+        /// </summary>
+        public FilterItem<string> RebuildTo { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
+        #region SoftwareList
+
+        /// <summary>
+        /// Include or exclude items with the "Supported" tag
+        /// </summary>
+        public FilterItem<bool?> Supported { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        #endregion
+
+        #endregion // Machine Filters
 
         #region DatItem Filters
 
@@ -300,7 +356,7 @@ namespace SabreTools.Library.Filtering
 
         #endregion
 
-        #endregion // Pubically facing variables
+        #endregion // Fields
 
         #region Instance methods
 
@@ -361,6 +417,8 @@ namespace SabreTools.Library.Filtering
             switch (key)
             {
                 #region Machine Filters
+
+                #region Common
 
                 case Field.MachineName:
                     if (negate)
@@ -432,12 +490,62 @@ namespace SabreTools.Library.Filtering
                         SampleOf.PositiveSet.Add(value);
                     break;
 
-                case Field.Supported:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Supported.Neutral = false;
+                #endregion
+
+                #region AttractMode
+
+                case Field.Players:
+                    if (negate)
+                        Players.NegativeSet.Add(value);
                     else
-                        Supported.Neutral = true;
+                        Players.PositiveSet.Add(value);
                     break;
+
+                case Field.Rotation:
+                    if (negate)
+                        Rotation.NegativeSet.Add(value);
+                    else
+                        Rotation.PositiveSet.Add(value);
+                    break;
+
+                case Field.Control:
+                    if (negate)
+                        Control.NegativeSet.Add(value);
+                    else
+                        Control.PositiveSet.Add(value);
+                    break;
+
+                case Field.SupportStatus:
+                    if (negate)
+                        SupportStatus.NegativeSet.Add(value);
+                    else
+                        SupportStatus.PositiveSet.Add(value);
+                    break;
+
+                case Field.DisplayCount:
+                    if (negate)
+                        DisplayCount.NegativeSet.Add(value);
+                    else
+                        DisplayCount.PositiveSet.Add(value);
+                    break;
+
+                case Field.DisplayType:
+                    if (negate)
+                        DisplayType.NegativeSet.Add(value);
+                    else
+                        DisplayType.PositiveSet.Add(value);
+                    break;
+
+                case Field.Buttons:
+                    if (negate)
+                        Buttons.NegativeSet.Add(value);
+                    else
+                        Buttons.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #region ListXML
 
                 case Field.SourceFile:
                     if (negate)
@@ -451,20 +559,6 @@ namespace SabreTools.Library.Filtering
                         Runnable.Neutral = false;
                     else
                         Runnable.Neutral = true;
-                    break;
-
-                case Field.Board:
-                    if (negate)
-                        Board.NegativeSet.Add(value);
-                    else
-                        Board.PositiveSet.Add(value);
-                    break;
-
-                case Field.RebuildTo:
-                    if (negate)
-                        RebuildTo.NegativeSet.Add(value);
-                    else
-                        RebuildTo.PositiveSet.Add(value);
                     break;
 
                 case Field.Devices:
@@ -489,6 +583,37 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 #endregion
+
+                #region Logiqx
+
+                case Field.Board:
+                    if (negate)
+                        Board.NegativeSet.Add(value);
+                    else
+                        Board.PositiveSet.Add(value);
+                    break;
+
+                case Field.RebuildTo:
+                    if (negate)
+                        RebuildTo.NegativeSet.Add(value);
+                    else
+                        RebuildTo.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #region SoftwareList
+
+                case Field.Supported:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Supported.Neutral = false;
+                    else
+                        Supported.Neutral = true;
+                    break;
+
+                #endregion
+
+                #endregion // Machine Filters
 
                 #region DatItem Filters
 

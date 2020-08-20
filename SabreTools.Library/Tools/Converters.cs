@@ -123,6 +123,117 @@ namespace SabreTools.Library.Tools
         {
             switch (input?.ToLowerInvariant())
             {
+                #region Machine
+
+                #region Common
+
+                case "gamename":
+                case "game-name":
+                case "machinename":
+                case "machine-name":
+                    return Field.MachineName;
+                case "comment":
+                case "extra":
+                    return Field.Comment;
+                case "desc":
+                case "description":
+                case "gamedesc":
+                case "gamedescription":
+                case "game-description":
+                case "machinedesc":
+                case "machinedescription":
+                case "machine-description":
+                    return Field.Description;
+                case "year":
+                    return Field.Year;
+                case "manufacturer":
+                    return Field.Manufacturer;
+                case "publisher":
+                    return Field.Publisher;
+                case "category":
+                case "machinecategory":
+                case "machine-category":
+                    return Field.Category;
+                case "romof":
+                    return Field.RomOf;
+                case "cloneof":
+                    return Field.CloneOf;
+                case "sampleof":
+                    return Field.SampleOf;
+
+                #endregion
+
+                #region AttractMode
+
+                case "players":
+                    return Field.Players;
+                case "rotation":
+                    return Field.Rotation;
+                case "control":
+                    return Field.Control;
+                case "amstatus":
+                case "am-status":
+                case "gamestatus":
+                case "game-status":
+                case "machinestatus":
+                case "machine-status":
+                case "supportstatus":
+                case "support-status":
+                    return Field.SupportStatus;
+                case "displaycount":
+                case "display-count":
+                case "displays":
+                    return Field.DisplayCount;
+                case "displaytype":
+                case "display-type":
+                    return Field.DisplayType;
+                case "buttons":
+                    return Field.Buttons;
+
+                #endregion
+
+                #region ListXML
+
+                case "sourcefile":
+                case "source-file":
+                    return Field.SourceFile;
+                case "runnable":
+                    return Field.Runnable;
+                case "devices":
+                    return Field.Devices;
+                case "slotoptions":
+                case "slot-options":
+                    return Field.SlotOptions;
+                case "infos":
+                    return Field.Infos;
+                case "gametype":
+                case "game-type":
+                case "machinetype":
+                case "machine-type":
+                    return Field.MachineType;
+
+                #endregion
+
+                #region Logiqx
+
+                case "board":
+                    return Field.Board;
+                case "rebuildto":
+                    return Field.RebuildTo;
+
+                #endregion
+
+                #region SoftwareList
+
+                case "supported":
+                    return Field.Supported;
+
+                #endregion
+
+                #endregion // Machine
+
+                #region DatItem
+
                 case "areaname":
                 case "area-name":
                     return Field.AreaName;
@@ -137,16 +248,6 @@ namespace SabreTools.Library.Tools
                 case "biosset-description":
                 case "bios-set-description":
                     return Field.BiosDescription;
-                case "board":
-                    return Field.Board;
-                case "category":
-                case "machinecategory":
-                case "machine-category":
-                    return Field.Category;
-                case "cloneof":
-                    return Field.CloneOf;
-                case "comment":
-                    return Field.Comment;
                 case "crc":
                 case "crc32":
                     return Field.CRC;
@@ -154,17 +255,6 @@ namespace SabreTools.Library.Tools
                     return Field.Default;
                 case "date":
                     return Field.Date;
-                case "desc":
-                case "description":
-                case "gamedesc":
-                case "gamedescription":
-                case "game-description":
-                case "machinedesc":
-                case "machinedescription":
-                case "machine-description":
-                    return Field.Description;
-                case "devices":
-                    return Field.Devices;
                 case "equal":
                 case "greater":
                 case "less":
@@ -172,18 +262,8 @@ namespace SabreTools.Library.Tools
                     return Field.Size;
                 case "features":
                     return Field.Features;
-                case "gamename":
-                case "machinename":
-                    return Field.MachineName;
-                case "gametype":
-                case "game-type":
-                case "machinetype":
-                case "machine-type":
-                    return Field.MachineType;
                 case "index":
                     return Field.Index;
-                case "infos":
-                    return Field.Infos;
                 case "inverted":
                     return Field.Inverted;
                 case "itemname":
@@ -200,8 +280,6 @@ namespace SabreTools.Library.Tools
                     return Field.ItemType;
                 case "language":
                     return Field.Language;
-                case "manufacturer":
-                    return Field.Manufacturer;
                 case "md5":
                     return Field.MD5;
                 case "merge":
@@ -218,22 +296,12 @@ namespace SabreTools.Library.Tools
                 case "partname":
                 case "part-name":
                     return Field.PartName;
-                case "publisher":
-                    return Field.Publisher;
-                case "rebuildto":
-                    return Field.RebuildTo;
                 case "region":
                     return Field.Region;
 #if NET_FRAMEWORK
                 case "ripemd160":
                     return Field.RIPEMD160;
 #endif
-                case "romof":
-                    return Field.RomOf;
-                case "runnable":
-                    return Field.Runnable;
-                case "sampleof":
-                    return Field.SampleOf;
                 case "sha1":
                 case "sha-1":
                     return Field.SHA1;
@@ -246,18 +314,11 @@ namespace SabreTools.Library.Tools
                 case "sha512":
                 case "sha-512":
                     return Field.SHA512;
-                case "slotoptions":
-                case "slot-options":
-                    return Field.SlotOptions;
-                case "sourcefile":
-                case "source-file":
-                    return Field.SourceFile;
-                case "supported":
-                    return Field.Supported;
                 case "writable":
                     return Field.Writable;
-                case "year":
-                    return Field.Year;
+
+                #endregion
+
                 default:
                     return Field.NULL;
             }

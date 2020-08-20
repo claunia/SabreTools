@@ -147,6 +147,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public static readonly List<Field> MachineFields = new List<Field>()
         {
+            // Common
             Field.MachineName,
             Field.Comment,
             Field.Description,
@@ -156,15 +157,30 @@ namespace SabreTools.Library.DatItems
             Field.RomOf,
             Field.CloneOf,
             Field.SampleOf,
-            Field.Supported,
+
+            // AttractMode
+            Field.Players,
+            Field.Rotation,
+            Field.Control,
+            Field.SupportStatus,
+            Field.DisplayCount,
+            Field.DisplayType,
+            Field.Buttons,
+
+            // ListXML
             Field.SourceFile,
             Field.Runnable,
-            Field.Board,
-            Field.RebuildTo,
             Field.Devices,
             Field.SlotOptions,
             Field.Infos,
             Field.MachineType,
+
+            // Logiqx
+            Field.Board,
+            Field.RebuildTo,
+
+            // SoftwareList
+            Field.Supported,
         };
 
         #endregion

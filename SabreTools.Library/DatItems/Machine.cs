@@ -14,121 +14,183 @@ namespace SabreTools.Library.DatItems
     {
         #region Fields
 
+        #region Common Fields
+
         /// <summary>
         /// Name of the machine
         /// </summary>
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null;
 
         /// <summary>
         /// Additional notes
         /// </summary>
         [JsonProperty("comment")]
-        public string Comment { get; set; }
+        public string Comment { get; set; } = null;
 
         /// <summary>
         /// Extended description
         /// </summary>
         [JsonProperty("description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = null;
 
         /// <summary>
         /// Year(s) of release/manufacture
         /// </summary>
         [JsonProperty("year")]
-        public string Year { get; set; }
+        public string Year { get; set; } = null;
 
         /// <summary>
         /// Manufacturer, if available
         /// </summary>
         [JsonProperty("manufacturer")]
-        public string Manufacturer { get; set; }
+        public string Manufacturer { get; set; } = null;
 
         /// <summary>
         /// Publisher, if available
         /// </summary>
         [JsonProperty("publisher")]
-        public string Publisher { get; set; }
+        public string Publisher { get; set; } = null;
 
         /// <summary>
         /// Category, if available
         /// </summary>
         [JsonProperty("category")]
-        public string Category { get; set; }
+        public string Category { get; set; } = null;
 
         /// <summary>
         /// fomof parent
         /// </summary>
         [JsonProperty("romof")]
-        public string RomOf { get; set; }
+        public string RomOf { get; set; } = null;
 
         /// <summary>
         /// cloneof parent
         /// </summary>
         [JsonProperty("cloneof")]
-        public string CloneOf { get; set; }
+        public string CloneOf { get; set; } = null;
 
         /// <summary>
         /// sampleof parent
         /// </summary>
         [JsonProperty("sampleof")]
-        public string SampleOf { get; set; }
+        public string SampleOf { get; set; } = null;
+
+        #endregion
+
+        #region AttractMode Fields
+
+        /// <summary>
+        /// Player count
+        /// </summary>
+        [JsonProperty("players")]
+        public string Players { get; set; } = null;
+
+        /// <summary>
+        /// Screen rotation
+        /// </summary>
+        [JsonProperty("rotation")]
+        public string Rotation { get; set; } = null;
+
+        /// <summary>
+        /// Control method
+        /// </summary>
+        [JsonProperty("control")]
+        public string Control { get; set; } = null;
 
         /// <summary>
         /// Support status
         /// </summary>
-        /// <remarks>yes = true, partial = null, no = false</remarks>
-        [JsonProperty("supported")]
-        public bool? Supported { get; set; }
+        [JsonProperty("status")]
+        public string Status { get; set; } = null;
+
+        /// <summary>
+        /// Display count
+        /// </summary>
+        [JsonProperty("displaycount")]
+        public string DisplayCount { get; set; } = null;
+
+        /// <summary>
+        /// Display type
+        /// </summary>
+        [JsonProperty("displaytype")]
+        public string DisplayType { get; set; } = null;
+
+        /// <summary>
+        /// Number of input buttons
+        /// </summary>
+        [JsonProperty("buttons")]
+        public string Buttons { get; set; } = null;
+
+        #endregion
+
+        #region ListXML Fields
 
         /// <summary>
         /// Emulator source file related to the machine
         /// </summary>
         [JsonProperty("sourcefile")]
-        public string SourceFile { get; set; }
+        public string SourceFile { get; set; } = null;
 
         /// <summary>
         /// Machine runnable status
         /// </summary>
         /// <remarks>yes = true, partial = null, no = false</remarks>
         [JsonProperty("runnable")]
-        public bool? Runnable { get; set; }
-
-        /// <summary>
-        /// Machine board name
-        /// </summary>
-        [JsonProperty("board")]
-        public string Board { get; set; }
-
-        /// <summary>
-        /// Rebuild location if different than machine name
-        /// </summary>
-        [JsonProperty("rebuildto")]
-        public string RebuildTo { get; set; }
+        public bool? Runnable { get; set; } = null;
 
         /// <summary>
         /// List of associated device names
         /// </summary>
         [JsonProperty("devices")]
-        public List<string> Devices { get; set; }
+        public List<string> Devices { get; set; } = null;
 
         /// <summary>
         /// List of slot options
         /// </summary>
         [JsonProperty("slotoptions")]
-        public List<string> SlotOptions { get; set; }
+        public List<string> SlotOptions { get; set; } = null;
 
         /// <summary>
         /// List of info items
         /// </summary>
         [JsonProperty("infos")]
-        public List<KeyValuePair<string, string>> Infos { get; set; }
+        public List<KeyValuePair<string, string>> Infos { get; set; } = null;
 
         /// <summary>
         /// Type of the machine
         /// </summary>
         [JsonProperty("type")]
-        public MachineType MachineType { get; set; }
+        public MachineType MachineType { get; set; } = MachineType.NULL;
+
+        #endregion
+
+        #region Logiqx Fields
+
+        /// <summary>
+        /// Machine board name
+        /// </summary>
+        [JsonProperty("board")]
+        public string Board { get; set; } = null;
+
+        /// <summary>
+        /// Rebuild location if different than machine name
+        /// </summary>
+        [JsonProperty("rebuildto")]
+        public string RebuildTo { get; set; } = null;
+
+        #endregion
+
+        #region SoftwareList Fields
+
+        /// <summary>
+        /// Support status
+        /// </summary>
+        /// <remarks>yes = true, partial = null, no = false</remarks>
+        [JsonProperty("supported")]
+        public bool? Supported { get; set; } = true;
+
+        #endregion
 
         #endregion
 
@@ -146,6 +208,7 @@ namespace SabreTools.Library.DatItems
             string fieldValue = null;
             switch (field)
             {
+                // Common
                 case Field.MachineName:
                     fieldValue = Name;
                     break;
@@ -176,20 +239,36 @@ namespace SabreTools.Library.DatItems
                 case Field.SampleOf:
                     fieldValue = SampleOf;
                     break;
-                case Field.Supported:
-                    fieldValue = Supported?.ToString();
+
+                // AttractMode
+                case Field.Players:
+                    fieldValue = Players;
                     break;
+                case Field.Rotation:
+                    fieldValue = Rotation;
+                    break;
+                case Field.Control:
+                    fieldValue = Control;
+                    break;
+                case Field.SupportStatus:
+                    fieldValue = Status;
+                    break;
+                case Field.DisplayCount:
+                    fieldValue = DisplayCount;
+                    break;
+                case Field.DisplayType:
+                    fieldValue = DisplayType;
+                    break;
+                case Field.Buttons:
+                    fieldValue = Buttons;
+                    break;
+
+                // ListXML
                 case Field.SourceFile:
                     fieldValue = SourceFile;
                     break;
                 case Field.Runnable:
                     fieldValue = Runnable?.ToString();
-                    break;
-                case Field.Board:
-                    fieldValue = Board;
-                    break;
-                case Field.RebuildTo:
-                    fieldValue = RebuildTo;
                     break;
                 case Field.Devices:
                     fieldValue = string.Join(";", Devices ?? new List<string>());
@@ -202,6 +281,19 @@ namespace SabreTools.Library.DatItems
                     break;
                 case Field.MachineType:
                     fieldValue = MachineType.ToString();
+                    break;
+
+                // Logiqx
+                case Field.Board:
+                    fieldValue = Board;
+                    break;
+                case Field.RebuildTo:
+                    fieldValue = RebuildTo;
+                    break;
+
+                // SoftwareList
+                case Field.Supported:
+                    fieldValue = Supported?.ToString();
                     break;
 
                 default:
@@ -224,25 +316,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Machine()
         {
-            Name = null;
-            Comment = null;
-            Description = null;
-            Year = null;
-            Manufacturer = null;
-            Publisher = null;
-            Category = null;
-            RomOf = null;
-            CloneOf = null;
-            SampleOf = null;
-            Supported = true;
-            SourceFile = null;
-            Runnable = null;
-            Board = null;
-            RebuildTo = null;
-            Devices = null;
-            SlotOptions = null;
-            Infos = null;
-            MachineType = MachineType.NULL;
         }
 
         /// <summary>
@@ -285,6 +358,7 @@ namespace SabreTools.Library.DatItems
         {
             return new Machine()
             {
+                // Common
                 Name = this.Name,
                 Comment = this.Comment,
                 Description = this.Description,
@@ -295,15 +369,30 @@ namespace SabreTools.Library.DatItems
                 RomOf = this.RomOf,
                 CloneOf = this.CloneOf,
                 SampleOf = this.SampleOf,
-                Supported = this.Supported,
+
+                // AttractMode
+                Players = this.Players,
+                Rotation = this.Rotation,
+                Control = this.Control,
+                Status = this.Status,
+                DisplayCount = this.DisplayCount,
+                DisplayType = this.DisplayType,
+                Buttons = this.Buttons,
+
+                // ListXML
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
                 Devices = this.Devices,
                 SlotOptions = this.SlotOptions,
                 Infos = this.Infos,
                 MachineType = this.MachineType,
+
+                // Logiqx
+                Board = this.Board,
+                RebuildTo = this.RebuildTo,
+
+                // SoftwareList
+                Supported = this.Supported,
             };
         }
 
@@ -318,6 +407,8 @@ namespace SabreTools.Library.DatItems
         /// <returns>True if the item passed the filter, false otherwise</returns>
         public bool PassesFilter(Filter filter)
         {
+            #region Common
+
             // Filter on machine name
             bool? machineNameFound = filter.MachineName.MatchesPositiveSet(Name);
             if (filter.IncludeOfInGame)
@@ -391,9 +482,55 @@ namespace SabreTools.Library.DatItems
             if (filter.SampleOf.MatchesNegativeSet(SampleOf) == true)
                 return false;
 
-            // Filter on supported
-            if (filter.Supported.MatchesNeutral(null, Supported) == false)
+            #endregion
+
+            #region AttractMode
+
+            // Filter on players
+            if (filter.Players.MatchesPositiveSet(Players) == false)
                 return false;
+            if (filter.Players.MatchesNegativeSet(Players) == true)
+                return false;
+
+            // Filter on rotation
+            if (filter.Rotation.MatchesPositiveSet(Rotation) == false)
+                return false;
+            if (filter.Rotation.MatchesNegativeSet(Rotation) == true)
+                return false;
+
+            // Filter on control
+            if (filter.Control.MatchesPositiveSet(Control) == false)
+                return false;
+            if (filter.Control.MatchesNegativeSet(Control) == true)
+                return false;
+
+            // Filter on support status
+            if (filter.SupportStatus.MatchesPositiveSet(Status) == false)
+                return false;
+            if (filter.SupportStatus.MatchesNegativeSet(Status) == true)
+                return false;
+
+            // Filter on display count
+            if (filter.DisplayCount.MatchesPositiveSet(DisplayCount) == false)
+                return false;
+            if (filter.DisplayCount.MatchesNegativeSet(DisplayCount) == true)
+                return false;
+
+            // Filter on display type
+            if (filter.DisplayType.MatchesPositiveSet(DisplayType) == false)
+                return false;
+            if (filter.DisplayType.MatchesNegativeSet(DisplayType) == true)
+                return false;
+
+            // Filter on buttons
+            if (filter.Buttons.MatchesPositiveSet(Buttons) == false)
+                return false;
+            if (filter.Buttons.MatchesNegativeSet(Buttons) == true)
+                return false;
+
+            #endregion
+
+            #region ListXML
 
             // Filter on source file
             if (filter.SourceFile.MatchesPositiveSet(SourceFile) == false)
@@ -403,18 +540,6 @@ namespace SabreTools.Library.DatItems
 
             // Filter on runnable
             if (filter.Runnable.MatchesNeutral(null, Runnable) == false)
-                return false;
-
-            // Filter on board
-            if (filter.Board.MatchesPositiveSet(Board) == false)
-                return false;
-            if (filter.Board.MatchesNegativeSet(Board) == true)
-                return false;
-
-            // Filter on rebuildto
-            if (filter.RebuildTo.MatchesPositiveSet(RebuildTo) == false)
-                return false;
-            if (filter.RebuildTo.MatchesNegativeSet(RebuildTo) == true)
                 return false;
 
             // Filter on devices
@@ -453,6 +578,32 @@ namespace SabreTools.Library.DatItems
             if (filter.MachineTypes.MatchesNegative(MachineType.NULL, MachineType) == true)
                 return false;
 
+            #endregion
+
+            #region Logiqx
+
+            // Filter on board
+            if (filter.Board.MatchesPositiveSet(Board) == false)
+                return false;
+            if (filter.Board.MatchesNegativeSet(Board) == true)
+                return false;
+
+            // Filter on rebuildto
+            if (filter.RebuildTo.MatchesPositiveSet(RebuildTo) == false)
+                return false;
+            if (filter.RebuildTo.MatchesNegativeSet(RebuildTo) == true)
+                return false;
+
+            #endregion
+
+            #region SoftwareList
+
+            // Filter on supported
+            if (filter.Supported.MatchesNeutral(null, Supported) == false)
+                return false;
+
+            #endregion
+
             return true;
         }
 
@@ -462,6 +613,8 @@ namespace SabreTools.Library.DatItems
         /// <param name="fields">List of Fields to remove</param>
         public void RemoveFields(List<Field> fields)
         {
+            #region Common
+
             if (fields.Contains(Field.MachineName))
                 Name = null;
 
@@ -492,20 +645,40 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.SampleOf))
                 SampleOf = null;
 
-            if (fields.Contains(Field.Supported))
-                Supported = null;
+            #endregion
+
+            #region AttractMode
+
+            if (fields.Contains(Field.Players))
+                Players = null;
+
+            if (fields.Contains(Field.Rotation))
+                Rotation = null;
+
+            if (fields.Contains(Field.Control))
+                Control = null;
+
+            if (fields.Contains(Field.SupportStatus))
+                Status = null;
+
+            if (fields.Contains(Field.DisplayCount))
+                DisplayCount = null;
+
+            if (fields.Contains(Field.DisplayType))
+                DisplayType = null;
+
+            if (fields.Contains(Field.Buttons))
+                Buttons = null;
+
+            #endregion
+
+            #region ListXML
 
             if (fields.Contains(Field.SourceFile))
                 SourceFile = null;
 
             if (fields.Contains(Field.Runnable))
                 Runnable = null;
-
-            if (fields.Contains(Field.Board))
-                Board = null;
-
-            if (fields.Contains(Field.RebuildTo))
-                RebuildTo = null;
 
             if (fields.Contains(Field.Devices))
                 Devices = null;
@@ -518,6 +691,25 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.MachineType))
                 MachineType = MachineType.NULL;
+
+            #endregion
+
+            #region Logiqx
+
+            if (fields.Contains(Field.Board))
+                Board = null;
+
+            if (fields.Contains(Field.RebuildTo))
+                RebuildTo = null;
+
+            #endregion
+
+            #region SoftwareList
+
+            if (fields.Contains(Field.Supported))
+                Supported = null;
+
+            #endregion
         }
 
         #endregion
@@ -532,6 +724,8 @@ namespace SabreTools.Library.DatItems
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
         public void ReplaceFields(Machine machine, List<Field> fields, bool onlySame)
         {
+            #region Common
+
             if (fields.Contains(Field.MachineName))
                 Name = machine.Name;
 
@@ -565,20 +759,40 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.SampleOf))
                 SampleOf = machine.SampleOf;
 
-            if (fields.Contains(Field.Supported))
-                Supported = machine.Supported;
+            #endregion
+
+            #region AttractMode
+
+            if (fields.Contains(Field.Players))
+                Players = machine.Players;
+
+            if (fields.Contains(Field.Rotation))
+                Rotation = machine.Rotation;
+
+            if (fields.Contains(Field.Control))
+                Control = machine.Control;
+
+            if (fields.Contains(Field.SupportStatus))
+                Status = machine.Status;
+
+            if (fields.Contains(Field.DisplayCount))
+                DisplayCount = machine.DisplayCount;
+
+            if (fields.Contains(Field.DisplayType))
+                DisplayType = machine.DisplayType;
+
+            if (fields.Contains(Field.Buttons))
+                Buttons = machine.Buttons;
+
+            #endregion
+
+            #region ListXML
 
             if (fields.Contains(Field.SourceFile))
                 SourceFile = machine.SourceFile;
 
             if (fields.Contains(Field.Runnable))
                 Runnable = machine.Runnable;
-
-            if (fields.Contains(Field.Board))
-                Board = machine.Board;
-
-            if (fields.Contains(Field.RebuildTo))
-                RebuildTo = machine.RebuildTo;
 
             if (fields.Contains(Field.Devices))
                 Devices = machine.Devices;
@@ -591,6 +805,25 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.MachineType))
                 MachineType = machine.MachineType;
+
+            #endregion
+
+            #region Logiqx
+
+            if (fields.Contains(Field.Board))
+                Board = machine.Board;
+
+            if (fields.Contains(Field.RebuildTo))
+                RebuildTo = machine.RebuildTo;
+
+            #endregion
+
+            #region SoftwareList
+
+            if (fields.Contains(Field.Supported))
+                Supported = machine.Supported;
+
+            #endregion
         }
 
         #endregion
