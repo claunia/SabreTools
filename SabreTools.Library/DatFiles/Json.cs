@@ -253,6 +253,64 @@ namespace SabreTools.Library.DatFiles
                         Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? content : Header.ScreenshotsHeight);
                         break;
 
+                    case "infos":
+                        Header.Infos = new List<Tuple<string, bool?, bool?, bool?>>();
+                        jtr.Read(); // Start Array
+                        while (!sr.EndOfStream)
+                        {
+                            jtr.Read(); // Start object (or end array)
+                            if (jtr.TokenType == JsonToken.EndArray)
+                                break;
+
+                            // Get default values
+                            string nameValue = string.Empty;
+                            bool? visibleValue = null;
+                            bool? inNamingOptionValue = null;
+                            bool? defaultValue = null;
+
+                            jtr.Read();
+                            while (!sr.EndOfStream)
+                            {
+                                // If we hit the end of the machine, return
+                                if (jtr.TokenType == JsonToken.EndObject)
+                                    return;
+
+                                // We don't care about anything except properties
+                                if (jtr.TokenType != JsonToken.PropertyName)
+                                {
+                                    jtr.Read();
+                                    continue;
+                                }
+
+                                switch (jtr.Value)
+                                {
+                                    case "name":
+                                        nameValue = jtr.ReadAsString();
+                                        break;
+                                    case "visible":
+                                        visibleValue = jtr.ReadAsString().AsYesNo();
+                                        break;
+                                    case "inNamingOption":
+                                        inNamingOptionValue = jtr.ReadAsString().AsYesNo();
+                                        break;
+                                    case "default":
+                                        defaultValue = jtr.ReadAsString().AsYesNo();
+                                        break;
+                                }
+
+                                jtr.Read(); // End object
+                            }
+                            
+                            // Add the new info tuple
+                            Header.Infos.Add(new Tuple<string, bool?, bool?, bool?>(
+                                nameValue,
+                                visibleValue,
+                                inNamingOptionValue,
+                                defaultValue));
+                        }
+
+                        break;
+
                     case "romtitle":
                         content = jtr.ReadAsString();
                         Header.RomTitle = (Header.MameConfig == null ? content : Header.RomTitle);
@@ -1084,6 +1142,27 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("screenshotsheight");
                     jtw.WriteValue(Header.ScreenshotsHeight);
+                }
+
+                if (Header.Infos != null)
+                {
+                    jtw.WritePropertyName("infos");
+                    jtw.WriteStartArray();
+                    foreach (var info in Header.Infos)
+                    {
+                        jtw.WriteStartObject();
+                        jtw.WritePropertyName("name");
+                        jtw.WriteValue(info.Item1);
+                        jtw.WritePropertyName("visible");
+                        jtw.WriteValue(info.Item2.ToString());
+                        jtw.WritePropertyName("inNamingOption");
+                        jtw.WriteValue(info.Item3.ToString());
+                        jtw.WritePropertyName("default");
+                        jtw.WriteValue(info.Item4.ToString());
+                        jtw.WriteEndObject();
+                    }
+
+                    jtw.WriteEndArray();
                 }
 
                 if (!string.IsNullOrWhiteSpace(Header.RomTitle))

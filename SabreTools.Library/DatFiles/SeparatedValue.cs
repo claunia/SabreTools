@@ -222,6 +222,8 @@ namespace SabreTools.Library.DatFiles
                             Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? value : Header.ScreenshotsHeight);
                             break;
 
+                        // TODO: Figure out how Header.Infos could be read in
+
                         case "DatFile.RomTitle":
                             Header.RomTitle = (Header.RomTitle == null ? value : Header.RomTitle);
                             break;

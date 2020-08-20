@@ -7,6 +7,7 @@ using System.Xml;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -154,7 +155,6 @@ namespace SabreTools.Library.DatFiles
                         Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? content : Header.ScreenshotsHeight);
                         break;
 
-                    // TODO: Use header values
                     case "infos":
                         ReadInfos(reader.ReadSubtree());
 
@@ -208,6 +208,9 @@ namespace SabreTools.Library.DatFiles
             if (reader == null)
                 return;
 
+            // Setup the infos object
+            Header.Infos = new List<Tuple<string, bool?, bool?, bool?>>();
+
             // Otherwise, add what is possible
             reader.MoveToContent();
 
@@ -221,104 +224,13 @@ namespace SabreTools.Library.DatFiles
                     continue;
                 }
 
-                // Get all infos items
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "title":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "location":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "publisher":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "sourcerom":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "savetype":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "romsize":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "releasenumber":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "languagenumber":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "comment":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "romcrc":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "im1crc":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "im2crc":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    case "languages":
-                        reader.GetAttribute("visible"); // (true|false)
-                        reader.GetAttribute("inNamingOption"); // (true|false)
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.Read();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
+                // Add all tuples to the info list
+                Header.Infos.Add(new Tuple<string, bool?, bool?, bool?>(
+                    reader.Name.ToLowerInvariant(),
+                    reader.GetAttribute("visible").AsYesNo(),
+                    reader.GetAttribute("inNamingOption").AsYesNo(),
+                    reader.GetAttribute("default").AsYesNo()));
+                reader.Read();
             }
         }
 
@@ -854,89 +766,23 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteElementString("screenshotsWidth", Header.ScreenshotsWidth ?? string.Empty);
                 xtw.WriteElementString("screenshotsHeight", Header.ScreenshotsHeight ?? string.Empty);
 
-                xtw.WriteStartElement("infos");
+                if (Header.Infos != null)
+                {
+                    xtw.WriteStartElement("infos");
 
-                xtw.WriteStartElement("title");
-                xtw.WriteAttributeString("visible", "false");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
+                    foreach (var info in Header.Infos)
+                    {
+                        xtw.WriteStartElement(info.Item1);
+                        xtw.WriteAttributeString("visible", info.Item2.ToString());
+                        xtw.WriteAttributeString("inNamingOption", info.Item3.ToString());
+                        xtw.WriteAttributeString("default", info.Item4.ToString());
+                        xtw.WriteEndElement();
+                    }
 
-                xtw.WriteStartElement("location");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "true");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("publisher");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "true");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("sourceRom");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "true");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("saveType");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "true");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("romSize");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "true");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("releaseNumber");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("languageNumber");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("comment");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("romCRC");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("im1CRC");
-                xtw.WriteAttributeString("visible", "false");
-                xtw.WriteAttributeString("inNamingOption", "false");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("im2CRC");
-                xtw.WriteAttributeString("visible", "false");
-                xtw.WriteAttributeString("inNamingOption", "false");
-                xtw.WriteAttributeString("default", "false");
-                xtw.WriteEndElement();
-
-                xtw.WriteStartElement("languages");
-                xtw.WriteAttributeString("visible", "true");
-                xtw.WriteAttributeString("inNamingOption", "true");
-                xtw.WriteAttributeString("default", "true");
-                xtw.WriteEndElement();
-
-                // End infos
-                xtw.WriteEndElement();
-
+                    // End infos
+                    xtw.WriteEndElement();
+                }
+                
                 xtw.WriteStartElement("canOpen");
                 xtw.WriteElementString("extension", ".bin");
                 xtw.WriteEndElement();

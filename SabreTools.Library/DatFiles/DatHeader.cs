@@ -237,6 +237,11 @@ namespace SabreTools.Library.DatFiles
         public string ScreenshotsHeight { get; set; }
 
         /// <summary>
+        /// OfflineList info list
+        /// </summary>
+        public List<Tuple<string, bool?, bool?, bool?>> Infos { get; set; }
+
+        /// <summary>
         /// Rom title
         /// </summary>
         [JsonProperty("romtitle")]
