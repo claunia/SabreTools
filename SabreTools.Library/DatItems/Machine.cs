@@ -25,6 +25,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Additional notes
         /// </summary>
+        /// <remarks>Known as "Extra" in AttractMode</remarks>
         [JsonProperty("comment")]
         public string Comment { get; set; } = null;
 
@@ -75,6 +76,12 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("sampleof")]
         public string SampleOf { get; set; } = null;
+
+        /// <summary>
+        /// Type of the machine
+        /// </summary>
+        [JsonProperty("type")]
+        public MachineType MachineType { get; set; } = MachineType.NULL;
 
         #endregion
 
@@ -129,6 +136,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Emulator source file related to the machine
         /// </summary>
+        /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("sourcefile")]
         public string SourceFile { get; set; } = null;
 
@@ -136,6 +144,7 @@ namespace SabreTools.Library.DatItems
         /// Machine runnable status
         /// </summary>
         /// <remarks>yes = true, partial = null, no = false</remarks>
+        /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("runnable")]
         public bool? Runnable { get; set; } = null;
 
@@ -156,12 +165,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("infos")]
         public List<KeyValuePair<string, string>> Infos { get; set; } = null;
-
-        /// <summary>
-        /// Type of the machine
-        /// </summary>
-        [JsonProperty("type")]
-        public MachineType MachineType { get; set; } = MachineType.NULL;
 
         #endregion
 
@@ -239,6 +242,9 @@ namespace SabreTools.Library.DatItems
                 case Field.SampleOf:
                     fieldValue = SampleOf;
                     break;
+                case Field.MachineType:
+                    fieldValue = MachineType.ToString();
+                    break;
 
                 // AttractMode
                 case Field.Players:
@@ -278,9 +284,6 @@ namespace SabreTools.Library.DatItems
                     break;
                 case Field.Infos:
                     fieldValue = string.Join(";", (Infos ?? new List<KeyValuePair<string, string>>()).Select(i => $"{i.Key}={i.Value}"));
-                    break;
-                case Field.MachineType:
-                    fieldValue = MachineType.ToString();
                     break;
 
                 // Logiqx
@@ -645,6 +648,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.SampleOf))
                 SampleOf = null;
 
+            if (fields.Contains(Field.MachineType))
+                MachineType = MachineType.NULL;
+
             #endregion
 
             #region AttractMode
@@ -688,9 +694,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Infos))
                 Infos = null;
-
-            if (fields.Contains(Field.MachineType))
-                MachineType = MachineType.NULL;
 
             #endregion
 
@@ -759,6 +762,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.SampleOf))
                 SampleOf = machine.SampleOf;
 
+            if (fields.Contains(Field.MachineType))
+                MachineType = machine.MachineType;
+
             #endregion
 
             #region AttractMode
@@ -802,9 +808,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Infos))
                 Infos = machine.Infos;
-
-            if (fields.Contains(Field.MachineType))
-                MachineType = machine.MachineType;
 
             #endregion
 

@@ -76,8 +76,8 @@ namespace SabreTools.Library.DatFiles
                     {
                         // The datafile tag can have some attributes
                         case "datafile":
-                            // string build = xtr.GetAttribute("build");
-                            // string debug = xtr.GetAttribute("debug"); // (yes|no) "no"
+                            Header.Build = (Header.Build == null ? xtr.GetAttribute("build") : Header.Build);
+                            Header.Debug = (Header.Debug == null ? xtr.GetAttribute("debug").AsYesNo() : Header.Debug);
                             xtr.Read();
                             break;
 
@@ -775,6 +775,21 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteDocType("datafile", "-//Logiqx//DTD ROM Management Datafile//EN", "http://www.logiqx.com/Dats/datafile.dtd", null);
 
                 xtw.WriteStartElement("datafile");
+
+                if (Header.Build != null)
+                    xtw.WriteAttributeString("build", Header.Build);
+                if (Header.Debug != null)
+                {
+                    switch (Header.Debug)
+                    {
+                        case true:
+                            xtw.WriteAttributeString("debug", "yes");
+                            break;
+                        case false:
+                            xtw.WriteAttributeString("debug", "no");
+                            break;
+                    }
+                }
 
                 xtw.WriteStartElement("header");
                 xtw.WriteElementString("name", Header.Name);

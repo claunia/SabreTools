@@ -183,6 +183,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Debug build flag
         /// </summary>
+        /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("debug")]
         public bool? Debug { get; set; } = false;
 
@@ -191,6 +192,16 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonProperty("mameconfig")]
         public string MameConfig { get; set; }
+
+        #endregion
+
+        #region Logiqx
+
+        /// <summary>
+        /// Build version
+        /// </summary>
+        [JsonProperty("build")]
+        public string Build { get; set; }
 
         #endregion
 

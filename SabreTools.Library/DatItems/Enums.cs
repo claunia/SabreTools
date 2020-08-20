@@ -37,6 +37,7 @@ namespace SabreTools.Library.DatItems
         RomOf,
         CloneOf,
         SampleOf,
+        MachineType,
 
         // AttractMode Machine
         Players,
@@ -53,7 +54,6 @@ namespace SabreTools.Library.DatItems
         Devices,
         SlotOptions,
         Infos,
-        MachineType,
 
         // Logiqx Machine
         Board,

@@ -490,6 +490,13 @@ namespace SabreTools.Library.Filtering
                         SampleOf.PositiveSet.Add(value);
                     break;
 
+                case Field.MachineType:
+                    if (negate)
+                        MachineTypes.Negative |= value.AsMachineType();
+                    else
+                        MachineTypes.Positive |= value.AsMachineType();
+                    break;
+
                 #endregion
 
                 #region AttractMode
@@ -573,13 +580,6 @@ namespace SabreTools.Library.Filtering
                         SlotOptions.NegativeSet.Add(value);
                     else
                         SlotOptions.PositiveSet.Add(value);
-                    break;
-
-                case Field.MachineType:
-                    if (negate)
-                        MachineTypes.Negative |= value.AsMachineType();
-                    else
-                        MachineTypes.Positive |= value.AsMachineType();
                     break;
 
                 #endregion

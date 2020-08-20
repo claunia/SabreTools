@@ -176,6 +176,14 @@ namespace SabreTools.Library.Tools
                 case "sampleof":
                     return Field.SampleOf;
 
+                case "gametype":
+                case "game type":
+                case "game-type":
+                case "machinetype":
+                case "machine type":
+                case "machine-type":
+                    return Field.MachineType;
+
                 #endregion
 
                 #region AttractMode
@@ -233,14 +241,6 @@ namespace SabreTools.Library.Tools
 
                 case "infos":
                     return Field.Infos;
-
-                case "gametype":
-                case "game type":
-                case "game-type":
-                case "machinetype":
-                case "machine type":
-                case "machine-type":
-                    return Field.MachineType;
 
                 #endregion
 

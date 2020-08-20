@@ -200,6 +200,14 @@ namespace SabreTools.Library.DatFiles
 
                         #endregion
 
+                        #region Logiqx
+
+                        case "DatFile.Build":
+                            Header.Build = (Header.Build == null ? value : Header.Build);
+                            break;
+
+                        #endregion
+
                         #endregion // DatFile
 
                         #region Machine
@@ -244,6 +252,10 @@ namespace SabreTools.Library.DatFiles
 
                         case "Machine.SampleOf":
                             machine.SampleOf = value;
+                            break;
+
+                        case "Machine.MachineType":
+                            machine.MachineType = value.AsMachineType();
                             break;
 
                         #endregion
@@ -319,10 +331,6 @@ namespace SabreTools.Library.DatFiles
                                 machine.Infos.Add(new KeyValuePair<string, string>(infoPair[0], infoPair[1]));
                             }
 
-                            break;
-
-                        case "Machine.MachineType":
-                            machine.MachineType = value.AsMachineType();
                             break;
 
                         #endregion
@@ -751,6 +759,13 @@ namespace SabreTools.Library.DatFiles
 
                 #endregion
 
+                #region Logiqx
+
+                case "build":
+                    return "DatFile.Build";
+
+                #endregion
+
                 #endregion // DatFile
 
                 #region Machine
@@ -802,6 +817,14 @@ namespace SabreTools.Library.DatFiles
 
                 case "sampleof":
                     return "Machine.SampleOf";
+
+                case "gametype":
+                case "game type":
+                case "game-type":
+                case "machinetype":
+                case "machine type":
+                case "machine-type":
+                    return "Machine.MachineType";
 
                 #endregion
 
@@ -860,14 +883,6 @@ namespace SabreTools.Library.DatFiles
 
                 case "infos":
                     return "Machine.Infos";
-
-                case "gametype":
-                case "game type":
-                case "game-type":
-                case "machinetype":
-                case "machine type":
-                case "machine-type":
-                    return "Machine.MachineType";
 
                 #endregion
 

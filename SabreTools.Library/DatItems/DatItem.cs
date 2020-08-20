@@ -157,6 +157,7 @@ namespace SabreTools.Library.DatItems
             Field.RomOf,
             Field.CloneOf,
             Field.SampleOf,
+            Field.MachineType,
 
             // AttractMode
             Field.Players,
@@ -173,7 +174,6 @@ namespace SabreTools.Library.DatItems
             Field.Devices,
             Field.SlotOptions,
             Field.Infos,
-            Field.MachineType,
 
             // Logiqx
             Field.Board,

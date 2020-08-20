@@ -227,6 +227,15 @@ namespace SabreTools.Library.DatFiles
 
                     #endregion
 
+                    #region Logiqx
+
+                    case "build":
+                        content = jtr.ReadAsString();
+                        Header.Build = (Header.Build == null ? content : Header.Build);
+                        break;
+
+                    #endregion
+
                     default:
                         break;
                 }
@@ -342,6 +351,24 @@ namespace SabreTools.Library.DatFiles
                     case "sampleof":
                         machine.SampleOf = jtr.ReadAsString();
                         break;
+                    case "isbios":
+                        string isbios = jtr.ReadAsString();
+                        if (string.Equals(isbios, "yes", StringComparison.OrdinalIgnoreCase))
+                            machine.MachineType &= MachineType.Bios;
+
+                        break;
+                    case "isdevice":
+                        string isdevice = jtr.ReadAsString();
+                        if (string.Equals(isdevice, "yes", StringComparison.OrdinalIgnoreCase))
+                            machine.MachineType &= MachineType.Device;
+
+                        break;
+                    case "ismechanical":
+                        string ismechanical = jtr.ReadAsString();
+                        if (string.Equals(ismechanical, "yes", StringComparison.OrdinalIgnoreCase))
+                            machine.MachineType &= MachineType.Mechanical;
+
+                        break;
                     case "items":
                         ReadItems(sr, jtr, filename, indexId, machine);
                         break;
@@ -410,24 +437,6 @@ namespace SabreTools.Library.DatFiles
 
                             machine.Infos.Add(new KeyValuePair<string, string>(key, value));
                         }
-
-                        break;
-                    case "isbios":
-                        string isbios = jtr.ReadAsString();
-                        if (string.Equals(isbios, "yes", StringComparison.OrdinalIgnoreCase))
-                            machine.MachineType &= MachineType.Bios;
-
-                        break;
-                    case "isdevice":
-                        string isdevice = jtr.ReadAsString();
-                        if (string.Equals(isdevice, "yes", StringComparison.OrdinalIgnoreCase))
-                            machine.MachineType &= MachineType.Device;
-
-                        break;
-                    case "ismechanical":
-                        string ismechanical = jtr.ReadAsString();
-                        if (string.Equals(ismechanical, "yes", StringComparison.OrdinalIgnoreCase))
-                            machine.MachineType &= MachineType.Mechanical;
 
                         break;
 
@@ -1023,6 +1032,16 @@ namespace SabreTools.Library.DatFiles
 
                 #endregion
 
+                #region Logiqx
+
+                if (!string.IsNullOrWhiteSpace(Header.Build))
+                {
+                    jtw.WritePropertyName("build");
+                    jtw.WriteValue(Header.Build);
+                }
+
+                #endregion
+
                 // End header
                 jtw.WriteEndObject();
 
@@ -1104,6 +1123,24 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("sampleof");
                     jtw.WriteValue(datItem.Machine.SampleOf);
+                }
+                if (!Header.ExcludeFields.Contains(Field.MachineType))
+                {
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
+                    {
+                        jtw.WritePropertyName("isbios");
+                        jtw.WriteValue("yes");
+                    }
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
+                    {
+                        jtw.WritePropertyName("isdevice");
+                        jtw.WriteValue("yes");
+                    }
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
+                    {
+                        jtw.WritePropertyName("ismechanical");
+                        jtw.WriteValue("yes");
+                    }
                 }
 
                 // AttractMode
@@ -1197,24 +1234,6 @@ namespace SabreTools.Library.DatFiles
                     }
 
                     jtw.WriteEndArray();
-                }
-                if (!Header.ExcludeFields.Contains(Field.MachineType))
-                {
-                    if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
-                    {
-                        jtw.WritePropertyName("isbios");
-                        jtw.WriteValue("yes");
-                    }
-                    if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
-                    {
-                        jtw.WritePropertyName("isdevice");
-                        jtw.WriteValue("yes");
-                    }
-                    if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
-                    {
-                        jtw.WritePropertyName("ismechanical");
-                        jtw.WriteValue("yes");
-                    }
                 }
 
                 // Logiqx
