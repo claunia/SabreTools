@@ -208,6 +208,26 @@ namespace SabreTools.Library.DatFiles
 
                         #endregion
 
+                        #region OfflineList
+
+                        case "DatFile.System":
+                            Header.System = (Header.System == null ? value : Header.System);
+                            break;
+
+                        case "DatFile.ScreenshotsWidth":
+                            Header.ScreenshotsWidth = (Header.ScreenshotsWidth == null ? value : Header.ScreenshotsWidth);
+                            break;
+
+                        case "DatFile.ScreenshotsHeight":
+                            Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? value : Header.ScreenshotsHeight);
+                            break;
+
+                        case "DatFile.RomTitle":
+                            Header.RomTitle = (Header.RomTitle == null ? value : Header.RomTitle);
+                            break;
+
+                        #endregion
+
                         #endregion // DatFile
 
                         #region Machine
@@ -763,6 +783,34 @@ namespace SabreTools.Library.DatFiles
 
                 case "build":
                     return "DatFile.Build";
+
+                #endregion
+
+                #region OfflineList
+
+                case "system":
+                    return "DatFile.System";
+
+                case "screenshotwidth":
+                case "screenshotswidth":
+                case "screenshot width":
+                case "screenshot-width":
+                case "screenshots width":
+                case "screenshots-width":
+                    return "DatFile.ScreenshotsWidth";
+
+                case "screenshotheight":
+                case "screenshotsheight":
+                case "screenshot height":
+                case "screenshot-height":
+                case "screenshots height":
+                case "screenshots-height":
+                    return "DatFile.ScreenshotsHeight";
+
+                case "romtitle":
+                case "rom title":
+                case "rom-title":
+                    return "DatFile.RomTitle";
 
                 #endregion
 

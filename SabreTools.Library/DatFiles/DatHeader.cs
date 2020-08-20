@@ -215,6 +215,34 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        #region OfflineList Fields
+
+        /// <summary>
+        /// System
+        /// </summary>
+        [JsonProperty("system")]
+        public string System { get; set; }
+
+        /// <summary>
+        /// Screenshots width
+        /// </summary>
+        [JsonProperty("screenshotswidth")]
+        public string ScreenshotsWidth { get; set; }
+
+        /// <summary>
+        /// Screenshots height
+        /// </summary>
+        [JsonProperty("screenshotsheight")]
+        public string ScreenshotsHeight { get; set; }
+
+        /// <summary>
+        /// Rom title
+        /// </summary>
+        [JsonProperty("romtitle")]
+        public string RomTitle { get; set; }
+
+        #endregion
+
         #region Write pre-processing
 
         /// <summary>

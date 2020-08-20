@@ -138,17 +138,23 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "system":
-                        reader.ReadElementContentAsString();
+                        content = reader.ReadElementContentAsString();
+                        Header.System = (Header.System == null ? content : Header.System);
                         break;
 
+                    // TODO: Int32?
                     case "screenshotswidth":
-                        reader.ReadElementContentAsString(); // Int32?
+                        content = reader.ReadElementContentAsString();
+                        Header.ScreenshotsWidth = (Header.ScreenshotsWidth == null ? content : Header.ScreenshotsWidth);
                         break;
 
+                    // TODO: Int32?
                     case "screenshotsheight":
-                        reader.ReadElementContentAsString(); // Int32?
+                        content = reader.ReadElementContentAsString();
+                        Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? content : Header.ScreenshotsHeight);
                         break;
 
+                    // TODO: Use header values
                     case "infos":
                         ReadInfos(reader.ReadSubtree());
 
@@ -156,6 +162,7 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
+                    // TODO: Use header values
                     case "canopen":
                         ReadCanOpen(reader.ReadSubtree());
 
@@ -163,6 +170,7 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
+                    // TODO: Use header values
                     case "newdat":
                         ReadNewDat(reader.ReadSubtree());
 
@@ -170,6 +178,7 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
+                    // TODO: Use header values
                     case "search":
                         ReadSearch(reader.ReadSubtree());
 
@@ -178,7 +187,8 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "romtitle":
-                        reader.ReadElementContentAsString();
+                        content = reader.ReadElementContentAsString();
+                        Header.RomTitle = (Header.RomTitle == null ? content : Header.RomTitle);
                         break;
 
                     default:
@@ -840,9 +850,9 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("configuration");
                 xtw.WriteElementString("datName", Header.Name);
                 xtw.WriteElementString("datVersion", Items.TotalCount.ToString());
-                xtw.WriteElementString("system", "none");
-                xtw.WriteElementString("screenshotsWidth", "240");
-                xtw.WriteElementString("screenshotsHeight", "160");
+                xtw.WriteElementString("system", Header.System ?? string.Empty);
+                xtw.WriteElementString("screenshotsWidth", Header.ScreenshotsWidth ?? string.Empty);
+                xtw.WriteElementString("screenshotsHeight", Header.ScreenshotsHeight ?? string.Empty);
 
                 xtw.WriteStartElement("infos");
 
@@ -985,7 +995,7 @@ namespace SabreTools.Library.DatFiles
                 // End search
                 xtw.WriteEndElement();
 
-                xtw.WriteElementString("romTitle", "%u - %n");
+                xtw.WriteElementString("romTitle", Header.RomTitle ?? "%u - %n");
 
                 // End configuration
                 xtw.WriteEndElement();

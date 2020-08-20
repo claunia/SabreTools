@@ -236,6 +236,30 @@ namespace SabreTools.Library.DatFiles
 
                     #endregion
 
+                    #region OfflineList
+
+                    case "system":
+                        content = jtr.ReadAsString();
+                        Header.System = (Header.System == null ? content : Header.System);
+                        break;
+
+                    case "screenshotswidth":
+                        content = jtr.ReadAsString();
+                        Header.ScreenshotsWidth = (Header.ScreenshotsWidth == null ? content : Header.ScreenshotsWidth);
+                        break;
+
+                    case "screenshotsheight":
+                        content = jtr.ReadAsString();
+                        Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? content : Header.ScreenshotsHeight);
+                        break;
+
+                    case "romtitle":
+                        content = jtr.ReadAsString();
+                        Header.RomTitle = (Header.MameConfig == null ? content : Header.RomTitle);
+                        break;
+
+                    #endregion
+
                     default:
                         break;
                 }
@@ -1038,6 +1062,34 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("build");
                     jtw.WriteValue(Header.Build);
+                }
+
+                #endregion
+
+                #region OfflineList
+
+                if (!string.IsNullOrWhiteSpace(Header.System))
+                {
+                    jtw.WritePropertyName("system");
+                    jtw.WriteValue(Header.System);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.ScreenshotsWidth))
+                {
+                    jtw.WritePropertyName("screenshotswidth");
+                    jtw.WriteValue(Header.ScreenshotsWidth);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.ScreenshotsHeight))
+                {
+                    jtw.WritePropertyName("screenshotsheight");
+                    jtw.WriteValue(Header.ScreenshotsHeight);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.RomTitle))
+                {
+                    jtw.WritePropertyName("romtitle");
+                    jtw.WriteValue(Header.RomTitle);
                 }
 
                 #endregion
