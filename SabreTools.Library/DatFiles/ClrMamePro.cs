@@ -291,8 +291,8 @@ namespace SabreTools.Library.DatFiles
                     // Then populate it with information
                     item.CopyMachineInformation(machine);
 
-                    item.IndexId = indexId;
-                    item.IndexSource = filename;
+                    item.Source.Index = indexId;
+                    item.Source.Name = filename;
 
                     // Loop through all of the attributes
                     foreach (var kvp in cmpr.Internal)
@@ -420,8 +420,11 @@ namespace SabreTools.Library.DatFiles
             {
                 Blank blank = new Blank()
                 {
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -475,18 +478,18 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteEndGame(cmpw, rom);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteStartGame(cmpw, rom);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -494,7 +497,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             // If we're in a mode that doesn't allow for actual empty folders, add the blank info
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
@@ -514,7 +517,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(cmpw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -613,27 +616,27 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
-                cmpw.WriteStartElement(datItem.MachineType == MachineType.Bios ? "resource" : "game");
+                cmpw.WriteStartElement(datItem.Machine.MachineType == MachineType.Bios ? "resource" : "game");
                 cmpw.WriteStandalone("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("romof", datItem.RomOf);
+                    cmpw.WriteStandalone("romof", datItem.Machine.RomOf);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("cloneof", datItem.CloneOf);
+                    cmpw.WriteStandalone("cloneof", datItem.Machine.CloneOf);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("sampleof", datItem.SampleOf);
+                    cmpw.WriteStandalone("sampleof", datItem.Machine.SampleOf);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("description", datItem.MachineDescription);
+                    cmpw.WriteStandalone("description", datItem.Machine.Description);
                 else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("description", datItem.MachineName);
+                    cmpw.WriteStandalone("description", datItem.Machine.Name);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("year", datItem.Year);
+                    cmpw.WriteStandalone("year", datItem.Machine.Year);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("manufacturer", datItem.Manufacturer);
+                    cmpw.WriteStandalone("manufacturer", datItem.Machine.Manufacturer);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("category", datItem.Category);
+                    cmpw.WriteStandalone("category", datItem.Machine.Category);
 
                 cmpw.Flush();
             }
@@ -658,7 +661,7 @@ namespace SabreTools.Library.DatFiles
             {
                 // Build the state based on excluded fields
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)))
-                    cmpw.WriteStandalone("sampleof", datItem.SampleOf);
+                    cmpw.WriteStandalone("sampleof", datItem.Machine.SampleOf);
 
                 // End game
                 cmpw.WriteEndElement();

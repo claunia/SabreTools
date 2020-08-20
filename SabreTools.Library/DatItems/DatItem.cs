@@ -19,15 +19,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
-        // TODO: Can internal fields be mapped to Field in a more reasonable way?
-        #region Protected instance variables
-
-        [JsonIgnore]
-        protected Machine _machine = new Machine();
-
-        #endregion
-
-        #region Publicly facing variables
+        #region Fields
 
         #region Standard item information
 
@@ -54,500 +46,10 @@ namespace SabreTools.Library.DatItems
         #region Machine information
 
         /// <summary>
-        /// Name of the machine associated with the item
+        /// Machine values
         /// </summary>
         [JsonIgnore]
-        public string MachineName
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Name;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Name = value;
-            }
-        }
-
-        /// <summary>
-        /// Additional notes on the machine
-        /// </summary>
-        [JsonIgnore]
-        public string Comment
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Comment;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Comment = value;
-            }
-        }
-
-        /// <summary>
-        /// Extended description of the machine
-        /// </summary>
-        [JsonIgnore]
-        public string MachineDescription
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Description;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Description = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine year(s) of release/manufacture
-        /// </summary>
-        [JsonIgnore]
-        public string Year
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Year;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Year = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine manufacturer, if available
-        /// </summary>
-        [JsonIgnore]
-        public string Manufacturer
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Manufacturer;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Manufacturer = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine publisher, if available
-        /// </summary>
-        [JsonIgnore]
-        public string Publisher
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Publisher;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Publisher = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine category, if available
-        /// </summary>
-        [JsonIgnore]
-        public string Category
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Category;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Category = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine romof parent
-        /// </summary>
-        [JsonIgnore]
-        public string RomOf
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.RomOf;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.RomOf = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine cloneof parent
-        /// </summary>
-        [JsonIgnore]
-        public string CloneOf
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.CloneOf;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.CloneOf = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine sampleof parent
-        /// </summary>
-        [JsonIgnore]
-        public string SampleOf
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.SampleOf;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.SampleOf = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine support status
-        /// </summary>
-        /// <remarks>yes = true, partial = null, no = false</remarks>
-        [JsonIgnore]
-        public bool? Supported
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Supported;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Supported = value;
-            }
-        }
-
-        /// <summary>
-        /// Emulator source file related to the machine
-        /// </summary>
-        [JsonIgnore]
-        public string SourceFile
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.SourceFile;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.SourceFile = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine runnable status
-        /// </summary>
-        /// <remarks>yes = true, partial = null, no = false</remarks>
-        [JsonIgnore]
-        public bool? Runnable
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Runnable;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Runnable = value;
-            }
-        }
-
-        /// <summary>
-        /// Machine board name
-        /// </summary>
-        [JsonIgnore]
-        public string Board
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Board;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Board = value;
-            }
-        }
-
-        /// <summary>
-        /// Rebuild location if different than machine name
-        /// </summary>
-        [JsonIgnore]
-        public string RebuildTo
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.RebuildTo;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.RebuildTo = value;
-            }
-        }
-
-        /// <summary>
-        /// List of associated device names
-        /// </summary>
-        [JsonIgnore]
-        public List<string> Devices
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Devices;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Devices = value;
-            }
-        }
-
-        /// <summary>
-        /// List of slot options
-        /// </summary>
-        [JsonIgnore]
-        public List<string> SlotOptions
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.SlotOptions;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.SlotOptions = value;
-            }
-        }
-
-        /// <summary>
-        /// List of info items
-        /// </summary>
-        [JsonIgnore]
-        public List<KeyValuePair<string, string>> Infos
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.Infos;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.Infos = value;
-            }
-        }
-
-        /// <summary>
-        /// Type of the associated machine
-        /// </summary>
-        [JsonIgnore]
-        public MachineType MachineType
-        {
-            get
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                return _machine.MachineType;
-            }
-            set
-            {
-                if (_machine == null)
-                {
-                    _machine = new Machine();
-                }
-
-                _machine.MachineType = value;
-            }
-        }
+        public Machine Machine { get; set; } = new Machine();
 
         #endregion
 
@@ -585,19 +87,13 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region Source metadata information
+        #region Metadata information
 
         /// <summary>
-        /// Internal DatFile index for organization
+        /// Source information
         /// </summary>
         [JsonIgnore]
-        public int IndexId { get; set; }
-
-        /// <summary>
-        /// Internal DatFile name for organization
-        /// </summary>
-        [JsonIgnore]
-        public string IndexSource { get; set; }
+        public Source Source { get; set; } = new Source();
 
         /// <summary>
         /// Flag if item should be removed
@@ -688,7 +184,11 @@ namespace SabreTools.Library.DatItems
             if (excludeFields.Contains(field))
                 return string.Empty;
 
-            string fieldValue = null;
+            // Try to get the machine field first
+            string fieldValue = Machine.GetField(field, excludeFields);
+            if (fieldValue != null)
+                return fieldValue;
+
             switch (field)
             {
                 case Field.Name:
@@ -708,64 +208,6 @@ namespace SabreTools.Library.DatItems
                     break;
                 case Field.AreaSize:
                     fieldValue = AreaSize?.ToString();
-                    break;
-
-                case Field.MachineName:
-                    fieldValue = MachineName;
-                    break;
-                case Field.Comment:
-                    fieldValue = Comment;
-                    break;
-                case Field.Description:
-                    fieldValue = MachineDescription;
-                    break;
-                case Field.Year:
-                    fieldValue = Year;
-                    break;
-                case Field.Manufacturer:
-                    fieldValue = Manufacturer;
-                    break;
-                case Field.Publisher:
-                    fieldValue = Publisher;
-                    break;
-                case Field.Category:
-                    fieldValue = Category;
-                    break;
-                case Field.RomOf:
-                    fieldValue = RomOf;
-                    break;
-                case Field.CloneOf:
-                    fieldValue = CloneOf;
-                    break;
-                case Field.SampleOf:
-                    fieldValue = SampleOf;
-                    break;
-                case Field.Supported:
-                    fieldValue = Supported?.ToString();
-                    break;
-                case Field.SourceFile:
-                    fieldValue = SourceFile;
-                    break;
-                case Field.Runnable:
-                    fieldValue = Runnable?.ToString();
-                    break;
-                case Field.Board:
-                    fieldValue = Board;
-                    break;
-                case Field.RebuildTo:
-                    fieldValue = RebuildTo;
-                    break;
-                case Field.Devices:
-                    fieldValue = string.Join(";", Devices ?? new List<string>());
-                    break;
-                case Field.SlotOptions:
-                    fieldValue = string.Join(";", SlotOptions ?? new List<string>());
-                    break;
-                case Field.Infos:
-                    fieldValue = string.Join(";", (Infos ?? new List<KeyValuePair<string, string>>()).Select(i => $"{i.Key}={i.Value}"));
-                    break;
-                case Field.MachineType:
-                    fieldValue = MachineType.ToString();
                     break;
 
                 case Field.NULL:
@@ -880,7 +322,7 @@ namespace SabreTools.Library.DatItems
         /// <param name="item">Existing item to copy information from</param>
         public void CopyMachineInformation(DatItem item)
         {
-            _machine = (Machine)item._machine.Clone();
+            Machine = (Machine)item.Machine.Clone();
         }
 
         /// <summary>
@@ -889,7 +331,7 @@ namespace SabreTools.Library.DatItems
         /// <param name="machine">Existing machine to copy information from</param>
         public void CopyMachineInformation(Machine machine)
         {
-            _machine = (Machine)machine.Clone();
+            Machine = (Machine)machine.Clone();
         }
 
         #endregion
@@ -932,9 +374,9 @@ namespace SabreTools.Library.DatItems
                 return output;
 
             // If the duplicate is external already or should be, set it
-            if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem.IndexId != IndexId)
+            if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem.Source.Index != Source.Index)
             {
-                if (lastItem.MachineName == MachineName && lastItem.Name == Name)
+                if (lastItem.Machine.Name == Machine.Name && lastItem.Name == Name)
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -943,7 +385,7 @@ namespace SabreTools.Library.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem.MachineName == MachineName && lastItem.Name == Name)
+                if (lastItem.Machine.Name == Machine.Name && lastItem.Name == Name)
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
@@ -963,146 +405,9 @@ namespace SabreTools.Library.DatItems
         /// <returns>True if the item passed the filter, false otherwise</returns>
         public virtual bool PassesFilter(Filter filter)
         {
-            #region Machine Filters
-
-            // Filter on machine name
-            bool? machineNameFound = filter.MachineName.MatchesPositiveSet(MachineName);
-            if (filter.IncludeOfInGame)
-            {
-                machineNameFound |= (filter.MachineName.MatchesPositiveSet(CloneOf) == true);
-                machineNameFound |= (filter.MachineName.MatchesPositiveSet(RomOf) == true);
-            }
-            if (machineNameFound == false)
+            // Filter on machine fields
+            if (!Machine.PassesFilter(filter))
                 return false;
-
-            machineNameFound = filter.MachineName.MatchesNegativeSet(MachineName);
-            if (filter.IncludeOfInGame)
-            {
-                machineNameFound |= (filter.MachineName.MatchesNegativeSet(CloneOf) == true);
-                machineNameFound |= (filter.MachineName.MatchesNegativeSet(RomOf) == true);
-            }
-            if (machineNameFound == false)
-                return false;
-
-            // Filter on comment
-            if (filter.Comment.MatchesPositiveSet(Comment) == false)
-                return false;
-            if (filter.Comment.MatchesNegativeSet(Comment) == true)
-                return false;
-
-            // Filter on machine description
-            if (filter.MachineDescription.MatchesPositiveSet(MachineDescription) == false)
-                return false;
-            if (filter.MachineDescription.MatchesNegativeSet(MachineDescription) == true)
-                return false;
-
-            // Filter on year
-            if (filter.Year.MatchesPositiveSet(Year) == false)
-                return false;
-            if (filter.Year.MatchesNegativeSet(Year) == true)
-                return false;
-
-            // Filter on manufacturer
-            if (filter.Manufacturer.MatchesPositiveSet(Manufacturer) == false)
-                return false;
-            if (filter.Manufacturer.MatchesNegativeSet(Manufacturer) == true)
-                return false;
-
-            // Filter on publisher
-            if (filter.Publisher.MatchesPositiveSet(Publisher) == false)
-                return false;
-            if (filter.Publisher.MatchesNegativeSet(Publisher) == true)
-                return false;
-
-            // Filter on category
-            if (filter.Category.MatchesPositiveSet(Category) == false)
-                return false;
-            if (filter.Category.MatchesNegativeSet(Category) == true)
-                return false;
-
-            // Filter on romof
-            if (filter.RomOf.MatchesPositiveSet(RomOf) == false)
-                return false;
-            if (filter.RomOf.MatchesNegativeSet(RomOf) == true)
-                return false;
-
-            // Filter on cloneof
-            if (filter.CloneOf.MatchesPositiveSet(CloneOf) == false)
-                return false;
-            if (filter.CloneOf.MatchesNegativeSet(CloneOf) == true)
-                return false;
-
-            // Filter on sampleof
-            if (filter.SampleOf.MatchesPositiveSet(SampleOf) == false)
-                return false;
-            if (filter.SampleOf.MatchesNegativeSet(SampleOf) == true)
-                return false;
-
-            // Filter on supported
-            if (filter.Supported.MatchesNeutral(null, Supported) == false)
-                return false;
-
-            // Filter on source file
-            if (filter.SourceFile.MatchesPositiveSet(SourceFile) == false)
-                return false;
-            if (filter.SourceFile.MatchesNegativeSet(SourceFile) == true)
-                return false;
-
-            // Filter on runnable
-            if (filter.Runnable.MatchesNeutral(null, Runnable) == false)
-                return false;
-
-            // Filter on board
-            if (filter.Board.MatchesPositiveSet(Board) == false)
-                return false;
-            if (filter.Board.MatchesNegativeSet(Board) == true)
-                return false;
-
-            // Filter on rebuildto
-            if (filter.RebuildTo.MatchesPositiveSet(RebuildTo) == false)
-                return false;
-            if (filter.RebuildTo.MatchesNegativeSet(RebuildTo) == true)
-                return false;
-
-            // Filter on devices
-            if (Devices != null && Devices.Any())
-            {
-                bool anyPositiveDevice = false;
-                bool anyNegativeDevice = false;
-                foreach (string device in Devices)
-                {
-                    anyPositiveDevice |= filter.Devices.MatchesPositiveSet(device) != false;
-                    anyNegativeDevice |= filter.Devices.MatchesNegativeSet(device) == false;
-                }
-
-                if (!anyPositiveDevice || anyNegativeDevice)
-                    return false;
-            }
-
-            // Filter on slot options
-            if (SlotOptions != null && SlotOptions.Any())
-            {
-                bool anyPositiveSlotOption = false;
-                bool anyNegativeSlotOption = false;
-                foreach (string slotOption in SlotOptions)
-                {
-                    anyPositiveSlotOption |= filter.SlotOptions.MatchesPositiveSet(slotOption) != false;
-                    anyNegativeSlotOption |= filter.SlotOptions.MatchesNegativeSet(slotOption) == false;
-                }
-
-                if (!anyPositiveSlotOption || anyNegativeSlotOption)
-                    return false;
-            }
-
-            // Filter on machine type
-            if (filter.MachineTypes.MatchesPositive(MachineType.NULL, MachineType) == false)
-                return false;
-            if (filter.MachineTypes.MatchesNegative(MachineType.NULL, MachineType) == true)
-                return false;
-
-            #endregion
-
-            #region DatItem Filters
 
             // Filter on item type
             if (filter.ItemTypes.MatchesPositiveSet(ItemType.ToString()) == false)
@@ -1142,8 +447,6 @@ namespace SabreTools.Library.DatItems
             else if (filter.AreaSize.MatchesNegative(null, AreaSize) == false)
                 return false;
 
-            #endregion
-
             return true;
         }
 
@@ -1153,68 +456,8 @@ namespace SabreTools.Library.DatItems
         /// <param name="fields">List of Fields to remove</param>
         public virtual void RemoveFields(List<Field> fields)
         {
-            #region Machine Fields
-
-            if (fields.Contains(Field.MachineName))
-                MachineName = null;
-
-            if (fields.Contains(Field.Comment))
-                Comment = null;
-
-            if (fields.Contains(Field.Description))
-                MachineDescription = null;
-
-            if (fields.Contains(Field.Year))
-                Year = null;
-
-            if (fields.Contains(Field.Manufacturer))
-                Manufacturer = null;
-
-            if (fields.Contains(Field.Publisher))
-                Publisher = null;
-
-            if (fields.Contains(Field.Category))
-                Category = null;
-
-            if (fields.Contains(Field.RomOf))
-                RomOf = null;
-
-            if (fields.Contains(Field.CloneOf))
-                CloneOf = null;
-
-            if (fields.Contains(Field.SampleOf))
-                SampleOf = null;
-
-            if (fields.Contains(Field.Supported))
-                Supported = null;
-
-            if (fields.Contains(Field.SourceFile))
-                SourceFile = null;
-
-            if (fields.Contains(Field.Runnable))
-                Runnable = null;
-
-            if (fields.Contains(Field.Board))
-                Board = null;
-
-            if (fields.Contains(Field.RebuildTo))
-                RebuildTo = null;
-
-            if (fields.Contains(Field.Devices))
-                Devices = null;
-
-            if (fields.Contains(Field.SlotOptions))
-                SlotOptions = null;
-
-            if (fields.Contains(Field.Infos))
-                Infos = null;
-
-            if (fields.Contains(Field.MachineType))
-                MachineType = MachineType.NULL;
-
-            #endregion
-
-            #region Item Fields
+            // Remove machine fields
+            Machine.RemoveFields(fields);
 
             if (fields.Contains(Field.Name))
                 Name = null;
@@ -1233,8 +476,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaSize))
                 AreaSize = null;
-
-            #endregion
         }
 
         #endregion
@@ -1262,11 +503,11 @@ namespace SabreTools.Library.DatItems
 
                 case BucketedBy.Game:
                     key = (norename ? string.Empty
-                        : IndexId.ToString().PadLeft(10, '0')
+                        : Source.Index.ToString().PadLeft(10, '0')
                             + "-")
-                    + (string.IsNullOrWhiteSpace(MachineName)
+                    + (string.IsNullOrWhiteSpace(Machine.Name)
                             ? "Default"
-                            : MachineName);
+                            : Machine.Name);
                     if (lower)
                         key = key.ToLowerInvariant();
 
@@ -1334,75 +575,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaSize))
                 AreaSize = item.AreaSize;
-        }
-
-        /// <summary>
-        /// Replace machine fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public void ReplaceMachineFields(DatItem item, List<Field> fields, bool onlySame)
-        {
-            if (fields.Contains(Field.MachineName))
-                MachineName = item.MachineName;
-
-            if (fields.Contains(Field.Comment))
-                Comment = item.Comment;
-
-            if (fields.Contains(Field.Description))
-            {
-                if (!onlySame || (onlySame && MachineName == MachineDescription))
-                    MachineDescription = item.MachineDescription;
-            }
-
-            if (fields.Contains(Field.Year))
-                Year = item.Year;
-
-            if (fields.Contains(Field.Manufacturer))
-                Manufacturer = item.Manufacturer;
-
-            if (fields.Contains(Field.Publisher))
-                Publisher = item.Publisher;
-
-            if (fields.Contains(Field.Category))
-                Category = item.Category;
-
-            if (fields.Contains(Field.RomOf))
-                RomOf = item.RomOf;
-
-            if (fields.Contains(Field.CloneOf))
-                CloneOf = item.CloneOf;
-
-            if (fields.Contains(Field.SampleOf))
-                SampleOf = item.SampleOf;
-
-            if (fields.Contains(Field.Supported))
-                Supported = item.Supported;
-
-            if (fields.Contains(Field.SourceFile))
-                SourceFile = item.SourceFile;
-
-            if (fields.Contains(Field.Runnable))
-                Runnable = item.Runnable;
-
-            if (fields.Contains(Field.Board))
-                Board = item.Board;
-
-            if (fields.Contains(Field.RebuildTo))
-                RebuildTo = item.RebuildTo;
-
-            if (fields.Contains(Field.Devices))
-                Devices = item.Devices;
-
-            if (fields.Contains(Field.SlotOptions))
-                SlotOptions = item.SlotOptions;
-
-            if (fields.Contains(Field.Infos))
-                Infos = item.Infos;
-
-            if (fields.Contains(Field.MachineType))
-                MachineType = item.MachineType;
         }
 
         #endregion
@@ -1503,16 +675,15 @@ namespace SabreTools.Library.DatItems
                         saveditem.DupeType = dupetype;
 
                         // If the current system has a lower ID than the previous, set the system accordingly
-                        if (file.IndexId < saveditem.IndexId)
+                        if (file.Source.Index < saveditem.Source.Index)
                         {
-                            saveditem.IndexId = file.IndexId;
-                            saveditem.IndexSource = file.IndexSource;
+                            saveditem.Source = file.Source.Clone() as Source;
                             saveditem.CopyMachineInformation(file);
                             saveditem.Name = file.Name;
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
-                        if (saveditem.CloneOf == file.MachineName || saveditem.RomOf == file.MachineName)
+                        if (saveditem.Machine.CloneOf == file.Machine.Name || saveditem.Machine.RomOf == file.Machine.Name)
                         {
                             saveditem.CopyMachineInformation(file);
                             saveditem.Name = file.Name;
@@ -1649,9 +820,9 @@ namespace SabreTools.Library.DatItems
                 try
                 {
                     NaturalComparer nc = new NaturalComparer();
-                    if (x.IndexId == y.IndexId)
+                    if (x.Source.Index == y.Source.Index)
                     {
-                        if (x.MachineName == y.MachineName)
+                        if (x.Machine.Name == y.Machine.Name)
                         {
                             // Special case for comparing a Disk or Rom to another item type
                             if ((x.ItemType == ItemType.Disk || x.ItemType == ItemType.Rom) ^ (y.ItemType == ItemType.Disk || y.ItemType == ItemType.Rom))
@@ -1672,10 +843,10 @@ namespace SabreTools.Library.DatItems
                             }
                         }
 
-                        return nc.Compare(x.MachineName, y.MachineName);
+                        return nc.Compare(x.Machine.Name, y.Machine.Name);
                     }
 
-                    return (norename ? nc.Compare(x.MachineName, y.MachineName) : x.IndexId - y.IndexId);
+                    return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : x.Source.Index - y.Source.Index);
                 }
                 catch (Exception)
                 {

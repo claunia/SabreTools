@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
@@ -27,7 +28,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region Publicly facing variables
+        #region Fields
 
         /// <summary>
         /// What BIOS is required for this rom
@@ -244,11 +245,11 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Rom()
         {
-            this.Name = string.Empty;
-            this.ItemType = ItemType.Rom;
-            this.DupeType = 0x00;
-            this.ItemStatus = ItemStatus.None;
-            this.Date = string.Empty;
+            Name = string.Empty;
+            ItemType = ItemType.Rom;
+            DupeType = 0x00;
+            ItemStatus = ItemStatus.None;
+            Date = string.Empty;
         }
 
         /// <summary>
@@ -259,12 +260,12 @@ namespace SabreTools.Library.DatItems
         /// <param name="omitFromScan"></param>
         public Rom(string name, string machineName)
         {
-            this.Name = name;
-            this.ItemType = ItemType.Rom;
-            this.Size = -1;
-            this.ItemStatus = ItemStatus.None;
+            Name = name;
+            ItemType = ItemType.Rom;
+            Size = -1;
+            ItemStatus = ItemStatus.None;
 
-            _machine = new Machine
+            Machine = new Machine
             {
                 Name = machineName,
                 Description = machineName,
@@ -277,8 +278,8 @@ namespace SabreTools.Library.DatItems
         /// <param name="baseFile"></param>
         public Rom(BaseFile baseFile)
         {
-            this.Name = baseFile.Filename;
-            this.Size = baseFile.Size ?? -1;
+            Name = baseFile.Filename;
+            Size = baseFile.Size ?? -1;
             _crc = baseFile.CRC;
             _md5 = baseFile.MD5;
 #if NET_FRAMEWORK
@@ -289,10 +290,10 @@ namespace SabreTools.Library.DatItems
             _sha384 = baseFile.SHA384;
             _sha512 = baseFile.SHA512;
 
-            this.ItemType = ItemType.Rom;
-            this.DupeType = 0x00;
-            this.ItemStatus = ItemStatus.None;
-            this.Date = baseFile.Date;
+            ItemType = ItemType.Rom;
+            DupeType = 0x00;
+            ItemStatus = ItemStatus.None;
+            Date = baseFile.Date;
         }
 
         #endregion
@@ -307,34 +308,17 @@ namespace SabreTools.Library.DatItems
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Supported = this.Supported,
-                Publisher = this.Publisher,
-                Category = this.Category,
-                Infos = this.Infos,
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,
 
-                MachineName = this.MachineName,
-                Comment = this.Comment,
-                MachineDescription = this.MachineDescription,
-                Year = this.Year,
-                Manufacturer = this.Manufacturer,
-                RomOf = this.RomOf,
-                CloneOf = this.CloneOf,
-                SampleOf = this.SampleOf,
-                SourceFile = this.SourceFile,
-                Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
-                Devices = this.Devices,
-                MachineType = this.MachineType,
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
 
-                IndexId = this.IndexId,
-                IndexSource = this.IndexSource,
-
+                Bios = this.Bios,
                 Size = this.Size,
                 _crc = this._crc,
                 _md5 = this._md5,
@@ -345,8 +329,13 @@ namespace SabreTools.Library.DatItems
                 _sha256 = this._sha256,
                 _sha384 = this._sha384,
                 _sha512 = this._sha512,
-                ItemStatus = this.ItemStatus,
+                MergeTag = this.MergeTag,
+                Region = this.Region,
+                Offset = this.Offset,
                 Date = this.Date,
+                ItemStatus = this.ItemStatus,
+                Optional = this.Optional,
+                Inverted = this.Inverted,
             };
         }
 

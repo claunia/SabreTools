@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
@@ -25,7 +26,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region Publicly facing variables
+        #region Fields
 
         /// <summary>
         /// Data MD5 hash
@@ -202,10 +203,10 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Disk()
         {
-            this.Name = string.Empty;
-            this.ItemType = ItemType.Disk;
-            this.DupeType = 0x00;
-            this.ItemStatus = ItemStatus.None;
+            Name = string.Empty;
+            ItemType = ItemType.Disk;
+            DupeType = 0x00;
+            ItemStatus = ItemStatus.None;
         }
 
         /// <summary>
@@ -214,7 +215,7 @@ namespace SabreTools.Library.DatItems
         /// <param name="baseFile"></param>
         public Disk(BaseFile baseFile)
         {
-            this.Name = baseFile.Filename;
+            Name = baseFile.Filename;
             _md5 = baseFile.MD5;
 #if NET_FRAMEWORK
             _ripemd160 = baseFile.RIPEMD160;
@@ -224,9 +225,9 @@ namespace SabreTools.Library.DatItems
             _sha384 = baseFile.SHA384;
             _sha512 = baseFile.SHA512;
 
-            this.ItemType = ItemType.Disk;
-            this.DupeType = 0x00;
-            this.ItemStatus = ItemStatus.None;
+            ItemType = ItemType.Disk;
+            DupeType = 0x00;
+            ItemStatus = ItemStatus.None;
         }
 
         #endregion
@@ -241,33 +242,15 @@ namespace SabreTools.Library.DatItems
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Supported = this.Supported,
-                Publisher = this.Publisher,
-                Category = this.Category,
-                Infos = this.Infos,
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,
 
-                MachineName = this.MachineName,
-                Comment = this.Comment,
-                MachineDescription = this.MachineDescription,
-                Year = this.Year,
-                Manufacturer = this.Manufacturer,
-                RomOf = this.RomOf,
-                CloneOf = this.CloneOf,
-                SampleOf = this.SampleOf,
-                SourceFile = this.SourceFile,
-                Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
-                Devices = this.Devices,
-                MachineType = this.MachineType,
-
-                IndexId = this.IndexId,
-                IndexSource = this.IndexSource,
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
 
                 _md5 = this._md5,
 #if NET_FRAMEWORK
@@ -277,7 +260,12 @@ namespace SabreTools.Library.DatItems
                 _sha256 = this._sha256,
                 _sha384 = this._sha384,
                 _sha512 = this._sha512,
+                MergeTag = this.MergeTag,
+                Region = this.Region,
+                Index = this.Index,
+                Writable = this.Writable,
                 ItemStatus = this.ItemStatus,
+                Optional = this.Optional,
             };
         }
 
@@ -293,6 +281,21 @@ namespace SabreTools.Library.DatItems
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
+                PartName = this.PartName,
+                PartInterface = this.PartInterface,
+                Features = this.Features,
+                AreaName = this.AreaName,
+                AreaSize = this.AreaSize,
+
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
+
+                MergeTag = this.MergeTag,
+                Region = this.Region,
+                ItemStatus = this.ItemStatus,
+                Optional = this.Optional,
+
                 CRC = null,
                 MD5 = this.MD5,
 #if NET_FRAMEWORK
@@ -302,41 +305,6 @@ namespace SabreTools.Library.DatItems
                 SHA256 = this.SHA256,
                 SHA384 = this.SHA384,
                 SHA512 = this.SHA512,
-
-                MergeTag = this.MergeTag,
-                Region = this.Region,
-                ItemStatus = this.ItemStatus,
-                Optional = this.Optional,
-
-                MachineName = this.MachineName,
-                Comment = this.Comment,
-                MachineDescription = this.MachineDescription,
-                Year = this.Year,
-                Manufacturer = this.Manufacturer,
-                Publisher = this.Publisher,
-                Category = this.Category,
-                RomOf = this.RomOf,
-                CloneOf = this.CloneOf,
-                SampleOf = this.SampleOf,
-                Supported = this.Supported,
-                SourceFile = this.SourceFile,
-                Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
-                Devices = this.Devices,
-                SlotOptions = this.SlotOptions,
-                Infos = this.Infos,
-                MachineType = this.MachineType,
-
-                PartName = this.PartName,
-                PartInterface = this.PartInterface,
-                Features = this.Features,
-                AreaName = this.AreaName,
-                AreaSize = this.AreaSize,
-
-                IndexId = this.IndexId,
-                IndexSource = this.IndexSource,
-                Remove = this.Remove,
             };
 
             return rom;

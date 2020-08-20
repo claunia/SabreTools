@@ -417,8 +417,11 @@ namespace SabreTools.Library.DatFiles
                             Description = reader.GetAttribute("description"),
                             Default = reader.GetAttribute("default").AsYesNo(),
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         biosset.CopyMachineInformation(machine);
@@ -450,8 +453,11 @@ namespace SabreTools.Library.DatFiles
                             Date = Sanitizer.CleanDate(reader.GetAttribute("date")),
                             Inverted = reader.GetAttribute("inverted").AsYesNo(),
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         rom.CopyMachineInformation(machine);
@@ -479,8 +485,11 @@ namespace SabreTools.Library.DatFiles
                             MergeTag = reader.GetAttribute("merge"),
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         disk.CopyMachineInformation(machine);
@@ -498,8 +507,11 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = reader.GetAttribute("name"),
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         samplerom.CopyMachineInformation(machine);
@@ -517,8 +529,11 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = reader.GetAttribute("name"),
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         archiverom.CopyMachineInformation(machine);
@@ -540,9 +555,13 @@ namespace SabreTools.Library.DatFiles
             {
                 Blank blank = new Blank()
                 {
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
+
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
@@ -685,18 +704,18 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteStartGame(xtw, rom);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -704,7 +723,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                             ((Rom)rom).Size = Constants.SizeZero;
@@ -723,7 +742,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(xtw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -856,48 +875,48 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
                 xtw.WriteStartElement(_deprecated ? "game" : "machine");
                 xtw.WriteAttributeString("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
                 if (!Header.ExcludeFields.Contains(Field.MachineType))
                 {
-                    if (datItem.MachineType.HasFlag(MachineType.Bios))
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
                         xtw.WriteAttributeString("isbios", "yes");
-                    if (datItem.MachineType.HasFlag(MachineType.Device))
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
                         xtw.WriteAttributeString("isdevice", "yes");
-                    if (datItem.MachineType.HasFlag(MachineType.Mechanical))
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
                         xtw.WriteAttributeString("ismechanical", "yes");
                 }
 
-                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Runnable != null)
+                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Machine.Runnable != null)
                 {
-                    if (datItem.Runnable == true)
+                    if (datItem.Machine.Runnable == true)
                         xtw.WriteAttributeString("runnable", "yes");
-                    else if (datItem.Runnable == false)
+                    else if (datItem.Machine.Runnable == false)
                         xtw.WriteAttributeString("runnable", "no");
                 }
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.CloneOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteAttributeString("cloneof", datItem.CloneOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.RomOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteAttributeString("romof", datItem.RomOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.SampleOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteAttributeString("sampleof", datItem.SampleOf);
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
+                    xtw.WriteAttributeString("cloneof", datItem.Machine.CloneOf);
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
+                    xtw.WriteAttributeString("romof", datItem.Machine.RomOf);
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
+                    xtw.WriteAttributeString("sampleof", datItem.Machine.SampleOf);
 
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Comment, Header.ExcludeFields)))
-                    xtw.WriteElementString("comment", datItem.Comment);
+                    xtw.WriteElementString("comment", datItem.Machine.Comment);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
-                    xtw.WriteElementString("description", datItem.MachineDescription);
+                    xtw.WriteElementString("description", datItem.Machine.Description);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
-                    xtw.WriteElementString("year", datItem.Year);
+                    xtw.WriteElementString("year", datItem.Machine.Year);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Publisher, Header.ExcludeFields)))
-                    xtw.WriteElementString("publisher", datItem.Publisher);
+                    xtw.WriteElementString("publisher", datItem.Machine.Publisher);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
-                    xtw.WriteElementString("manufacturer", datItem.Manufacturer);
+                    xtw.WriteElementString("manufacturer", datItem.Machine.Manufacturer);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
-                    xtw.WriteElementString("category", datItem.Category);
+                    xtw.WriteElementString("category", datItem.Machine.Category);
 
                 xtw.Flush();
             }

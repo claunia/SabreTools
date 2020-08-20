@@ -1,6 +1,4 @@
-﻿using SabreTools.Library.Data;
-
-namespace SabreTools.Library.DatItems
+﻿namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents a blank set from an input DAT
@@ -14,8 +12,8 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Blank()
         {
-            this.Name = string.Empty;
-            this.ItemType = ItemType.Blank;
+            Name = string.Empty;
+            ItemType = ItemType.Blank;
         }
 
         #endregion
@@ -30,33 +28,15 @@ namespace SabreTools.Library.DatItems
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Supported = this.Supported,
-                Publisher = this.Publisher,
-                Category = this.Category,
-                Infos = this.Infos,
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,
 
-                MachineName = this.MachineName,
-                Comment = this.Comment,
-                MachineDescription = this.MachineDescription,
-                Year = this.Year,
-                Manufacturer = this.Manufacturer,
-                RomOf = this.RomOf,
-                CloneOf = this.CloneOf,
-                SampleOf = this.SampleOf,
-                SourceFile = this.SourceFile,
-                Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
-                Devices = this.Devices,
-                MachineType = this.MachineType,
-
-                IndexId = this.IndexId,
-                IndexSource = this.IndexSource,
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
             };
         }
 
@@ -67,14 +47,14 @@ namespace SabreTools.Library.DatItems
         public override bool Equals(DatItem other)
         {
             // If we don't have a blank, return false
-            if (this.ItemType != other.ItemType)
+            if (ItemType != other.ItemType)
                 return false;
 
             // Otherwise, treat it as a Blank
             Blank newOther = other as Blank;
 
             // If the archive information matches
-            return (_machine == newOther._machine);
+            return (Machine == newOther.Machine);
         }
 
         #endregion

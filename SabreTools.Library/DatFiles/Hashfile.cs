@@ -84,10 +84,16 @@ namespace SabreTools.Library.DatFiles
                     SHA512 = (_hash.HasFlag(Hash.SHA512) ? hash : null),
                     ItemStatus = ItemStatus.None,
 
-                    MachineName = Path.GetFileNameWithoutExtension(filename),
+                    Machine = new Machine
+                    {
+                        Name = Path.GetFileNameWithoutExtension(filename),
+                    },
 
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
 
                 // Now process and add the rom
@@ -137,7 +143,7 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
@@ -148,7 +154,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
                         }
 
                         // Now, output the rom data

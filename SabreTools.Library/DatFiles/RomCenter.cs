@@ -344,14 +344,21 @@ namespace SabreTools.Library.DatFiles
                     CRC = rominfo[6],
                     ItemStatus = ItemStatus.None,
 
-                    MachineName = rominfo[3],
-                    MachineDescription = rominfo[4],
-                    CloneOf = rominfo[1],
-                    RomOf = rominfo[8],
+                    Machine = new Machine
+                    {
+                        Name = rominfo[3],
+                        Description = rominfo[4],
+                        CloneOf = rominfo[1],
+                        RomOf = rominfo[8],
+                    },
+
                     MergeTag = rominfo[9],
 
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
 
                 // Now process and add the rom
@@ -403,7 +410,7 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
@@ -414,7 +421,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                             ((Rom)rom).Size = Constants.SizeZero;
@@ -433,7 +440,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(iw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -521,7 +528,7 @@ namespace SabreTools.Library.DatFiles
                 iw.WriteString($"¬{datItem.GetField(Field.CloneOf, Header.ExcludeFields)}");
                 iw.WriteString($"¬{datItem.GetField(Field.CloneOf, Header.ExcludeFields)}");
                 iw.WriteString($"¬{datItem.GetField(Field.MachineName, Header.ExcludeFields)}");
-                if (string.IsNullOrWhiteSpace(datItem.MachineDescription))
+                if (string.IsNullOrWhiteSpace(datItem.Machine.Description))
                     iw.WriteString($"¬{datItem.GetField(Field.MachineName, Header.ExcludeFields)}");
                 else
                     iw.WriteString($"¬{datItem.GetField(Field.Description, Header.ExcludeFields)}");

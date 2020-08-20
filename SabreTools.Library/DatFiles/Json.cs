@@ -532,8 +532,7 @@ namespace SabreTools.Library.DatFiles
 
                     DatItem datItem = DatItem.Create(itemType.Value);
                     datItem.CopyMachineInformation(machine);
-                    datItem.IndexId = indexId;
-                    datItem.IndexSource = filename;
+                    datItem.Source = new Source { Index = indexId, Name = filename };
 
                     datItem.Name = name;
                     datItem.PartName = partName;
@@ -795,18 +794,18 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteStartGame(jtw, rom);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -814,7 +813,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                             ((Rom)rom).Size = Constants.SizeZero;
@@ -833,7 +832,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(jtw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -997,7 +996,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
                 jtw.WriteStartObject();
@@ -1008,56 +1007,56 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Comment, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("comment");
-                    jtw.WriteValue(datItem.Comment);
+                    jtw.WriteValue(datItem.Machine.Comment);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("description");
-                    jtw.WriteValue(datItem.MachineDescription);
+                    jtw.WriteValue(datItem.Machine.Description);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("year");
-                    jtw.WriteValue(datItem.Year);
+                    jtw.WriteValue(datItem.Machine.Year);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("manufacturer");
-                    jtw.WriteValue(datItem.Manufacturer);
+                    jtw.WriteValue(datItem.Machine.Manufacturer);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Publisher, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("publisher");
-                    jtw.WriteValue(datItem.Publisher);
+                    jtw.WriteValue(datItem.Machine.Publisher);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("category");
-                    jtw.WriteValue(datItem.Category);
+                    jtw.WriteValue(datItem.Machine.Category);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.RomOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
                 {
                     jtw.WritePropertyName("romof");
-                    jtw.WriteValue(datItem.RomOf);
+                    jtw.WriteValue(datItem.Machine.RomOf);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.CloneOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                 {
                     jtw.WritePropertyName("cloneof");
-                    jtw.WriteValue(datItem.CloneOf);
+                    jtw.WriteValue(datItem.Machine.CloneOf);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)) && !string.Equals(datItem.MachineName, datItem.SampleOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
                 {
                     jtw.WritePropertyName("sampleof");
-                    jtw.WriteValue(datItem.SampleOf);
+                    jtw.WriteValue(datItem.Machine.SampleOf);
                 }
-                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Supported != null)
+                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != null)
                 {
-                    if (datItem.Supported == true)
+                    if (datItem.Machine.Supported == true)
                     {
                         jtw.WritePropertyName("supported");
                         jtw.WriteValue("yes");
                     }
-                    else if (datItem.Supported == false)
+                    else if (datItem.Machine.Supported == false)
                     {
                         jtw.WritePropertyName("supported");
                         jtw.WriteValue("no");
@@ -1066,16 +1065,16 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("sourcefile");
-                    jtw.WriteValue(datItem.SourceFile);
+                    jtw.WriteValue(datItem.Machine.SourceFile);
                 }
-                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Runnable != null)
+                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Machine.Runnable != null)
                 {
-                    if (datItem.Runnable == true)
+                    if (datItem.Machine.Runnable == true)
                     {
                         jtw.WritePropertyName("runnable");
                         jtw.WriteValue("yes");
                     }
-                    else if (datItem.Runnable == false)
+                    else if (datItem.Machine.Runnable == false)
                     {
                         jtw.WritePropertyName("runnable");
                         jtw.WriteValue("no");
@@ -1084,18 +1083,18 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Board, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("board");
-                    jtw.WriteValue(datItem.Board);
+                    jtw.WriteValue(datItem.Machine.Board);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RebuildTo, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("rebuildto");
-                    jtw.WriteValue(datItem.RebuildTo);
+                    jtw.WriteValue(datItem.Machine.RebuildTo);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Devices, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("devices");
                     jtw.WriteStartArray();
-                    foreach (string device in datItem.Devices)
+                    foreach (string device in datItem.Machine.Devices)
                     {
                         jtw.WriteValue(device);
                     }
@@ -1106,7 +1105,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("slotoptions");
                     jtw.WriteStartArray();
-                    foreach (string slotoption in datItem.SlotOptions)
+                    foreach (string slotoption in datItem.Machine.SlotOptions)
                     {
                         jtw.WriteValue(slotoption);
                     }
@@ -1117,7 +1116,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("infos");
                     jtw.WriteStartArray();
-                    foreach (var info in datItem.Infos)
+                    foreach (var info in datItem.Machine.Infos)
                     {
                         jtw.WriteStartObject();
                         jtw.WritePropertyName(info.Key);
@@ -1129,17 +1128,17 @@ namespace SabreTools.Library.DatFiles
                 }
                 if (!Header.ExcludeFields.Contains(Field.MachineType))
                 {
-                    if (datItem.MachineType.HasFlag(MachineType.Bios))
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
                     {
                         jtw.WritePropertyName("isbios");
                         jtw.WriteValue("yes");
                     }
-                    if (datItem.MachineType.HasFlag(MachineType.Device))
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
                     {
                         jtw.WritePropertyName("isdevice");
                         jtw.WriteValue("yes");
                     }
-                    if (datItem.MachineType.HasFlag(MachineType.Mechanical))
+                    if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
                     {
                         jtw.WritePropertyName("ismechanical");
                         jtw.WriteValue("yes");

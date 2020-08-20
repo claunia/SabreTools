@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public class Release : DatItem
     {
-        #region Publicly facing variables
+        #region Fields
 
         /// <summary>
         /// Release region(s)
@@ -86,12 +87,12 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Release()
         {
-            this.Name = string.Empty;
-            this.ItemType = ItemType.Release;
-            this.Region = string.Empty;
-            this.Language = string.Empty;
-            this.Date = string.Empty;
-            this.Default = null;
+            Name = string.Empty;
+            ItemType = ItemType.Release;
+            Region = string.Empty;
+            Language = string.Empty;
+            Date = string.Empty;
+            Default = null;
         }
 
         #endregion
@@ -106,33 +107,15 @@ namespace SabreTools.Library.DatItems
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Supported = this.Supported,
-                Publisher = this.Publisher,
-                Category = this.Category,
-                Infos = this.Infos,
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,
 
-                MachineName = this.MachineName,
-                Comment = this.Comment,
-                MachineDescription = this.MachineDescription,
-                Year = this.Year,
-                Manufacturer = this.Manufacturer,
-                RomOf = this.RomOf,
-                CloneOf = this.CloneOf,
-                SampleOf = this.SampleOf,
-                SourceFile = this.SourceFile,
-                Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
-                Devices = this.Devices,
-                MachineType = this.MachineType,
-
-                IndexId = this.IndexId,
-                IndexSource = this.IndexSource,
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
 
                 Region = this.Region,
                 Language = this.Language,
@@ -148,18 +131,18 @@ namespace SabreTools.Library.DatItems
         public override bool Equals(DatItem other)
         {
             // If we don't have a release return false
-            if (this.ItemType != other.ItemType)
+            if (ItemType != other.ItemType)
                 return false;
 
             // Otherwise, treat it as a Release
             Release newOther = other as Release;
 
             // If the archive information matches
-            return (this.Name == newOther.Name
-                && this.Region == newOther.Region
-                && this.Language == newOther.Language
-                && this.Date == newOther.Date
-                && this.Default == newOther.Default);
+            return (Name == newOther.Name
+                && Region == newOther.Region
+                && Language == newOther.Language
+                && Date == newOther.Date
+                && Default == newOther.Default);
         }
 
         #endregion

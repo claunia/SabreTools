@@ -176,9 +176,13 @@ namespace SabreTools.Library.DatFiles
             {
                 Blank blank = new Blank()
                 {
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
+
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
@@ -316,8 +320,11 @@ namespace SabreTools.Library.DatFiles
                 Size = -1,
                 SHA1 = hash,
 
-                IndexId = indexId,
-                IndexSource = filename,
+                Source = new Source
+                {
+                    Index = indexId,
+                    Name = filename,
+                },
             };
 
             rom.CopyMachineInformation(machine);
@@ -389,8 +396,11 @@ namespace SabreTools.Library.DatFiles
                 Size = -1,
                 SHA1 = hash,
 
-                IndexId = indexId,
-                IndexSource = filename,
+                Source = new Source
+                {
+                    Index = indexId,
+                    Name = filename,
+                },
             };
 
             rom.CopyMachineInformation(machine);
@@ -457,8 +467,11 @@ namespace SabreTools.Library.DatFiles
                 Size = -1,
                 SHA1 = hash,
 
-                IndexId = indexId,
-                IndexSource = filename,
+                Source = new Source
+                {
+                    Index = indexId,
+                    Name = filename,
+                },
             };
 
             rom.CopyMachineInformation(machine);
@@ -513,18 +526,18 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteStartGame(xtw, rom);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -532,9 +545,9 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
-                            lastgame = rom.MachineName;
+                            lastgame = rom.Machine.Name;
                             continue;
                         }
 
@@ -542,7 +555,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(xtw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -613,7 +626,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
                 xtw.WriteStartElement("software");

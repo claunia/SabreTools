@@ -81,15 +81,21 @@ namespace SabreTools.Library.DatFiles
                     SHA1 = Constants.SHA1Zero,
                     ItemStatus = ItemStatus.None,
 
-                    MachineName = gameinfo[0],
-                    MachineDescription = gameinfo[1],
-                    CloneOf = gameinfo[3],
-                    Year = gameinfo[4],
-                    Manufacturer = gameinfo[5],
-                    Comment = gameinfo[15],
+                    Machine = new Machine
+                    {
+                        Name = gameinfo[0],
+                        Description = gameinfo[1],
+                        CloneOf = gameinfo[3],
+                        Year = gameinfo[4],
+                        Manufacturer = gameinfo[5],
+                        Comment = gameinfo[15],
+                    },
 
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },                    
                 };
 
                 // Now process and add the rom
@@ -145,14 +151,14 @@ namespace SabreTools.Library.DatFiles
                         DatItem item = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (item.Name == null || item.MachineName == null)
+                        if (item.Name == null || item.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != item.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != item.Machine.Name.ToLowerInvariant())
                             WriteDatItem(svw, item, ignoreblanks);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -160,14 +166,14 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)item).Size == -1
                             && ((Rom)item).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {item.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {item.Machine.Name}");
 
                             item.Name = (item.Name == "null" ? "-" : item.Name);
                             ((Rom)item).Size = Constants.SizeZero;
                         }
 
                         // Set the new data to compare against
-                        lastgame = item.MachineName;
+                        lastgame = item.Machine.Name;
                     }
                 }
 
@@ -243,7 +249,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Pre-process the item name
                 ProcessItemName(datItem, true);

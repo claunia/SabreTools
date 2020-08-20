@@ -197,9 +197,11 @@ namespace SabreTools.Library.DatFiles
 
                     // Then populate it with information
                     item.CopyMachineInformation(machine);
-
-                    item.IndexId = indexId;
-                    item.IndexSource = filename;
+                    item.Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    };
 
                     // Loop through all of the attributes
                     foreach (var kvp in cmpr.Internal)
@@ -245,8 +247,11 @@ namespace SabreTools.Library.DatFiles
             {
                 Blank blank = new Blank()
                 {
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
 
                 blank.CopyMachineInformation(machine);
@@ -301,20 +306,20 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
-                        List<string> newsplit = rom.MachineName.Split('\\').ToList();
+                        List<string> newsplit = rom.Machine.Name.Split('\\').ToList();
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteEndGame(cmpw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteStartGame(cmpw, rom);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -322,7 +327,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                             ((Rom)rom).Size = Constants.SizeZero;
@@ -341,7 +346,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(cmpw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -402,7 +407,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
                 cmpw.WriteStartElement("game");

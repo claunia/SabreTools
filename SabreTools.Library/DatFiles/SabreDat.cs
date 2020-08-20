@@ -360,8 +360,11 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
 
-                                    IndexId = indexId,
-                                    IndexSource = filename,
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
                                 };
                                 break;
 
@@ -372,8 +375,11 @@ namespace SabreTools.Library.DatFiles
                                     Description = reader.GetAttribute("description"),
                                     Default = reader.GetAttribute("default").AsYesNo(),
 
-                                    IndexId = indexId,
-                                    IndexSource = filename,
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
                                 };
                                 break;
 
@@ -391,8 +397,11 @@ namespace SabreTools.Library.DatFiles
                                     SHA512 = reader.GetAttribute("sha512"),
                                     ItemStatus = its,
 
-                                    IndexId = indexId,
-                                    IndexSource = filename,
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
                                 };
                                 break;
 
@@ -405,8 +414,11 @@ namespace SabreTools.Library.DatFiles
                                     Date = reader.GetAttribute("date"),
                                     Default = reader.GetAttribute("default").AsYesNo(),
 
-                                    IndexId = indexId,
-                                    IndexSource = filename,
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
                                 };
                                 break;
 
@@ -427,8 +439,11 @@ namespace SabreTools.Library.DatFiles
                                     ItemStatus = its,
                                     Date = date,
 
-                                    IndexId = indexId,
-                                    IndexSource = filename,
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
                                 };
                                 break;
 
@@ -437,8 +452,11 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
 
-                                    IndexId = indexId,
-                                    IndexSource = filename,
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
                                 };
                                 break;
 
@@ -576,20 +594,20 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
-                        List<string> newsplit = rom.MachineName.Split('\\').ToList();
+                        List<string> newsplit = rom.Machine.Name.Split('\\').ToList();
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             depth = WriteEndGame(xtw, splitpath, newsplit, depth, out last);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             depth = WriteStartGame(xtw, rom, newsplit, depth, last);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -597,10 +615,10 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             splitpath = newsplit;
-                            lastgame = rom.MachineName;
+                            lastgame = rom.Machine.Name;
                             continue;
                         }
 
@@ -609,7 +627,7 @@ namespace SabreTools.Library.DatFiles
 
                         // Set the new data to compare against
                         splitpath = newsplit;
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -772,7 +790,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
                 for (int i = (last == -1 ? 0 : last); i < newsplit.Count; i++)

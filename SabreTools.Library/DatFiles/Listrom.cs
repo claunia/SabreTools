@@ -109,10 +109,16 @@ namespace SabreTools.Library.DatFiles
                             Name = romname,
                             SHA1 = Sanitizer.CleanListromHashData(split[0]),
 
-                            MachineName = gamename,
+                            Machine = new Machine
+                            {
+                                Name = gamename,
+                            },
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         ParseAddHelper(disk);
@@ -127,10 +133,16 @@ namespace SabreTools.Library.DatFiles
                             SHA1 = Sanitizer.CleanListromHashData(split[1]),
                             ItemStatus = ItemStatus.BadDump,
 
-                            MachineName = gamename,
+                            Machine = new Machine
+                            {
+                                Name = gamename,
+                            },
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         ParseAddHelper(disk);
@@ -149,10 +161,16 @@ namespace SabreTools.Library.DatFiles
                             CRC = Sanitizer.CleanListromHashData(split[1]),
                             SHA1 = Sanitizer.CleanListromHashData(split[2]),
 
-                            MachineName = gamename,
+                            Machine = new Machine
+                            {
+                                Name = gamename,
+                            },
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         ParseAddHelper(rom);
@@ -166,10 +184,16 @@ namespace SabreTools.Library.DatFiles
                             Name = romname,
                             ItemStatus = ItemStatus.Nodump,
 
-                            MachineName = gamename,
+                            Machine = new Machine
+                            {
+                                Name = gamename,
+                            },
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         ParseAddHelper(disk);
@@ -189,10 +213,16 @@ namespace SabreTools.Library.DatFiles
                             SHA1 = Sanitizer.CleanListromHashData(split[3]),
                             ItemStatus = ItemStatus.BadDump,
 
-                            MachineName = gamename,
+                            Machine = new Machine
+                            {
+                                Name = gamename,
+                            },
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         ParseAddHelper(rom);
@@ -210,10 +240,16 @@ namespace SabreTools.Library.DatFiles
                             Size = size,
                             ItemStatus = ItemStatus.Nodump,
 
-                            MachineName = gamename,
+                            Machine = new Machine
+                            {
+                                Name = gamename,
+                            },
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         ParseAddHelper(rom);
@@ -266,18 +302,18 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
                         }
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteEndGame(sw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.MachineName.ToLowerInvariant())
+                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
                             WriteStartGame(sw, rom);
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
@@ -285,7 +321,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                             ((Rom)rom).Size = Constants.SizeZero;
@@ -301,7 +337,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(sw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -329,7 +365,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                rom.MachineName = rom.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                rom.Machine.Name = rom.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Build the state based on excluded fields
                 sw.Write($"ROMs required for driver \"{rom.GetField(Field.MachineName, Header.ExcludeFields)}\".\n");

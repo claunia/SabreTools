@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 
@@ -9,7 +10,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public class BiosSet : DatItem
     {
-        #region Publicly facing variables
+        #region Fields
 
         /// <summary>
         /// Description of the BIOS
@@ -68,8 +69,8 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public BiosSet()
         {
-            this.Name = string.Empty;
-            this.ItemType = ItemType.BiosSet;
+            Name = string.Empty;
+            ItemType = ItemType.BiosSet;
         }
 
         #endregion
@@ -84,33 +85,15 @@ namespace SabreTools.Library.DatItems
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                Supported = this.Supported,
-                Publisher = this.Publisher,
-                Category = this.Category,
-                Infos = this.Infos,
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,
 
-                MachineName = this.MachineName,
-                Comment = this.Comment,
-                MachineDescription = this.MachineDescription,
-                Year = this.Year,
-                Manufacturer = this.Manufacturer,
-                RomOf = this.RomOf,
-                CloneOf = this.CloneOf,
-                SampleOf = this.SampleOf,
-                SourceFile = this.SourceFile,
-                Runnable = this.Runnable,
-                Board = this.Board,
-                RebuildTo = this.RebuildTo,
-                Devices = this.Devices,
-                MachineType = this.MachineType,
-
-                IndexId = this.IndexId,
-                IndexSource = this.IndexSource,
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
 
                 Description = this.Description,
                 Default = this.Default,
@@ -124,14 +107,14 @@ namespace SabreTools.Library.DatItems
         public override bool Equals(DatItem other)
         {
             // If we don't have a biosset, return false
-            if (this.ItemType != other.ItemType)
+            if (ItemType != other.ItemType)
                 return false;
 
             // Otherwise, treat it as a biosset
             BiosSet newOther = other as BiosSet;
 
             // If the archive information matches
-            return (this.Name == newOther.Name && this.Description == newOther.Description && this.Default == newOther.Default);
+            return (Name == newOther.Name && Description == newOther.Description && Default == newOther.Default);
         }
 
         #endregion

@@ -79,7 +79,7 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
@@ -90,8 +90,8 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
-                            lastgame = rom.MachineName;
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
+                            lastgame = rom.Machine.Name;
                             continue;
                         }
 
@@ -99,7 +99,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(sw, rom, lastgame, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
@@ -140,10 +140,10 @@ namespace SabreTools.Library.DatFiles
                 {
                     sw.Write($"{datItem.GetField(Field.Name, Header.ExcludeFields)}\n");
                 }
-                else if (!Header.UseRomName && datItem.MachineName != lastgame)
+                else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
                 {
                     sw.Write($"{datItem.GetField(Field.MachineName, Header.ExcludeFields)}\n");
-                    lastgame = datItem.MachineName;
+                    lastgame = datItem.Machine.Name;
                 }
 
                 sw.Flush();

@@ -68,11 +68,17 @@ namespace SabreTools.Library.DatFiles
                     SHA256 = gameinfo[0],
                     ItemStatus = ItemStatus.None,
 
-                    MachineName = fullname[0],
-                    MachineDescription = fullname[0],
+                    Machine = new Machine
+                    {
+                        Name = fullname[0],
+                        Description = fullname[0],
+                    },
 
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 };
 
                 // Now process and add the rom
@@ -122,7 +128,7 @@ namespace SabreTools.Library.DatFiles
                         DatItem item = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (item.Name == null || item.MachineName == null)
+                        if (item.Name == null || item.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
@@ -133,7 +139,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)item).Size == -1
                             && ((Rom)item).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {item.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {item.Machine.Name}");
 
                             item.Name = (item.Name == "null" ? "-" : item.Name);
                             ((Rom)item).Size = Constants.SizeZero;
@@ -171,7 +177,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.MachineName = datItem.MachineName.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
                 // Pre-process the item name
                 ProcessItemName(datItem, true);

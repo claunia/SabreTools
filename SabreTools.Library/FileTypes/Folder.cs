@@ -332,7 +332,7 @@ namespace SabreTools.Library.FileTypes
             FileStream outputStream = null;
 
             // Get the output folder name from the first rebuild rom
-            string fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.MachineName), Sanitizer.RemovePathUnsafeCharacters(rom.Name));
+            string fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Machine.Name), Sanitizer.RemovePathUnsafeCharacters(rom.Name));
 
             try
             {

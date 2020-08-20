@@ -288,7 +288,7 @@ namespace SabreTools.Library.DatFiles
                         {
                             DatItem newDatItem = datItem.Clone() as DatItem;
                             if (Items.ContainsKey(key) && Items[key].Count() > 0)
-                                newDatItem.ReplaceMachineFields(Items[key][0], updateFields, onlySame);
+                                newDatItem.Machine.ReplaceFields(Items[key][0].Machine, updateFields, onlySame);
 
                             newDatItems.Add(newDatItem);
                         }
@@ -499,13 +499,13 @@ namespace SabreTools.Library.DatFiles
                 foreach (DatItem item in items)
                 {
                     // There's odd cases where there are items with System ID < 0. Skip them for now
-                    if (item.IndexId < 0)
+                    if (item.Source.Index < 0)
                     {
                         Globals.Logger.Warning($"Item found with a <0 SystemID: {item.Name}");
                         continue;
                     }
 
-                    outDats[item.IndexId].Items.Add(key, item);
+                    outDats[item.Source.Index].Items.Add(key, item);
                 }
             });
 
@@ -581,7 +581,7 @@ namespace SabreTools.Library.DatFiles
                     if (item.DupeType.HasFlag(DupeType.External))
                     {
                         DatItem newrom = item.Clone() as DatItem;
-                        newrom.MachineName += $" ({Path.GetFileNameWithoutExtension(inputs[item.IndexId].CurrentPath)})";
+                        newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})";
 
                         dupeData.Items.Add(key, newrom);
                     }
@@ -660,7 +660,7 @@ namespace SabreTools.Library.DatFiles
                 foreach (DatItem item in items)
                 {
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
-                        outDats[item.IndexId].Items.Add(key, item);
+                        outDats[item.Source.Index].Items.Add(key, item);
                 }
             });
 
@@ -736,7 +736,7 @@ namespace SabreTools.Library.DatFiles
                     if (item.DupeType.HasFlag(DupeType.Internal) || item.DupeType == 0x00)
                     {
                         DatItem newrom = item.Clone() as DatItem;
-                        newrom.MachineName += $" ({Path.GetFileNameWithoutExtension(inputs[item.IndexId].CurrentPath)})";
+                        newrom.Machine.Name += $" ({Path.GetFileNameWithoutExtension(inputs[item.Source.Index].CurrentPath)})";
                         outerDiffData.Items.Add(key, newrom);
                     }
                 }
@@ -778,14 +778,14 @@ namespace SabreTools.Library.DatFiles
                     foreach (DatItem item in items)
                     {
                         DatItem newItem = item;
-                        string filename = inputs[newItem.IndexId].CurrentPath;
-                        string rootpath = inputs[newItem.IndexId].ParentPath;
+                        string filename = inputs[newItem.Source.Index].CurrentPath;
+                        string rootpath = inputs[newItem.Source.Index].ParentPath;
 
                         rootpath += (string.IsNullOrWhiteSpace(rootpath) ? string.Empty : Path.DirectorySeparatorChar.ToString());
                         filename = filename.Remove(0, rootpath.Length);
-                        newItem.MachineName = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                        newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
                             + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                            + newItem.MachineName;
+                            + newItem.Machine.Name;
 
                         newItems.Add(newItem);
                     }
@@ -933,26 +933,26 @@ namespace SabreTools.Library.DatFiles
                             if (filter.RemoveUnicode)
                             {
                                 item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
-                                item.MachineName = Sanitizer.RemoveUnicodeCharacters(item.MachineName);
-                                item.MachineDescription = Sanitizer.RemoveUnicodeCharacters(item.MachineDescription);
+                                item.Machine.Name = Sanitizer.RemoveUnicodeCharacters(item.Machine.Name);
+                                item.Machine.Description = Sanitizer.RemoveUnicodeCharacters(item.Machine.Description);
                             }
 
                             // If we're in cleaning mode, do so from all relevant things
                             if (filter.Clean)
                             {
-                                item.MachineName = Sanitizer.CleanGameName(item.MachineName);
-                                item.MachineDescription = Sanitizer.CleanGameName(item.MachineDescription);
+                                item.Machine.Name = Sanitizer.CleanGameName(item.Machine.Name);
+                                item.Machine.Description = Sanitizer.CleanGameName(item.Machine.Description);
                             }
 
                             // If we are in single game mode, rename all games
                             if (filter.Single)
-                                item.MachineName = "!";
+                                item.Machine.Name = "!";
 
                             // If we are in NTFS trim mode, trim the game name
                             if (filter.Trim)
                             {
                                 // Windows max name length is 260
-                                int usableLength = 260 - item.MachineName.Length - filter.Root.Length;
+                                int usableLength = 260 - item.Machine.Name.Length - filter.Root.Length;
                                 if (item.Name.Length > usableLength)
                                 {
                                     string ext = Path.GetExtension(item.Name);
@@ -1030,7 +1030,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (DatItem item in items)
                     {
                         // If the key mapping doesn't exist, add it
-                        mapping.TryAdd(item.MachineName, item.MachineDescription.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                        mapping.TryAdd(item.Machine.Name, item.Machine.Description.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
                     }
                 });
 
@@ -1042,20 +1042,20 @@ namespace SabreTools.Library.DatFiles
                     foreach (DatItem item in items)
                     {
                         // Update machine name
-                        if (!string.IsNullOrWhiteSpace(item.MachineName) && mapping.ContainsKey(item.MachineName))
-                            item.MachineName = mapping[item.MachineName];
+                        if (!string.IsNullOrWhiteSpace(item.Machine.Name) && mapping.ContainsKey(item.Machine.Name))
+                            item.Machine.Name = mapping[item.Machine.Name];
 
                         // Update cloneof
-                        if (!string.IsNullOrWhiteSpace(item.CloneOf) && mapping.ContainsKey(item.CloneOf))
-                            item.CloneOf = mapping[item.CloneOf];
+                        if (!string.IsNullOrWhiteSpace(item.Machine.CloneOf) && mapping.ContainsKey(item.Machine.CloneOf))
+                            item.Machine.CloneOf = mapping[item.Machine.CloneOf];
 
                         // Update romof
-                        if (!string.IsNullOrWhiteSpace(item.RomOf) && mapping.ContainsKey(item.RomOf))
-                            item.RomOf = mapping[item.RomOf];
+                        if (!string.IsNullOrWhiteSpace(item.Machine.RomOf) && mapping.ContainsKey(item.Machine.RomOf))
+                            item.Machine.RomOf = mapping[item.Machine.RomOf];
 
                         // Update sampleof
-                        if (!string.IsNullOrWhiteSpace(item.SampleOf) && mapping.ContainsKey(item.SampleOf))
-                            item.SampleOf = mapping[item.SampleOf];
+                        if (!string.IsNullOrWhiteSpace(item.Machine.SampleOf) && mapping.ContainsKey(item.Machine.SampleOf))
+                            item.Machine.SampleOf = mapping[item.Machine.SampleOf];
 
                         // Add the new item to the output list
                         newItems.Add(item);
@@ -1097,30 +1097,30 @@ namespace SabreTools.Library.DatFiles
                 DatItem item = Items[key][0];
 
                 // Match on CloneOf first
-                if (!string.IsNullOrEmpty(item.CloneOf))
+                if (!string.IsNullOrEmpty(item.Machine.CloneOf))
                 {
-                    if (!parents.ContainsKey(item.CloneOf.ToLowerInvariant()))
-                        parents.Add(item.CloneOf.ToLowerInvariant(), new List<string>());
+                    if (!parents.ContainsKey(item.Machine.CloneOf.ToLowerInvariant()))
+                        parents.Add(item.Machine.CloneOf.ToLowerInvariant(), new List<string>());
 
-                    parents[item.CloneOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                    parents[item.Machine.CloneOf.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
                 }
 
                 // Then by RomOf
-                else if (!string.IsNullOrEmpty(item.RomOf))
+                else if (!string.IsNullOrEmpty(item.Machine.RomOf))
                 {
-                    if (!parents.ContainsKey(item.RomOf.ToLowerInvariant()))
-                        parents.Add(item.RomOf.ToLowerInvariant(), new List<string>());
+                    if (!parents.ContainsKey(item.Machine.RomOf.ToLowerInvariant()))
+                        parents.Add(item.Machine.RomOf.ToLowerInvariant(), new List<string>());
 
-                    parents[item.RomOf.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                    parents[item.Machine.RomOf.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
                 }
 
                 // Otherwise, treat it as a parent
                 else
                 {
-                    if (!parents.ContainsKey(item.MachineName.ToLowerInvariant()))
-                        parents.Add(item.MachineName.ToLowerInvariant(), new List<string>());
+                    if (!parents.ContainsKey(item.Machine.Name.ToLowerInvariant()))
+                        parents.Add(item.Machine.Name.ToLowerInvariant(), new List<string>());
 
-                    parents[item.MachineName.ToLowerInvariant()].Add(item.MachineName.ToLowerInvariant());
+                    parents[item.Machine.Name.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
                 }
             }
 
@@ -1171,7 +1171,7 @@ namespace SabreTools.Library.DatFiles
                 for (int i = 0; i < items.Count; i++)
                 {
                     string[] splitname = items[i].Name.Split('.');
-                    items[i].MachineName += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+                    items[i].Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
                     items[i].Name = Path.GetFileName(items[i].Name);
                 }
             });
@@ -1220,11 +1220,11 @@ namespace SabreTools.Library.DatFiles
                 for (int j = 0; j < items.Count; j++)
                 {
                     DatItem item = items[j];
-                    if (Regex.IsMatch(item.MachineName, pattern))
-                        item.MachineName = Regex.Replace(item.MachineName, pattern, "$2");
+                    if (Regex.IsMatch(item.Machine.Name, pattern))
+                        item.Machine.Name = Regex.Replace(item.Machine.Name, pattern, "$2");
 
-                    if (Regex.IsMatch(item.MachineDescription, pattern))
-                        item.MachineDescription = Regex.Replace(item.MachineDescription, pattern, "$2");
+                    if (Regex.IsMatch(item.Machine.Description, pattern))
+                        item.Machine.Description = Regex.Replace(item.Machine.Description, pattern, "$2");
 
                     items[j] = item;
                 }
@@ -1390,8 +1390,8 @@ namespace SabreTools.Library.DatFiles
 
                 // Determine if the game has a parent or not
                 string parent = null;
-                if (!string.IsNullOrWhiteSpace(Items[game][0].RomOf))
-                    parent = Items[game][0].RomOf;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].Machine.RomOf))
+                    parent = Items[game][0].Machine.RomOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
@@ -1430,20 +1430,20 @@ namespace SabreTools.Library.DatFiles
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
-                if (dev ^ (Items[game][0].MachineType.HasFlag(MachineType.Device)))
+                if (dev ^ (Items[game][0].Machine.MachineType.HasFlag(MachineType.Device)))
                     continue;
 
                 // If the game has no devices, we continue
-                if (Items[game][0].Devices == null
-                    || Items[game][0].Devices.Count == 0
-                    || (slotoptions && Items[game][0].SlotOptions == null)
-                    || (slotoptions && Items[game][0].SlotOptions.Count == 0))
+                if (Items[game][0].Machine.Devices == null
+                    || Items[game][0].Machine.Devices.Count == 0
+                    || (slotoptions && Items[game][0].Machine.SlotOptions == null)
+                    || (slotoptions && Items[game][0].Machine.SlotOptions.Count == 0))
                 {
                     continue;
                 }
 
                 // Determine if the game has any devices or not
-                List<string> devices = Items[game][0].Devices;
+                List<string> devices = Items[game][0].Machine.Devices;
                 List<string> newdevs = new List<string>();
                 foreach (string device in devices)
                 {
@@ -1457,7 +1457,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (DatItem item in devItems)
                     {
                         DatItem datItem = (DatItem)item.Clone();
-                        newdevs.AddRange(datItem.Devices ?? new List<string>());
+                        newdevs.AddRange(datItem.Machine.Devices ?? new List<string>());
                         datItem.CopyMachineInformation(copyFrom);
                         if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
                         {
@@ -1470,15 +1470,15 @@ namespace SabreTools.Library.DatFiles
                 // Now that every device is accounted for, add the new list of devices, if they don't already exist
                 foreach (string device in newdevs)
                 {
-                    if (!Items[game][0].Devices.Contains(device))
-                        Items[game][0].Devices.Add(device);
+                    if (!Items[game][0].Machine.Devices.Contains(device))
+                        Items[game][0].Machine.Devices.Add(device);
                 }
 
                 // If we're checking slotoptions too
                 if (slotoptions)
                 {
                     // Determine if the game has any slotoptions or not
-                    List<string> slotopts = Items[game][0].SlotOptions;
+                    List<string> slotopts = Items[game][0].Machine.SlotOptions;
                     List<string> newslotopts = new List<string>();
                     foreach (string slotopt in slotopts)
                     {
@@ -1492,7 +1492,7 @@ namespace SabreTools.Library.DatFiles
                         foreach (DatItem item in slotItems)
                         {
                             DatItem datItem = (DatItem)item.Clone();
-                            newslotopts.AddRange(datItem.SlotOptions ?? new List<string>());
+                            newslotopts.AddRange(datItem.Machine.SlotOptions ?? new List<string>());
                             datItem.CopyMachineInformation(copyFrom);
                             if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
                             {
@@ -1505,8 +1505,8 @@ namespace SabreTools.Library.DatFiles
                     // Now that every slotoption is accounted for, add the new list of slotoptions, if they don't already exist
                     foreach (string slotopt in newslotopts)
                     {
-                        if (!Items[game][0].SlotOptions.Contains(slotopt))
-                            Items[game][0].SlotOptions.Add(slotopt);
+                        if (!Items[game][0].Machine.SlotOptions.Contains(slotopt))
+                            Items[game][0].Machine.SlotOptions.Add(slotopt);
                     }
                 }
             }
@@ -1528,8 +1528,8 @@ namespace SabreTools.Library.DatFiles
 
                 // Determine if the game has a parent or not
                 string parent = null;
-                if (!string.IsNullOrWhiteSpace(Items[game][0].CloneOf))
-                    parent = Items[game][0].CloneOf;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].Machine.CloneOf))
+                    parent = Items[game][0].Machine.CloneOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
@@ -1555,10 +1555,10 @@ namespace SabreTools.Library.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the items
                 List<DatItem> items = Items[game];
-                string romof = Items[parent][0].RomOf;
+                string romof = Items[parent][0].Machine.RomOf;
                 foreach (DatItem item in items)
                 {
-                    item.RomOf = romof;
+                    item.Machine.RomOf = romof;
                 }
             }
         }
@@ -1578,15 +1578,26 @@ namespace SabreTools.Library.DatFiles
 
                 // Determine if the game has a parent or not
                 string parent = null;
-                if (!string.IsNullOrWhiteSpace(Items[game][0].CloneOf))
-                    parent = Items[game][0].CloneOf;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].Machine.CloneOf))
+                    parent = Items[game][0].Machine.CloneOf;
 
                 // If there is no parent, then we continue
                 if (string.IsNullOrWhiteSpace(parent))
                     continue;
 
                 // Otherwise, move the items from the current game to a subfolder of the parent game
-                DatItem copyFrom = Items[parent].Count == 0 ? new Rom { MachineName = parent, MachineDescription = parent } : Items[parent][0];
+                DatItem copyFrom;
+                if (Items[parent].Count == 0)
+                {
+                    copyFrom = new Rom();
+                    copyFrom.Machine.Name = parent;
+                    copyFrom.Machine.Description = parent;
+                }
+                else
+                {
+                    copyFrom = Items[parent][0];
+                }
+
                 List<DatItem> items = Items[game];
                 foreach (DatItem item in items)
                 {
@@ -1631,7 +1642,7 @@ namespace SabreTools.Library.DatFiles
                         else if (rom.MergeTag != null && !Items[parent].Select(i => i.Name).Contains(rom.MergeTag))
                         {
                             if (subfolder)
-                                item.Name = $"{item.MachineName}\\{item.Name}";
+                                item.Name = $"{item.Machine.Name}\\{item.Name}";
 
                             item.CopyMachineInformation(copyFrom);
                             Items.Add(parent, item);
@@ -1641,7 +1652,7 @@ namespace SabreTools.Library.DatFiles
                         else if (!Items[parent].Contains(item))
                         {
                             if (subfolder)
-                                item.Name = $"{item.MachineName}\\{item.Name}";
+                                item.Name = $"{item.Machine.Name}\\{item.Name}";
 
                             item.CopyMachineInformation(copyFrom);
                             Items.Add(parent, item);
@@ -1652,7 +1663,7 @@ namespace SabreTools.Library.DatFiles
                     else if (!Items[parent].Contains(item))
                     {
                         if (subfolder)
-                            item.Name = $"{item.MachineName}\\{item.Name}";
+                            item.Name = $"{item.Machine.Name}\\{item.Name}";
 
                         item.CopyMachineInformation(copyFrom);
                         Items.Add(parent, item);
@@ -1673,8 +1684,8 @@ namespace SabreTools.Library.DatFiles
             foreach (string game in games)
             {
                 if (Items[game].Count > 0
-                    && (Items[game][0].MachineType.HasFlag(MachineType.Bios)
-                        || Items[game][0].MachineType.HasFlag(MachineType.Device)))
+                    && (Items[game][0].Machine.MachineType.HasFlag(MachineType.Bios)
+                        || Items[game][0].Machine.MachineType.HasFlag(MachineType.Device)))
                 {
                     Items.Remove(game);
                 }
@@ -1696,13 +1707,13 @@ namespace SabreTools.Library.DatFiles
                     continue;
 
                 // If the game (is/is not) a bios, we want to continue
-                if (bios ^ Items[game][0].MachineType.HasFlag(MachineType.Bios))
+                if (bios ^ Items[game][0].Machine.MachineType.HasFlag(MachineType.Bios))
                     continue;
 
                 // Determine if the game has a parent or not
                 string parent = null;
-                if (!string.IsNullOrWhiteSpace(Items[game][0].RomOf))
-                    parent = Items[game][0].RomOf;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].Machine.RomOf))
+                    parent = Items[game][0].Machine.RomOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
@@ -1739,8 +1750,8 @@ namespace SabreTools.Library.DatFiles
 
                 // Determine if the game has a parent or not
                 string parent = null;
-                if (!string.IsNullOrWhiteSpace(Items[game][0].CloneOf))
-                    parent = Items[game][0].CloneOf;
+                if (!string.IsNullOrWhiteSpace(Items[game][0].Machine.CloneOf))
+                    parent = Items[game][0].Machine.CloneOf;
 
                 // If the parent doesnt exist, we want to continue
                 if (string.IsNullOrWhiteSpace(parent))
@@ -1763,10 +1774,10 @@ namespace SabreTools.Library.DatFiles
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
                 List<DatItem> items = Items[game];
-                string romof = Items[parent][0].RomOf;
+                string romof = Items[parent][0].Machine.RomOf;
                 foreach (DatItem item in items)
                 {
-                    item.RomOf = romof;
+                    item.Machine.RomOf = romof;
                 }
             }
         }
@@ -1782,9 +1793,9 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> items = Items[game];
                 foreach (DatItem item in items)
                 {
-                    item.CloneOf = null;
-                    item.RomOf = null;
-                    item.SampleOf = null;
+                    item.Machine.CloneOf = null;
+                    item.Machine.RomOf = null;
+                    item.Machine.SampleOf = null;
                 }
             }
         }
@@ -2326,8 +2337,8 @@ namespace SabreTools.Library.DatFiles
 
             // Update rom information
             datItem.Name = romname;
-            datItem.MachineName = gamename;
-            datItem.MachineDescription = gamename;
+            datItem.Machine.Name = gamename;
+            datItem.Machine.Description = gamename;
 
             // If we have a Disk, then the ".chd" extension needs to be removed
             if (datItem.ItemType == ItemType.Disk)
@@ -2879,14 +2890,14 @@ namespace SabreTools.Library.DatFiles
 
                     // Get the item from the current file
                     Rom item = new Rom(fileStream.GetInfo(keepReadOpen: true));
-                    item.MachineName = Path.GetFileNameWithoutExtension(item.Name);
-                    item.MachineDescription = Path.GetFileNameWithoutExtension(item.Name);
+                    item.Machine.Name = Path.GetFileNameWithoutExtension(item.Name);
+                    item.Machine.Description = Path.GetFileNameWithoutExtension(item.Name);
 
                     // If we are coming from an archive, set the correct machine name
                     if (machinename != null)
                     {
-                        item.MachineName = machinename;
-                        item.MachineDescription = machinename;
+                        item.Machine.Name = machinename;
+                        item.Machine.Description = machinename;
                     }
 
                     dupes.Add(item);
@@ -3128,7 +3139,7 @@ namespace SabreTools.Library.DatFiles
                     List<DatItem> roms = Items[key];
                     foreach (DatItem rom in roms)
                     {
-                        if (rom.IndexId == 99)
+                        if (rom.Source.Index == 99)
                         {
                             if (rom.ItemType == ItemType.Disk || rom.ItemType == ItemType.Rom)
                                 matched.Items.Add(((Disk)rom).SHA1, rom);
@@ -3145,7 +3156,7 @@ namespace SabreTools.Library.DatFiles
                     List<DatItem> newroms = DatItem.Merge(roms);
                     foreach (Rom rom in newroms)
                     {
-                        if (rom.IndexId == 99)
+                        if (rom.Source.Index == 99)
                             matched.Items.Add($"{rom.Size}-{rom.CRC}", rom);
                     }
                 }
@@ -3396,8 +3407,8 @@ namespace SabreTools.Library.DatFiles
 
                 // Clean the input list and set all games to be pathless
                 List<DatItem> items = Items[key];
-                items.ForEach(item => item.MachineName = Path.GetFileName(item.MachineName));
-                items.ForEach(item => item.MachineDescription = Path.GetFileName(item.MachineDescription));
+                items.ForEach(item => item.Machine.Name = Path.GetFileName(item.Machine.Name));
+                items.ForEach(item => item.Machine.Description = Path.GetFileName(item.Machine.Description));
 
                 // Now add the game to the output DAT
                 tempDat.Items.AddRange(key, items);
@@ -3755,7 +3766,7 @@ namespace SabreTools.Library.DatFiles
                 name += Header.AddExtension;
 
             if (Header.UseRomName && Header.GameName)
-                name = Path.Combine(item.MachineName, name);
+                name = Path.Combine(item.Machine.Name, name);
 
             // Now assign back the item name
             item.Name = pre + name + post;
@@ -3778,11 +3789,8 @@ namespace SabreTools.Library.DatFiles
         {
             // Initialize strings
             string fix = string.Empty,
-                game = item.MachineName,
+                game = item.Machine.Name,
                 name = item.Name,
-                manufacturer = item.Manufacturer,
-                publisher = item.Publisher,
-                category = item.Category,
                 crc = string.Empty,
                 md5 = string.Empty,
                 ripemd160 = string.Empty,
@@ -3831,9 +3839,9 @@ namespace SabreTools.Library.DatFiles
                 .Replace("%game%", game)
                 .Replace("%machine%", game)
                 .Replace("%name%", name)
-                .Replace("%manufacturer%", manufacturer)
-                .Replace("%publisher%", publisher)
-                .Replace("%category%", category)
+                .Replace("%manufacturer%", item.Machine.Manufacturer)
+                .Replace("%publisher%", item.Machine.Publisher)
+                .Replace("%category%", item.Machine.Category)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
                 .Replace("%ripemd160%", ripemd160)

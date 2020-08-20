@@ -436,8 +436,11 @@ namespace SabreTools.Library.DatFiles
                             AreaName = areaName,
                             AreaSize = areaSize,
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         archive.CopyMachineInformation(machine);
@@ -457,8 +460,11 @@ namespace SabreTools.Library.DatFiles
                             Description = biosDescription,
                             Default = def,
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         biosset.CopyMachineInformation(machine);
@@ -490,8 +496,11 @@ namespace SabreTools.Library.DatFiles
                             ItemStatus = status,
                             Optional = optional,
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         disk.CopyMachineInformation(machine);
@@ -513,8 +522,11 @@ namespace SabreTools.Library.DatFiles
                             Date = date,
                             Default = default,
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         release.CopyMachineInformation(machine);
@@ -550,8 +562,11 @@ namespace SabreTools.Library.DatFiles
                             Optional = optional,
                             Inverted = inverted,
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         rom.CopyMachineInformation(machine);
@@ -568,8 +583,11 @@ namespace SabreTools.Library.DatFiles
                             AreaName = areaName,
                             AreaSize = areaSize,
 
-                            IndexId = indexId,
-                            IndexSource = filename,
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         sample.CopyMachineInformation(machine);
@@ -902,7 +920,7 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
@@ -913,7 +931,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
                         }
 
                         // Now, output the rom data

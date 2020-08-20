@@ -607,7 +607,7 @@ namespace RombaSharp.Features
         internal static void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
             // Get the dat full path
-            string fullpath = Path.Combine(_dats, (dat.MachineName == "dats" ? string.Empty : dat.MachineName), dat.Name);
+            string fullpath = Path.Combine(_dats, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name), dat.Name);
 
             // Parse the Dat if possible
             Globals.Logger.User($"Adding from '{dat.Name}'");

@@ -4,6 +4,9 @@ using SabreTools.Library.Data;
 
 namespace SabreTools.Library.DatFiles
 {
+    /// <summary>
+    /// Depot information wrapper
+    /// </summary>
     public class DepotInformation : ICloneable
     {
         /// <summary>

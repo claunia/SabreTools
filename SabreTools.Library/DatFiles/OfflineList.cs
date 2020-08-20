@@ -643,8 +643,8 @@ namespace SabreTools.Library.DatFiles
             for (int i = 0; i < roms.Count; i++)
             {
                 roms[i].Size = size;
-                roms[i].Publisher = publisher;
                 roms[i].CopyMachineInformation(machine);
+                roms[i].Machine.Publisher = publisher;
 
                 // Now process and add the rom
                 ParseAddHelper(roms[i]);
@@ -715,8 +715,11 @@ namespace SabreTools.Library.DatFiles
 
                     ItemStatus = ItemStatus.None,
 
-                    IndexId = indexId,
-                    IndexSource = filename,
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
                 });
             }
 
@@ -769,7 +772,7 @@ namespace SabreTools.Library.DatFiles
                         DatItem rom = roms[index];
 
                         // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.MachineName == null)
+                        if (rom.Name == null || rom.Machine.Name == null)
                         {
                             Globals.Logger.Warning("Null rom found!");
                             continue;
@@ -780,7 +783,7 @@ namespace SabreTools.Library.DatFiles
                             && ((Rom)rom).Size == -1
                             && ((Rom)rom).CRC == "null")
                         {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.MachineName}");
+                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                             ((Rom)rom).Size = Constants.SizeZero;
@@ -799,7 +802,7 @@ namespace SabreTools.Library.DatFiles
                         WriteDatItem(xtw, rom, ignoreblanks);
 
                         // Set the new data to compare against
-                        lastgame = rom.MachineName;
+                        lastgame = rom.Machine.Name;
                     }
                 }
 
