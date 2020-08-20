@@ -52,6 +52,10 @@ structure according to the original DAT master directory tree structure.";
                 // Get the DAT file associated with the key
                 DatFile datFile = DatFile.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
+                // Set the depot values
+                datFile.Header.InputDepot = new DepotInformation(true, 4);
+                datFile.Header.OutputDepot = new DepotInformation(true, 4);
+
                 // Create the new output directory if it doesn't exist
                 string outputFolder = Path.Combine(outdat, Path.GetFileNameWithoutExtension(foundDats[key]));
                 DirectoryExtensions.Ensure(outputFolder, create: true);
@@ -62,8 +66,6 @@ structure according to the original DAT master directory tree structure.";
                 // Now scan all of those depots and rebuild
                 datFile.RebuildDepot(
                     onlineDepots,
-                    indepth: 4,
-                    outdepth: 4,
                     outDir: outputFolder,
                     outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
                     updateDat: false);

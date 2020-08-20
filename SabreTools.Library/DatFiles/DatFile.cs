@@ -2045,7 +2045,7 @@ namespace SabreTools.Library.DatFiles
                 });
 
                 // Now find all folders that are empty, if we are supposed to
-                if (!Header.Romba && addBlanks)
+                if (!Header.OutputDepot.IsActive && addBlanks)
                 {
                     List<string> empties = DirectoryExtensions.ListEmpty(basePath);
                     Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
@@ -2119,8 +2119,8 @@ namespace SabreTools.Library.DatFiles
             bool addDate,
             bool copyFiles)
         {
-            // Special case for if we are in Romba mode (all names are supposed to be SHA-1 hashes)
-            if (Header.Romba)
+            // Special case for if we are in Depot mode (all names are supposed to be SHA-1 hashes)
+            if (Header.OutputDepot.IsActive)
             {
                 GZipArchive gzarc = new GZipArchive(item);
                 BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
@@ -2342,8 +2342,6 @@ namespace SabreTools.Library.DatFiles
         /// Process the DAT and find all matches in input files and folders assuming they're a depot
         /// </summary>
         /// <param name="inputs">List of input files/folders to check</param>
-        /// <param name="indepth">Positive value representing depth of input depot</param>
-        /// <param name="outdepth">Positive value representing depth of output depot</param>
         /// <param name="outDir">Output directory to use to build to</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
@@ -2353,8 +2351,6 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildDepot(
             List<string> inputs,
-            int indepth = 4,
-            int outdepth = 4,
             string outDir = null,
             bool date = false,
             bool delete = false,
@@ -2463,7 +2459,7 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string subpath = PathExtensions.GetRombaPath(hash, indepth);
+                string subpath = PathExtensions.GetDepotPath(hash, Header.InputDepot.Depth);
 
                 // Find the first depot that includes the hash
                 string foundpath = null;
@@ -2495,9 +2491,9 @@ namespace SabreTools.Library.DatFiles
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
                 if (Items[hash][0].ItemType == ItemType.Disk)
-                    usedInternally = RebuildIndividualFile(new Disk(fileinfo), foundpath, outDir, outdepth, date, inverse, outputFormat, updateDat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, updateDat, false /* isZip */);
                 else
-                    usedInternally = RebuildIndividualFile(new Rom(fileinfo), foundpath, outDir, outdepth, date, inverse, outputFormat, updateDat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, updateDat, false /* isZip */);
 
                 // If we are supposed to delete the depot file, do so
                 if (delete && usedInternally)
@@ -2526,7 +2522,6 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="inputs">List of input files/folders to check</param>
         /// <param name="outDir">Output directory to use to build to</param>
-        /// <param name="outdepth">Positive value representing depth of output depot</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
@@ -2538,7 +2533,6 @@ namespace SabreTools.Library.DatFiles
         public bool RebuildGeneric(
             List<string> inputs,
             string outDir = null,
-            int outdepth = 4,
             bool quickScan = false,
             bool date = false,
             bool delete = false,
@@ -2626,7 +2620,7 @@ namespace SabreTools.Library.DatFiles
                 if (File.Exists(input))
                 {
                     Globals.Logger.User($"Checking file: {input}");
-                    RebuildGenericHelper(input, outDir, outdepth, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                    RebuildGenericHelper(input, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                 }
 
                 // If the input is a directory
@@ -2636,7 +2630,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
                     {
                         Globals.Logger.User($"Checking file: {file}");
-                        RebuildGenericHelper(file, outDir, outdepth, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                        RebuildGenericHelper(file, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                     }
                 }
             }
@@ -2663,7 +2657,6 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="file">Name of the file to process</param>
         /// <param name="outDir">Output directory to use to build to</param>
-        /// <param name="outdepth">Positive value representing depth of output depot</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
@@ -2674,7 +2667,6 @@ namespace SabreTools.Library.DatFiles
         private void RebuildGenericHelper(
             string file,
             string outDir,
-            int outdepth,
             bool quickScan,
             bool date,
             bool delete,
@@ -2702,7 +2694,7 @@ namespace SabreTools.Library.DatFiles
             else if (externalFileInfo.Type == FileType.None)
                 externalDatItem = new Rom(externalFileInfo);
 
-            usedExternally = RebuildIndividualFile(externalDatItem, file, outDir, outdepth, date, inverse, outputFormat, updateDat, null /* isZip */);
+            usedExternally = RebuildIndividualFile(externalDatItem, file, outDir, date, inverse, outputFormat, updateDat, null /* isZip */);
 
             // Scan the file internally
 
@@ -2735,7 +2727,7 @@ namespace SabreTools.Library.DatFiles
                 else if (internalFileInfo.Type == FileType.None)
                     internalDatItem = new Rom(internalFileInfo);
 
-                usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, outdepth, date, inverse, outputFormat, updateDat, null /* isZip */);
+                usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, updateDat, null /* isZip */);
             }
             // Otherwise, loop through the entries and try to match
             else
@@ -2743,7 +2735,7 @@ namespace SabreTools.Library.DatFiles
                 foreach (BaseFile entry in entries)
                 {
                     DatItem internalDatItem = DatItem.Create(entry);
-                    usedInternally |= RebuildIndividualFile(internalDatItem, file, outDir, outdepth, date, inverse, outputFormat, updateDat, !isTorrentGzip /* isZip */);
+                    usedInternally |= RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, updateDat, !isTorrentGzip /* isZip */);
                 }
             }
 
@@ -2758,7 +2750,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="datItem">Information for the current file to rebuild from</param>
         /// <param name="file">Name of the file to process</param>
         /// <param name="outDir">Output directory to use to build to</param>
-        /// <param name="outdepth">Positive value representing depth of output depot</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
@@ -2769,7 +2760,6 @@ namespace SabreTools.Library.DatFiles
             DatItem datItem,
             string file,
             string outDir,
-            int outdepth,
             bool date,
             bool inverse,
             OutputFormat outputFormat,
@@ -2811,7 +2801,7 @@ namespace SabreTools.Library.DatFiles
 
                     // Get the proper output path
                     if (outputFormat == OutputFormat.TorrentGzipRomba)
-                        outDir = Path.Combine(outDir, PathExtensions.GetRombaPath(sha1, outdepth));
+                        outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, Header.OutputDepot.Depth));
                     else
                         outDir = Path.Combine(outDir, sha1 + ".gz");
 
@@ -2839,7 +2829,7 @@ namespace SabreTools.Library.DatFiles
 
                     // Get the proper output path
                     if (outputFormat == OutputFormat.TorrentXZRomba)
-                        outDir = Path.Combine(outDir, PathExtensions.GetRombaPath(sha1, outdepth));
+                        outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, Header.OutputDepot.Depth));
                     else
                         outDir = Path.Combine(outDir, sha1 + ".xz");
 
@@ -2912,7 +2902,7 @@ namespace SabreTools.Library.DatFiles
                     Folder outputArchive = Folder.Create(outputFormat);
 
                     // Now rebuild to the output file
-                    outputArchive.Write(fileStream, outDir, (Rom)item, date: date, depth: outdepth);
+                    outputArchive.Write(fileStream, outDir, (Rom)item, date: date, depth: Header.OutputDepot.Depth);
                 }
 
                 // Close the input stream
@@ -2979,8 +2969,8 @@ namespace SabreTools.Library.DatFiles
                                 Folder outputArchive = Folder.Create(outputFormat);
 
                                 // Now rebuild to the output file
-                                eitherSuccess |= outputArchive.Write(transformStream, outDir, (Rom)item, date: date, depth: outdepth);
-                                eitherSuccess |= outputArchive.Write(fileStream, outDir, (Rom)datItem, date: date, depth: outdepth);
+                                eitherSuccess |= outputArchive.Write(transformStream, outDir, (Rom)item, date: date, depth: Header.OutputDepot.Depth);
+                                eitherSuccess |= outputArchive.Write(fileStream, outDir, (Rom)datItem, date: date, depth: Header.OutputDepot.Depth);
 
                                 // Now add the success of either rebuild
                                 rebuilt &= eitherSuccess;
@@ -3003,10 +2993,9 @@ namespace SabreTools.Library.DatFiles
         /// Process the DAT and verify from the depots
         /// </summary>
         /// <param name="inputs">List of input directories to compare against</param>
-        /// <param name="depth">Positive value representing depot depth, defaults to 4</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyDepot(List<string> inputs, int depth = 4, string outDir = null)
+        public bool VerifyDepot(List<string> inputs, string outDir = null)
         {
             bool success = true;
 
@@ -3042,7 +3031,7 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string subpath = PathExtensions.GetRombaPath(hash, depth);
+                string subpath = PathExtensions.GetDepotPath(hash, Header.InputDepot.Depth);
 
                 // Find the first depot that includes the hash
                 string foundpath = null;
@@ -3723,8 +3712,8 @@ namespace SabreTools.Library.DatFiles
             string pre = CreatePrefixPostfix(item, true);
             string post = CreatePrefixPostfix(item, false);
 
-            // If we're in Romba mode, take care of that instead
-            if (Header.Romba)
+            // If we're in Depot mode, take care of that instead
+            if (Header.OutputDepot.IsActive)
             {
                 if (item.ItemType == ItemType.Rom)
                 {
@@ -3733,7 +3722,7 @@ namespace SabreTools.Library.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(romItem.SHA1))
                     {
-                        name = PathExtensions.GetRombaPath(romItem.SHA1, Header.RombaDepth).Replace('\\', '/');
+                        name = PathExtensions.GetDepotPath(romItem.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
                         item.Name = $"{pre}{name}{post}";
                     }
                 }
@@ -3744,7 +3733,7 @@ namespace SabreTools.Library.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(diskItem.SHA1))
                     {
-                        name = PathExtensions.GetRombaPath(diskItem.SHA1, Header.RombaDepth).Replace('\\', '/');
+                        name = PathExtensions.GetDepotPath(diskItem.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
                         item.Name = pre + name + post;
                     }
                 }

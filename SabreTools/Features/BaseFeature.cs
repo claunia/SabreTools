@@ -2661,8 +2661,6 @@ Some special strings that can be used:
                 RegionList = GetList(features, RegionListValue),
                 RemoveExtension = GetBoolean(features, RemoveExtensionsValue),
                 ReplaceExtension = GetString(features, ReplaceExtensionStringValue),
-                Romba = GetBoolean(features, RombaValue),
-                RombaDepth = GetInt32(features, RombaDepthInt32Value),
                 RootDir = GetString(features, RootStringValue),
                 SceneDateStrip = GetBoolean(features, SceneDateStripValue),
                 Type = GetBoolean(features, SuperdatValue) ? "SuperDAT" : null,
@@ -2671,9 +2669,13 @@ Some special strings that can be used:
                 Version = GetString(features, VersionStringValue),
             };
 
-            // Set a reasonable default for the Romba depth
-            if (datHeader.RombaDepth == Int32.MinValue)
-                datHeader.RombaDepth = 4;
+            // Get the depot information
+            datHeader.InputDepot = new DepotInformation(
+                GetBoolean(features, DepotValue),
+                GetInt32(features, DepotDepthInt32Value));
+            datHeader.OutputDepot = new DepotInformation(
+                GetBoolean(features, RombaValue),
+                GetInt32(features, RombaDepthInt32Value));
 
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))

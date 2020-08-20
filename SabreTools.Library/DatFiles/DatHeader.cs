@@ -211,16 +211,16 @@ namespace SabreTools.Library.DatFiles
         public bool RemoveExtension { get; set; }
 
         /// <summary>
-        /// Romba output mode
+        /// Input depot information
         /// </summary>
         [JsonIgnore]
-        public bool Romba { get; set; }
+        public DepotInformation InputDepot { get; set; }
 
         /// <summary>
-        /// Romba depth
+        /// Output depot information
         /// </summary>
         [JsonIgnore]
-        public int RombaDepth { get; set; } = 4;
+        public DepotInformation OutputDepot { get; set; }
 
         /// <summary>
         /// Output the machine name
@@ -294,8 +294,8 @@ namespace SabreTools.Library.DatFiles
                 AddExtension = this.AddExtension,
                 RemoveExtension = this.RemoveExtension,
                 GameName = this.GameName,
-                Romba = this.Romba,
-                RombaDepth = this.RombaDepth,
+                InputDepot = this.InputDepot.Clone() as DepotInformation,
+                OutputDepot = this.OutputDepot.Clone() as DepotInformation,
             };
         }
 
@@ -358,8 +358,8 @@ namespace SabreTools.Library.DatFiles
                 AddExtension = this.AddExtension,
                 RemoveExtension = this.RemoveExtension,
                 GameName = this.GameName,
-                Romba = this.Romba,
-                RombaDepth = this.RombaDepth,
+                InputDepot = this.InputDepot.Clone() as DepotInformation,
+                OutputDepot = this.OutputDepot.Clone() as DepotInformation,
             };
         }
 
@@ -370,86 +370,86 @@ namespace SabreTools.Library.DatFiles
         public void ConditionalCopy(DatHeader datHeader)
         {
             if (!string.IsNullOrWhiteSpace(datHeader.FileName))
-                this.FileName = datHeader.FileName;
+                FileName = datHeader.FileName;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Name))
-                this.Name = datHeader.Name;
+                Name = datHeader.Name;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Description))
-                this.Description = datHeader.Description;
+                Description = datHeader.Description;
 
             if (!string.IsNullOrWhiteSpace(datHeader.RootDir))
-                this.RootDir = datHeader.RootDir;
+                RootDir = datHeader.RootDir;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Category))
-                this.Category = datHeader.Category;
+                Category = datHeader.Category;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Version))
-                this.Version = datHeader.Version;
+                Version = datHeader.Version;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Date))
-                this.Date = datHeader.Date;
+                Date = datHeader.Date;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Author))
-                this.Author = datHeader.Author;
+                Author = datHeader.Author;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Email))
-                this.Email = datHeader.Email;
+                Email = datHeader.Email;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Homepage))
-                this.Homepage = datHeader.Homepage;
+                Homepage = datHeader.Homepage;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Url))
-                this.Url = datHeader.Url;
+                Url = datHeader.Url;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Comment))
-                this.Comment = datHeader.Comment;
+                Comment = datHeader.Comment;
 
             if (!string.IsNullOrWhiteSpace(datHeader.HeaderSkipper))
-                this.HeaderSkipper = datHeader.HeaderSkipper;
+                HeaderSkipper = datHeader.HeaderSkipper;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Type))
-                this.Type = datHeader.Type;
+                Type = datHeader.Type;
 
             if (datHeader.ForceMerging != ForceMerging.None)
-                this.ForceMerging = datHeader.ForceMerging;
+                ForceMerging = datHeader.ForceMerging;
 
             if (datHeader.ForceNodump != ForceNodump.None)
-                this.ForceNodump = datHeader.ForceNodump;
+                ForceNodump = datHeader.ForceNodump;
 
             if (datHeader.ForcePacking != ForcePacking.None)
-                this.ForcePacking = datHeader.ForcePacking;
+                ForcePacking = datHeader.ForcePacking;
 
             if (datHeader.DatFormat != 0x00)
-                this.DatFormat = datHeader.DatFormat;
+                DatFormat = datHeader.DatFormat;
 
             if (datHeader.ExcludeFields != null)
-                this.ExcludeFields = datHeader.ExcludeFields;
+                ExcludeFields = datHeader.ExcludeFields;
 
-            this.OneRomPerGame = datHeader.OneRomPerGame;
-            this.KeepEmptyGames = datHeader.KeepEmptyGames;
-            this.SceneDateStrip = datHeader.SceneDateStrip;
-            this.DedupeRoms = datHeader.DedupeRoms;
-            //this.StripHash = datHeader.StripHash;
+            OneRomPerGame = datHeader.OneRomPerGame;
+            KeepEmptyGames = datHeader.KeepEmptyGames;
+            SceneDateStrip = datHeader.SceneDateStrip;
+            DedupeRoms = datHeader.DedupeRoms;
+            //StripHash = datHeader.StripHash;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Prefix))
-                this.Prefix = datHeader.Prefix;
+                Prefix = datHeader.Prefix;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Postfix))
-                this.Postfix = datHeader.Postfix;
+                Postfix = datHeader.Postfix;
 
             if (!string.IsNullOrWhiteSpace(datHeader.AddExtension))
-                this.AddExtension = datHeader.AddExtension;
+                AddExtension = datHeader.AddExtension;
 
             if (!string.IsNullOrWhiteSpace(datHeader.ReplaceExtension))
-                this.ReplaceExtension = datHeader.ReplaceExtension;
+                ReplaceExtension = datHeader.ReplaceExtension;
 
-            this.RemoveExtension = datHeader.RemoveExtension;
-            this.Romba = datHeader.Romba;
-            this.RombaDepth = datHeader.RombaDepth;
-            this.GameName = datHeader.GameName;
-            this.Quotes = datHeader.Quotes;
-            this.UseRomName = datHeader.UseRomName;
+            RemoveExtension = datHeader.RemoveExtension;
+            InputDepot = datHeader.InputDepot.Clone() as DepotInformation;
+            OutputDepot = datHeader.OutputDepot.Clone() as DepotInformation;
+            GameName = datHeader.GameName;
+            Quotes = datHeader.Quotes;
+            UseRomName = datHeader.UseRomName;
         }
 
         #endregion

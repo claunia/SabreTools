@@ -44,14 +44,8 @@ namespace SabreTools.Features
 
             // Get feature flags
             TreatAsFiles asFiles = GetTreatAsFiles(features);
-            bool depot = GetBoolean(features, DepotValue);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
-
-            // Get optional depth
-            int depotDepth = 4;
-            if (features.ContainsKey(DepotDepthInt32Value))
-                depotDepth = GetInt32(features, DepotDepthInt32Value);
 
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
@@ -62,13 +56,16 @@ namespace SabreTools.Features
                     datdata.Parse(datfile, 99, keep: true);
                     datdata.ApplyFilter(Filter, true);
 
+                    // Set depot information
+                    datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
+
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
-                    if (depot)
-                        datdata.VerifyDepot(Inputs, depotDepth, OutputDir);
+                    if (Header.InputDepot.IsActive)
+                        datdata.VerifyDepot(Inputs, OutputDir);
                     else
                         datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
                 }
@@ -86,6 +83,9 @@ namespace SabreTools.Features
                     datdata.ApplyFilter(Filter, true);
                 }
 
+                // Set depot information
+                datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
+
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.HeaderSkipper))
                     datdata.Header.HeaderSkipper = Header.HeaderSkipper;
@@ -93,8 +93,8 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (depot)
-                    datdata.VerifyDepot(Inputs, depotDepth, OutputDir);
+                if (Header.InputDepot.IsActive)
+                    datdata.VerifyDepot(Inputs, OutputDir);
                 else
                     datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
             }

@@ -39,7 +39,7 @@ namespace SabreTools.Library.IO
         /// <param name="hash">SHA-1 hash to get the path for</param>
         /// <param name="depth">Positive value representing the depth of the depot</param>
         /// <returns>Subfolder path for the given hash</returns>
-        public static string GetRombaPath(string hash, int depth)
+        public static string GetDepotPath(string hash, int depth)
         {
             // If the hash isn't the right size, then we return null
             if (hash.Length != Constants.SHA1Length) // TODO: When updating to SHA-256, this needs to update to Constants.SHA256Length

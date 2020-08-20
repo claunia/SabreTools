@@ -357,7 +357,7 @@ namespace SabreTools.Library.FileTypes
             rom = new Rom(inputStream.GetInfo(keepReadOpen: true));
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, PathExtensions.GetRombaPath(rom.SHA1, depth)); // TODO: When updating to SHA-256, this needs to update to SHA256
+            string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(rom.SHA1, depth)); // TODO: When updating to SHA-256, this needs to update to SHA256
             outfile = outfile.Replace(".gz", ".xz");
 
             // Check to see if the folder needs to be created

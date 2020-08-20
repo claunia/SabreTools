@@ -62,27 +62,17 @@ namespace SabreTools.Features
             TreatAsFiles asFiles = GetTreatAsFiles(features);
             bool date = GetBoolean(features, AddDateValue);
             bool delete = GetBoolean(features, DeleteValue);
-            bool depot = GetBoolean(features, DepotValue);
             bool inverse = GetBoolean(features, InverseValue);
             bool quickScan = GetBoolean(features, QuickValue);
-            bool romba = GetBoolean(features, RombaValue);
             bool updateDat = GetBoolean(features, UpdateDatValue);
             var outputFormat = GetOutputFormat(features);
 
-            // Get optional depths
-            int depotDepth = 4;
-            if (features.ContainsKey(DepotDepthInt32Value))
-                depotDepth = GetInt32(features, DepotDepthInt32Value);
-            int rombaDepth = 4;
-            if (features.ContainsKey(RombaDepthInt32Value))
-                rombaDepth = GetInt32(features, RombaDepthInt32Value);
-
             // If we have TorrentGzip output and the romba flag, update
-            if (romba && outputFormat == OutputFormat.TorrentGzip)
+            if (Header.OutputDepot.IsActive && outputFormat == OutputFormat.TorrentGzip)
                 outputFormat = OutputFormat.TorrentGzipRomba;
 
             // If we hae TorrentXZ output and the romba flag, update
-            if (romba && outputFormat == OutputFormat.TorrentXZ)
+            if (Header.OutputDepot.IsActive && outputFormat == OutputFormat.TorrentXZ)
                 outputFormat = OutputFormat.TorrentXZRomba;
 
             // Get a list of files from the input datfiles
@@ -97,15 +87,19 @@ namespace SabreTools.Features
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
 
+                    // Set depot information
+                    datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
+                    datdata.Header.OutputDepot = Header.OutputDepot.Clone() as DepotInformation;
+
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
-                    if (depot)
-                        datdata.RebuildDepot(Inputs, depotDepth, rombaDepth, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
+                    if (Header.InputDepot.IsActive)
+                        datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
                     else
-                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), rombaDepth, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
                 }
             }
 
@@ -121,6 +115,10 @@ namespace SabreTools.Features
                     datdata.Parse(datfile, 99, keep: true);
                 }
 
+                // Set depot information
+                datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
+                datdata.Header.OutputDepot = Header.OutputDepot.Clone() as DepotInformation;
+
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.HeaderSkipper))
                     datdata.Header.HeaderSkipper = Header.HeaderSkipper;
@@ -128,10 +126,10 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (depot)
-                    datdata.RebuildDepot(Inputs, depotDepth, rombaDepth, OutputDir, date, delete, inverse, outputFormat, updateDat);
+                if (Header.InputDepot.IsActive)
+                    datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat);
                 else
-                    datdata.RebuildGeneric(Inputs, OutputDir, rombaDepth, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                    datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
             }
         }
     }
