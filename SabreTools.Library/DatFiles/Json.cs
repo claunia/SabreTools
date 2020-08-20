@@ -1007,7 +1007,7 @@ namespace SabreTools.Library.DatFiles
                     switch (Header.Debug)
                     {
                         case true:
-                            jtw.WriteValue("yes"));
+                            jtw.WriteValue("yes");
                             break;
                         case false:
                             jtw.WriteValue("no");
