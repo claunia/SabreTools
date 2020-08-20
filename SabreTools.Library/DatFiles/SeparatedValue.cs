@@ -188,6 +188,8 @@ namespace SabreTools.Library.DatFiles
 
                         #region Machine
 
+                        #region Common
+
                         case "Machine.Name":
                             machine.Name = value;
                             break;
@@ -228,9 +230,41 @@ namespace SabreTools.Library.DatFiles
                             machine.SampleOf = value;
                             break;
 
-                        case "Machine.Supported":
-                            machine.Supported = value.AsYesNo();
+                        #endregion
+
+                        #region AttractMode
+
+                        case "Machine.Players":
+                            machine.Players = value;
                             break;
+
+                        case "Machine.Rotation":
+                            machine.Rotation = value;
+                            break;
+
+                        case "Machine.Control":
+                            machine.Control = value;
+                            break;
+
+                        case "Machine.Status":
+                            machine.Status = value;
+                            break;
+
+                        case "Machine.DisplayCount":
+                            machine.DisplayCount = value;
+                            break;
+
+                        case "Machine.DisplayType":
+                            machine.DisplayType = value;
+                            break;
+
+                        case "Machine.Buttons":
+                            machine.Buttons = value;
+                            break;
+
+                        #endregion
+
+                        #region ListXML
 
                         case "Machine.SourceFile":
                             machine.SourceFile = value;
@@ -238,14 +272,6 @@ namespace SabreTools.Library.DatFiles
 
                         case "Machine.Runnable":
                             machine.Runnable = value.AsYesNo();
-                            break;
-
-                        case "Machine.Board":
-                            machine.Board = value;
-                            break;
-
-                        case "Machine.RebuildTo":
-                            machine.RebuildTo = value;
                             break;
 
                         case "Machine.Devices":
@@ -284,6 +310,28 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         #endregion
+
+                        #region Logiqx
+
+                        case "Machine.Board":
+                            machine.Board = value;
+                            break;
+
+                        case "Machine.RebuildTo":
+                            machine.RebuildTo = value;
+                            break;
+
+                        #endregion
+
+                        #region SoftwareList
+
+                        case "Machine.Supported":
+                            machine.Supported = value.AsYesNo();
+                            break;
+
+                        #endregion
+
+                        #endregion // Machine
 
                         #region DatItem
 
@@ -617,6 +665,7 @@ namespace SabreTools.Library.DatFiles
                 case "internal name":
                     return "DatFile.Name";
 
+                case "desc":
                 case "description":
                 case "dat description":
                     return "DatFile.Description";
@@ -674,6 +723,8 @@ namespace SabreTools.Library.DatFiles
 
                 #region Machine
 
+                #region Common
+
                 case "game":
                 case "gamename":
                 case "game name":
@@ -683,11 +734,16 @@ namespace SabreTools.Library.DatFiles
                     return "Machine.Name";
 
                 case "comment":
+                case "extra":
                     return "Machine.Comment";
 
+                case "gamedesc":
                 case "gamedescription":
+                case "game-description":
                 case "game description":
+                case "machinedesc":
                 case "machinedescription":
+                case "machine-description":
                 case "machine description":
                     return "Machine.Description";
 
@@ -700,6 +756,12 @@ namespace SabreTools.Library.DatFiles
                 case "publisher":
                     return "Machine.Publisher";
 
+                case "gamecategory":
+                case "game-category":
+                case "machinecategory":
+                case "machine-category":
+                    return "Machine.Category";
+
                 case "romof":
                     return "Machine.RomOf";
 
@@ -709,28 +771,59 @@ namespace SabreTools.Library.DatFiles
                 case "sampleof":
                     return "Machine.SampleOf";
 
-                case "supported":
-                    return "Machine.Supported";
+                #endregion
+
+                #region AttractMode
+
+                case "players":
+                    return "Machine.Players";
+
+                case "rotation":
+                    return "Machine.Rotation";
+
+                case "control":
+                    return "Machine.Control";
+
+                case "amstatus":
+                case "am-status":
+                case "gamestatus":
+                case "game-status":
+                case "machinestatus":
+                case "machine-status":
+                case "supportstatus":
+                case "support-status":
+                    return "Machine.Status";
+
+                case "displaycount":
+                case "display-count":
+                case "displays":
+                    return "Machine.DisplayCount";
+
+                case "displaytype":
+                case "display-type":
+                    return "Machine.DisplayType";
+
+                case "buttons":
+                    return "Machine.Buttons";
+
+                #endregion
+
+                #region ListXML
 
                 case "sourcefile":
                 case "source file":
+                case "source-file":
                     return "Machine.SourceFile";
 
                 case "runnable":
                     return "Machine.Runnable";
-
-                case "board":
-                    return "Machine.Board";
-
-                case "rebuildto":
-                case "rebuild to":
-                    return "Machine.RebuildTo";
 
                 case "devices":
                     return "Machine.Devices";
 
                 case "slotoptions":
                 case "slot options":
+                case "slot-options":
                     return "Machine.SlotOptions";
 
                 case "infos":
@@ -738,11 +831,34 @@ namespace SabreTools.Library.DatFiles
 
                 case "gametype":
                 case "game type":
+                case "game-type":
                 case "machinetype":
                 case "machine type":
+                case "machine-type":
                     return "Machine.MachineType";
 
                 #endregion
+
+                #region Logiqx
+
+                case "board":
+                    return "Machine.Board";
+
+                case "rebuildto":
+                case "rebuild to":
+                case "rebuild-to":
+                    return "Machine.RebuildTo";
+
+                #endregion
+
+                #region SoftwareList
+
+                case "supported":
+                    return "Machine.Supported";
+
+                #endregion
+
+                #endregion // Machine
 
                 #region DatItem
 

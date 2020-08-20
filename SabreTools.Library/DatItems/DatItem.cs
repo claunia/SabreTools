@@ -53,7 +53,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region Software list information
+        #region SoftwareList Fields
 
         /// <summary>
         /// Original hardware part associated with the item

@@ -127,37 +127,52 @@ namespace SabreTools.Library.Tools
 
                 #region Common
 
+                case "game":
                 case "gamename":
                 case "game-name":
+                case "machine":
                 case "machinename":
                 case "machine-name":
                     return Field.MachineName;
+
                 case "comment":
                 case "extra":
                     return Field.Comment;
+
                 case "desc":
                 case "description":
                 case "gamedesc":
                 case "gamedescription":
                 case "game-description":
+                case "game description":
                 case "machinedesc":
                 case "machinedescription":
                 case "machine-description":
+                case "machine description":
                     return Field.Description;
+
                 case "year":
                     return Field.Year;
+
                 case "manufacturer":
                     return Field.Manufacturer;
+
                 case "publisher":
                     return Field.Publisher;
+
                 case "category":
+                case "gamecategory":
+                case "game-category":
                 case "machinecategory":
                 case "machine-category":
                     return Field.Category;
+
                 case "romof":
                     return Field.RomOf;
+
                 case "cloneof":
                     return Field.CloneOf;
+
                 case "sampleof":
                     return Field.SampleOf;
 
@@ -167,10 +182,13 @@ namespace SabreTools.Library.Tools
 
                 case "players":
                     return Field.Players;
+
                 case "rotation":
                     return Field.Rotation;
+
                 case "control":
                     return Field.Control;
+
                 case "amstatus":
                 case "am-status":
                 case "gamestatus":
@@ -180,13 +198,16 @@ namespace SabreTools.Library.Tools
                 case "supportstatus":
                 case "support-status":
                     return Field.SupportStatus;
+
                 case "displaycount":
                 case "display-count":
                 case "displays":
                     return Field.DisplayCount;
+
                 case "displaytype":
                 case "display-type":
                     return Field.DisplayType;
+
                 case "buttons":
                     return Field.Buttons;
 
@@ -195,20 +216,29 @@ namespace SabreTools.Library.Tools
                 #region ListXML
 
                 case "sourcefile":
+                case "source file":
                 case "source-file":
                     return Field.SourceFile;
+
                 case "runnable":
                     return Field.Runnable;
+
                 case "devices":
                     return Field.Devices;
+
                 case "slotoptions":
+                case "slot options":
                 case "slot-options":
                     return Field.SlotOptions;
+
                 case "infos":
                     return Field.Infos;
+
                 case "gametype":
+                case "game type":
                 case "game-type":
                 case "machinetype":
+                case "machine type":
                 case "machine-type":
                     return Field.MachineType;
 
@@ -218,7 +248,10 @@ namespace SabreTools.Library.Tools
 
                 case "board":
                     return Field.Board;
+
                 case "rebuildto":
+                case "rebuild to":
+                case "rebuild-to":
                     return Field.RebuildTo;
 
                 #endregion
