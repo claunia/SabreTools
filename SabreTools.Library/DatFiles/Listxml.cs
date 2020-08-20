@@ -66,8 +66,8 @@ namespace SabreTools.Library.DatFiles
                         case "mame":
                             Header.Name = (Header.Name == null ? xtr.GetAttribute("build") : Header.Name);
                             Header.Description = (Header.Description == null ? Header.Name : Header.Description);
-                            string mame_debug = xtr.GetAttribute("debug"); // (yes|no) "no"
-                            string mame_mameconfig = xtr.GetAttribute("mameconfig"); // CDATA
+                            Header.Debug = (Header.Debug == null ? xtr.GetAttribute("debug").AsYesNo() : Header.Debug);
+                            Header.MameConfig = (Header.MameConfig == null ? xtr.GetAttribute("mameconfig") : Header.MameConfig);
                             xtr.Read();
                             break;
 
@@ -309,6 +309,9 @@ namespace SabreTools.Library.DatFiles
 
                         reader.Read();
                         break;
+
+                    // TODO: Should these be new DatItem types?
+                    // TODO: Should any be additional Machine fields?
 
                     case "chip":
                         // string chip_name = reader.GetAttribute("name");
@@ -665,8 +668,21 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("mame");
                 xtw.WriteAttributeString("build", Header.Name);
-                //xtw.WriteAttributeString("debug", Debug);
-                //xtw.WriteAttributeString("mameconfig", MameConfig);
+                if (Header.Debug != null)
+                {
+                    switch (Header.Debug)
+                    {
+                        case true:
+                            xtw.WriteAttributeString("debug", "yes");
+                            break;
+                        case false:
+                            xtw.WriteAttributeString("debug", "no");
+                            break;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Header.MameConfig))
+                    xtw.WriteAttributeString("mameconfig", Header.MameConfig);
 
                 xtw.Flush();
             }

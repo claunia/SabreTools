@@ -13,9 +13,9 @@ namespace SabreTools.Library.DatFiles
     /// </summary>
     public class DatHeader : ICloneable
     {
-        #region Publicly facing variables
+        #region Fields
 
-        #region Data common to most DAT types
+        #region Common Fields
 
         /// <summary>
         /// External name of the DAT
@@ -178,6 +178,32 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        #region ListXML Fields
+
+        /// <summary>
+        /// Debug build flag
+        /// </summary>
+        [JsonProperty("debug")]
+        public bool? Debug { get; set; } = false;
+
+        /// <summary>
+        /// MAME configuration name
+        /// </summary>
+        [JsonProperty("mameconfig")]
+        public string MameConfig { get; set; }
+
+        #endregion
+
+        #region Missfile Fields
+
+        /// <summary>
+        /// Output the item name
+        /// </summary>
+        [JsonIgnore]
+        public bool UseRomName { get; set; }
+
+        #endregion
+
         #region Write pre-processing
 
         /// <summary>
@@ -221,16 +247,6 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public bool Quotes { get; set; }
-
-        #endregion
-
-        #region Data specific to the Miss DAT type
-
-        /// <summary>
-        /// Output the item name
-        /// </summary>
-        [JsonIgnore]
-        public bool UseRomName { get; set; }
 
         #endregion
 

@@ -116,6 +116,8 @@ namespace SabreTools.Library.DatFiles
                     {
                         #region DatFile
 
+                        #region Common
+
                         case "DatFile.FileName":
                             Header.FileName = (Header.FileName== null ? value : Header.FileName);
                             break;
@@ -185,6 +187,20 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         #endregion
+
+                        #region ListXML
+
+                        case "DatFile.Debug":
+                            Header.Debug = (Header.Debug == null ? value.AsYesNo() : Header.Debug);
+                            break;
+
+                        case "DatFile.MameConfig":
+                            Header.MameConfig = (Header.MameConfig == null ? value : Header.MameConfig);
+                            break;
+
+                        #endregion
+
+                        #endregion // DatFile
 
                         #region Machine
 
@@ -654,6 +670,8 @@ namespace SabreTools.Library.DatFiles
             {
                 #region DatFile
 
+                #region Common
+
                 case "file":
                 case "filename":
                 case "file name":
@@ -720,6 +738,20 @@ namespace SabreTools.Library.DatFiles
                     return "DatFile.ForcePacking";
 
                 #endregion
+
+                #region ListXML
+
+                case "debug":
+                    return "DatFile.Debug";
+
+                case "mameconfig":
+                case "mame config":
+                case "mame-config":
+                    return "DatFile.MameConfig";
+
+                #endregion
+
+                #endregion // DatFile
 
                 #region Machine
 

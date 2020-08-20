@@ -120,6 +120,8 @@ namespace SabreTools.Library.DatFiles
                 string content;
                 switch (jtr.Value)
                 {
+                    #region Common
+
                     case "name":
                         content = jtr.ReadAsString();
                         Header.Name = (Header.Name == null ? content : Header.Name);
@@ -180,6 +182,11 @@ namespace SabreTools.Library.DatFiles
                         Header.Comment = (Header.Comment == null ? content : Header.Comment);
                         break;
 
+                    case "header":
+                        content = jtr.ReadAsString();
+                        Header.HeaderSkipper = (Header.HeaderSkipper == null ? content : Header.HeaderSkipper);
+                        break;
+
                     case "type": // This is exclusive to TruRip XML
                         content = jtr.ReadAsString();
                         Header.Type = (Header.Type == null ? content : Header.Type);
@@ -192,22 +199,33 @@ namespace SabreTools.Library.DatFiles
 
                         break;
 
-                    case "forcepacking":
-                        if (Header.ForcePacking == ForcePacking.None)
-                            Header.ForcePacking = jtr.ReadAsString().AsForcePacking();
-
-                        break;
-
                     case "forcenodump":
                         if (Header.ForceNodump == ForceNodump.None)
                             Header.ForceNodump = jtr.ReadAsString().AsForceNodump();
 
                         break;
 
-                    case "header":
-                        content = jtr.ReadAsString();
-                        Header.HeaderSkipper = (Header.HeaderSkipper == null ? content : Header.HeaderSkipper);
+                    case "forcepacking":
+                        if (Header.ForcePacking == ForcePacking.None)
+                            Header.ForcePacking = jtr.ReadAsString().AsForcePacking();
+
                         break;
+
+                    #endregion
+
+                    #region ListXML
+
+                    case "debug":
+                        content = jtr.ReadAsString();
+                        Header.Debug = (Header.Debug == null ? content.AsYesNo() : Header.Debug);
+                        break;
+
+                    case "mameconfig":
+                        content = jtr.ReadAsString();
+                        Header.MameConfig = (Header.MameConfig == null ? content : Header.MameConfig);
+                        break;
+
+                    #endregion
 
                     default:
                         break;
@@ -875,6 +893,8 @@ namespace SabreTools.Library.DatFiles
                 jtw.WritePropertyName("header");
                 jtw.WriteStartObject();
 
+                #region Common
+
                 jtw.WritePropertyName("name");
                 jtw.WriteValue(Header.Name);
                 jtw.WritePropertyName("description");
@@ -976,6 +996,32 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("header");
                     jtw.WriteValue(Header.HeaderSkipper);
                 }
+
+                #endregion
+
+                #region ListXML
+
+                if (Header.Debug != null)
+                {
+                    jtw.WritePropertyName("debug");
+                    switch (Header.Debug)
+                    {
+                        case true:
+                            jtw.WriteValue("yes"));
+                            break;
+                        case false:
+                            jtw.WriteValue("no");
+                            break;
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.MameConfig))
+                {
+                    jtw.WritePropertyName("mameconfig");
+                    jtw.WriteValue(Header.MameConfig);
+                }
+
+                #endregion
 
                 // End header
                 jtw.WriteEndObject();
