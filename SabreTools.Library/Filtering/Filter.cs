@@ -284,12 +284,6 @@ namespace SabreTools.Library.Filtering
         public bool RemoveUnicode { get; set; }
 
         /// <summary>
-        /// Remove fields based on Header values
-        /// </summary>
-        /// TODO: Remove in lieu of relying on Header value
-        public bool RemoveFields { get; set; }
-
-        /// <summary>
         /// Include root directory when determing trim sizes
         /// </summary>
         public string Root { get; set; }

@@ -983,7 +983,7 @@ namespace SabreTools.Library.DatFiles
                     OneRomPerGame();
 
                 // If we are removing fields, do that now
-                if (filter.RemoveFields)
+                if (Header.ExcludeFields != null && Header.ExcludeFields.Any())
                     RemoveFieldsFromItems();
 
                 // We remove any blanks, if we aren't supposed to have any
