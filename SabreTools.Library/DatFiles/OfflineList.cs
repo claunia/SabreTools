@@ -162,7 +162,6 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
-                    // TODO: Use header values
                     case "canopen":
                         ReadCanOpen(reader.ReadSubtree());
 
@@ -170,7 +169,7 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
-                    // TODO: Use header values
+                    // TODO: Use all header values
                     case "newdat":
                         ReadNewDat(reader.ReadSubtree());
 
@@ -241,7 +240,7 @@ namespace SabreTools.Library.DatFiles
         private void ReadCanOpen(XmlReader reader)
         {
             // Prepare all internal variables
-            List<string> extensions = new List<string>();
+            Header.CanOpen = new List<string>();
 
             // If there's no subtree to the configuration, skip it
             if (reader == null)
@@ -264,7 +263,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "extension":
-                        extensions.Add(reader.ReadElementContentAsString());
+                        Header.CanOpen.Add(reader.ReadElementContentAsString());
                         break;
 
                     default:
@@ -783,9 +782,18 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteEndElement();
                 }
                 
-                xtw.WriteStartElement("canOpen");
-                xtw.WriteElementString("extension", ".bin");
-                xtw.WriteEndElement();
+                if (Header.CanOpen != null)
+                {
+                    xtw.WriteStartElement("canOpen");
+
+                    foreach (string extension in Header.CanOpen)
+                    {
+                        xtw.WriteElementString("extension", extension);
+                    }
+
+                    // End canOpen
+                    xtw.WriteEndElement();
+                }
 
                 xtw.WriteStartElement("newDat");
                 xtw.WriteElementString("datVersionURL", Header.Url);

@@ -311,6 +311,16 @@ namespace SabreTools.Library.DatFiles
 
                         break;
 
+                    case "canopen":
+                        Header.CanOpen = new List<string>();
+                        jtr.Read(); // Start Array
+                        while (!sr.EndOfStream && jtr.TokenType != JsonToken.EndArray)
+                        {
+                            Header.CanOpen.Add(jtr.ReadAsString());
+                        }
+
+                        break;
+
                     case "romtitle":
                         content = jtr.ReadAsString();
                         Header.RomTitle = (Header.MameConfig == null ? content : Header.RomTitle);
@@ -1160,6 +1170,18 @@ namespace SabreTools.Library.DatFiles
                         jtw.WritePropertyName("default");
                         jtw.WriteValue(info.Item4.ToString());
                         jtw.WriteEndObject();
+                    }
+
+                    jtw.WriteEndArray();
+                }
+
+                if (Header.CanOpen != null)
+                {
+                    jtw.WritePropertyName("canopen");
+                    jtw.WriteStartArray();
+                    foreach (string extension in Header.CanOpen)
+                    {
+                        jtw.WriteValue(extension);
                     }
 
                     jtw.WriteEndArray();

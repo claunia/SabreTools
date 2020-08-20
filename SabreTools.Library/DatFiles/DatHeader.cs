@@ -239,7 +239,14 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// OfflineList info list
         /// </summary>
+        [JsonProperty("infos")]
         public List<Tuple<string, bool?, bool?, bool?>> Infos { get; set; }
+
+        /// <summary>
+        /// OfflineList can-open extensions
+        /// </summary>
+        [JsonProperty("canopen")]
+        public List<string> CanOpen { get; set; }
 
         /// <summary>
         /// Rom title

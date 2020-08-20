@@ -222,7 +222,19 @@ namespace SabreTools.Library.DatFiles
                             Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? value : Header.ScreenshotsHeight);
                             break;
 
-                        // TODO: Figure out how Header.Infos could be read in
+                        case "DatFile.Infos":
+                            // TODO: Figure out how Header.Infos could be read in
+                            break;
+
+                        case "DatFile.CanOpen":
+                            Header.CanOpen = new List<string>();
+                            var extensions = value.Split(';');
+                            foreach (var extension in extensions)
+                            {
+                                Header.CanOpen.Add(extension);
+                            }
+
+                            break;
 
                         case "DatFile.RomTitle":
                             Header.RomTitle = (Header.RomTitle == null ? value : Header.RomTitle);
@@ -813,6 +825,22 @@ namespace SabreTools.Library.DatFiles
                 case "screenshots height":
                 case "screenshots-height":
                     return "DatFile.ScreenshotsHeight";
+
+                case "offlineinfos":
+                case "offline infos":
+                case "offline-infos":
+                case "olinfos":
+                case "ol infos":
+                case "ol-infos":
+                case "offlinelistinfos":
+                case "offlinelist infos":
+                case "offlinelist-infos":
+                    return "DatFile.Infos";
+
+                case "canopen":
+                case "can open":
+                case "can-open":
+                    return "DatFile.CanOpen";
 
                 case "romtitle":
                 case "rom title":
