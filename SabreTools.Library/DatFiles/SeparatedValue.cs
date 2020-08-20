@@ -728,6 +728,10 @@ namespace SabreTools.Library.DatFiles
 
                 case "datdate":
                 case "dat date":
+                case "dat-date":
+                case "timestamp":
+                case "time stamp":
+                case "time-stamp":
                     return "DatFile.Date";
 
                 case "author":

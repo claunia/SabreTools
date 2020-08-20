@@ -63,7 +63,7 @@ namespace SabreTools.Library.DatFiles
                         case "softwaredb":
                             Header.Name = (Header.Name == null ? "openMSX Software List" : Header.Name);
                             Header.Description = (Header.Description == null ? Header.Name : Header.Description);
-                            // string timestamp = xtr.GetAttribute("timestamp"); // CDATA
+                            Header.Date = (Header.Date == null ? xtr.GetAttribute("timestamp") : Header.Date);
                             xtr.Read();
                             break;
 
@@ -588,7 +588,7 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteDocType("softwaredb", null, "softwaredb1.dtd", null);
 
                 xtw.WriteStartElement("softwaredb");
-                //xtw.WriteAttributeString("timestamp", timestamp);
+                xtw.WriteAttributeString("timestamp", Header.Date);
 
                 //TODO: Figure out how to fix the issue with removed formatting after this point
 //                xtw.WriteComment("Credits");
