@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 
+using SabreTools.Library.Data;
+using SabreTools.Library.Tools;
+
 namespace SabreTools.Library.Filtering
 {
     public class ExtraIni
@@ -24,8 +27,21 @@ namespace SabreTools.Library.Filtering
             foreach (string input in inputs)
             {
                 ExtraIniItem item = new ExtraIniItem();
-                item.PopulateFromInput(input);
-                Items.Add(item);
+
+                // If we don't even have a possible field and file combination
+                if (!input.Contains(":"))
+                {
+                    Globals.Logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                    return;
+                }
+
+                string inputTrimmed = input.Trim('"', ' ', '\t');
+                string fieldString = inputTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
+                string fileString = inputTrimmed.Substring(fieldString.Length + 1).Trim('"', ' ', '\t');
+
+                item.Field = fieldString.AsField();
+                if (item.PopulateFromFile(fileString))
+                    Items.Add(item);
             }
         }
 

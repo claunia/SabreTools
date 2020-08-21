@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Filtering
 {
@@ -27,27 +26,6 @@ namespace SabreTools.Library.Filtering
         #region Extras Population
 
         /// <summary>
-        /// Populate item using a field:file input
-        /// </summary>
-        /// <param name="ini">Field and file combination</param>
-        public void PopulateFromInput(string ini)
-        {
-            // If we don't even have a possible field and file combination
-            if (!ini.Contains(":"))
-            {
-                Globals.Logger.Warning($"'{ini}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
-                return;
-            }
-
-            string iniTrimmed = ini.Trim('"', ' ', '\t');
-            string iniFieldString = iniTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
-            string iniFileString = iniTrimmed.Substring(iniFieldString.Length + 1).Trim('"', ' ', '\t');
-
-            Field = iniFieldString.AsField();
-            PopulateFromFile(iniFileString);
-        }
-
-        /// <summary>
         /// Populate the dictionary from an INI file
         /// </summary>
         /// <param name="ini">Path to INI file to populate from</param>
@@ -59,7 +37,7 @@ namespace SabreTools.Library.Filtering
         /// the value is boolean. If there's another section name, then that is set
         /// as the value instead.
         /// </remarks>
-        public void PopulateFromFile(string ini)
+        public bool PopulateFromFile(string ini)
         {
             // Prepare all intenral variables
             IniReader ir = ini.GetIniReader(false);
@@ -67,7 +45,7 @@ namespace SabreTools.Library.Filtering
 
             // If we got a null reader, just return
             if (ir == null)
-                return;
+                return false;
 
             // Otherwise, read the file to the end
             try
@@ -107,15 +85,26 @@ namespace SabreTools.Library.Filtering
 
                         // Add the new mapping
                         Mappings[key].Add(value);
+
+                        // Read the next line in
+                        ir.ReadNextLine();
+                    }
+
+                    // Otherwise, just read the next line
+                    else
+                    {
+                        ir.ReadNextLine();
                     }
                 }
             }
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{ini}': {ex}");
+                return false;
             }
 
             ir.Dispose();
+            return true;
         }
 
         #endregion
