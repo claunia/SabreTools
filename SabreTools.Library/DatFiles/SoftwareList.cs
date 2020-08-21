@@ -262,11 +262,7 @@ namespace SabreTools.Library.DatFiles
                     }
 
                     if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "dataarea" || reader.Name == "diskarea"))
-                    {
                         areasize = null;
-                        areaWidth = null;
-                        areaEndinaness = null;
-                    }
 
                     reader.Read();
                     continue;
