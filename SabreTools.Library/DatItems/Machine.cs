@@ -4,6 +4,7 @@ using System.Linq;
 
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatItems
 {
@@ -414,6 +415,164 @@ namespace SabreTools.Library.DatItems
                 fieldValue = string.Empty;
 
             return fieldValue;
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        public void SetFields(Dictionary<Field, string> mappings)
+        {
+            #region Common
+
+            if (mappings.Keys.Contains(Field.MachineName))
+                Name = mappings[Field.MachineName];
+
+            if (mappings.Keys.Contains(Field.Comment))
+                Comment = mappings[Field.Comment];
+
+            if (mappings.Keys.Contains(Field.Description))
+                Description = mappings[Field.Description];
+
+            if (mappings.Keys.Contains(Field.Year))
+                Year = mappings[Field.Year];
+
+            if (mappings.Keys.Contains(Field.Manufacturer))
+                Manufacturer = mappings[Field.Manufacturer];
+
+            if (mappings.Keys.Contains(Field.Publisher))
+                Publisher = mappings[Field.Publisher];
+
+            if (mappings.Keys.Contains(Field.Category))
+                Category = mappings[Field.Category];
+
+            if (mappings.Keys.Contains(Field.RomOf))
+                RomOf = mappings[Field.RomOf];
+
+            if (mappings.Keys.Contains(Field.CloneOf))
+                CloneOf = mappings[Field.CloneOf];
+
+            if (mappings.Keys.Contains(Field.SampleOf))
+                SampleOf = mappings[Field.SampleOf];
+
+            if (mappings.Keys.Contains(Field.MachineType))
+                MachineType = mappings[Field.MachineType].AsMachineType();
+
+            #endregion
+
+            #region AttractMode
+
+            if (mappings.Keys.Contains(Field.Players))
+                Players = mappings[Field.Players];
+
+            if (mappings.Keys.Contains(Field.Rotation))
+                Rotation = mappings[Field.Rotation];
+
+            if (mappings.Keys.Contains(Field.Control))
+                Control = mappings[Field.Control];
+
+            if (mappings.Keys.Contains(Field.SupportStatus))
+                Status = mappings[Field.SupportStatus];
+
+            if (mappings.Keys.Contains(Field.DisplayCount))
+                DisplayCount = mappings[Field.DisplayCount];
+
+            if (mappings.Keys.Contains(Field.DisplayType))
+                DisplayType = mappings[Field.DisplayType];
+
+            if (mappings.Keys.Contains(Field.Buttons))
+                Buttons = mappings[Field.Buttons];
+
+            #endregion
+
+            #region ListXML
+
+            if (mappings.Keys.Contains(Field.SourceFile))
+                SourceFile = mappings[Field.SourceFile];
+
+            if (mappings.Keys.Contains(Field.Runnable))
+                Runnable = mappings[Field.Runnable].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.Devices))
+            {
+                if (Devices == null)
+                    Devices = new List<string>();
+
+                string[] devices = mappings[Field.Devices].Split(';');
+                Devices.AddRange(devices);
+            }
+
+            if (mappings.Keys.Contains(Field.SlotOptions))
+            {
+                if (SlotOptions == null)
+                    SlotOptions = new List<string>();
+
+                string[] slotOptions = mappings[Field.SlotOptions].Split(';');
+                SlotOptions.AddRange(slotOptions);
+            }
+
+            if (mappings.Keys.Contains(Field.Infos))
+            {
+                if (Infos == null)
+                    Infos = new List<KeyValuePair<string, string>>();
+
+                string[] pairs = mappings[Field.Infos].Split(';');
+                foreach (string pair in pairs)
+                {
+                    string[] split = pair.Split('=');
+                    Infos.Add(new KeyValuePair<string, string>(split[0], split[1]));
+                }
+            }
+
+            #endregion
+
+            #region Logiqx
+
+            if (mappings.Keys.Contains(Field.Board))
+                Board = mappings[Field.Board];
+
+            if (mappings.Keys.Contains(Field.RebuildTo))
+                RebuildTo = mappings[Field.RebuildTo];
+
+            #endregion
+
+            #region Logiqx EmuArc
+
+            if (mappings.Keys.Contains(Field.TitleID))
+                TitleID = mappings[Field.TitleID];
+
+            if (mappings.Keys.Contains(Field.Developer))
+                Developer = mappings[Field.Developer];
+
+            if (mappings.Keys.Contains(Field.Genre))
+                Genre = mappings[Field.Genre];
+
+            if (mappings.Keys.Contains(Field.Subgenre))
+                Subgenre = mappings[Field.Subgenre];
+
+            if (mappings.Keys.Contains(Field.Ratings))
+                Ratings = mappings[Field.Ratings];
+
+            if (mappings.Keys.Contains(Field.Score))
+                Score = mappings[Field.Score];
+
+            if (mappings.Keys.Contains(Field.Enabled))
+                Enabled = mappings[Field.Enabled];
+
+            if (mappings.Keys.Contains(Field.HasCrc))
+                HasCrc = mappings[Field.HasCrc].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.RelatedTo))
+                RelatedTo = mappings[Field.RelatedTo];
+
+            #endregion
+
+            #region SoftwareList
+
+            if (mappings.Keys.Contains(Field.Supported))
+                Supported = mappings[Field.Supported].AsYesNo();
+
+            #endregion
         }
 
         #endregion

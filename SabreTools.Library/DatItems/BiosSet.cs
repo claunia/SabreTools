@@ -2,6 +2,8 @@
 
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
+using System.Linq;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatItems
 {
@@ -58,6 +60,23 @@ namespace SabreTools.Library.DatItems
                 fieldValue = string.Empty;
 
             return fieldValue;
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        public override void SetFields(Dictionary<Field, string> mappings)
+        {
+            // Set base fields
+            base.SetFields(mappings);
+
+            // Handle BiosSet-specific fields
+            if (mappings.Keys.Contains(Field.Default))
+                Default = mappings[Field.Default].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.BiosDescription))
+                Description = mappings[Field.BiosDescription];
         }
 
         #endregion

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatItems
 {
@@ -76,6 +78,29 @@ namespace SabreTools.Library.DatItems
                 fieldValue = string.Empty;
 
             return fieldValue;
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        public override void SetFields(Dictionary<Field, string> mappings)
+        {
+            // Set base fields
+            base.SetFields(mappings);
+
+            // Handle Release-specific fields
+            if (mappings.Keys.Contains(Field.Region))
+                Region = mappings[Field.Region];
+
+            if (mappings.Keys.Contains(Field.Language))
+                Language = mappings[Field.Language];
+
+            if (mappings.Keys.Contains(Field.Date))
+                Date = mappings[Field.Date];
+
+            if (mappings.Keys.Contains(Field.Default))
+                Default = mappings[Field.Default].AsYesNo();
         }
 
         #endregion

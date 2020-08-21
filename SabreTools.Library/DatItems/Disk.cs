@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
@@ -192,6 +193,55 @@ namespace SabreTools.Library.DatItems
                 fieldValue = string.Empty;
 
             return fieldValue;
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        public override void SetFields(Dictionary<Field, string> mappings)
+        {
+            // Set base fields
+            base.SetFields(mappings);
+
+            // Handle Disk-specific fields
+            if (mappings.Keys.Contains(Field.MD5))
+                MD5 = mappings[Field.MD5];
+
+#if NET_FRAMEWORK
+            if (mappings.Keys.Contains(Field.RIPEMD160))
+                RIPEMD160 = mappings[Field.RIPEMD160];
+#endif
+
+            if (mappings.Keys.Contains(Field.SHA1))
+                SHA1 = mappings[Field.SHA1];
+
+            if (mappings.Keys.Contains(Field.SHA256))
+                SHA256 = mappings[Field.SHA256];
+
+            if (mappings.Keys.Contains(Field.SHA384))
+                SHA384 = mappings[Field.SHA384];
+
+            if (mappings.Keys.Contains(Field.SHA512))
+                SHA512 = mappings[Field.SHA512];
+
+            if (mappings.Keys.Contains(Field.Merge))
+                MergeTag = mappings[Field.Merge];
+
+            if (mappings.Keys.Contains(Field.Region))
+                Region = mappings[Field.Region];
+
+            if (mappings.Keys.Contains(Field.Index))
+                Index = mappings[Field.Index];
+
+            if (mappings.Keys.Contains(Field.Writable))
+                Writable = mappings[Field.Writable].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.Status))
+                ItemStatus = mappings[Field.Status].AsItemStatus();
+
+            if (mappings.Keys.Contains(Field.Optional))
+                Optional = mappings[Field.Optional].AsYesNo();
         }
 
         #endregion

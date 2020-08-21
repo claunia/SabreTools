@@ -285,6 +285,65 @@ namespace SabreTools.Library.DatItems
             return fieldValue;
         }
 
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        public virtual void SetFields(Dictionary<Field, string> mappings)
+        {
+            // Set machine fields
+            Machine.SetFields(mappings);
+
+            #region Common
+
+            if (mappings.Keys.Contains(Field.Name))
+                Name = mappings[Field.Name];
+
+            #endregion
+
+            #region AttractMode
+
+            if (mappings.Keys.Contains(Field.AltName))
+                AltName = mappings[Field.AltName];
+
+            if (mappings.Keys.Contains(Field.AltTitle))
+                AltTitle = mappings[Field.AltTitle];
+
+            #endregion
+
+            #region SoftwareList
+
+            if (mappings.Keys.Contains(Field.PartName))
+                PartName = mappings[Field.PartName];
+
+            if (mappings.Keys.Contains(Field.PartInterface))
+                PartInterface = mappings[Field.PartInterface];
+
+            if (mappings.Keys.Contains(Field.Features))
+            {
+                if (Features == null)
+                    Features = new List<KeyValuePair<string, string>>();
+
+                string[] pairs = mappings[Field.Features].Split(';');
+                foreach (string pair in pairs)
+                {
+                    string[] split = pair.Split('=');
+                    Features.Add(new KeyValuePair<string, string>(split[0], split[1]));
+                }
+            }
+
+            if (mappings.Keys.Contains(Field.AreaName))
+                AreaName = mappings[Field.AreaName];
+
+            if (mappings.Keys.Contains(Field.AreaSize))
+            {
+                if (Int64.TryParse(mappings[Field.AreaSize], out long areaSize))
+                    AreaSize = areaSize;
+            }
+
+            #endregion
+        }
+
         #endregion
 
         #region Constructors
