@@ -31,6 +31,7 @@ namespace SabreTools.Features
             AddFeature(ChdsAsFilesFlag);
             AddFeature(IndividualFlag);
             AddInternalSplitFeatures();
+            AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
         }
 
@@ -54,6 +55,7 @@ namespace SabreTools.Features
                 {
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
+                    datdata.ApplyExtras(Extras);
                     datdata.ApplyFilter(Filter, true);
 
                     // Set depot information
@@ -67,7 +69,7 @@ namespace SabreTools.Features
                     if (Header.InputDepot.IsActive)
                         datdata.VerifyDepot(Inputs, OutputDir);
                     else
-                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
+                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Extras, Filter);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -80,6 +82,7 @@ namespace SabreTools.Features
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     datdata.Parse(datfile, 99, keep: true);
+                    datdata.ApplyExtras(Extras);
                     datdata.ApplyFilter(Filter, true);
                 }
 
@@ -96,7 +99,7 @@ namespace SabreTools.Features
                 if (Header.InputDepot.IsActive)
                     datdata.VerifyDepot(Inputs, OutputDir);
                 else
-                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Filter);
+                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Extras, Filter);
             }
         }
     }

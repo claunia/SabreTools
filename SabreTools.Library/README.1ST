@@ -360,6 +360,11 @@ Options:
 		  compare against the input DATs. This flag forces all CHDs to be
 		  treated like regular files.
 
+	  -ini=, --extra-ini=       Apply a MAME INI for given field(s)
+		  Apply any valid MAME INI for any valid field in the DatFile. Inputs are
+		  of the form 'Field:path\to\ini'. Multiple instances of this flag are
+		  allowed.
+
 	  -fi=, --filter=             Filter a game/rom field with the given value(s)
 		  Filter any valid item or machine field from inputs. Filters are input
 		  in the form 'key:value' or '!key:value', where the '!' signifies 'not'
@@ -1312,6 +1317,11 @@ Options:
 			  second time, this will skip writing it. This can often speed up
 			  the output process. [Both diff-cascade and diff-reverse-cascade]
 
+	  -ini=, --extra-ini=       Apply a MAME INI for given field(s)
+		  Apply any valid MAME INI for any valid field in the DatFile. Inputs are
+		  of the form 'Field:path\to\ini'. Multiple instances of this flag are
+		  allowed.
+
 	  -fi=, --filter=             Filter a game/rom field with the given value(s)
 		  Filter any valid item or machine field from inputs. Filters are input
 		  in the form 'key:value' or '!key:value', where the '!' signifies 'not'
@@ -1596,6 +1606,11 @@ Options:
 		  Preprocess the DAT to have child sets contain all items from the
 		  parent sets based on the cloneof and romof tags as well as device
 		  references. This is incompatible with the other --dat-X flags.
+
+	  -ini=, --extra-ini=       Apply a MAME INI for given field(s)
+		  Apply any valid MAME INI for any valid field in the DatFile. Inputs are
+		  of the form 'Field:path\to\ini'. Multiple instances of this flag are
+		  allowed.
 
 	  -fi=, --filter=             Filter a game/rom field with the given value(s)
 		  Filter any valid item or machine field from inputs. Filters are input

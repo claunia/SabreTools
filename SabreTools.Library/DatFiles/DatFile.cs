@@ -200,6 +200,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
@@ -207,12 +208,13 @@ namespace SabreTools.Library.DatFiles
             List<string> inputs,
             string outDir,
             bool inplace,
+            ExtraIni extras,
             Filter filter,
             List<Field> updateFields,
             bool onlySame)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            BaseReplace(paths, outDir, inplace, filter, updateFields, onlySame);
+            BaseReplace(paths, outDir, inplace, extras, filter, updateFields, onlySame);
         }
 
         /// <summary>
@@ -221,6 +223,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
@@ -228,6 +231,7 @@ namespace SabreTools.Library.DatFiles
             List<ParentablePath> inputs,
             string outDir,
             bool inplace,
+            ExtraIni extras,
             Filter filter,
             List<Field> updateFields,
             bool onlySame)
@@ -240,6 +244,7 @@ namespace SabreTools.Library.DatFiles
                 // First we parse in the DAT internally
                 DatFile intDat = Create(Header.CloneFiltering());
                 intDat.Parse(path, 1, keep: true);
+                intDat.ApplyExtras(extras);
                 intDat.ApplyFilter(filter, false /* useTags */);
 
                 // If we are matching based on DatItem fields of any sort
@@ -316,12 +321,19 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="useGames">True to diff using games, false to use hashes</param>
-        public void DiffAgainst(List<string> inputs, string outDir, bool inplace, Filter filter, bool useGames)
+        public void DiffAgainst(
+            List<string> inputs,
+            string outDir,
+            bool inplace,
+            ExtraIni extras,
+            Filter filter,
+            bool useGames)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffAgainst(paths, outDir, inplace, filter, useGames);
+            DiffAgainst(paths, outDir, inplace, extras, filter, useGames);
         }
 
         /// <summary>
@@ -330,9 +342,16 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="useGames">True to diff using games, false to use hashes</param>
-        public void DiffAgainst(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter, bool useGames)
+        public void DiffAgainst(
+            List<ParentablePath> inputs,
+            string outDir,
+            bool inplace,
+            ExtraIni extras,
+            Filter filter,
+            bool useGames)
         {
             // For comparison's sake, we want to use a base ordering
             if (useGames)
@@ -348,6 +367,7 @@ namespace SabreTools.Library.DatFiles
                 // First we parse in the DAT internally
                 DatFile intDat = Create(Header.CloneFiltering());
                 intDat.Parse(path, 1, keep: true);
+                intDat.ApplyExtras(extras);
                 intDat.ApplyFilter(filter, false /* useTags */);
 
                 // For comparison's sake, we want to a the base bucketing
@@ -803,21 +823,23 @@ namespace SabreTools.Library.DatFiles
         /// Populate the user DatData object from the input files
         /// </summary>
         /// <param name="inputs">Paths to DATs to parse</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>List of DatData objects representing headers</returns>
-        public List<DatHeader> PopulateUserData(List<string> inputs, Filter filter)
+        public List<DatHeader> PopulateUserData(List<string> inputs, ExtraIni extras, Filter filter)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            return PopulateUserData(paths, filter);
+            return PopulateUserData(paths, extras, filter);
         }
 
         /// <summary>
         /// Populate the user DatData object from the input files
         /// </summary>
         /// <param name="inputs">Paths to DATs to parse</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>List of DatData objects representing headers</returns>
-        public List<DatHeader> PopulateUserData(List<ParentablePath> inputs, Filter filter)
+        public List<DatHeader> PopulateUserData(List<ParentablePath> inputs, ExtraIni extras, Filter filter)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
@@ -839,7 +861,8 @@ namespace SabreTools.Library.DatFiles
                 AddFromExisting(datFiles[i], true);
             }
 
-            // Now that we have a merged DAT, filter it
+            // Now that we have a merged DAT, apply extras and filter it
+            ApplyExtras(extras);
             ApplyFilter(filter, false /* useTags */);
 
             watch.Stop();
@@ -853,11 +876,17 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files and/or folders</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        public void Update(List<string> inputs, string outDir, bool inplace, Filter filter)
+        public void Update(
+            List<string> inputs,
+            string outDir,
+            bool inplace,
+            ExtraIni extras,
+            Filter filter)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            Update(paths, outDir, inplace, filter);
+            Update(paths, outDir, inplace, extras, filter);
         }
 
         /// <summary>
@@ -866,8 +895,14 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">Names of the input files and/or folders</param>
         /// <param name="outDir">Optional param for output directory</param>
         /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        public void Update(List<ParentablePath> inputs, string outDir, bool inplace, Filter filter)
+        public void Update(
+            List<ParentablePath> inputs,
+            string outDir,
+            bool inplace,
+            ExtraIni extras,
+            Filter filter)
         {
             // Iterate over the files
             foreach (ParentablePath file in inputs)
@@ -878,6 +913,7 @@ namespace SabreTools.Library.DatFiles
                     keepext: innerDatdata.Header.DatFormat.HasFlag(DatFormat.TSV)
                         || innerDatdata.Header.DatFormat.HasFlag(DatFormat.CSV)
                         || innerDatdata.Header.DatFormat.HasFlag(DatFormat.SSV));
+                innerDatdata.ApplyExtras(extras);
                 innerDatdata.ApplyFilter(filter, false /* useTags */);
 
                 // Get the correct output path
@@ -891,6 +927,69 @@ namespace SabreTools.Library.DatFiles
         #endregion
 
         #region Filtering
+
+        /// <summary>
+        /// Apply a set of Extra INIs on the DatFile
+        /// </summary>
+        /// <param name="extras">ExtrasIni to use</param>
+        /// <returns>True if the extras were applied, false on error</returns>
+        public bool ApplyExtras(ExtraIni extras)
+        {
+            try
+            {
+                // Bucket by game first
+                Items.BucketBy(BucketedBy.Game, DedupeType.None);
+
+                // Create a new set of mappings based on the items
+                var map = new Dictionary<string, Dictionary<Field, string>>();
+
+                // Loop through each of the extras
+                foreach (ExtraIniItem item in extras.Items)
+                {
+                    foreach (var mapping in item.Mappings)
+                    {
+                        string key = mapping.Key;
+                        List<string> machineNames = mapping.Value;
+
+                        // If we have the root folder, assume boolean
+                        if (string.Equals(key, "ROOT_FOLDER"))
+                            key = "true";
+
+                        // Loop through the machines and add the new mappings
+                        foreach (string machine in machineNames)
+                        {
+                            if (!map.ContainsKey(machine))
+                                map[machine] = new Dictionary<Field, string>();
+
+                            map[machine][item.Field] = key;
+                        }
+                    }
+                }
+
+                // Now apply the new set of mappings
+                foreach (string key in map.Keys)
+                {
+                    // If the key doesn't exist, continue
+                    if (!Items.ContainsKey(key))
+                        continue;
+
+                    List<DatItem> datItems = Items[key];
+                    var mappings = map[key];
+
+                    foreach (var datItem in datItems)
+                    {
+                        datItem.SetFields(mappings);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Globals.Logger.Error(ex.ToString());
+                return false;
+            }
+
+            return true;
+        }
 
         /// <summary>
         /// Apply a Filter on the DatFile
@@ -2005,6 +2104,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="outDir">Output directory to </param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
@@ -2017,6 +2117,7 @@ namespace SabreTools.Library.DatFiles
             bool addBlanks = false,
             bool addDate = false,
             bool copyFiles = false,
+            ExtraIni extras = null,
             Filter filter = null,
             bool useTags = false)
         {
@@ -2101,6 +2202,10 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Cleaning temp folder");
             if (Globals.TempDir != Path.GetTempPath())
                 DirectoryExtensions.TryDelete(Globals.TempDir);
+
+            // If we have valid extras, perform the application now
+            if (extras != null && extras != default(ExtraIni))
+                ApplyExtras(extras);
 
             // If we have a valid filter, perform the filtering now
             if (filter != null && filter != default(Filter))
@@ -3092,6 +3197,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
+        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
         /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>True if verification was a success, false otherwise</returns>
         public bool VerifyGeneric(
@@ -3100,6 +3206,7 @@ namespace SabreTools.Library.DatFiles
             bool hashOnly = false,
             bool quickScan = false,
             TreatAsFiles asFiles = 0x00,
+            ExtraIni extras = null,
             Filter filter = null)
         {
             // TODO: We want the cross section of what's the folder and what's in the DAT. Right now, it just has what's in the DAT that's not in the folder
@@ -3115,6 +3222,7 @@ namespace SabreTools.Library.DatFiles
                     quickScan ? Hash.SecureHashes : Hash.DeepHashes,
                     bare: true,
                     asFiles: asFiles,
+                    extras: extras,
                     filter: filter);
             }
 

@@ -87,6 +87,7 @@ namespace SabreTools.Features
             this[DiffCascadeFlag].AddFeature(SkipFirstOutputFlag);
             AddFeature(DiffReverseCascadeFlag);
             this[DiffReverseCascadeFlag].AddFeature(SkipFirstOutputFlag);
+            AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
             AddFeature(OutputDirStringInput);
             AddFeature(InplaceFlag);
@@ -156,6 +157,7 @@ namespace SabreTools.Features
                     inputFileNames,
                     OutputDir,
                     GetBoolean(features, InplaceValue),
+                    Extras,
                     Filter);
                 return;
             }
@@ -178,9 +180,9 @@ namespace SabreTools.Features
             // Populate using the correct set
             List<DatHeader> datHeaders;
             if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
-                datHeaders = userInputDat.PopulateUserData(baseFileNames, Filter);
+                datHeaders = userInputDat.PopulateUserData(baseFileNames, Extras, Filter);
             else
-                datHeaders = userInputDat.PopulateUserData(inputFileNames, Filter);
+                datHeaders = userInputDat.PopulateUserData(inputFileNames, Extras, Filter);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
@@ -212,6 +214,7 @@ namespace SabreTools.Features
                     inputFileNames,
                     OutputDir,
                     GetBoolean(features, InplaceValue),
+                    Extras,
                     Filter,
                     GetBoolean(Features, ByGameValue));
             }
@@ -223,6 +226,7 @@ namespace SabreTools.Features
                     inputFileNames,
                     OutputDir,
                     GetBoolean(features, InplaceValue),
+                    Extras,
                     Filter,
                     updateFields,
                     GetBoolean(features, OnlySameValue));

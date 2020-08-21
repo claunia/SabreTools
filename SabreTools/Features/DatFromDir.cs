@@ -44,6 +44,7 @@ namespace SabreTools.Features
             AddFeature(CopyFilesFlag);
             AddFeature(HeaderStringInput);
             AddFeature(ChdsAsFilesFlag);
+            AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
             AddFeature(TempStringInput);
             AddFeature(OutputDirStringInput);
@@ -85,6 +86,7 @@ namespace SabreTools.Features
                         addBlankFiles,
                         addFileDates,
                         copyFiles,
+                        Extras,
                         Filter);
 
                     if (success)

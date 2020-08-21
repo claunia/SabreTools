@@ -60,8 +60,8 @@ namespace RombaSharp.Features
             List<string> basedats = new List<string> { olddat };
 
             // Now run the diff on the inputs
-            datfile.PopulateUserData(basedats, new Filter());
-            datfile.DiffAgainst(dats, outdat, false, new Filter(), false);
+            datfile.PopulateUserData(basedats, new ExtraIni(), new Filter());
+            datfile.DiffAgainst(dats, outdat, false, new ExtraIni(), new Filter(), false);
         }
     }
 }

@@ -1382,6 +1382,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string ExtraIniListValue = "extra-ini";
+        internal static Feature ExtraIniListInput
+        {
+            get
+            {
+                return new Feature(
+                    ExtraIniListValue,
+                    new List<string>() { "-ini", "--extra-ini" },
+                    "Apply a MAME INI for given field(s)",
+                    FeatureType.List,
+                    longDescription: "Apply any valid MAME INI for any valid field in the DatFile. Inputs are of the form 'Field:path\\to\\ini'. Multiple instances of this flag are allowed.");
+            }
+        }
+
         internal const string FilterListValue = "filter";
         internal static Feature FilterListInput
         {
@@ -2275,6 +2289,11 @@ Some special strings that can be used:
         #region Fields
 
         /// <summary>
+        /// Preconfigured ExtraIni set
+        /// </summary>
+        protected ExtraIni Extras { get; set; }
+
+        /// <summary>
         /// Pre-configured Filter
         /// </summary>
         protected Filter Filter { get; set; }
@@ -2386,6 +2405,7 @@ Some special strings that can be used:
         public override void ProcessFeatures(Dictionary<string, Feature> features)
         {
             // Generic feature flags
+            Extras = GetExtras(features);
             Filter = GetFilter(features);
             Header = GetDatHeader(features);
             OutputDir = GetString(features, OutputDirStringValue);
@@ -2707,6 +2727,16 @@ Some special strings that can be used:
                 return DedupeType.Game;
             else
                 return DedupeType.None;
+        }
+
+        /// <summary>
+        /// Get ExtraIni from feature list
+        /// </summary>
+        private ExtraIni GetExtras(Dictionary<string, Feature> features)
+        {
+            ExtraIni extraIni = new ExtraIni();
+            extraIni.PopulateFromList(GetList(features, ExtraIniListValue));
+            return extraIni;
         }
 
         /// <summary>

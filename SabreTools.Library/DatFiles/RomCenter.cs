@@ -44,7 +44,7 @@ namespace SabreTools.Library.DatFiles
             if (ir == null)
                 return;
 
-            // Otherwise, read teh file to the end
+            // Otherwise, read the file to the end
             try
             {
                 ir.ReadNextLine();
