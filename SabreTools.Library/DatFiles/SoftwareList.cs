@@ -243,8 +243,8 @@ namespace SabreTools.Library.DatFiles
             string areaname,
                 partname = string.Empty,
                 partinterface = string.Empty,
-                areaWidth = string.Empty,
-                areaEndinaness = string.Empty;
+                areaWidth,
+                areaEndinaness;
             long? areasize = null;
             var features = new List<KeyValuePair<string, string>>();
             bool containsItems = false;
@@ -262,7 +262,11 @@ namespace SabreTools.Library.DatFiles
                     }
 
                     if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "dataarea" || reader.Name == "diskarea"))
+                    {
                         areasize = null;
+                        areaWidth = null;
+                        areaEndinaness = null;
+                    }
 
                     reader.Read();
                     continue;
