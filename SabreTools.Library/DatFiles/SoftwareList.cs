@@ -145,8 +145,8 @@ namespace SabreTools.Library.DatFiles
                 Supported = reader.GetAttribute("supported").AsYesNo(), // (yes|partial|no) "yes"
 
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
-                Infos = new List<KeyValuePair<string, string>>(),
-                SharedFeatures = new List<KeyValuePair<string, string>>(),
+                Infos = new List<ListXmlInfo>(),
+                SharedFeatures = new List<SoftwareListSharedFeature>(),
 
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
             };
@@ -180,12 +180,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "info":
-                        machine.Infos.Add(new KeyValuePair<string, string>(reader.GetAttribute("name"), reader.GetAttribute("value")));
+                        machine.Infos.Add(new ListXmlInfo(reader.GetAttribute("name"), reader.GetAttribute("value")));
                         reader.Read();
                         break;
 
                     case "sharedfeat":
-                        machine.SharedFeatures.Add(new KeyValuePair<string, string>(reader.GetAttribute("name"), reader.GetAttribute("value")));
+                        machine.SharedFeatures.Add(new SoftwareListSharedFeature(reader.GetAttribute("name"), reader.GetAttribute("value")));
                         reader.Read();
                         break;
 
@@ -246,7 +246,7 @@ namespace SabreTools.Library.DatFiles
                 areaWidth,
                 areaEndinaness;
             long? areasize = null;
-            var features = new List<KeyValuePair<string, string>>();
+            var features = new List<SoftwareListFeature>();
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -258,7 +258,7 @@ namespace SabreTools.Library.DatFiles
                     {
                         partname = string.Empty;
                         partinterface = string.Empty;
-                        features = new List<KeyValuePair<string, string>>();
+                        features = new List<SoftwareListFeature>();
                     }
 
                     if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "dataarea" || reader.Name == "diskarea"))
@@ -278,7 +278,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "feature":
-                        features.Add(new KeyValuePair<string, string>(reader.GetAttribute("name"), reader.GetAttribute("value")));
+                        features.Add(new SoftwareListFeature(reader.GetAttribute("name"), reader.GetAttribute("value")));
                         reader.Read();
                         break;
 
@@ -373,7 +373,7 @@ namespace SabreTools.Library.DatFiles
             Machine machine,
             string partName,
             string partInterface,
-            List<KeyValuePair<string, string>> features,
+            List<SoftwareListFeature> features,
             string areaName,
             long? areaSize,
             string areaWidth,
@@ -489,7 +489,7 @@ namespace SabreTools.Library.DatFiles
             Machine machine,
             string partname,
             string partinterface,
-            List<KeyValuePair<string, string>> features,
+            List<SoftwareListFeature> features,
             string areaname,
             long? areasize,
 
@@ -765,10 +765,10 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.Infos) && datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
                 {
-                    foreach (KeyValuePair<string, string> kvp in datItem.Machine.Infos)
+                    foreach (ListXmlInfo kvp in datItem.Machine.Infos)
                     {
                         xtw.WriteStartElement("info");
-                        xtw.WriteAttributeString("name", kvp.Key);
+                        xtw.WriteAttributeString("name", kvp.Name);
                         xtw.WriteAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }
@@ -776,10 +776,10 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.SharedFeatures) && datItem.Machine.SharedFeatures != null && datItem.Machine.SharedFeatures.Count > 0)
                 {
-                    foreach (KeyValuePair<string, string> kvp in datItem.Machine.SharedFeatures)
+                    foreach (SoftwareListSharedFeature kvp in datItem.Machine.SharedFeatures)
                     {
                         xtw.WriteStartElement("sharedfeat");
-                        xtw.WriteAttributeString("name", kvp.Key);
+                        xtw.WriteAttributeString("name", kvp.Name);
                         xtw.WriteAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }
@@ -844,10 +844,10 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.Features) && datItem.Features != null && datItem.Features.Count > 0)
                 {
-                    foreach (KeyValuePair<string, string> kvp in datItem.Features)
+                    foreach (SoftwareListFeature kvp in datItem.Features)
                     {
                         xtw.WriteStartElement("feature");
-                        xtw.WriteAttributeString("name", kvp.Key);
+                        xtw.WriteAttributeString("name", kvp.Name);
                         xtw.WriteAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }

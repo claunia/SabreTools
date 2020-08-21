@@ -112,7 +112,7 @@ namespace SabreTools.Library.DatFiles
                 long size = -1;
                 ItemType itemType = ItemType.Rom;
                 ItemStatus status = ItemStatus.None;
-                List<KeyValuePair<string, string>> features = null;
+                List<SoftwareListFeature> features = null;
 
                 // Now we loop through and get values for everything
                 for (int i = 0; i < svr.HeaderValues.Count; i++)
@@ -395,12 +395,12 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "Machine.Infos":
-                            machine.Infos = new List<KeyValuePair<string, string>>();
+                            machine.Infos = new List<ListXmlInfo>();
                             var infos = value.Split(';');
                             foreach (var info in infos)
                             {
                                 var infoPair = info.Split('=');
-                                machine.Infos.Add(new KeyValuePair<string, string>(infoPair[0], infoPair[1]));
+                                machine.Infos.Add(new ListXmlInfo(infoPair[0], infoPair[1]));
                             }
 
                             break;
@@ -466,12 +466,12 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "Machine.SharedFeatures":
-                            machine.SharedFeatures = new List<KeyValuePair<string, string>>();
+                            machine.SharedFeatures = new List<SoftwareListSharedFeature>();
                             var sharedFeatures = value.Split(';');
                             foreach (var sharedFeature in sharedFeatures)
                             {
                                 var featurePair = sharedFeature.Split('=');
-                                machine.SharedFeatures.Add(new KeyValuePair<string, string>(featurePair[0], featurePair[1]));
+                                machine.SharedFeatures.Add(new SoftwareListSharedFeature(featurePair[0], featurePair[1]));
                             }
 
                             break;
@@ -517,12 +517,12 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatItem.Features":
-                            features = new List<KeyValuePair<string, string>>();
+                            features = new List<SoftwareListFeature>();
                             var splitFeatures = value.Split(';');
                             foreach (var splitFeature in splitFeatures)
                             {
                                 var featurePair = splitFeature.Split('=');
-                                features.Add(new KeyValuePair<string, string>(featurePair[0], featurePair[1]));
+                                features.Add(new SoftwareListFeature(featurePair[0], featurePair[1]));
                             }
 
                             break;

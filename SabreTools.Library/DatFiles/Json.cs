@@ -284,7 +284,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "infos":
-                        Header.Infos = new List<Tuple<string, bool?, bool?, bool?>>();
+                        Header.Infos = new List<OfflineListInfo>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream)
                         {
@@ -331,8 +331,8 @@ namespace SabreTools.Library.DatFiles
                                 jtr.Read(); // End object
                             }
                             
-                            // Add the new info tuple
-                            Header.Infos.Add(new Tuple<string, bool?, bool?, bool?>(
+                            // Add the new info object
+                            Header.Infos.Add(new OfflineListInfo(
                                 nameValue,
                                 visibleValue,
                                 inNamingOptionValue,
@@ -560,7 +560,7 @@ namespace SabreTools.Library.DatFiles
 
                         break;
                     case "infos":
-                        machine.Infos = new List<KeyValuePair<string, string>>();
+                        machine.Infos = new List<ListXmlInfo>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream)
                         {
@@ -573,7 +573,7 @@ namespace SabreTools.Library.DatFiles
                             string value = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            machine.Infos.Add(new KeyValuePair<string, string>(key, value));
+                            machine.Infos.Add(new ListXmlInfo(key, value));
                         }
 
                         break;
@@ -630,7 +630,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sharedfeat":
-                        machine.SharedFeatures = new List<KeyValuePair<string, string>>();
+                        machine.SharedFeatures = new List<SoftwareListSharedFeature>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream)
                         {
@@ -643,7 +643,7 @@ namespace SabreTools.Library.DatFiles
                             string value = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            machine.SharedFeatures.Add(new KeyValuePair<string, string>(key, value));
+                            machine.SharedFeatures.Add(new SoftwareListSharedFeature(key, value));
                         }
 
                         break;
@@ -757,7 +757,7 @@ namespace SabreTools.Library.DatFiles
                 bios = null;
             ItemStatus? itemStatus = null;
             ItemType? itemType = null;
-            List<KeyValuePair<string, string>> features = null;
+            List<SoftwareListFeature> features = null;
 
             jtr.Read();
             while (!sr.EndOfStream)
@@ -876,7 +876,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "features":
-                        features = new List<KeyValuePair<string, string>>();
+                        features = new List<SoftwareListFeature>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream)
                         {
@@ -889,7 +889,7 @@ namespace SabreTools.Library.DatFiles
                             string featureValue = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            features.Add(new KeyValuePair<string, string>(key, featureValue));
+                            features.Add(new SoftwareListFeature(key, featureValue));
                         }
 
                         break;
@@ -1396,13 +1396,13 @@ namespace SabreTools.Library.DatFiles
                     {
                         jtw.WriteStartObject();
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(info.Item1);
+                        jtw.WriteValue(info.Name);
                         jtw.WritePropertyName("visible");
-                        jtw.WriteValue(info.Item2.ToString());
+                        jtw.WriteValue(info.Visible.ToString());
                         jtw.WritePropertyName("inNamingOption");
-                        jtw.WriteValue(info.Item3.ToString());
+                        jtw.WriteValue(info.IsNamingOption.ToString());
                         jtw.WritePropertyName("default");
-                        jtw.WriteValue(info.Item4.ToString());
+                        jtw.WriteValue(info.Default.ToString());
                         jtw.WriteEndObject();
                     }
 
@@ -1632,7 +1632,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (var info in datItem.Machine.Infos)
                     {
                         jtw.WriteStartObject();
-                        jtw.WritePropertyName(info.Key);
+                        jtw.WritePropertyName(info.Name);
                         jtw.WriteValue(info.Value);
                         jtw.WriteEndObject();
                     }
@@ -1737,7 +1737,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (var feature in datItem.Machine.SharedFeatures)
                     {
                         jtw.WriteStartObject();
-                        jtw.WritePropertyName(feature.Key);
+                        jtw.WritePropertyName(feature.Name);
                         jtw.WriteValue(feature.Value);
                         jtw.WriteEndObject();
                     }
@@ -2057,7 +2057,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (var feature in datItem.Features)
                     {
                         jtw.WriteStartObject();
-                        jtw.WritePropertyName(feature.Key);
+                        jtw.WritePropertyName(feature.Name);
                         jtw.WriteValue(feature.Value);
                         jtw.WriteEndObject();
                     }

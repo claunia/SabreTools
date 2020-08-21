@@ -208,7 +208,7 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Setup the infos object
-            Header.Infos = new List<Tuple<string, bool?, bool?, bool?>>();
+            Header.Infos = new List<OfflineListInfo>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -223,8 +223,8 @@ namespace SabreTools.Library.DatFiles
                     continue;
                 }
 
-                // Add all tuples to the info list
-                Header.Infos.Add(new Tuple<string, bool?, bool?, bool?>(
+                // Add all infos to the info list
+                Header.Infos.Add(new OfflineListInfo(
                     reader.Name.ToLowerInvariant(),
                     reader.GetAttribute("visible").AsYesNo(),
                     reader.GetAttribute("inNamingOption").AsYesNo(),
@@ -771,10 +771,10 @@ namespace SabreTools.Library.DatFiles
 
                     foreach (var info in Header.Infos)
                     {
-                        xtw.WriteStartElement(info.Item1);
-                        xtw.WriteAttributeString("visible", info.Item2.ToString());
-                        xtw.WriteAttributeString("inNamingOption", info.Item3.ToString());
-                        xtw.WriteAttributeString("default", info.Item4.ToString());
+                        xtw.WriteStartElement(info.Name);
+                        xtw.WriteAttributeString("visible", info.Visible.ToString());
+                        xtw.WriteAttributeString("inNamingOption", info.IsNamingOption.ToString());
+                        xtw.WriteAttributeString("default", info.Default.ToString());
                         xtw.WriteEndElement();
                     }
 

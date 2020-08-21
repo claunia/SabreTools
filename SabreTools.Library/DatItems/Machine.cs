@@ -167,7 +167,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
         [JsonProperty("infos")]
-        public List<KeyValuePair<string, string>> Infos { get; set; } = null;
+        public List<ListXmlInfo> Infos { get; set; } = null;
 
         #endregion
 
@@ -259,7 +259,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
         [JsonProperty("sharedfeat")]
-        public List<KeyValuePair<string, string>> SharedFeatures { get; set; } = null;
+        public List<SoftwareListSharedFeature> SharedFeatures { get; set; } = null;
 
         #endregion
 
@@ -358,7 +358,7 @@ namespace SabreTools.Library.DatItems
                     fieldValue = string.Join(";", SlotOptions ?? new List<string>());
                     break;
                 case Field.Infos:
-                    fieldValue = string.Join(";", (Infos ?? new List<KeyValuePair<string, string>>()).Select(i => $"{i.Key}={i.Value}"));
+                    fieldValue = string.Join(";", (Infos ?? new List<ListXmlInfo>()).Select(i => $"{i.Name}={i.Value}"));
                     break;
 
                 #endregion
@@ -412,7 +412,7 @@ namespace SabreTools.Library.DatItems
                     fieldValue = Supported?.ToString();
                     break;
                 case Field.SharedFeatures:
-                    fieldValue = string.Join(";", (SharedFeatures ?? new List<KeyValuePair<string, string>>()).Select(i => $"{i.Key}={i.Value}"));
+                    fieldValue = string.Join(";", (SharedFeatures ?? new List<SoftwareListSharedFeature>()).Select(i => $"{i.Name}={i.Value}"));
                     break;
 
                 #endregion
@@ -525,13 +525,13 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Infos))
             {
                 if (Infos == null)
-                    Infos = new List<KeyValuePair<string, string>>();
+                    Infos = new List<ListXmlInfo>();
 
                 string[] pairs = mappings[Field.Infos].Split(';');
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
-                    Infos.Add(new KeyValuePair<string, string>(split[0], split[1]));
+                    Infos.Add(new ListXmlInfo(split[0], split[1]));
                 }
             }
 
@@ -586,13 +586,13 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.SharedFeatures))
             {
                 if (SharedFeatures == null)
-                    SharedFeatures = new List<KeyValuePair<string, string>>();
+                    SharedFeatures = new List<SoftwareListSharedFeature>();
 
                 string[] pairs = mappings[Field.SharedFeatures].Split(';');
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
-                    SharedFeatures.Add(new KeyValuePair<string, string>(split[0], split[1]));
+                    SharedFeatures.Add(new SoftwareListSharedFeature(split[0], split[1]));
                 }
             }
 

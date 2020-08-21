@@ -750,10 +750,10 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.Infos) && datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
                 {
-                    foreach (KeyValuePair<string, string> kvp in datItem.Machine.Infos)
+                    foreach (ListXmlInfo kvp in datItem.Machine.Infos)
                     {
                         xtw.WriteStartElement("info");
-                        xtw.WriteAttributeString("name", kvp.Key);
+                        xtw.WriteAttributeString("name", kvp.Name);
                         xtw.WriteAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }

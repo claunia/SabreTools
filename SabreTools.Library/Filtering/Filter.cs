@@ -133,7 +133,7 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<string> SlotOptions { get; private set; } = new FilterItem<string>();
 
-        // TODO: Machine.Infos - List<KeyValuePair<string, string>>
+        // TODO: Machine.Infos - List<ListXmlInfo>
 
         /// <summary>
         /// Include or exclude machine types
@@ -212,7 +212,7 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<bool?> Supported { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
-        // TODO: Machine.SharedFeatures - List<KeyValuePair<string, string>>
+        // TODO: Machine.SharedFeatures - List<SoftwareListSharedFeature>
 
         #endregion
 
@@ -260,7 +260,7 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<string> PartInterface { get; private set; } = new FilterItem<string>();
 
-        // TODO: DatItem.Features - List<KeyValuePair<string, string>>
+        // TODO: DatItem.Features - List<SoftwareListFeature>
 
         /// <summary>
         /// Include or exclude area names

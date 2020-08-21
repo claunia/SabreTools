@@ -279,7 +279,7 @@ namespace SabreTools.Library.DatFiles
         /// OfflineList info list
         /// </summary>
         [JsonProperty("infos")]
-        public List<Tuple<string, bool?, bool?, bool?>> Infos { get; set; }
+        public List<OfflineListInfo> Infos { get; set; }
 
         /// <summary>
         /// OfflineList can-open extensions

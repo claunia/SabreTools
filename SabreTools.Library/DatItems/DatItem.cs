@@ -87,7 +87,7 @@ namespace SabreTools.Library.DatItems
         /// Features provided to/by the item
         /// </summary>
         [JsonProperty("features")]
-        public List<KeyValuePair<string, string>> Features { get; set; }
+        public List<SoftwareListFeature> Features { get; set; }
 
         /// <summary>
         /// Original hardware part name within an item
@@ -296,7 +296,7 @@ namespace SabreTools.Library.DatItems
                     fieldValue = PartInterface;
                     break;
                 case Field.Features:
-                    fieldValue = string.Join(";", (Features ?? new List<KeyValuePair<string, string>>()).Select(f => $"{f.Key}={f.Value}"));
+                    fieldValue = string.Join(";", (Features ?? new List<SoftwareListFeature>()).Select(f => $"{f.Name}={f.Value}"));
                     break;
                 case Field.AreaName:
                     fieldValue = AreaName;
@@ -366,13 +366,13 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Features))
             {
                 if (Features == null)
-                    Features = new List<KeyValuePair<string, string>>();
+                    Features = new List<SoftwareListFeature>();
 
                 string[] pairs = mappings[Field.Features].Split(';');
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
-                    Features.Add(new KeyValuePair<string, string>(split[0], split[1]));
+                    Features.Add(new SoftwareListFeature(split[0], split[1]));
                 }
             }
 
