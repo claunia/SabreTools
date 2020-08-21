@@ -147,6 +147,7 @@ namespace SabreTools.Library.DatFiles
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
                 Infos = new List<ListXmlInfo>(),
                 SharedFeatures = new List<SoftwareListSharedFeature>(),
+                DipSwitches = new List<SoftwareListDipSwitch>(),
 
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
             };
@@ -247,6 +248,7 @@ namespace SabreTools.Library.DatFiles
                 areaEndinaness;
             long? areasize = null;
             var features = new List<SoftwareListFeature>();
+            var dipswitches = new List<SoftwareListDipSwitch>();
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -331,16 +333,15 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitch":
-                        // TODO: Read dipswitches
-                        // string dipswitch_name = reader.GetAttribute("name");
-                        // string dipswitch_tag = reader.GetAttribute("tag");
-                        // string dipswitch_mask = reader.GetAttribute("mask");
+                        var dip = new SoftwareListDipSwitch(
+                            reader.GetAttribute("name"),
+                            reader.GetAttribute("tag"),
+                            reader.GetAttribute("mask"));
+                        
+                        dip.Values = ReadDipSwitch(reader.ReadSubtree());
+                        dipswitches.Add(dip);
 
-                        // For every <dipvalue> element...
-                        // string dipvalue_name = reader.GetAttribute("name");
-                        // string dipvalue_value = reader.GetAttribute("value");
-                        // bool? dipvalue_default = Utilities.GetYesNo(reader.GetAttribute("default")); // (yes|no) "no"
-
+                        // Skip the dipswitch now that we've processed it
                         reader.Skip();
                         break;
 
@@ -564,6 +565,50 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Read DipSwitch DipValues information
+        /// </summary>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        private List<SoftwareListDipValue> ReadDipSwitch(XmlReader reader)
+        {
+            // If we have an empty trurip, skip it
+            if (reader == null)
+                return null;
+
+            // Get list ready
+            List<SoftwareListDipValue> dipValues = new List<SoftwareListDipValue>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipswitch
+                switch (reader.Name)
+                {
+                    case "dipvalue":
+                        dipValues.Add(new SoftwareListDipValue(
+                            reader.GetAttribute("name"),
+                            reader.GetAttribute("value"),
+                            reader.GetAttribute("default").AsYesNo()));
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+
+            return dipValues;
+        }
+
+        /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
@@ -781,6 +826,29 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("sharedfeat");
                         xtw.WriteAttributeString("name", kvp.Name);
                         xtw.WriteAttributeString("value", kvp.Value);
+                        xtw.WriteEndElement();
+                    }
+                }
+
+                if (!Header.ExcludeFields.Contains(Field.DipSwitches) && datItem.Machine.DipSwitches != null && datItem.Machine.DipSwitches.Count > 0)
+                {
+                    foreach (SoftwareListDipSwitch dip in datItem.Machine.DipSwitches)
+                    {
+                        xtw.WriteStartElement("dipswitch");
+                        xtw.WriteAttributeString("name", dip.Name);
+                        xtw.WriteAttributeString("tag", dip.Tag);
+                        xtw.WriteAttributeString("mask", dip.Mask);
+
+                        foreach (SoftwareListDipValue dipval in dip.Values)
+                        {
+                            xtw.WriteStartElement("dipvalue");
+                            xtw.WriteAttributeString("name", dipval.Name);
+                            xtw.WriteAttributeString("value", dipval.Value);
+                            xtw.WriteAttributeString("default", dipval.Default == true ? "yes" : "no");
+                            xtw.WriteEndElement();
+                        }
+
+                        // End dipswitch
                         xtw.WriteEndElement();
                     }
                 }

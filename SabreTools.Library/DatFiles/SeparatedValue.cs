@@ -476,6 +476,11 @@ namespace SabreTools.Library.DatFiles
 
                             break;
 
+                        case "Machine.DipSwitches":
+                            machine.DipSwitches = new List<SoftwareListDipSwitch>();
+                            // TODO: There is no way this would work... Just use empty for now
+                            break;
+
                         #endregion
 
                         #endregion // Machine
@@ -1248,6 +1253,13 @@ namespace SabreTools.Library.DatFiles
                 case "shared features":
                 case "shared-features":
                     return "Machine.SharedFeatures";
+                case "dipswitch":
+                case "dip switch":
+                case "dip-switch":
+                case "dipswitches":
+                case "dip switches":
+                case "dip-switches":
+                    return "Machine.DipSwitches";
 
                 #endregion
 

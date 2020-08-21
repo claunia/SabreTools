@@ -307,6 +307,13 @@ namespace SabreTools.Library.Tools
                 case "shared features":
                 case "shared-features":
                     return Field.SharedFeatures;
+                case "dipswitch":
+                case "dip switch":
+                case "dip-switch":
+                case "dipswitches":
+                case "dip switches":
+                case "dip-switches":
+                    return Field.DipSwitches;
 
                 #endregion
 

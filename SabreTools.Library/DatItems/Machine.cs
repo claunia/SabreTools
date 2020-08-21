@@ -257,9 +257,15 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// List of shared feature items
         /// </summary>
-        /// <remarks>Also in SoftwareList</remarks>
         [JsonProperty("sharedfeat")]
         public List<SoftwareListSharedFeature> SharedFeatures { get; set; } = null;
+
+        /// <summary>
+        /// List of shared feature items
+        /// </summary>
+        /// <remarks>Also in SoftwareList</remarks>
+        [JsonProperty("dipswitches")]
+        public List<SoftwareListDipSwitch> DipSwitches { get; set; } = null;
 
         #endregion
 
@@ -413,6 +419,10 @@ namespace SabreTools.Library.DatItems
                     break;
                 case Field.SharedFeatures:
                     fieldValue = string.Join(";", (SharedFeatures ?? new List<SoftwareListSharedFeature>()).Select(i => $"{i.Name}={i.Value}"));
+                    break;
+                case Field.DipSwitches:
+                    // TODO: There is no possible way this will work... use placeholder for now
+                    fieldValue = "dipswitches";
                     break;
 
                 #endregion
@@ -596,6 +606,14 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
+            if (mappings.Keys.Contains(Field.DipSwitches))
+            {
+                if (DipSwitches == null)
+                    DipSwitches = new List<SoftwareListDipSwitch>();
+
+                // TODO: There's no way this will work... just create the new list for now
+            }
+
             #endregion
         }
 
@@ -696,6 +714,7 @@ namespace SabreTools.Library.DatItems
 
                 Supported = this.Supported,
                 SharedFeatures = this.SharedFeatures,
+                DipSwitches = this.DipSwitches,
 
                 #endregion
             };
@@ -1104,6 +1123,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.SharedFeatures))
                 SharedFeatures = null;
 
+            if (fields.Contains(Field.DipSwitches))
+                DipSwitches = null;
+
             #endregion
         }
 
@@ -1251,6 +1273,9 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.SharedFeatures))
                 SharedFeatures = machine.SharedFeatures;
+
+            if (fields.Contains(Field.DipSwitches))
+                DipSwitches = machine.DipSwitches;
 
             #endregion
         }

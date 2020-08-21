@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System.Collections.Generic;
+
+/// <summary>
 /// This holds all of the auxiliary types needed for proper parsing
 /// </summary>
 namespace SabreTools.Library.DatItems
@@ -25,6 +27,42 @@ namespace SabreTools.Library.DatItems
     #endregion
 
     #region SoftwareList
+
+    /// <summary>
+    /// Represents one SoftwareList dipswitch
+    /// </summary>
+    public class SoftwareListDipSwitch
+    {
+        public string Name { get; set; }
+        public string Tag { get; set; }
+        public string Mask { get; set; }
+        public List<SoftwareListDipValue> Values { get; set; }
+
+        public SoftwareListDipSwitch(string name, string tag, string mask)
+        {
+            Name = name;
+            Tag = tag;
+            Mask = mask;
+            Values = new List<SoftwareListDipValue>();
+        }
+    }
+
+    /// <summary>
+    /// Represents one SoftwareList dipswitch
+    /// </summary>
+    public class SoftwareListDipValue
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public bool? Default { get; set; }
+
+        public SoftwareListDipValue(string name, string value, bool? def)
+        {
+            Name = name;
+            Value = value;
+            Default = def;
+        }
+    }
 
     /// <summary>
     /// Represents one SoftwareList shared feature object

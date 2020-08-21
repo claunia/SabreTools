@@ -648,7 +648,50 @@ namespace SabreTools.Library.DatFiles
 
                         break;
 
-                    #endregion
+                    case "dipswitches":
+                        machine.DipSwitches = new List<SoftwareListDipSwitch>();
+                        jtr.Read(); // Start Array
+                        while (!sr.EndOfStream)
+                        {
+                            jtr.Read(); // Start object (or end array)
+                            if (jtr.TokenType == JsonToken.EndArray)
+                                break;
+
+                            jtr.Read(); // Name Key
+                            string name = jtr.ReadAsString();
+                            jtr.Read(); // Tag Key
+                            string tag = jtr.ReadAsString();
+                            jtr.Read(); // Mask Key
+                            string mask = jtr.ReadAsString();
+
+                            var dip = new SoftwareListDipSwitch(name, tag, mask);
+
+                            jtr.Read(); // Start dipvalues object
+                            while (!sr.EndOfStream)
+                            {
+                                jtr.Read(); // Start object (or end array)
+                                if (jtr.TokenType == JsonToken.EndArray)
+                                    break;
+
+                                jtr.Read(); // Name Key
+                                string valname = jtr.ReadAsString();
+                                jtr.Read(); // Value Key
+                                string value = jtr.ReadAsString();
+                                jtr.Read(); // Default Key
+                                bool? def = jtr.ReadAsString().AsYesNo();
+                                jtr.Read(); // End object
+
+                                dip.Values.Add(new SoftwareListDipValue(valname, value, def));
+                            }
+
+                            jtr.Read(); // End object
+
+                            machine.DipSwitches.Add(dip);
+                        }
+
+                        break;
+
+                        #endregion
 
                     default:
                         break;
@@ -1739,6 +1782,41 @@ namespace SabreTools.Library.DatFiles
                         jtw.WriteStartObject();
                         jtw.WritePropertyName(feature.Name);
                         jtw.WriteValue(feature.Value);
+                        jtw.WriteEndObject();
+                    }
+
+                    jtw.WriteEndArray();
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DipSwitches, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("dipswitches");
+                    jtw.WriteStartArray();
+                    foreach (var dip in datItem.Machine.DipSwitches)
+                    {
+                        jtw.WriteStartObject();
+                        jtw.WritePropertyName("name");
+                        jtw.WriteValue(dip.Name);
+                        jtw.WritePropertyName("tag");
+                        jtw.WriteValue(dip.Tag);
+                        jtw.WritePropertyName("mask");
+                        jtw.WriteValue(dip.Mask);
+                        jtw.WriteStartArray();
+
+                        foreach (SoftwareListDipValue dipval in dip.Values)
+                        {
+                            jtw.WriteStartObject();
+                            jtw.WritePropertyName("name");
+                            jtw.WriteValue(dipval.Name);
+                            jtw.WritePropertyName("value");
+                            jtw.WriteValue(dipval.Value);
+                            jtw.WritePropertyName("default");
+                            jtw.WriteValue(dipval.Default == true ? "yes" : "no");
+                            jtw.WriteEndObject();
+                        }
+
+                        jtw.WriteEndArray();
+
+                        // End dipswitch
                         jtw.WriteEndObject();
                     }
 

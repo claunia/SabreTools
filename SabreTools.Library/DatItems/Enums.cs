@@ -91,6 +91,7 @@ namespace SabreTools.Library.DatItems
 
         Supported,
         SharedFeatures,
+        DipSwitches,
 
         #endregion
 
