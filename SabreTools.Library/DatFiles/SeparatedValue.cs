@@ -82,6 +82,8 @@ namespace SabreTools.Library.DatFiles
                     optional = null,
                     inverted = null;
                 string name = null,
+                    altName = null,
+                    altTitle = null,
                     partName = null,
                     partInterface = null,
                     areaName = null,
@@ -425,13 +427,31 @@ namespace SabreTools.Library.DatFiles
 
                         #region DatItem
 
-                        case "DatItem.Type":
-                            itemType = value.AsItemType() ?? ItemType.Rom;
-                            break;
+                        #region Common
 
                         case "DatItem.Name":
                             name = value;
                             break;
+
+                        case "DatItem.Type":
+                            itemType = value.AsItemType() ?? ItemType.Rom;
+                            break;
+
+                        #endregion
+
+                        #region AttractMode
+
+                        case "DatItem.AltName":
+                            altName = value;
+                            break;
+
+                        case "DatItem.AltTitle":
+                            altTitle = value;
+                            break;
+
+                        #endregion
+
+                        #region SoftwareList
 
                         case "DatItem.PartName":
                             partName = value;
@@ -463,6 +483,8 @@ namespace SabreTools.Library.DatFiles
                                 areaSize = null;
 
                             break;
+
+                        #endregion
 
                         case "DatItem.Default":
                             def = value.AsYesNo();
@@ -552,7 +574,7 @@ namespace SabreTools.Library.DatFiles
                             inverted = value.AsYesNo();
                             break;
 
-                        #endregion
+                        #endregion // DatItem
 
                         case "INVALID":
                         default:
@@ -568,6 +590,8 @@ namespace SabreTools.Library.DatFiles
                         Archive archive = new Archive()
                         {
                             Name = name,
+                            AltName = altName,
+                            AltTitle = altTitle,
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -589,6 +613,8 @@ namespace SabreTools.Library.DatFiles
                         BiosSet biosset = new BiosSet()
                         {
                             Name = name,
+                            AltName = altName,
+                            AltTitle = altTitle,
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -613,6 +639,8 @@ namespace SabreTools.Library.DatFiles
                         Disk disk = new Disk()
                         {
                             Name = name,
+                            AltName = altName,
+                            AltTitle = altTitle,
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -649,6 +677,8 @@ namespace SabreTools.Library.DatFiles
                         Release release = new Release()
                         {
                             Name = name,
+                            AltName = altName,
+                            AltTitle = altTitle,
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -675,6 +705,8 @@ namespace SabreTools.Library.DatFiles
                         Rom rom = new Rom()
                         {
                             Name = name,
+                            AltName = altName,
+                            AltTitle = altTitle,
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -715,6 +747,8 @@ namespace SabreTools.Library.DatFiles
                         Sample sample = new Sample()
                         {
                             Name = name,
+                            AltName = altName,
+                            AltTitle = altTitle,
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -1066,6 +1100,8 @@ namespace SabreTools.Library.DatFiles
 
                 #region DatItem
 
+                #region Common
+
                 case "itemtype":
                 case "item type":
                 case "type":
@@ -1082,6 +1118,30 @@ namespace SabreTools.Library.DatFiles
                 case "romname":
                 case "rom name":
                     return "DatItem.Name";
+
+                #endregion
+
+                #region AttractMode
+
+                case "altname":
+                case "alt name":
+                case "alt-name":
+                case "altromname":
+                case "alt romname":
+                case "alt-romname":
+                    return "DatItem.AltName";
+
+                case "alttitle":
+                case "alt title":
+                case "alt-title":
+                case "altromtitle":
+                case "alt romtitle":
+                case "alt-romtitle":
+                    return "DatItem.AltTitle";
+
+                #endregion
+
+                #region SoftwareList
 
                 case "partname":
                 case "part name":
@@ -1101,6 +1161,8 @@ namespace SabreTools.Library.DatFiles
                 case "areasize":
                 case "area size":
                     return "DatItem.AreaSize";
+
+                #endregion
 
                 case "default":
                     return "DatItem.Default";
@@ -1190,7 +1252,7 @@ namespace SabreTools.Library.DatFiles
                 case "inverted":
                     return "DatItem.Inverted";
 
-                #endregion
+                #endregion // DatItem
 
                 default:
                     return "INVALID";

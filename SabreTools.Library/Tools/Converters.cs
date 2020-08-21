@@ -267,12 +267,62 @@ namespace SabreTools.Library.Tools
 
                 #region DatItem
 
+                #region Common
+
+                case "itemname":
+                case "item-name":
+                case "name":
+                    return Field.Name;
+                case "itemtype":
+                case "item-type":
+                case "type":
+                    return Field.ItemType;
+
+                #endregion
+
+                #region AttractMode
+
+                case "altname":
+                case "alt name":
+                case "alt-name":
+                case "altromname":
+                case "alt romname":
+                case "alt-romname":
+                    return Field.AltName;
+
+                case "alttitle":
+                case "alt title":
+                case "alt-title":
+                case "altromtitle":
+                case "alt romtitle":
+                case "alt-romtitle":
+                    return Field.AltTitle;
+
+                #endregion
+
+                #region SoftwareList
+
+                case "partname":
+                case "part name":
+                case "part-name":
+                    return Field.PartName;
+                case "partinterface":
+                case "part interface":
+                case "part-interface":
+                    return Field.PartInterface;
+                case "features":
+                    return Field.Features;
                 case "areaname":
+                case "area name":
                 case "area-name":
                     return Field.AreaName;
                 case "areasize":
+                case "area size":
                 case "area-size":
                     return Field.AreaSize;
+
+                #endregion
+
                 case "bios":
                     return Field.Bios;
                 case "biosdescription":
@@ -293,24 +343,14 @@ namespace SabreTools.Library.Tools
                 case "less":
                 case "size":
                     return Field.Size;
-                case "features":
-                    return Field.Features;
                 case "index":
                     return Field.Index;
                 case "inverted":
                     return Field.Inverted;
-                case "itemname":
-                case "item-name":
-                case "name":
-                    return Field.Name;
                 case "itemtatus":
                 case "item-status":
                 case "status":
                     return Field.Status;
-                case "itemtype":
-                case "item-type":
-                case "type":
-                    return Field.ItemType;
                 case "language":
                     return Field.Language;
                 case "md5":
@@ -323,12 +363,6 @@ namespace SabreTools.Library.Tools
                     return Field.Offset;
                 case "optional":
                     return Field.Optional;
-                case "partinterface":
-                case "part-interface":
-                    return Field.PartInterface;
-                case "partname":
-                case "part-name":
-                    return Field.PartName;
                 case "region":
                     return Field.Region;
 #if NET_FRAMEWORK

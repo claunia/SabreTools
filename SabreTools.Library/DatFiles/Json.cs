@@ -665,6 +665,8 @@ namespace SabreTools.Library.DatFiles
             long size = -1;
             long? areaSize = null;
             string name = null,
+                altName = null,
+                altTitle = null,
                 partName = null,
                 partInterface = null,
                 areaName = null,
@@ -702,6 +704,8 @@ namespace SabreTools.Library.DatFiles
                     datItem.Source = new Source { Index = indexId, Name = filename };
 
                     datItem.Name = name;
+                    datItem.AltName = altName;
+                    datItem.AltTitle = altTitle;
                     datItem.PartName = partName;
                     datItem.PartInterface = partInterface;
                     datItem.Features = features;
@@ -779,6 +783,14 @@ namespace SabreTools.Library.DatFiles
 
                     case "name":
                         name = jtr.ReadAsString();
+                        break;
+
+                    case "alt_romname":
+                        altName = jtr.ReadAsString();
+                        break;
+
+                    case "alt_title":
+                        altTitle = jtr.ReadAsString();
                         break;
 
                     case "partname":
@@ -1841,6 +1853,16 @@ namespace SabreTools.Library.DatFiles
                         break;
                 }
 
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AltName, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("alt_romname");
+                    jtw.WriteValue(datItem.AltName);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AltTitle, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("alt_title");
+                    jtw.WriteValue(datItem.AltTitle);
+                }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.PartName, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("partname");

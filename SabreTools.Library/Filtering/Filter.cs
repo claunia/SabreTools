@@ -169,17 +169,35 @@ namespace SabreTools.Library.Filtering
 
         #region DatItem Filters
 
-        /// <summary>
-        /// Include or exclude item types
-        /// </summary>
-        public FilterItem<string> ItemTypes { get; private set; } = new FilterItem<string>();
+        #region Common
 
         /// <summary>
         /// Include or exclude item names
         /// </summary>
         public FilterItem<string> ItemName { get; private set; } = new FilterItem<string>();
 
-        // TODO: DatItem.Features - List<KeyValuePair<string, string>>
+        /// <summary>
+        /// Include or exclude item types
+        /// </summary>
+        public FilterItem<string> ItemTypes { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
+        #region AttractMode
+
+        /// <summary>
+        /// Include or exclude alt names
+        /// </summary>
+        public FilterItem<string> AltName { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude alt titles
+        /// </summary>
+        public FilterItem<string> AltTitle { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
+        #region SoftwareList
 
         /// <summary>
         /// Include or exclude part names
@@ -191,6 +209,8 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<string> PartInterface { get; private set; } = new FilterItem<string>();
 
+        // TODO: DatItem.Features - List<KeyValuePair<string, string>>
+
         /// <summary>
         /// Include or exclude area names
         /// </summary>
@@ -201,6 +221,8 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         /// <remarks>Positive means "Greater than or equal", Negative means "Less than or equal", Neutral means "Equal"</remarks>
         public FilterItem<long?> AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+
+        #endregion
 
         /// <summary>
         /// Include or exclude items with the "Default" tag
@@ -310,7 +332,7 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<bool?> Inverted { get; private set; } = new FilterItem<bool?>();
 
-        #endregion
+        #endregion // DatItem Filters
 
         #region Manipulation Flags
 
@@ -617,6 +639,15 @@ namespace SabreTools.Library.Filtering
 
                 #region DatItem Filters
 
+                #region Common
+
+                case Field.Name:
+                    if (negate)
+                        ItemName.NegativeSet.Add(value);
+                    else
+                        ItemName.PositiveSet.Add(value);
+                    break;
+
                 case Field.ItemType:
                     if (value.AsItemType() == null)
                         return;
@@ -627,12 +658,27 @@ namespace SabreTools.Library.Filtering
                         ItemTypes.PositiveSet.Add(value);
                     break;
 
-                case Field.Name:
+                #endregion
+
+                #region AttractMode
+
+                case Field.AltName:
                     if (negate)
-                        ItemName.NegativeSet.Add(value);
+                        AltName.NegativeSet.Add(value);
                     else
-                        ItemName.PositiveSet.Add(value);
+                        AltName.PositiveSet.Add(value);
                     break;
+
+                case Field.AltTitle:
+                    if (negate)
+                        AltTitle.NegativeSet.Add(value);
+                    else
+                        AltTitle.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #region SoftwareList
 
                 case Field.PartName:
                     if (negate)
@@ -706,6 +752,8 @@ namespace SabreTools.Library.Filtering
                     }
 
                     break;
+
+                #endregion
 
                 case Field.Default:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
@@ -901,7 +949,7 @@ namespace SabreTools.Library.Filtering
                         Inverted.Neutral = true;
                     break;
 
-                    #endregion
+                    #endregion // DatItem Filters
             }
         }
 

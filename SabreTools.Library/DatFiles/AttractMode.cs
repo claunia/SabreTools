@@ -99,6 +99,9 @@ namespace SabreTools.Library.DatFiles
                         Buttons = gameinfo[16],
                     },
 
+                    AltName = gameinfo[13],
+                    AltTitle = gameinfo[14],
+
                     Source = new Source
                     {
                         Index = indexId,
@@ -277,8 +280,8 @@ namespace SabreTools.Library.DatFiles
                     datItem.GetField(Field.Status, Header.ExcludeFields),
                     datItem.GetField(Field.DisplayCount, Header.ExcludeFields),
                     datItem.GetField(Field.DisplayType, Header.ExcludeFields),
-                    string.Empty, // datItem.GetField(Field.AltRomname, Header.ExcludeFields),
-                    string.Empty, // datItem.GetField(Field.AltTitle, Header.ExcludeFields),
+                    datItem.GetField(Field.AltName, Header.ExcludeFields),
+                    datItem.GetField(Field.AltTitle, Header.ExcludeFields),
                     datItem.GetField(Field.Comment, Header.ExcludeFields),
                     datItem.GetField(Field.Buttons, Header.ExcludeFields),
                 };

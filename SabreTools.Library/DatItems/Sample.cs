@@ -28,6 +28,9 @@
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
+                AltName = this.AltName,
+                AltTitle = this.AltTitle,
+
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,

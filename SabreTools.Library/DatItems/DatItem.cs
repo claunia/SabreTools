@@ -21,7 +21,7 @@ namespace SabreTools.Library.DatItems
     {
         #region Fields
 
-        #region Standard item information
+        #region Common Fields
 
         /// <summary>
         /// Name of the item
@@ -43,13 +43,29 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region Machine information
+        #region Machine Fields
 
         /// <summary>
         /// Machine values
         /// </summary>
         [JsonIgnore]
         public Machine Machine { get; set; } = new Machine();
+
+        #endregion
+
+        #region AttractMode Fields
+
+        /// <summary>
+        /// Alternate name for the item
+        /// </summary>
+        [JsonProperty("alt_romname")]
+        public string AltName { get; set; }
+
+        /// <summary>
+        /// Alternate title for the item
+        /// </summary>
+        [JsonProperty("alt_title")]
+        public string AltTitle { get; set; }
 
         #endregion
 
@@ -110,28 +126,25 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public static readonly List<Field> DatItemFields = new List<Field>()
         {
+            // Common
             Field.Name,
+
+            // AttractMode
+            Field.AltName,
+            Field.AltTitle,
+
+            //SoftwareList
             Field.PartName,
             Field.PartInterface,
             Field.Features,
             Field.AreaName,
             Field.AreaSize,
+
+            // BiosSet
             Field.BiosDescription,
             Field.Default,
-            Field.Language,
-            Field.Date,
-            Field.Bios,
-            Field.Size,
-            Field.Offset,
-            Field.Merge,
-            Field.Region,
-            Field.Index,
-            Field.Writable,
-            Field.Optional,
-            Field.Status,
-            Field.Inverted,
 
-            Field.CRC,
+            // Disk
             Field.MD5,
 #if NET_FRAMEWORK
             Field.RIPEMD160,
@@ -140,6 +153,23 @@ namespace SabreTools.Library.DatItems
             Field.SHA256,
             Field.SHA384,
             Field.SHA512,
+            Field.Merge,
+            Field.Region,
+            Field.Index,
+            Field.Writable,
+            Field.Optional,
+            Field.Status,
+
+            // Release
+            Field.Language,
+            Field.Date,
+
+            // Rom
+            Field.Bios,
+            Field.Size,
+            Field.CRC,
+            Field.Offset,
+            Field.Inverted,
         };
 
         /// <summary>
@@ -209,6 +239,12 @@ namespace SabreTools.Library.DatItems
             {
                 case Field.Name:
                     fieldValue = Name;
+                    break;
+                case Field.AltName:
+                    fieldValue = AltName;
+                    break;
+                case Field.AltTitle:
+                    fieldValue = AltTitle;
                     break;
                 case Field.PartName:
                     fieldValue = PartName;
@@ -425,17 +461,39 @@ namespace SabreTools.Library.DatItems
             if (!Machine.PassesFilter(filter))
                 return false;
 
-            // Filter on item type
-            if (filter.ItemTypes.MatchesPositiveSet(ItemType.ToString()) == false)
-                return false;
-            if (filter.ItemTypes.MatchesNegativeSet(ItemType.ToString()) == true)
-                return false;
+            #region Common
 
             // Filter on item name
             if (filter.ItemName.MatchesPositiveSet(Name) == false)
                 return false;
             if (filter.ItemName.MatchesNegativeSet(Name) == true)
                 return false;
+
+            // Filter on item type
+            if (filter.ItemTypes.MatchesPositiveSet(ItemType.ToString()) == false)
+                return false;
+            if (filter.ItemTypes.MatchesNegativeSet(ItemType.ToString()) == true)
+                return false;
+
+            #endregion
+
+            #region AttractMode
+
+            // Filter on alt name
+            if (filter.AltName.MatchesPositiveSet(AltName) == false)
+                return false;
+            if (filter.AltName.MatchesNegativeSet(AltName) == true)
+                return false;
+
+            // Filter on alt title
+            if (filter.AltTitle.MatchesPositiveSet(AltTitle) == false)
+                return false;
+            if (filter.AltTitle.MatchesNegativeSet(AltTitle) == true)
+                return false;
+
+            #endregion
+
+            #region SoftwareList
 
             // Filter on part name
             if (filter.PartName.MatchesPositiveSet(PartName) == false)
@@ -463,6 +521,8 @@ namespace SabreTools.Library.DatItems
             else if (filter.AreaSize.MatchesNegative(null, AreaSize) == false)
                 return false;
 
+            #endregion
+
             return true;
         }
 
@@ -475,8 +535,24 @@ namespace SabreTools.Library.DatItems
             // Remove machine fields
             Machine.RemoveFields(fields);
 
+            #region Common
+
             if (fields.Contains(Field.Name))
                 Name = null;
+
+            #endregion
+
+            #region AttractMode
+
+            if (fields.Contains(Field.AltName))
+                AltName = null;
+
+            if (fields.Contains(Field.AltTitle))
+                AltTitle = null;
+
+            #endregion
+
+            #region SoftwareList
 
             if (fields.Contains(Field.PartName))
                 PartName = null;
@@ -492,6 +568,8 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaSize))
                 AreaSize = null;
+
+            #endregion
         }
 
         #endregion
@@ -574,8 +652,24 @@ namespace SabreTools.Library.DatItems
         /// <param name="fields">List of Fields representing what should be updated</param>
         public virtual void ReplaceFields(DatItem item, List<Field> fields)
         {
+            #region Common
+
             if (fields.Contains(Field.Name))
                 Name = item.Name;
+
+            #endregion
+
+            #region AttractMode
+
+            if (fields.Contains(Field.AltName))
+                AltName = item.AltName;
+
+            if (fields.Contains(Field.AltTitle))
+                AltTitle = item.AltTitle;
+
+            #endregion
+
+            #region SoftwareList
 
             if (fields.Contains(Field.PartName))
                 PartName = item.PartName;
@@ -591,6 +685,8 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaSize))
                 AreaSize = item.AreaSize;
+
+            #endregion
         }
 
         #endregion

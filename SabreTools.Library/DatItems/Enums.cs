@@ -20,6 +20,8 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// List of valid field types within a DatItem/Machine
     /// </summary>
+    /// TODO: Should this be split into MachineField and DatItemField?
+    /// TODO: Should there also be a DatFileField?
     public enum Field : int
     {
         NULL = 0,
@@ -67,8 +69,14 @@ namespace SabreTools.Library.DatItems
         #region DatItem
 
         // Common DatItem
-        ItemType,
         Name,
+        ItemType,
+
+        // AttractMode DatItem
+        AltName,
+        AltTitle,
+
+        // SoftwareList DatItem
         PartName,
         PartInterface,
         Features,
