@@ -87,6 +87,8 @@ namespace SabreTools.Library.DatFiles
                     partName = null,
                     partInterface = null,
                     areaName = null,
+                    areaWidth = null,
+                    areaEndianness = null,
                     biosDescription = null,
                     crc = null,
                     md5 = null,
@@ -535,6 +537,14 @@ namespace SabreTools.Library.DatFiles
 
                             break;
 
+                        case "DatItem.AreaWidth":
+                            areaWidth = value;
+                            break;
+
+                        case "DatItem.AreaEndianness":
+                            areaEndianness = value;
+                            break;
+
                         #endregion
 
                         case "DatItem.Default":
@@ -641,13 +651,17 @@ namespace SabreTools.Library.DatFiles
                         Archive archive = new Archive()
                         {
                             Name = name,
+
                             AltName = altName,
                             AltTitle = altTitle,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             Source = new Source
                             {
@@ -664,13 +678,17 @@ namespace SabreTools.Library.DatFiles
                         BiosSet biosset = new BiosSet()
                         {
                             Name = name,
+
                             AltName = altName,
                             AltTitle = altTitle,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             Description = biosDescription,
                             Default = def,
@@ -690,13 +708,17 @@ namespace SabreTools.Library.DatFiles
                         Disk disk = new Disk()
                         {
                             Name = name,
+
                             AltName = altName,
                             AltTitle = altTitle,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             MD5 = md5,
 #if NET_FRAMEWORK
@@ -728,13 +750,17 @@ namespace SabreTools.Library.DatFiles
                         Release release = new Release()
                         {
                             Name = name,
+
                             AltName = altName,
                             AltTitle = altTitle,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             Region = region,
                             Language = language,
@@ -756,13 +782,17 @@ namespace SabreTools.Library.DatFiles
                         Rom rom = new Rom()
                         {
                             Name = name,
+
                             AltName = altName,
                             AltTitle = altTitle,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             Bios = bios,
                             Size = size,
@@ -798,13 +828,17 @@ namespace SabreTools.Library.DatFiles
                         Sample sample = new Sample()
                         {
                             Name = name,
+
                             AltName = altName,
                             AltTitle = altTitle,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             Source = new Source
                             {
@@ -1244,10 +1278,12 @@ namespace SabreTools.Library.DatFiles
 
                 case "partname":
                 case "part name":
+                case "part-name":
                     return "DatItem.PartName";
 
                 case "partinterface":
                 case "part interface":
+                case "part-interface":
                     return "DatItem.PartInterface";
 
                 case "features":
@@ -1255,11 +1291,23 @@ namespace SabreTools.Library.DatFiles
 
                 case "areaname":
                 case "area name":
+                case "area-name":
                     return "DatItem.AreaName";
 
                 case "areasize":
                 case "area size":
+                case "area-size":
                     return "DatItem.AreaSize";
+
+                case "areawidth":
+                case "area width":
+                case "area-width":
+                    return "DatItem.AreaWidth";
+
+                case "areaendinanness":
+                case "area endianness":
+                case "area-endianness":
+                    return "DatItem.AreaEndianness";
 
                 #endregion
 

@@ -240,7 +240,11 @@ namespace SabreTools.Library.DatFiles
             // Miscellaneous
             bool keep)
         {
-            string areaname, partname = string.Empty, partinterface = string.Empty;
+            string areaname,
+                partname = string.Empty,
+                partinterface = string.Empty,
+                areaWidth = string.Empty,
+                areaEndinaness = string.Empty;
             long? areasize = null;
             var features = new List<KeyValuePair<string, string>>();
             bool containsItems = false;
@@ -286,11 +290,22 @@ namespace SabreTools.Library.DatFiles
                                 areasize = tempas;
                         }
 
-                        // string dataarea_width = reader.GetAttribute("width"); // (8|16|32|64) "8"
-                        // string dataarea_endianness = reader.GetAttribute("endianness"); // endianness (big|little) "little"
+                        areaWidth = reader.GetAttribute("width");
+                        areaEndinaness = reader.GetAttribute("endianness");
 
-                        containsItems = ReadDataArea(reader.ReadSubtree(), machine, features, areaname, areasize,
-                            partname, partinterface, filename, indexId, keep);
+                        containsItems = ReadDataArea(
+                            reader.ReadSubtree(),
+                            machine,
+                            partname,
+                            partinterface,
+                            features,
+                            areaname,
+                            areasize,
+                            areaWidth,
+                            areaEndinaness,
+                            filename,
+                            indexId,
+                            keep);
 
                         // Skip the dataarea now that we've processed it
                         reader.Skip();
@@ -299,8 +314,17 @@ namespace SabreTools.Library.DatFiles
                     case "diskarea":
                         areaname = reader.GetAttribute("name");
 
-                        containsItems = ReadDiskArea(reader.ReadSubtree(), machine, features, areaname, areasize,
-                            partname, partinterface, filename, indexId, keep);
+                        containsItems = ReadDiskArea(
+                            reader.ReadSubtree(),
+                            machine,
+                            partname,
+                            partinterface,
+                            features,
+                            areaname,
+                            areasize,
+                            filename,
+                            indexId,
+                            keep);
 
                         // Skip the diskarea now that we've processed it
                         reader.Skip();
@@ -333,22 +357,26 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader representing a dataarea block</param>
         /// <param name="machine">Machine information to pass to contained items</param>
+        /// <param name="partName">Name of the containing part</param>
+        /// <param name="partInterface">Interface of the containing part</param>
         /// <param name="features">List of features from the parent part</param>
-        /// <param name="areaname">Name of the containing area</param>
-        /// <param name="areasize">Size of the containing area</param>
-        /// <param name="partname">Name of the containing part</param>
-        /// <param name="partinterface">Interface of the containing part</param>
+        /// <param name="areaName">Name of the containing area</param>
+        /// <param name="areaSize">Size of the containing area</param>
+        /// <param name="areaWidth">Byte width of the containing area</param>
+        /// <param name="areaEndianness">Endianness of the containing area</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         private bool ReadDataArea(
             XmlReader reader,
             Machine machine,
+            string partName,
+            string partInterface,
             List<KeyValuePair<string, string>> features,
-            string areaname,
-            long? areasize,
-            string partname,
-            string partinterface,
+            string areaName,
+            long? areaSize,
+            string areaWidth,
+            string areaEndianness,
 
             // Standard Dat parsing
             string filename,
@@ -409,11 +437,13 @@ namespace SabreTools.Library.DatFiles
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             // LoadFlag = reader.GetAttribute("loadflag"), // (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain|ignore)
 
-                            AreaName = areaname,
-                            AreaSize = areasize,
+                            PartName = partName,
+                            PartInterface = partInterface,
                             Features = features,
-                            PartName = partname,
-                            PartInterface = partinterface,
+                            AreaName = areaName,
+                            AreaSize = areaSize,
+                            AreaWidth = areaWidth,
+                            AreaEndianness = areaEndianness,
 
                             Source = new Source
                             {
@@ -444,22 +474,22 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
         /// <param name="machine">Machine information to pass to contained items</param>
+        /// <param name="partname">Name of the containing part</param>
+        /// <param name="partinterface">Interface of the containing part</param>
         /// <param name="features">List of features from the parent part</param>
         /// <param name="areaname">Name of the containing area</param>
         /// <param name="areasize">Size of the containing area</param>
-        /// <param name="partname">Name of the containing part</param>
-        /// <param name="partinterface">Interface of the containing part</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         private bool ReadDiskArea(
             XmlReader reader,
             Machine machine,
+            string partname,
+            string partinterface,
             List<KeyValuePair<string, string>> features,
             string areaname,
             long? areasize,
-            string partname,
-            string partinterface,
 
             // Standard Dat parsing
             string filename,
@@ -501,11 +531,11 @@ namespace SabreTools.Library.DatFiles
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             Writable = reader.GetAttribute("writable").AsYesNo(),
 
-                            AreaName = areaname,
-                            AreaSize = areasize,
-                            Features = features,
                             PartName = partname,
                             PartInterface = partinterface,
+                            Features = features,
+                            AreaName = areaname,
+                            AreaSize = areasize,
 
                             Source = new Source
                             {
@@ -869,6 +899,10 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("name", areaName);
                         if (!Header.ExcludeFields.Contains(Field.AreaSize) && rom.AreaSize != null)
                             xtw.WriteAttributeString("size", rom.AreaSize.ToString());
+                        if (!Header.ExcludeFields.Contains(Field.AreaWidth) && rom.AreaWidth != null)
+                            xtw.WriteAttributeString("width", rom.AreaWidth);
+                        if (!Header.ExcludeFields.Contains(Field.AreaEndianness) && rom.AreaEndianness != null)
+                            xtw.WriteAttributeString("endianness", rom.AreaEndianness);
 
                         xtw.WriteStartElement("rom");
                         xtw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));

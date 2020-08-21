@@ -112,6 +112,8 @@ namespace SabreTools.Library.DatItems
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,
+                AreaWidth = this.AreaWidth,
+                AreaEndianness = this.AreaEndianness,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,

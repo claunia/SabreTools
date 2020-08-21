@@ -273,6 +273,16 @@ namespace SabreTools.Library.Filtering
         /// <remarks>Positive means "Greater than or equal", Negative means "Less than or equal", Neutral means "Equal"</remarks>
         public FilterItem<long?> AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
 
+        /// <summary>
+        /// Include or exclude area byte widths
+        /// </summary>
+        public FilterItem<string> AreaWidth { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude area endianness
+        /// </summary>
+        public FilterItem<string> AreaEndianness { get; private set; } = new FilterItem<string>();
+
         #endregion
 
         /// <summary>
@@ -869,6 +879,20 @@ namespace SabreTools.Library.Filtering
                         AreaSize.Positive = areasize + 1;
                     }
 
+                    break;
+
+                case Field.AreaWidth:
+                    if (negate)
+                        AreaWidth.NegativeSet.Add(value);
+                    else
+                        AreaWidth.PositiveSet.Add(value);
+                    break;
+
+                case Field.AreaEndianness:
+                    if (negate)
+                        AreaEndianness.NegativeSet.Add(value);
+                    else
+                        AreaEndianness.PositiveSet.Add(value);
                     break;
 
                 #endregion

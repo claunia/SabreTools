@@ -101,6 +101,20 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("areasize")]
         public long? AreaSize { get; set; }
 
+        /// <summary>
+        /// Width of the data area in bytes
+        /// </summary>
+        /// TODO: Convert to Int32
+        [JsonProperty("width")]
+        public string AreaWidth { get; set; } // (8|16|32|64) "8"
+
+        /// <summary>
+        /// Endianness of the data area
+        /// </summary>
+        /// TODO: Convert to Enum?
+        [JsonProperty("endianness")]
+        public string AreaEndianness { get; set; } // (big|little) "little"
+
         #endregion
 
         #region Metadata information
@@ -139,6 +153,8 @@ namespace SabreTools.Library.DatItems
             Field.Features,
             Field.AreaName,
             Field.AreaSize,
+            Field.AreaWidth,
+            Field.AreaEndianness,
 
             // BiosSet
             Field.BiosDescription,
@@ -273,6 +289,12 @@ namespace SabreTools.Library.DatItems
                 case Field.AreaSize:
                     fieldValue = AreaSize?.ToString();
                     break;
+                case Field.AreaWidth:
+                    fieldValue = AreaWidth;
+                    break;
+                case Field.AreaEndianness:
+                    fieldValue = AreaEndianness;
+                    break;
 
                 case Field.NULL:
                 default:
@@ -341,6 +363,12 @@ namespace SabreTools.Library.DatItems
                 if (Int64.TryParse(mappings[Field.AreaSize], out long areaSize))
                     AreaSize = areaSize;
             }
+
+            if (mappings.Keys.Contains(Field.AreaWidth))
+                AreaWidth = mappings[Field.AreaWidth];
+
+            if (mappings.Keys.Contains(Field.AreaEndianness))
+                AreaEndianness = mappings[Field.AreaEndianness];
 
             #endregion
         }
@@ -592,6 +620,18 @@ namespace SabreTools.Library.DatItems
             else if (filter.AreaSize.MatchesNegative(null, AreaSize) == false)
                 return false;
 
+            // Filter on area byte width
+            if (filter.AreaWidth.MatchesPositiveSet(AreaWidth) == false)
+                return false;
+            if (filter.AreaWidth.MatchesNegativeSet(AreaWidth) == true)
+                return false;
+
+            // Filter on area endianness
+            if (filter.AreaEndianness.MatchesPositiveSet(AreaEndianness) == false)
+                return false;
+            if (filter.AreaEndianness.MatchesNegativeSet(AreaEndianness) == true)
+                return false;
+
             #endregion
 
             return true;
@@ -639,6 +679,12 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaSize))
                 AreaSize = null;
+
+            if (fields.Contains(Field.AreaWidth))
+                AreaWidth = null;
+
+            if (fields.Contains(Field.AreaEndianness))
+                AreaEndianness = null;
 
             #endregion
         }
@@ -756,6 +802,12 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaSize))
                 AreaSize = item.AreaSize;
+
+            if (fields.Contains(Field.AreaWidth))
+                AreaWidth = item.AreaWidth;
+
+            if (fields.Contains(Field.AreaEndianness))
+                AreaEndianness = item.AreaEndianness;
 
             #endregion
         }

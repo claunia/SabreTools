@@ -736,6 +736,8 @@ namespace SabreTools.Library.DatFiles
                 partName = null,
                 partInterface = null,
                 areaName = null,
+                areaWidth = null,
+                areaEndianness = null,
                 biosDescription = null,
                 region = null,
                 language = null,
@@ -777,6 +779,8 @@ namespace SabreTools.Library.DatFiles
                     datItem.Features = features;
                     datItem.AreaName = areaName;
                     datItem.AreaSize = areaSize;
+                    datItem.AreaWidth = areaWidth;
+                    datItem.AreaEndianness = areaEndianness;
 
                     if (itemType == ItemType.BiosSet)
                     {
@@ -896,6 +900,14 @@ namespace SabreTools.Library.DatFiles
                         else
                             areaSize = null;
 
+                        break;
+
+                    case "areawidth":
+                        areaWidth = jtr.ReadAsString();
+                        break;
+
+                    case "areaendianness":
+                        areaEndianness = jtr.ReadAsString();
                         break;
 
                     case "description":
@@ -2049,6 +2061,16 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("areasize");
                     jtw.WriteValue(datItem.AreaSize);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AreaWidth, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("areawidth");
+                    jtw.WriteValue(datItem.AreaWidth);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AreaEndianness, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("areaendianness");
+                    jtw.WriteValue(datItem.AreaEndianness);
                 }
 
                 // End item

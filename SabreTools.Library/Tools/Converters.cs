@@ -367,6 +367,14 @@ namespace SabreTools.Library.Tools
                 case "area size":
                 case "area-size":
                     return Field.AreaSize;
+                case "areawidth":
+                case "area width":
+                case "area-width":
+                    return Field.AreaWidth;
+                case "areaendinanness":
+                case "area endianness":
+                case "area-endianness":
+                    return Field.AreaEndianness;
 
                 #endregion
 
