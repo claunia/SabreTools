@@ -197,39 +197,6 @@ namespace SabreTools.Library.DatFiles
     }
 
     /// <summary>
-    /// Determines forcemerging tag for DAT output
-    /// </summary>
-    public enum ForceMerging
-    {
-        None = 0,
-        Split,
-        Merged,
-        NonMerged,
-        Full,
-    }
-
-    /// <summary>
-    /// Determines forcenodump tag for DAT output
-    /// </summary>
-    public enum ForceNodump
-    {
-        None = 0,
-        Obsolete,
-        Required,
-        Ignore,
-    }
-
-    /// <summary>
-    /// Determines forcepacking tag for DAT output
-    /// </summary>
-    public enum ForcePacking
-    {
-        None = 0,
-        Zip,
-        Unzip,
-    }
-
-    /// <summary>
     /// Available hashing types
     /// </summary>
     [Flags]
@@ -254,6 +221,39 @@ namespace SabreTools.Library.DatFiles
         DeepHashes = SHA256 | SHA384 | SHA512,
         SecureHashes = MD5 | SHA1 | SHA256 | SHA384 | SHA512,
 #endif
+    }
+
+    /// <summary>
+    /// Determines merging tag handling for DAT output
+    /// </summary>
+    public enum MergingFlag
+    {
+        None = 0,
+        Split,
+        Merged,
+        NonMerged,
+        Full,
+    }
+
+    /// <summary>
+    /// Determines nodump tag handling for DAT output
+    /// </summary>
+    public enum NodumpFlag
+    {
+        None = 0,
+        Obsolete,
+        Required,
+        Ignore,
+    }
+
+    /// <summary>
+    /// Determines packing tag handling for DAT output
+    /// </summary>
+    public enum PackingFlag
+    {
+        None = 0,
+        Zip,
+        Unzip,
     }
 
     /// <summary>

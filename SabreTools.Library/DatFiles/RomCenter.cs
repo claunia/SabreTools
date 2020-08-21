@@ -212,15 +212,15 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "split":
-                        if (Header.ForceMerging == ForceMerging.None && kvp?.Value == "1")
-                            Header.ForceMerging = ForceMerging.Split;
+                        if (Header.ForceMerging == MergingFlag.None && kvp?.Value == "1")
+                            Header.ForceMerging = MergingFlag.Split;
 
                         reader.ReadNextLine();
                         break;
 
                     case "merge":
-                        if (Header.ForceMerging == ForceMerging.None && kvp?.Value == "1")
-                            Header.ForceMerging = ForceMerging.Merged;
+                        if (Header.ForceMerging == MergingFlag.None && kvp?.Value == "1")
+                            Header.ForceMerging = MergingFlag.Merged;
 
                         reader.ReadNextLine();
                         break;
@@ -475,8 +475,8 @@ namespace SabreTools.Library.DatFiles
                 iw.WriteSection("DAT");
                 iw.WriteKeyValuePair("version", Header.RomCenterVersion ?? "2.50");
                 iw.WriteKeyValuePair("plugin", Header.System);
-                iw.WriteKeyValuePair("split", Header.ForceMerging == ForceMerging.Split ? "1" : "0");
-                iw.WriteKeyValuePair("merge", Header.ForceMerging == ForceMerging.Full || Header.ForceMerging == ForceMerging.Merged ? "1" : "0");
+                iw.WriteKeyValuePair("split", Header.ForceMerging == MergingFlag.Split ? "1" : "0");
+                iw.WriteKeyValuePair("merge", Header.ForceMerging == MergingFlag.Full || Header.ForceMerging == MergingFlag.Merged ? "1" : "0");
 
                 iw.WriteSection("EMULATOR");
                 iw.WriteKeyValuePair("refname", Header.Name);

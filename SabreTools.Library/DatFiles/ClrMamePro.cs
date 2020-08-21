@@ -162,18 +162,18 @@ namespace SabreTools.Library.DatFiles
                         superdat = superdat || itemVal.Contains("SuperDAT");
                         break;
                     case "forcemerging":
-                        if (Header.ForceMerging == ForceMerging.None)
-                            Header.ForceMerging = itemVal.AsForceMerging();
+                        if (Header.ForceMerging == MergingFlag.None)
+                            Header.ForceMerging = itemVal.AsMergingFlag();
 
                         break;
                     case "forcezipping":
-                        if (Header.ForcePacking == ForcePacking.None)
-                            Header.ForcePacking = itemVal.AsForcePacking();
+                        if (Header.ForcePacking == PackingFlag.None)
+                            Header.ForcePacking = itemVal.AsPackingFlag();
 
                         break;
                     case "forcepacking":
-                        if (Header.ForcePacking == ForcePacking.None)
-                            Header.ForcePacking = itemVal.AsForcePacking();
+                        if (Header.ForcePacking == PackingFlag.None)
+                            Header.ForcePacking = itemVal.AsPackingFlag();
 
                         break;
                 }
@@ -567,26 +567,26 @@ namespace SabreTools.Library.DatFiles
 
                 switch (Header.ForcePacking)
                 {
-                    case ForcePacking.Unzip:
+                    case PackingFlag.Unzip:
                         cmpw.WriteStandalone("forcezipping", "no", false);
                         break;
-                    case ForcePacking.Zip:
+                    case PackingFlag.Zip:
                         cmpw.WriteStandalone("forcezipping", "yes", false);
                         break;
                 }
 
                 switch (Header.ForceMerging)
                 {
-                    case ForceMerging.Full:
+                    case MergingFlag.Full:
                         cmpw.WriteStandalone("forcemerging", "full", false);
                         break;
-                    case ForceMerging.Split:
+                    case MergingFlag.Split:
                         cmpw.WriteStandalone("forcemerging", "split", false);
                         break;
-                    case ForceMerging.Merged:
+                    case MergingFlag.Merged:
                         cmpw.WriteStandalone("forcemerging", "merged", false);
                         break;
-                    case ForceMerging.NonMerged:
+                    case MergingFlag.NonMerged:
                         cmpw.WriteStandalone("forcemerging", "nonmerged", false);
                         break;
                 }

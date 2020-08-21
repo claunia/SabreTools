@@ -175,15 +175,15 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatFile.ForceMerging":
-                            Header.ForceMerging = (Header.ForceMerging == ForceMerging.None ? value.AsForceMerging() : Header.ForceMerging);
+                            Header.ForceMerging = (Header.ForceMerging == MergingFlag.None ? value.AsMergingFlag() : Header.ForceMerging);
                             break;
 
                         case "DatFile.ForceNodump":
-                            Header.ForceNodump = (Header.ForceNodump == ForceNodump.None ? value.AsForceNodump() : Header.ForceNodump);
+                            Header.ForceNodump = (Header.ForceNodump == NodumpFlag.None ? value.AsNodumpFlag() : Header.ForceNodump);
                             break;
 
                         case "DatFile.ForcePacking":
-                            Header.ForcePacking = (Header.ForcePacking == ForcePacking.None ? value.AsForcePacking() : Header.ForcePacking);
+                            Header.ForcePacking = (Header.ForcePacking == PackingFlag.None ? value.AsPackingFlag() : Header.ForcePacking);
                             break;
 
                         #endregion
@@ -207,15 +207,15 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "DatFile.RomMode":
-                            Header.RomMode = (Header.RomMode == null ? value : Header.RomMode);
+                            Header.RomMode = (Header.RomMode == MergingFlag.None ? value.AsMergingFlag() : Header.RomMode);
                             break;
 
                         case "DatFile.BiosMode":
-                            Header.BiosMode = (Header.BiosMode == null ? value : Header.BiosMode);
+                            Header.BiosMode = (Header.BiosMode == MergingFlag.None ? value.AsMergingFlag() : Header.BiosMode);
                             break;
 
                         case "DatFile.SampleMode":
-                            Header.SampleMode = (Header.SampleMode == null ? value : Header.SampleMode);
+                            Header.SampleMode = (Header.SampleMode == MergingFlag.None ? value.AsMergingFlag() : Header.SampleMode);
                             break;
 
                         case "DatFile.LockRomMode":

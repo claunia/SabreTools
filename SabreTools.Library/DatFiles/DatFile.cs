@@ -2382,14 +2382,14 @@ namespace SabreTools.Library.DatFiles
             outDir = DirectoryExtensions.Ensure(outDir, create: true);
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && Header.ForcePacking != ForcePacking.None)
+            if (outputFormat == OutputFormat.Folder && Header.ForcePacking != PackingFlag.None)
             {
                 switch (Header.ForcePacking)
                 {
-                    case ForcePacking.Zip:
+                    case PackingFlag.Zip:
                         outputFormat = OutputFormat.TorrentZip;
                         break;
-                    case ForcePacking.Unzip:
+                    case PackingFlag.Unzip:
                         outputFormat = OutputFormat.Folder;
                         break;
                 }
@@ -2569,14 +2569,14 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Now we want to get forcepack flag if it's not overridden
-            if (outputFormat == OutputFormat.Folder && Header.ForcePacking != ForcePacking.None)
+            if (outputFormat == OutputFormat.Folder && Header.ForcePacking != PackingFlag.None)
             {
                 switch (Header.ForcePacking)
                 {
-                    case ForcePacking.Zip:
+                    case PackingFlag.Zip:
                         outputFormat = OutputFormat.TorrentZip;
                         break;
-                    case ForcePacking.Unzip:
+                    case PackingFlag.Unzip:
                         outputFormat = OutputFormat.Folder;
                         break;
                 }

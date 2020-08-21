@@ -194,20 +194,20 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "forcemerging":
-                        if (Header.ForceMerging == ForceMerging.None)
-                            Header.ForceMerging = jtr.ReadAsString().AsForceMerging();
+                        if (Header.ForceMerging == MergingFlag.None)
+                            Header.ForceMerging = jtr.ReadAsString().AsMergingFlag();
 
                         break;
 
                     case "forcenodump":
-                        if (Header.ForceNodump == ForceNodump.None)
-                            Header.ForceNodump = jtr.ReadAsString().AsForceNodump();
+                        if (Header.ForceNodump == NodumpFlag.None)
+                            Header.ForceNodump = jtr.ReadAsString().AsNodumpFlag();
 
                         break;
 
                     case "forcepacking":
-                        if (Header.ForcePacking == ForcePacking.None)
-                            Header.ForcePacking = jtr.ReadAsString().AsForcePacking();
+                        if (Header.ForcePacking == PackingFlag.None)
+                            Header.ForcePacking = jtr.ReadAsString().AsPackingFlag();
 
                         break;
 
@@ -236,17 +236,17 @@ namespace SabreTools.Library.DatFiles
 
                     case "rommode":
                         content = jtr.ReadAsString();
-                        Header.RomMode = (Header.RomMode == null ? content : Header.RomMode);
+                        Header.RomMode = (Header.RomMode == MergingFlag.None ? content.AsMergingFlag() : Header.RomMode);
                         break;
 
                     case "biosmode":
                         content = jtr.ReadAsString();
-                        Header.BiosMode = (Header.BiosMode == null ? content : Header.BiosMode);
+                        Header.BiosMode = (Header.BiosMode == MergingFlag.None ? content.AsMergingFlag() : Header.BiosMode);
                         break;
 
                     case "samplemode":
                         content = jtr.ReadAsString();
-                        Header.Build = (Header.SampleMode == null ? content : Header.SampleMode);
+                        Header.SampleMode = (Header.SampleMode == MergingFlag.None ? content.AsMergingFlag() : Header.SampleMode);
                         break;
 
                     case "lockrommode":
@@ -1083,50 +1083,50 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("type");
                     jtw.WriteValue(Header.Type);
                 }
-                if (Header.ForceMerging != ForceMerging.None)
+                if (Header.ForceMerging != MergingFlag.None)
                 {
                     jtw.WritePropertyName("forcemerging");
                     switch (Header.ForceMerging)
                     {
-                        case ForceMerging.Full:
+                        case MergingFlag.Full:
                             jtw.WriteValue("full");
                             break;
-                        case ForceMerging.Split:
+                        case MergingFlag.Split:
                             jtw.WriteValue("split");
                             break;
-                        case ForceMerging.Merged:
+                        case MergingFlag.Merged:
                             jtw.WriteValue("merged");
                             break;
-                        case ForceMerging.NonMerged:
+                        case MergingFlag.NonMerged:
                             jtw.WriteValue("nonmerged");
                             break;
                     }
                 }
-                if (Header.ForcePacking != ForcePacking.None)
+                if (Header.ForcePacking != PackingFlag.None)
                 {
                     jtw.WritePropertyName("forcepacking");
                     switch (Header.ForcePacking)
                     {
-                        case ForcePacking.Unzip:
+                        case PackingFlag.Unzip:
                             jtw.WriteValue("unzip");
                             break;
-                        case ForcePacking.Zip:
+                        case PackingFlag.Zip:
                             jtw.WriteValue("zip");
                             break;
                     }
                 }
-                if (Header.ForceNodump != ForceNodump.None)
+                if (Header.ForceNodump != NodumpFlag.None)
                 {
                     jtw.WritePropertyName("forcenodump");
                     switch (Header.ForceNodump)
                     {
-                        case ForceNodump.Ignore:
+                        case NodumpFlag.Ignore:
                             jtw.WriteValue("ignore");
                             break;
-                        case ForceNodump.Obsolete:
+                        case NodumpFlag.Obsolete:
                             jtw.WriteValue("obsolete");
                             break;
-                        case ForceNodump.Required:
+                        case NodumpFlag.Required:
                             jtw.WriteValue("required");
                             break;
                     }
@@ -1171,22 +1171,52 @@ namespace SabreTools.Library.DatFiles
                     jtw.WriteValue(Header.Build);
                 }
 
-                if (!string.IsNullOrWhiteSpace(Header.RomMode))
+                if (Header.RomMode != MergingFlag.None)
                 {
                     jtw.WritePropertyName("rommode");
-                    jtw.WriteValue(Header.RomMode);
+                    switch (Header.RomMode)
+                    {
+                        case MergingFlag.Split:
+                            jtw.WriteValue("split");
+                            break;
+                        case MergingFlag.Merged:
+                            jtw.WriteValue("merged");
+                            break;
+                        case MergingFlag.NonMerged:
+                            jtw.WriteValue("unmerged");
+                            break;
+                    }
                 }
 
-                if (!string.IsNullOrWhiteSpace(Header.BiosMode))
+                if (Header.BiosMode != MergingFlag.None)
                 {
                     jtw.WritePropertyName("biosmode");
-                    jtw.WriteValue(Header.BiosMode);
+                    switch (Header.BiosMode)
+                    {
+                        case MergingFlag.Split:
+                            jtw.WriteValue("split");
+                            break;
+                        case MergingFlag.Merged:
+                            jtw.WriteValue("merged");
+                            break;
+                        case MergingFlag.NonMerged:
+                            jtw.WriteValue("unmerged");
+                            break;
+                    }
                 }
 
-                if (!string.IsNullOrWhiteSpace(Header.SampleMode))
+                if (Header.SampleMode != MergingFlag.None)
                 {
                     jtw.WritePropertyName("samplemode");
-                    jtw.WriteValue(Header.SampleMode);
+                    switch (Header.SampleMode)
+                    {
+                        case MergingFlag.Merged:
+                            jtw.WriteValue("merged");
+                            break;
+                        case MergingFlag.NonMerged:
+                            jtw.WriteValue("unmerged");
+                            break;
+                    }
                 }
 
                 if (Header.LockRomMode != null)

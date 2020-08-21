@@ -358,106 +358,6 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
-        /// Get ForceMerging value from input string
-        /// </summary>
-        /// <param name="forcemerge">String to get value from</param>
-        /// <returns>ForceMerging value corresponding to the string</returns>
-        public static ForceMerging AsForceMerging(this string forcemerge)
-        {
-#if NET_FRAMEWORK
-            switch (forcemerge?.ToLowerInvariant())
-            {
-                case "split":
-                    return ForceMerging.Split;
-                case "merged":
-                    return ForceMerging.Merged;
-                case "nonmerged":
-                    return ForceMerging.NonMerged;
-                case "full":
-                    return ForceMerging.Full;
-                case "none":
-                default:
-                    return ForceMerging.None;
-            }
-#else
-            return forcemerge?.ToLowerInvariant() switch
-            {
-                "split" => ForceMerging.Split,
-                "merged" => ForceMerging.Merged,
-                "nonmerged" => ForceMerging.NonMerged,
-                "full" => ForceMerging.Full,
-                "none" => ForceMerging.None,
-                _ => ForceMerging.None,
-            };
-#endif
-        }
-
-        /// <summary>
-        /// Get ForceNodump value from input string
-        /// </summary>
-        /// <param name="forcend">String to get value from</param>
-        /// <returns>ForceNodump value corresponding to the string</returns>
-        public static ForceNodump AsForceNodump(this string forcend)
-        {
-#if NET_FRAMEWORK
-            switch (forcend?.ToLowerInvariant())
-            {
-                case "obsolete":
-                    return ForceNodump.Obsolete;
-                case "required":
-                    return ForceNodump.Required;
-                case "ignore":
-                    return ForceNodump.Ignore;
-                case "none":
-                default:
-                    return ForceNodump.None;
-            }
-#else
-            return forcend?.ToLowerInvariant() switch
-            {
-                "obsolete" => ForceNodump.Obsolete,
-                "required" => ForceNodump.Required,
-                "ignore" => ForceNodump.Ignore,
-                "none" => ForceNodump.None,
-                _ => ForceNodump.None,
-            };
-#endif
-        }
-
-        /// <summary>
-        /// Get ForcePacking value from input string
-        /// </summary>
-        /// <param name="forcepack">String to get value from</param>
-        /// <returns>ForcePacking value corresponding to the string</returns>
-        public static ForcePacking AsForcePacking(this string forcepack)
-        {
-#if NET_FRAMEWORK
-            switch (forcepack?.ToLowerInvariant())
-            {
-                case "yes":
-                case "zip":
-                    return ForcePacking.Zip;
-                case "no":
-                case "unzip":
-                    return ForcePacking.Unzip;
-                case "none":
-                default:
-                    return ForcePacking.None;
-            }
-#else
-            return forcepack?.ToLowerInvariant() switch
-            {
-                "yes" => ForcePacking.Zip,
-                "zip" => ForcePacking.Zip,
-                "no" => ForcePacking.Unzip,
-                "unzip" => ForcePacking.Unzip,
-                "none" => ForcePacking.None,
-                _ => ForcePacking.None,
-            };
-#endif
-        }
-
-        /// <summary>
         /// Get ItemStatus value from input string
         /// </summary>
         /// <param name="status">String to get value from</param>
@@ -575,35 +475,137 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get MergingFlag value from input string
+        /// </summary>
+        /// <param name="merging">String to get value from</param>
+        /// <returns>MergingFlag value corresponding to the string</returns>
+        public static MergingFlag AsMergingFlag(this string merging)
+        {
+#if NET_FRAMEWORK
+            switch (merging?.ToLowerInvariant())
+            {
+                case "split":
+                    return MergingFlag.Split;
+                case "merged":
+                    return MergingFlag.Merged;
+                case "nonmerged":
+                case "unmerged":
+                    return MergingFlag.NonMerged;
+                case "full":
+                    return MergingFlag.Full;
+                case "none":
+                default:
+                    return MergingFlag.None;
+            }
+#else
+            return merging?.ToLowerInvariant() switch
+            {
+                "split" => MergingFlag.Split,
+                "merged" => MergingFlag.Merged,
+                "nonmerged" => MergingFlag.NonMerged,
+                "unmerged" => MergingFlag.NonMerged,
+                "full" => MergingFlag.Full,
+                "none" => MergingFlag.None,
+                _ => MergingFlag.None,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get NodumpFlag value from input string
+        /// </summary>
+        /// <param name="nodump">String to get value from</param>
+        /// <returns>NodumpFlag value corresponding to the string</returns>
+        public static NodumpFlag AsNodumpFlag(this string nodump)
+        {
+#if NET_FRAMEWORK
+            switch (nodump?.ToLowerInvariant())
+            {
+                case "obsolete":
+                    return NodumpFlag.Obsolete;
+                case "required":
+                    return NodumpFlag.Required;
+                case "ignore":
+                    return NodumpFlag.Ignore;
+                case "none":
+                default:
+                    return NodumpFlag.None;
+            }
+#else
+            return nodump?.ToLowerInvariant() switch
+            {
+                "obsolete" => NodumpFlag.Obsolete,
+                "required" => NodumpFlag.Required,
+                "ignore" => NodumpFlag.Ignore,
+                "none" => NodumpFlag.None,
+                _ => NodumpFlag.None,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get PackingFlag value from input string
+        /// </summary>
+        /// <param name="packing">String to get value from</param>
+        /// <returns>PackingFlag value corresponding to the string</returns>
+        public static PackingFlag AsPackingFlag(this string packing)
+        {
+#if NET_FRAMEWORK
+            switch (packing?.ToLowerInvariant())
+            {
+                case "yes":
+                case "zip":
+                    return PackingFlag.Zip;
+                case "no":
+                case "unzip":
+                    return PackingFlag.Unzip;
+                case "none":
+                default:
+                    return PackingFlag.None;
+            }
+#else
+            return packing?.ToLowerInvariant() switch
+            {
+                "yes" => PackingFlag.Zip,
+                "zip" => PackingFlag.Zip,
+                "no" => PackingFlag.Unzip,
+                "unzip" => PackingFlag.Unzip,
+                "none" => PackingFlag.None,
+                _ => PackingFlag.None,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get SplitType value from input ForceMerging
         /// </summary>
         /// <param name="forceMerging">ForceMerging to get value from</param>
         /// <returns>SplitType value corresponding to the string</returns>
-        public static SplitType AsSplitType(this ForceMerging forceMerging)
+        public static SplitType AsSplitType(this MergingFlag forceMerging)
         {
 #if NET_FRAMEWORK
             switch (forceMerging)
             {
-                case ForceMerging.Split:
+                case MergingFlag.Split:
                     return SplitType.Split;
-                case ForceMerging.Merged:
+                case MergingFlag.Merged:
                     return SplitType.Merged;
-                case ForceMerging.NonMerged:
+                case MergingFlag.NonMerged:
                     return SplitType.NonMerged;
-                case ForceMerging.Full:
+                case MergingFlag.Full:
                     return SplitType.FullNonMerged;
-                case ForceMerging.None:
+                case MergingFlag.None:
                 default:
                     return SplitType.None;
             }
 #else
             return forceMerging switch
             {
-                ForceMerging.Split => SplitType.Split,
-                ForceMerging.Merged => SplitType.Merged,
-                ForceMerging.NonMerged => SplitType.NonMerged,
-                ForceMerging.Full => SplitType.FullNonMerged,
-                ForceMerging.None => SplitType.None,
+                MergingFlag.Split => SplitType.Split,
+                MergingFlag.Merged => SplitType.Merged,
+                MergingFlag.NonMerged => SplitType.NonMerged,
+                MergingFlag.Full => SplitType.FullNonMerged,
+                MergingFlag.None => SplitType.None,
                 _ => SplitType.None,
             };
 #endif

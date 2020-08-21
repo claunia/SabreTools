@@ -106,21 +106,21 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// TODO: Make nullable
         [JsonProperty("forcemerging")]
-        public ForceMerging ForceMerging { get; set; }
+        public MergingFlag ForceMerging { get; set; }
 
         /// <summary>
         /// Force nodump handling when loaded
         /// </summary>
         /// TODO: Make nullable
         [JsonProperty("forcenodump")]
-        public ForceNodump ForceNodump { get; set; }
+        public NodumpFlag ForceNodump { get; set; }
 
         /// <summary>
         /// Force output packing when loaded
         /// </summary>
         /// TODO: Make nullable
         [JsonProperty("forcepacking")]
-        public ForcePacking ForcePacking { get; set; }
+        public PackingFlag ForcePacking { get; set; }
 
         /// <summary>
         /// Read or write format
@@ -206,38 +206,41 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// RomCenter rom mode
         /// </summary>
+        /// <remarks>(merged|split|unmerged) "split"</remarks>
         [JsonProperty("rommode")]
-        public string RomMode { get; set; } // (merged|split|unmerged) "split"
+        public MergingFlag RomMode { get; set; }
 
         /// <summary>
         /// RomCenter bios mode
         /// </summary>
+        /// <remarks>(merged|split|unmerged) "split"</remarks>
         [JsonProperty("biosmode")]
-        public string BiosMode { get; set; } // (merged|split|unmerged) "split"
+        public MergingFlag BiosMode { get; set; }
 
         /// <summary>
         /// RomCenter sample mode
         /// </summary>
+        /// <remarks>(merged|unmerged) "merged"</remarks>
         [JsonProperty("samplemode")]
-        public string SampleMode { get; set; } // (merged|unmerged) "merged"
+        public MergingFlag SampleMode { get; set; }
 
         /// <summary>
         /// RomCenter lock rom mode
         /// </summary>
         [JsonProperty("lockrommode")]
-        public bool? LockRomMode { get; set; } // (yes|no) "no"
+        public bool? LockRomMode { get; set; }
 
         /// <summary>
         /// RomCenter lock bios mode
         /// </summary>
         [JsonProperty("lockbiosmode")]
-        public bool? LockBiosMode { get; set; } // (yes|no) "no"
+        public bool? LockBiosMode { get; set; }
 
         /// <summary>
         /// RomCenter lock sample mode
         /// </summary>
         [JsonProperty("locksamplemode")]
-        public bool? LockSampleMode { get; set; } // (yes|no) "no"
+        public bool? LockSampleMode { get; set; }
 
         #endregion
 
@@ -537,13 +540,13 @@ namespace SabreTools.Library.DatFiles
             if (!string.IsNullOrWhiteSpace(datHeader.Type))
                 Type = datHeader.Type;
 
-            if (datHeader.ForceMerging != ForceMerging.None)
+            if (datHeader.ForceMerging != MergingFlag.None)
                 ForceMerging = datHeader.ForceMerging;
 
-            if (datHeader.ForceNodump != ForceNodump.None)
+            if (datHeader.ForceNodump != NodumpFlag.None)
                 ForceNodump = datHeader.ForceNodump;
 
-            if (datHeader.ForcePacking != ForcePacking.None)
+            if (datHeader.ForcePacking != PackingFlag.None)
                 ForcePacking = datHeader.ForcePacking;
 
             if (datHeader.DatFormat != 0x00)

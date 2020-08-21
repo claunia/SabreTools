@@ -221,14 +221,14 @@ namespace SabreTools.Library.DatFiles
                         if (Header.HeaderSkipper == null)
                             Header.HeaderSkipper = reader.GetAttribute("header");
 
-                        if (Header.ForceMerging == ForceMerging.None)
-                            Header.ForceMerging = reader.GetAttribute("forcemerging").AsForceMerging();
+                        if (Header.ForceMerging == MergingFlag.None)
+                            Header.ForceMerging = reader.GetAttribute("forcemerging").AsMergingFlag();
 
-                        if (Header.ForceNodump == ForceNodump.None)
-                            Header.ForceNodump = reader.GetAttribute("forcenodump").AsForceNodump();
+                        if (Header.ForceNodump == NodumpFlag.None)
+                            Header.ForceNodump = reader.GetAttribute("forcenodump").AsNodumpFlag();
 
-                        if (Header.ForcePacking == ForcePacking.None)
-                            Header.ForcePacking = reader.GetAttribute("forcepacking").AsForcePacking();
+                        if (Header.ForcePacking == PackingFlag.None)
+                            Header.ForcePacking = reader.GetAttribute("forcepacking").AsPackingFlag();
 
                         reader.Read();
                         break;
@@ -238,13 +238,13 @@ namespace SabreTools.Library.DatFiles
                             Header.System = reader.GetAttribute("plugin");
 
                         if (Header.RomMode == null)
-                            Header.RomMode = reader.GetAttribute("rommode");
+                            Header.RomMode = reader.GetAttribute("rommode").AsMergingFlag();
 
                         if (Header.BiosMode == null)
-                            Header.BiosMode = reader.GetAttribute("biosmode");
+                            Header.BiosMode = reader.GetAttribute("biosmode").AsMergingFlag();
 
                         if (Header.SampleMode == null)
-                            Header.SampleMode = reader.GetAttribute("samplemode");
+                            Header.SampleMode = reader.GetAttribute("samplemode").AsMergingFlag();
 
                         if (Header.LockRomMode == null)
                             Header.LockRomMode = reader.GetAttribute("lockrommode").AsYesNo();
@@ -799,47 +799,47 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(Header.Type))
                     xtw.WriteElementString("type", Header.Type);
 
-                if (Header.ForcePacking != ForcePacking.None
-                    || Header.ForceMerging != ForceMerging.None
-                    || Header.ForceNodump != ForceNodump.None
+                if (Header.ForcePacking != PackingFlag.None
+                    || Header.ForceMerging != MergingFlag.None
+                    || Header.ForceNodump != NodumpFlag.None
                     || !string.IsNullOrWhiteSpace(Header.HeaderSkipper))
                 {
                     xtw.WriteStartElement("clrmamepro");
                     switch (Header.ForcePacking)
                     {
-                        case ForcePacking.Unzip:
+                        case PackingFlag.Unzip:
                             xtw.WriteAttributeString("forcepacking", "unzip");
                             break;
-                        case ForcePacking.Zip:
+                        case PackingFlag.Zip:
                             xtw.WriteAttributeString("forcepacking", "zip");
                             break;
                     }
 
                     switch (Header.ForceMerging)
                     {
-                        case ForceMerging.Full:
+                        case MergingFlag.Full:
                             xtw.WriteAttributeString("forcemerging", "full");
                             break;
-                        case ForceMerging.Split:
+                        case MergingFlag.Split:
                             xtw.WriteAttributeString("forcemerging", "split");
                             break;
-                        case ForceMerging.Merged:
+                        case MergingFlag.Merged:
                             xtw.WriteAttributeString("forcemerging", "merged");
                             break;
-                        case ForceMerging.NonMerged:
+                        case MergingFlag.NonMerged:
                             xtw.WriteAttributeString("forcemerging", "nonmerged");
                             break;
                     }
 
                     switch (Header.ForceNodump)
                     {
-                        case ForceNodump.Ignore:
+                        case NodumpFlag.Ignore:
                             xtw.WriteAttributeString("forcenodump", "ignore");
                             break;
-                        case ForceNodump.Obsolete:
+                        case NodumpFlag.Obsolete:
                             xtw.WriteAttributeString("forcenodump", "obsolete");
                             break;
-                        case ForceNodump.Required:
+                        case NodumpFlag.Required:
                             xtw.WriteAttributeString("forcenodump", "required");
                             break;
                     }
@@ -852,23 +852,50 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 if (Header.System != null
-                    || Header.RomMode != null || Header.LockRomMode != null
-                    || Header.BiosMode != null || Header.LockBiosMode != null
-                    || Header.SampleMode != null || Header.LockSampleMode != null)
+                    || Header.RomMode != MergingFlag.None || Header.LockRomMode != null
+                    || Header.BiosMode != MergingFlag.None || Header.LockBiosMode != null
+                    || Header.SampleMode != MergingFlag.None || Header.LockSampleMode != null)
                 {
                     xtw.WriteStartElement("romcenter");
 
                     if (!string.IsNullOrWhiteSpace(Header.System))
                         xtw.WriteAttributeString("plugin", Header.System);
 
-                    if (!string.IsNullOrWhiteSpace(Header.RomMode))
-                        xtw.WriteAttributeString("rommode", Header.RomMode);
+                    switch (Header.RomMode)
+                    {
+                        case MergingFlag.Split:
+                            xtw.WriteAttributeString("rommode", "split");
+                            break;
+                        case MergingFlag.Merged:
+                            xtw.WriteAttributeString("rommode", "merged");
+                            break;
+                        case MergingFlag.NonMerged:
+                            xtw.WriteAttributeString("rommode", "unmerged");
+                            break;
+                    }
 
-                    if (!string.IsNullOrWhiteSpace(Header.BiosMode))
-                        xtw.WriteAttributeString("biosmode", Header.BiosMode);
+                    switch (Header.BiosMode)
+                    {
+                        case MergingFlag.Split:
+                            xtw.WriteAttributeString("biosmode", "split");
+                            break;
+                        case MergingFlag.Merged:
+                            xtw.WriteAttributeString("biosmode", "merged");
+                            break;
+                        case MergingFlag.NonMerged:
+                            xtw.WriteAttributeString("biosmode", "unmerged");
+                            break;
+                    }
 
-                    if (!string.IsNullOrWhiteSpace(Header.SampleMode))
-                        xtw.WriteAttributeString("samplemode", Header.SampleMode);
+                    switch (Header.SampleMode)
+                    {
+                        case MergingFlag.Merged:
+                            xtw.WriteAttributeString("samplemode", "merged");
+                            break;
+                        case MergingFlag.NonMerged:
+                            xtw.WriteAttributeString("samplemode", "unmerged");
+                            break;
+                    }
 
                     if (Header.LockRomMode != null)
                     {

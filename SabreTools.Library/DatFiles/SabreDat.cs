@@ -516,20 +516,20 @@ namespace SabreTools.Library.DatFiles
                                     break;
 
                                 case "forcemerging":
-                                    if (Header.ForceMerging == ForceMerging.None)
-                                        Header.ForceMerging = content.AsForceMerging();
+                                    if (Header.ForceMerging == MergingFlag.None)
+                                        Header.ForceMerging = content.AsMergingFlag();
 
                                     break;
 
                                 case "forcenodump":
-                                    if (Header.ForceNodump == ForceNodump.None)
-                                        Header.ForceNodump = content.AsForceNodump();
+                                    if (Header.ForceNodump == NodumpFlag.None)
+                                        Header.ForceNodump = content.AsNodumpFlag();
 
                                     break;
 
                                 case "forcepacking":
-                                    if (Header.ForcePacking == ForcePacking.None)
-                                        Header.ForcePacking = content.AsForcePacking();
+                                    if (Header.ForcePacking == PackingFlag.None)
+                                        Header.ForcePacking = content.AsPackingFlag();
 
                                     break;
                             }
@@ -676,9 +676,9 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(Header.Comment))
                     xtw.WriteElementString("comment", Header.Comment);
                 if (!string.IsNullOrWhiteSpace(Header.Type)
-                    || Header.ForcePacking != ForcePacking.None
-                    || Header.ForceMerging != ForceMerging.None
-                    || Header.ForceNodump != ForceNodump.None)
+                    || Header.ForcePacking != PackingFlag.None
+                    || Header.ForceMerging != MergingFlag.None
+                    || Header.ForceNodump != NodumpFlag.None)
                 {
                     xtw.WriteStartElement("flags");
 
@@ -692,13 +692,13 @@ namespace SabreTools.Library.DatFiles
 
                     switch (Header.ForcePacking)
                     {
-                        case ForcePacking.Unzip:
+                        case PackingFlag.Unzip:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcepacking");
                             xtw.WriteAttributeString("value", "unzip");
                             xtw.WriteEndElement();
                             break;
-                        case ForcePacking.Zip:
+                        case PackingFlag.Zip:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcepacking");
                             xtw.WriteAttributeString("value", "zip");
@@ -708,25 +708,25 @@ namespace SabreTools.Library.DatFiles
 
                     switch (Header.ForceMerging)
                     {
-                        case ForceMerging.Full:
+                        case MergingFlag.Full:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcemerging");
                             xtw.WriteAttributeString("value", "full");
                             xtw.WriteEndElement();
                             break;
-                        case ForceMerging.Split:
+                        case MergingFlag.Split:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcemerging");
                             xtw.WriteAttributeString("value", "split");
                             xtw.WriteEndElement();
                             break;
-                        case ForceMerging.Merged:
+                        case MergingFlag.Merged:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcemerging");
                             xtw.WriteAttributeString("value", "merged");
                             xtw.WriteEndElement();
                             break;
-                        case ForceMerging.NonMerged:
+                        case MergingFlag.NonMerged:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcemerging");
                             xtw.WriteAttributeString("value", "nonmerged");
@@ -736,19 +736,19 @@ namespace SabreTools.Library.DatFiles
 
                     switch (Header.ForceNodump)
                     {
-                        case ForceNodump.Ignore:
+                        case NodumpFlag.Ignore:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcenodump");
                             xtw.WriteAttributeString("value", "ignore");
                             xtw.WriteEndElement();
                             break;
-                        case ForceNodump.Obsolete:
+                        case NodumpFlag.Obsolete:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcenodump");
                             xtw.WriteAttributeString("value", "obsolete");
                             xtw.WriteEndElement();
                             break;
-                        case ForceNodump.Required:
+                        case NodumpFlag.Required:
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "forcenodump");
                             xtw.WriteAttributeString("value", "required");

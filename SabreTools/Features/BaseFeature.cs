@@ -2634,6 +2634,7 @@ Some special strings that can be used:
         /// </summary>
         private DatHeader GetDatHeader(Dictionary<string, Feature> features)
         {
+            // TODO: Sort this by region, like the actual header
             DatHeader datHeader = new DatHeader
             {
                 AddExtension = GetString(features, AddExtensionStringValue),
@@ -2645,9 +2646,9 @@ Some special strings that can be used:
                 Description = GetString(features, DescriptionStringValue),
                 Email = GetString(features, EmailStringValue),
                 FileName = GetString(features, FilenameStringValue),
-                ForceMerging = GetString(features, ForceMergingStringValue).AsForceMerging(),
-                ForceNodump = GetString(features, ForceNodumpStringValue).AsForceNodump(),
-                ForcePacking = GetString(features, ForcePackingStringValue).AsForcePacking(),
+                ForceMerging = GetString(features, ForceMergingStringValue).AsMergingFlag(),
+                ForceNodump = GetString(features, ForceNodumpStringValue).AsNodumpFlag(),
+                ForcePacking = GetString(features, ForcePackingStringValue).AsPackingFlag(),
                 GameName = GetBoolean(features, GamePrefixValue),
                 HeaderSkipper = GetString(features, HeaderStringValue),
                 Homepage = GetString(features, HomepageStringValue),

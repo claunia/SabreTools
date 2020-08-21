@@ -64,14 +64,14 @@ namespace SabreTools.Library.DatFiles
                         case "softwarelist":
                             Header.Name = (Header.Name == null ? xtr.GetAttribute("name") ?? string.Empty : Header.Name);
                             Header.Description = (Header.Description == null ? xtr.GetAttribute("description") ?? string.Empty : Header.Description);
-                            if (Header.ForceMerging == ForceMerging.None)
-                                Header.ForceMerging = xtr.GetAttribute("forcemerging").AsForceMerging();
+                            if (Header.ForceMerging == MergingFlag.None)
+                                Header.ForceMerging = xtr.GetAttribute("forcemerging").AsMergingFlag();
 
-                            if (Header.ForceNodump == ForceNodump.None)
-                                Header.ForceNodump = xtr.GetAttribute("forcenodump").AsForceNodump();
+                            if (Header.ForceNodump == NodumpFlag.None)
+                                Header.ForceNodump = xtr.GetAttribute("forcenodump").AsNodumpFlag();
 
-                            if (Header.ForcePacking == ForcePacking.None)
-                                Header.ForcePacking = xtr.GetAttribute("forcepacking").AsForcePacking();
+                            if (Header.ForcePacking == PackingFlag.None)
+                                Header.ForcePacking = xtr.GetAttribute("forcepacking").AsPackingFlag();
 
                             xtr.Read();
                             break;
@@ -644,39 +644,39 @@ namespace SabreTools.Library.DatFiles
 
                 switch (Header.ForcePacking)
                 {
-                    case ForcePacking.Unzip:
+                    case PackingFlag.Unzip:
                         xtw.WriteAttributeString("forcepacking", "unzip");
                         break;
-                    case ForcePacking.Zip:
+                    case PackingFlag.Zip:
                         xtw.WriteAttributeString("forcepacking", "zip");
                         break;
                 }
 
                 switch (Header.ForceMerging)
                 {
-                    case ForceMerging.Full:
+                    case MergingFlag.Full:
                         xtw.WriteAttributeString("forcemerging", "full");
                         break;
-                    case ForceMerging.Split:
+                    case MergingFlag.Split:
                         xtw.WriteAttributeString("forcemerging", "split");
                         break;
-                    case ForceMerging.Merged:
+                    case MergingFlag.Merged:
                         xtw.WriteAttributeString("forcemerging", "merged");
                         break;
-                    case ForceMerging.NonMerged:
+                    case MergingFlag.NonMerged:
                         xtw.WriteAttributeString("forcemerging", "nonmerged");
                         break;
                 }
 
                 switch (Header.ForceNodump)
                 {
-                    case ForceNodump.Ignore:
+                    case NodumpFlag.Ignore:
                         xtw.WriteAttributeString("forcenodump", "ignore");
                         break;
-                    case ForceNodump.Obsolete:
+                    case NodumpFlag.Obsolete:
                         xtw.WriteAttributeString("forcenodump", "obsolete");
                         break;
-                    case ForceNodump.Required:
+                    case NodumpFlag.Required:
                         xtw.WriteAttributeString("forcenodump", "required");
                         break;
                 }
