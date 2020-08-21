@@ -212,6 +212,8 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<bool?> Supported { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
+        // TODO: Machine.SharedFeatures - List<KeyValuePair<string, string>>
+
         #endregion
 
         #endregion // Machine Filters

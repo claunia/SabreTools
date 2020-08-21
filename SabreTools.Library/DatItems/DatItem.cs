@@ -222,6 +222,7 @@ namespace SabreTools.Library.DatItems
 
             // SoftwareList
             Field.Supported,
+            Field.SharedFeatures,
         };
 
         #endregion

@@ -461,6 +461,17 @@ namespace SabreTools.Library.DatFiles
                             machine.Supported = value.AsYesNo();
                             break;
 
+                        case "Machine.SharedFeatures":
+                            machine.SharedFeatures = new List<KeyValuePair<string, string>>();
+                            var sharedFeatures = value.Split(';');
+                            foreach (var sharedFeature in sharedFeatures)
+                            {
+                                var featurePair = sharedFeature.Split('=');
+                                machine.SharedFeatures.Add(new KeyValuePair<string, string>(featurePair[0], featurePair[1]));
+                            }
+
+                            break;
+
                         #endregion
 
                         #endregion // Machine
@@ -1170,6 +1181,17 @@ namespace SabreTools.Library.DatFiles
 
                 case "supported":
                     return "Machine.Supported";
+
+                case "sharedfeat":
+                case "shared feat":
+                case "shared-feat":
+                case "sharedfeature":
+                case "shared feature":
+                case "shared-feature":
+                case "sharedfeatures":
+                case "shared features":
+                case "shared-features":
+                    return "Machine.SharedFeatures";
 
                 #endregion
 

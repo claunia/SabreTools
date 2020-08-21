@@ -90,6 +90,7 @@ namespace SabreTools.Library.DatItems
         #region SoftwareList
 
         Supported,
+        SharedFeatures,
 
         #endregion
 

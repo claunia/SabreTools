@@ -629,6 +629,25 @@ namespace SabreTools.Library.DatFiles
                         machine.Supported = jtr.ReadAsString().AsYesNo();
                         break;
 
+                    case "sharedfeat":
+                        machine.SharedFeatures = new List<KeyValuePair<string, string>>();
+                        jtr.Read(); // Start Array
+                        while (!sr.EndOfStream)
+                        {
+                            jtr.Read(); // Start object (or end array)
+                            if (jtr.TokenType == JsonToken.EndArray)
+                                break;
+
+                            jtr.Read(); // Key
+                            string key = jtr.Value as string;
+                            string value = jtr.ReadAsString();
+                            jtr.Read(); // End object
+
+                            machine.SharedFeatures.Add(new KeyValuePair<string, string>(key, value));
+                        }
+
+                        break;
+
                     #endregion
 
                     default:
@@ -1686,6 +1705,20 @@ namespace SabreTools.Library.DatFiles
                         jtw.WritePropertyName("supported");
                         jtw.WriteValue("no");
                     }
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SharedFeatures, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("sharedfeat");
+                    jtw.WriteStartArray();
+                    foreach (var feature in datItem.Machine.SharedFeatures)
+                    {
+                        jtw.WriteStartObject();
+                        jtw.WritePropertyName(feature.Key);
+                        jtw.WriteValue(feature.Value);
+                        jtw.WriteEndObject();
+                    }
+
+                    jtw.WriteEndArray();
                 }
 
                 #endregion

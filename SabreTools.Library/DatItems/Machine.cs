@@ -165,6 +165,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// List of info items
         /// </summary>
+        /// <remarks>Also in SoftwareList</remarks>
         [JsonProperty("infos")]
         public List<KeyValuePair<string, string>> Infos { get; set; } = null;
 
@@ -252,6 +253,13 @@ namespace SabreTools.Library.DatItems
         /// <remarks>yes = true, partial = null, no = false</remarks>
         [JsonProperty("supported")]
         public bool? Supported { get; set; } = true;
+
+        /// <summary>
+        /// List of shared feature items
+        /// </summary>
+        /// <remarks>Also in SoftwareList</remarks>
+        [JsonProperty("sharedfeat")]
+        public List<KeyValuePair<string, string>> SharedFeatures { get; set; } = null;
 
         #endregion
 
@@ -402,6 +410,9 @@ namespace SabreTools.Library.DatItems
 
                 case Field.Supported:
                     fieldValue = Supported?.ToString();
+                    break;
+                case Field.SharedFeatures:
+                    fieldValue = string.Join(";", (SharedFeatures ?? new List<KeyValuePair<string, string>>()).Select(i => $"{i.Key}={i.Value}"));
                     break;
 
                 #endregion
@@ -572,6 +583,19 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Supported))
                 Supported = mappings[Field.Supported].AsYesNo();
 
+            if (mappings.Keys.Contains(Field.SharedFeatures))
+            {
+                if (SharedFeatures == null)
+                    SharedFeatures = new List<KeyValuePair<string, string>>();
+
+                string[] pairs = mappings[Field.SharedFeatures].Split(';');
+                foreach (string pair in pairs)
+                {
+                    string[] split = pair.Split('=');
+                    SharedFeatures.Add(new KeyValuePair<string, string>(split[0], split[1]));
+                }
+            }
+
             #endregion
         }
 
@@ -671,6 +695,7 @@ namespace SabreTools.Library.DatItems
                 #region SoftwareList
 
                 Supported = this.Supported,
+                SharedFeatures = this.SharedFeatures,
 
                 #endregion
             };
@@ -1076,6 +1101,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Supported))
                 Supported = null;
 
+            if (fields.Contains(Field.SharedFeatures))
+                SharedFeatures = null;
+
             #endregion
         }
 
@@ -1220,6 +1248,9 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Supported))
                 Supported = machine.Supported;
+
+            if (fields.Contains(Field.SharedFeatures))
+                SharedFeatures = machine.SharedFeatures;
 
             #endregion
         }

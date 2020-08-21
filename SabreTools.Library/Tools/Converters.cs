@@ -297,6 +297,16 @@ namespace SabreTools.Library.Tools
 
                 case "supported":
                     return Field.Supported;
+                case "sharedfeat":
+                case "shared feat":
+                case "shared-feat":
+                case "sharedfeature":
+                case "shared feature":
+                case "shared-feature":
+                case "sharedfeatures":
+                case "shared features":
+                case "shared-features":
+                    return Field.SharedFeatures;
 
                 #endregion
 

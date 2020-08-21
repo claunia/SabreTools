@@ -146,6 +146,7 @@ namespace SabreTools.Library.DatFiles
 
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
                 Infos = new List<KeyValuePair<string, string>>(),
+                SharedFeatures = new List<KeyValuePair<string, string>>(),
 
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
             };
@@ -184,8 +185,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sharedfeat":
-                        // string sharedfeat_name = reader.GetAttribute("name");
-                        // string sharedfeat_value = reader.GetAttribute("value");
+                        machine.SharedFeatures.Add(new KeyValuePair<string, string>(reader.GetAttribute("name"), reader.GetAttribute("value")));
                         reader.Read();
                         break;
 
@@ -736,6 +736,17 @@ namespace SabreTools.Library.DatFiles
                     foreach (KeyValuePair<string, string> kvp in datItem.Machine.Infos)
                     {
                         xtw.WriteStartElement("info");
+                        xtw.WriteAttributeString("name", kvp.Key);
+                        xtw.WriteAttributeString("value", kvp.Value);
+                        xtw.WriteEndElement();
+                    }
+                }
+
+                if (!Header.ExcludeFields.Contains(Field.SharedFeatures) && datItem.Machine.SharedFeatures != null && datItem.Machine.SharedFeatures.Count > 0)
+                {
+                    foreach (KeyValuePair<string, string> kvp in datItem.Machine.SharedFeatures)
+                    {
+                        xtw.WriteStartElement("sharedfeat");
                         xtw.WriteAttributeString("name", kvp.Key);
                         xtw.WriteAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
