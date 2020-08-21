@@ -415,6 +415,46 @@ namespace SabreTools.Library.DatFiles
 
                         #endregion
 
+                        #region Logiqx EmuArc
+
+                        case "Machine.TitleID":
+                            machine.TitleID = value;
+                            break;
+
+                        case "Machine.Developer":
+                            machine.Developer = value;
+                            break;
+
+                        case "Machine.Genre":
+                            machine.Genre = value;
+                            break;
+
+                        case "Machine.Subgenre":
+                            machine.Subgenre = value;
+                            break;
+
+                        case "Machine.Ratings":
+                            machine.Ratings = value;
+                            break;
+
+                        case "Machine.Score":
+                            machine.Score = value;
+                            break;
+
+                        case "Machine.Enabled":
+                            machine.Enabled = value;
+                            break;
+
+                        case "Machine.HasCrc":
+                            machine.HasCrc = value.AsYesNo();
+                            break;
+
+                        case "Machine.RelatedTo":
+                            machine.RelatedTo = value;
+                            break;
+
+                        #endregion
+
                         #region SoftwareList
 
                         case "Machine.Supported":
@@ -1086,6 +1126,43 @@ namespace SabreTools.Library.DatFiles
                 case "rebuild to":
                 case "rebuild-to":
                     return "Machine.RebuildTo";
+
+                #endregion
+
+                #region Logiqx EmuArc
+
+                case "titleid":
+                case "title id":
+                case "title-id":
+                    return "Machine.TitleID";
+
+                case "developer":
+                    return "Machine.Developer";
+
+                case "genre":
+                    return "Machine.Genre";
+
+                case "subgenre":
+                    return "Machine.Subgenre";
+
+                case "ratings":
+                    return "Machine.Ratings";
+
+                case "score":
+                    return "Machine.Score";
+
+                case "enabled":
+                    return "Machine.Enabled";
+
+                case "hascrc":
+                case "has crc":
+                case "has-crc":
+                    return "Machine.HasCrc";
+
+                case "relatedto":
+                case "related to":
+                case "related-to":
+                    return "Machine.RelatedTo";
 
                 #endregion
 

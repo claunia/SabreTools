@@ -156,6 +156,55 @@ namespace SabreTools.Library.Filtering
 
         #endregion
 
+        #region Logiqx EmuArc
+
+        /// <summary>
+        /// Include or exclude machine title ID
+        /// </summary>
+        public FilterItem<string> TitleID { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine developer
+        /// </summary>
+        public FilterItem<string> Developer { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine genre
+        /// </summary>
+        public FilterItem<string> Genre { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine subgenre
+        /// </summary>
+        public FilterItem<string> Subgenre { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine ratings
+        /// </summary>
+        public FilterItem<string> Ratings { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine score
+        /// </summary>
+        public FilterItem<string> Score { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine enabled
+        /// </summary>
+        public FilterItem<string> Enabled { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude items with the "crc" tag
+        /// </summary>
+        public FilterItem<bool?> HasCrc { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        /// <summary>
+        /// Include or exclude machine related to
+        /// </summary>
+        public FilterItem<string> RelatedTo { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
         #region SoftwareList
 
         /// <summary>
@@ -620,6 +669,73 @@ namespace SabreTools.Library.Filtering
                         RebuildTo.NegativeSet.Add(value);
                     else
                         RebuildTo.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #region Logiqx EmuArc
+
+                case Field.TitleID:
+                    if (negate)
+                        TitleID.NegativeSet.Add(value);
+                    else
+                        TitleID.PositiveSet.Add(value);
+                    break;
+
+                case Field.Developer:
+                    if (negate)
+                        Developer.NegativeSet.Add(value);
+                    else
+                        Developer.PositiveSet.Add(value);
+                    break;
+
+                case Field.Genre:
+                    if (negate)
+                        Genre.NegativeSet.Add(value);
+                    else
+                        Genre.PositiveSet.Add(value);
+                    break;
+
+                case Field.Subgenre:
+                    if (negate)
+                        Subgenre.NegativeSet.Add(value);
+                    else
+                        Subgenre.PositiveSet.Add(value);
+                    break;
+
+                case Field.Ratings:
+                    if (negate)
+                        Ratings.NegativeSet.Add(value);
+                    else
+                        Ratings.PositiveSet.Add(value);
+                    break;
+
+                case Field.Score:
+                    if (negate)
+                        Score.NegativeSet.Add(value);
+                    else
+                        Score.PositiveSet.Add(value);
+                    break;
+
+                case Field.Enabled:
+                    if (negate)
+                        Enabled.NegativeSet.Add(value);
+                    else
+                        Enabled.PositiveSet.Add(value);
+                    break;
+
+                case Field.HasCrc:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        HasCrc.Neutral = false;
+                    else
+                        HasCrc.Neutral = true;
+                    break;
+
+                case Field.RelatedTo:
+                    if (negate)
+                        RelatedTo.NegativeSet.Add(value);
+                    else
+                        RelatedTo.PositiveSet.Add(value);
                     break;
 
                 #endregion

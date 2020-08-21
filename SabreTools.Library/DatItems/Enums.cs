@@ -28,7 +28,8 @@ namespace SabreTools.Library.DatItems
 
         #region Machine
 
-        // Common Machine
+        #region Common
+
         MachineName,
         Comment,
         Description,
@@ -41,7 +42,10 @@ namespace SabreTools.Library.DatItems
         SampleOf,
         MachineType,
 
-        // AttractMode Machine
+        #endregion
+
+        #region AttractMode
+
         Players,
         Rotation,
         Control,
@@ -50,38 +54,72 @@ namespace SabreTools.Library.DatItems
         DisplayType,
         Buttons,
 
-        // ListXML Machine
+        #endregion
+
+        #region ListXML
+
         SourceFile,
         Runnable,
         Devices,
         SlotOptions,
         Infos,
 
-        // Logiqx Machine
+        #endregion
+
+        #region Logiqx
+
         Board,
         RebuildTo,
 
-        // SoftwareList Machine
+        #endregion
+
+        #region Logiqx EmuArc
+
+        TitleID,
+        Developer,
+        Genre,
+        Subgenre,
+        Ratings,
+        Score,
+        Enabled,
+        HasCrc,
+        RelatedTo,
+
+        #endregion
+
+        #region SoftwareList
+
         Supported,
 
         #endregion
 
+        #endregion // Machine
+
         #region DatItem
 
-        // Common DatItem
+        #region Common
+
         Name,
         ItemType,
 
-        // AttractMode DatItem
+        #endregion
+
+        #region AttractMode
+
         AltName,
         AltTitle,
 
-        // SoftwareList DatItem
+        #endregion
+
+        #region SoftwareList
+
         PartName,
         PartInterface,
         Features,
         AreaName,
         AreaSize,
+
+        #endregion
 
         // BiosSet
         Default,
@@ -114,7 +152,7 @@ namespace SabreTools.Library.DatItems
         Offset,
         Inverted,
 
-        #endregion
+        #endregion // DatItem
     }
 
     /// <summary>

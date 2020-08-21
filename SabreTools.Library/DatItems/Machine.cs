@@ -90,6 +90,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Player count
         /// </summary>
+        /// <remarks>Also in Logiqx EmuArc</remarks>
         [JsonProperty("players")]
         public string Players { get; set; } = null;
 
@@ -184,6 +185,64 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region Logiqx EmuArc Fields
+
+        /// <summary>
+        /// Title ID
+        /// </summary>
+        [JsonProperty("titleid")]
+        public string TitleID { get; set; } = null;
+
+        /// <summary>
+        /// Machine developer
+        /// </summary>
+        [JsonProperty("developer")]
+        public string Developer { get; set; } = null;
+
+        /// <summary>
+        /// Game genre
+        /// </summary>
+        [JsonProperty("genre")]
+        public string Genre { get; set; } = null;
+
+        /// <summary>
+        /// Game subgenre
+        /// </summary>
+        [JsonProperty("genre")]
+        public string Subgenre { get; set; } = null;
+
+        /// <summary>
+        /// Game ratings
+        /// </summary>
+        [JsonProperty("ratings")]
+        public string Ratings { get; set; } = null;
+
+        /// <summary>
+        /// Game score
+        /// </summary>
+        [JsonProperty("score")]
+        public string Score { get; set; } = null;
+
+        /// <summary>
+        /// Is the machine enabled
+        /// </summary>
+        [JsonProperty("enabled")]
+        public string Enabled { get; set; } = null; // bool?
+
+        /// <summary>
+        /// Does the game have a CRC check
+        /// </summary>
+        [JsonProperty("hascrc")]
+        public bool? HasCrc { get; set; } = null;
+
+        /// <summary>
+        /// Machine relations
+        /// </summary>
+        [JsonProperty("relatedto")]
+        public string RelatedTo { get; set; } = null;
+
+        #endregion
+
         #region SoftwareList Fields
 
         /// <summary>
@@ -211,7 +270,8 @@ namespace SabreTools.Library.DatItems
             string fieldValue = null;
             switch (field)
             {
-                // Common
+                #region Common
+
                 case Field.MachineName:
                     fieldValue = Name;
                     break;
@@ -246,7 +306,10 @@ namespace SabreTools.Library.DatItems
                     fieldValue = MachineType.ToString();
                     break;
 
-                // AttractMode
+                #endregion
+
+                #region AttractMode
+
                 case Field.Players:
                     fieldValue = Players;
                     break;
@@ -269,7 +332,10 @@ namespace SabreTools.Library.DatItems
                     fieldValue = Buttons;
                     break;
 
-                // ListXML
+                #endregion
+
+                #region ListXML
+
                 case Field.SourceFile:
                     fieldValue = SourceFile;
                     break;
@@ -286,7 +352,10 @@ namespace SabreTools.Library.DatItems
                     fieldValue = string.Join(";", (Infos ?? new List<KeyValuePair<string, string>>()).Select(i => $"{i.Key}={i.Value}"));
                     break;
 
-                // Logiqx
+                #endregion
+
+                #region Logiqx
+
                 case Field.Board:
                     fieldValue = Board;
                     break;
@@ -294,10 +363,47 @@ namespace SabreTools.Library.DatItems
                     fieldValue = RebuildTo;
                     break;
 
-                // SoftwareList
+                #endregion
+
+                #region Logiqx EmuArc
+
+                case Field.TitleID:
+                    fieldValue = TitleID;
+                    break;
+                case Field.Developer:
+                    fieldValue = Developer;
+                    break;
+                case Field.Genre:
+                    fieldValue = Genre;
+                    break;
+                case Field.Subgenre:
+                    fieldValue = Subgenre;
+                    break;
+                case Field.Ratings:
+                    fieldValue = Ratings;
+                    break;
+                case Field.Score:
+                    fieldValue = Score;
+                    break;
+                case Field.Enabled:
+                    fieldValue = Enabled;
+                    break;
+                case Field.HasCrc:
+                    fieldValue = HasCrc.ToString();
+                    break;
+                case Field.RelatedTo:
+                    fieldValue = RelatedTo;
+                    break;
+
+                #endregion
+
+                #region SoftwareList
+
                 case Field.Supported:
                     fieldValue = Supported?.ToString();
                     break;
+
+                #endregion
 
                 default:
                     return null;
@@ -329,24 +435,7 @@ namespace SabreTools.Library.DatItems
         public Machine(string name, string description)
         {
             Name = name;
-            Comment = null;
             Description = description;
-            Year = null;
-            Manufacturer = null;
-            Publisher = null;
-            Category = null;
-            RomOf = null;
-            CloneOf = null;
-            SampleOf = null;
-            Supported = true;
-            SourceFile = null;
-            Runnable = null;
-            Board = null;
-            RebuildTo = null;
-            Devices = null;
-            SlotOptions = null;
-            Infos = null;
-            MachineType = MachineType.NULL;
         }
 
         #endregion
@@ -403,6 +492,20 @@ namespace SabreTools.Library.DatItems
 
                 Board = this.Board,
                 RebuildTo = this.RebuildTo,
+
+                #endregion
+
+                #region Logiqx EmuArc
+
+                TitleID = this.TitleID,
+                Developer = this.Developer,
+                Genre = this.Genre,
+                Subgenre = this.Subgenre,
+                Ratings = this.Ratings,
+                Score = this.Score,
+                Enabled = this.Enabled,
+                HasCrc = this.HasCrc,
+                RelatedTo = this.RelatedTo,
 
                 #endregion
 
@@ -614,6 +717,62 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region Logiqx EmuArc
+
+            // Filter on title ID
+            if (filter.TitleID.MatchesPositiveSet(TitleID) == false)
+                return false;
+            if (filter.TitleID.MatchesNegativeSet(TitleID) == true)
+                return false;
+
+            // Filter on developer
+            if (filter.Developer.MatchesPositiveSet(Developer) == false)
+                return false;
+            if (filter.Developer.MatchesNegativeSet(Developer) == true)
+                return false;
+
+            // Filter on genre
+            if (filter.Genre.MatchesPositiveSet(Genre) == false)
+                return false;
+            if (filter.Genre.MatchesNegativeSet(Genre) == true)
+                return false;
+
+            // Filter on rebuildto
+            if (filter.Subgenre.MatchesPositiveSet(Subgenre) == false)
+                return false;
+            if (filter.Subgenre.MatchesNegativeSet(Subgenre) == true)
+                return false;
+
+            // Filter on subgenre
+            if (filter.Ratings.MatchesPositiveSet(Ratings) == false)
+                return false;
+            if (filter.Ratings.MatchesNegativeSet(Ratings) == true)
+                return false;
+
+            // Filter on score
+            if (filter.Score.MatchesPositiveSet(Score) == false)
+                return false;
+            if (filter.Score.MatchesNegativeSet(Score) == true)
+                return false;
+
+            // Filter on enabled
+            if (filter.Enabled.MatchesPositiveSet(Enabled) == false)
+                return false;
+            if (filter.Enabled.MatchesNegativeSet(Enabled) == true)
+                return false;
+
+            // Filter on has CRC flag
+            if (filter.HasCrc.MatchesNeutral(null, HasCrc) == false)
+                return false;
+
+            // Filter on related to
+            if (filter.RelatedTo.MatchesPositiveSet(RelatedTo) == false)
+                return false;
+            if (filter.RelatedTo.MatchesNegativeSet(RelatedTo) == true)
+                return false;
+
+            #endregion
+
             #region SoftwareList
 
             // Filter on supported
@@ -719,6 +878,37 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.RebuildTo))
                 RebuildTo = null;
+
+            #endregion
+
+            #region Logiqx EmuArc
+
+            if (fields.Contains(Field.TitleID))
+                TitleID = null;
+
+            if (fields.Contains(Field.Developer))
+                Developer = null;
+
+            if (fields.Contains(Field.Genre))
+                Genre = null;
+
+            if (fields.Contains(Field.Subgenre))
+                Subgenre = null;
+
+            if (fields.Contains(Field.Ratings))
+                Ratings = null;
+
+            if (fields.Contains(Field.Score))
+                Score = null;
+
+            if (fields.Contains(Field.Enabled))
+                Enabled = null;
+
+            if (fields.Contains(Field.HasCrc))
+                HasCrc = null;
+
+            if (fields.Contains(Field.RelatedTo))
+                RelatedTo = null;
 
             #endregion
 
@@ -833,6 +1023,37 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.RebuildTo))
                 RebuildTo = machine.RebuildTo;
+
+            #endregion
+
+            #region Logiqx EmuArc
+
+            if (fields.Contains(Field.TitleID))
+                TitleID = machine.TitleID;
+
+            if (fields.Contains(Field.Developer))
+                Developer = machine.Developer;
+
+            if (fields.Contains(Field.Genre))
+                Genre = machine.Genre;
+
+            if (fields.Contains(Field.Subgenre))
+                Subgenre = machine.Subgenre;
+
+            if (fields.Contains(Field.Ratings))
+                Ratings = machine.Ratings;
+
+            if (fields.Contains(Field.Score))
+                Score = machine.Score;
+
+            if (fields.Contains(Field.Enabled))
+                Enabled = machine.Enabled;
+
+            if (fields.Contains(Field.HasCrc))
+                HasCrc = machine.HasCrc;
+
+            if (fields.Contains(Field.RelatedTo))
+                RelatedTo = machine.RelatedTo;
 
             #endregion
 

@@ -256,6 +256,43 @@ namespace SabreTools.Library.Tools
 
                 #endregion
 
+                #region Logiqx EmuArc
+
+                case "titleid":
+                case "title id":
+                case "title-id":
+                    return Field.TitleID;
+
+                case "developer":
+                    return Field.Developer;
+
+                case "genre":
+                    return Field.Genre;
+
+                case "subgenre":
+                    return Field.Subgenre;
+
+                case "ratings":
+                    return Field.Ratings;
+
+                case "score":
+                    return Field.Score;
+
+                case "enabled":
+                    return Field.Enabled;
+
+                case "hascrc":
+                case "has crc":
+                case "has-crc":
+                    return Field.HasCrc;
+
+                case "relatedto":
+                case "related to":
+                case "related-to":
+                    return Field.RelatedTo;
+
+                #endregion
+
                 #region SoftwareList
 
                 case "supported":

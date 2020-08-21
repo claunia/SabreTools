@@ -451,7 +451,8 @@ namespace SabreTools.Library.DatFiles
 
                 switch (jtr.Value)
                 {
-                    // Common
+                    #region Common
+
                     case "name":
                         machine.Name = jtr.ReadAsString();
                         break;
@@ -504,7 +505,10 @@ namespace SabreTools.Library.DatFiles
                         ReadItems(sr, jtr, filename, indexId, machine);
                         break;
 
-                    // AttractMode
+                    #endregion
+
+                    #region AttractMode
+
                     case "players":
                         machine.Players = jtr.ReadAsString();
                         break;
@@ -527,7 +531,10 @@ namespace SabreTools.Library.DatFiles
                         machine.Buttons = jtr.ReadAsString();
                         break;
 
-                    // ListXML
+                    #endregion
+
+                    #region ListXML
+
                     case "sourcefile":
                         machine.SourceFile = jtr.ReadAsString();
                         break;
@@ -571,7 +578,10 @@ namespace SabreTools.Library.DatFiles
 
                         break;
 
-                    // Logiqx
+                    #endregion
+
+                    #region Logiqx
+
                     case "board":
                         machine.Board = jtr.ReadAsString();
                         break;
@@ -579,10 +589,47 @@ namespace SabreTools.Library.DatFiles
                         machine.RebuildTo = jtr.ReadAsString();
                         break;
 
-                    // SoftwareList
+                    #endregion
+
+                    #region Logiqx EmuArc
+
+                    case "titleid":
+                        machine.TitleID = jtr.ReadAsString();
+                        break;
+                    case "developer":
+                        machine.Developer = jtr.ReadAsString();
+                        break;
+                    case "genre":
+                        machine.Genre = jtr.ReadAsString();
+                        break;
+                    case "subgenre":
+                        machine.Subgenre = jtr.ReadAsString();
+                        break;
+                    case "ratings":
+                        machine.Ratings = jtr.ReadAsString();
+                        break;
+                    case "score":
+                        machine.Score = jtr.ReadAsString();
+                        break;
+                    case "enabled":
+                        machine.Enabled = jtr.ReadAsString();
+                        break;
+                    case "hascrc":
+                        machine.HasCrc = jtr.ReadAsString().AsYesNo();
+                        break;
+                    case "relatedto":
+                        machine.RelatedTo = jtr.ReadAsString();
+                        break;
+
+                    #endregion
+
+                    #region SoftwareList
+
                     case "supported":
                         machine.Supported = jtr.ReadAsString().AsYesNo();
                         break;
+
+                    #endregion
 
                     default:
                         break;
@@ -1382,7 +1429,8 @@ namespace SabreTools.Library.DatFiles
                 // Build the state based on excluded fields
                 jtw.WriteStartObject();
 
-                // Common
+                #region Common
+
                 jtw.WritePropertyName("name");
                 jtw.WriteValue(datItem.GetField(Field.MachineName, Header.ExcludeFields));
 
@@ -1450,7 +1498,10 @@ namespace SabreTools.Library.DatFiles
                     }
                 }
 
-                // AttractMode
+                #endregion
+
+                #region AttractMode
+
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Players, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("players");
@@ -1487,7 +1538,10 @@ namespace SabreTools.Library.DatFiles
                     jtw.WriteValue(datItem.Machine.Buttons);
                 }
 
-                // ListXML
+                #endregion
+
+                #region ListXML
+
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("sourcefile");
@@ -1543,7 +1597,10 @@ namespace SabreTools.Library.DatFiles
                     jtw.WriteEndArray();
                 }
 
-                // Logiqx
+                #endregion
+
+                #region Logiqx
+
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Board, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("board");
@@ -1555,7 +1612,68 @@ namespace SabreTools.Library.DatFiles
                     jtw.WriteValue(datItem.Machine.RebuildTo);
                 }
 
-                // SoftwareList
+                #endregion
+
+                #region Logiqx EmuArc
+
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.TitleID, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("titleid");
+                    jtw.WriteValue(datItem.Machine.TitleID);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Developer, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("developer");
+                    jtw.WriteValue(datItem.Machine.Developer);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Genre, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("genre");
+                    jtw.WriteValue(datItem.Machine.Genre);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Subgenre, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("subgenre");
+                    jtw.WriteValue(datItem.Machine.Subgenre);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Ratings, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("ratings");
+                    jtw.WriteValue(datItem.Machine.Ratings);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Score, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("score");
+                    jtw.WriteValue(datItem.Machine.Score);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Enabled, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("enabled");
+                    jtw.WriteValue(datItem.Machine.Enabled);
+                }
+                if (!Header.ExcludeFields.Contains(Field.HasCrc) && datItem.Machine.HasCrc != null)
+                {
+                    if (datItem.Machine.HasCrc == true)
+                    {
+                        jtw.WritePropertyName("hascrc");
+                        jtw.WriteValue("yes");
+                    }
+                    else if (datItem.Machine.HasCrc == false)
+                    {
+                        jtw.WritePropertyName("hascrc");
+                        jtw.WriteValue("no");
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RelatedTo, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("relatedto");
+                    jtw.WriteValue(datItem.Machine.RelatedTo);
+                }
+
+                #endregion
+
+                #region SoftwareList
+
                 if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != null)
                 {
                     if (datItem.Machine.Supported == true)
@@ -1569,6 +1687,8 @@ namespace SabreTools.Library.DatFiles
                         jtw.WriteValue("no");
                     }
                 }
+
+                #endregion
 
                 jtw.WritePropertyName("items");
                 jtw.WriteStartArray();

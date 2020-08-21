@@ -367,7 +367,7 @@ namespace SabreTools.Library.DatFiles
                         machine.Category = reader.ReadElementContentAsString();
                         break;
 
-                    case "trurip": // This is special metadata unique to TruRip
+                    case "trurip": // This is special metadata unique to EmuArc
                         ReadTruRip(reader.ReadSubtree(), machine);
 
                         // Skip the trurip node now that we've processed it
@@ -556,7 +556,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Read TruRip information
+        /// Read EmuArc information
         /// </summary>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="machine">Machine information to pass to contained items</param>
@@ -582,15 +582,15 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "titleid":
-                        reader.ReadElementContentAsString();
+                        machine.TitleID = reader.ReadElementContentAsString();
                         break;
 
                     case "publisher":
                         machine.Publisher = reader.ReadElementContentAsString();
                         break;
 
-                    case "developer": // Manufacturer is as close as this gets
-                        machine.Manufacturer = reader.ReadElementContentAsString();
+                    case "developer":
+                        machine.Developer = reader.ReadElementContentAsString();
                         break;
 
                     case "year":
@@ -598,31 +598,31 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "genre":
-                        machine.Category = reader.ReadElementContentAsString();
+                        machine.Genre = reader.ReadElementContentAsString();
                         break;
 
                     case "subgenre":
-                        reader.ReadElementContentAsString();
+                        machine.Subgenre = reader.ReadElementContentAsString();
                         break;
 
                     case "ratings":
-                        reader.ReadElementContentAsString();
+                        machine.Ratings = reader.ReadElementContentAsString();
                         break;
 
                     case "score":
-                        reader.ReadElementContentAsString();
+                        machine.Score = reader.ReadElementContentAsString();
                         break;
 
                     case "players":
-                        reader.ReadElementContentAsString();
+                        machine.Players = reader.ReadElementContentAsString();
                         break;
 
                     case "enabled":
-                        reader.ReadElementContentAsString();
+                        machine.Enabled = reader.ReadElementContentAsString();
                         break;
 
                     case "crc":
-                        reader.ReadElementContentAsString().AsYesNo();
+                        machine.HasCrc = reader.ReadElementContentAsString().AsYesNo();
                         break;
 
                     case "source":
@@ -634,7 +634,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "relatedto":
-                        reader.ReadElementContentAsString();
+                        machine.RelatedTo = reader.ReadElementContentAsString();
                         break;
 
                     default:
@@ -1007,6 +1007,58 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteElementString("manufacturer", datItem.Machine.Manufacturer);
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
                     xtw.WriteElementString("category", datItem.Machine.Category);
+
+                if (datItem.Machine.TitleID != null
+                    || datItem.Machine.Developer != null
+                    || datItem.Machine.Genre != null
+                    || datItem.Machine.Subgenre != null
+                    || datItem.Machine.Ratings != null
+                    || datItem.Machine.Score != null
+                    || datItem.Machine.Enabled != null
+                    || datItem.Machine.HasCrc != null
+                    || datItem.Machine.RelatedTo != null)
+                {
+                    xtw.WriteStartElement("trurip");
+
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.TitleID, Header.ExcludeFields)))
+                        xtw.WriteElementString("titleid", datItem.Machine.TitleID);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Publisher, Header.ExcludeFields)))
+                        xtw.WriteElementString("publisher", datItem.Machine.Publisher);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Developer, Header.ExcludeFields)))
+                        xtw.WriteElementString("developer", datItem.Machine.Developer);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
+                        xtw.WriteElementString("year", datItem.Machine.Year);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Genre, Header.ExcludeFields)))
+                        xtw.WriteElementString("genre", datItem.Machine.Genre);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Subgenre, Header.ExcludeFields)))
+                        xtw.WriteElementString("subgenre", datItem.Machine.Subgenre);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Ratings, Header.ExcludeFields)))
+                        xtw.WriteElementString("ratings", datItem.Machine.Ratings);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Score, Header.ExcludeFields)))
+                        xtw.WriteElementString("score", datItem.Machine.Score);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Players, Header.ExcludeFields)))
+                        xtw.WriteElementString("players", datItem.Machine.Players);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Enabled, Header.ExcludeFields)))
+                        xtw.WriteElementString("enabled", datItem.Machine.Enabled);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.TitleID, Header.ExcludeFields)))
+                        xtw.WriteElementString("titleid", datItem.Machine.TitleID);
+                    if (!Header.ExcludeFields.Contains(Field.HasCrc) && datItem.Machine.HasCrc != null)
+                    {
+                        if (datItem.Machine.HasCrc == true)
+                            xtw.WriteElementString("crc", "yes");
+                        else if (datItem.Machine.HasCrc == false)
+                            xtw.WriteElementString("crc", "no");
+                    }
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
+                        xtw.WriteElementString("source", datItem.Machine.SourceFile);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)))
+                        xtw.WriteElementString("cloneof", datItem.Machine.CloneOf);
+                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RelatedTo, Header.ExcludeFields)))
+                        xtw.WriteElementString("relatedto", datItem.Machine.RelatedTo);
+
+                    // End trurip
+                    xtw.WriteEndElement();
+                }
 
                 xtw.Flush();
             }

@@ -209,6 +209,17 @@ namespace SabreTools.Library.DatItems
             Field.Board,
             Field.RebuildTo,
 
+            // Logiqx EmuArc
+            Field.TitleID,
+            Field.Developer,
+            Field.Genre,
+            Field.Subgenre,
+            Field.Ratings,
+            Field.Score,
+            Field.Enabled,
+            Field.HasCrc,
+            Field.RelatedTo,
+
             // SoftwareList
             Field.Supported,
         };
