@@ -121,6 +121,8 @@ namespace SabreTools.Library.DatItems
         AreaSize,
         AreaWidth,
         AreaEndianness,
+        Value,
+        LoadFlag,
 
         #endregion
 

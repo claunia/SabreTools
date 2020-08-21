@@ -283,6 +283,16 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public FilterItem<string> AreaEndianness { get; private set; } = new FilterItem<string>();
 
+        /// <summary>
+        /// Include or exclude softwarelist value
+        /// </summary>
+        public FilterItem<string> Value { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude load flag
+        /// </summary>
+        public FilterItem<string> LoadFlag { get; private set; } = new FilterItem<string>();
+
         #endregion
 
         /// <summary>
@@ -893,6 +903,20 @@ namespace SabreTools.Library.Filtering
                         AreaEndianness.NegativeSet.Add(value);
                     else
                         AreaEndianness.PositiveSet.Add(value);
+                    break;
+
+                case Field.Value:
+                    if (negate)
+                        Value.NegativeSet.Add(value);
+                    else
+                        Value.PositiveSet.Add(value);
+                    break;
+
+                case Field.LoadFlag:
+                    if (negate)
+                        LoadFlag.NegativeSet.Add(value);
+                    else
+                        LoadFlag.PositiveSet.Add(value);
                     break;
 
                 #endregion

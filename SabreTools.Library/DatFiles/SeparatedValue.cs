@@ -89,6 +89,8 @@ namespace SabreTools.Library.DatFiles
                     areaName = null,
                     areaWidth = null,
                     areaEndianness = null,
+                    slvalue = null,
+                    loadFlag = null,
                     biosDescription = null,
                     crc = null,
                     md5 = null,
@@ -545,6 +547,14 @@ namespace SabreTools.Library.DatFiles
                             areaEndianness = value;
                             break;
 
+                        case "DatItem.Value":
+                            slvalue = value;
+                            break;
+
+                        case "DatItem.LoadFlag":
+                            loadFlag = value;
+                            break;
+
                         #endregion
 
                         case "DatItem.Default":
@@ -662,6 +672,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = slvalue,
+                            LoadFlag = loadFlag,
 
                             Source = new Source
                             {
@@ -689,6 +701,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = slvalue,
+                            LoadFlag = loadFlag,
 
                             Description = biosDescription,
                             Default = def,
@@ -719,6 +733,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = slvalue,
+                            LoadFlag = loadFlag,
 
                             MD5 = md5,
 #if NET_FRAMEWORK
@@ -761,6 +777,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = slvalue,
+                            LoadFlag = loadFlag,
 
                             Region = region,
                             Language = language,
@@ -793,6 +811,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = slvalue,
+                            LoadFlag = loadFlag,
 
                             Bios = bios,
                             Size = size,
@@ -839,6 +859,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = slvalue,
+                            LoadFlag = loadFlag,
 
                             Source = new Source
                             {
@@ -1308,6 +1330,14 @@ namespace SabreTools.Library.DatFiles
                 case "area endianness":
                 case "area-endianness":
                     return "DatItem.AreaEndianness";
+
+                case "value":
+                    return "DatItem.Value";
+
+                case "loadflag":
+                case "load flag":
+                case "load-flag":
+                    return "DatItem.LoadFlag";
 
                 #endregion
 

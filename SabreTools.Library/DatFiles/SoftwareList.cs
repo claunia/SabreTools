@@ -331,6 +331,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitch":
+                        // TODO: Read dipswitches
                         // string dipswitch_name = reader.GetAttribute("name");
                         // string dipswitch_tag = reader.GetAttribute("tag");
                         // string dipswitch_mask = reader.GetAttribute("mask");
@@ -413,6 +414,7 @@ namespace SabreTools.Library.DatFiles
                             {
                                 ((Rom)lastrom).Size += Sanitizer.CleanSize(reader.GetAttribute("size"));
                             }
+
                             Items[key].RemoveAt(index);
                             Items[key].Add(lastrom);
                             reader.Read();
@@ -433,9 +435,7 @@ namespace SabreTools.Library.DatFiles
                             SHA384 = reader.GetAttribute("sha384"),
                             SHA512 = reader.GetAttribute("sha512"),
                             Offset = reader.GetAttribute("offset"),
-                            // Value = reader.GetAttribute("value");
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            // LoadFlag = reader.GetAttribute("loadflag"), // (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain|ignore)
 
                             PartName = partName,
                             PartInterface = partInterface,
@@ -444,6 +444,8 @@ namespace SabreTools.Library.DatFiles
                             AreaSize = areaSize,
                             AreaWidth = areaWidth,
                             AreaEndianness = areaEndianness,
+                            Value = reader.GetAttribute("value"),
+                            LoadFlag = reader.GetAttribute("loadflag"),
 
                             Source = new Source
                             {
@@ -926,12 +928,12 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
                             xtw.WriteAttributeString("offset", rom.Offset);
-                        //if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Value, DatHeader.ExcludeFields)))
-                        //    xtw.WriteAttributeString("value", rom.Value);
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Value, Header.ExcludeFields)))
+                            xtw.WriteAttributeString("value", rom.Value);
                         if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
-                        //if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Loadflag, DatHeader.ExcludeFields)))
-                        //    xtw.WriteAttributeString("loadflag", rom.Loadflag);
+                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.LoadFlag, Header.ExcludeFields)))
+                            xtw.WriteAttributeString("loadflag", rom.LoadFlag);
                         xtw.WriteEndElement();
 
                         // End dataarea

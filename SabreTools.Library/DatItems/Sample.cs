@@ -38,6 +38,8 @@
                 AreaSize = this.AreaSize,
                 AreaWidth = this.AreaWidth,
                 AreaEndianness = this.AreaEndianness,
+                Value = this.Value,
+                LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,

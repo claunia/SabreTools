@@ -738,6 +738,8 @@ namespace SabreTools.Library.DatFiles
                 areaName = null,
                 areaWidth = null,
                 areaEndianness = null,
+                value = null,
+                loadFlag = null,
                 biosDescription = null,
                 region = null,
                 language = null,
@@ -781,6 +783,8 @@ namespace SabreTools.Library.DatFiles
                     datItem.AreaSize = areaSize;
                     datItem.AreaWidth = areaWidth;
                     datItem.AreaEndianness = areaEndianness;
+                    datItem.Value = value;
+                    datItem.LoadFlag = loadFlag;
 
                     if (itemType == ItemType.BiosSet)
                     {
@@ -882,10 +886,10 @@ namespace SabreTools.Library.DatFiles
 
                             jtr.Read(); // Key
                             string key = jtr.Value as string;
-                            string value = jtr.ReadAsString();
+                            string featureValue = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            features.Add(new KeyValuePair<string, string>(key, value));
+                            features.Add(new KeyValuePair<string, string>(key, featureValue));
                         }
 
                         break;
@@ -908,6 +912,14 @@ namespace SabreTools.Library.DatFiles
 
                     case "areaendianness":
                         areaEndianness = jtr.ReadAsString();
+                        break;
+
+                    case "value":
+                        value = jtr.ReadAsString();
+                        break;
+
+                    case "loadflag":
+                        loadFlag = jtr.ReadAsString();
                         break;
 
                     case "description":
@@ -2071,6 +2083,16 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("areaendianness");
                     jtw.WriteValue(datItem.AreaEndianness);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Value, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("value");
+                    jtw.WriteValue(datItem.Value);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.LoadFlag, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("loadflag");
+                    jtw.WriteValue(datItem.LoadFlag);
                 }
 
                 // End item

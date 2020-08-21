@@ -115,6 +115,19 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("endianness")]
         public string AreaEndianness { get; set; } // (big|little) "little"
 
+        /// <summary>
+        /// SoftwareList value associated with the item
+        /// </summary>
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        /// <summary>
+        /// Loading flag
+        /// </summary>
+        /// TODO: Convert to Enum?
+        [JsonProperty("loadflag")]
+        public string LoadFlag { get; set; } // (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain|ignore)
+
         #endregion
 
         #region Metadata information
@@ -155,6 +168,8 @@ namespace SabreTools.Library.DatItems
             Field.AreaSize,
             Field.AreaWidth,
             Field.AreaEndianness,
+            Field.Value,
+            Field.LoadFlag,
 
             // BiosSet
             Field.BiosDescription,
@@ -295,6 +310,12 @@ namespace SabreTools.Library.DatItems
                 case Field.AreaEndianness:
                     fieldValue = AreaEndianness;
                     break;
+                case Field.Value:
+                    fieldValue = Value;
+                    break;
+                case Field.LoadFlag:
+                    fieldValue = LoadFlag;
+                    break;
 
                 case Field.NULL:
                 default:
@@ -369,6 +390,12 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.AreaEndianness))
                 AreaEndianness = mappings[Field.AreaEndianness];
+
+            if (mappings.Keys.Contains(Field.Value))
+                Value = mappings[Field.Value];
+
+            if (mappings.Keys.Contains(Field.LoadFlag))
+                LoadFlag = mappings[Field.LoadFlag];
 
             #endregion
         }
@@ -632,6 +659,18 @@ namespace SabreTools.Library.DatItems
             if (filter.AreaEndianness.MatchesNegativeSet(AreaEndianness) == true)
                 return false;
 
+            // Filter on softwarelist value
+            if (filter.Value.MatchesPositiveSet(Value) == false)
+                return false;
+            if (filter.Value.MatchesNegativeSet(Value) == true)
+                return false;
+
+            // Filter on load flag
+            if (filter.LoadFlag.MatchesPositiveSet(LoadFlag) == false)
+                return false;
+            if (filter.LoadFlag.MatchesNegativeSet(LoadFlag) == true)
+                return false;
+
             #endregion
 
             return true;
@@ -685,6 +724,12 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaEndianness))
                 AreaEndianness = null;
+
+            if (fields.Contains(Field.Value))
+                Value = null;
+
+            if (fields.Contains(Field.LoadFlag))
+                LoadFlag = null;
 
             #endregion
         }
@@ -808,6 +853,12 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AreaEndianness))
                 AreaEndianness = item.AreaEndianness;
+
+            if (fields.Contains(Field.Value))
+                Value = item.Value;
+
+            if (fields.Contains(Field.LoadFlag))
+                LoadFlag = item.LoadFlag;
 
             #endregion
         }

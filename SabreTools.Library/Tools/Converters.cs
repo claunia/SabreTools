@@ -375,6 +375,12 @@ namespace SabreTools.Library.Tools
                 case "area endianness":
                 case "area-endianness":
                     return Field.AreaEndianness;
+                case "value":
+                    return Field.Value;
+                case "loadflag":
+                case "load flag":
+                case "load-flag":
+                    return Field.LoadFlag;
 
                 #endregion
 
