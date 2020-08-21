@@ -206,6 +206,30 @@ namespace SabreTools.Library.DatFiles
                             Header.Build = (Header.Build == null ? value : Header.Build);
                             break;
 
+                        case "DatFile.RomMode":
+                            Header.RomMode = (Header.RomMode == null ? value : Header.RomMode);
+                            break;
+
+                        case "DatFile.BiosMode":
+                            Header.BiosMode = (Header.BiosMode == null ? value : Header.BiosMode);
+                            break;
+
+                        case "DatFile.SampleMode":
+                            Header.SampleMode = (Header.SampleMode == null ? value : Header.SampleMode);
+                            break;
+
+                        case "DatFile.LockRomMode":
+                            Header.LockRomMode = (Header.LockRomMode == null ? value.AsYesNo() : Header.LockRomMode);
+                            break;
+
+                        case "DatFile.LockBiosMode":
+                            Header.LockBiosMode = (Header.LockBiosMode == null ? value.AsYesNo() : Header.LockBiosMode);
+                            break;
+
+                        case "DatFile.LockSampleMode":
+                            Header.LockSampleMode = (Header.LockSampleMode == null ? value.AsYesNo() : Header.LockSampleMode);
+                            break;
+
                         #endregion
 
                         #region OfflineList
@@ -809,6 +833,36 @@ namespace SabreTools.Library.DatFiles
 
                 case "build":
                     return "DatFile.Build";
+
+                case "rommode":
+                case "rom mode":
+                case "rom-mode":
+                    return "DatFile.RomMode";
+
+                case "biosmode":
+                case "bios mode":
+                case "bios-mode":
+                    return "DatFile.BiosMode";
+
+                case "samplemode":
+                case "sample mode":
+                case "sample-mode":
+                    return "DatFile.SampleMode";
+
+                case "lockrommode":
+                case "lock rom mode":
+                case "lock-rom-mode":
+                    return "DatFile.LockRomMode";
+
+                case "lockbiosmode":
+                case "lock bios mode":
+                case "lock-bios-mode":
+                    return "DatFile.LockBiosMode";
+
+                case "locksamplemode":
+                case "lock sample mode":
+                case "lock-sample-mode":
+                    return "DatFile.LockSampleMode";
 
                 #endregion
 

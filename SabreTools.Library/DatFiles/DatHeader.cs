@@ -203,14 +203,41 @@ namespace SabreTools.Library.DatFiles
         [JsonProperty("build")]
         public string Build { get; set; }
 
-        // TODO: Implement the following header values:
-        // - romcenter.plugin
-        // - romcenter.rommode (merged|split|unmerged) "split"
-        // - romcenter.biosmode (merged|split|unmerged) "split"
-        // - romcenter.samplemode (merged|unmerged) "merged"
-        // - romcenter.lockrommode (yes|no) "no"
-        // - romcenter.lockbiosmode (yes|no) "no"
-        // - romcenter.locksamplemode (yes|no) "no"
+        /// <summary>
+        /// RomCenter rom mode
+        /// </summary>
+        [JsonProperty("rommode")]
+        public string RomMode { get; set; } // (merged|split|unmerged) "split"
+
+        /// <summary>
+        /// RomCenter bios mode
+        /// </summary>
+        [JsonProperty("biosmode")]
+        public string BiosMode { get; set; } // (merged|split|unmerged) "split"
+
+        /// <summary>
+        /// RomCenter sample mode
+        /// </summary>
+        [JsonProperty("samplemode")]
+        public string SampleMode { get; set; } // (merged|unmerged) "merged"
+
+        /// <summary>
+        /// RomCenter lock rom mode
+        /// </summary>
+        [JsonProperty("lockrommode")]
+        public bool? LockRomMode { get; set; } // (yes|no) "no"
+
+        /// <summary>
+        /// RomCenter lock bios mode
+        /// </summary>
+        [JsonProperty("lockbiosmode")]
+        public bool? LockBiosMode { get; set; } // (yes|no) "no"
+
+        /// <summary>
+        /// RomCenter lock sample mode
+        /// </summary>
+        [JsonProperty("locksamplemode")]
+        public bool? LockSampleMode { get; set; } // (yes|no) "no"
 
         #endregion
 
@@ -229,7 +256,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// System
         /// </summary>
-        /// <remarks>Known as "plugin" in RomCenter</remarks>
+        /// <remarks>Known as "plugin" in Logiqx and RomCenter</remarks>
         [JsonProperty("system")]
         public string System { get; set; }
 
@@ -260,7 +287,7 @@ namespace SabreTools.Library.DatFiles
         // TODO: Implement the following header values:
         // - newdat.datversionurl (currently reads and writes to Header.Url, not strictly correct)
         // - newdat.daturl (currently writes to Header.Url, not strictly correct)
-        // - newdat.daturl[fileName] (currently writes to Header.FileName, not strictly correct)
+        // - newdat.daturl[fileName] (currently writes to Header.FileName + ".zip", not strictly correct)
         // - newdat.imurl (currently writes to Header.Url, not strictly correct)
         // - search[...].to.find[operation, value (Int32?)]
         // - search[...].to[value, default (true|false), auto (true, false)]

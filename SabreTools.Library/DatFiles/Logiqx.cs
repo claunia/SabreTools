@@ -237,35 +237,23 @@ namespace SabreTools.Library.DatFiles
                         if (Header.System == null)
                             Header.System = reader.GetAttribute("plugin");
 
-                        if (reader.GetAttribute("rommode") != null)
-                        {
-                            // (merged|split|unmerged) "split"
-                        }
+                        if (Header.RomMode == null)
+                            Header.RomMode = reader.GetAttribute("rommode");
 
-                        if (reader.GetAttribute("biosmode") != null)
-                        {
-                            // (merged|split|unmerged) "split"
-                        }
+                        if (Header.BiosMode == null)
+                            Header.BiosMode = reader.GetAttribute("biosmode");
 
-                        if (reader.GetAttribute("samplemode") != null)
-                        {
-                            // (merged|unmerged) "merged"
-                        }
+                        if (Header.SampleMode == null)
+                            Header.SampleMode = reader.GetAttribute("samplemode");
 
-                        if (reader.GetAttribute("lockrommode") != null)
-                        {
-                            // (yes|no) "no"
-                        }
+                        if (Header.LockRomMode == null)
+                            Header.LockRomMode = reader.GetAttribute("lockrommode").AsYesNo();
 
-                        if (reader.GetAttribute("lockbiosmode") != null)
-                        {
-                            // (yes|no) "no"
-                        }
+                        if (Header.LockBiosMode == null)
+                            Header.LockBiosMode = reader.GetAttribute("lockbiosmode").AsYesNo();
 
-                        if (reader.GetAttribute("locksamplemode") != null)
-                        {
-                            // (yes|no) "no"
-                        }
+                        if (Header.LockSampleMode == null)
+                            Header.LockSampleMode = reader.GetAttribute("locksamplemode").AsYesNo();
 
                         reader.Read();
                         break;
@@ -860,6 +848,68 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("header", Header.HeaderSkipper);
 
                     // End clrmamepro
+                    xtw.WriteEndElement();
+                }
+
+                if (Header.System != null
+                    || Header.RomMode != null || Header.LockRomMode != null
+                    || Header.BiosMode != null || Header.LockBiosMode != null
+                    || Header.SampleMode != null || Header.LockSampleMode != null)
+                {
+                    xtw.WriteStartElement("romcenter");
+
+                    if (!string.IsNullOrWhiteSpace(Header.System))
+                        xtw.WriteAttributeString("plugin", Header.System);
+
+                    if (!string.IsNullOrWhiteSpace(Header.RomMode))
+                        xtw.WriteAttributeString("rommode", Header.RomMode);
+
+                    if (!string.IsNullOrWhiteSpace(Header.BiosMode))
+                        xtw.WriteAttributeString("biosmode", Header.BiosMode);
+
+                    if (!string.IsNullOrWhiteSpace(Header.SampleMode))
+                        xtw.WriteAttributeString("samplemode", Header.SampleMode);
+
+                    if (Header.LockRomMode != null)
+                    {
+                        switch (Header.LockRomMode)
+                        {
+                            case true:
+                                xtw.WriteAttributeString("lockrommode", "yes");
+                                break;
+                            case false:
+                                xtw.WriteAttributeString("lockrommode", "no");
+                                break;
+                        }
+                    }
+
+                    if (Header.LockBiosMode != null)
+                    {
+                        switch (Header.LockBiosMode)
+                        {
+                            case true:
+                                xtw.WriteAttributeString("lockbiosmode", "yes");
+                                break;
+                            case false:
+                                xtw.WriteAttributeString("lockbiosmode", "no");
+                                break;
+                        }
+                    }
+
+                    if (Header.LockSampleMode != null)
+                    {
+                        switch (Header.LockSampleMode)
+                        {
+                            case true:
+                                xtw.WriteAttributeString("locksamplemode", "yes");
+                                break;
+                            case false:
+                                xtw.WriteAttributeString("locksamplemode", "no");
+                                break;
+                        }
+                    }
+
+                    // End romcenter
                     xtw.WriteEndElement();
                 }
 

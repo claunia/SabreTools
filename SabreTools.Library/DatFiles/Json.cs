@@ -234,6 +234,36 @@ namespace SabreTools.Library.DatFiles
                         Header.Build = (Header.Build == null ? content : Header.Build);
                         break;
 
+                    case "rommode":
+                        content = jtr.ReadAsString();
+                        Header.RomMode = (Header.RomMode == null ? content : Header.RomMode);
+                        break;
+
+                    case "biosmode":
+                        content = jtr.ReadAsString();
+                        Header.BiosMode = (Header.BiosMode == null ? content : Header.BiosMode);
+                        break;
+
+                    case "samplemode":
+                        content = jtr.ReadAsString();
+                        Header.Build = (Header.SampleMode == null ? content : Header.SampleMode);
+                        break;
+
+                    case "lockrommode":
+                        content = jtr.ReadAsString();
+                        Header.LockRomMode = (Header.LockRomMode == null ? content.AsYesNo() : Header.LockRomMode);
+                        break;
+
+                    case "lockbiosmode":
+                        content = jtr.ReadAsString();
+                        Header.LockBiosMode = (Header.LockBiosMode == null ? content.AsYesNo() : Header.LockBiosMode);
+                        break;
+
+                    case "locksamplemode":
+                        content = jtr.ReadAsString();
+                        Header.LockSampleMode = (Header.LockSampleMode == null ? content.AsYesNo() : Header.LockSampleMode);
+                        break;
+
                     #endregion
 
                     #region OfflineList
@@ -1139,6 +1169,69 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("build");
                     jtw.WriteValue(Header.Build);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.RomMode))
+                {
+                    jtw.WritePropertyName("rommode");
+                    jtw.WriteValue(Header.RomMode);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.BiosMode))
+                {
+                    jtw.WritePropertyName("biosmode");
+                    jtw.WriteValue(Header.BiosMode);
+                }
+
+                if (!string.IsNullOrWhiteSpace(Header.SampleMode))
+                {
+                    jtw.WritePropertyName("samplemode");
+                    jtw.WriteValue(Header.SampleMode);
+                }
+
+                if (Header.LockRomMode != null)
+                {
+                    switch (Header.LockRomMode)
+                    {
+                        case true:
+                            jtw.WritePropertyName("lockrommode");
+                            jtw.WriteValue("yes");
+                            break;
+                        case false:
+                            jtw.WritePropertyName("lockrommode");
+                            jtw.WriteValue("no");
+                            break;
+                    }
+                }
+
+                if (Header.LockBiosMode != null)
+                {
+                    switch (Header.LockBiosMode)
+                    {
+                        case true:
+                            jtw.WritePropertyName("lockbiosmode");
+                            jtw.WriteValue("yes");
+                            break;
+                        case false:
+                            jtw.WritePropertyName("lockbiosmode");
+                            jtw.WriteValue("no");
+                            break;
+                    }
+                }
+
+                if (Header.LockSampleMode != null)
+                {
+                    switch (Header.LockSampleMode)
+                    {
+                        case true:
+                            jtw.WritePropertyName("locksamplemode");
+                            jtw.WriteValue("yes");
+                            break;
+                        case false:
+                            jtw.WritePropertyName("locksamplemode");
+                            jtw.WriteValue("no");
+                            break;
+                    }
                 }
 
                 #endregion
