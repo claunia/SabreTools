@@ -301,16 +301,19 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "datversionurl":
+                        // TODO: Read this into an appropriate field
                         content = reader.ReadElementContentAsString();
                         Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? content : Header.Url);
                         break;
 
                     case "daturl":
+                        // TODO: Read this into an appropriate structure
                         reader.GetAttribute("fileName");
                         reader.ReadElementContentAsString();
                         break;
 
                     case "imurl":
+                        // TODO: Read this into an appropriate field
                         reader.ReadElementContentAsString();
                         break;
 
@@ -348,6 +351,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "to":
+                        // TODO: Read this into an appropriate structure
                         reader.GetAttribute("value");
                         reader.GetAttribute("default"); // (true|false)
                         reader.GetAttribute("auto"); // (true|false)
@@ -392,6 +396,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "find":
+                        // TODO: Read this into an appropriate structure
                         reader.GetAttribute("operation");
                         reader.GetAttribute("value"); // Int32?
                         reader.ReadElementContentAsString();
@@ -465,9 +470,9 @@ namespace SabreTools.Library.DatFiles
             int indexId)
         {
             // Prepare all internal variables
-            string releaseNumber = string.Empty, publisher = string.Empty, duplicateid;
+            string releaseNumber = string.Empty, duplicateid;
             long size = -1;
-            List<Rom> roms = new List<Rom>();
+            List<Rom> datItems = new List<Rom>();
             Machine machine = new Machine();
 
             // If there's no subtree to the configuration, skip it
@@ -491,10 +496,12 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "imagenumber":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
                     case "releasenumber":
+                        // TODO: Read this into a field
                         releaseNumber = reader.ReadElementContentAsString();
                         break;
 
@@ -503,6 +510,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "savetype":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
@@ -513,33 +521,38 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "publisher":
-                        publisher = reader.ReadElementContentAsString();
+                        machine.Publisher = reader.ReadElementContentAsString();
                         break;
 
                     case "location":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
                     case "sourcerom":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
                     case "language":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
                     case "files":
-                        roms = ReadFiles(reader.ReadSubtree(), releaseNumber, machine.Name, filename, indexId);
+                        datItems = ReadFiles(reader.ReadSubtree(), releaseNumber, machine.Name, filename, indexId);
                         
                         // Skip the files node now that we've processed it
                         reader.Skip();
                         break;
 
                     case "im1crc":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
                     case "im2crc":
+                        // TODO: Read this into a field
                         reader.ReadElementContentAsString();
                         break;
 
@@ -561,14 +574,13 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Add information accordingly for each rom
-            for (int i = 0; i < roms.Count; i++)
+            for (int i = 0; i < datItems.Count; i++)
             {
-                roms[i].Size = size;
-                roms[i].CopyMachineInformation(machine);
-                roms[i].Machine.Publisher = publisher;
+                datItems[i].Size = size;
+                datItems[i].CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(roms[i]);
+                ParseAddHelper(datItems[i]);
             }
         }
 
@@ -619,6 +631,8 @@ namespace SabreTools.Library.DatFiles
                                 reader.GetAttribute("extension") ?? string.Empty,
                                 reader.ReadElementContentAsString().ToLowerInvariant()));
                         break;
+
+                    // TODO: Should I support the "custom" romMD5 and romSHA1 tags I write out?
 
                     default:
                         reader.Read();
@@ -889,16 +903,16 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("game");
                 xtw.WriteElementString("imageNumber", "1");
                 xtw.WriteElementString("releaseNumber", "1");
-                xtw.WriteElementString("title", datItem.GetField(Field.Name, Header.ExcludeFields));
+                xtw.WriteElementString("title", datItem.GetField(Field.Name, Header.ExcludeFields) ?? string.Empty);
                 xtw.WriteElementString("saveType", "None");
 
                 if (datItem.ItemType == ItemType.Rom)
                 {
                     var rom = datItem as Rom;
-                    xtw.WriteElementString("romSize", datItem.GetField(Field.Size, Header.ExcludeFields));
+                    xtw.WriteElementString("romSize", datItem.GetField(Field.Size, Header.ExcludeFields) ?? string.Empty);
                 }
 
-                xtw.WriteElementString("publisher", "None");
+                xtw.WriteElementString("publisher", datItem.GetField(Field.Publisher, Header.ExcludeFields) ?? string.Empty);
                 xtw.WriteElementString("location", "0");
                 xtw.WriteElementString("sourceRom", "None");
                 xtw.WriteElementString("language", "0");
@@ -959,8 +973,8 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteElementString("im1CRC", "00000000");
                 xtw.WriteElementString("im2CRC", "00000000");
-                xtw.WriteElementString("comment", "");
-                xtw.WriteElementString("duplicateID", "0");
+                xtw.WriteElementString("comment", datItem.GetField(Field.Comment, Header.ExcludeFields) ?? string.Empty);
+                xtw.WriteElementString("duplicateID", datItem.GetField(Field.CloneOf, Header.ExcludeFields) ?? string.Empty);
 
                 // End game
                 xtw.WriteEndElement();

@@ -19,6 +19,8 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
+        // TODO: Should any of these be specific to certain types?
+        // Most of the "weird" fields might only apply to Rom or Disk?
         #region Fields
 
         #region Common Fields
