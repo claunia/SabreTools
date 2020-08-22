@@ -769,7 +769,8 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         private void ClearEmpty()
         {
-            foreach (string key in items.Keys)
+            var keys = items.Keys.ToList();
+            foreach (string key in keys)
             {
                 if (items[key] == null || items[key].Count == 0)
                     items.Remove(key);
