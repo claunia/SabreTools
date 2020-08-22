@@ -251,6 +251,11 @@ namespace SabreTools.Library.DatItems
             Field.HasCrc,
             Field.RelatedTo,
 
+            // OpenMSX
+            Field.GenMSXID,
+            Field.System,
+            Field.Country,
+
             // SoftwareList
             Field.Supported,
             Field.SharedFeatures,

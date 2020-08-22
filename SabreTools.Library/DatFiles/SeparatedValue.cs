@@ -459,6 +459,22 @@ namespace SabreTools.Library.DatFiles
 
                         #endregion
 
+                        #region OpenMSX
+
+                        case "Machine.GenMSXID":
+                            machine.GenMSXID = value;
+                            break;
+
+                        case "Machine.System":
+                            machine.System = value;
+                            break;
+
+                        case "Machine.Country":
+                            machine.Country = value;
+                            break;
+
+                        #endregion
+
                         #region SoftwareList
 
                         case "Machine.Supported":
@@ -1235,6 +1251,25 @@ namespace SabreTools.Library.DatFiles
                 case "related to":
                 case "related-to":
                     return "Machine.RelatedTo";
+
+                #endregion
+
+                #region OpenMSX
+
+                case "genmsxid":
+                case "genmsx id":
+                case "genmsx-id":
+                case "gen msx id":
+                case "gen-msx-id":
+                    return "Machine.GenMSXID";
+
+                case "msxsystem":
+                case "msx system":
+                case "msx-system":
+                    return "Machine.System";
+
+                case "country":
+                    return "Machine.Country";
 
                 #endregion
 

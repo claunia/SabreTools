@@ -623,6 +623,20 @@ namespace SabreTools.Library.DatFiles
 
                     #endregion
 
+                    #region OpenMSX
+
+                    case "genmsxid":
+                        machine.GenMSXID = jtr.ReadAsString();
+                        break;
+                    case "system":
+                        machine.System = jtr.ReadAsString();
+                        break;
+                    case "country":
+                        machine.Country = jtr.ReadAsString();
+                        break;
+
+                    #endregion
+
                     #region SoftwareList
 
                     case "supported":
@@ -1754,6 +1768,26 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("relatedto");
                     jtw.WriteValue(datItem.Machine.RelatedTo);
+                }
+
+                #endregion
+
+                #region OpenMSX
+
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.GenMSXID, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("genmsxid");
+                    jtw.WriteValue(datItem.Machine.GenMSXID);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.System, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("system");
+                    jtw.WriteValue(datItem.Machine.System);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Country, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("country");
+                    jtw.WriteValue(datItem.Machine.Country);
                 }
 
                 #endregion

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
-using Newtonsoft.Json;
 using SabreTools.Library.Tools;
+using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {
@@ -245,6 +245,28 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region OpenMSX Fields
+
+        /// <summary>
+        /// Generation MSX ID
+        /// </summary>
+        [JsonProperty("genmsxid")]
+        public string GenMSXID { get; set; } = null;
+
+        /// <summary>
+        /// MSX System
+        /// </summary>
+        [JsonProperty("system")]
+        public string System { get; set; } = null;
+
+        /// <summary>
+        /// Machine country of origin
+        /// </summary>
+        [JsonProperty("country")]
+        public string Country { get; set; } = null;
+
+        #endregion
+
         #region SoftwareList Fields
 
         /// <summary>
@@ -408,6 +430,20 @@ namespace SabreTools.Library.DatItems
                     break;
                 case Field.RelatedTo:
                     fieldValue = RelatedTo;
+                    break;
+
+                #endregion
+
+                #region OpenMSX
+
+                case Field.GenMSXID:
+                    fieldValue = GenMSXID;
+                    break;
+                case Field.System:
+                    fieldValue = System;
+                    break;
+                case Field.Country:
+                    fieldValue = Country;
                     break;
 
                 #endregion
@@ -588,6 +624,19 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region OpenMSX
+
+            if (mappings.Keys.Contains(Field.GenMSXID))
+                GenMSXID = mappings[Field.GenMSXID];
+
+            if (mappings.Keys.Contains(Field.System))
+                System = mappings[Field.System];
+
+            if (mappings.Keys.Contains(Field.Country))
+                Country = mappings[Field.Country];
+
+            #endregion
+
             #region SoftwareList
 
             if (mappings.Keys.Contains(Field.Supported))
@@ -707,6 +756,14 @@ namespace SabreTools.Library.DatItems
                 Enabled = this.Enabled,
                 HasCrc = this.HasCrc,
                 RelatedTo = this.RelatedTo,
+
+                #endregion
+
+                #region OpenMSX
+
+                GenMSXID = this.GenMSXID,
+                System = this.System,
+                Country = this.Country,
 
                 #endregion
 
@@ -976,6 +1033,28 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region OpenMSX
+
+            // Filter on Generation MSX ID
+            if (filter.GenMSXID.MatchesPositiveSet(GenMSXID) == false)
+                return false;
+            if (filter.GenMSXID.MatchesNegativeSet(GenMSXID) == true)
+                return false;
+
+            // Filter on system
+            if (filter.System.MatchesPositiveSet(System) == false)
+                return false;
+            if (filter.System.MatchesNegativeSet(System) == true)
+                return false;
+
+            // Filter on country
+            if (filter.Country.MatchesPositiveSet(Country) == false)
+                return false;
+            if (filter.Country.MatchesNegativeSet(Country) == true)
+                return false;
+
+            #endregion
+
             #region SoftwareList
 
             // Filter on supported
@@ -1112,6 +1191,19 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.RelatedTo))
                 RelatedTo = null;
+
+            #endregion
+
+            #region OpenMSX
+
+            if (fields.Contains(Field.GenMSXID))
+                GenMSXID = null;
+
+            if (fields.Contains(Field.System))
+                System = null;
+
+            if (fields.Contains(Field.Country))
+                Country = null;
 
             #endregion
 
@@ -1263,6 +1355,19 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.RelatedTo))
                 RelatedTo = machine.RelatedTo;
+
+            #endregion
+
+            #region OpenMSX
+
+            if (fields.Contains(Field.GenMSXID))
+                GenMSXID = machine.GenMSXID;
+
+            if (fields.Contains(Field.System))
+                System = machine.System;
+
+            if (fields.Contains(Field.Country))
+                Country = machine.Country;
 
             #endregion
 

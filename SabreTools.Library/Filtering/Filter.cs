@@ -205,6 +205,25 @@ namespace SabreTools.Library.Filtering
 
         #endregion
 
+        #region OpenMSX
+
+        /// <summary>
+        /// Include or exclude machine Generation MSX ID
+        /// </summary>
+        public FilterItem<string> GenMSXID { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine system
+        /// </summary>
+        public FilterItem<string> System { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude machine country
+        /// </summary>
+        public FilterItem<string> Country { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
         #region SoftwareList
 
         /// <summary>
@@ -758,6 +777,31 @@ namespace SabreTools.Library.Filtering
                         RelatedTo.NegativeSet.Add(value);
                     else
                         RelatedTo.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #region OpenMSX
+
+                case Field.GenMSXID:
+                    if (negate)
+                        GenMSXID.NegativeSet.Add(value);
+                    else
+                        GenMSXID.PositiveSet.Add(value);
+                    break;
+
+                case Field.System:
+                    if (negate)
+                        System.NegativeSet.Add(value);
+                    else
+                        System.PositiveSet.Add(value);
+                    break;
+
+                case Field.Country:
+                    if (negate)
+                        Country.NegativeSet.Add(value);
+                    else
+                        Country.PositiveSet.Add(value);
                     break;
 
                 #endregion

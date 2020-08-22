@@ -135,13 +135,11 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "genmsxid":
-                        // string id = reader.ReadElementContentAsString();
-                        reader.Read();
+                        machine.GenMSXID = reader.ReadElementContentAsString();
                         break;
 
                     case "system":
-                        // string system = reader.ReadElementContentAsString();
-                        reader.Read();
+                        machine.System = reader.ReadElementContentAsString();
                         break;
 
                     case "company":
@@ -153,8 +151,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "country":
-                        // string country = reader.ReadElementContentAsString();
-                        reader.Read();
+                        machine.Country = reader.ReadElementContentAsString();
                         break;
 
                     case "dump":
@@ -631,11 +628,11 @@ namespace SabreTools.Library.DatFiles
                 // Build the state based on excluded fields
                 xtw.WriteStartElement("software");
                 xtw.WriteElementString("title", datItem.GetField(Field.MachineName, Header.ExcludeFields));
-                //xtw.WriteElementString("genmsxid", msxid);
-                //xtw.WriteElementString("system", system));
+                xtw.WriteElementString("genmsxid", datItem.GetField(Field.GenMSXID, Header.ExcludeFields));
+                xtw.WriteElementString("system", datItem.GetField(Field.System, Header.ExcludeFields));
                 xtw.WriteElementString("company", datItem.GetField(Field.Manufacturer, Header.ExcludeFields));
                 xtw.WriteElementString("year", datItem.GetField(Field.Year, Header.ExcludeFields));
-                //xtw.WriteElementString("country", country);
+                xtw.WriteElementString("country", datItem.GetField(Field.Country, Header.ExcludeFields));
 
                 xtw.Flush();
             }

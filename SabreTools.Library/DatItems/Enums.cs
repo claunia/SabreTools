@@ -87,6 +87,14 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region OpenMSX
+
+        GenMSXID,
+        System,
+        Country,
+
+        #endregion
+
         #region SoftwareList
 
         Supported,

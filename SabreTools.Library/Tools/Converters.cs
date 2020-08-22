@@ -293,6 +293,26 @@ namespace SabreTools.Library.Tools
 
                 #endregion
 
+                #region OpenMSX
+
+                case "genmsxid":
+                case "genmsx id":
+                case "genmsx-id":
+                case "gen msx id":
+                case "gen-msx-id":
+                    return Field.GenMSXID;
+
+                case "system":
+                case "msxsystem":
+                case "msx system":
+                case "msx-system":
+                    return Field.System;
+
+                case "country":
+                    return Field.Country;
+
+                #endregion
+
                 #region SoftwareList
 
                 case "supported":
