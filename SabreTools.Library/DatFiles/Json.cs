@@ -640,7 +640,7 @@ namespace SabreTools.Library.DatFiles
                     #region SoftwareList
 
                     case "supported":
-                        machine.Supported = jtr.ReadAsString().AsYesNo();
+                        machine.Supported = jtr.ReadAsString().AsSupported();
                         break;
 
                     case "sharedfeat":
@@ -663,7 +663,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitches":
-                        machine.DipSwitches = new List<SoftwareListDipSwitch>();
+                        machine.DipSwitches = new List<ListXMLDipSwitch>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream)
                         {
@@ -678,7 +678,7 @@ namespace SabreTools.Library.DatFiles
                             jtr.Read(); // Mask Key
                             string mask = jtr.ReadAsString();
 
-                            var dip = new SoftwareListDipSwitch(name, tag, mask);
+                            var dip = new ListXMLDipSwitch(name, tag, mask);
 
                             jtr.Read(); // Start dipvalues object
                             while (!sr.EndOfStream)
@@ -695,7 +695,7 @@ namespace SabreTools.Library.DatFiles
                                 bool? def = jtr.ReadAsString().AsYesNo();
                                 jtr.Read(); // End object
 
-                                dip.Values.Add(new SoftwareListDipValue(valname, value, def));
+                                dip.Values.Add(new ListXMLDipValue(valname, value, def));
                             }
 
                             jtr.Read(); // End object
@@ -1843,17 +1843,22 @@ namespace SabreTools.Library.DatFiles
 
                 #region SoftwareList
 
-                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != null)
+                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != Supported.NULL)
                 {
-                    if (datItem.Machine.Supported == true)
+                    switch (datItem.Machine.Supported)
                     {
-                        jtw.WritePropertyName("supported");
-                        jtw.WriteValue("yes");
-                    }
-                    else if (datItem.Machine.Supported == false)
-                    {
-                        jtw.WritePropertyName("supported");
-                        jtw.WriteValue("no");
+                        case Supported.No:
+                            jtw.WritePropertyName("supported");
+                            jtw.WriteValue("yes");
+                            break;
+                        case Supported.Partial:
+                            jtw.WritePropertyName("supported");
+                            jtw.WriteValue("partial");
+                            break;
+                        case Supported.Yes:
+                            jtw.WritePropertyName("supported");
+                            jtw.WriteValue("no");
+                            break;
                     }
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SharedFeatures, Header.ExcludeFields)))
@@ -1885,7 +1890,7 @@ namespace SabreTools.Library.DatFiles
                         jtw.WriteValue(dip.Mask);
                         jtw.WriteStartArray();
 
-                        foreach (SoftwareListDipValue dipval in dip.Values)
+                        foreach (ListXMLDipValue dipval in dip.Values)
                         {
                             jtw.WriteStartObject();
                             jtw.WritePropertyName("name");

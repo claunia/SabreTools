@@ -386,23 +386,23 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitch":
-                        // TODO: Make a new object for this
-                        // string dipswitch_name = reader.GetAttribute("name");
-                        // string dipswitch_tag = reader.GetAttribute("tag");
-                        // string dipswitch_mask = reader.GetAttribute("mask");
+                        // TODO: Use these dipswitches
+                        var dipSwitch = new ListXMLDipSwitch(reader.GetAttribute("name"), reader.GetAttribute("tag"), reader.GetAttribute("mask"));
+                        ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
                         // // While the subtree contains <diplocation> elements...
-                        // TODO: Make a new object for this
+                        // TODO: Populate the dipswitch with the diplocations
                         // string diplocation_name = reader.GetAttribute("name");
                         // string diplocation_number = reader.GetAttribute("number");
                         // bool? diplocation_inverted = Utilities.GetYesNo(reader.GetAttribute("inverted"));
 
                         // // While the subtree contains <dipvalue> elements...
-                        // TODO: Make a new object for this
+                        // TODO: Populate the dipswitch with the dipvalues
                         // string dipvalue_name = reader.GetAttribute("name");
                         // string dipvalue_value = reader.GetAttribute("value");
                         // bool? dipvalue_default = Utilities.GetYesNo(reader.GetAttribute("default"));
 
+                        // Skip the dipswitch now that we've processed it
                         reader.Skip();
                         break;
 
@@ -574,6 +574,59 @@ namespace SabreTools.Library.DatFiles
                             machine.SlotOptions.Add(devname);
                         }
                         // bool? slotoption_default = Utilities.GetYesNo(reader.GetAttribute("default"));
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read DipSwitch DipValues information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="dipSwitch">ListXMLDipSwitch to populate</param>
+        private void ReadDipSwitch(XmlReader reader, ListXMLDipSwitch dipSwitch)
+        {
+            // If we have an empty trurip, skip it
+            if (reader == null)
+                return;
+
+            // Get lists ready
+            dipSwitch.Locations = new List<ListXMLDipLocation>();
+            dipSwitch.Values = new List<ListXMLDipValue>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipswitch
+                switch (reader.Name)
+                {
+                    case "diplocation":
+                        dipSwitch.Locations.Add(new ListXMLDipLocation(
+                            reader.GetAttribute("name"),
+                            reader.GetAttribute("number"),
+                            reader.GetAttribute("inverted").AsYesNo()));
+                        reader.Read();
+                        break;
+
+                    case "dipvalue":
+                        dipSwitch.Values.Add(new ListXMLDipValue(
+                            reader.GetAttribute("name"),
+                            reader.GetAttribute("value"),
+                            reader.GetAttribute("default").AsYesNo()));
                         reader.Read();
                         break;
 

@@ -45,43 +45,68 @@ namespace SabreTools.Library.DatItems
 
     #endregion
 
-    #region SoftwareList
+    #region ListXML
 
     /// <summary>
-    /// Represents one SoftwareList dipswitch
+    /// Represents one ListXML dipswitch
     /// </summary>
-    public class SoftwareListDipSwitch
+    /// <remarks>Also used by SoftwareList</remarks>
+    public class ListXMLDipSwitch
     {
         public string Name { get; set; }
         public string Tag { get; set; }
         public string Mask { get; set; }
-        public List<SoftwareListDipValue> Values { get; set; }
+        public List<ListXMLDipLocation> Locations { get; set; }
+        public List<ListXMLDipValue> Values { get; set; }
 
-        public SoftwareListDipSwitch(string name, string tag, string mask)
+        public ListXMLDipSwitch(string name, string tag, string mask)
         {
             Name = name;
             Tag = tag;
             Mask = mask;
-            Values = new List<SoftwareListDipValue>();
+            Locations = new List<ListXMLDipLocation>();
+            Values = new List<ListXMLDipValue>();
         }
     }
 
     /// <summary>
-    /// Represents one SoftwareList dipswitch
+    /// Represents one ListXML diplocation
     /// </summary>
-    public class SoftwareListDipValue
+    public class ListXMLDipLocation
+    {
+        public string Name { get; set; }
+        public string Number { get; set; }
+        public bool? Inverted { get; set; }
+
+        public ListXMLDipLocation(string name, string number, bool? inverted)
+        {
+            Name = name;
+            Number = number;
+            Inverted = inverted;
+        }
+    }
+
+    /// <summary>
+    /// Represents one ListXML dipvalue
+    /// </summary>
+    /// <remarks>Also used by SoftwareList</remarks>
+    public class ListXMLDipValue
     {
         public string Name { get; set; }
         public string Value { get; set; }
         public bool? Default { get; set; }
 
-        public SoftwareListDipValue(string name, string value, bool? def)
+        public ListXMLDipValue(string name, string value, bool? def)
         {
             Name = name;
             Value = value;
             Default = def;
         }
     }
+
+    #endregion
+
+    #region SoftwareList
 
     /// <summary>
     /// Represents one SoftwareList shared feature object

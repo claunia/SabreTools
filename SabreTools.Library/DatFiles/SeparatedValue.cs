@@ -483,7 +483,7 @@ namespace SabreTools.Library.DatFiles
                         #region SoftwareList
 
                         case "Machine.Supported":
-                            machine.Supported = value.AsYesNo();
+                            machine.Supported = value.AsSupported();
                             break;
 
                         case "Machine.SharedFeatures":
@@ -498,7 +498,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "Machine.DipSwitches":
-                            machine.DipSwitches = new List<SoftwareListDipSwitch>();
+                            machine.DipSwitches = new List<ListXMLDipSwitch>();
                             // TODO: There is no way this would work... Just use empty for now
                             break;
 

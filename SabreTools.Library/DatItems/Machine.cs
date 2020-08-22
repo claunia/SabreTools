@@ -272,9 +272,8 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Support status
         /// </summary>
-        /// <remarks>yes = true, partial = null, no = false</remarks>
         [JsonProperty("supported")]
-        public bool? Supported { get; set; } = true;
+        public Supported Supported { get; set; } = Supported.NULL;
 
         /// <summary>
         /// List of shared feature items
@@ -287,7 +286,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
         [JsonProperty("dipswitches")]
-        public List<SoftwareListDipSwitch> DipSwitches { get; set; } = null;
+        public List<ListXMLDipSwitch> DipSwitches { get; set; } = null;
 
         #endregion
 
@@ -451,7 +450,7 @@ namespace SabreTools.Library.DatItems
                 #region SoftwareList
 
                 case Field.Supported:
-                    fieldValue = Supported?.ToString();
+                    fieldValue = Supported.ToString();
                     break;
                 case Field.SharedFeatures:
                     fieldValue = string.Join(";", (SharedFeatures ?? new List<SoftwareListSharedFeature>()).Select(i => $"{i.Name}={i.Value}"));
@@ -640,7 +639,7 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             if (mappings.Keys.Contains(Field.Supported))
-                Supported = mappings[Field.Supported].AsYesNo();
+                Supported = mappings[Field.Supported].AsSupported();
 
             if (mappings.Keys.Contains(Field.SharedFeatures))
             {
@@ -658,7 +657,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DipSwitches))
             {
                 if (DipSwitches == null)
-                    DipSwitches = new List<SoftwareListDipSwitch>();
+                    DipSwitches = new List<ListXMLDipSwitch>();
 
                 // TODO: There's no way this will work... just create the new list for now
             }
@@ -1058,7 +1057,9 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             // Filter on supported
-            if (filter.Supported.MatchesNeutral(null, Supported) == false)
+            if (filter.SupportedStatus.MatchesPositive(Supported.NULL, Supported) == false)
+                return false;
+            if (filter.SupportedStatus.MatchesNegative(Supported.NULL, Supported) == true)
                 return false;
 
             #endregion
@@ -1210,7 +1211,7 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             if (fields.Contains(Field.Supported))
-                Supported = null;
+                Supported = Supported.NULL;
 
             if (fields.Contains(Field.SharedFeatures))
                 SharedFeatures = null;

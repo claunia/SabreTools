@@ -240,4 +240,16 @@ namespace SabreTools.Library.DatItems
         Device = 1 << 2,
         Mechanical = 1 << 3,
     }
+
+    /// <summary>
+    /// Determine machine support status
+    /// </summary>
+    [Flags]
+    public enum Supported
+    {
+        NULL,
+        No,
+        Partial,
+        Yes,
+    }
 }

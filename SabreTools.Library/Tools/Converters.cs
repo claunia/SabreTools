@@ -820,6 +820,37 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get Supported value from input string
+        /// </summary>
+        /// <param name="supported">String to get value from</param>
+        /// <returns>Supported value corresponding to the string</returns>
+        public static Supported AsSupported(this string supported)
+        {
+#if NET_FRAMEWORK
+            switch (supported?.ToLowerInvariant())
+            {
+                case "no":
+                    return Supported.No;
+                case "partial":
+                    return Supported.Partial;
+                case "yes":
+                    return Supported.Yes;
+                default:
+                    return Supported.NULL;
+            }
+#else
+            return supported?.ToLowerInvariant() switch
+            {
+                "no" => Supported.No,
+                "partial" => Supported.Partial,
+                "yes" => Supported.Yes,
+                _ => Supported.NULL,
+            };
+#endif
+        }
+
+
+        /// <summary>
         /// Get bool? value from input string
         /// </summary>
         /// <param name="yesno">String to get value from</param>

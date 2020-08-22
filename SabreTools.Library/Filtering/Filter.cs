@@ -229,7 +229,7 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Include or exclude items with the "Supported" tag
         /// </summary>
-        public FilterItem<bool?> Supported { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<Supported> SupportedStatus { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
 
         // TODO: Machine.SharedFeatures - List<SoftwareListSharedFeature>
 
@@ -838,10 +838,10 @@ namespace SabreTools.Library.Filtering
                 #region SoftwareList
 
                 case Field.Supported:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Supported.Neutral = false;
+                    if (negate)
+                        SupportedStatus.Negative |= value.AsSupported();
                     else
-                        Supported.Neutral = true;
+                        SupportedStatus.Positive |= value.AsSupported();
                     break;
 
                 #endregion

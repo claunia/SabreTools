@@ -142,12 +142,12 @@ namespace SabreTools.Library.DatFiles
             {
                 Name = reader.GetAttribute("name"),
                 Description = reader.GetAttribute("name"),
-                Supported = reader.GetAttribute("supported").AsYesNo(), // (yes|partial|no) "yes"
+                Supported = reader.GetAttribute("supported").AsSupported(),
 
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
                 Infos = new List<ListXmlInfo>(),
                 SharedFeatures = new List<SoftwareListSharedFeature>(),
-                DipSwitches = new List<SoftwareListDipSwitch>(),
+                DipSwitches = new List<ListXMLDipSwitch>(),
 
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
             };
@@ -248,7 +248,7 @@ namespace SabreTools.Library.DatFiles
                 areaEndinaness;
             long? areasize = null;
             var features = new List<SoftwareListFeature>();
-            var dipswitches = new List<SoftwareListDipSwitch>();
+            var dipswitches = new List<ListXMLDipSwitch>();
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -334,13 +334,8 @@ namespace SabreTools.Library.DatFiles
 
                     case "dipswitch":
                         // TODO: Use these dipswitches
-                        var dip = new SoftwareListDipSwitch(
-                            reader.GetAttribute("name"),
-                            reader.GetAttribute("tag"),
-                            reader.GetAttribute("mask"));
-                        
-                        dip.Values = ReadDipSwitch(reader.ReadSubtree());
-                        dipswitches.Add(dip);
+                        var dipSwitch = new ListXMLDipSwitch(reader.GetAttribute("name"), reader.GetAttribute("tag"), reader.GetAttribute("mask"));
+                        ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
                         // Skip the dipswitch now that we've processed it
                         reader.Skip();
@@ -568,15 +563,16 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Read DipSwitch DipValues information
         /// </summary>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private List<SoftwareListDipValue> ReadDipSwitch(XmlReader reader)
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="dipSwitch">ListXMLDipSwitch to populate</param>
+        private void ReadDipSwitch(XmlReader reader, ListXMLDipSwitch dipSwitch)
         {
             // If we have an empty trurip, skip it
             if (reader == null)
-                return null;
+                return;
 
             // Get list ready
-            List<SoftwareListDipValue> dipValues = new List<SoftwareListDipValue>();
+            dipSwitch.Values = new List<ListXMLDipValue>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -594,10 +590,11 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "dipvalue":
-                        dipValues.Add(new SoftwareListDipValue(
+                        dipSwitch.Values.Add(new ListXMLDipValue(
                             reader.GetAttribute("name"),
                             reader.GetAttribute("value"),
                             reader.GetAttribute("default").AsYesNo()));
+                        reader.Read();
                         break;
 
                     default:
@@ -605,8 +602,6 @@ namespace SabreTools.Library.DatFiles
                         break;
                 }
             }
-
-            return dipValues;
         }
 
         /// <summary>
@@ -792,12 +787,18 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.Supported))
                 {
-                    if (datItem.Machine.Supported == true)
-                        xtw.WriteAttributeString("supported", "yes");
-                    else if (datItem.Machine.Supported == false)
-                        xtw.WriteAttributeString("supported", "no");
-                    else
-                        xtw.WriteAttributeString("supported", "partial");
+                    switch (datItem.Machine.Supported)
+                    {
+                        case Supported.No:
+                            xtw.WriteAttributeString("supported", "no");
+                            break;
+                        case Supported.Partial:
+                            xtw.WriteAttributeString("supported", "partial");
+                            break;
+                        case Supported.Yes:
+                            xtw.WriteAttributeString("supported", "yes");
+                            break;
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
@@ -833,14 +834,14 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.DipSwitches) && datItem.Machine.DipSwitches != null && datItem.Machine.DipSwitches.Count > 0)
                 {
-                    foreach (SoftwareListDipSwitch dip in datItem.Machine.DipSwitches)
+                    foreach (ListXMLDipSwitch dip in datItem.Machine.DipSwitches)
                     {
                         xtw.WriteStartElement("dipswitch");
                         xtw.WriteAttributeString("name", dip.Name);
                         xtw.WriteAttributeString("tag", dip.Tag);
                         xtw.WriteAttributeString("mask", dip.Mask);
 
-                        foreach (SoftwareListDipValue dipval in dip.Values)
+                        foreach (ListXMLDipValue dipval in dip.Values)
                         {
                             xtw.WriteStartElement("dipvalue");
                             xtw.WriteAttributeString("name", dipval.Name);
