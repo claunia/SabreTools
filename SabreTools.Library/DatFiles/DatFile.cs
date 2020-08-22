@@ -166,7 +166,8 @@ namespace SabreTools.Library.DatFiles
         public void AddFromExisting(DatFile datFile, bool delete = false)
         {
             // Get the list of keys from the DAT
-            foreach (string key in datFile.Items.Keys)
+            var keys = datFile.Items.Keys.ToList();
+            foreach (string key in keys)
             {
                 // Add everything from the key to the internal DAT
                 Items.AddRange(key, datFile.Items[key]);
