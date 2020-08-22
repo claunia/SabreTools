@@ -314,6 +314,7 @@ namespace SabreTools.Library.DatFiles
                     // TODO: Should any be additional Machine fields?
 
                     case "chip":
+                        // TODO: Make a new object for this
                         // string chip_name = reader.GetAttribute("name");
                         // string chip_tag = reader.GetAttribute("tag");
                         // string chip_type = reader.GetAttribute("type"); // (cpu|audio)
@@ -323,6 +324,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "display":
+                        // TODO: Make a new object for this
                         // string display_tag = reader.GetAttribute("tag");
                         // string display_type = reader.GetAttribute("type"); // (raster|vector|lcd|svg|unknown)
                         // string display_rotate = reader.GetAttribute("rotate"); // (0|90|180|270)
@@ -342,12 +344,14 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sound":
+                        // TODO: Make a new object for this
                         // string sound_channels = reader.GetAttribute("channels");
 
                         reader.Read();
                         break;
 
                     case "condition":
+                        // TODO: Make a new object for this
                         // string condition_tag = reader.GetAttribute("tag");
                         // string condition_mask = reader.GetAttribute("mask");
                         // string condition_relation = reader.GetAttribute("relation"); // (eq|ne|gt|le|lt|ge)
@@ -357,12 +361,14 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "input":
+                        // TODO: Make a new object for this
                         // bool? input_service = Utilities.GetYesNo(reader.GetAttribute("service"));
                         // bool? input_tilt = Utilities.GetYesNo(reader.GetAttribute("tilt"));
                         // string input_players = reader.GetAttribute("players");
                         // string input_coins = reader.GetAttribute("coins");
 
                         // // While the subtree contains <control> elements...
+                        // TODO: Make a new object for this
                         // string control_type = reader.GetAttribute("type");
                         // string control_player = reader.GetAttribute("player");
                         // string control_buttons = reader.GetAttribute("buttons");
@@ -380,16 +386,19 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitch":
+                        // TODO: Make a new object for this
                         // string dipswitch_name = reader.GetAttribute("name");
                         // string dipswitch_tag = reader.GetAttribute("tag");
                         // string dipswitch_mask = reader.GetAttribute("mask");
 
                         // // While the subtree contains <diplocation> elements...
+                        // TODO: Make a new object for this
                         // string diplocation_name = reader.GetAttribute("name");
                         // string diplocation_number = reader.GetAttribute("number");
                         // bool? diplocation_inverted = Utilities.GetYesNo(reader.GetAttribute("inverted"));
 
                         // // While the subtree contains <dipvalue> elements...
+                        // TODO: Make a new object for this
                         // string dipvalue_name = reader.GetAttribute("name");
                         // string dipvalue_value = reader.GetAttribute("value");
                         // bool? dipvalue_default = Utilities.GetYesNo(reader.GetAttribute("default"));
@@ -398,16 +407,19 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "configuration":
+                        // TODO: Make a new object for this
                         // string configuration_name = reader.GetAttribute("name");
                         // string configuration_tag = reader.GetAttribute("tag");
                         // string configuration_mask = reader.GetAttribute("mask");
 
                         // // While the subtree contains <conflocation> elements...
+                        // TODO: Make a new object for this
                         // string conflocation_name = reader.GetAttribute("name");
                         // string conflocation_number = reader.GetAttribute("number");
                         // bool? conflocation_inverted = Utilities.GetYesNo(reader.GetAttribute("inverted"));
 
                         // // While the subtree contains <confsetting> elements...
+                        // TODO: Make a new object for this
                         // string confsetting_name = reader.GetAttribute("name");
                         // string confsetting_value = reader.GetAttribute("value");
                         // bool? confsetting_default = Utilities.GetYesNo(reader.GetAttribute("default"));
@@ -416,19 +428,23 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "port":
+                        // TODO: Make a new object for this
                         // string port_tag = reader.GetAttribute("tag");
 
                         // // While the subtree contains <analog> elements...
+                        // TODO: Make a new object for this
                         // string analog_mask = reader.GetAttribute("mask");
 
                         reader.Skip();
                         break;
 
                     case "adjuster":
+                        // TODO: Make a new object for this
                         // string adjuster_name = reader.GetAttribute("name");
                         // bool? adjuster_default = Utilities.GetYesNo(reader.GetAttribute("default"));
 
                         // // For the one possible <condition> element...
+                        // TODO: Make a new object for this
                         // string condition_tag = reader.GetAttribute("tag");
                         // string condition_mask = reader.GetAttribute("mask");
                         // string condition_relation = reader.GetAttribute("relation"); // (eq|ne|gt|le|lt|ge)
@@ -436,7 +452,9 @@ namespace SabreTools.Library.DatFiles
 
                         reader.Skip();
                         break;
+
                     case "driver":
+                        // TODO: Make a new object for this
                         // string driver_status = reader.GetAttribute("status"); // (good|imperfect|preliminary)
                         // string driver_emulation = reader.GetAttribute("emulation"); // (good|imperfect|preliminary)
                         // string driver_cocktail = reader.GetAttribute("cocktail"); // (good|imperfect|preliminary)
@@ -446,6 +464,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "feature":
+                        // TODO: Make a new object for this
                         // string feature_type = reader.GetAttribute("type"); // (protection|palette|graphics|sound|controls|keyboard|mouse|microphone|camera|disk|printer|lan|wan|timing)
                         // string feature_status = reader.GetAttribute("status"); // (unemulated|imperfect)
                         // string feature_overall = reader.GetAttribute("overall"); // (unemulated|imperfect)
@@ -453,6 +472,7 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
                     case "device":
+                        // TODO: Make a new object for this
                         // string device_type = reader.GetAttribute("type");
                         // string device_tag = reader.GetAttribute("tag");
                         // string device_fixed_image = reader.GetAttribute("fixed_image");
@@ -460,10 +480,12 @@ namespace SabreTools.Library.DatFiles
                         // string device_interface = reader.GetAttribute("interface");
 
                         // // For the one possible <instance> element...
+                        // TODO: Make a new object for this
                         // string instance_name = reader.GetAttribute("name");
                         // string instance_briefname = reader.GetAttribute("briefname");
 
                         // // While the subtree contains <extension> elements...
+                        // TODO: Make a new object for this
                         // string extension_name = reader.GetAttribute("name");
 
                         reader.Skip();
@@ -478,6 +500,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "softwarelist":
+                        // TODO: Make a new object for this
                         // string softwarelist_name = reader.GetAttribute("name");
                         // string softwarelist_status = reader.GetAttribute("status"); // (original|compatible)
                         // string softwarelist_filter = reader.GetAttribute("filter");
@@ -486,6 +509,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "ramoption":
+                        // TODO: Make a new object for this
                         // string ramoption_default = reader.GetAttribute("default");
 
                         reader.Read();

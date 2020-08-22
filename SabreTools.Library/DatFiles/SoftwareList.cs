@@ -333,6 +333,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitch":
+                        // TODO: Use these dipswitches
                         var dip = new SoftwareListDipSwitch(
                             reader.GetAttribute("name"),
                             reader.GetAttribute("tag"),
