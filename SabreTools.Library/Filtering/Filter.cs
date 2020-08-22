@@ -267,6 +267,35 @@ namespace SabreTools.Library.Filtering
 
         #endregion
 
+        #region OpenMSX
+
+        /// <summary>
+        /// Include or exclude original value
+        /// </summary>
+        public FilterItem<string> Original { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude items of a certain OpenMSX subtype
+        /// </summary>
+        public FilterItem<OpenMSXSubType> SubType { get; private set; } = new FilterItem<OpenMSXSubType>() { Positive = OpenMSXSubType.NULL, Negative = OpenMSXSubType.NULL };
+
+        /// <summary>
+        /// Include or exclude OpenMSX type
+        /// </summary>
+        public FilterItem<string> OpenMSXType { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude remarks
+        /// </summary>
+        public FilterItem<string> Remark { get; private set; } = new FilterItem<string>();
+
+        /// <summary>
+        /// Include or exclude boots
+        /// </summary>
+        public FilterItem<string> Boot { get; private set; } = new FilterItem<string>();
+
+        #endregion
+
         #region SoftwareList
 
         /// <summary>
@@ -856,6 +885,45 @@ namespace SabreTools.Library.Filtering
                         AltTitle.NegativeSet.Add(value);
                     else
                         AltTitle.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #region OpenMSX
+
+                case Field.Original:
+                    if (negate)
+                        Original.NegativeSet.Add(value);
+                    else
+                        Original.PositiveSet.Add(value);
+                    break;
+
+                case Field.OpenMSXSubType:
+                    if (negate)
+                        SubType.Negative |= value.AsOpenMSXSubType();
+                    else
+                        SubType.Positive |= value.AsOpenMSXSubType();
+                    break;
+
+                case Field.OpenMSXType:
+                    if (negate)
+                        OpenMSXType.NegativeSet.Add(value);
+                    else
+                        OpenMSXType.PositiveSet.Add(value);
+                    break;
+
+                case Field.Remark:
+                    if (negate)
+                        Remark.NegativeSet.Add(value);
+                    else
+                        Remark.PositiveSet.Add(value);
+                    break;
+
+                case Field.Boot:
+                    if (negate)
+                        Boot.NegativeSet.Add(value);
+                    else
+                        Boot.PositiveSet.Add(value);
                     break;
 
                 #endregion

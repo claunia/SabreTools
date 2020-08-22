@@ -26,6 +26,25 @@ namespace SabreTools.Library.DatItems
 
     #endregion
 
+    #region OpenMSX
+
+    /// <summary>
+    /// Represents the OpenMSX original value
+    /// </summary>
+    public class OpenMSXOriginal
+    {
+        public string Original { get; set; }
+        public bool? Value { get; set; }
+
+        public OpenMSXOriginal(string original, bool? value)
+        {
+            Original = original;
+            Value = value;
+        }
+    }
+
+    #endregion
+
     #region SoftwareList
 
     /// <summary>

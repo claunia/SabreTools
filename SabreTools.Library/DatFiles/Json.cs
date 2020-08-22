@@ -790,6 +790,10 @@ namespace SabreTools.Library.DatFiles
             string name = null,
                 altName = null,
                 altTitle = null,
+                original = null,
+                msxType = null,
+                remark = null,
+                boot = null,
                 partName = null,
                 partInterface = null,
                 areaName = null,
@@ -814,6 +818,7 @@ namespace SabreTools.Library.DatFiles
                 bios = null;
             ItemStatus? itemStatus = null;
             ItemType? itemType = null;
+            OpenMSXSubType subType = OpenMSXSubType.NULL;
             List<SoftwareListFeature> features = null;
 
             jtr.Read();
@@ -831,8 +836,16 @@ namespace SabreTools.Library.DatFiles
                     datItem.Source = new Source { Index = indexId, Name = filename };
 
                     datItem.Name = name;
+
                     datItem.AltName = altName;
                     datItem.AltTitle = altTitle;
+
+                    datItem.Original = new OpenMSXOriginal(original, null);
+                    datItem.OpenMSXSubType = subType;
+                    datItem.OpenMSXType = msxType;
+                    datItem.Remark = remark;
+                    datItem.Boot = boot;
+
                     datItem.PartName = partName;
                     datItem.PartInterface = partInterface;
                     datItem.Features = features;
@@ -908,6 +921,8 @@ namespace SabreTools.Library.DatFiles
 
                 switch (jtr.Value)
                 {
+                    #region Common
+
                     case "type":
                         itemType = jtr.ReadAsString().AsItemType();
                         break;
@@ -916,6 +931,10 @@ namespace SabreTools.Library.DatFiles
                         name = jtr.ReadAsString();
                         break;
 
+                    #endregion
+
+                    #region AttractMode
+
                     case "alt_romname":
                         altName = jtr.ReadAsString();
                         break;
@@ -923,6 +942,34 @@ namespace SabreTools.Library.DatFiles
                     case "alt_title":
                         altTitle = jtr.ReadAsString();
                         break;
+
+                    #endregion
+
+                    #region OpenMSX
+
+                    case "original":
+                        original = jtr.ReadAsString();
+                        break;
+
+                    case "openmsx_subtype":
+                        subType = jtr.ReadAsString().AsOpenMSXSubType();
+                        break;
+
+                    case "openmsx_type":
+                        msxType = jtr.ReadAsString();
+                        break;
+
+                    case "remark":
+                        remark = jtr.ReadAsString();
+                        break;
+
+                    case "boot":
+                        boot = jtr.ReadAsString();
+                        break;
+
+                    #endregion
+
+                    #region SoftwareList
 
                     case "partname":
                         partName = jtr.ReadAsString();
@@ -978,6 +1025,8 @@ namespace SabreTools.Library.DatFiles
                     case "loadflag":
                         loadFlag = jtr.ReadAsString();
                         break;
+
+                    #endregion
 
                     case "description":
                         biosDescription = jtr.ReadAsString();
@@ -2142,6 +2191,8 @@ namespace SabreTools.Library.DatFiles
                         break;
                 }
 
+                #region AttractMode
+
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AltName, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("alt_romname");
@@ -2152,6 +2203,41 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("alt_title");
                     jtw.WriteValue(datItem.AltTitle);
                 }
+
+                #endregion
+
+                #region OpenMSX
+
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Original, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("original");
+                    jtw.WriteValue(datItem.Original.Original);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXSubType, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("openmsx_subtype");
+                    jtw.WriteValue(datItem.OpenMSXSubType);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXType, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("openmsx_type");
+                    jtw.WriteValue(datItem.OpenMSXType);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("remark");
+                    jtw.WriteValue(datItem.Remark);
+                }
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Boot, Header.ExcludeFields)))
+                {
+                    jtw.WritePropertyName("boot");
+                    jtw.WriteValue(datItem.Boot);
+                }
+
+                #endregion
+
+                #region SoftwareList
+
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.PartName, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("partname");
@@ -2206,6 +2292,8 @@ namespace SabreTools.Library.DatFiles
                     jtw.WritePropertyName("loadflag");
                     jtw.WriteValue(datItem.LoadFlag);
                 }
+
+                #endregion
 
                 // End item
                 jtw.WriteEndObject();

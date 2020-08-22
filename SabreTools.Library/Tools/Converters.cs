@@ -363,7 +363,6 @@ namespace SabreTools.Library.Tools
                 case "alt romname":
                 case "alt-romname":
                     return Field.AltName;
-
                 case "alttitle":
                 case "alt title":
                 case "alt-title":
@@ -371,6 +370,24 @@ namespace SabreTools.Library.Tools
                 case "alt romtitle":
                 case "alt-romtitle":
                     return Field.AltTitle;
+
+                #endregion
+
+                #region OpenMSX
+
+                case "original":
+                    return Field.Original;
+                case "subtype":
+                case "sub type":
+                case "sub-type":
+                case "openmsx_subtype":
+                    return Field.OpenMSXSubType;
+                case "openmsx_type":
+                    return Field.OpenMSXType;
+                case "remark":
+                    return Field.Remark;
+                case "boot":
+                    return Field.Boot;
 
                 #endregion
 
@@ -661,6 +678,36 @@ namespace SabreTools.Library.Tools
                 "ignore" => NodumpFlag.Ignore,
                 "none" => NodumpFlag.None,
                 _ => NodumpFlag.None,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get OpenMSXSubType value from input string
+        /// </summary>
+        /// <param name="itemType">String to get value from</param>
+        /// <returns>OpenMSXSubType value corresponding to the string</returns>
+        public static OpenMSXSubType AsOpenMSXSubType(this string itemType)
+        {
+#if NET_FRAMEWORK
+            switch (itemType?.ToLowerInvariant())
+            {
+                case "rom":
+                    return OpenMSXSubType.Rom;
+                case "megarom":
+                    return OpenMSXSubType.MegaRom;
+                case "sccpluscart":
+                    return OpenMSXSubType.SCCPlusCart;
+                default:
+                    return OpenMSXSubType.NULL;
+            }
+#else
+            return itemType?.ToLowerInvariant() switch
+            {
+                "rom" => OpenMSXSubType.Rom,
+                "megarom" => OpenMSXSubType.MegaRom,
+                "sccpluscart" => OpenMSXSubType.SCCPlusCart,
+                _ => OpenMSXSubType.NULL,
             };
 #endif
         }

@@ -107,6 +107,12 @@ namespace SabreTools.Library.DatItems
                 AltName = this.AltName,
                 AltTitle = this.AltTitle,
 
+                Original = this.Original,
+                OpenMSXSubType = this.OpenMSXSubType,
+                OpenMSXType = this.OpenMSXType,
+                Remark = this.Remark,
+                Boot = this.Boot,
+
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,
@@ -159,7 +165,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on description
-            if (filter.Description.MatchesNeutral(null, Description) == false)
+            if (filter.Description.MatchesPositiveSet(Description) == false)
+                return false;
+            if (filter.Description.MatchesNegativeSet(Description) == true)
                 return false;
 
             // Filter on default

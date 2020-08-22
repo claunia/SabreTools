@@ -69,6 +69,41 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region OpenMSX
+
+        /// <summary>
+        /// OpenMSX sub item type
+        /// </summary>
+        [JsonProperty("original")]
+        public OpenMSXOriginal Original { get; set; }
+
+        /// <summary>
+        /// OpenMSX sub item type
+        /// </summary>
+        [JsonProperty("openmsx_subtype")]
+        public OpenMSXSubType OpenMSXSubType { get; set; }
+
+        /// <summary>
+        /// OpenMSX sub item type
+        /// </summary>
+        /// <remarks>Not related to the subtype above</remarks>
+        [JsonProperty("openmsx_type")]
+        public string OpenMSXType { get; set; }
+
+        /// <summary>
+        /// Item remark (like a comment)
+        /// </summary>
+        [JsonProperty("remark")]
+        public string Remark { get; set; }
+
+        /// <summary>
+        /// Boot state
+        /// </summary>
+        [JsonProperty("boot")]
+        public string Boot { get; set; }
+
+        #endregion
+
         #region SoftwareList Fields
 
         /// <summary>
@@ -159,6 +194,13 @@ namespace SabreTools.Library.DatItems
             // AttractMode
             Field.AltName,
             Field.AltTitle,
+
+            // OpenMSX
+            Field.Original,
+            Field.OpenMSXSubType,
+            Field.OpenMSXType,
+            Field.Remark,
+            Field.Boot,
 
             //SoftwareList
             Field.PartName,
@@ -286,15 +328,47 @@ namespace SabreTools.Library.DatItems
 
             switch (field)
             {
+                #region Common
+
                 case Field.Name:
                     fieldValue = Name;
                     break;
+
+                #endregion
+
+                #region AttractMode
+
                 case Field.AltName:
                     fieldValue = AltName;
                     break;
                 case Field.AltTitle:
                     fieldValue = AltTitle;
                     break;
+
+                #endregion
+
+                #region OpenMSX
+
+                case Field.Original:
+                    fieldValue = Original.Original;
+                    break;
+                case Field.OpenMSXSubType:
+                    fieldValue = OpenMSXSubType.ToString();
+                    break;
+                case Field.OpenMSXType:
+                    fieldValue = OpenMSXType;
+                    break;
+                case Field.Remark:
+                    fieldValue = Remark;
+                    break;
+                case Field.Boot:
+                    fieldValue = Boot;
+                    break;
+
+                #endregion
+
+                #region SoftwareList
+
                 case Field.PartName:
                     fieldValue = PartName;
                     break;
@@ -322,6 +396,8 @@ namespace SabreTools.Library.DatItems
                 case Field.LoadFlag:
                     fieldValue = LoadFlag;
                     break;
+
+                #endregion
 
                 case Field.NULL:
                 default:
@@ -358,6 +434,25 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.AltTitle))
                 AltTitle = mappings[Field.AltTitle];
+
+            #endregion
+
+            #region OpenMSX
+
+            if (mappings.Keys.Contains(Field.Original))
+                Original = new OpenMSXOriginal(mappings[Field.Original], null);
+
+            if (mappings.Keys.Contains(Field.OpenMSXSubType))
+                OpenMSXSubType = mappings[Field.OpenMSXSubType].AsOpenMSXSubType();
+
+            if (mappings.Keys.Contains(Field.OpenMSXType))
+                OpenMSXType = mappings[Field.OpenMSXType];
+
+            if (mappings.Keys.Contains(Field.Remark))
+                Remark = mappings[Field.Remark];
+
+            if (mappings.Keys.Contains(Field.Boot))
+                Boot = mappings[Field.Boot];
 
             #endregion
 
@@ -625,6 +720,40 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region OpenMSX
+
+            // Filter on original
+            if (filter.Original.MatchesPositiveSet(Original.Original) == false)
+                return false;
+            if (filter.Original.MatchesNegativeSet(Original.Original) == true)
+                return false;
+
+            // Filter on OpenMSX subtype
+            if (filter.SubType.MatchesPositiveSet(OpenMSXSubType) == false)
+                return false;
+            if (filter.SubType.MatchesNegativeSet(OpenMSXSubType) == true)
+                return false;
+
+            // Filter on OpenMSX type
+            if (filter.OpenMSXType.MatchesPositiveSet(OpenMSXType) == false)
+                return false;
+            if (filter.OpenMSXType.MatchesNegativeSet(OpenMSXType) == true)
+                return false;
+
+            // Filter on remark
+            if (filter.Remark.MatchesPositiveSet(Remark) == false)
+                return false;
+            if (filter.Remark.MatchesNegativeSet(Remark) == true)
+                return false;
+
+            // Filter on boot
+            if (filter.Boot.MatchesPositiveSet(Boot) == false)
+                return false;
+            if (filter.Boot.MatchesNegativeSet(Boot) == true)
+                return false;
+
+            #endregion
+
             #region SoftwareList
 
             // Filter on part name
@@ -705,6 +834,25 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AltTitle))
                 AltTitle = null;
+
+            #endregion
+
+            #region OpenMSX
+
+            if (fields.Contains(Field.Original))
+                Original = null;
+
+            if (fields.Contains(Field.OpenMSXSubType))
+                OpenMSXSubType = OpenMSXSubType.NULL;
+
+            if (fields.Contains(Field.OpenMSXType))
+                OpenMSXType = null;
+
+            if (fields.Contains(Field.Remark))
+                Remark = null;
+
+            if (fields.Contains(Field.Boot))
+                Boot = null;
 
             #endregion
 
@@ -834,6 +982,25 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.AltTitle))
                 AltTitle = item.AltTitle;
+
+            #endregion
+
+            #region OpenMSX
+
+            if (fields.Contains(Field.Original))
+                Original = item.Original;
+
+            if (fields.Contains(Field.OpenMSXSubType))
+                OpenMSXSubType = item.OpenMSXSubType;
+
+            if (fields.Contains(Field.OpenMSXType))
+                OpenMSXType = item.OpenMSXType;
+
+            if (fields.Contains(Field.Remark))
+                Remark = item.Remark;
+
+            if (fields.Contains(Field.Boot))
+                Boot = item.Boot;
 
             #endregion
 

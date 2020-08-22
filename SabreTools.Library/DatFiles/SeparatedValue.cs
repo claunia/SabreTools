@@ -84,6 +84,10 @@ namespace SabreTools.Library.DatFiles
                 string name = null,
                     altName = null,
                     altTitle = null,
+                    original = null,
+                    msxType = null,
+                    remark = null,
+                    boot = null,
                     partName = null,
                     partInterface = null,
                     areaName = null,
@@ -112,6 +116,7 @@ namespace SabreTools.Library.DatFiles
                 long size = -1;
                 ItemType itemType = ItemType.Rom;
                 ItemStatus status = ItemStatus.None;
+                OpenMSXSubType subType = OpenMSXSubType.NULL;
                 List<SoftwareListFeature> features = null;
 
                 // Now we loop through and get values for everything
@@ -527,6 +532,30 @@ namespace SabreTools.Library.DatFiles
 
                         #endregion
 
+                        #region OpenMSX
+
+                        case "DatItem.Original":
+                            original = value;
+                            break;
+
+                        case "DatItem.OpenMSXSubType":
+                            subType = value.AsOpenMSXSubType();
+                            break;
+
+                        case "DatItem.OpenMSXType":
+                            msxType = value;
+                            break;
+
+                        case "DatItem.Remark":
+                            remark = value;
+                            break;
+
+                        case "DatItem.Boot":
+                            boot = value;
+                            break;
+
+                        #endregion
+
                         #region SoftwareList
 
                         case "DatItem.PartName":
@@ -686,6 +715,12 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
+                            Original = new OpenMSXOriginal(original, null),
+                            OpenMSXSubType = subType,
+                            OpenMSXType = msxType,
+                            Remark = remark,
+                            Boot = boot,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -714,6 +749,12 @@ namespace SabreTools.Library.DatFiles
 
                             AltName = altName,
                             AltTitle = altTitle,
+
+                            Original = new OpenMSXOriginal(original, null),
+                            OpenMSXSubType = subType,
+                            OpenMSXType = msxType,
+                            Remark = remark,
+                            Boot = boot,
 
                             PartName = partName,
                             PartInterface = partInterface,
@@ -746,6 +787,12 @@ namespace SabreTools.Library.DatFiles
 
                             AltName = altName,
                             AltTitle = altTitle,
+
+                            Original = new OpenMSXOriginal(original, null),
+                            OpenMSXSubType = subType,
+                            OpenMSXType = msxType,
+                            Remark = remark,
+                            Boot = boot,
 
                             PartName = partName,
                             PartInterface = partInterface,
@@ -791,6 +838,12 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
+                            Original = new OpenMSXOriginal(original, null),
+                            OpenMSXSubType = subType,
+                            OpenMSXType = msxType,
+                            Remark = remark,
+                            Boot = boot,
+
                             PartName = partName,
                             PartInterface = partInterface,
                             Features = features,
@@ -824,6 +877,12 @@ namespace SabreTools.Library.DatFiles
 
                             AltName = altName,
                             AltTitle = altTitle,
+
+                            Original = new OpenMSXOriginal(original, null),
+                            OpenMSXSubType = subType,
+                            OpenMSXType = msxType,
+                            Remark = remark,
+                            Boot = boot,
 
                             PartName = partName,
                             PartInterface = partInterface,
@@ -872,6 +931,12 @@ namespace SabreTools.Library.DatFiles
 
                             AltName = altName,
                             AltTitle = altTitle,
+
+                            Original = new OpenMSXOriginal(original, null),
+                            OpenMSXSubType = subType,
+                            OpenMSXType = msxType,
+                            Remark = remark,
+                            Boot = boot,
 
                             PartName = partName,
                             PartInterface = partInterface,
@@ -1340,6 +1405,24 @@ namespace SabreTools.Library.DatFiles
                 case "alt romtitle":
                 case "alt-romtitle":
                     return "DatItem.AltTitle";
+
+                #endregion
+
+                #region OpenMSX
+
+                case "original":
+                    return "DatItem.Original";
+                case "subtype":
+                case "sub type":
+                case "sub-type":
+                case "openmsx_subtype":
+                    return "DatItem.OpenMSXSubType";
+                case "openmsx_type":
+                    return "DatItem.OpenMSXType";
+                case "remark":
+                    return "DatItem.Remark";
+                case "boot":
+                    return "DatItem.Boot";
 
                 #endregion
 

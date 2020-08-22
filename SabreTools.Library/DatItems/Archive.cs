@@ -31,6 +31,12 @@
                 AltName = this.AltName,
                 AltTitle = this.AltTitle,
 
+                Original = this.Original,
+                OpenMSXSubType = this.OpenMSXSubType,
+                OpenMSXType = this.OpenMSXType,
+                Remark = this.Remark,
+                Boot = this.Boot,
+
                 PartName = this.PartName,
                 PartInterface = this.PartInterface,
                 Features = this.Features,

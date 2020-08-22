@@ -121,6 +121,16 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region OpenMSX
+
+        Original,
+        OpenMSXSubType,
+        OpenMSXType,
+        Remark,
+        Boot,
+
+        #endregion
+
         #region SoftwareList
 
         PartName,
@@ -200,6 +210,18 @@ namespace SabreTools.Library.DatItems
         Archive = 5,
 
         Blank = 99, // This is not a real type, only used internally
+    }
+
+    /// <summary>
+    /// Determine which OpenMSX subtype an item is
+    /// </summary>
+    [Flags]
+    public enum OpenMSXSubType
+    {
+        NULL = 0,
+        Rom = 1,
+        MegaRom = 2,
+        SCCPlusCart = 3,
     }
 
     /// <summary>

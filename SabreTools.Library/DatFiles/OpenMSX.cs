@@ -7,6 +7,7 @@ using System.Xml;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -204,7 +205,8 @@ namespace SabreTools.Library.DatFiles
             string filename,
             int indexId)
         {
-            bool containsItems = false;
+            List<DatItem> items = new List<DatItem>();
+            OpenMSXOriginal original = null;
 
             while (!reader.EOF)
             {
@@ -219,30 +221,36 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "rom":
-                        containsItems = ReadRom(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        DatItem rom = ReadRom(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        if (rom != null)
+                            items.Add(rom);
 
                         // Skip the rom now that we've processed it
                         reader.Skip();
                         break;
 
                     case "megarom":
-                        containsItems = ReadMegaRom(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        DatItem megarom = ReadMegaRom(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        if (megarom != null)
+                            items.Add(megarom);
 
                         // Skip the megarom now that we've processed it
                         reader.Skip();
                         break;
 
                     case "sccpluscart":
-                        containsItems = ReadSccPlusCart(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        DatItem sccpluscart = ReadSccPlusCart(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        if (sccpluscart != null)
+                            items.Add(sccpluscart);
 
                         // Skip the sccpluscart now that we've processed it
                         reader.Skip();
                         break;
 
                     case "original":
-                        // bool value = Utilities.GetYesNo(reader.GetAttribute("value");
-                        // string original = reader.ReadElementContentAsString();
-                        reader.Read();
+                        bool? value = reader.GetAttribute("value").AsYesNo();
+                        string orig = reader.ReadElementContentAsString();
+                        original = new OpenMSXOriginal(orig, value);
                         break;
 
                     default:
@@ -251,7 +259,15 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
-            return containsItems;
+            // If we have any items, loop through and add them
+            foreach (DatItem item in items)
+            {
+                item.CopyMachineInformation(machine);
+                item.Original = original;
+                ParseAddHelper(item);
+            }
+
+            return items.Count > 0;
         }
 
         /// <summary>
@@ -262,7 +278,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private bool ReadRom(
+        private DatItem ReadRom(
             XmlReader reader,
             Machine machine,
             int diskno,
@@ -271,8 +287,10 @@ namespace SabreTools.Library.DatFiles
             string filename,
             int indexId)
         {
-            string hash = string.Empty, offset = string.Empty, remark = string.Empty;
-            bool containsItems = false;
+            string hash = string.Empty,
+                offset = string.Empty,
+                type = string.Empty,
+                remark = string.Empty;
 
             while (!reader.EOF)
             {
@@ -287,7 +305,6 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "hash":
-                        containsItems = true;
                         hash = reader.ReadElementContentAsString();
                         break;
 
@@ -296,7 +313,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "type":
-                        reader.ReadElementContentAsString();
+                        type = reader.ReadElementContentAsString();
                         break;
 
                     case "remark":
@@ -309,25 +326,30 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
-            // Create and add the new rom
-            Rom rom = new Rom
+            // If we got a hash, then create and return the item
+            if (!string.IsNullOrWhiteSpace(hash))
             {
-                Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
-                Offset = offset,
-                Size = -1,
-                SHA1 = hash,
-
-                Source = new Source
+                return new Rom
                 {
-                    Index = indexId,
-                    Name = filename,
-                },
-            };
+                    Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
+                    Offset = offset,
+                    Size = -1,
+                    SHA1 = hash,
 
-            rom.CopyMachineInformation(machine);
-            ParseAddHelper(rom);
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
 
-            return containsItems;
+                    OpenMSXSubType = OpenMSXSubType.Rom,
+                    OpenMSXType = type,
+                    Remark = remark,
+                };
+            }
+
+            // No valid item means returning null
+            return null;
         }
 
         /// <summary>
@@ -338,7 +360,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private bool ReadMegaRom(
+        private DatItem ReadMegaRom(
             XmlReader reader,
             Machine machine,
             int diskno,
@@ -347,8 +369,10 @@ namespace SabreTools.Library.DatFiles
             string filename,
             int indexId)
         {
-            string hash = string.Empty, offset = string.Empty, remark = string.Empty;
-            bool containsItems = false;
+            string hash = string.Empty,
+                offset = string.Empty,
+                type = string.Empty,
+                remark = string.Empty;
 
             while (!reader.EOF)
             {
@@ -363,7 +387,6 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "hash":
-                        containsItems = true;
                         hash = reader.ReadElementContentAsString();
                         break;
 
@@ -385,25 +408,30 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
-            // Create and add the new rom
-            Rom rom = new Rom
+            // If we got a hash, then create and return the item
+            if (!string.IsNullOrWhiteSpace(hash))
             {
-                Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
-                Offset = offset,
-                Size = -1,
-                SHA1 = hash,
-
-                Source = new Source
+                return new Rom
                 {
-                    Index = indexId,
-                    Name = filename,
-                },
-            };
+                    Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
+                    Offset = offset,
+                    Size = -1,
+                    SHA1 = hash,
 
-            rom.CopyMachineInformation(machine);
-            ParseAddHelper(rom);
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
 
-            return containsItems;
+                    OpenMSXSubType = OpenMSXSubType.MegaRom,
+                    OpenMSXType = type,
+                    Remark = remark,
+                };
+            }
+
+            // No valid item means returning null
+            return null;
         }
 
         /// <summary>
@@ -414,7 +442,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private bool ReadSccPlusCart(
+        private DatItem ReadSccPlusCart(
             XmlReader reader,
             Machine machine,
             int diskno,
@@ -423,8 +451,9 @@ namespace SabreTools.Library.DatFiles
             string filename,
             int indexId)
         {
-            string hash = string.Empty, remark = string.Empty;
-            bool containsItems = false;
+            string boot = string.Empty,
+                hash = string.Empty,
+                remark = string.Empty;
 
             while (!reader.EOF)
             {
@@ -439,11 +468,10 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "boot":
-                        reader.ReadElementContentAsString();
+                        boot = reader.ReadElementContentAsString();
                         break;
 
                     case "hash":
-                        containsItems = true;
                         hash = reader.ReadElementContentAsString();
                         break;
 
@@ -457,24 +485,29 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
-            // Create and add the new rom
-            Rom rom = new Rom
+            // If we got a hash, then create and return the item
+            if (!string.IsNullOrWhiteSpace(hash))
             {
-                Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
-                Size = -1,
-                SHA1 = hash,
-
-                Source = new Source
+                return new Rom
                 {
-                    Index = indexId,
-                    Name = filename,
-                },
-            };
+                    Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
+                    Size = -1,
+                    SHA1 = hash,
 
-            rom.CopyMachineInformation(machine);
-            ParseAddHelper(rom);
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
 
-            return containsItems;
+                    OpenMSXSubType = OpenMSXSubType.SCCPlusCart,
+                    Boot = boot,
+                    Remark = remark,
+                };
+            }
+
+            // No valid item means returning null
+            return null;
         }
 
         /// <summary>
@@ -689,24 +722,56 @@ namespace SabreTools.Library.DatFiles
                 // Build the state based on excluded fields
                 switch (datItem.ItemType)
                 {
-                    case ItemType.Rom: // Currently this encapsulates rom, megarom, and sccpluscart
+                    case ItemType.Rom:
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("dump");
 
-                        //xtw.WriteStartElement("original");
-                        //xtw.WriteAttributeString("value", "true");
-                        //xtw.WriteString("GoodMSX");
-                        //xtw.WriteEndElement();
+                        if (!Header.ExcludeFields.Contains(Field.Original) && rom.Original != null)
+                        {
+                            xtw.WriteStartElement("original");
+                            xtw.WriteAttributeString("value", rom.Original.Value == true ? "true" : "false");
+                            xtw.WriteString(rom.Original.Original);
+                            xtw.WriteEndElement();
+                        }
 
-                        xtw.WriteStartElement("rom");
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
-                            xtw.WriteElementString("start", rom.Offset);
-                        //xtw.WriteElementString("type", "Normal");
-                        xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
-                        //xtw.WriteElementString("remark", "");
+                        switch (datItem.OpenMSXSubType)
+                        {
+                            // Default to Rom for converting from other formats
+                            case OpenMSXSubType.Rom:
+                            case OpenMSXSubType.NULL:
+                                xtw.WriteStartElement("rom");
+                                xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
+                                    xtw.WriteElementString("start", rom.Offset);
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXType, Header.ExcludeFields)))
+                                    xtw.WriteElementString("type", rom.OpenMSXType);
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                                    xtw.WriteElementString("remark", rom.Remark);
+                                xtw.WriteEndElement();
+                                break;
 
-                        // End rom
-                        xtw.WriteEndElement();
+                            case OpenMSXSubType.MegaRom:
+                                xtw.WriteStartElement("megarom");
+                                xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
+                                    xtw.WriteElementString("start", rom.Offset);
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXType, Header.ExcludeFields)))
+                                    xtw.WriteElementString("type", rom.OpenMSXType);
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                                    xtw.WriteElementString("remark", rom.Remark);
+                                xtw.WriteEndElement();
+                                break;
+
+                            case OpenMSXSubType.SCCPlusCart:
+                                xtw.WriteStartElement("sccpluscart");
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Boot, Header.ExcludeFields)))
+                                    xtw.WriteElementString("boot", rom.Boot);
+                                xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
+                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                                    xtw.WriteElementString("remark", rom.Remark);
+                                xtw.WriteEndElement();
+                                break;
+                        }
 
                         // End dump
                         xtw.WriteEndElement();
