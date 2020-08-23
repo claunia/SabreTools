@@ -678,7 +678,10 @@ namespace SabreTools.Library.DatFiles
                             jtr.Read(); // Mask Key
                             string mask = jtr.ReadAsString();
 
-                            var dip = new ListXMLDipSwitch(name, tag, mask);
+                            var dipSwitch = new ListXMLDipSwitch();
+                            dipSwitch.Name = name;
+                            dipSwitch.Tag = tag;
+                            dipSwitch.Mask = mask;
 
                             jtr.Read(); // Start dipvalues object
                             while (!sr.EndOfStream)
@@ -695,12 +698,17 @@ namespace SabreTools.Library.DatFiles
                                 bool? def = jtr.ReadAsString().AsYesNo();
                                 jtr.Read(); // End object
 
-                                dip.Values.Add(new ListXMLDipValue(valname, value, def));
+                                var dipValue = new ListXMLDipValue();
+                                dipValue.Name = valname;
+                                dipValue.Value = value;
+                                dipValue.Default = def;
+
+                                dipSwitch.Values.Add(dipValue);
                             }
 
                             jtr.Read(); // End object
 
-                            machine.DipSwitches.Add(dip);
+                            machine.DipSwitches.Add(dipSwitch);
                         }
 
                         break;
@@ -840,7 +848,7 @@ namespace SabreTools.Library.DatFiles
                     datItem.AltName = altName;
                     datItem.AltTitle = altTitle;
 
-                    datItem.Original = new OpenMSXOriginal(original, null);
+                    datItem.Original = new OpenMSXOriginal() { Name = original };
                     datItem.OpenMSXSubType = subType;
                     datItem.OpenMSXType = msxType;
                     datItem.Remark = remark;
@@ -2216,7 +2224,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Original, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("original");
-                    jtw.WriteValue(datItem.Original.Original);
+                    jtw.WriteValue(datItem.Original.Name);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXSubType, Header.ExcludeFields)))
                 {

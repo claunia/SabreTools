@@ -352,7 +352,7 @@ namespace SabreTools.Library.DatItems
                 #region OpenMSX
 
                 case Field.Original:
-                    fieldValue = Original.Original;
+                    fieldValue = Original.Name;
                     break;
                 case Field.OpenMSXSubType:
                     fieldValue = OpenMSXSubType.ToString();
@@ -442,7 +442,7 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             if (mappings.Keys.Contains(Field.Original))
-                Original = new OpenMSXOriginal(mappings[Field.Original], null);
+                Original = new OpenMSXOriginal() { Name = mappings[Field.Original] };
 
             if (mappings.Keys.Contains(Field.OpenMSXSubType))
                 OpenMSXSubType = mappings[Field.OpenMSXSubType].AsOpenMSXSubType();
@@ -725,9 +725,9 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             // Filter on original
-            if (filter.Original.MatchesPositiveSet(Original.Original) == false)
+            if (filter.Original.MatchesPositiveSet(Original.Name) == false)
                 return false;
-            if (filter.Original.MatchesNegativeSet(Original.Original) == true)
+            if (filter.Original.MatchesNegativeSet(Original.Name) == true)
                 return false;
 
             // Filter on OpenMSX subtype

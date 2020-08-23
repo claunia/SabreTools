@@ -715,7 +715,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal(original, null),
+                            Original = new OpenMSXOriginal() { Name = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -750,7 +750,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal(original, null),
+                            Original = new OpenMSXOriginal() { Name = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -788,7 +788,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal(original, null),
+                            Original = new OpenMSXOriginal() { Name = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -838,7 +838,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal(original, null),
+                            Original = new OpenMSXOriginal() { Name = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -878,7 +878,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal(original, null),
+                            Original = new OpenMSXOriginal() { Name = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -932,7 +932,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal(original, null),
+                            Original = new OpenMSXOriginal() { Name = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,

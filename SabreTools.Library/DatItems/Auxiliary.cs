@@ -33,19 +33,75 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public class OpenMSXOriginal
     {
-        public string Original { get; set; }
+        public string Name { get; set; }
         public bool? Value { get; set; }
-
-        public OpenMSXOriginal(string original, bool? value)
-        {
-            Original = original;
-            Value = value;
-        }
     }
 
     #endregion
 
     #region ListXML
+
+    /// <summary>
+    /// Represents one ListXML chip
+    /// </summary>
+    public class ListXMLChip
+    {
+        public string Name { get; set; }
+        public string Tag { get; set; }
+        public string Type { get; set; } // TODO: (cpu|audio)
+        public string Clock { get; set; }
+    }
+
+    /// <summary>
+    /// Represents one ListXML condition
+    /// </summary>
+    public class ListXMLCondition
+    {
+        public string Tag { get; set; }
+        public string Mask { get; set; }
+        public string Relation { get; set; } // TODO: (eq|ne|gt|le|lt|ge)
+        public string Value { get; set; }
+    }
+
+    /// <summary>
+    /// Represents one ListXML control
+    /// </summary>
+    public class ListXMLControl
+    {
+        public string Type { get; set; }
+        public string Player { get; set; } // TODO: Int32?
+        public string Buttons { get; set; } // TODO: Int32?
+        public string RegButtons { get; set; } // TODO: Int32?
+        public string Minimum { get; set; } // TODO: Int32? Float?
+        public string Maximum { get; set; } // TODO: Int32? Float?
+        public string Sensitivity { get; set; } // TODO: Int32? Float?
+        public string KeyDelta { get; set; } // TODO: Int32? Float?
+        public bool? Reverse { get; set; }
+        public string Ways { get; set; } // TODO: Int32? Float?
+        public string Ways2 { get; set; } // TODO: Int32? Float?
+        public string Ways3 { get; set; } // TODO: Int32? Float?
+    }
+
+    /// <summary>
+    /// Represents one ListXML display
+    /// </summary>
+    public class ListXMLDisplay
+    {
+        public string Tag { get; set; }
+        public string Type { get; set; } // TODO: (raster|vector|lcd|svg|unknown)
+        public string Rotate { get; set; } // TODO: (0|90|180|270) Int32?
+        public bool? FlipX { get; set; }
+        public string Width { get; set; } // TODO: Int32?
+        public string Height { get; set; } // TODO: Int32?
+        public string Refresh { get; set; } // TODO: Int32? Float?
+        public string PixClock { get; set; } // TODO: Int32? Float?
+        public string HTotal { get; set; } // TODO: Int32? Float?
+        public string HBend { get; set; } // TODO: Int32? Float?
+        public string HStart { get; set; } // TODO: Int32? Float?
+        public string VTotal { get; set; } // TODO: Int32? Float?
+        public string VBend { get; set; } // TODO: Int32? Float?
+        public string VStart { get; set; } // TODO: Int32? Float?
+    }
 
     /// <summary>
     /// Represents one ListXML dipswitch
@@ -59,11 +115,8 @@ namespace SabreTools.Library.DatItems
         public List<ListXMLDipLocation> Locations { get; set; }
         public List<ListXMLDipValue> Values { get; set; }
 
-        public ListXMLDipSwitch(string name, string tag, string mask)
+        public ListXMLDipSwitch()
         {
-            Name = name;
-            Tag = tag;
-            Mask = mask;
             Locations = new List<ListXMLDipLocation>();
             Values = new List<ListXMLDipValue>();
         }
@@ -77,13 +130,6 @@ namespace SabreTools.Library.DatItems
         public string Name { get; set; }
         public string Number { get; set; }
         public bool? Inverted { get; set; }
-
-        public ListXMLDipLocation(string name, string number, bool? inverted)
-        {
-            Name = name;
-            Number = number;
-            Inverted = inverted;
-        }
     }
 
     /// <summary>
@@ -95,13 +141,31 @@ namespace SabreTools.Library.DatItems
         public string Name { get; set; }
         public string Value { get; set; }
         public bool? Default { get; set; }
+    }
 
-        public ListXMLDipValue(string name, string value, bool? def)
+    /// <summary>
+    /// Represents one ListXML input
+    /// </summary>
+    public class ListXMLInput
+    {
+        public bool? Service { get; set; }
+        public bool? Tilt { get; set; }
+        public string Players { get; set; } // TODO: Int32?
+        public string Coins { get; set; } // TODO: Int32?
+        public List<ListXMLControl> Controls { get; set; }
+
+        public ListXMLInput()
         {
-            Name = name;
-            Value = value;
-            Default = def;
+            Controls = new List<ListXMLControl>();
         }
+    }
+
+    /// <summary>
+    /// Represents one ListXML sound
+    /// </summary>
+    public class ListXMLSound
+    {
+        public string Channels { get; set; } // TODO: Int32?
     }
 
     #endregion

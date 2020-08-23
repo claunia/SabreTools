@@ -248,9 +248,9 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "original":
-                        bool? value = reader.GetAttribute("value").AsYesNo();
-                        string orig = reader.ReadElementContentAsString();
-                        original = new OpenMSXOriginal(orig, value);
+                        original = new OpenMSXOriginal();
+                        original.Value = reader.GetAttribute("value").AsYesNo();
+                        original.Name = reader.ReadElementContentAsString();
                         break;
 
                     default:
@@ -730,7 +730,7 @@ namespace SabreTools.Library.DatFiles
                         {
                             xtw.WriteStartElement("original");
                             xtw.WriteAttributeString("value", rom.Original.Value == true ? "true" : "false");
-                            xtw.WriteString(rom.Original.Original);
+                            xtw.WriteString(rom.Original.Name);
                             xtw.WriteEndElement();
                         }
 

@@ -334,7 +334,12 @@ namespace SabreTools.Library.DatFiles
 
                     case "dipswitch":
                         // TODO: Use these dipswitches
-                        var dipSwitch = new ListXMLDipSwitch(reader.GetAttribute("name"), reader.GetAttribute("tag"), reader.GetAttribute("mask"));
+                        var dipSwitch = new ListXMLDipSwitch();
+                        dipSwitch.Name = reader.GetAttribute("name");
+                        dipSwitch.Tag = reader.GetAttribute("tag");
+                        dipSwitch.Mask = reader.GetAttribute("mask");
+
+                        // Now read the internal tags
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
                         // Skip the dipswitch now that we've processed it
@@ -590,10 +595,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "dipvalue":
-                        dipSwitch.Values.Add(new ListXMLDipValue(
-                            reader.GetAttribute("name"),
-                            reader.GetAttribute("value"),
-                            reader.GetAttribute("default").AsYesNo()));
+                        var dipValue = new ListXMLDipValue();
+                        dipValue.Name = reader.GetAttribute("name");
+                        dipValue.Value = reader.GetAttribute("value");
+                        dipValue.Default = reader.GetAttribute("default").AsYesNo();
+
+                        dipSwitch.Values.Add(dipValue);
+
                         reader.Read();
                         break;
 

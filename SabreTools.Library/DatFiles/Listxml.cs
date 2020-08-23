@@ -314,80 +314,79 @@ namespace SabreTools.Library.DatFiles
                     // TODO: Should any be additional Machine fields?
 
                     case "chip":
-                        // TODO: Make a new object for this
-                        // string chip_name = reader.GetAttribute("name");
-                        // string chip_tag = reader.GetAttribute("tag");
-                        // string chip_type = reader.GetAttribute("type"); // (cpu|audio)
-                        // string chip_clock = reader.GetAttribute("clock");
+                        // TODO: Use these chips
+                        var chip = new ListXMLChip();
+                        chip.Name = reader.GetAttribute("name");
+                        chip.Tag = reader.GetAttribute("tag");
+                        chip.Type = reader.GetAttribute("type");
+                        chip.Clock = reader.GetAttribute("clock");
 
                         reader.Read();
                         break;
 
                     case "display":
-                        // TODO: Make a new object for this
-                        // string display_tag = reader.GetAttribute("tag");
-                        // string display_type = reader.GetAttribute("type"); // (raster|vector|lcd|svg|unknown)
-                        // string display_rotate = reader.GetAttribute("rotate"); // (0|90|180|270)
-                        // bool? display_flipx = Utilities.GetYesNo(reader.GetAttribute("flipx"));
-                        // string display_width = reader.GetAttribute("width");
-                        // string display_height = reader.GetAttribute("height");
-                        // string display_refresh = reader.GetAttribute("refresh");
-                        // string display_pixclock = reader.GetAttribute("pixclock");
-                        // string display_htotal = reader.GetAttribute("htotal");
-                        // string display_hbend = reader.GetAttribute("hbend");
-                        // string display_hbstart = reader.GetAttribute("hbstart");
-                        // string display_vtotal = reader.GetAttribute("vtotal");
-                        // string display_vbend = reader.GetAttribute("vbend");
-                        // string display_vbstart = reader.GetAttribute("vbstart");
+                        // TODO: Use these displays
+                        var display = new ListXMLDisplay();
+                        display.Tag = reader.GetAttribute("tag");
+                        display.Type = reader.GetAttribute("type");
+                        display.Rotate = reader.GetAttribute("rotate");
+                        display.FlipX = reader.GetAttribute("flipx").AsYesNo();
+                        display.Width = reader.GetAttribute("width");
+                        display.Height = reader.GetAttribute("height");
+                        display.Refresh = reader.GetAttribute("refresh");
+                        display.PixClock = reader.GetAttribute("pixclock");
+                        display.HTotal = reader.GetAttribute("htotal");
+                        display.HBend = reader.GetAttribute("hbend");
+                        display.HStart = reader.GetAttribute("hstart");
+                        display.VTotal = reader.GetAttribute("vtotal");
+                        display.VBend = reader.GetAttribute("vbend");
+                        display.VStart = reader.GetAttribute("vstart");
 
                         reader.Read();
                         break;
 
                     case "sound":
-                        // TODO: Make a new object for this
-                        // string sound_channels = reader.GetAttribute("channels");
+                        // TODO: Use these sounds
+                        var sound = new ListXMLSound();
+                        sound.Channels = reader.GetAttribute("channels");
 
                         reader.Read();
                         break;
 
                     case "condition":
-                        // TODO: Make a new object for this
-                        // string condition_tag = reader.GetAttribute("tag");
-                        // string condition_mask = reader.GetAttribute("mask");
-                        // string condition_relation = reader.GetAttribute("relation"); // (eq|ne|gt|le|lt|ge)
-                        // string condition_value = reader.GetAttribute("value");
+                        // TODO: Use these conditions
+                        var condition = new ListXMLCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
 
                         reader.Read();
                         break;
 
                     case "input":
-                        // TODO: Make a new object for this
-                        // bool? input_service = Utilities.GetYesNo(reader.GetAttribute("service"));
-                        // bool? input_tilt = Utilities.GetYesNo(reader.GetAttribute("tilt"));
-                        // string input_players = reader.GetAttribute("players");
-                        // string input_coins = reader.GetAttribute("coins");
+                        // TODO: Use these inputs
+                        var input = new ListXMLInput();
+                        input.Service = reader.GetAttribute("service").AsYesNo();
+                        input.Tilt = reader.GetAttribute("tilt").AsYesNo();
+                        input.Players = reader.GetAttribute("players");
+                        input.Coins = reader.GetAttribute("coins");
 
-                        // // While the subtree contains <control> elements...
-                        // TODO: Make a new object for this
-                        // string control_type = reader.GetAttribute("type");
-                        // string control_player = reader.GetAttribute("player");
-                        // string control_buttons = reader.GetAttribute("buttons");
-                        // string control_regbuttons = reader.GetAttribute("regbuttons");
-                        // string control_minimum = reader.GetAttribute("minimum");
-                        // string control_maximum = reader.GetAttribute("maximum");
-                        // string control_sensitivity = reader.GetAttribute("sensitivity");
-                        // string control_keydelta = reader.GetAttribute("keydelta");
-                        // bool? control_reverse = Utilities.GetYesNo(reader.GetAttribute("reverse"));
-                        // string control_ways = reader.GetAttribute("ways");
-                        // string control_ways2 = reader.GetAttribute("ways2");
-                        // string control_ways3 = reader.GetAttribute("ways3");
+                        // Now read the internal tags
+                        ReadInput(reader.ReadSubtree(), input);
 
+                        // Skip the input now that we've processed it
                         reader.Skip();
                         break;
 
                     case "dipswitch":
                         // TODO: Use these dipswitches
-                        var dipSwitch = new ListXMLDipSwitch(reader.GetAttribute("name"), reader.GetAttribute("tag"), reader.GetAttribute("mask"));
+                        var dipSwitch = new ListXMLDipSwitch();
+                        dipSwitch.Name = reader.GetAttribute("name");
+                        dipSwitch.Tag = reader.GetAttribute("tag");
+                        dipSwitch.Mask = reader.GetAttribute("mask");
+
+                        // Now read the internal tags
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
                         // Skip the dipswitch now that we've processed it
@@ -573,7 +572,63 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Read DipSwitch DipValues information
+        /// Read Input information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="input">ListXMLInput to populate</param>
+        private void ReadInput(XmlReader reader, ListXMLInput input)
+        {
+            // If we have an empty trurip, skip it
+            if (reader == null)
+                return;
+
+            // Get list ready
+            input.Controls = new List<ListXMLControl>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipswitch
+                switch (reader.Name)
+                {
+                    case "control":
+                        var control = new ListXMLControl();
+                        control.Type = reader.GetAttribute("type");
+                        control.Player = reader.GetAttribute("player");
+                        control.Buttons = reader.GetAttribute("buttons");
+                        control.RegButtons = reader.GetAttribute("regbuttons");
+                        control.Minimum = reader.GetAttribute("minimum");
+                        control.Maximum = reader.GetAttribute("maximum");
+                        control.Sensitivity = reader.GetAttribute("sensitivity");
+                        control.KeyDelta = reader.GetAttribute("keydelta");
+                        control.Reverse = reader.GetAttribute("reverse").AsYesNo();
+                        control.Ways = reader.GetAttribute("ways");
+                        control.Ways2 = reader.GetAttribute("ways2");
+                        control.Ways3 = reader.GetAttribute("ways3");
+
+                        input.Controls.Add(control);
+
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read DipSwitch information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
         /// <param name="dipSwitch">ListXMLDipSwitch to populate</param>
@@ -603,18 +658,24 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "diplocation":
-                        dipSwitch.Locations.Add(new ListXMLDipLocation(
-                            reader.GetAttribute("name"),
-                            reader.GetAttribute("number"),
-                            reader.GetAttribute("inverted").AsYesNo()));
+                        var dipLocation = new ListXMLDipLocation();
+                        dipLocation.Name = reader.GetAttribute("name");
+                        dipLocation.Number = reader.GetAttribute("number");
+                        dipLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
+
+                        dipSwitch.Locations.Add(dipLocation);
+
                         reader.Read();
                         break;
 
                     case "dipvalue":
-                        dipSwitch.Values.Add(new ListXMLDipValue(
-                            reader.GetAttribute("name"),
-                            reader.GetAttribute("value"),
-                            reader.GetAttribute("default").AsYesNo()));
+                        var dipValue = new ListXMLDipValue();
+                        dipValue.Name = reader.GetAttribute("name");
+                        dipValue.Value = reader.GetAttribute("value");
+                        dipValue.Default = reader.GetAttribute("default").AsYesNo();
+
+                        dipSwitch.Values.Add(dipValue);
+
                         reader.Read();
                         break;
 
