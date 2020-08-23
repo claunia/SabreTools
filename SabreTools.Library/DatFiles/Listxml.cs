@@ -152,7 +152,7 @@ namespace SabreTools.Library.DatFiles
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
                 RomOf = reader.GetAttribute("romof") ?? string.Empty,
                 SampleOf = reader.GetAttribute("sampleof") ?? string.Empty,
-                Devices = new List<string>(),
+                DeviceReferences = new List<ListXmlDeviceReference>(),
                 SlotOptions = new List<string>(),
 
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
@@ -285,9 +285,7 @@ namespace SabreTools.Library.DatFiles
                         var deviceReference = new ListXmlDeviceReference();
                         deviceReference.Name = reader.GetAttribute("name");
 
-                        // TODO: Retire this direct machine setter
-                        if (!machine.Devices.Contains(deviceReference.Name))
-                            machine.Devices.Add(deviceReference.Name);
+                        machine.DeviceReferences.Add(deviceReference);
 
                         reader.Read();
                         break;

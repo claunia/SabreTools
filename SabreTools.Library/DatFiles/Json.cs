@@ -542,11 +542,11 @@ namespace SabreTools.Library.DatFiles
                         machine.Runnable = jtr.ReadAsString().AsRunnable();
                         break;
                     case "devices":
-                        machine.Devices = new List<string>();
+                        machine.DeviceReferences = new List<ListXmlDeviceReference>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream && jtr.TokenType != JsonToken.EndArray)
                         {
-                            machine.Devices.Add(jtr.ReadAsString());
+                            machine.DeviceReferences.Add(new ListXmlDeviceReference() { Name = jtr.ReadAsString() });
                         }
 
                         break;
@@ -1728,9 +1728,9 @@ namespace SabreTools.Library.DatFiles
                 {
                     jtw.WritePropertyName("devices");
                     jtw.WriteStartArray();
-                    foreach (string device in datItem.Machine.Devices)
+                    foreach (ListXmlDeviceReference device in datItem.Machine.DeviceReferences)
                     {
-                        jtw.WriteValue(device);
+                        jtw.WriteValue(device.Name);
                     }
 
                     jtw.WriteEndArray();

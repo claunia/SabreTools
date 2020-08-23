@@ -152,9 +152,8 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// List of associated device names
         /// </summary>
-        /// TODO: Use ListXmlDeviceReference for this...
         [JsonProperty("devices")]
-        public List<string> Devices { get; set; } = null;
+        public List<ListXmlDeviceReference> DeviceReferences { get; set; } = null;
 
         /// <summary>
         /// List of slot options
@@ -382,7 +381,7 @@ namespace SabreTools.Library.DatItems
                     fieldValue = Runnable.ToString();
                     break;
                 case Field.Devices:
-                    fieldValue = string.Join(";", Devices ?? new List<string>());
+                    fieldValue = string.Join(";", DeviceReferences ?? new List<ListXmlDeviceReference>());
                     break;
                 case Field.SlotOptions:
                     fieldValue = string.Join(";", SlotOptions ?? new List<string>());
@@ -554,11 +553,11 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.Devices))
             {
-                if (Devices == null)
-                    Devices = new List<string>();
+                if (DeviceReferences == null)
+                    DeviceReferences = new List<ListXmlDeviceReference>();
 
-                string[] devices = mappings[Field.Devices].Split(';');
-                Devices.AddRange(devices);
+                var devices = mappings[Field.Devices].Split(';').Select(d => new ListXmlDeviceReference() { Name = d, });
+                DeviceReferences.AddRange(devices);
             }
 
             if (mappings.Keys.Contains(Field.SlotOptions))
@@ -738,7 +737,7 @@ namespace SabreTools.Library.DatItems
 
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
-                Devices = this.Devices,
+                DeviceReferences = this.DeviceReferences,
                 SlotOptions = this.SlotOptions,
                 Infos = this.Infos,
                 MachineType = this.MachineType,
@@ -933,14 +932,14 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on devices
-            if (Devices != null && Devices.Any())
+            if (DeviceReferences != null && DeviceReferences.Any())
             {
                 bool anyPositiveDevice = false;
                 bool anyNegativeDevice = false;
-                foreach (string device in Devices)
+                foreach (ListXmlDeviceReference device in DeviceReferences)
                 {
-                    anyPositiveDevice |= filter.Devices.MatchesPositiveSet(device) != false;
-                    anyNegativeDevice |= filter.Devices.MatchesNegativeSet(device) == false;
+                    anyPositiveDevice |= filter.Devices.MatchesPositiveSet(device.Name) != false;
+                    anyNegativeDevice |= filter.Devices.MatchesNegativeSet(device.Name) == false;
                 }
 
                 if (!anyPositiveDevice || anyNegativeDevice)
@@ -1154,7 +1153,7 @@ namespace SabreTools.Library.DatItems
                 Runnable = Runnable.NULL;
 
             if (fields.Contains(Field.Devices))
-                Devices = null;
+                DeviceReferences = null;
 
             if (fields.Contains(Field.SlotOptions))
                 SlotOptions = null;
@@ -1318,7 +1317,7 @@ namespace SabreTools.Library.DatItems
                 Runnable = machine.Runnable;
 
             if (fields.Contains(Field.Devices))
-                Devices = machine.Devices;
+                DeviceReferences = machine.DeviceReferences;
 
             if (fields.Contains(Field.SlotOptions))
                 SlotOptions = machine.SlotOptions;

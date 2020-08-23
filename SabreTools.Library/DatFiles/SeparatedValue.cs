@@ -380,11 +380,11 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "Machine.Devices":
-                            machine.Devices = new List<string>();
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
                             var devices = value.Split(';');
                             foreach (var device in devices)
                             {
-                                machine.Devices.Add(device);
+                                machine.DeviceReferences.Add(new ListXmlDeviceReference() { Name = device });
                             }
 
                             break;

@@ -1534,8 +1534,8 @@ namespace SabreTools.Library.DatFiles
                     continue;
 
                 // If the game has no devices, we continue
-                if (Items[game][0].Machine.Devices == null
-                    || Items[game][0].Machine.Devices.Count == 0
+                if (Items[game][0].Machine.DeviceReferences == null
+                    || Items[game][0].Machine.DeviceReferences.Count == 0
                     || (slotoptions && Items[game][0].Machine.SlotOptions == null)
                     || (slotoptions && Items[game][0].Machine.SlotOptions.Count == 0))
                 {
@@ -1543,21 +1543,21 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Determine if the game has any devices or not
-                List<string> devices = Items[game][0].Machine.Devices;
-                List<string> newdevs = new List<string>();
-                foreach (string device in devices)
+                List<ListXmlDeviceReference> deviceReferences = Items[game][0].Machine.DeviceReferences;
+                List<ListXmlDeviceReference> newdevs = new List<ListXmlDeviceReference>();
+                foreach (ListXmlDeviceReference deviceReference in deviceReferences)
                 {
                     // If the device doesn't exist then we continue
-                    if (Items[device].Count == 0)
+                    if (Items[deviceReference.Name].Count == 0)
                         continue;
 
                     // Otherwise, copy the items from the device to the current game
                     DatItem copyFrom = Items[game][0];
-                    List<DatItem> devItems = Items[device];
+                    List<DatItem> devItems = Items[deviceReference.Name];
                     foreach (DatItem item in devItems)
                     {
                         DatItem datItem = (DatItem)item.Clone();
-                        newdevs.AddRange(datItem.Machine.Devices ?? new List<string>());
+                        newdevs.AddRange(datItem.Machine.DeviceReferences ?? new List<ListXmlDeviceReference>());
                         datItem.CopyMachineInformation(copyFrom);
                         if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
                         {
@@ -1568,10 +1568,10 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Now that every device is accounted for, add the new list of devices, if they don't already exist
-                foreach (string device in newdevs)
+                foreach (ListXmlDeviceReference device in newdevs)
                 {
-                    if (!Items[game][0].Machine.Devices.Contains(device))
-                        Items[game][0].Machine.Devices.Add(device);
+                    if (!Items[game][0].Machine.DeviceReferences.Select(d => d.Name).Contains(device.Name))
+                        Items[game][0].Machine.DeviceReferences.Add(new ListXmlDeviceReference() { Name = device.Name });
                 }
 
                 // If we're checking slotoptions too
