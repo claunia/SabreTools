@@ -668,11 +668,11 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Get the dictionary key that should be used for a given item and bucketing type
         /// </summary>
-        /// <param name="bucketedBy">BucketedBy enum representing what key to get</param>
+        /// <param name="bucketedBy">Field enum representing what key to get</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns>String representing the key to be used for the DatItem</returns>
-        public override string GetKey(BucketedBy bucketedBy, bool lower = true, bool norename = true)
+        public override string GetKey(Field bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string key = string.Empty;
@@ -680,29 +680,29 @@ namespace SabreTools.Library.DatItems
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)
             {
-                case BucketedBy.MD5:
+                case Field.MD5:
                     key = MD5;
                     break;
 
 #if NET_FRAMEWORK
-                case BucketedBy.RIPEMD160:
+                case Field.RIPEMD160:
                     key = RIPEMD160;
                     break;
 #endif
 
-                case BucketedBy.SHA1:
+                case Field.SHA1:
                     key = SHA1;
                     break;
 
-                case BucketedBy.SHA256:
+                case Field.SHA256:
                     key = SHA256;
                     break;
 
-                case BucketedBy.SHA384:
+                case Field.SHA384:
                     key = SHA384;
                     break;
 
-                case BucketedBy.SHA512:
+                case Field.SHA512:
                     key = SHA512;
                     break;
 

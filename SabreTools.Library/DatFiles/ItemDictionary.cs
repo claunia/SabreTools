@@ -23,7 +23,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Determine the bucketing key for all items
         /// </summary>
-        private BucketedBy bucketedBy;
+        private Field bucketedBy;
 
         /// <summary>
         /// Determine merging type for all items
@@ -340,10 +340,10 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Override the internal BucketedBy value
+        /// Override the internal Field value
         /// </summary>
         /// <param name="newBucket"></param>
-        public void SetBucketedBy(BucketedBy newBucket)
+        public void SetBucketedBy(Field newBucket)
         {
             bucketedBy = newBucket;
         }
@@ -544,7 +544,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         public ItemDictionary()
         {
-            bucketedBy = BucketedBy.Default;
+            bucketedBy = Field.NULL;
             mergedBy = DedupeType.None;
             items = new Dictionary<string, List<DatItem>>();
         }
@@ -556,11 +556,11 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Take the arbitrarily bucketed Files Dictionary and convert to one bucketed by a user-defined method
         /// </summary>
-        /// <param name="bucketBy">BucketedBy enum representing how to bucket the individual items</param>
+        /// <param name="bucketBy">Field enum representing how to bucket the individual items</param>
         /// <param name="dedupeType">Dedupe type that should be used</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        public void BucketBy(BucketedBy bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
+        public void BucketBy(Field bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
             if (items == null || items.Count == 0)
@@ -625,7 +625,7 @@ namespace SabreTools.Library.DatFiles
                     DatItem.Sort(ref sortedlist, false);
 
                     // If we're merging the roms, do so
-                    if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == BucketedBy.Game))
+                    if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == Field.MachineName))
                         sortedlist = DatItem.Merge(sortedlist);
 
                     // Add the list back to the dictionary
@@ -778,39 +778,39 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Get the highest-order BucketedBy value that represents the statistics
+        /// Get the highest-order Field value that represents the statistics
         /// </summary>
-        private BucketedBy GetBestAvailable()
+        private Field GetBestAvailable()
         {
             // If all items are supposed to have a SHA-512, we bucket by that
             if (RomCount + DiskCount - NodumpCount == SHA512Count)
-                return BucketedBy.SHA512;
+                return Field.SHA512;
 
             // If all items are supposed to have a SHA-384, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA384Count)
-                return BucketedBy.SHA384;
+                return Field.SHA384;
 
             // If all items are supposed to have a SHA-256, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA256Count)
-                return BucketedBy.SHA256;
+                return Field.SHA256;
 
             // If all items are supposed to have a SHA-1, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA1Count)
-                return BucketedBy.SHA1;
+                return Field.SHA1;
 
 #if NET_FRAMEWORK
             // If all items are supposed to have a RIPEMD160, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == RIPEMD160Count)
-                return BucketedBy.RIPEMD160;
+                return Field.RIPEMD160;
 #endif
 
             // If all items are supposed to have a MD5, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == MD5Count)
-                return BucketedBy.MD5;
+                return Field.MD5;
 
             // Otherwise, we bucket by CRC
             else
-                return BucketedBy.CRC;
+                return Field.CRC;
         }
 
         /// <summary>
@@ -1005,7 +1005,7 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.Verbose($"Beginning stat collection for '{file}'", false);
                 List<string> games = new List<string>();
                 DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
-                datdata.Items.BucketBy(BucketedBy.Game, DedupeType.None, norename: true);
+                datdata.Items.BucketBy(Field.MachineName, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
                 Globals.Logger.User($"Adding stats for file '{file}'\n", false);

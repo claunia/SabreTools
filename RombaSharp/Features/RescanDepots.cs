@@ -65,7 +65,7 @@ namespace RombaSharp.Features
                 // Now rescan the depot itself
                 DatFile depot = DatFile.Create();
                 depot.PopulateFromDir(depotname, asFiles: TreatAsFiles.CHDs);
-                depot.Items.BucketBy(BucketedBy.SHA1, DedupeType.None);
+                depot.Items.BucketBy(Field.SHA1, DedupeType.None);
 
                 // Set the base queries to use
                 string crcquery = "INSERT OR IGNORE INTO crc (crc) VALUES";

@@ -3,26 +3,6 @@
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Determines how the current dictionary is bucketed by
-    /// </summary>
-    /// TODO: Can we use "Field" instead of this? How much more stupidly complex would that make things?
-    public enum BucketedBy
-    {
-        Default = 0,
-        Size,
-        CRC,
-        MD5,
-#if NET_FRAMEWORK
-        RIPEMD160,
-#endif
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512,
-        Game,
-    }
-
-    /// <summary>
     /// DAT output formats
     /// </summary>
     [Flags]
