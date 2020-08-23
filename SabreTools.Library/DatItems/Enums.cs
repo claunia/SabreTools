@@ -242,6 +242,18 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine machine runnable status
+    /// </summary>
+    [Flags]
+    public enum Runnable
+    {
+        NULL,
+        No,
+        Partial,
+        Yes,
+    }
+
+    /// <summary>
     /// Determine machine support status
     /// </summary>
     [Flags]

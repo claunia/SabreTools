@@ -121,7 +121,7 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Include or exclude items with the "Runnable" tag
         /// </summary>
-        public FilterItem<bool?> Runnable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<Runnable> Runnables { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
 
         /// <summary>
         /// Include or exclude machine devices
@@ -703,10 +703,10 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.Runnable:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Runnable.Neutral = false;
+                    if (negate)
+                        Runnables.Negative |= value.AsRunnable();
                     else
-                        Runnable.Neutral = true;
+                        Runnables.Positive |= value.AsRunnable();
                     break;
 
                 case Field.Devices:

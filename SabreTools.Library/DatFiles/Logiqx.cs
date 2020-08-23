@@ -313,7 +313,7 @@ namespace SabreTools.Library.DatFiles
                 SourceFile = reader.GetAttribute("sourcefile"),
                 Board = reader.GetAttribute("board"),
                 RebuildTo = reader.GetAttribute("rebuildto"),
-                Runnable = reader.GetAttribute("runnable").AsYesNo(), // Listxml-specific, used by older DATs
+                Runnable = reader.GetAttribute("runnable").AsRunnable(), // Used by older DATs
 
                 Comment = string.Empty,
 
@@ -982,10 +982,18 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Machine.Runnable != null)
                 {
-                    if (datItem.Machine.Runnable == true)
-                        xtw.WriteAttributeString("runnable", "yes");
-                    else if (datItem.Machine.Runnable == false)
-                        xtw.WriteAttributeString("runnable", "no");
+                    switch (datItem.Machine.Runnable)
+                    {
+                        case Runnable.No:
+                            xtw.WriteAttributeString("runnable", "no");
+                            break;
+                        case Runnable.Partial:
+                            xtw.WriteAttributeString("runnable", "partial");
+                            break;
+                        case Runnable.Yes:
+                            xtw.WriteAttributeString("runnable", "yes");
+                            break;
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))

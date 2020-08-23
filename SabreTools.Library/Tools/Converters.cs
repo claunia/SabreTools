@@ -746,6 +746,36 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get Runnable value from input string
+        /// </summary>
+        /// <param name="runnable">String to get value from</param>
+        /// <returns>Runnable value corresponding to the string</returns>
+        public static Runnable AsRunnable(this string runnable)
+        {
+#if NET_FRAMEWORK
+            switch (runnable?.ToLowerInvariant())
+            {
+                case "no":
+                    return Runnable.No;
+                case "partial":
+                    return Runnable.Partial;
+                case "yes":
+                    return Runnable.Yes;
+                default:
+                    return Runnable.NULL;
+            }
+#else
+            return runnable?.ToLowerInvariant() switch
+            {
+                "no" => Runnable.No,
+                "partial" => Runnable.Partial,
+                "yes" => Runnable.Yes,
+                _ => Runnable.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get SplitType value from input ForceMerging
         /// </summary>
         /// <param name="forceMerging">ForceMerging to get value from</param>
@@ -848,7 +878,6 @@ namespace SabreTools.Library.Tools
             };
 #endif
         }
-
 
         /// <summary>
         /// Get bool? value from input string

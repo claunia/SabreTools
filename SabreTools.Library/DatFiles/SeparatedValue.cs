@@ -376,7 +376,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "Machine.Runnable":
-                            machine.Runnable = value.AsYesNo();
+                            machine.Runnable = value.AsRunnable();
                             break;
 
                         case "Machine.Devices":
@@ -405,7 +405,12 @@ namespace SabreTools.Library.DatFiles
                             foreach (var info in infos)
                             {
                                 var infoPair = info.Split('=');
-                                machine.Infos.Add(new ListXmlInfo(infoPair[0], infoPair[1]));
+
+                                var infoObj = new ListXmlInfo();
+                                infoObj.Name = infoPair[0];
+                                infoObj.Value = infoPair[1];
+
+                                machine.Infos.Add(infoObj);
                             }
 
                             break;
@@ -498,7 +503,7 @@ namespace SabreTools.Library.DatFiles
                             break;
 
                         case "Machine.DipSwitches":
-                            machine.DipSwitches = new List<ListXMLDipSwitch>();
+                            machine.DipSwitches = new List<ListXmlDipSwitch>();
                             // TODO: There is no way this would work... Just use empty for now
                             break;
 

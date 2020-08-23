@@ -145,20 +145,21 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Machine runnable status
         /// </summary>
-        /// <remarks>yes = true, partial = null, no = false</remarks>
         /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("runnable")]
-        public bool? Runnable { get; set; } = null;
+        public Runnable Runnable { get; set; } = Runnable.NULL;
 
         /// <summary>
         /// List of associated device names
         /// </summary>
+        /// TODO: Use ListXmlDeviceReference for this...
         [JsonProperty("devices")]
         public List<string> Devices { get; set; } = null;
 
         /// <summary>
         /// List of slot options
         /// </summary>
+        /// TODO: Use ListXmlSlot for this...
         [JsonProperty("slotoptions")]
         public List<string> SlotOptions { get; set; } = null;
 
@@ -285,8 +286,10 @@ namespace SabreTools.Library.DatItems
         /// List of shared feature items
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
+        /// TODO: Move to ListXML section
+        /// TODO: Order ListXML and SoftwareList outputs by area names
         [JsonProperty("dipswitches")]
-        public List<ListXMLDipSwitch> DipSwitches { get; set; } = null;
+        public List<ListXmlDipSwitch> DipSwitches { get; set; } = null;
 
         #endregion
 
@@ -376,7 +379,7 @@ namespace SabreTools.Library.DatItems
                     fieldValue = SourceFile;
                     break;
                 case Field.Runnable:
-                    fieldValue = Runnable?.ToString();
+                    fieldValue = Runnable.ToString();
                     break;
                 case Field.Devices:
                     fieldValue = string.Join(";", Devices ?? new List<string>());
@@ -547,7 +550,7 @@ namespace SabreTools.Library.DatItems
                 SourceFile = mappings[Field.SourceFile];
 
             if (mappings.Keys.Contains(Field.Runnable))
-                Runnable = mappings[Field.Runnable].AsYesNo();
+                Runnable = mappings[Field.Runnable].AsRunnable();
 
             if (mappings.Keys.Contains(Field.Devices))
             {
@@ -576,7 +579,12 @@ namespace SabreTools.Library.DatItems
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
-                    Infos.Add(new ListXmlInfo(split[0], split[1]));
+
+                    var infoObj = new ListXmlInfo();
+                    infoObj.Name = split[0];
+                    infoObj.Value = split[1];
+
+                    Infos.Add(infoObj);
                 }
             }
 
@@ -657,7 +665,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DipSwitches))
             {
                 if (DipSwitches == null)
-                    DipSwitches = new List<ListXMLDipSwitch>();
+                    DipSwitches = new List<ListXmlDipSwitch>();
 
                 // TODO: There's no way this will work... just create the new list for now
             }
@@ -919,7 +927,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on runnable
-            if (filter.Runnable.MatchesNeutral(null, Runnable) == false)
+            if (filter.Runnables.MatchesPositive(Runnable.NULL, Runnable) == false)
+                return false;
+            if (filter.Runnables.MatchesNegative(Runnable.NULL, Runnable) == true)
                 return false;
 
             // Filter on devices
@@ -1141,7 +1151,7 @@ namespace SabreTools.Library.DatItems
                 SourceFile = null;
 
             if (fields.Contains(Field.Runnable))
-                Runnable = null;
+                Runnable = Runnable.NULL;
 
             if (fields.Contains(Field.Devices))
                 Devices = null;

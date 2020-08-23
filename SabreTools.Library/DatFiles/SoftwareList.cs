@@ -147,7 +147,7 @@ namespace SabreTools.Library.DatFiles
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
                 Infos = new List<ListXmlInfo>(),
                 SharedFeatures = new List<SoftwareListSharedFeature>(),
-                DipSwitches = new List<ListXMLDipSwitch>(),
+                DipSwitches = new List<ListXmlDipSwitch>(),
 
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
             };
@@ -181,7 +181,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "info":
-                        machine.Infos.Add(new ListXmlInfo(reader.GetAttribute("name"), reader.GetAttribute("value")));
+                        var info = new ListXmlInfo();
+                        info.Name = reader.GetAttribute("name");
+                        info.Value = reader.GetAttribute("value");
+
+                        machine.Infos.Add(info);
+
                         reader.Read();
                         break;
 
@@ -248,7 +253,6 @@ namespace SabreTools.Library.DatFiles
                 areaEndinaness;
             long? areasize = null;
             var features = new List<SoftwareListFeature>();
-            var dipswitches = new List<ListXMLDipSwitch>();
             bool containsItems = false;
 
             while (!reader.EOF)
@@ -334,7 +338,7 @@ namespace SabreTools.Library.DatFiles
 
                     case "dipswitch":
                         // TODO: Use these dipswitches
-                        var dipSwitch = new ListXMLDipSwitch();
+                        var dipSwitch = new ListXmlDipSwitch();
                         dipSwitch.Name = reader.GetAttribute("name");
                         dipSwitch.Tag = reader.GetAttribute("tag");
                         dipSwitch.Mask = reader.GetAttribute("mask");
@@ -570,14 +574,14 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
         /// <param name="dipSwitch">ListXMLDipSwitch to populate</param>
-        private void ReadDipSwitch(XmlReader reader, ListXMLDipSwitch dipSwitch)
+        private void ReadDipSwitch(XmlReader reader, ListXmlDipSwitch dipSwitch)
         {
-            // If we have an empty trurip, skip it
+            // If we have an empty dipswitch, skip it
             if (reader == null)
                 return;
 
             // Get list ready
-            dipSwitch.Values = new List<ListXMLDipValue>();
+            dipSwitch.Values = new List<ListXmlDipValue>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -595,7 +599,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "dipvalue":
-                        var dipValue = new ListXMLDipValue();
+                        var dipValue = new ListXmlDipValue();
                         dipValue.Name = reader.GetAttribute("name");
                         dipValue.Value = reader.GetAttribute("value");
                         dipValue.Default = reader.GetAttribute("default").AsYesNo();
@@ -842,14 +846,14 @@ namespace SabreTools.Library.DatFiles
 
                 if (!Header.ExcludeFields.Contains(Field.DipSwitches) && datItem.Machine.DipSwitches != null && datItem.Machine.DipSwitches.Count > 0)
                 {
-                    foreach (ListXMLDipSwitch dip in datItem.Machine.DipSwitches)
+                    foreach (ListXmlDipSwitch dip in datItem.Machine.DipSwitches)
                     {
                         xtw.WriteStartElement("dipswitch");
                         xtw.WriteAttributeString("name", dip.Name);
                         xtw.WriteAttributeString("tag", dip.Tag);
                         xtw.WriteAttributeString("mask", dip.Mask);
 
-                        foreach (ListXMLDipValue dipval in dip.Values)
+                        foreach (ListXmlDipValue dipval in dip.Values)
                         {
                             xtw.WriteStartElement("dipvalue");
                             xtw.WriteAttributeString("name", dipval.Name);

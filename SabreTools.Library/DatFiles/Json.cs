@@ -539,7 +539,7 @@ namespace SabreTools.Library.DatFiles
                         machine.SourceFile = jtr.ReadAsString();
                         break;
                     case "runnable":
-                        machine.Runnable = jtr.ReadAsString().AsYesNo();
+                        machine.Runnable = jtr.ReadAsString().AsRunnable();
                         break;
                     case "devices":
                         machine.Devices = new List<string>();
@@ -568,12 +568,14 @@ namespace SabreTools.Library.DatFiles
                             if (jtr.TokenType == JsonToken.EndArray)
                                 break;
 
+                            var info = new ListXmlInfo();
+
                             jtr.Read(); // Key
-                            string key = jtr.Value as string;
-                            string value = jtr.ReadAsString();
+                            info.Name = jtr.Value as string;
+                            info.Value = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            machine.Infos.Add(new ListXmlInfo(key, value));
+                            machine.Infos.Add(info);
                         }
 
                         break;
@@ -663,7 +665,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitches":
-                        machine.DipSwitches = new List<ListXMLDipSwitch>();
+                        machine.DipSwitches = new List<ListXmlDipSwitch>();
                         jtr.Read(); // Start Array
                         while (!sr.EndOfStream)
                         {
@@ -678,7 +680,7 @@ namespace SabreTools.Library.DatFiles
                             jtr.Read(); // Mask Key
                             string mask = jtr.ReadAsString();
 
-                            var dipSwitch = new ListXMLDipSwitch();
+                            var dipSwitch = new ListXmlDipSwitch();
                             dipSwitch.Name = name;
                             dipSwitch.Tag = tag;
                             dipSwitch.Mask = mask;
@@ -698,7 +700,7 @@ namespace SabreTools.Library.DatFiles
                                 bool? def = jtr.ReadAsString().AsYesNo();
                                 jtr.Read(); // End object
 
-                                var dipValue = new ListXMLDipValue();
+                                var dipValue = new ListXmlDipValue();
                                 dipValue.Name = valname;
                                 dipValue.Value = value;
                                 dipValue.Default = def;
@@ -1706,15 +1708,20 @@ namespace SabreTools.Library.DatFiles
                 }
                 if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Machine.Runnable != null)
                 {
-                    if (datItem.Machine.Runnable == true)
+                    switch (datItem.Machine.Runnable)
                     {
-                        jtw.WritePropertyName("runnable");
-                        jtw.WriteValue("yes");
-                    }
-                    else if (datItem.Machine.Runnable == false)
-                    {
-                        jtw.WritePropertyName("runnable");
-                        jtw.WriteValue("no");
+                        case Runnable.No:
+                            jtw.WritePropertyName("runnable");
+                            jtw.WriteValue("no");
+                            break;
+                        case Runnable.Partial:
+                            jtw.WritePropertyName("runnable");
+                            jtw.WriteValue("partial");
+                            break;
+                        case Runnable.Yes:
+                            jtw.WritePropertyName("runnable");
+                            jtw.WriteValue("yes");
+                            break;
                     }
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Devices, Header.ExcludeFields)))
@@ -1898,7 +1905,7 @@ namespace SabreTools.Library.DatFiles
                         jtw.WriteValue(dip.Mask);
                         jtw.WriteStartArray();
 
-                        foreach (ListXMLDipValue dipval in dip.Values)
+                        foreach (ListXmlDipValue dipval in dip.Values)
                         {
                             jtw.WriteStartObject();
                             jtw.WritePropertyName("name");
