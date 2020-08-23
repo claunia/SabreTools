@@ -390,18 +390,6 @@ namespace SabreTools.Library.DatFiles
                         var dipSwitch = new ListXMLDipSwitch(reader.GetAttribute("name"), reader.GetAttribute("tag"), reader.GetAttribute("mask"));
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
-                        // // While the subtree contains <diplocation> elements...
-                        // TODO: Populate the dipswitch with the diplocations
-                        // string diplocation_name = reader.GetAttribute("name");
-                        // string diplocation_number = reader.GetAttribute("number");
-                        // bool? diplocation_inverted = Utilities.GetYesNo(reader.GetAttribute("inverted"));
-
-                        // // While the subtree contains <dipvalue> elements...
-                        // TODO: Populate the dipswitch with the dipvalues
-                        // string dipvalue_name = reader.GetAttribute("name");
-                        // string dipvalue_value = reader.GetAttribute("value");
-                        // bool? dipvalue_default = Utilities.GetYesNo(reader.GetAttribute("default"));
-
                         // Skip the dipswitch now that we've processed it
                         reader.Skip();
                         break;
