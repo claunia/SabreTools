@@ -532,18 +532,18 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
 
-                        iw.WriteString($"¬{rom.Machine.CloneOf}");
-                        iw.WriteString($"¬{rom.Machine.CloneOf}");
-                        iw.WriteString($"¬{rom.Machine.Name}");
-                        if (string.IsNullOrWhiteSpace(rom.Machine.Description))
-                            iw.WriteString($"¬{rom.Machine.Name}");
+                        iw.WriteString($"¬{rom.Machine.CloneOf ?? string.Empty}");
+                        iw.WriteString($"¬{rom.Machine.CloneOf ?? string.Empty}");
+                        iw.WriteString($"¬{rom.Machine.Name ?? string.Empty}");
+                        if (string.IsNullOrWhiteSpace(rom.Machine.Description ?? string.Empty))
+                            iw.WriteString($"¬{rom.Machine.Name ?? string.Empty}");
                         else
-                            iw.WriteString($"¬{rom.Machine.Description}");
-                        iw.WriteString($"¬{rom.Name}");
-                        iw.WriteString($"¬{rom.CRC}");
+                            iw.WriteString($"¬{rom.Machine.Description ?? string.Empty}");
+                        iw.WriteString($"¬{rom.Name ?? string.Empty}");
+                        iw.WriteString($"¬{rom.CRC ?? string.Empty}");
                         iw.WriteString($"¬{rom.Size}");
-                        iw.WriteString($"¬{rom.Machine.RomOf}");
-                        iw.WriteString($"¬{rom.MergeTag}");
+                        iw.WriteString($"¬{rom.Machine.RomOf ?? string.Empty}");
+                        iw.WriteString($"¬{rom.MergeTag ?? string.Empty}");
                         iw.WriteString("¬");
                         iw.WriteLine();
 

@@ -902,14 +902,14 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "disk");
                         xtw.WriteRequiredAttributeString("name", disk.Name);
-                        xtw.WriteOptionalAttributeString("md5", disk.MD5.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160?.ToLowerInvariant());
 #endif
-                        xtw.WriteOptionalAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha512", disk.SHA512.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
                         if (disk.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
@@ -943,15 +943,15 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("type", "rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);
                         if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
-                        xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
 #endif
-                        xtw.WriteOptionalAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha512", rom.SHA512.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("date", rom.Date);
                         if (rom.ItemStatus != ItemStatus.None)
                         {

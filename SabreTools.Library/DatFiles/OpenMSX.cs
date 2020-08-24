@@ -740,7 +740,7 @@ namespace SabreTools.Library.DatFiles
                             case OpenMSXSubType.Rom:
                             case OpenMSXSubType.NULL:
                                 xtw.WriteStartElement("rom");
-                                xtw.WriteRequiredElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
                                 xtw.WriteOptionalElementString("start", rom.Offset);
                                 xtw.WriteOptionalElementString("type", rom.OpenMSXType);
                                 xtw.WriteOptionalElementString("remark", rom.Remark);
@@ -749,7 +749,7 @@ namespace SabreTools.Library.DatFiles
 
                             case OpenMSXSubType.MegaRom:
                                 xtw.WriteStartElement("megarom");
-                                xtw.WriteRequiredElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
                                 xtw.WriteOptionalElementString("start", rom.Offset);
                                 xtw.WriteOptionalElementString("type", rom.OpenMSXType);
                                 xtw.WriteOptionalElementString("remark", rom.Remark);
@@ -759,7 +759,7 @@ namespace SabreTools.Library.DatFiles
                             case OpenMSXSubType.SCCPlusCart:
                                 xtw.WriteStartElement("sccpluscart");
                                 xtw.WriteOptionalElementString("boot", rom.Boot);
-                                xtw.WriteRequiredElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
                                 xtw.WriteOptionalElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;

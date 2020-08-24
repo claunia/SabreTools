@@ -1723,11 +1723,11 @@ namespace SabreTools.Library.DatFiles
                         fields[8] = string.Empty;
                         fields[9] = string.Empty;
                         fields[10] = disk.MD5.ToLowerInvariant();
-                        //fields[11] = disk.GetField(Field.RIPEMD160, DatHeader.ExcludeFields).ToLowerInvariant();
+                        //fields[11] = disk.RIPEMD160?.ToLowerInvariant();
                         fields[11] = disk.SHA1.ToLowerInvariant();
                         fields[12] = disk.SHA256.ToLowerInvariant();
-                        //fields[13] = disk.GetField(Field.SHA384, DatHeader.ExcludeFields).ToLowerInvariant();
-                        //fields[14] = disk.GetField(Field.SHA512, DatHeader.ExcludeFields).ToLowerInvariant();
+                        //fields[13] = disk.SHA384?.ToLowerInvariant();
+                        //fields[14] = disk.SHA512?.ToLowerInvariant();
                         fields[13] = disk.ItemStatus.ToString();
                         break;
 
@@ -1737,13 +1737,13 @@ namespace SabreTools.Library.DatFiles
                         fields[6] = rom.Name;
                         fields[7] = string.Empty;
                         fields[8] = rom.Size.ToString();
-                        fields[9] = rom.CRC.ToLowerInvariant();
-                        fields[10] = rom.MD5.ToLowerInvariant();
-                        //fields[11] = rom.GetField(Field.RIPEMD160, DatHeader.ExcludeFields).ToLowerInvariant();
-                        fields[11] = rom.SHA1.ToLowerInvariant();
-                        fields[12] = rom.SHA256.ToLowerInvariant();
-                        //fields[13] = rom.GetField(Field.SHA384, DatHeader.ExcludeFields).ToLowerInvariant();
-                        //fields[14] = rom.GetField(Field.SHA512, DatHeader.ExcludeFields).ToLowerInvariant();
+                        fields[9] = rom.CRC?.ToLowerInvariant();
+                        fields[10] = rom.MD5?.ToLowerInvariant();
+                        //fields[11] = rom.RIPEMD160?.ToLowerInvariant();
+                        fields[11] = rom.SHA1?.ToLowerInvariant();
+                        fields[12] = rom.SHA256?.ToLowerInvariant();
+                        //fields[13] = rom.SHA384?.ToLowerInvariant();
+                        //fields[14] = rom.SHA512?.ToLowerInvariant();
                         fields[13] = rom.ItemStatus.ToString();
                         break;
                 }

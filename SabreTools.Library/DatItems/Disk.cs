@@ -33,7 +33,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Data MD5 hash
         /// </summary>
-        [JsonProperty("md5")]
+        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
@@ -44,7 +44,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Data RIPEMD160 hash
         /// </summary>
-        [JsonProperty("ripemd160")]
+        [JsonProperty("ripemd160", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RIPEMD160
         {
             get { return _ripemd160.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_ripemd160); }
@@ -55,7 +55,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Data SHA-1 hash
         /// </summary>
-        [JsonProperty("sha1")]
+        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
@@ -65,7 +65,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Data SHA-256 hash
         /// </summary>
-        [JsonProperty("sha256")]
+        [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SHA256
         {
             get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
@@ -75,7 +75,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Data SHA-384 hash
         /// </summary>
-        [JsonProperty("sha384")]
+        [JsonProperty("sha384", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SHA384
         {
             get { return _sha384.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha384); }
@@ -85,7 +85,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Data SHA-512 hash
         /// </summary>
-        [JsonProperty("sha512")]
+        [JsonProperty("sha512", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SHA512
         {
             get { return _sha512.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha512); }
@@ -95,38 +95,38 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Disk name to merge from parent
         /// </summary>
-        [JsonProperty("merge")]
+        [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string MergeTag { get; set; }
 
         /// <summary>
         /// Disk region
         /// </summary>
-        [JsonProperty("region")]
+        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Region { get; set; }
 
         /// <summary>
         /// Disk index
         /// </summary>
-        [JsonProperty("index")]
+        [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Index { get; set; }
 
         /// <summary>
         /// Disk writable flag
         /// </summary>
-        [JsonProperty("writable")]
+        [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Writable { get; set; }
 
         /// <summary>
         /// Disk dump status
         /// </summary>
-        [JsonProperty("status")]
+        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus { get; set; }
 
         /// <summary>
         /// Determine if the disk is optional in the set
         /// </summary>
-        [JsonProperty("optional")]
+        [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Optional { get; set; }
 
         #endregion

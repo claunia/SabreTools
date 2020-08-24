@@ -21,106 +21,103 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// External name of the DAT
         /// </summary>
-        [JsonProperty("filename")]
+        [JsonProperty("filename", DefaultValueHandling = DefaultValueHandling.Include)]
         public string FileName { get; set; }
 
         /// <summary>
         /// Internal name of the DAT
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Name { get; set; }
 
         /// <summary>
         /// DAT description
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Description { get; set; }
 
         /// <summary>
         /// Root directory for the files; currently TruRip/EmuARC-exclusive
         /// </summary>
-        [JsonProperty("rootdir")]
+        [JsonProperty("rootdir", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RootDir { get; set; }
 
         /// <summary>
         /// General category of items found in the DAT
         /// </summary>
-        [JsonProperty("category")]
+        [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Category { get; set; }
 
         /// <summary>
         /// Version of the DAT
         /// </summary>
-        [JsonProperty("version")]
+        [JsonProperty("version", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Version { get; set; }
 
         /// <summary>
         /// Creation or modification date
         /// </summary>
-        [JsonProperty("date")]
+        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Date { get; set; }
 
         /// <summary>
         /// List of authors who contributed to the DAT
         /// </summary>
-        [JsonProperty("author")]
+        [JsonProperty("author", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Author { get; set; }
 
         /// <summary>
         /// Email address for DAT author(s)
         /// </summary>
-        [JsonProperty("email")]
+        [JsonProperty("email", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Email { get; set; }
 
         /// <summary>
         /// Author or distribution homepage name
         /// </summary>
-        [JsonProperty("homepage")]
+        [JsonProperty("homepage", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Homepage { get; set; }
 
         /// <summary>
         /// Author or distribution URL
         /// </summary>
-        [JsonProperty("url")]
+        [JsonProperty("url", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Url { get; set; }
 
         /// <summary>
         /// Any comment that does not already fit an existing field
         /// </summary>
-        [JsonProperty("comment")]
+        [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Comment { get; set; }
 
         /// <summary>
         /// Header skipper to be used when loading the DAT
         /// </summary>
-        [JsonProperty("header")]
+        [JsonProperty("header", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string HeaderSkipper { get; set; }
 
         /// <summary>
         /// Classification of the DAT. Generally only used for SuperDAT
         /// </summary>
-        [JsonProperty("type")]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Type { get; set; }
 
         /// <summary>
         /// Force a merging style when loaded
         /// </summary>
-        /// TODO: Make nullable
-        [JsonProperty("forcemerging")]
+        [JsonProperty("forcemerging", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public MergingFlag ForceMerging { get; set; }
 
         /// <summary>
         /// Force nodump handling when loaded
         /// </summary>
-        /// TODO: Make nullable
-        [JsonProperty("forcenodump")]
+        [JsonProperty("forcenodump", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public NodumpFlag ForceNodump { get; set; }
 
         /// <summary>
         /// Force output packing when loaded
         /// </summary>
-        /// TODO: Make nullable
-        [JsonProperty("forcepacking")]
+        [JsonProperty("forcepacking", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public PackingFlag ForcePacking { get; set; }
 
         /// <summary>
@@ -185,13 +182,13 @@ namespace SabreTools.Library.DatFiles
         /// Debug build flag
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
-        [JsonProperty("debug")]
-        public bool? Debug { get; set; } = false;
+        [JsonProperty("debug", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? Debug { get; set; } = null;
 
         /// <summary>
         /// MAME configuration name
         /// </summary>
-        [JsonProperty("mameconfig")]
+        [JsonProperty("mameconfig", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string MameConfig { get; set; }
 
         #endregion
@@ -201,46 +198,46 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Build version
         /// </summary>
-        [JsonProperty("build")]
+        [JsonProperty("build", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Build { get; set; }
 
         /// <summary>
         /// RomCenter rom mode
         /// </summary>
         /// <remarks>(merged|split|unmerged) "split"</remarks>
-        [JsonProperty("rommode")]
+        [JsonProperty("rommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public MergingFlag RomMode { get; set; }
 
         /// <summary>
         /// RomCenter bios mode
         /// </summary>
         /// <remarks>(merged|split|unmerged) "split"</remarks>
-        [JsonProperty("biosmode")]
+        [JsonProperty("biosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public MergingFlag BiosMode { get; set; }
 
         /// <summary>
         /// RomCenter sample mode
         /// </summary>
         /// <remarks>(merged|unmerged) "merged"</remarks>
-        [JsonProperty("samplemode")]
+        [JsonProperty("samplemode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public MergingFlag SampleMode { get; set; }
 
         /// <summary>
         /// RomCenter lock rom mode
         /// </summary>
-        [JsonProperty("lockrommode")]
+        [JsonProperty("lockrommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? LockRomMode { get; set; }
 
         /// <summary>
         /// RomCenter lock bios mode
         /// </summary>
-        [JsonProperty("lockbiosmode")]
+        [JsonProperty("lockbiosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? LockBiosMode { get; set; }
 
         /// <summary>
         /// RomCenter lock sample mode
         /// </summary>
-        [JsonProperty("locksamplemode")]
+        [JsonProperty("locksamplemode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? LockSampleMode { get; set; }
 
         #endregion
@@ -261,31 +258,31 @@ namespace SabreTools.Library.DatFiles
         /// System
         /// </summary>
         /// <remarks>Known as "plugin" in Logiqx and RomCenter</remarks>
-        [JsonProperty("system")]
+        [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string System { get; set; }
 
         /// <summary>
         /// Screenshots width
         /// </summary>
-        [JsonProperty("screenshotswidth")]
+        [JsonProperty("screenshotswidth", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ScreenshotsWidth { get; set; }
 
         /// <summary>
         /// Screenshots height
         /// </summary>
-        [JsonProperty("screenshotsheight")]
+        [JsonProperty("screenshotsheight", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string ScreenshotsHeight { get; set; }
 
         /// <summary>
         /// OfflineList info list
         /// </summary>
-        [JsonProperty("infos")]
+        [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<OfflineListInfo> Infos { get; set; }
 
         /// <summary>
         /// OfflineList can-open extensions
         /// </summary>
-        [JsonProperty("canopen")]
+        [JsonProperty("canopen", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<string> CanOpen { get; set; }
 
         // TODO: Implement the following header values:
@@ -299,7 +296,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Rom title
         /// </summary>
-        [JsonProperty("romtitle")]
+        [JsonProperty("romtitle", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RomTitle { get; set; }
 
         #endregion
@@ -309,7 +306,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// RomCenter DAT format version
         /// </summary>
-        [JsonProperty("rcversion")]
+        [JsonProperty("rcversion", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RomCenterVersion { get; set; }
 
         #endregion
@@ -575,8 +572,8 @@ namespace SabreTools.Library.DatFiles
                 ReplaceExtension = datHeader.ReplaceExtension;
 
             RemoveExtension = datHeader.RemoveExtension;
-            InputDepot = datHeader.InputDepot.Clone() as DepotInformation;
-            OutputDepot = datHeader.OutputDepot.Clone() as DepotInformation;
+            InputDepot = datHeader.InputDepot?.Clone() as DepotInformation;
+            OutputDepot = datHeader.OutputDepot?.Clone() as DepotInformation;
             GameName = datHeader.GameName;
             Quotes = datHeader.Quotes;
             UseRomName = datHeader.UseRomName;

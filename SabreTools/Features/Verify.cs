@@ -66,7 +66,7 @@ namespace SabreTools.Features
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
-                    if (Header.InputDepot.IsActive)
+                    if (Header.InputDepot?.IsActive ?? false)
                         datdata.VerifyDepot(Inputs, OutputDir);
                     else
                         datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Extras, Filter);
@@ -96,7 +96,7 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (Header.InputDepot.IsActive)
+                if (Header.InputDepot?.IsActive ?? false)
                     datdata.VerifyDepot(Inputs, OutputDir);
                 else
                     datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Extras, Filter);

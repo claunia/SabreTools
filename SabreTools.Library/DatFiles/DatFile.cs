@@ -2166,7 +2166,7 @@ namespace SabreTools.Library.DatFiles
                 });
 
                 // Now find all folders that are empty, if we are supposed to
-                if (!Header.OutputDepot.IsActive && addBlanks)
+                if (!(Header.OutputDepot?.IsActive ?? false) && addBlanks)
                 {
                     List<string> empties = DirectoryExtensions.ListEmpty(basePath);
                     Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
@@ -2245,7 +2245,7 @@ namespace SabreTools.Library.DatFiles
             bool copyFiles)
         {
             // Special case for if we are in Depot mode (all names are supposed to be SHA-1 hashes)
-            if (Header.OutputDepot.IsActive)
+            if (Header.OutputDepot?.IsActive ?? false)
             {
                 GZipArchive gzarc = new GZipArchive(item);
                 BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
@@ -3841,7 +3841,7 @@ namespace SabreTools.Library.DatFiles
             string post = CreatePrefixPostfix(item, false);
 
             // If we're in Depot mode, take care of that instead
-            if (Header.OutputDepot.IsActive)
+            if (Header.OutputDepot?.IsActive ?? false)
             {
                 if (item.ItemType == ItemType.Rom)
                 {
@@ -3928,27 +3928,27 @@ namespace SabreTools.Library.DatFiles
             // Ensure we have the proper values for replacement
             if (item.ItemType == ItemType.Rom)
             {
-                crc = ((Rom)item).CRC;
-                md5 = ((Rom)item).MD5;
+                crc = ((Rom)item).CRC ?? string.Empty;
+                md5 = ((Rom)item).MD5 ?? string.Empty;
 #if NET_FRAMEWORK
-                ripemd160 = ((Rom)item).RIPEMD160;
+                ripemd160 = ((Rom)item).RIPEMD160 ?? string.Empty;
 #endif
-                sha1 = ((Rom)item).SHA1;
-                sha256 = ((Rom)item).SHA256;
-                sha384 = ((Rom)item).SHA384;
-                sha512 = ((Rom)item).SHA512;
+                sha1 = ((Rom)item).SHA1 ?? string.Empty;
+                sha256 = ((Rom)item).SHA256 ?? string.Empty;
+                sha384 = ((Rom)item).SHA384 ?? string.Empty;
+                sha512 = ((Rom)item).SHA512 ?? string.Empty;
                 size = ((Rom)item).Size.ToString();
             }
             else if (item.ItemType == ItemType.Disk)
             {
-                md5 = ((Disk)item).MD5;
+                md5 = ((Disk)item).MD5 ?? string.Empty;
 #if NET_FRAMEWORK
-                ripemd160 = ((Disk)item).RIPEMD160;
+                ripemd160 = ((Disk)item).RIPEMD160 ?? string.Empty;
 #endif
-                sha1 = ((Disk)item).SHA1;
-                sha256 = ((Disk)item).SHA256;
-                sha384 = ((Disk)item).SHA384;
-                sha512 = ((Disk)item).SHA512;
+                sha1 = ((Disk)item).SHA1 ?? string.Empty;
+                sha256 = ((Disk)item).SHA256 ?? string.Empty;
+                sha384 = ((Disk)item).SHA384 ?? string.Empty;
+                sha512 = ((Disk)item).SHA512 ?? string.Empty;
             }
 
             // Now do bulk replacement where possible
@@ -3956,9 +3956,9 @@ namespace SabreTools.Library.DatFiles
                 .Replace("%game%", game)
                 .Replace("%machine%", game)
                 .Replace("%name%", name)
-                .Replace("%manufacturer%", item.Machine.Manufacturer)
-                .Replace("%publisher%", item.Machine.Publisher)
-                .Replace("%category%", item.Machine.Category)
+                .Replace("%manufacturer%", item.Machine.Manufacturer ?? string.Empty)
+                .Replace("%publisher%", item.Machine.Publisher ?? string.Empty)
+                .Replace("%category%", item.Machine.Category ?? string.Empty)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
                 .Replace("%ripemd160%", ripemd160)

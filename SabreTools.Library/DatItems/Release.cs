@@ -18,25 +18,25 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Release region(s)
         /// </summary>
-        [JsonProperty("region")]
+        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Region { get; set; }
 
         /// <summary>
         /// Release language(s)
         /// </summary>
-        [JsonProperty("language")]
+        [JsonProperty("language", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Language { get; set; }
 
         /// <summary>
         /// Date of release
         /// </summary>
-        [JsonProperty("date")]
+        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Date { get; set; }
 
         /// <summary>
         /// Default release, if applicable
         /// </summary>
-        [JsonProperty("default")]
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Default { get; set; }
 
         #endregion

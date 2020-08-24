@@ -477,7 +477,7 @@ namespace SabreTools.Library.DatFiles
                         if (!string.IsNullOrWhiteSpace(rom.Date))
                             cmpw.WriteAttributeString("date", rom.Date);
                         if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            cmpw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
+                            cmpw.WriteAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
                 }

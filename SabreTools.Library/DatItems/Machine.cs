@@ -21,68 +21,68 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Name of the machine
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Name { get; set; } = null;
 
         /// <summary>
         /// Additional notes
         /// </summary>
         /// <remarks>Known as "Extra" in AttractMode</remarks>
-        [JsonProperty("comment")]
+        [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Comment { get; set; } = null;
 
         /// <summary>
         /// Extended description
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Description { get; set; } = null;
 
         /// <summary>
         /// Year(s) of release/manufacture
         /// </summary>
-        [JsonProperty("year")]
+        [JsonProperty("year", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Year { get; set; } = null;
 
         /// <summary>
         /// Manufacturer, if available
         /// </summary>
-        [JsonProperty("manufacturer")]
+        [JsonProperty("manufacturer", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Manufacturer { get; set; } = null;
 
         /// <summary>
         /// Publisher, if available
         /// </summary>
-        [JsonProperty("publisher")]
+        [JsonProperty("publisher", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Publisher { get; set; } = null;
 
         /// <summary>
         /// Category, if available
         /// </summary>
-        [JsonProperty("category")]
+        [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Category { get; set; } = null;
 
         /// <summary>
         /// fomof parent
         /// </summary>
-        [JsonProperty("romof")]
+        [JsonProperty("romof", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RomOf { get; set; } = null;
 
         /// <summary>
         /// cloneof parent
         /// </summary>
-        [JsonProperty("cloneof")]
+        [JsonProperty("cloneof", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CloneOf { get; set; } = null;
 
         /// <summary>
         /// sampleof parent
         /// </summary>
-        [JsonProperty("sampleof")]
+        [JsonProperty("sampleof", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SampleOf { get; set; } = null;
 
         /// <summary>
         /// Type of the machine
         /// </summary>
-        [JsonProperty("type")]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public MachineType MachineType { get; set; } = MachineType.NULL;
 
         #endregion
@@ -93,43 +93,43 @@ namespace SabreTools.Library.DatItems
         /// Player count
         /// </summary>
         /// <remarks>Also in Logiqx EmuArc</remarks>
-        [JsonProperty("players")]
+        [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Players { get; set; } = null;
 
         /// <summary>
         /// Screen rotation
         /// </summary>
-        [JsonProperty("rotation")]
+        [JsonProperty("rotation", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Rotation { get; set; } = null;
 
         /// <summary>
         /// Control method
         /// </summary>
-        [JsonProperty("control")]
+        [JsonProperty("control", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Control { get; set; } = null;
 
         /// <summary>
         /// Support status
         /// </summary>
-        [JsonProperty("status")]
+        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Status { get; set; } = null;
 
         /// <summary>
         /// Display count
         /// </summary>
-        [JsonProperty("displaycount")]
+        [JsonProperty("displaycount", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string DisplayCount { get; set; } = null;
 
         /// <summary>
         /// Display type
         /// </summary>
-        [JsonProperty("displaytype")]
+        [JsonProperty("displaytype", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string DisplayType { get; set; } = null;
 
         /// <summary>
         /// Number of input buttons
         /// </summary>
-        [JsonProperty("buttons")]
+        [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Buttons { get; set; } = null;
 
         #endregion
@@ -140,50 +140,50 @@ namespace SabreTools.Library.DatItems
         /// Emulator source file related to the machine
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
-        [JsonProperty("sourcefile")]
+        [JsonProperty("sourcefile", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string SourceFile { get; set; } = null;
 
         /// <summary>
         /// Machine runnable status
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
-        [JsonProperty("runnable")]
+        [JsonProperty("runnable", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Runnable Runnable { get; set; } = Runnable.NULL;
 
         /// <summary>
         /// List of associated device names
         /// </summary>
-        [JsonProperty("devices")]
+        [JsonProperty("devices", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlDeviceReference> DeviceReferences { get; set; } = null;
 
         /// <summary>
         /// List of associated chips
         /// </summary>
-        [JsonProperty("chips")]
+        [JsonProperty("chips", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlChip> Chips { get; set; } = null;
 
         /// <summary>
         /// List of associated displays
         /// </summary>
-        [JsonProperty("displays")]
+        [JsonProperty("displays", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlDisplay> Displays { get; set; } = null;
 
         /// <summary>
         /// List of associated sounds
         /// </summary>
-        [JsonProperty("sounds")]
+        [JsonProperty("sounds", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlSound> Sounds { get; set; } = null;
 
         /// <summary>
         /// List of associated conditions
         /// </summary>
-        [JsonProperty("conditions")]
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlCondition> Conditions { get; set; } = null;
 
         /// <summary>
         /// List of associated inputs
         /// </summary>
-        [JsonProperty("inputs")]
+        [JsonProperty("inputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlInput> Inputs { get; set; } = null;
 
         /// <summary>
@@ -191,26 +191,26 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
         /// TODO: Order ListXML and SoftwareList outputs by area names
-        [JsonProperty("dipswitches")]
+        [JsonProperty("dipswitches", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlDipSwitch> DipSwitches { get; set; } = null;
 
         /// <summary>
         /// List of associated configurations
         /// </summary>
-        [JsonProperty("configurations")]
+        [JsonProperty("configurations", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlConfiguration> Configurations { get; set; } = null;
 
         /// <summary>
         /// List of slot options
         /// </summary>
-        [JsonProperty("slots")]
+        [JsonProperty("slots", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlSlot> Slots { get; set; } = null;
 
         /// <summary>
         /// List of info items
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
-        [JsonProperty("infos")]
+        [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlInfo> Infos { get; set; } = null;
 
         #endregion
@@ -220,13 +220,13 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Machine board name
         /// </summary>
-        [JsonProperty("board")]
+        [JsonProperty("board", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Board { get; set; } = null;
 
         /// <summary>
         /// Rebuild location if different than machine name
         /// </summary>
-        [JsonProperty("rebuildto")]
+        [JsonProperty("rebuildto", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RebuildTo { get; set; } = null;
 
         #endregion
@@ -236,55 +236,55 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Title ID
         /// </summary>
-        [JsonProperty("titleid")]
+        [JsonProperty("titleid", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string TitleID { get; set; } = null;
 
         /// <summary>
         /// Machine developer
         /// </summary>
-        [JsonProperty("developer")]
+        [JsonProperty("developer", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Developer { get; set; } = null;
 
         /// <summary>
         /// Game genre
         /// </summary>
-        [JsonProperty("genre")]
+        [JsonProperty("genre", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Genre { get; set; } = null;
 
         /// <summary>
         /// Game subgenre
         /// </summary>
-        [JsonProperty("genre")]
+        [JsonProperty("subgenre", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Subgenre { get; set; } = null;
 
         /// <summary>
         /// Game ratings
         /// </summary>
-        [JsonProperty("ratings")]
+        [JsonProperty("ratings", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Ratings { get; set; } = null;
 
         /// <summary>
         /// Game score
         /// </summary>
-        [JsonProperty("score")]
+        [JsonProperty("score", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Score { get; set; } = null;
 
         /// <summary>
         /// Is the machine enabled
         /// </summary>
-        [JsonProperty("enabled")]
+        [JsonProperty("enabled", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Enabled { get; set; } = null; // bool?
 
         /// <summary>
         /// Does the game have a CRC check
         /// </summary>
-        [JsonProperty("hascrc")]
+        [JsonProperty("hascrc", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? HasCrc { get; set; } = null;
 
         /// <summary>
         /// Machine relations
         /// </summary>
-        [JsonProperty("relatedto")]
+        [JsonProperty("relatedto", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RelatedTo { get; set; } = null;
 
         #endregion
@@ -294,19 +294,19 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Generation MSX ID
         /// </summary>
-        [JsonProperty("genmsxid")]
+        [JsonProperty("genmsxid", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string GenMSXID { get; set; } = null;
 
         /// <summary>
         /// MSX System
         /// </summary>
-        [JsonProperty("system")]
+        [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string System { get; set; } = null;
 
         /// <summary>
         /// Machine country of origin
         /// </summary>
-        [JsonProperty("country")]
+        [JsonProperty("country", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Country { get; set; } = null;
 
         #endregion
@@ -316,13 +316,13 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Support status
         /// </summary>
-        [JsonProperty("supported")]
+        [JsonProperty("supported", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Supported Supported { get; set; } = Supported.NULL;
 
         /// <summary>
         /// List of shared feature items
         /// </summary>
-        [JsonProperty("sharedfeat")]
+        [JsonProperty("sharedfeat", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<SoftwareListSharedFeature> SharedFeatures { get; set; } = null;
 
         #endregion

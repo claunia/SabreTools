@@ -721,19 +721,19 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteStartElement("disk");
                         cmpw.WriteAttributeString("name", disk.Name);
                         if (!string.IsNullOrWhiteSpace(disk.MD5))
-                            cmpw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
+                            cmpw.WriteAttributeString("md5", disk.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
                         if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
-                            cmpw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
+                            cmpw.WriteAttributeString("ripemd160", disk.RIPEMD160?.ToLowerInvariant());
 #endif
                         if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            cmpw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(disk.SHA256))
-                            cmpw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(disk.SHA384))
-                            cmpw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(disk.SHA512))
-                            cmpw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
                         if (disk.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", disk.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
@@ -761,21 +761,21 @@ namespace SabreTools.Library.DatFiles
                         if (rom.Size != -1)
                             cmpw.WriteAttributeString("size", rom.Size.ToString());
                         if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            cmpw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
+                            cmpw.WriteAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(rom.MD5))
-                            cmpw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
+                            cmpw.WriteAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
                         if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
-                            cmpw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
+                            cmpw.WriteAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
 #endif
                         if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                            cmpw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(rom.SHA256))
-                            cmpw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(rom.SHA384))
-                            cmpw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(rom.SHA512))
-                            cmpw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
+                            cmpw.WriteAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
                         if (!string.IsNullOrWhiteSpace(rom.Date))
                             cmpw.WriteAttributeString("date", rom.Date);
                         if (rom.ItemStatus != ItemStatus.None)

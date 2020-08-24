@@ -39,7 +39,7 @@ namespace SabreTools.Library.IO
         /// <param name="value">Value to write in the attribute</param>
         public static void WriteOptionalAttributeString(this XmlTextWriter writer, string localName, string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 writer.WriteAttributeString(localName, value);
         }
 
@@ -51,7 +51,7 @@ namespace SabreTools.Library.IO
         /// <param name="value">Value to write in the element</param>
         public static void WriteOptionalElementString(this XmlTextWriter writer, string localName, string value)
         {
-            if (string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value))
                 writer.WriteElementString(localName, value);
         }
     }

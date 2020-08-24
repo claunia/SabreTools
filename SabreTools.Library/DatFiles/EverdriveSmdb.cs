@@ -190,12 +190,12 @@ namespace SabreTools.Library.DatFiles
 
                         string[] fields = new string[]
                         {
-                            rom.SHA256,
-                            $"{rom.Machine.Name}/",
-                            rom.Name,
-                            rom.SHA1,
-                            rom.MD5,
-                            rom.CRC,
+                            rom.SHA256 ?? string.Empty,
+                            $"{rom.Machine.Name ?? string.Empty}/",
+                            rom.Name ?? string.Empty,
+                            rom.SHA1 ?? string.Empty,
+                            rom.MD5 ?? string.Empty,
+                            rom.CRC ?? string.Empty,
                         };
 
                         svw.WriteValues(fields);

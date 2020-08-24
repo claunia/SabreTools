@@ -62,13 +62,13 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Alternate name for the item
         /// </summary>
-        [JsonProperty("alt_romname")]
+        [JsonProperty("alt_romname", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AltName { get; set; }
 
         /// <summary>
         /// Alternate title for the item
         /// </summary>
-        [JsonProperty("alt_title")]
+        [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AltTitle { get; set; }
 
         #endregion
@@ -78,13 +78,13 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// OpenMSX sub item type
         /// </summary>
-        [JsonProperty("original")]
+        [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public OpenMSXOriginal Original { get; set; }
 
         /// <summary>
         /// OpenMSX sub item type
         /// </summary>
-        [JsonProperty("openmsx_subtype")]
+        [JsonProperty("openmsx_subtype", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
         public OpenMSXSubType OpenMSXSubType { get; set; }
 
@@ -92,19 +92,19 @@ namespace SabreTools.Library.DatItems
         /// OpenMSX sub item type
         /// </summary>
         /// <remarks>Not related to the subtype above</remarks>
-        [JsonProperty("openmsx_type")]
+        [JsonProperty("openmsx_type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string OpenMSXType { get; set; }
 
         /// <summary>
         /// Item remark (like a comment)
         /// </summary>
-        [JsonProperty("remark")]
+        [JsonProperty("remark", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Remark { get; set; }
 
         /// <summary>
         /// Boot state
         /// </summary>
-        [JsonProperty("boot")]
+        [JsonProperty("boot", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Boot { get; set; }
 
         #endregion
@@ -114,58 +114,58 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
-        [JsonProperty("partname")]
+        [JsonProperty("partname", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string PartName { get; set; }
 
         /// <summary>
         /// Original hardware interface associated with the item
         /// </summary>
-        [JsonProperty("partinterface")]
+        [JsonProperty("partinterface", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string PartInterface { get; set; }
 
         /// <summary>
         /// Features provided to/by the item
         /// </summary>
-        [JsonProperty("features")]
+        [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<SoftwareListFeature> Features { get; set; }
 
         /// <summary>
         /// Original hardware part name within an item
         /// </summary>
-        [JsonProperty("areaname")]
+        [JsonProperty("areaname", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AreaName { get; set; }
 
         /// <summary>
         /// Original hardware size within the part
         /// </summary>
-        [JsonProperty("areasize")]
+        [JsonProperty("areasize", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public long? AreaSize { get; set; }
 
         /// <summary>
         /// Width of the data area in bytes
         /// </summary>
         /// TODO: Convert to Int32
-        [JsonProperty("width")]
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AreaWidth { get; set; } // (8|16|32|64) "8"
 
         /// <summary>
         /// Endianness of the data area
         /// </summary>
         /// TODO: Convert to Enum?
-        [JsonProperty("endianness")]
+        [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string AreaEndianness { get; set; } // (big|little) "little"
 
         /// <summary>
         /// SoftwareList value associated with the item
         /// </summary>
-        [JsonProperty("value")]
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Value { get; set; }
 
         /// <summary>
         /// Loading flag
         /// </summary>
         /// TODO: Convert to Enum?
-        [JsonProperty("loadflag")]
+        [JsonProperty("loadflag", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string LoadFlag { get; set; } // (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain|ignore)
 
         #endregion

@@ -445,7 +445,7 @@ namespace SabreTools.Library.DatFiles
 
                         // Otherwise, write out the SHA-1 hash
                         else if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            sw.Write($" SHA1({disk.SHA1})");
+                            sw.Write($" SHA1({disk.SHA1 ?? string.Empty})");
 
                         // If we have a baddump, put the second indicator
                         if (disk.ItemStatus == ItemStatus.BadDump)
@@ -480,9 +480,9 @@ namespace SabreTools.Library.DatFiles
                         else
                         {
                             if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                sw.Write($" CRC({rom.CRC})");
+                                sw.Write($" CRC({rom.CRC ?? string.Empty})");
                             if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                                sw.Write($" SHA1({rom.SHA1})");
+                                sw.Write($" SHA1({rom.SHA1 ?? string.Empty})");
                         }
 
                         // If we have a baddump, put the second indicator

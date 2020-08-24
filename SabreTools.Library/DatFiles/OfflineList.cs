@@ -925,14 +925,14 @@ namespace SabreTools.Library.DatFiles
                     {
                         xtw.WriteStartElement("romMD5");
                         xtw.WriteAttributeString("extension", ".chd");
-                        xtw.WriteString(disk.MD5.ToUpperInvariant());
+                        xtw.WriteString(disk.MD5?.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
                     else if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
                         xtw.WriteStartElement("romSHA1");
                         xtw.WriteAttributeString("extension", ".chd");
-                        xtw.WriteString(disk.SHA1.ToUpperInvariant());
+                        xtw.WriteString(disk.SHA1?.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
 
@@ -949,21 +949,21 @@ namespace SabreTools.Library.DatFiles
                     {
                         xtw.WriteStartElement("romCRC");
                         xtw.WriteRequiredAttributeString("extension", tempext);
-                        xtw.WriteString(rom.CRC.ToUpperInvariant());
+                        xtw.WriteString(rom.CRC?.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
                     else if (!string.IsNullOrWhiteSpace(rom.MD5))
                     {
                         xtw.WriteStartElement("romMD5");
                         xtw.WriteRequiredAttributeString("extension", tempext);
-                        xtw.WriteString(rom.MD5.ToUpperInvariant());
+                        xtw.WriteString(rom.MD5?.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
                     else if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
                         xtw.WriteStartElement("romSHA1");
                         xtw.WriteRequiredAttributeString("extension", tempext);
-                        xtw.WriteString(rom.SHA1.ToUpperInvariant());
+                        xtw.WriteString(rom.SHA1?.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
 

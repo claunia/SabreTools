@@ -68,11 +68,11 @@ namespace SabreTools.Features
             var outputFormat = GetOutputFormat(features);
 
             // If we have TorrentGzip output and the romba flag, update
-            if (Header.OutputDepot.IsActive && outputFormat == OutputFormat.TorrentGzip)
+            if ((Header.OutputDepot?.IsActive ?? false) && outputFormat == OutputFormat.TorrentGzip)
                 outputFormat = OutputFormat.TorrentGzipRomba;
 
             // If we hae TorrentXZ output and the romba flag, update
-            if (Header.OutputDepot.IsActive && outputFormat == OutputFormat.TorrentXZ)
+            if ((Header.OutputDepot?.IsActive ?? false) && outputFormat == OutputFormat.TorrentXZ)
                 outputFormat = OutputFormat.TorrentXZRomba;
 
             // Get a list of files from the input datfiles
@@ -96,7 +96,7 @@ namespace SabreTools.Features
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
-                    if (Header.InputDepot.IsActive)
+                    if (Header.InputDepot?.IsActive ?? false)
                         datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
                     else
                         datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
@@ -126,7 +126,7 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (Header.InputDepot.IsActive)
+                if (Header.InputDepot?.IsActive ?? false)
                     datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat);
                 else
                     datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);

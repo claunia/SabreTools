@@ -18,13 +18,13 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Description of the BIOS
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Description { get; set; }
 
         /// <summary>
         /// Determine whether the BIOS is default
         /// </summary>
-        [JsonProperty("default")]
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Default { get; set; }
 
         #endregion
