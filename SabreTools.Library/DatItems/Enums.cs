@@ -236,15 +236,10 @@ namespace SabreTools.Library.DatItems
     [Flags]
     public enum MachineType
     {
-        /// <summary>
-        /// This is a fake flag that is used for filter only
-        /// </summary>
         NULL = 0x00,
-
-        None = 1 << 0,
-        Bios = 1 << 1,
-        Device = 1 << 2,
-        Mechanical = 1 << 3,
+        Bios = 1 << 0,
+        Device = 1 << 1,
+        Mechanical = 1 << 2,
     }
 
     /// <summary>

@@ -149,7 +149,7 @@ namespace SabreTools.Library.DatFiles
                 SharedFeatures = new List<SoftwareListSharedFeature>(),
                 DipSwitches = new List<ListXmlDipSwitch>(),
 
-                MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
+                MachineType = (machineType != MachineType.NULL ? machineType : MachineType.NULL),
             };
 
             while (!reader.EOF)

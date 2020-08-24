@@ -5,6 +5,7 @@ using System.Linq;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -83,6 +84,7 @@ namespace SabreTools.Library.DatItems
         /// Type of the machine
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
         public MachineType MachineType { get; set; } = MachineType.NULL;
 
         #endregion

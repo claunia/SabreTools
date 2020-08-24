@@ -321,7 +321,7 @@ namespace SabreTools.Library.DatFiles
                 RomOf = reader.GetAttribute("romof"),
                 SampleOf = reader.GetAttribute("sampleof"),
 
-                MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
+                MachineType = (machineType == MachineType.NULL ? MachineType.NULL : machineType),
             };
 
             if (Header.Type == "SuperDAT" && !keep)

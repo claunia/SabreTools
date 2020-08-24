@@ -145,7 +145,7 @@ namespace SabreTools.Library.DatFiles
                 CloneOf = reader.GetAttribute("cloneof"),
                 RomOf = reader.GetAttribute("romof"),
                 SampleOf = reader.GetAttribute("sampleof"),
-                MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
+                MachineType = (machineType == MachineType.NULL ? MachineType.NULL : machineType),
 
                 SourceFile = reader.GetAttribute("sourcefile"),
                 Runnable = reader.GetAttribute("runnable").AsRunnable(),

@@ -603,7 +603,7 @@ namespace SabreTools.Library.Tools
                     return MachineType.Mechanical;
                 case "none":
                 default:
-                    return MachineType.None;
+                    return MachineType.NULL;
             }
 #else
             return gametype?.ToLowerInvariant() switch
@@ -613,8 +613,8 @@ namespace SabreTools.Library.Tools
                 "device" => MachineType.Device,
                 "mech" => MachineType.Mechanical,
                 "mechanical" => MachineType.Mechanical,
-                "none" => MachineType.None,
-                _ => MachineType.None,
+                "none" => MachineType.NULL,
+                _ => MachineType.NULL,
             };
 #endif
         }

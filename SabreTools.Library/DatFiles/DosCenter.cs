@@ -150,7 +150,7 @@ namespace SabreTools.Library.DatFiles
             bool containsItems = false;
             Machine machine = new Machine()
             {
-                MachineType = MachineType.None,
+                MachineType = MachineType.NULL,
             };
 
             // If there's no subtree to the header, skip it
