@@ -895,7 +895,6 @@ namespace SabreTools.Library.Tools
                 case "no":
                 case "false":
                     return false;
-                case "partial":
                 default:
                     return null;
             }
@@ -906,7 +905,33 @@ namespace SabreTools.Library.Tools
                 "true" => true,
                 "no" => false,
                 "false" => false,
-                "partial" => null,
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input bool?
+        /// </summary>
+        /// <param name="yesno">bool? to get value from</param>
+        /// <returns>string corresponding to the bool?</returns>
+        public static string FromYesNo(this bool? yesno)
+        {
+#if NET_FRAMEWORK
+            switch (yesno)
+            {
+                case true:
+                    return "yes";
+                case false:
+                    return "no";
+                default:
+                    return null;
+            }
+#else
+            return yesno switch
+            {
+                true => "yes",
+                false => "no",
                 _ => null,
             };
 #endif

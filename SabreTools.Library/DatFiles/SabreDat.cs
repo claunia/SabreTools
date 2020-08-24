@@ -896,10 +896,8 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "biosset");
                         xtw.WriteAttributeString("name", biosSet.Name);
-                        if (!string.IsNullOrWhiteSpace(biosSet.Description))
-                            xtw.WriteAttributeString("description", biosSet.Description);
-                        if (biosSet.Default != null)
-                            xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("description", biosSet.Description);
+                        xtw.WriteOptionalAttributeString("default", biosSet.Default.FromYesNo());
                         xtw.WriteEndElement();
                         break;
 
@@ -908,20 +906,14 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "disk");
                         xtw.WriteAttributeString("name", disk.Name);
-                        if (!string.IsNullOrWhiteSpace(disk.MD5))
-                            xtw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
-                            xtw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            xtw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA256))
-                            xtw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA384))
-                            xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA512))
-                            xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha1", disk.SHA1.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", disk.SHA256.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha384", disk.SHA384.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha512", disk.SHA512.ToLowerInvariant());
                         if (disk.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
@@ -942,14 +934,10 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "release");
                         xtw.WriteAttributeString("name", release.Name);
-                        if (!string.IsNullOrWhiteSpace(release.Region))
-                            xtw.WriteAttributeString("region", release.Region);
-                        if (!string.IsNullOrWhiteSpace(release.Language))
-                            xtw.WriteAttributeString("language", release.Language);
-                        if (!string.IsNullOrWhiteSpace(release.Date))
-                            xtw.WriteAttributeString("date", release.Date);
-                        if (release.Default != null)
-                            xtw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("region", release.Region);
+                        xtw.WriteOptionalAttributeString("language", release.Language);
+                        xtw.WriteOptionalAttributeString("date", release.Date);
+                        xtw.WriteOptionalAttributeString("default", release.Default.FromYesNo());
                         xtw.WriteEndElement();
                         break;
 
@@ -958,26 +946,17 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "rom");
                         xtw.WriteAttributeString("name", rom.Name);
-                        if (rom.Size != -1)
-                            xtw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.MD5))
-                            xtw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
+                        if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
+                        xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
-                            xtw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                            xtw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA256))
-                            xtw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA384))
-                            xtw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA512))
-                            xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.Date))
-                            xtw.WriteAttributeString("date", rom.Date);
+                        xtw.WriteOptionalAttributeString("sha1", rom.SHA1.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", rom.SHA256.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha384", rom.SHA384.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha512", rom.SHA512.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("date", rom.Date);
                         if (rom.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");

@@ -13,7 +13,7 @@ namespace SabreTools.Library.IO
         /// <param name="writer">XmlTextWriter to write out with</param>
         /// <param name="localName">Name of the attribute</param>
         /// <param name="value">Value to write in the attribute</param>
-        public static void WriteAttributeStringIfExists(this XmlTextWriter writer, string localName, string value)
+        public static void WriteOptionalAttributeString(this XmlTextWriter writer, string localName, string value)
         {
             if (string.IsNullOrEmpty(value))
                 writer.WriteAttributeString(localName, value);

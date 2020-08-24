@@ -995,21 +995,17 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("mame");
                 xtw.WriteAttributeString("build", Header.Name);
-                if (Header.Debug != null)
+                switch (Header.Debug)
                 {
-                    switch (Header.Debug)
-                    {
-                        case true:
-                            xtw.WriteAttributeString("debug", "yes");
-                            break;
-                        case false:
-                            xtw.WriteAttributeString("debug", "no");
-                            break;
-                    }
+                    case true:
+                        xtw.WriteAttributeString("debug", "yes");
+                        break;
+                    case false:
+                        xtw.WriteAttributeString("debug", "no");
+                        break;
                 }
 
-                if (!string.IsNullOrEmpty(Header.MameConfig))
-                    xtw.WriteAttributeString("mameconfig", Header.MameConfig);
+                xtw.WriteOptionalAttributeString("mameconfig", Header.MameConfig);
 
                 xtw.Flush();
             }
@@ -1038,50 +1034,39 @@ namespace SabreTools.Library.DatFiles
                 // Build the state
                 xtw.WriteStartElement("machine");
                 xtw.WriteAttributeString("name", datItem.Machine.Name);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.SourceFile))
-                    xtw.WriteAttributeString("sourcefile", datItem.Machine.SourceFile);
+                xtw.WriteOptionalAttributeString("sourcefile", datItem.Machine.SourceFile);
 
-                if (datItem.Machine.MachineType != MachineType.NULL)
+                if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
+                    xtw.WriteAttributeString("isbios", "yes");
+                if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
+                    xtw.WriteAttributeString("isdevice", "yes");
+                if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
+                    xtw.WriteAttributeString("ismechanical", "yes");
+
+                switch (datItem.Machine.Runnable)
                 {
-                    if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
-                        xtw.WriteAttributeString("isbios", "yes");
-                    if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
-                        xtw.WriteAttributeString("isdevice", "yes");
-                    if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
-                        xtw.WriteAttributeString("ismechanical", "yes");
+                    case Runnable.No:
+                        xtw.WriteAttributeString("runnable", "no");
+                        break;
+                    case Runnable.Partial:
+                        xtw.WriteAttributeString("runnable", "partial");
+                        break;
+                    case Runnable.Yes:
+                        xtw.WriteAttributeString("runnable", "yes");
+                        break;
                 }
 
-                if (datItem.Machine.Runnable != Runnable.NULL)
-                {
-                    switch (datItem.Machine.Runnable)
-                    {
-                        case Runnable.No:
-                            xtw.WriteAttributeString("runnable", "no");
-                            break;
-                        case Runnable.Partial:
-                            xtw.WriteAttributeString("runnable", "partial");
-                            break;
-                        case Runnable.Yes:
-                            xtw.WriteAttributeString("runnable", "yes");
-                            break;
-                    } 
-                }
+                if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
+                    xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
+                if (!string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
+                    xtw.WriteOptionalAttributeString("romof", datItem.Machine.RomOf);
+                if (!string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
+                    xtw.WriteOptionalAttributeString("sampleof", datItem.Machine.SampleOf);
 
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.CloneOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteAttributeString("cloneof", datItem.Machine.CloneOf);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.RomOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteAttributeString("romof", datItem.Machine.RomOf);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteAttributeString("sampleof", datItem.Machine.SampleOf);
-
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
-                    xtw.WriteElementString("description", datItem.Machine.Description);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Year))
-                    xtw.WriteElementString("year", datItem.Machine.Year);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Publisher))
-                    xtw.WriteElementString("publisher", datItem.Machine.Publisher);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Category))
-                    xtw.WriteElementString("category", datItem.Machine.Category);
+                xtw.WriteOptionalAttributeString("description", datItem.Machine.Description);
+                xtw.WriteOptionalAttributeString("year", datItem.Machine.Year);
+                xtw.WriteOptionalAttributeString("publisher", datItem.Machine.Publisher);
+                xtw.WriteOptionalAttributeString("category", datItem.Machine.Category);
 
                 if (datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
                 {
@@ -1153,10 +1138,8 @@ namespace SabreTools.Library.DatFiles
                         var biosSet = datItem as BiosSet;
                         xtw.WriteStartElement("biosset");
                         xtw.WriteAttributeString("name", biosSet.Name);
-                        if (!string.IsNullOrWhiteSpace(biosSet.Description))
-                            xtw.WriteAttributeString("description", biosSet.Description);
-                        if (biosSet.Default != null)
-                            xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("description", biosSet.Description);
+                        xtw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
 
@@ -1164,32 +1147,20 @@ namespace SabreTools.Library.DatFiles
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("disk");
                         xtw.WriteAttributeString("name", disk.Name);
-                        if (!string.IsNullOrWhiteSpace(disk.MD5))
-                            xtw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
-                            xtw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            xtw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA256))
-                            xtw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA384))
-                            xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA512))
-                            xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.MergeTag))
-                            xtw.WriteAttributeString("merge", disk.MergeTag);
-                        if (!string.IsNullOrWhiteSpace(disk.Region))
-                            xtw.WriteAttributeString("region", disk.Region);
-                        if (!string.IsNullOrWhiteSpace(disk.Index))
-                            xtw.WriteAttributeString("index", disk.Index);
-                        if (disk.Writable != null)
-                            xtw.WriteAttributeString("writable", disk.Writable == true ? "yes" : "no");
-                        if (disk.ItemStatus != ItemStatus.None)
-                            xtw.WriteAttributeString("status", disk.ItemStatus.ToString());
-                        if (disk.Optional != null)
-                            xtw.WriteAttributeString("optional", disk.Optional == true ? "yes" : "no");
+                        xtw.WriteOptionalAttributeString("sha1", disk.SHA1.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", disk.SHA256.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha384", disk.SHA384.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha512", disk.SHA512.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("merge", disk.MergeTag);
+                        xtw.WriteOptionalAttributeString("region", disk.Region);
+                        xtw.WriteOptionalAttributeString("index", disk.Index);
+                        xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
+                        if (disk.ItemStatus != ItemStatus.None) xtw.WriteAttributeString("status", disk.ItemStatus.ToString());
+                        xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
                         xtw.WriteEndElement();
                         break;
 
@@ -1197,36 +1168,22 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
                         xtw.WriteAttributeString("name", rom.Name);
-                        if (rom.Size != -1)
-                            xtw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.MD5))
-                            xtw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
+                        if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
+                        xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
-                            xtw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                            xtw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA256))
-                            xtw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA384))
-                            xtw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA512))
-                            xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.Bios))
-                            xtw.WriteAttributeString("bios", rom.Bios);
-                        if (!string.IsNullOrWhiteSpace(rom.MergeTag))
-                            xtw.WriteAttributeString("merge", rom.MergeTag);
-                        if (!string.IsNullOrWhiteSpace(rom.Region))
-                            xtw.WriteAttributeString("region", rom.Region);
-                        if (!string.IsNullOrWhiteSpace(rom.Offset))
-                            xtw.WriteAttributeString("offset", rom.Offset);
-                        if (rom.ItemStatus != ItemStatus.None)
-                            xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
-                        if (rom.Optional != null)
-                            xtw.WriteAttributeString("optional", rom.Optional == true ? "yes" : "no");
+                        xtw.WriteOptionalAttributeString("sha1", rom.SHA1.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", rom.SHA256.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha384", rom.SHA384.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha512", rom.SHA512.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("bios", rom.Bios);
+                        xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
+                        xtw.WriteOptionalAttributeString("region", rom.Region);
+                        xtw.WriteOptionalAttributeString("offset", rom.Offset);
+                        if (rom.ItemStatus != ItemStatus.None) xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("optional", rom.Optional.FromYesNo());
                         xtw.WriteEndElement();
                         break;
 
