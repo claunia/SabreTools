@@ -71,7 +71,7 @@ namespace SabreTools.Library.DatFiles
 
                         // Machine array
                         case "machines":
-                            ReadMachines(sr, jtr, filename, indexId);
+                            ReadMachines(jtr, filename, indexId);
                             jtr.Read();
                             break;
 
@@ -109,12 +109,10 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Read machine array information
         /// </summary>
-        /// <param name="sr">StreamReader to use to parse the header</param>
         /// <param name="itr">JsonTextReader to use to parse the machine</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         private void ReadMachines(
-            StreamReader sr,
             JsonTextReader jtr,
 
             // Standard Dat parsing
@@ -125,92 +123,57 @@ namespace SabreTools.Library.DatFiles
             if (jtr == null)
                 return;
 
+            // Read in the machine array
             jtr.Read();
-            while (!sr.EndOfStream)
+            JsonSerializer js = new JsonSerializer();
+            JArray machineArray = js.Deserialize<JArray>(jtr);
+
+            // Loop through each machine object and process
+            foreach (JObject machineObj in machineArray)
             {
-                // If we hit the end of an array, we want to return
-                if (jtr.TokenType == JsonToken.EndArray)
-                    return;
-
-                // We don't care about anything except start object
-                if (jtr.TokenType != JsonToken.StartObject)
-                {
-                    jtr.Read();
-                    continue;
-                }
-
-                ReadMachine(sr, jtr, filename, indexId);
-                jtr.Read();
+                ReadMachine(machineObj, filename, indexId);
             }
         }
 
         /// <summary>
         /// Read machine object information
         /// </summary>
-        /// <param name="sr">StreamReader to use to parse the header</param>
-        /// <param name="itr">JsonTextReader to use to parse the machine</param>
+        /// <param name="machineObj">JObject representing a single machine</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         private void ReadMachine(
-            StreamReader sr,
-            JsonTextReader jtr,
+            JObject machineObj,
 
             // Standard Dat parsing
             string filename,
             int indexId)
         {
-            // If we have an empty machine, skip it
-            if (jtr == null)
+            // If object is invalid, skip it
+            if (machineObj == null)
                 return;
 
             // Prepare internal variables
             JsonSerializer js = new JsonSerializer();
             Machine machine = null;
 
-            jtr.Read();
-            while (!sr.EndOfStream)
-            {
-                // If we hit the end of the machine, return
-                if (jtr.TokenType == JsonToken.EndObject)
-                    return;
+            // Read the machine info, if possible
+            if (machineObj.ContainsKey("machine"))
+                machine = machineObj["machine"].ToObject<Machine>();
 
-                // We don't care about anything except properties
-                if (jtr.TokenType != JsonToken.PropertyName)
-                {
-                    jtr.Read();
-                    continue;
-                }
-
-                switch (jtr.Value)
-                {
-                    case "machine":
-                        jtr.Read();
-                        machine = js.Deserialize<Machine>(jtr);
-                        break;
-
-                    case "items":
-                        ReadItems(sr, jtr, filename, indexId, machine);
-                        break;
-
-                    default:
-                        break;
-                }
-
-                jtr.Read();
-            }
+            // Read items, if possible
+            if (machineObj.ContainsKey("items"))
+                ReadItems(machineObj["items"] as JArray, filename, indexId, machine);
         }
 
         /// <summary>
         /// Read item array information
         /// </summary>
-        /// <param name="sr">StreamReader to use to parse the header</param>
-        /// <param name="jtr">JsonTextReader to use to parse the machine</param>
+        /// <param name="itemsArr">JArray representing the items list</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         private void ReadItems(
-            StreamReader sr,
-            JsonTextReader jtr,
+            JArray itemsArr,
 
             // Standard Dat parsing
             string filename,
@@ -219,40 +182,26 @@ namespace SabreTools.Library.DatFiles
             // Miscellaneous
             Machine machine)
         {
-            // If the reader is invalid, skip
-            if (jtr == null)
+            // If the array is invalid, skip
+            if (itemsArr == null)
                 return;
 
-            jtr.Read();
-            while (!sr.EndOfStream)
+            // Loop through each datitem object and process
+            foreach (JObject itemObj in itemsArr)
             {
-                // If we hit the end of an array, we want to return
-                if (jtr.TokenType == JsonToken.EndArray)
-                    return;
-
-                // We don't care about anything except start object
-                if (jtr.TokenType != JsonToken.StartObject)
-                {
-                    jtr.Read();
-                    continue;
-                }
-
-                ReadItem(sr, jtr, filename, indexId, machine);
-                jtr.Read();
+                ReadItem(itemObj, filename, indexId, machine);
             }
         }
 
         /// <summary>
         /// Read item information
         /// </summary>
-        /// <param name="sr">StreamReader to use to parse the header</param>
-        /// <param name="jtr">JsonTextReader to use to parse the machine</param>
+        /// <param name="machineObj">JObject representing a single datitem</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="machine">Machine information to add to the parsed items</param>
         private void ReadItem(
-            StreamReader sr,
-            JsonTextReader jtr,
+            JObject itemObj,
 
             // Standard Dat parsing
             string filename,
@@ -261,75 +210,49 @@ namespace SabreTools.Library.DatFiles
             // Miscellaneous
             Machine machine)
         {
-            // If we have an empty machine, skip it
-            if (jtr == null)
+            // If we have an empty item, skip it
+            if (itemObj == null)
                 return;
 
             // Prepare internal variables
-            JsonSerializer js = new JsonSerializer();
             DatItem datItem = null;
 
-            jtr.Read();
-            while (!sr.EndOfStream)
+            // Read the datitem info, if possible
+            if (itemObj.ContainsKey("datitem"))
             {
-                // If we hit the end of the machine - create, add, and return
-                if (jtr.TokenType == JsonToken.EndObject)
+                JToken datItemObj = itemObj["datitem"];
+                switch (datItemObj.Value<string>("type").AsItemType())
                 {
-                    // If we didn't read something valid, just return
-                    if (datItem == null)
-                        return;
-
-                    datItem.CopyMachineInformation(machine);
-                    datItem.Source = new Source { Index = indexId, Name = filename };
-                    ParseAddHelper(datItem);
-
-                    return;
-                }
-
-                // We don't care about anything except properties
-                if (jtr.TokenType != JsonToken.PropertyName)
-                {
-                    jtr.Read();
-                    continue;
-                }
-
-                switch (jtr.Value)
-                {
-                    case "datitem":
-                        jtr.Read();
-                        JObject datItemObj = js.Deserialize<JObject>(jtr);
-                        switch (datItemObj.Value<string>("type").AsItemType())
-                        {
-                            case ItemType.Archive:
-                                datItem = datItemObj.ToObject<Archive>();
-                                break;
-                            case ItemType.BiosSet:
-                                datItem = datItemObj.ToObject<BiosSet>();
-                                break;
-                            case ItemType.Blank:
-                                datItem = datItemObj.ToObject<Blank>();
-                                break;
-                            case ItemType.Disk:
-                                datItem = datItemObj.ToObject<Disk>();
-                                break;
-                            case ItemType.Release:
-                                datItem = datItemObj.ToObject<Release>();
-                                break;
-                            case ItemType.Rom:
-                                datItem = datItemObj.ToObject<Rom>();
-                                break;
-                            case ItemType.Sample:
-                                datItem = datItemObj.ToObject<Sample>();
-                                break;
-                        }
-
+                    case ItemType.Archive:
+                        datItem = datItemObj.ToObject<Archive>();
                         break;
-
-                    default:
+                    case ItemType.BiosSet:
+                        datItem = datItemObj.ToObject<BiosSet>();
+                        break;
+                    case ItemType.Blank:
+                        datItem = datItemObj.ToObject<Blank>();
+                        break;
+                    case ItemType.Disk:
+                        datItem = datItemObj.ToObject<Disk>();
+                        break;
+                    case ItemType.Release:
+                        datItem = datItemObj.ToObject<Release>();
+                        break;
+                    case ItemType.Rom:
+                        datItem = datItemObj.ToObject<Rom>();
+                        break;
+                    case ItemType.Sample:
+                        datItem = datItemObj.ToObject<Sample>();
                         break;
                 }
+            }
 
-                jtr.Read();
+            // If we got a valid datitem, copy machine info and add
+            if (datItem != null)
+            {
+                datItem.CopyMachineInformation(machine);
+                datItem.Source = new Source { Index = indexId, Name = filename };
+                ParseAddHelper(datItem);
             }
         }
 
