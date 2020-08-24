@@ -734,8 +734,8 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteDocType("softwarelist", null, "softwarelist.dtd", null);
 
                 xtw.WriteStartElement("softwarelist");
-                xtw.WriteAttributeString("name", Header.Name);
-                xtw.WriteAttributeString("description", Header.Description);
+                xtw.WriteRequiredAttributeString("name", Header.Name);
+                xtw.WriteRequiredAttributeString("description", Header.Description);
 
                 switch (Header.ForcePacking)
                 {
@@ -802,7 +802,7 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 xtw.WriteStartElement("software");
-                xtw.WriteAttributeString("name", datItem.Machine.Name);
+                xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
 
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
@@ -830,8 +830,8 @@ namespace SabreTools.Library.DatFiles
                     foreach (ListXmlInfo kvp in datItem.Machine.Infos)
                     {
                         xtw.WriteStartElement("info");
-                        xtw.WriteAttributeString("name", kvp.Name);
-                        xtw.WriteAttributeString("value", kvp.Value);
+                        xtw.WriteRequiredAttributeString("name", kvp.Name);
+                        xtw.WriteRequiredAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }
                 }
@@ -841,8 +841,8 @@ namespace SabreTools.Library.DatFiles
                     foreach (SoftwareListSharedFeature kvp in datItem.Machine.SharedFeatures)
                     {
                         xtw.WriteStartElement("sharedfeat");
-                        xtw.WriteAttributeString("name", kvp.Name);
-                        xtw.WriteAttributeString("value", kvp.Value);
+                        xtw.WriteRequiredAttributeString("name", kvp.Name);
+                        xtw.WriteRequiredAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }
                 }
@@ -852,16 +852,16 @@ namespace SabreTools.Library.DatFiles
                     foreach (ListXmlDipSwitch dip in datItem.Machine.DipSwitches)
                     {
                         xtw.WriteStartElement("dipswitch");
-                        xtw.WriteAttributeString("name", dip.Name);
-                        xtw.WriteAttributeString("tag", dip.Tag);
-                        xtw.WriteAttributeString("mask", dip.Mask);
+                        xtw.WriteRequiredAttributeString("name", dip.Name);
+                        xtw.WriteRequiredAttributeString("tag", dip.Tag);
+                        xtw.WriteRequiredAttributeString("mask", dip.Mask);
 
                         foreach (ListXmlDipValue dipval in dip.Values)
                         {
                             xtw.WriteStartElement("dipvalue");
-                            xtw.WriteAttributeString("name", dipval.Name);
-                            xtw.WriteAttributeString("value", dipval.Value);
-                            xtw.WriteAttributeString("default", dipval.Default == true ? "yes" : "no");
+                            xtw.WriteRequiredAttributeString("name", dipval.Name);
+                            xtw.WriteRequiredAttributeString("value", dipval.Value);
+                            xtw.WriteRequiredAttributeString("default", dipval.Default == true ? "yes" : "no");
                             xtw.WriteEndElement();
                         }
 
@@ -924,16 +924,16 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 xtw.WriteStartElement("part");
-                xtw.WriteAttributeString("name", datItem.PartName);
-                xtw.WriteAttributeString("interface", datItem.PartInterface);
+                xtw.WriteRequiredAttributeString("name", datItem.PartName);
+                xtw.WriteRequiredAttributeString("interface", datItem.PartInterface);
 
                 if (datItem.Features != null && datItem.Features.Count > 0)
                 {
                     foreach (SoftwareListFeature kvp in datItem.Features)
                     {
                         xtw.WriteStartElement("feature");
-                        xtw.WriteAttributeString("name", kvp.Name);
-                        xtw.WriteAttributeString("value", kvp.Value);
+                        xtw.WriteRequiredAttributeString("name", kvp.Name);
+                        xtw.WriteRequiredAttributeString("value", kvp.Value);
                         xtw.WriteEndElement();
                     }
                 }
@@ -947,11 +947,11 @@ namespace SabreTools.Library.DatFiles
                             areaName = "cdrom";
 
                         xtw.WriteStartElement("diskarea");
-                        xtw.WriteAttributeString("name", areaName);
+                        xtw.WriteRequiredAttributeString("name", areaName);
                         xtw.WriteOptionalAttributeString("size", disk.AreaSize.ToString());
 
                         xtw.WriteStartElement("disk");
-                        xtw.WriteAttributeString("name", disk.Name);
+                        xtw.WriteRequiredAttributeString("name", disk.Name);
                         xtw.WriteOptionalAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
                         xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
@@ -974,13 +974,13 @@ namespace SabreTools.Library.DatFiles
                             areaName = "rom";
 
                         xtw.WriteStartElement("dataarea");
-                        xtw.WriteAttributeString("name", areaName);
+                        xtw.WriteRequiredAttributeString("name", areaName);
                         xtw.WriteOptionalAttributeString("size", rom.AreaSize.ToString());
                         xtw.WriteOptionalAttributeString("width", rom.AreaWidth);
                         xtw.WriteOptionalAttributeString("endianness", rom.AreaEndianness);
 
                         xtw.WriteStartElement("rom");
-                        xtw.WriteAttributeString("name", rom.Name);
+                        xtw.WriteRequiredAttributeString("name", rom.Name);
                         if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());

@@ -618,7 +618,7 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteDocType("softwaredb", null, "softwaredb1.dtd", null);
 
                 xtw.WriteStartElement("softwaredb");
-                xtw.WriteAttributeString("timestamp", Header.Date);
+                xtw.WriteRequiredAttributeString("timestamp", Header.Date);
 
                 //TODO: Figure out how to fix the issue with removed formatting after this point
 //                xtw.WriteComment("Credits");
@@ -660,12 +660,12 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 xtw.WriteStartElement("software");
-                xtw.WriteFullElementString("title", datItem.Machine.Name);
-                xtw.WriteFullElementString("genmsxid", datItem.Machine.GenMSXID);
-                xtw.WriteFullElementString("system", datItem.Machine.System);
-                xtw.WriteFullElementString("company", datItem.Machine.Manufacturer);
-                xtw.WriteFullElementString("year", datItem.Machine.Year);
-                xtw.WriteFullElementString("country", datItem.Machine.Country);
+                xtw.WriteRequiredElementString("title", datItem.Machine.Name);
+                xtw.WriteRequiredElementString("genmsxid", datItem.Machine.GenMSXID);
+                xtw.WriteRequiredElementString("system", datItem.Machine.System);
+                xtw.WriteRequiredElementString("company", datItem.Machine.Manufacturer);
+                xtw.WriteRequiredElementString("year", datItem.Machine.Year);
+                xtw.WriteRequiredElementString("country", datItem.Machine.Country);
 
                 xtw.Flush();
             }
@@ -740,7 +740,7 @@ namespace SabreTools.Library.DatFiles
                             case OpenMSXSubType.Rom:
                             case OpenMSXSubType.NULL:
                                 xtw.WriteStartElement("rom");
-                                xtw.WriteFullElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteRequiredElementString("hash", rom.SHA1.ToLowerInvariant());
                                 xtw.WriteOptionalElementString("start", rom.Offset);
                                 xtw.WriteOptionalElementString("type", rom.OpenMSXType);
                                 xtw.WriteOptionalElementString("remark", rom.Remark);
@@ -749,7 +749,7 @@ namespace SabreTools.Library.DatFiles
 
                             case OpenMSXSubType.MegaRom:
                                 xtw.WriteStartElement("megarom");
-                                xtw.WriteFullElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteRequiredElementString("hash", rom.SHA1.ToLowerInvariant());
                                 xtw.WriteOptionalElementString("start", rom.Offset);
                                 xtw.WriteOptionalElementString("type", rom.OpenMSXType);
                                 xtw.WriteOptionalElementString("remark", rom.Remark);
@@ -759,7 +759,7 @@ namespace SabreTools.Library.DatFiles
                             case OpenMSXSubType.SCCPlusCart:
                                 xtw.WriteStartElement("sccpluscart");
                                 xtw.WriteOptionalElementString("boot", rom.Boot);
-                                xtw.WriteFullElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteRequiredElementString("hash", rom.SHA1.ToLowerInvariant());
                                 xtw.WriteOptionalElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;

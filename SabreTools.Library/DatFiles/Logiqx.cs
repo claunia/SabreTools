@@ -766,13 +766,13 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("header");
 
-                xtw.WriteFullElementString("name", Header.Name);
-                xtw.WriteFullElementString("description", Header.Description);
+                xtw.WriteRequiredElementString("name", Header.Name);
+                xtw.WriteRequiredElementString("description", Header.Description);
                 xtw.WriteOptionalElementString("rootdir", Header.RootDir);
                 xtw.WriteOptionalElementString("category", Header.Category);
-                xtw.WriteFullElementString("version", Header.Version);
+                xtw.WriteRequiredElementString("version", Header.Version);
                 xtw.WriteOptionalElementString("date", Header.Date);
-                xtw.WriteFullElementString("author", Header.Author);
+                xtw.WriteRequiredElementString("author", Header.Author);
                 xtw.WriteOptionalElementString("email", Header.Email);
                 xtw.WriteOptionalElementString("homepage", Header.Homepage);
                 xtw.WriteOptionalElementString("url", Header.Url);
@@ -912,7 +912,7 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 xtw.WriteStartElement(_deprecated ? "game" : "machine");
-                xtw.WriteAttributeString("name", datItem.Machine.Name);
+                xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
 
                 if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
                     xtw.WriteAttributeString("isbios", "yes");
@@ -1040,14 +1040,14 @@ namespace SabreTools.Library.DatFiles
                 {
                     case ItemType.Archive:
                         xtw.WriteStartElement("archive");
-                        xtw.WriteAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
 
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         xtw.WriteStartElement("biosset");
-                        xtw.WriteAttributeString("name", biosSet.Name);
+                        xtw.WriteRequiredAttributeString("name", biosSet.Name);
                         xtw.WriteOptionalAttributeString("description", biosSet.Description);
                         xtw.WriteOptionalAttributeString("default", biosSet.Default.FromYesNo());
                         xtw.WriteEndElement();
@@ -1056,7 +1056,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("disk");
-                        xtw.WriteAttributeString("name", disk.Name);
+                        xtw.WriteRequiredAttributeString("name", disk.Name);
                         xtw.WriteOptionalAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
                         xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
@@ -1072,7 +1072,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Release:
                         var release = datItem as Release;
                         xtw.WriteStartElement("release");
-                        xtw.WriteAttributeString("name", release.Name);
+                        xtw.WriteRequiredAttributeString("name", release.Name);
                         xtw.WriteOptionalAttributeString("region", release.Region);
                         xtw.WriteOptionalAttributeString("language", release.Language);
                         xtw.WriteOptionalAttributeString("date", release.Date);
@@ -1083,7 +1083,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
-                        xtw.WriteAttributeString("name", rom.Name);
+                        xtw.WriteRequiredAttributeString("name", rom.Name);
                         if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());
@@ -1102,7 +1102,7 @@ namespace SabreTools.Library.DatFiles
 
                     case ItemType.Sample:
                         xtw.WriteStartElement("sample");
-                        xtw.WriteAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
                 }

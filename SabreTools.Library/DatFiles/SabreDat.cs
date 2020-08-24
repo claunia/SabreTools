@@ -663,13 +663,13 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("header");
 
-                xtw.WriteFullElementString("name", Header.Name);
-                xtw.WriteFullElementString("description", Header.Description);
+                xtw.WriteRequiredElementString("name", Header.Name);
+                xtw.WriteRequiredElementString("description", Header.Description);
                 xtw.WriteOptionalElementString("rootdir", Header.RootDir);
                 xtw.WriteOptionalElementString("category", Header.Category);
-                xtw.WriteFullElementString("version", Header.Version);
+                xtw.WriteRequiredElementString("version", Header.Version);
                 xtw.WriteOptionalElementString("date", Header.Date);
-                xtw.WriteFullElementString("author", Header.Author);
+                xtw.WriteRequiredElementString("author", Header.Author);
                 xtw.WriteOptionalElementString("comment", Header.Comment);
                 if (!string.IsNullOrWhiteSpace(Header.Type)
                     || Header.ForcePacking != PackingFlag.None
@@ -682,7 +682,7 @@ namespace SabreTools.Library.DatFiles
                     {
                         xtw.WriteStartElement("flag");
                         xtw.WriteAttributeString("name", "type");
-                        xtw.WriteAttributeString("value", Header.Type);
+                        xtw.WriteRequiredAttributeString("value", Header.Type);
                         xtw.WriteEndElement();
                     }
 
@@ -792,8 +792,8 @@ namespace SabreTools.Library.DatFiles
                 for (int i = (last == -1 ? 0 : last); i < newsplit.Count; i++)
                 {
                     xtw.WriteStartElement("directory");
-                    xtw.WriteAttributeString("name", newsplit[i]);
-                    xtw.WriteAttributeString("description", newsplit[i]);
+                    xtw.WriteRequiredAttributeString("name", newsplit[i]);
+                    xtw.WriteRequiredAttributeString("description", newsplit[i]);
                 }
 
                 depth = depth - (last == -1 ? 0 : last) + newsplit.Count;
@@ -883,7 +883,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Archive:
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "archive");
-                        xtw.WriteAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -891,7 +891,7 @@ namespace SabreTools.Library.DatFiles
                         var biosSet = datItem as BiosSet;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "biosset");
-                        xtw.WriteAttributeString("name", biosSet.Name);
+                        xtw.WriteRequiredAttributeString("name", biosSet.Name);
                         xtw.WriteOptionalAttributeString("description", biosSet.Description);
                         xtw.WriteOptionalAttributeString("default", biosSet.Default.FromYesNo());
                         xtw.WriteEndElement();
@@ -901,7 +901,7 @@ namespace SabreTools.Library.DatFiles
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "disk");
-                        xtw.WriteAttributeString("name", disk.Name);
+                        xtw.WriteRequiredAttributeString("name", disk.Name);
                         xtw.WriteOptionalAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
                         xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
@@ -929,7 +929,7 @@ namespace SabreTools.Library.DatFiles
                         var release = datItem as Release;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "release");
-                        xtw.WriteAttributeString("name", release.Name);
+                        xtw.WriteRequiredAttributeString("name", release.Name);
                         xtw.WriteOptionalAttributeString("region", release.Region);
                         xtw.WriteOptionalAttributeString("language", release.Language);
                         xtw.WriteOptionalAttributeString("date", release.Date);
@@ -941,7 +941,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "rom");
-                        xtw.WriteAttributeString("name", rom.Name);
+                        xtw.WriteRequiredAttributeString("name", rom.Name);
                         if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());
@@ -971,7 +971,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Sample:
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "sample");
-                        xtw.WriteAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
                 }

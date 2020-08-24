@@ -773,11 +773,11 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteAttributeString("noNamespaceSchemaLocation", "xsi", "datas.xsd");
 
                 xtw.WriteStartElement("configuration");
-                xtw.WriteFullElementString("datName", Header.Name);
+                xtw.WriteRequiredElementString("datName", Header.Name);
                 xtw.WriteElementString("datVersion", Items.TotalCount.ToString());
-                xtw.WriteFullElementString("system", Header.System);
-                xtw.WriteFullElementString("screenshotsWidth", Header.ScreenshotsWidth);
-                xtw.WriteFullElementString("screenshotsHeight", Header.ScreenshotsHeight);
+                xtw.WriteRequiredElementString("system", Header.System);
+                xtw.WriteRequiredElementString("screenshotsWidth", Header.ScreenshotsWidth);
+                xtw.WriteRequiredElementString("screenshotsHeight", Header.ScreenshotsHeight);
 
                 if (Header.Infos != null)
                 {
@@ -810,14 +810,14 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 xtw.WriteStartElement("newDat");
-                xtw.WriteFullElementString("datVersionURL", Header.Url);
+                xtw.WriteRequiredElementString("datVersionURL", Header.Url);
 
                 xtw.WriteStartElement("datUrl");
-                xtw.WriteAttributeString("fileName", $"{Header.FileName}.zip");
+                xtw.WriteAttributeString("fileName", $"{Header.FileName ?? string.Empty}.zip");
                 xtw.WriteString(Header.Url);
                 xtw.WriteEndElement();
 
-                xtw.WriteFullElementString("imURL", Header.Url);
+                xtw.WriteRequiredElementString("imURL", Header.Url);
 
                 // End newDat
                 xtw.WriteEndElement();
@@ -863,7 +863,7 @@ namespace SabreTools.Library.DatFiles
                 // End search
                 xtw.WriteEndElement();
 
-                xtw.WriteFullElementString("romTitle", Header.RomTitle ?? "%u - %n");
+                xtw.WriteRequiredElementString("romTitle", Header.RomTitle ?? "%u - %n");
 
                 // End configuration
                 xtw.WriteEndElement();
@@ -903,16 +903,16 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("game");
                 xtw.WriteElementString("imageNumber", "1");
                 xtw.WriteElementString("releaseNumber", "1");
-                xtw.WriteFullElementString("title", datItem.Name);
+                xtw.WriteRequiredElementString("title", datItem.Name);
                 xtw.WriteElementString("saveType", "None");
 
                 if (datItem.ItemType == ItemType.Rom)
                 {
                     var rom = datItem as Rom;
-                    xtw.WriteFullElementString("romSize", rom.Size.ToString());
+                    xtw.WriteRequiredElementString("romSize", rom.Size.ToString());
                 }
 
-                xtw.WriteFullElementString("publisher", datItem.Machine.Publisher);
+                xtw.WriteRequiredElementString("publisher", datItem.Machine.Publisher);
                 xtw.WriteElementString("location", "0");
                 xtw.WriteElementString("sourceRom", "None");
                 xtw.WriteElementString("language", "0");
@@ -948,21 +948,21 @@ namespace SabreTools.Library.DatFiles
                     if (!string.IsNullOrWhiteSpace(rom.CRC))
                     {
                         xtw.WriteStartElement("romCRC");
-                        xtw.WriteAttributeString("extension", tempext);
+                        xtw.WriteRequiredAttributeString("extension", tempext);
                         xtw.WriteString(rom.CRC.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
                     else if (!string.IsNullOrWhiteSpace(rom.MD5))
                     {
                         xtw.WriteStartElement("romMD5");
-                        xtw.WriteAttributeString("extension", tempext);
+                        xtw.WriteRequiredAttributeString("extension", tempext);
                         xtw.WriteString(rom.MD5.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
                     else if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
                         xtw.WriteStartElement("romSHA1");
-                        xtw.WriteAttributeString("extension", tempext);
+                        xtw.WriteRequiredAttributeString("extension", tempext);
                         xtw.WriteString(rom.SHA1.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
@@ -973,8 +973,8 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteElementString("im1CRC", "00000000");
                 xtw.WriteElementString("im2CRC", "00000000");
-                xtw.WriteFullElementString("comment", datItem.Machine.Comment);
-                xtw.WriteFullElementString("duplicateID", datItem.Machine.CloneOf);
+                xtw.WriteRequiredElementString("comment", datItem.Machine.Comment);
+                xtw.WriteRequiredElementString("duplicateID", datItem.Machine.CloneOf);
 
                 // End game
                 xtw.WriteEndElement();
