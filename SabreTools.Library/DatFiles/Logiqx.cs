@@ -761,39 +761,23 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteDocType("datafile", "-//Logiqx//DTD ROM Management Datafile//EN", "http://www.logiqx.com/Dats/datafile.dtd", null);
 
                 xtw.WriteStartElement("datafile");
-
                 xtw.WriteOptionalAttributeString("build", Header.Build);
-                switch (Header.Debug)
-                {
-                    case true:
-                        xtw.WriteAttributeString("debug", "yes");
-                        break;
-                    case false:
-                        xtw.WriteAttributeString("debug", "no");
-                        break;
-                }
+                xtw.WriteOptionalAttributeString("debug", Header.Debug.FromYesNo());
 
                 xtw.WriteStartElement("header");
-                xtw.WriteElementString("name", Header.Name);
-                xtw.WriteElementString("description", Header.Description);
-                if (!string.IsNullOrWhiteSpace(Header.RootDir))
-                    xtw.WriteElementString("rootdir", Header.RootDir);
-                if (!string.IsNullOrWhiteSpace(Header.Category))
-                    xtw.WriteElementString("category", Header.Category);
-                xtw.WriteElementString("version", Header.Version);
-                if (!string.IsNullOrWhiteSpace(Header.Date))
-                    xtw.WriteElementString("date", Header.Date);
-                xtw.WriteElementString("author", Header.Author);
-                if (!string.IsNullOrWhiteSpace(Header.Email))
-                    xtw.WriteElementString("email", Header.Email);
-                if (!string.IsNullOrWhiteSpace(Header.Homepage))
-                    xtw.WriteElementString("homepage", Header.Homepage);
-                if (!string.IsNullOrWhiteSpace(Header.Url))
-                    xtw.WriteElementString("url", Header.Url);
-                if (!string.IsNullOrWhiteSpace(Header.Comment))
-                    xtw.WriteElementString("comment", Header.Comment);
-                if (!string.IsNullOrWhiteSpace(Header.Type))
-                    xtw.WriteElementString("type", Header.Type);
+
+                xtw.WriteFullElementString("name", Header.Name);
+                xtw.WriteFullElementString("description", Header.Description);
+                xtw.WriteOptionalElementString("rootdir", Header.RootDir);
+                xtw.WriteOptionalElementString("category", Header.Category);
+                xtw.WriteFullElementString("version", Header.Version);
+                xtw.WriteOptionalElementString("date", Header.Date);
+                xtw.WriteFullElementString("author", Header.Author);
+                xtw.WriteOptionalElementString("email", Header.Email);
+                xtw.WriteOptionalElementString("homepage", Header.Homepage);
+                xtw.WriteOptionalElementString("url", Header.Url);
+                xtw.WriteOptionalElementString("comment", Header.Comment);
+                xtw.WriteOptionalElementString("type", Header.Type);
 
                 if (Header.ForcePacking != PackingFlag.None
                     || Header.ForceMerging != MergingFlag.None
@@ -979,21 +963,21 @@ namespace SabreTools.Library.DatFiles
                 {
                     xtw.WriteStartElement("trurip");
 
-                    xtw.WriteOptionalAttributeString("titleid", datItem.Machine.TitleID);
-                    xtw.WriteOptionalAttributeString("publisher", datItem.Machine.Publisher);
-                    xtw.WriteOptionalAttributeString("developer", datItem.Machine.Developer);
-                    xtw.WriteOptionalAttributeString("year", datItem.Machine.Year);
-                    xtw.WriteOptionalAttributeString("genre", datItem.Machine.Genre);
-                    xtw.WriteOptionalAttributeString("subgenre", datItem.Machine.Subgenre);
-                    xtw.WriteOptionalAttributeString("ratings", datItem.Machine.Ratings);
-                    xtw.WriteOptionalAttributeString("score", datItem.Machine.Score);
-                    xtw.WriteOptionalAttributeString("players", datItem.Machine.Players);
-                    xtw.WriteOptionalAttributeString("enabled", datItem.Machine.Enabled);
-                    xtw.WriteOptionalAttributeString("titleid", datItem.Machine.TitleID);
-                    xtw.WriteOptionalAttributeString("crc", datItem.Machine.HasCrc.FromYesNo());
-                    xtw.WriteOptionalAttributeString("source", datItem.Machine.SourceFile);
-                    xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
-                    xtw.WriteOptionalAttributeString("relatedto", datItem.Machine.RelatedTo);
+                    xtw.WriteOptionalElementString("titleid", datItem.Machine.TitleID);
+                    xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
+                    xtw.WriteOptionalElementString("developer", datItem.Machine.Developer);
+                    xtw.WriteOptionalElementString("year", datItem.Machine.Year);
+                    xtw.WriteOptionalElementString("genre", datItem.Machine.Genre);
+                    xtw.WriteOptionalElementString("subgenre", datItem.Machine.Subgenre);
+                    xtw.WriteOptionalElementString("ratings", datItem.Machine.Ratings);
+                    xtw.WriteOptionalElementString("score", datItem.Machine.Score);
+                    xtw.WriteOptionalElementString("players", datItem.Machine.Players);
+                    xtw.WriteOptionalElementString("enabled", datItem.Machine.Enabled);
+                    xtw.WriteOptionalElementString("titleid", datItem.Machine.TitleID);
+                    xtw.WriteOptionalElementString("crc", datItem.Machine.HasCrc.FromYesNo());
+                    xtw.WriteOptionalElementString("source", datItem.Machine.SourceFile);
+                    xtw.WriteOptionalElementString("cloneof", datItem.Machine.CloneOf);
+                    xtw.WriteOptionalElementString("relatedto", datItem.Machine.RelatedTo);
 
                     // End trurip
                     xtw.WriteEndElement();
@@ -1100,8 +1084,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
                         xtw.WriteAttributeString("name", rom.Name);
-                        if (rom.Size != -1)
-                            xtw.WriteAttributeString("size", rom.Size.ToString());
+                        if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK

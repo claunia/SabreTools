@@ -995,16 +995,7 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("mame");
                 xtw.WriteAttributeString("build", Header.Name);
-                switch (Header.Debug)
-                {
-                    case true:
-                        xtw.WriteAttributeString("debug", "yes");
-                        break;
-                    case false:
-                        xtw.WriteAttributeString("debug", "no");
-                        break;
-                }
-
+                xtw.WriteOptionalAttributeString("debug", Header.Debug.FromYesNo());
                 xtw.WriteOptionalAttributeString("mameconfig", Header.MameConfig);
 
                 xtw.Flush();

@@ -820,10 +820,10 @@ namespace SabreTools.Library.DatFiles
                         break;
                 }
 
-                xtw.WriteOptionalAttributeString("description", datItem.Machine.Description);
-                xtw.WriteOptionalAttributeString("year", datItem.Machine.Year);
-                xtw.WriteOptionalAttributeString("publisher", datItem.Machine.Publisher);
-                xtw.WriteOptionalAttributeString("category", datItem.Machine.Category);
+                xtw.WriteOptionalElementString("description", datItem.Machine.Description);
+                xtw.WriteOptionalElementString("year", datItem.Machine.Year);
+                xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
+                xtw.WriteOptionalElementString("category", datItem.Machine.Category);
 
                 if (datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
                 {

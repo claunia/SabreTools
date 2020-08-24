@@ -663,18 +663,14 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteStartElement("header");
 
-                xtw.WriteElementString("name", Header.Name);
-                xtw.WriteElementString("description", Header.Description);
-                if (!string.IsNullOrWhiteSpace(Header.RootDir))
-                    xtw.WriteElementString("rootdir", Header.RootDir);
-                if (!string.IsNullOrWhiteSpace(Header.Category))
-                    xtw.WriteElementString("category", Header.Category);
-                xtw.WriteElementString("version", Header.Version);
-                if (!string.IsNullOrWhiteSpace(Header.Date))
-                    xtw.WriteElementString("date", Header.Date);
-                xtw.WriteElementString("author", Header.Author);
-                if (!string.IsNullOrWhiteSpace(Header.Comment))
-                    xtw.WriteElementString("comment", Header.Comment);
+                xtw.WriteFullElementString("name", Header.Name);
+                xtw.WriteFullElementString("description", Header.Description);
+                xtw.WriteOptionalElementString("rootdir", Header.RootDir);
+                xtw.WriteOptionalElementString("category", Header.Category);
+                xtw.WriteFullElementString("version", Header.Version);
+                xtw.WriteOptionalElementString("date", Header.Date);
+                xtw.WriteFullElementString("author", Header.Author);
+                xtw.WriteOptionalElementString("comment", Header.Comment);
                 if (!string.IsNullOrWhiteSpace(Header.Type)
                     || Header.ForcePacking != PackingFlag.None
                     || Header.ForceMerging != MergingFlag.None

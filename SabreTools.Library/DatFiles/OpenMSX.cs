@@ -660,12 +660,12 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 xtw.WriteStartElement("software");
-                xtw.WriteElementString("title", datItem.Machine.Name);
-                xtw.WriteElementString("genmsxid", datItem.Machine.GenMSXID);
-                xtw.WriteElementString("system", datItem.Machine.System);
-                xtw.WriteElementString("company", datItem.Machine.Manufacturer);
-                xtw.WriteElementString("year", datItem.Machine.Year);
-                xtw.WriteElementString("country", datItem.Machine.Country);
+                xtw.WriteFullElementString("title", datItem.Machine.Name);
+                xtw.WriteFullElementString("genmsxid", datItem.Machine.GenMSXID);
+                xtw.WriteFullElementString("system", datItem.Machine.System);
+                xtw.WriteFullElementString("company", datItem.Machine.Manufacturer);
+                xtw.WriteFullElementString("year", datItem.Machine.Year);
+                xtw.WriteFullElementString("country", datItem.Machine.Country);
 
                 xtw.Flush();
             }
@@ -740,35 +740,27 @@ namespace SabreTools.Library.DatFiles
                             case OpenMSXSubType.Rom:
                             case OpenMSXSubType.NULL:
                                 xtw.WriteStartElement("rom");
-                                xtw.WriteElementString("hash", rom.SHA1.ToLowerInvariant());
-                                if (!string.IsNullOrWhiteSpace(rom.Offset))
-                                    xtw.WriteElementString("start", rom.Offset);
-                                if (!string.IsNullOrWhiteSpace(rom.OpenMSXType))
-                                    xtw.WriteElementString("type", rom.OpenMSXType);
-                                if (!string.IsNullOrWhiteSpace(rom.Remark))
-                                    xtw.WriteElementString("remark", rom.Remark);
+                                xtw.WriteFullElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteOptionalElementString("start", rom.Offset);
+                                xtw.WriteOptionalElementString("type", rom.OpenMSXType);
+                                xtw.WriteOptionalElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;
 
                             case OpenMSXSubType.MegaRom:
                                 xtw.WriteStartElement("megarom");
-                                xtw.WriteElementString("hash", rom.SHA1.ToLowerInvariant());
-                                if (!string.IsNullOrWhiteSpace(rom.Offset))
-                                    xtw.WriteElementString("start", rom.Offset);
-                                if (!string.IsNullOrWhiteSpace(rom.OpenMSXType))
-                                    xtw.WriteElementString("type", rom.OpenMSXType);
-                                if (!string.IsNullOrWhiteSpace(rom.Remark))
-                                    xtw.WriteElementString("remark", rom.Remark);
+                                xtw.WriteFullElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteOptionalElementString("start", rom.Offset);
+                                xtw.WriteOptionalElementString("type", rom.OpenMSXType);
+                                xtw.WriteOptionalElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;
 
                             case OpenMSXSubType.SCCPlusCart:
                                 xtw.WriteStartElement("sccpluscart");
-                                if (!string.IsNullOrWhiteSpace(rom.Boot))
-                                    xtw.WriteElementString("boot", rom.Boot);
-                                xtw.WriteElementString("hash", rom.SHA1.ToLowerInvariant());
-                                if (!string.IsNullOrWhiteSpace(rom.Remark))
-                                    xtw.WriteElementString("remark", rom.Remark);
+                                xtw.WriteOptionalElementString("boot", rom.Boot);
+                                xtw.WriteFullElementString("hash", rom.SHA1.ToLowerInvariant());
+                                xtw.WriteOptionalElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;
                         }

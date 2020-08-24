@@ -773,11 +773,11 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteAttributeString("noNamespaceSchemaLocation", "xsi", "datas.xsd");
 
                 xtw.WriteStartElement("configuration");
-                xtw.WriteElementString("datName", Header.Name);
+                xtw.WriteFullElementString("datName", Header.Name);
                 xtw.WriteElementString("datVersion", Items.TotalCount.ToString());
-                xtw.WriteElementString("system", Header.System ?? string.Empty);
-                xtw.WriteElementString("screenshotsWidth", Header.ScreenshotsWidth ?? string.Empty);
-                xtw.WriteElementString("screenshotsHeight", Header.ScreenshotsHeight ?? string.Empty);
+                xtw.WriteFullElementString("system", Header.System);
+                xtw.WriteFullElementString("screenshotsWidth", Header.ScreenshotsWidth);
+                xtw.WriteFullElementString("screenshotsHeight", Header.ScreenshotsHeight);
 
                 if (Header.Infos != null)
                 {
@@ -810,14 +810,14 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 xtw.WriteStartElement("newDat");
-                xtw.WriteElementString("datVersionURL", Header.Url);
+                xtw.WriteFullElementString("datVersionURL", Header.Url);
 
                 xtw.WriteStartElement("datUrl");
                 xtw.WriteAttributeString("fileName", $"{Header.FileName}.zip");
                 xtw.WriteString(Header.Url);
                 xtw.WriteEndElement();
 
-                xtw.WriteElementString("imURL", Header.Url);
+                xtw.WriteFullElementString("imURL", Header.Url);
 
                 // End newDat
                 xtw.WriteEndElement();
@@ -863,7 +863,7 @@ namespace SabreTools.Library.DatFiles
                 // End search
                 xtw.WriteEndElement();
 
-                xtw.WriteElementString("romTitle", Header.RomTitle ?? "%u - %n");
+                xtw.WriteFullElementString("romTitle", Header.RomTitle ?? "%u - %n");
 
                 // End configuration
                 xtw.WriteEndElement();
@@ -903,16 +903,16 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("game");
                 xtw.WriteElementString("imageNumber", "1");
                 xtw.WriteElementString("releaseNumber", "1");
-                xtw.WriteElementString("title", datItem.Name ?? string.Empty);
+                xtw.WriteFullElementString("title", datItem.Name);
                 xtw.WriteElementString("saveType", "None");
 
                 if (datItem.ItemType == ItemType.Rom)
                 {
                     var rom = datItem as Rom;
-                    xtw.WriteElementString("romSize", rom.Size.ToString() ?? string.Empty);
+                    xtw.WriteFullElementString("romSize", rom.Size.ToString());
                 }
 
-                xtw.WriteElementString("publisher", datItem.Machine.Publisher ?? string.Empty);
+                xtw.WriteFullElementString("publisher", datItem.Machine.Publisher);
                 xtw.WriteElementString("location", "0");
                 xtw.WriteElementString("sourceRom", "None");
                 xtw.WriteElementString("language", "0");
@@ -973,8 +973,8 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteElementString("im1CRC", "00000000");
                 xtw.WriteElementString("im2CRC", "00000000");
-                xtw.WriteElementString("comment", datItem.Machine.Comment ?? string.Empty);
-                xtw.WriteElementString("duplicateID", datItem.Machine.CloneOf ?? string.Empty);
+                xtw.WriteFullElementString("comment", datItem.Machine.Comment);
+                xtw.WriteFullElementString("duplicateID", datItem.Machine.CloneOf);
 
                 // End game
                 xtw.WriteEndElement();
