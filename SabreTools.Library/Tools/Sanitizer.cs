@@ -17,6 +17,10 @@ namespace SabreTools.Library.Tools
         /// <returns>Date as a string, if possible</returns>
         public static string CleanDate(string input)
         {
+            // Null in, null out
+            if (input == null)
+                return null;
+
             string date = string.Empty;
             if (input != null)
             {

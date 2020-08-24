@@ -237,11 +237,10 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Rom()
         {
-            Name = string.Empty;
+            Name = null;
             ItemType = ItemType.Rom;
             DupeType = 0x00;
             ItemStatus = ItemStatus.None;
-            Date = string.Empty;
         }
 
         /// <summary>
