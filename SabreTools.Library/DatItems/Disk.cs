@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents Compressed Hunks of Data (CHD) formatted disks which use internal hashes
     /// </summary>
+    [JsonObject("disk")]
     public class Disk : DatItem
     {
         #region Private instance variables
@@ -119,6 +120,7 @@ namespace SabreTools.Library.DatItems
         /// Disk dump status
         /// </summary>
         [JsonProperty("status")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus { get; set; }
 
         /// <summary>
@@ -130,70 +132,6 @@ namespace SabreTools.Library.DatItems
         #endregion
 
         #region Accessors
-
-        /// <summary>
-        /// Get the value of that field as a string, if possible
-        /// </summary>
-        public override string GetField(Field field, List<Field> excludeFields)
-        {
-            // If the field is to be excluded, return empty string
-            if (excludeFields.Contains(field))
-                return string.Empty;
-
-            // Handle Disk-specific fields
-            string fieldValue;
-            switch (field)
-            {
-                case Field.MD5:
-                    fieldValue = MD5;
-                    break;
-#if NET_FRAMEWORK
-                case Field.RIPEMD160:
-                    fieldValue = RIPEMD160;
-                    break;
-#endif
-                case Field.SHA1:
-                    fieldValue = SHA1;
-                    break;
-                case Field.SHA256:
-                    fieldValue = SHA256;
-                    break;
-                case Field.SHA384:
-                    fieldValue = SHA384;
-                    break;
-                case Field.SHA512:
-                    fieldValue = SHA512;
-                    break;
-                case Field.Merge:
-                    fieldValue = MergeTag;
-                    break;
-                case Field.Region:
-                    fieldValue = Region;
-                    break;
-                case Field.Index:
-                    fieldValue = Index;
-                    break;
-                case Field.Writable:
-                    fieldValue = Writable?.ToString();
-                    break;
-                case Field.Optional:
-                    fieldValue = Optional?.ToString();
-                    break;
-                case Field.Status:
-                    fieldValue = ItemStatus.ToString();
-                    break;
-
-                // For everything else, use the base method
-                default:
-                    return base.GetField(field, excludeFields);
-            }
-
-            // Make sure we don't return null
-            if (string.IsNullOrEmpty(fieldValue))
-                fieldValue = string.Empty;
-
-            return fieldValue;
-        }
 
         /// <summary>
         /// Set fields with given values

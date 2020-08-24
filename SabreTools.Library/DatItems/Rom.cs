@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents a generic file within a set
     /// </summary>
+    [JsonObject("rom")]
     public class Rom : DatItem
     {
         #region Private instance variables
@@ -144,6 +145,7 @@ namespace SabreTools.Library.DatItems
         /// Rom dump status
         /// </summary>
         [JsonProperty("status")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemStatus ItemStatus { get; set; }
 
         /// <summary>
@@ -161,82 +163,6 @@ namespace SabreTools.Library.DatItems
         #endregion
 
         #region Accessors
-
-        /// <summary>
-        /// Get the value of that field as a string, if possible
-        /// </summary>
-        public override string GetField(Field field, List<Field> excludeFields)
-        {
-            // If the field is to be excluded, return empty string
-            if (excludeFields.Contains(field))
-                return string.Empty;
-
-            // Handle Rom-specific fields
-            string fieldValue;
-            switch (field)
-            {
-                case Field.Bios:
-                    fieldValue = Bios;
-                    break;
-                case Field.Size:
-                    fieldValue = Size.ToString();
-                    break;
-                case Field.CRC:
-                    fieldValue = CRC;
-                    break;
-                case Field.MD5:
-                    fieldValue = MD5;
-                    break;
-#if NET_FRAMEWORK
-                case Field.RIPEMD160:
-                    fieldValue = RIPEMD160;
-                    break;
-#endif
-                case Field.SHA1:
-                    fieldValue = SHA1;
-                    break;
-                case Field.SHA256:
-                    fieldValue = SHA256;
-                    break;
-                case Field.SHA384:
-                    fieldValue = SHA384;
-                    break;
-                case Field.SHA512:
-                    fieldValue = SHA512;
-                    break;
-                case Field.Merge:
-                    fieldValue = MergeTag;
-                    break;
-                case Field.Region:
-                    fieldValue = Region;
-                    break;
-                case Field.Offset:
-                    fieldValue = Offset;
-                    break;
-                case Field.Date:
-                    fieldValue = Date;
-                    break;
-                case Field.Status:
-                    fieldValue = ItemStatus.ToString();
-                    break;
-                case Field.Optional:
-                    fieldValue = Optional?.ToString();
-                    break;
-                case Field.Inverted:
-                    fieldValue = Inverted?.ToString();
-                    break;
-
-                // For everything else, use the base method
-                default:
-                    return base.GetField(field, excludeFields);
-            }
-
-            // Make sure we don't return null
-            if (string.IsNullOrEmpty(fieldValue))
-                fieldValue = string.Empty;
-
-            return fieldValue;
-        }
 
         /// <summary>
         /// Set fields with given values

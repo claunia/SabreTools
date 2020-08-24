@@ -1,8 +1,11 @@
-﻿namespace SabreTools.Library.DatItems
+﻿using Newtonsoft.Json;
+
+namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents generic archive files to be included in a set
     /// </summary>
+    [JsonObject("archive")]
     public class Archive : DatItem
     {
         #region Constructors

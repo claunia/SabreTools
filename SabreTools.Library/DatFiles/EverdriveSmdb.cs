@@ -182,7 +182,7 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 switch (datItem.ItemType)
                 {
                     case ItemType.Rom:
@@ -190,12 +190,12 @@ namespace SabreTools.Library.DatFiles
 
                         string[] fields = new string[]
                         {
-                            rom.GetField(Field.SHA256, Header.ExcludeFields),
-                            $"{rom.GetField(Field.MachineName, Header.ExcludeFields)}/",
-                            rom.GetField(Field.Name, Header.ExcludeFields),
-                            rom.GetField(Field.SHA1, Header.ExcludeFields),
-                            rom.GetField(Field.MD5, Header.ExcludeFields),
-                            rom.GetField(Field.CRC, Header.ExcludeFields),
+                            rom.SHA256,
+                            $"{rom.Machine.Name}/",
+                            rom.Name,
+                            rom.SHA1,
+                            rom.MD5,
+                            rom.CRC,
                         };
 
                         svw.WriteValues(fields);

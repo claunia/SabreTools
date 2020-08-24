@@ -967,10 +967,10 @@ namespace SabreTools.Library.DatFiles
                 // No game should start with a path separator
                 datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state based on excluded fields
+                // Build the state
                 xtw.WriteStartElement(_deprecated ? "game" : "machine");
-                xtw.WriteAttributeString("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
-                if (!Header.ExcludeFields.Contains(Field.MachineType))
+                xtw.WriteAttributeString("name", datItem.Machine.Name);
+                if (datItem.Machine.MachineType != MachineType.NULL)
                 {
                     if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
                         xtw.WriteAttributeString("isbios", "yes");
@@ -980,7 +980,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("ismechanical", "yes");
                 }
 
-                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Machine.Runnable != null)
+                if (datItem.Machine.Runnable != Runnable.NULL)
                 {
                     switch (datItem.Machine.Runnable)
                     {
@@ -996,24 +996,24 @@ namespace SabreTools.Library.DatFiles
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.CloneOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteAttributeString("cloneof", datItem.Machine.CloneOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.RomOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteAttributeString("romof", datItem.Machine.RomOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteAttributeString("sampleof", datItem.Machine.SampleOf);
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Comment, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Comment))
                     xtw.WriteElementString("comment", datItem.Machine.Comment);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
                     xtw.WriteElementString("description", datItem.Machine.Description);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Year))
                     xtw.WriteElementString("year", datItem.Machine.Year);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Publisher, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Publisher))
                     xtw.WriteElementString("publisher", datItem.Machine.Publisher);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Manufacturer))
                     xtw.WriteElementString("manufacturer", datItem.Machine.Manufacturer);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Category))
                     xtw.WriteElementString("category", datItem.Machine.Category);
 
                 if (datItem.Machine.TitleID != null
@@ -1028,40 +1028,40 @@ namespace SabreTools.Library.DatFiles
                 {
                     xtw.WriteStartElement("trurip");
 
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.TitleID, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.TitleID))
                         xtw.WriteElementString("titleid", datItem.Machine.TitleID);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Publisher, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Publisher))
                         xtw.WriteElementString("publisher", datItem.Machine.Publisher);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Developer, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Developer))
                         xtw.WriteElementString("developer", datItem.Machine.Developer);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Year))
                         xtw.WriteElementString("year", datItem.Machine.Year);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Genre, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Genre))
                         xtw.WriteElementString("genre", datItem.Machine.Genre);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Subgenre, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Subgenre))
                         xtw.WriteElementString("subgenre", datItem.Machine.Subgenre);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Ratings, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Ratings))
                         xtw.WriteElementString("ratings", datItem.Machine.Ratings);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Score, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Score))
                         xtw.WriteElementString("score", datItem.Machine.Score);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Players, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Players))
                         xtw.WriteElementString("players", datItem.Machine.Players);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Enabled, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.Enabled))
                         xtw.WriteElementString("enabled", datItem.Machine.Enabled);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.TitleID, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.TitleID))
                         xtw.WriteElementString("titleid", datItem.Machine.TitleID);
-                    if (!Header.ExcludeFields.Contains(Field.HasCrc) && datItem.Machine.HasCrc != null)
+                    if (datItem.Machine.HasCrc != null)
                     {
                         if (datItem.Machine.HasCrc == true)
                             xtw.WriteElementString("crc", "yes");
                         else if (datItem.Machine.HasCrc == false)
                             xtw.WriteElementString("crc", "no");
                     }
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.SourceFile))
                         xtw.WriteElementString("source", datItem.Machine.SourceFile);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.CloneOf))
                         xtw.WriteElementString("cloneof", datItem.Machine.CloneOf);
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RelatedTo, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(datItem.Machine.RelatedTo))
                         xtw.WriteElementString("relatedto", datItem.Machine.RelatedTo);
 
                     // End trurip
@@ -1120,22 +1120,22 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 switch (datItem.ItemType)
                 {
                     case ItemType.Archive:
                         xtw.WriteStartElement("archive");
-                        xtw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
+                        xtw.WriteAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
 
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         xtw.WriteStartElement("biosset");
-                        xtw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, Header.ExcludeFields)))
+                        xtw.WriteAttributeString("name", biosSet.Name);
+                        if (!string.IsNullOrWhiteSpace(biosSet.Description))
                             xtw.WriteAttributeString("description", biosSet.Description);
-                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
+                        if (biosSet.Default != null)
                             xtw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -1143,22 +1143,22 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("disk");
-                        xtw.WriteAttributeString("name", disk.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
+                        xtw.WriteAttributeString("name", disk.Name);
+                        if (!string.IsNullOrWhiteSpace(disk.MD5))
                             xtw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
                             xtw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
                             xtw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA256))
                             xtw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA384))
                             xtw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA512))
                             xtw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
+                        if (disk.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", disk.ItemStatus.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -1166,14 +1166,14 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Release:
                         var release = datItem as Release;
                         xtw.WriteStartElement("release");
-                        xtw.WriteAttributeString("name", release.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Region, Header.ExcludeFields)))
+                        xtw.WriteAttributeString("name", release.Name);
+                        if (!string.IsNullOrWhiteSpace(release.Region))
                             xtw.WriteAttributeString("region", release.Region);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Language, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(release.Language))
                             xtw.WriteAttributeString("language", release.Language);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(release.Date))
                             xtw.WriteAttributeString("date", release.Date);
-                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
+                        if (release.Default != null)
                             xtw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
@@ -1181,37 +1181,37 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
-                        xtw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
+                        xtw.WriteAttributeString("name", rom.Name);
+                        if (rom.Size != -1)
                             xtw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.CRC))
                             xtw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.MD5))
                             xtw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
                             xtw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
                             xtw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA256))
                             xtw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA384))
                             xtw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA512))
                             xtw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Date))
                             xtw.WriteAttributeString("date", rom.Date);
-                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
+                        if (rom.ItemStatus != ItemStatus.None)
                             xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
-                        if (!Header.ExcludeFields.Contains(Field.Inverted) && rom.Inverted != null)
+                        if (rom.Inverted != null)
                             xtw.WriteAttributeString("inverted", rom.Inverted.ToString().ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
 
                     case ItemType.Sample:
                         xtw.WriteStartElement("sample");
-                        xtw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
+                        xtw.WriteAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
                 }

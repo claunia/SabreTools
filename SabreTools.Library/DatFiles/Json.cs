@@ -1583,60 +1583,60 @@ namespace SabreTools.Library.DatFiles
                 // No game should start with a path separator
                 datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state based on excluded fields
+                // Build the state
                 jtw.WriteStartObject();
 
                 #region Common
 
                 jtw.WritePropertyName("name");
-                jtw.WriteValue(datItem.GetField(Field.MachineName, Header.ExcludeFields));
+                jtw.WriteValue(datItem.Machine.Name);
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Comment, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Comment))
                 {
                     jtw.WritePropertyName("comment");
                     jtw.WriteValue(datItem.Machine.Comment);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
                 {
                     jtw.WritePropertyName("description");
                     jtw.WriteValue(datItem.Machine.Description);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Year))
                 {
                     jtw.WritePropertyName("year");
                     jtw.WriteValue(datItem.Machine.Year);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Manufacturer))
                 {
                     jtw.WritePropertyName("manufacturer");
                     jtw.WriteValue(datItem.Machine.Manufacturer);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Publisher, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Publisher))
                 {
                     jtw.WritePropertyName("publisher");
                     jtw.WriteValue(datItem.Machine.Publisher);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Category))
                 {
                     jtw.WritePropertyName("category");
                     jtw.WriteValue(datItem.Machine.Category);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.RomOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
                 {
                     jtw.WritePropertyName("romof");
                     jtw.WriteValue(datItem.Machine.RomOf);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.CloneOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                 {
                     jtw.WritePropertyName("cloneof");
                     jtw.WriteValue(datItem.Machine.CloneOf);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf) && !string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
                 {
                     jtw.WritePropertyName("sampleof");
                     jtw.WriteValue(datItem.Machine.SampleOf);
                 }
-                if (!Header.ExcludeFields.Contains(Field.MachineType))
+                if (datItem.Machine.MachineType != MachineType.NULL)
                 {
                     if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
                     {
@@ -1659,37 +1659,37 @@ namespace SabreTools.Library.DatFiles
 
                 #region AttractMode
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Players, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Players))
                 {
                     jtw.WritePropertyName("players");
                     jtw.WriteValue(datItem.Machine.Players);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Rotation, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Rotation))
                 {
                     jtw.WritePropertyName("rotation");
                     jtw.WriteValue(datItem.Machine.Rotation);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Control, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Control))
                 {
                     jtw.WritePropertyName("control");
                     jtw.WriteValue(datItem.Machine.Control);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SupportStatus, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Status))
                 {
                     jtw.WritePropertyName("status");
                     jtw.WriteValue(datItem.Machine.Status);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DisplayCount, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.DisplayCount))
                 {
                     jtw.WritePropertyName("displaycount");
                     jtw.WriteValue(datItem.Machine.DisplayCount);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DisplayType, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.DisplayType))
                 {
                     jtw.WritePropertyName("displaytype");
                     jtw.WriteValue(datItem.Machine.DisplayType);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Buttons, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Buttons))
                 {
                     jtw.WritePropertyName("buttons");
                     jtw.WriteValue(datItem.Machine.Buttons);
@@ -1699,12 +1699,12 @@ namespace SabreTools.Library.DatFiles
 
                 #region ListXML
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SourceFile, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.SourceFile))
                 {
                     jtw.WritePropertyName("sourcefile");
                     jtw.WriteValue(datItem.Machine.SourceFile);
                 }
-                if (!Header.ExcludeFields.Contains(Field.Runnable) && datItem.Machine.Runnable != null)
+                if (datItem.Machine.Runnable != Runnable.NULL)
                 {
                     switch (datItem.Machine.Runnable)
                     {
@@ -1722,7 +1722,7 @@ namespace SabreTools.Library.DatFiles
                             break;
                     }
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DeviceReferences, Header.ExcludeFields)))
+                if (datItem.Machine.DeviceReferences != null)
                 {
                     jtw.WritePropertyName("devices");
                     jtw.WriteStartArray();
@@ -1736,7 +1736,7 @@ namespace SabreTools.Library.DatFiles
                 
                 // TODO: Add Field.Slots
                 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Infos, Header.ExcludeFields)))
+                if (datItem.Machine.Infos != null)
                 {
                     jtw.WritePropertyName("infos");
                     jtw.WriteStartArray();
@@ -1755,12 +1755,12 @@ namespace SabreTools.Library.DatFiles
 
                 #region Logiqx
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Board, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Board))
                 {
                     jtw.WritePropertyName("board");
                     jtw.WriteValue(datItem.Machine.Board);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RebuildTo, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.RebuildTo))
                 {
                     jtw.WritePropertyName("rebuildto");
                     jtw.WriteValue(datItem.Machine.RebuildTo);
@@ -1770,42 +1770,42 @@ namespace SabreTools.Library.DatFiles
 
                 #region Logiqx EmuArc
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.TitleID, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.TitleID))
                 {
                     jtw.WritePropertyName("titleid");
                     jtw.WriteValue(datItem.Machine.TitleID);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Developer, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Developer))
                 {
                     jtw.WritePropertyName("developer");
                     jtw.WriteValue(datItem.Machine.Developer);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Genre, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Genre))
                 {
                     jtw.WritePropertyName("genre");
                     jtw.WriteValue(datItem.Machine.Genre);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Subgenre, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Subgenre))
                 {
                     jtw.WritePropertyName("subgenre");
                     jtw.WriteValue(datItem.Machine.Subgenre);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Ratings, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Ratings))
                 {
                     jtw.WritePropertyName("ratings");
                     jtw.WriteValue(datItem.Machine.Ratings);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Score, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Score))
                 {
                     jtw.WritePropertyName("score");
                     jtw.WriteValue(datItem.Machine.Score);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Enabled, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Enabled))
                 {
                     jtw.WritePropertyName("enabled");
                     jtw.WriteValue(datItem.Machine.Enabled);
                 }
-                if (!Header.ExcludeFields.Contains(Field.HasCrc) && datItem.Machine.HasCrc != null)
+                if (datItem.Machine.HasCrc != null)
                 {
                     if (datItem.Machine.HasCrc == true)
                     {
@@ -1818,7 +1818,7 @@ namespace SabreTools.Library.DatFiles
                         jtw.WriteValue("no");
                     }
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RelatedTo, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.RelatedTo))
                 {
                     jtw.WritePropertyName("relatedto");
                     jtw.WriteValue(datItem.Machine.RelatedTo);
@@ -1828,17 +1828,17 @@ namespace SabreTools.Library.DatFiles
 
                 #region OpenMSX
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.GenMSXID, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.GenMSXID))
                 {
                     jtw.WritePropertyName("genmsxid");
                     jtw.WriteValue(datItem.Machine.GenMSXID);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.System, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.System))
                 {
                     jtw.WritePropertyName("system");
                     jtw.WriteValue(datItem.Machine.System);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Country, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Country))
                 {
                     jtw.WritePropertyName("country");
                     jtw.WriteValue(datItem.Machine.Country);
@@ -1848,7 +1848,7 @@ namespace SabreTools.Library.DatFiles
 
                 #region SoftwareList
 
-                if (!Header.ExcludeFields.Contains(Field.Supported) && datItem.Machine.Supported != Supported.NULL)
+                if (datItem.Machine.Supported != Supported.NULL)
                 {
                     switch (datItem.Machine.Supported)
                     {
@@ -1866,7 +1866,7 @@ namespace SabreTools.Library.DatFiles
                             break;
                     }
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SharedFeatures, Header.ExcludeFields)))
+                if (datItem.Machine.SharedFeatures != null)
                 {
                     jtw.WritePropertyName("sharedfeat");
                     jtw.WriteStartArray();
@@ -1880,7 +1880,7 @@ namespace SabreTools.Library.DatFiles
 
                     jtw.WriteEndArray();
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DipSwitches, Header.ExcludeFields)))
+                if (datItem.Machine.DipSwitches != null)
                 {
                     jtw.WritePropertyName("dipswitches");
                     jtw.WriteStartArray();
@@ -1980,7 +1980,7 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 jtw.WriteStartObject();
                 jtw.WritePropertyName("type");
 
@@ -1989,20 +1989,20 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Archive:
                         jtw.WriteValue("archive");
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(datItem.GetField(Field.Name, Header.ExcludeFields));
+                        jtw.WriteValue(datItem.Name);
                         break;
 
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         jtw.WriteValue("biosset");
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(biosSet.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.BiosDescription, Header.ExcludeFields)))
+                        jtw.WriteValue(biosSet.Name);
+                        if (!string.IsNullOrWhiteSpace(biosSet.Description))
                         {
                             jtw.WritePropertyName("description");
                             jtw.WriteValue(biosSet.Description);
                         }
-                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
+                        if (biosSet.Default != null)
                         {
                             jtw.WritePropertyName("default");
                             jtw.WriteValue(biosSet.Default);
@@ -2013,65 +2013,65 @@ namespace SabreTools.Library.DatFiles
                         var disk = datItem as Disk;
                         jtw.WriteValue("disk");
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(disk.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.MD5, Header.ExcludeFields)))
+                        jtw.WriteValue(disk.Name);
+                        if (!string.IsNullOrWhiteSpace(disk.MD5))
                         {
                             jtw.WritePropertyName("md5");
                             jtw.WriteValue(disk.MD5.ToLowerInvariant());
                         }
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.RIPEMD160, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
                         {
                             jtw.WritePropertyName("ripemd160");
                             jtw.WriteValue(disk.RIPEMD160.ToLowerInvariant());
                         }
 #endif
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.SHA1, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
                         {
                             jtw.WritePropertyName("sha1");
                             jtw.WriteValue(disk.SHA1.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.SHA256, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA256))
                         {
                             jtw.WritePropertyName("sha256");
                             jtw.WriteValue(disk.SHA256.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.SHA384, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA384))
                         {
                             jtw.WritePropertyName("sha384");
                             jtw.WriteValue(disk.SHA384.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.SHA512, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA512))
                         {
                             jtw.WritePropertyName("sha512");
                             jtw.WriteValue(disk.SHA512.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.Merge, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.MergeTag))
                         {
                             jtw.WritePropertyName("merge");
                             jtw.WriteValue(disk.MergeTag);
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.Region, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.Region))
                         {
                             jtw.WritePropertyName("region");
                             jtw.WriteValue(disk.Region);
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.Index, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.Index))
                         {
                             jtw.WritePropertyName("index");
                             jtw.WriteValue(disk.Index);
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.Writable, Header.ExcludeFields)))
+                        if (disk.Writable != null)
                         {
                             jtw.WritePropertyName("writable");
                             jtw.WriteValue(disk.Writable);
                         }
-                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
+                        if (disk.ItemStatus != ItemStatus.None)
                         {
                             jtw.WritePropertyName("status");
                             jtw.WriteValue(disk.ItemStatus.ToString().ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(disk.GetField(Field.Optional, Header.ExcludeFields)))
+                        if (disk.Optional != null)
                         {
                             jtw.WritePropertyName("optional");
                             jtw.WriteValue(disk.Optional);
@@ -2082,23 +2082,23 @@ namespace SabreTools.Library.DatFiles
                         var release = datItem as Release;
                         jtw.WriteValue("release");
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(release.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(release.GetField(Field.Region, Header.ExcludeFields)))
+                        jtw.WriteValue(release.Name);
+                        if (!string.IsNullOrWhiteSpace(release.Region))
                         {
                             jtw.WritePropertyName("region");
                             jtw.WriteValue(release.Region);
                         }
-                        if (!string.IsNullOrWhiteSpace(release.GetField(Field.Language, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(release.Language))
                         {
                             jtw.WritePropertyName("language");
                             jtw.WriteValue(release.Language);
                         }
-                        if (!string.IsNullOrWhiteSpace(release.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(release.Date))
                         {
                             jtw.WritePropertyName("date");
                             jtw.WriteValue(release.Date);
                         }
-                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
+                        if (release.Default != null)
                         {
                             jtw.WritePropertyName("default");
                             jtw.WriteValue(release.Default);
@@ -2109,85 +2109,85 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         jtw.WriteValue("rom");
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
+                        jtw.WriteValue(rom.Name);
+                        if (rom.Size != -1)
                         {
                             jtw.WritePropertyName("size");
                             jtw.WriteValue(rom.Size);
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Offset, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Offset))
                         {
                             jtw.WritePropertyName("offset");
                             jtw.WriteValue(rom.Offset);
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.CRC, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.CRC))
                         {
                             jtw.WritePropertyName("crc");
                             jtw.WriteValue(rom.CRC.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.MD5, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.MD5))
                         {
                             jtw.WritePropertyName("md5");
                             jtw.WriteValue(rom.MD5.ToLowerInvariant());
                         }
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.RIPEMD160, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
                         {
                             jtw.WritePropertyName("ripemd160");
                             jtw.WriteValue(rom.RIPEMD160.ToLowerInvariant());
                         }
 #endif
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.SHA1, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
                         {
                             jtw.WritePropertyName("sha1");
                             jtw.WriteValue(rom.SHA1.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.SHA256, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA256))
                         {
                             jtw.WritePropertyName("sha256");
                             jtw.WriteValue(rom.SHA256.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.SHA384, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA384))
                         {
                             jtw.WritePropertyName("sha384");
                             jtw.WriteValue(rom.SHA384.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.SHA512, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA512))
                         {
                             jtw.WritePropertyName("sha512");
                             jtw.WriteValue(rom.SHA512.ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Bios, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Bios))
                         {
                             jtw.WritePropertyName("bios");
                             jtw.WriteValue(rom.Bios);
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Merge, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.MergeTag))
                         {
                             jtw.WritePropertyName("merge");
                             jtw.WriteValue(rom.MergeTag);
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Region, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Region))
                         {
                             jtw.WritePropertyName("region");
                             jtw.WriteValue(rom.Region);
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Date))
                         {
                             jtw.WritePropertyName("date");
                             jtw.WriteValue(rom.Date);
                         }
-                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
+                        if (rom.ItemStatus != ItemStatus.None)
                         {
                             jtw.WritePropertyName("status");
                             jtw.WriteValue(rom.ItemStatus.ToString().ToLowerInvariant());
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Optional, Header.ExcludeFields)))
+                        if (rom.Optional != null)
                         {
                             jtw.WritePropertyName("optional");
                             jtw.WriteValue(rom.Optional);
                         }
-                        if (!string.IsNullOrWhiteSpace(rom.GetField(Field.Inverted, Header.ExcludeFields)))
+                        if (rom.Inverted != null)
                         {
                             jtw.WritePropertyName("inverted");
                             jtw.WriteValue(rom.Inverted);
@@ -2197,18 +2197,18 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Sample:
                         jtw.WriteValue("sample");
                         jtw.WritePropertyName("name");
-                        jtw.WriteValue(datItem.GetField(Field.Name, Header.ExcludeFields));
+                        jtw.WriteValue(datItem.Name);
                         break;
                 }
 
                 #region AttractMode
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AltName, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.AltName))
                 {
                     jtw.WritePropertyName("alt_romname");
                     jtw.WriteValue(datItem.AltName);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AltTitle, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.AltTitle))
                 {
                     jtw.WritePropertyName("alt_title");
                     jtw.WriteValue(datItem.AltTitle);
@@ -2218,27 +2218,27 @@ namespace SabreTools.Library.DatFiles
 
                 #region OpenMSX
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Original, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Original?.Content ?? string.Empty))
                 {
                     jtw.WritePropertyName("original");
                     jtw.WriteValue(datItem.Original.Content);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXSubType, Header.ExcludeFields)))
+                if (datItem.OpenMSXSubType != OpenMSXSubType.NULL)
                 {
                     jtw.WritePropertyName("openmsx_subtype");
                     jtw.WriteValue(datItem.OpenMSXSubType);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXType, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.OpenMSXType))
                 {
                     jtw.WritePropertyName("openmsx_type");
                     jtw.WriteValue(datItem.OpenMSXType);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Remark))
                 {
                     jtw.WritePropertyName("remark");
                     jtw.WriteValue(datItem.Remark);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Boot, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Boot))
                 {
                     jtw.WritePropertyName("boot");
                     jtw.WriteValue(datItem.Boot);
@@ -2248,17 +2248,17 @@ namespace SabreTools.Library.DatFiles
 
                 #region SoftwareList
 
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.PartName, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.PartName))
                 {
                     jtw.WritePropertyName("partname");
                     jtw.WriteValue(datItem.PartName);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.PartInterface, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.PartInterface))
                 {
                     jtw.WritePropertyName("partinterface");
                     jtw.WriteValue(datItem.PartInterface);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Features, Header.ExcludeFields)))
+                if (datItem.Features != null)
                 {
                     jtw.WritePropertyName("features");
                     jtw.WriteStartArray();
@@ -2272,32 +2272,32 @@ namespace SabreTools.Library.DatFiles
 
                     jtw.WriteEndArray();
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AreaName, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.AreaName))
                 {
                     jtw.WritePropertyName("areaname");
                     jtw.WriteValue(datItem.AreaName);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AreaSize, Header.ExcludeFields)))
+                if (datItem.AreaSize != null)
                 {
                     jtw.WritePropertyName("areasize");
                     jtw.WriteValue(datItem.AreaSize);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AreaWidth, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.AreaWidth))
                 {
                     jtw.WritePropertyName("areawidth");
                     jtw.WriteValue(datItem.AreaWidth);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.AreaEndianness, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.AreaEndianness))
                 {
                     jtw.WritePropertyName("areaendianness");
                     jtw.WriteValue(datItem.AreaEndianness);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Value, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Value))
                 {
                     jtw.WritePropertyName("value");
                     jtw.WriteValue(datItem.Value);
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.LoadFlag, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.LoadFlag))
                 {
                     jtw.WritePropertyName("loadflag");
                     jtw.WriteValue(datItem.LoadFlag);

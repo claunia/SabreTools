@@ -618,24 +618,24 @@ namespace SabreTools.Library.DatFiles
                 // No game should start with a path separator
                 datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state based on excluded fields
+                // Build the state
                 cmpw.WriteStartElement(datItem.Machine.MachineType == MachineType.Bios ? "resource" : "game");
-                cmpw.WriteStandalone("name", datItem.GetField(Field.MachineName, Header.ExcludeFields));
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RomOf, Header.ExcludeFields)))
+                cmpw.WriteStandalone("name", datItem.Machine.Name);
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.RomOf))
                     cmpw.WriteStandalone("romof", datItem.Machine.RomOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CloneOf, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.CloneOf))
                     cmpw.WriteStandalone("cloneof", datItem.Machine.CloneOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf))
                     cmpw.WriteStandalone("sampleof", datItem.Machine.SampleOf);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
                     cmpw.WriteStandalone("description", datItem.Machine.Description);
-                else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Description, Header.ExcludeFields)))
+                else if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
                     cmpw.WriteStandalone("description", datItem.Machine.Name);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Year, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Year))
                     cmpw.WriteStandalone("year", datItem.Machine.Year);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Manufacturer, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Manufacturer))
                     cmpw.WriteStandalone("manufacturer", datItem.Machine.Manufacturer);
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Category, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.Category))
                     cmpw.WriteStandalone("category", datItem.Machine.Category);
 
                 cmpw.Flush();
@@ -659,8 +659,8 @@ namespace SabreTools.Library.DatFiles
         {
             try
             {
-                // Build the state based on excluded fields
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SampleOf, Header.ExcludeFields)))
+                // Build the state
+                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf))
                     cmpw.WriteStandalone("sampleof", datItem.Machine.SampleOf);
 
                 // End game
@@ -696,22 +696,22 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 switch (datItem.ItemType)
                 {
                     case ItemType.Archive:
                         cmpw.WriteStartElement("archive");
-                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
+                        cmpw.WriteAttributeString("name", datItem.Name);
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         cmpw.WriteStartElement("biosset");
-                        cmpw.WriteAttributeString("name", biosSet.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(biosSet.GetField(Field.BiosDescription, Header.ExcludeFields)))
+                        cmpw.WriteAttributeString("name", biosSet.Name);
+                        if (!string.IsNullOrWhiteSpace(biosSet.Description))
                             cmpw.WriteAttributeString("description", biosSet.Description);
-                        if (!Header.ExcludeFields.Contains(Field.Default) && biosSet.Default != null)
+                        if (biosSet.Default != null)
                             cmpw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -719,22 +719,22 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         cmpw.WriteStartElement("disk");
-                        cmpw.WriteAttributeString("name", disk.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
+                        cmpw.WriteAttributeString("name", disk.Name);
+                        if (!string.IsNullOrWhiteSpace(disk.MD5))
                             cmpw.WriteAttributeString("md5", disk.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
                             cmpw.WriteAttributeString("ripemd160", disk.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
                             cmpw.WriteAttributeString("sha1", disk.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA256))
                             cmpw.WriteAttributeString("sha256", disk.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA384))
                             cmpw.WriteAttributeString("sha384", disk.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(disk.SHA512))
                             cmpw.WriteAttributeString("sha512", disk.SHA512.ToLowerInvariant());
-                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus != ItemStatus.None)
+                        if (disk.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", disk.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -742,14 +742,14 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Release:
                         var release = datItem as Release;
                         cmpw.WriteStartElement("release");
-                        cmpw.WriteAttributeString("name", release.GetField(Field.Name, Header.ExcludeFields));
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Region, Header.ExcludeFields)))
+                        cmpw.WriteAttributeString("name", release.Name);
+                        if (!string.IsNullOrWhiteSpace(release.Region))
                             cmpw.WriteAttributeString("region", release.Region);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Language, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(release.Language))
                             cmpw.WriteAttributeString("language", release.Language);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(release.Date))
                             cmpw.WriteAttributeString("date", release.Date);
-                        if (!Header.ExcludeFields.Contains(Field.Default) && release.Default != null)
+                        if (release.Default != null)
                             cmpw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
@@ -757,35 +757,35 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("rom");
-                        cmpw.WriteAttributeString("name", rom.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
+                        cmpw.WriteAttributeString("name", rom.Name);
+                        if (rom.Size != -1)
                             cmpw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.CRC))
                             cmpw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.MD5))
                             cmpw.WriteAttributeString("md5", rom.MD5.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.RIPEMD160, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
                             cmpw.WriteAttributeString("ripemd160", rom.RIPEMD160.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
                             cmpw.WriteAttributeString("sha1", rom.SHA1.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA256, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA256))
                             cmpw.WriteAttributeString("sha256", rom.SHA256.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA384, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA384))
                             cmpw.WriteAttributeString("sha384", rom.SHA384.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA512, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.SHA512))
                             cmpw.WriteAttributeString("sha512", rom.SHA512.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Date))
                             cmpw.WriteAttributeString("date", rom.Date);
-                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus != ItemStatus.None)
+                        if (rom.ItemStatus != ItemStatus.None)
                             cmpw.WriteAttributeString("flags", rom.ItemStatus.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.Sample:
                         cmpw.WriteStartElement("sample");
-                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
+                        cmpw.WriteAttributeString("name", datItem.Name);
                         cmpw.WriteEndElement();
                         break;
                 }

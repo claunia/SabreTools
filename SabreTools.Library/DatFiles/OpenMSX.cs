@@ -658,14 +658,14 @@ namespace SabreTools.Library.DatFiles
                 // No game should start with a path separator
                 datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state based on excluded fields
+                // Build the state
                 xtw.WriteStartElement("software");
-                xtw.WriteElementString("title", datItem.GetField(Field.MachineName, Header.ExcludeFields));
-                xtw.WriteElementString("genmsxid", datItem.GetField(Field.GenMSXID, Header.ExcludeFields));
-                xtw.WriteElementString("system", datItem.GetField(Field.System, Header.ExcludeFields));
-                xtw.WriteElementString("company", datItem.GetField(Field.Manufacturer, Header.ExcludeFields));
-                xtw.WriteElementString("year", datItem.GetField(Field.Year, Header.ExcludeFields));
-                xtw.WriteElementString("country", datItem.GetField(Field.Country, Header.ExcludeFields));
+                xtw.WriteElementString("title", datItem.Machine.Name);
+                xtw.WriteElementString("genmsxid", datItem.Machine.GenMSXID);
+                xtw.WriteElementString("system", datItem.Machine.System);
+                xtw.WriteElementString("company", datItem.Machine.Manufacturer);
+                xtw.WriteElementString("year", datItem.Machine.Year);
+                xtw.WriteElementString("country", datItem.Machine.Country);
 
                 xtw.Flush();
             }
@@ -719,14 +719,14 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 switch (datItem.ItemType)
                 {
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("dump");
 
-                        if (!Header.ExcludeFields.Contains(Field.Original) && rom.Original != null)
+                        if (rom.Original != null)
                         {
                             xtw.WriteStartElement("original");
                             xtw.WriteAttributeString("value", rom.Original.Value == true ? "true" : "false");
@@ -740,34 +740,34 @@ namespace SabreTools.Library.DatFiles
                             case OpenMSXSubType.Rom:
                             case OpenMSXSubType.NULL:
                                 xtw.WriteStartElement("rom");
-                                xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
+                                xtw.WriteElementString("hash", rom.SHA1.ToLowerInvariant());
+                                if (!string.IsNullOrWhiteSpace(rom.Offset))
                                     xtw.WriteElementString("start", rom.Offset);
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXType, Header.ExcludeFields)))
+                                if (!string.IsNullOrWhiteSpace(rom.OpenMSXType))
                                     xtw.WriteElementString("type", rom.OpenMSXType);
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                                if (!string.IsNullOrWhiteSpace(rom.Remark))
                                     xtw.WriteElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;
 
                             case OpenMSXSubType.MegaRom:
                                 xtw.WriteStartElement("megarom");
-                                xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Offset, Header.ExcludeFields)))
+                                xtw.WriteElementString("hash", rom.SHA1.ToLowerInvariant());
+                                if (!string.IsNullOrWhiteSpace(rom.Offset))
                                     xtw.WriteElementString("start", rom.Offset);
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXType, Header.ExcludeFields)))
+                                if (!string.IsNullOrWhiteSpace(rom.OpenMSXType))
                                     xtw.WriteElementString("type", rom.OpenMSXType);
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                                if (!string.IsNullOrWhiteSpace(rom.Remark))
                                     xtw.WriteElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;
 
                             case OpenMSXSubType.SCCPlusCart:
                                 xtw.WriteStartElement("sccpluscart");
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Boot, Header.ExcludeFields)))
+                                if (!string.IsNullOrWhiteSpace(rom.Boot))
                                     xtw.WriteElementString("boot", rom.Boot);
-                                xtw.WriteElementString("hash", rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant());
-                                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Remark, Header.ExcludeFields)))
+                                xtw.WriteElementString("hash", rom.SHA1.ToLowerInvariant());
+                                if (!string.IsNullOrWhiteSpace(rom.Remark))
                                     xtw.WriteElementString("remark", rom.Remark);
                                 xtw.WriteEndElement();
                                 break;

@@ -8,16 +8,28 @@ namespace SabreTools.Library.IO
     public static class XmlTextWriterExtensions
     {
         /// <summary>
+        /// Write an attribute, if the value is not null or empty
+        /// </summary>
+        /// <param name="writer">XmlTextWriter to write out with</param>
+        /// <param name="localName">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        public static void WriteAttributeStringIfExists(this XmlTextWriter writer, string localName, string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                writer.WriteAttributeString(localName, value);
+        }
+
+        /// <summary>
         /// Force writing separate open and start tags, even for empty elements
         /// </summary>
-        /// <param name="xmlTextWriter">XmlTextWriter to write out with</param>
+        /// <param name="writer">XmlTextWriter to write out with</param>
         /// <param name="localName">Name of the element</param>
         /// <param name="value">Value to write in the element</param>
-        public static void WriteFullElementString(this XmlTextWriter xmlTextWriter, string localName, string value)
+        public static void WriteFullElementString(this XmlTextWriter writer, string localName, string value)
         {
-            xmlTextWriter.WriteStartElement(localName);
-            xmlTextWriter.WriteRaw(value);
-            xmlTextWriter.WriteFullEndElement();
+            writer.WriteStartElement(localName);
+            writer.WriteRaw(value);
+            writer.WriteFullEndElement();
         }
     }
 }

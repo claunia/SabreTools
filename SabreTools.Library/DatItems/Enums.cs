@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Newtonsoft.Json;
+
 namespace SabreTools.Library.DatItems
 {
     /// <summary>

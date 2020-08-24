@@ -190,8 +190,32 @@ namespace SabreTools.Library.DatFiles
 
             try
             {
-                // Build the state based on excluded fields
+                // Build the state
                 string[] fields = new string[2];
+
+                // Get the name field
+                string name = string.Empty;
+                switch (datItem.ItemType)
+                {
+                    case ItemType.Disk:
+                        var disk = datItem as Disk;
+                        if (Header.GameName)
+                            name = $"{disk.Machine.Name}{Path.DirectorySeparatorChar}";
+
+                        name += disk.Name;
+                        break;
+
+                    case ItemType.Rom:
+                        var rom = datItem as Rom;
+                        if (Header.GameName)
+                            name = $"{rom.Machine.Name}{Path.DirectorySeparatorChar}";
+
+                        name += rom.Name;
+                        break;
+                }
+
+                // Get the hash field and set final fields
+                string hash = string.Empty;
                 switch (_hash)
                 {
                     case Hash.CRC:
@@ -199,45 +223,120 @@ namespace SabreTools.Library.DatFiles
                         {
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
-                                fields[0] = string.Empty;
-                                if (Header.GameName)
-                                    fields[0] = $"{rom.GetField(Field.MachineName, Header.ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[0] += rom.GetField(Field.Name, Header.ExcludeFields);
-                                fields[1] = rom.GetField(Field.CRC, Header.ExcludeFields);
+                                fields[0] = name;
+                                fields[1] = rom.CRC;
                                 break;
                         }
+
                         break;
 
                     case Hash.MD5:
-#if NET_FRAMEWORK
-                    case Hash.RIPEMD160:
-#endif
-                    case Hash.SHA1:
-                    case Hash.SHA256:
-                    case Hash.SHA384:
-                    case Hash.SHA512:
-                        Field hashField = _hash.AsField();
-
                         switch (datItem.ItemType)
                         {
                             case ItemType.Disk:
                                 var disk = datItem as Disk;
-                                fields[0] = disk.GetField(hashField, Header.ExcludeFields);
-                                fields[1] = string.Empty;
-                                if (Header.GameName)
-                                    fields[1] = $"{disk.GetField(Field.MachineName, Header.ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[1] += disk.GetField(Field.Name, Header.ExcludeFields);
+                                fields[0] = disk.MD5;
+                                fields[1] = name;
                                 break;
 
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
-                                fields[0] = rom.GetField(hashField, Header.ExcludeFields);
-                                fields[1] = string.Empty;
-                                if (Header.GameName)
-                                    fields[1] = $"{rom.GetField(Field.MachineName, Header.ExcludeFields)}{Path.DirectorySeparatorChar}";
-                                fields[1] += rom.GetField(Field.Name, Header.ExcludeFields);
+                                fields[0] = rom.MD5;
+                                fields[1] = name;
                                 break;
                         }
+
+                        break;
+
+#if NET_FRAMEWORK
+                    case Hash.RIPEMD160:
+                        switch (datItem.ItemType)
+                        {
+                            case ItemType.Disk:
+                                var disk = datItem as Disk;
+                                fields[0] = disk.RIPEMD160;
+                                fields[1] = name;
+                                break;
+
+                            case ItemType.Rom:
+                                var rom = datItem as Rom;
+                                fields[0] = rom.RIPEMD160;
+                                fields[1] = name;
+                                break;
+                        }
+
+                        break;
+#endif
+                    case Hash.SHA1:
+                        switch (datItem.ItemType)
+                        {
+                            case ItemType.Disk:
+                                var disk = datItem as Disk;
+                                fields[0] = disk.SHA1;
+                                fields[1] = name;
+                                break;
+
+                            case ItemType.Rom:
+                                var rom = datItem as Rom;
+                                fields[0] = rom.SHA1;
+                                fields[1] = name;
+                                break;
+                        }
+
+                        break;
+
+                    case Hash.SHA256:
+                        switch (datItem.ItemType)
+                        {
+                            case ItemType.Disk:
+                                var disk = datItem as Disk;
+                                fields[0] = disk.SHA256;
+                                fields[1] = name;
+                                break;
+
+                            case ItemType.Rom:
+                                var rom = datItem as Rom;
+                                fields[0] = rom.SHA256;
+                                fields[1] = name;
+                                break;
+                        }
+
+                        break;
+
+                    case Hash.SHA384:
+                        switch (datItem.ItemType)
+                        {
+                            case ItemType.Disk:
+                                var disk = datItem as Disk;
+                                fields[0] = disk.SHA384;
+                                fields[1] = name;
+                                break;
+
+                            case ItemType.Rom:
+                                var rom = datItem as Rom;
+                                fields[0] = rom.SHA384;
+                                fields[1] = name;
+                                break;
+                        }
+
+                        break;
+
+                    case Hash.SHA512:
+                        switch (datItem.ItemType)
+                        {
+                            case ItemType.Disk:
+                                var disk = datItem as Disk;
+                                fields[0] = disk.SHA512;
+                                fields[1] = name;
+                                break;
+
+                            case ItemType.Rom:
+                                var rom = datItem as Rom;
+                                fields[0] = rom.SHA512;
+                                fields[1] = name;
+                                break;
+                        }
+
                         break;
                 }
 

@@ -367,8 +367,8 @@ namespace SabreTools.Library.DatFiles
                 // No game should start with a path separator
                 rom.Machine.Name = rom.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state based on excluded fields
-                sw.Write($"ROMs required for driver \"{rom.GetField(Field.MachineName, Header.ExcludeFields)}\".\n");
+                // Build the state
+                sw.Write($"ROMs required for driver \"{rom.Machine.Name}\".\n");
                 sw.Write("Name                                   Size Checksum\n");
 
                 sw.Flush();
@@ -423,7 +423,7 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 switch (datItem.ItemType)
                 {
                     case ItemType.Disk:
@@ -436,19 +436,19 @@ namespace SabreTools.Library.DatFiles
                             sw.Write($"{disk.Name}          ");
 
                         // If we have a baddump, put the first indicator
-                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus == ItemStatus.BadDump)
+                        if (disk.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD");
 
                         // If we have a nodump, write out the indicator
-                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus == ItemStatus.Nodump)
+                        if (disk.ItemStatus == ItemStatus.Nodump)
                             sw.Write(" NO GOOD DUMP KNOWN");
 
                         // Otherwise, write out the SHA-1 hash
-                        else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                        else if (!string.IsNullOrWhiteSpace(disk.SHA1))
                             sw.Write($" SHA1({disk.SHA1})");
 
                         // If we have a baddump, put the second indicator
-                        if (!Header.ExcludeFields.Contains(Field.Status) && disk.ItemStatus == ItemStatus.BadDump)
+                        if (disk.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD_DUMP");
 
                         sw.Write("\n");
@@ -468,25 +468,25 @@ namespace SabreTools.Library.DatFiles
                             sw.Write(rom.Size);
 
                         // If we have a baddump, put the first indicator
-                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus == ItemStatus.BadDump)
+                        if (rom.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD");
 
                         // If we have a nodump, write out the indicator
-                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus == ItemStatus.Nodump)
+                        if (rom.ItemStatus == ItemStatus.Nodump)
                         {
                             sw.Write(" NO GOOD DUMP KNOWN");
                         }
                         // Otherwise, write out the CRC and SHA-1 hashes
                         else
                         {
-                            if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
+                            if (!string.IsNullOrWhiteSpace(rom.CRC))
                                 sw.Write($" CRC({rom.CRC})");
-                            if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                            if (!string.IsNullOrWhiteSpace(rom.SHA1))
                                 sw.Write($" SHA1({rom.SHA1})");
                         }
 
                         // If we have a baddump, put the second indicator
-                        if (!Header.ExcludeFields.Contains(Field.Status) && rom.ItemStatus == ItemStatus.BadDump)
+                        if (rom.ItemStatus == ItemStatus.BadDump)
                             sw.Write(" BAD_DUMP");
 
                         sw.Write("\n");

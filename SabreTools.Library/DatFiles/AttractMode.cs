@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -265,28 +266,35 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                string[] fields = new string[]
+                // Build the state
+                switch (datItem.ItemType)
                 {
-                    datItem.GetField(Field.MachineName, Header.ExcludeFields),
-                    datItem.GetField(Field.Description, Header.ExcludeFields),
-                    Header.FileName,
-                    datItem.GetField(Field.CloneOf, Header.ExcludeFields),
-                    datItem.GetField(Field.Year, Header.ExcludeFields),
-                    datItem.GetField(Field.Manufacturer, Header.ExcludeFields),
-                    datItem.GetField(Field.Category, Header.ExcludeFields),
-                    datItem.GetField(Field.Players, Header.ExcludeFields),
-                    datItem.GetField(Field.Rotation, Header.ExcludeFields),
-                    datItem.GetField(Field.Control, Header.ExcludeFields),
-                    datItem.GetField(Field.Status, Header.ExcludeFields),
-                    datItem.GetField(Field.DisplayCount, Header.ExcludeFields),
-                    datItem.GetField(Field.DisplayType, Header.ExcludeFields),
-                    datItem.GetField(Field.AltName, Header.ExcludeFields),
-                    datItem.GetField(Field.AltTitle, Header.ExcludeFields),
-                    datItem.GetField(Field.Comment, Header.ExcludeFields),
-                    datItem.GetField(Field.Buttons, Header.ExcludeFields),
-                };
+                    case ItemType.Rom:
+                        var rom = datItem as Rom;
+                        string[] fields = new string[]
+                        {
+                            rom.Machine.Name,
+                            rom.Machine.Description,
+                            Header.FileName,
+                            rom.Machine.CloneOf,
+                            rom.Machine.Year,
+                            rom.Machine.Manufacturer,
+                            rom.Machine.Category,
+                            rom.Machine.Players,
+                            rom.Machine.Rotation,
+                            rom.Machine.Control,
+                            rom.ItemStatus.ToString(),
+                            rom.Machine.DisplayCount,
+                            rom.Machine.DisplayType,
+                            rom.AltName,
+                            rom.AltTitle,
+                            rom.Machine.Comment,
+                            rom.Machine.Buttons,
+                        };
 
-                svw.WriteValues(fields);
+                        svw.WriteValues(fields);
+                        break;
+                }
 
                 svw.Flush();
             }

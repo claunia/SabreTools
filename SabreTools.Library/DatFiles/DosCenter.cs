@@ -409,9 +409,9 @@ namespace SabreTools.Library.DatFiles
                 // No game should start with a path separator
                 datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state based on excluded fields
+                // Build the state
                 cmpw.WriteStartElement("game");
-                cmpw.WriteStandalone("name", $"{datItem.GetField(Field.MachineName, Header.ExcludeFields)}.zip", true);
+                cmpw.WriteStandalone("name", $"{datItem.Machine.Name}.zip", true);
 
                 cmpw.Flush();
             }
@@ -465,18 +465,18 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 switch (datItem.ItemType)
                 {
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("file");
-                        cmpw.WriteAttributeString("name", datItem.GetField(Field.Name, Header.ExcludeFields));
-                        if (!Header.ExcludeFields.Contains(Field.Size) && rom.Size != -1)
+                        cmpw.WriteAttributeString("name", datItem.Name);
+                        if (rom.Size != -1)
                             cmpw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Date, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.Date))
                             cmpw.WriteAttributeString("date", rom.Date);
-                        if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
+                        if (!string.IsNullOrWhiteSpace(rom.CRC))
                             cmpw.WriteAttributeString("crc", rom.CRC.ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;

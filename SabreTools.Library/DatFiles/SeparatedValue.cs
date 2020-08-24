@@ -1704,14 +1704,14 @@ namespace SabreTools.Library.DatFiles
                 if (datItem.ItemType != ItemType.Disk && datItem.ItemType != ItemType.Rom)
                     return true;
 
-                // Build the state based on excluded fields
+                // Build the state
                 // TODO: Can we have some way of saying what fields to write out? Support for read extends to all fields now
                 string[] fields = new string[14]; // 17;
                 fields[0] = Header.FileName;
                 fields[1] = Header.Name;
                 fields[2] = Header.Description;
-                fields[3] = datItem.GetField(Field.MachineName, Header.ExcludeFields);
-                fields[4] = datItem.GetField(Field.Description, Header.ExcludeFields);
+                fields[3] = datItem.Machine.Name;
+                fields[4] = datItem.Machine.Description;
 
                 switch (datItem.ItemType)
                 {
@@ -1719,32 +1719,32 @@ namespace SabreTools.Library.DatFiles
                         var disk = datItem as Disk;
                         fields[5] = "disk";
                         fields[6] = string.Empty;
-                        fields[7] = disk.GetField(Field.Name, Header.ExcludeFields);
+                        fields[7] = disk.Name;
                         fields[8] = string.Empty;
                         fields[9] = string.Empty;
-                        fields[10] = disk.GetField(Field.MD5, Header.ExcludeFields).ToLowerInvariant();
+                        fields[10] = disk.MD5.ToLowerInvariant();
                         //fields[11] = disk.GetField(Field.RIPEMD160, DatHeader.ExcludeFields).ToLowerInvariant();
-                        fields[11] = disk.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant();
-                        fields[12] = disk.GetField(Field.SHA256, Header.ExcludeFields).ToLowerInvariant();
+                        fields[11] = disk.SHA1.ToLowerInvariant();
+                        fields[12] = disk.SHA256.ToLowerInvariant();
                         //fields[13] = disk.GetField(Field.SHA384, DatHeader.ExcludeFields).ToLowerInvariant();
                         //fields[14] = disk.GetField(Field.SHA512, DatHeader.ExcludeFields).ToLowerInvariant();
-                        fields[13] = disk.GetField(Field.Status, Header.ExcludeFields);
+                        fields[13] = disk.ItemStatus.ToString();
                         break;
 
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         fields[5] = "rom";
-                        fields[6] = rom.GetField(Field.Name, Header.ExcludeFields);
+                        fields[6] = rom.Name;
                         fields[7] = string.Empty;
-                        fields[8] = rom.GetField(Field.Size, Header.ExcludeFields);
-                        fields[9] = rom.GetField(Field.CRC, Header.ExcludeFields).ToLowerInvariant();
-                        fields[10] = rom.GetField(Field.MD5, Header.ExcludeFields).ToLowerInvariant();
+                        fields[8] = rom.Size.ToString();
+                        fields[9] = rom.CRC.ToLowerInvariant();
+                        fields[10] = rom.MD5.ToLowerInvariant();
                         //fields[11] = rom.GetField(Field.RIPEMD160, DatHeader.ExcludeFields).ToLowerInvariant();
-                        fields[11] = rom.GetField(Field.SHA1, Header.ExcludeFields).ToLowerInvariant();
-                        fields[12] = rom.GetField(Field.SHA256, Header.ExcludeFields).ToLowerInvariant();
+                        fields[11] = rom.SHA1.ToLowerInvariant();
+                        fields[12] = rom.SHA256.ToLowerInvariant();
                         //fields[13] = rom.GetField(Field.SHA384, DatHeader.ExcludeFields).ToLowerInvariant();
                         //fields[14] = rom.GetField(Field.SHA512, DatHeader.ExcludeFields).ToLowerInvariant();
-                        fields[13] = rom.GetField(Field.Status, Header.ExcludeFields);
+                        fields[13] = rom.ItemStatus.ToString();
                         break;
                 }
 

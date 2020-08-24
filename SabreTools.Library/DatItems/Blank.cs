@@ -1,8 +1,11 @@
-﻿namespace SabreTools.Library.DatItems
+﻿using Newtonsoft.Json;
+
+namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Represents a blank set from an input DAT
     /// </summary>
+    [JsonObject("blank")]
     public class Blank : DatItem
     {
         #region Constructors

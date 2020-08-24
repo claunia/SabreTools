@@ -899,20 +899,20 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
+                // Build the state
                 xtw.WriteStartElement("game");
                 xtw.WriteElementString("imageNumber", "1");
                 xtw.WriteElementString("releaseNumber", "1");
-                xtw.WriteElementString("title", datItem.GetField(Field.Name, Header.ExcludeFields) ?? string.Empty);
+                xtw.WriteElementString("title", datItem.Name ?? string.Empty);
                 xtw.WriteElementString("saveType", "None");
 
                 if (datItem.ItemType == ItemType.Rom)
                 {
                     var rom = datItem as Rom;
-                    xtw.WriteElementString("romSize", datItem.GetField(Field.Size, Header.ExcludeFields) ?? string.Empty);
+                    xtw.WriteElementString("romSize", rom.Size.ToString() ?? string.Empty);
                 }
 
-                xtw.WriteElementString("publisher", datItem.GetField(Field.Publisher, Header.ExcludeFields) ?? string.Empty);
+                xtw.WriteElementString("publisher", datItem.Machine.Publisher ?? string.Empty);
                 xtw.WriteElementString("location", "0");
                 xtw.WriteElementString("sourceRom", "None");
                 xtw.WriteElementString("language", "0");
@@ -921,14 +921,14 @@ namespace SabreTools.Library.DatFiles
                 {
                     var disk = datItem as Disk;
                     xtw.WriteStartElement("files");
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(disk.MD5))
                     {
                         xtw.WriteStartElement("romMD5");
                         xtw.WriteAttributeString("extension", ".chd");
                         xtw.WriteString(disk.MD5.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
-                    else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                    else if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
                         xtw.WriteStartElement("romSHA1");
                         xtw.WriteAttributeString("extension", ".chd");
@@ -945,21 +945,21 @@ namespace SabreTools.Library.DatFiles
                     string tempext = "." + PathExtensions.GetNormalizedExtension(rom.Name);
 
                     xtw.WriteStartElement("files");
-                    if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.CRC, Header.ExcludeFields)))
+                    if (!string.IsNullOrWhiteSpace(rom.CRC))
                     {
                         xtw.WriteStartElement("romCRC");
                         xtw.WriteAttributeString("extension", tempext);
                         xtw.WriteString(rom.CRC.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
-                    else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.MD5, Header.ExcludeFields)))
+                    else if (!string.IsNullOrWhiteSpace(rom.MD5))
                     {
                         xtw.WriteStartElement("romMD5");
                         xtw.WriteAttributeString("extension", tempext);
                         xtw.WriteString(rom.MD5.ToUpperInvariant());
                         xtw.WriteEndElement();
                     }
-                    else if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SHA1, Header.ExcludeFields)))
+                    else if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
                         xtw.WriteStartElement("romSHA1");
                         xtw.WriteAttributeString("extension", tempext);
@@ -973,8 +973,8 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteElementString("im1CRC", "00000000");
                 xtw.WriteElementString("im2CRC", "00000000");
-                xtw.WriteElementString("comment", datItem.GetField(Field.Comment, Header.ExcludeFields) ?? string.Empty);
-                xtw.WriteElementString("duplicateID", datItem.GetField(Field.CloneOf, Header.ExcludeFields) ?? string.Empty);
+                xtw.WriteElementString("comment", datItem.Machine.Comment ?? string.Empty);
+                xtw.WriteElementString("duplicateID", datItem.Machine.CloneOf ?? string.Empty);
 
                 // End game
                 xtw.WriteEndElement();

@@ -526,21 +526,29 @@ namespace SabreTools.Library.DatFiles
                 // Pre-process the item name
                 ProcessItemName(datItem, true);
 
-                // Build the state based on excluded fields
-                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.CloneOf, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.MachineName, Header.ExcludeFields)}");
-                if (string.IsNullOrWhiteSpace(datItem.Machine.Description))
-                    iw.WriteString($"¬{datItem.GetField(Field.MachineName, Header.ExcludeFields)}");
-                else
-                    iw.WriteString($"¬{datItem.GetField(Field.Description, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Name, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.CRC, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Size, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.RomOf, Header.ExcludeFields)}");
-                iw.WriteString($"¬{datItem.GetField(Field.Merge, Header.ExcludeFields)}");
-                iw.WriteString("¬");
-                iw.WriteLine();
+                // Build the state
+                switch (datItem.ItemType)
+                {
+                    case ItemType.Rom:
+                        var rom = datItem as Rom;
+
+                        iw.WriteString($"¬{rom.Machine.CloneOf}");
+                        iw.WriteString($"¬{rom.Machine.CloneOf}");
+                        iw.WriteString($"¬{rom.Machine.Name}");
+                        if (string.IsNullOrWhiteSpace(rom.Machine.Description))
+                            iw.WriteString($"¬{rom.Machine.Name}");
+                        else
+                            iw.WriteString($"¬{rom.Machine.Description}");
+                        iw.WriteString($"¬{rom.Name}");
+                        iw.WriteString($"¬{rom.CRC}");
+                        iw.WriteString($"¬{rom.Size}");
+                        iw.WriteString($"¬{rom.Machine.RomOf}");
+                        iw.WriteString($"¬{rom.MergeTag}");
+                        iw.WriteString("¬");
+                        iw.WriteLine();
+
+                        break;
+                }
 
                 iw.Flush();
             }

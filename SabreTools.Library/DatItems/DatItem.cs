@@ -5,18 +5,19 @@ using System.Linq;
 using System.Net;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using NaturalSort;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
     /// Base class for all items included in a set
     /// </summary>
+    [JsonObject("datitem")]
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
         // TODO: Should any of these be specific to certain types?
@@ -34,7 +35,8 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Item type for outputting
         /// </summary>
-        [JsonIgnore]
+        [JsonProperty("type")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ItemType ItemType { get; set; }
 
         /// <summary>
@@ -83,6 +85,7 @@ namespace SabreTools.Library.DatItems
         /// OpenMSX sub item type
         /// </summary>
         [JsonProperty("openmsx_subtype")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public OpenMSXSubType OpenMSXSubType { get; set; }
 
         /// <summary>
@@ -313,105 +316,6 @@ namespace SabreTools.Library.DatItems
         #region Instance Methods
 
         #region Accessors
-
-        /// <summary>
-        /// Get the value of that field as a string, if possible
-        /// </summary>
-        public virtual string GetField(Field field, List<Field> excludeFields)
-        {
-            // If the field is to be excluded, return empty string
-            if (excludeFields.Contains(field))
-                return string.Empty;
-
-            // Try to get the machine field first
-            string fieldValue = Machine.GetField(field, excludeFields);
-            if (fieldValue != null)
-                return fieldValue;
-
-            switch (field)
-            {
-                #region Common
-
-                case Field.Name:
-                    fieldValue = Name;
-                    break;
-
-                #endregion
-
-                #region AttractMode
-
-                case Field.AltName:
-                    fieldValue = AltName;
-                    break;
-                case Field.AltTitle:
-                    fieldValue = AltTitle;
-                    break;
-
-                #endregion
-
-                #region OpenMSX
-
-                case Field.Original:
-                    fieldValue = Original.Content;
-                    break;
-                case Field.OpenMSXSubType:
-                    fieldValue = OpenMSXSubType.ToString();
-                    break;
-                case Field.OpenMSXType:
-                    fieldValue = OpenMSXType;
-                    break;
-                case Field.Remark:
-                    fieldValue = Remark;
-                    break;
-                case Field.Boot:
-                    fieldValue = Boot;
-                    break;
-
-                #endregion
-
-                #region SoftwareList
-
-                case Field.PartName:
-                    fieldValue = PartName;
-                    break;
-                case Field.PartInterface:
-                    fieldValue = PartInterface;
-                    break;
-                case Field.Features:
-                    fieldValue = string.Join(";", (Features ?? new List<SoftwareListFeature>()).Select(f => $"{f.Name}={f.Value}"));
-                    break;
-                case Field.AreaName:
-                    fieldValue = AreaName;
-                    break;
-                case Field.AreaSize:
-                    fieldValue = AreaSize?.ToString();
-                    break;
-                case Field.AreaWidth:
-                    fieldValue = AreaWidth;
-                    break;
-                case Field.AreaEndianness:
-                    fieldValue = AreaEndianness;
-                    break;
-                case Field.Value:
-                    fieldValue = Value;
-                    break;
-                case Field.LoadFlag:
-                    fieldValue = LoadFlag;
-                    break;
-
-                #endregion
-
-                case Field.NULL:
-                default:
-                    return string.Empty;
-            }
-
-            // Make sure we don't return null
-            if (string.IsNullOrEmpty(fieldValue))
-                fieldValue = string.Empty;
-
-            return fieldValue;
-        }
 
         /// <summary>
         /// Set fields with given values

@@ -138,11 +138,11 @@ namespace SabreTools.Library.DatFiles
                 // Romba mode automatically uses item name
                 if (Header.OutputDepot.IsActive || Header.UseRomName)
                 {
-                    sw.Write($"{datItem.GetField(Field.Name, Header.ExcludeFields)}\n");
+                    sw.Write($"{datItem.Name}\n");
                 }
                 else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
                 {
-                    sw.Write($"{datItem.GetField(Field.MachineName, Header.ExcludeFields)}\n");
+                    sw.Write($"{datItem.Machine.Name}\n");
                     lastgame = datItem.Machine.Name;
                 }
 
