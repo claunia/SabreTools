@@ -634,9 +634,9 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             // Filter on original
-            if (filter.Original.MatchesPositiveSet(Original.Content) == false)
+            if (filter.Original.MatchesPositiveSet(Original?.Content) == false)
                 return false;
-            if (filter.Original.MatchesNegativeSet(Original.Content) == true)
+            if (filter.Original.MatchesNegativeSet(Original?.Content) == true)
                 return false;
 
             // Filter on OpenMSX subtype
