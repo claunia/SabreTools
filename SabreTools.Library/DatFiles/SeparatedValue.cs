@@ -389,15 +389,7 @@ namespace SabreTools.Library.DatFiles
 
                             break;
 
-                        case "Machine.SlotOptions":
-                            machine.SlotOptions = new List<string>();
-                            var slotOptions = value.Split(';');
-                            foreach (var slotOption in slotOptions)
-                            {
-                                machine.SlotOptions.Add(slotOption);
-                            }
-
-                            break;
+                        // TODO: Add Machine.Slot
 
                         case "Machine.Infos":
                             machine.Infos = new List<ListXmlInfo>();
@@ -494,18 +486,20 @@ namespace SabreTools.Library.DatFiles
                         case "Machine.SharedFeatures":
                             machine.SharedFeatures = new List<SoftwareListSharedFeature>();
                             var sharedFeatures = value.Split(';');
-                            foreach (var sharedFeature in sharedFeatures)
+                            foreach (var pair in sharedFeatures)
                             {
-                                var featurePair = sharedFeature.Split('=');
-                                machine.SharedFeatures.Add(new SoftwareListSharedFeature(featurePair[0], featurePair[1]));
+                                var featurePair = pair.Split('=');
+
+                                var sharedFeature = new SoftwareListSharedFeature();
+                                sharedFeature.Name = featurePair[0];
+                                sharedFeature.Value = featurePair[1];
+
+                                machine.SharedFeatures.Add(sharedFeature);
                             }
 
                             break;
 
-                        case "Machine.DipSwitches":
-                            machine.DipSwitches = new List<ListXmlDipSwitch>();
-                            // TODO: There is no way this would work... Just use empty for now
-                            break;
+                        // TODO: Implement Machine.DipSwitches
 
                         #endregion
 
@@ -577,7 +571,12 @@ namespace SabreTools.Library.DatFiles
                             foreach (var splitFeature in splitFeatures)
                             {
                                 var featurePair = splitFeature.Split('=');
-                                features.Add(new SoftwareListFeature(featurePair[0], featurePair[1]));
+
+                                var feature = new SoftwareListFeature();
+                                feature.Name = featurePair[0];
+                                feature.Value = featurePair[1];
+
+                                features.Add(feature);
                             }
 
                             break;
@@ -720,7 +719,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal() { Name = original },
+                            Original = new OpenMSXOriginal() { Content = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -755,7 +754,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal() { Name = original },
+                            Original = new OpenMSXOriginal() { Content = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -793,7 +792,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal() { Name = original },
+                            Original = new OpenMSXOriginal() { Content = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -843,7 +842,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal() { Name = original },
+                            Original = new OpenMSXOriginal() { Content = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -883,7 +882,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal() { Name = original },
+                            Original = new OpenMSXOriginal() { Content = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -937,7 +936,7 @@ namespace SabreTools.Library.DatFiles
                             AltName = altName,
                             AltTitle = altTitle,
 
-                            Original = new OpenMSXOriginal() { Name = original },
+                            Original = new OpenMSXOriginal() { Content = original },
                             OpenMSXSubType = subType,
                             OpenMSXType = msxType,
                             Remark = remark,
@@ -1265,10 +1264,7 @@ namespace SabreTools.Library.DatFiles
                 case "devices":
                     return "Machine.Devices";
 
-                case "slotoptions":
-                case "slot options":
-                case "slot-options":
-                    return "Machine.SlotOptions";
+                // TODO: Add Machine.Slot
 
                 case "infos":
                     return "Machine.Infos";

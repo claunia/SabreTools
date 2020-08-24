@@ -550,15 +550,9 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         break;
-                    case "slotoptions":
-                        machine.SlotOptions = new List<string>();
-                        jtr.Read(); // Start Array
-                        while (!sr.EndOfStream && jtr.TokenType != JsonToken.EndArray)
-                        {
-                            machine.SlotOptions.Add(jtr.ReadAsString());
-                        }
 
-                        break;
+                    // TODO: Add `slot`
+
                     case "infos":
                         machine.Infos = new List<ListXmlInfo>();
                         jtr.Read(); // Start Array
@@ -654,12 +648,14 @@ namespace SabreTools.Library.DatFiles
                             if (jtr.TokenType == JsonToken.EndArray)
                                 break;
 
+                            var sharedFeature = new SoftwareListSharedFeature();
+
                             jtr.Read(); // Key
-                            string key = jtr.Value as string;
-                            string value = jtr.ReadAsString();
+                            sharedFeature.Name = jtr.Value as string;
+                            sharedFeature.Value = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            machine.SharedFeatures.Add(new SoftwareListSharedFeature(key, value));
+                            machine.SharedFeatures.Add(sharedFeature);
                         }
 
                         break;
@@ -850,7 +846,7 @@ namespace SabreTools.Library.DatFiles
                     datItem.AltName = altName;
                     datItem.AltTitle = altTitle;
 
-                    datItem.Original = new OpenMSXOriginal() { Name = original };
+                    datItem.Original = new OpenMSXOriginal() { Content = original };
                     datItem.OpenMSXSubType = subType;
                     datItem.OpenMSXType = msxType;
                     datItem.Remark = remark;
@@ -998,12 +994,14 @@ namespace SabreTools.Library.DatFiles
                             if (jtr.TokenType == JsonToken.EndArray)
                                 break;
 
+                            var feature = new SoftwareListFeature();
+
                             jtr.Read(); // Key
-                            string key = jtr.Value as string;
-                            string featureValue = jtr.ReadAsString();
+                            feature.Name = jtr.Value as string;
+                            feature.Value = jtr.ReadAsString();
                             jtr.Read(); // End object
 
-                            features.Add(new SoftwareListFeature(key, featureValue));
+                            features.Add(feature);
                         }
 
                         break;
@@ -1724,7 +1722,7 @@ namespace SabreTools.Library.DatFiles
                             break;
                     }
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Devices, Header.ExcludeFields)))
+                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.DeviceReferences, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("devices");
                     jtw.WriteStartArray();
@@ -1735,17 +1733,9 @@ namespace SabreTools.Library.DatFiles
 
                     jtw.WriteEndArray();
                 }
-                if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.SlotOptions, Header.ExcludeFields)))
-                {
-                    jtw.WritePropertyName("slotoptions");
-                    jtw.WriteStartArray();
-                    foreach (string slotoption in datItem.Machine.SlotOptions)
-                    {
-                        jtw.WriteValue(slotoption);
-                    }
-
-                    jtw.WriteEndArray();
-                }
+                
+                // TODO: Add Field.Slots
+                
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Infos, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("infos");
@@ -2231,7 +2221,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.Original, Header.ExcludeFields)))
                 {
                     jtw.WritePropertyName("original");
-                    jtw.WriteValue(datItem.Original.Name);
+                    jtw.WriteValue(datItem.Original.Content);
                 }
                 if (!string.IsNullOrWhiteSpace(datItem.GetField(Field.OpenMSXSubType, Header.ExcludeFields)))
                 {

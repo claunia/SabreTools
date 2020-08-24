@@ -156,11 +156,54 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlDeviceReference> DeviceReferences { get; set; } = null;
 
         /// <summary>
+        /// List of associated chips
+        /// </summary>
+        [JsonProperty("chips")]
+        public List<ListXmlChip> Chips { get; set; } = null;
+
+        /// <summary>
+        /// List of associated displays
+        /// </summary>
+        [JsonProperty("displays")]
+        public List<ListXmlDisplay> Displays { get; set; } = null;
+
+        /// <summary>
+        /// List of associated sounds
+        /// </summary>
+        [JsonProperty("sounds")]
+        public List<ListXmlSound> Sounds { get; set; } = null;
+
+        /// <summary>
+        /// List of associated conditions
+        /// </summary>
+        [JsonProperty("conditions")]
+        public List<ListXmlCondition> Conditions { get; set; } = null;
+
+        /// <summary>
+        /// List of associated inputs
+        /// </summary>
+        [JsonProperty("inputs")]
+        public List<ListXmlInput> Inputs { get; set; } = null;
+
+        /// <summary>
+        /// List of associated dipswitches
+        /// </summary>
+        /// <remarks>Also in SoftwareList</remarks>
+        /// TODO: Order ListXML and SoftwareList outputs by area names
+        [JsonProperty("dipswitches")]
+        public List<ListXmlDipSwitch> DipSwitches { get; set; } = null;
+
+        /// <summary>
+        /// List of associated configurations
+        /// </summary>
+        [JsonProperty("configurations")]
+        public List<ListXmlConfiguration> Configurations { get; set; } = null;
+
+        /// <summary>
         /// List of slot options
         /// </summary>
-        /// TODO: Use ListXmlSlot for this...
-        [JsonProperty("slotoptions")]
-        public List<string> SlotOptions { get; set; } = null;
+        [JsonProperty("slots")]
+        public List<ListXmlSlot> Slots { get; set; } = null;
 
         /// <summary>
         /// List of info items
@@ -281,15 +324,6 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("sharedfeat")]
         public List<SoftwareListSharedFeature> SharedFeatures { get; set; } = null;
 
-        /// <summary>
-        /// List of shared feature items
-        /// </summary>
-        /// <remarks>Also in SoftwareList</remarks>
-        /// TODO: Move to ListXML section
-        /// TODO: Order ListXML and SoftwareList outputs by area names
-        [JsonProperty("dipswitches")]
-        public List<ListXmlDipSwitch> DipSwitches { get; set; } = null;
-
         #endregion
 
         #endregion
@@ -380,11 +414,11 @@ namespace SabreTools.Library.DatItems
                 case Field.Runnable:
                     fieldValue = Runnable.ToString();
                     break;
-                case Field.Devices:
+                case Field.DeviceReferences:
                     fieldValue = string.Join(";", DeviceReferences ?? new List<ListXmlDeviceReference>());
                     break;
-                case Field.SlotOptions:
-                    fieldValue = string.Join(";", SlotOptions ?? new List<string>());
+                case Field.Slots:
+                    fieldValue = string.Join(";", Slots ?? new List<ListXmlSlot>());
                     break;
                 case Field.Infos:
                     fieldValue = string.Join(";", (Infos ?? new List<ListXmlInfo>()).Select(i => $"{i.Name}={i.Value}"));
@@ -551,23 +585,16 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Runnable))
                 Runnable = mappings[Field.Runnable].AsRunnable();
 
-            if (mappings.Keys.Contains(Field.Devices))
+            if (mappings.Keys.Contains(Field.DeviceReferences))
             {
                 if (DeviceReferences == null)
                     DeviceReferences = new List<ListXmlDeviceReference>();
 
-                var devices = mappings[Field.Devices].Split(';').Select(d => new ListXmlDeviceReference() { Name = d, });
+                var devices = mappings[Field.DeviceReferences].Split(';').Select(d => new ListXmlDeviceReference() { Name = d, });
                 DeviceReferences.AddRange(devices);
             }
 
-            if (mappings.Keys.Contains(Field.SlotOptions))
-            {
-                if (SlotOptions == null)
-                    SlotOptions = new List<string>();
-
-                string[] slotOptions = mappings[Field.SlotOptions].Split(';');
-                SlotOptions.AddRange(slotOptions);
-            }
+            // TODO: Add Field.Slot
 
             if (mappings.Keys.Contains(Field.Infos))
             {
@@ -657,7 +684,12 @@ namespace SabreTools.Library.DatItems
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
-                    SharedFeatures.Add(new SoftwareListSharedFeature(split[0], split[1]));
+
+                    var sharedFeature = new SoftwareListSharedFeature();
+                    sharedFeature.Name = split[0];
+                    sharedFeature.Value = split[1];
+
+                    SharedFeatures.Add(sharedFeature);
                 }
             }
 
@@ -738,7 +770,7 @@ namespace SabreTools.Library.DatItems
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
                 DeviceReferences = this.DeviceReferences,
-                SlotOptions = this.SlotOptions,
+                Slots = this.Slots,
                 Infos = this.Infos,
                 MachineType = this.MachineType,
 
@@ -946,20 +978,7 @@ namespace SabreTools.Library.DatItems
                     return false;
             }
 
-            // Filter on slot options
-            if (SlotOptions != null && SlotOptions.Any())
-            {
-                bool anyPositiveSlotOption = false;
-                bool anyNegativeSlotOption = false;
-                foreach (string slotOption in SlotOptions)
-                {
-                    anyPositiveSlotOption |= filter.SlotOptions.MatchesPositiveSet(slotOption) != false;
-                    anyNegativeSlotOption |= filter.SlotOptions.MatchesNegativeSet(slotOption) == false;
-                }
-
-                if (!anyPositiveSlotOption || anyNegativeSlotOption)
-                    return false;
-            }
+            // TODO: Add Slot filter
 
             // Filter on machine type
             if (filter.MachineTypes.MatchesPositive(MachineType.NULL, MachineType) == false)
@@ -1152,11 +1171,11 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Runnable))
                 Runnable = Runnable.NULL;
 
-            if (fields.Contains(Field.Devices))
+            if (fields.Contains(Field.DeviceReferences))
                 DeviceReferences = null;
 
-            if (fields.Contains(Field.SlotOptions))
-                SlotOptions = null;
+            if (fields.Contains(Field.Slots))
+                Slots = null;
 
             if (fields.Contains(Field.Infos))
                 Infos = null;
@@ -1316,11 +1335,11 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Runnable))
                 Runnable = machine.Runnable;
 
-            if (fields.Contains(Field.Devices))
+            if (fields.Contains(Field.DeviceReferences))
                 DeviceReferences = machine.DeviceReferences;
 
-            if (fields.Contains(Field.SlotOptions))
-                SlotOptions = machine.SlotOptions;
+            if (fields.Contains(Field.Slots))
+                Slots = machine.Slots;
 
             if (fields.Contains(Field.Infos))
                 Infos = machine.Infos;

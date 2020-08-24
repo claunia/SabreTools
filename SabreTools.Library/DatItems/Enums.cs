@@ -60,8 +60,12 @@ namespace SabreTools.Library.DatItems
 
         SourceFile,
         Runnable,
-        Devices,
-        SlotOptions,
+        DeviceReferences, // TODO: Double-check DeviceReferences usage
+        Chips, // TODO: Implement Chips usage
+        Displays, // TODO: Implement Displays usage
+        Sounds, // TODO: Implement Sounds usage
+        Conditions, // TODO: Implement Conditions usage
+        Slots, // TODO: Fix Slots usage
         Infos,
 
         #endregion

@@ -232,12 +232,12 @@ namespace SabreTools.Library.Tools
                     return Field.Runnable;
 
                 case "devices":
-                    return Field.Devices;
+                    return Field.DeviceReferences;
 
                 case "slotoptions":
                 case "slot options":
                 case "slot-options":
-                    return Field.SlotOptions;
+                    return Field.Slots;
 
                 case "infos":
                     return Field.Infos;

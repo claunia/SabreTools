@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -125,10 +126,6 @@ namespace SabreTools.Library.DatFiles
             // Otherwise, add what is possible
             reader.MoveToContent();
 
-            string key = string.Empty;
-            string temptype = reader.Name;
-            bool containsItems = false;
-
             // Create a new machine
             MachineType machineType = MachineType.NULL;
             if (reader.GetAttribute("isbios").AsYesNo() == true)
@@ -143,20 +140,28 @@ namespace SabreTools.Library.DatFiles
             Machine machine = new Machine
             {
                 Name = reader.GetAttribute("name"),
-                Description = reader.GetAttribute("name"),
-                SourceFile = reader.GetAttribute("sourcefile"),
-                Runnable = reader.GetAttribute("runnable").AsRunnable(),
-
                 Comment = string.Empty,
-
+                Description = reader.GetAttribute("name"),
                 CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
                 RomOf = reader.GetAttribute("romof") ?? string.Empty,
                 SampleOf = reader.GetAttribute("sampleof") ?? string.Empty,
-                DeviceReferences = new List<ListXmlDeviceReference>(),
-                SlotOptions = new List<string>(),
-
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
+
+                SourceFile = reader.GetAttribute("sourcefile"),
+                Runnable = reader.GetAttribute("runnable").AsRunnable(),
+                DeviceReferences = new List<ListXmlDeviceReference>(),
+                Chips = new List<ListXmlChip>(),
+                Displays = new List<ListXmlDisplay>(),
+                Sounds = new List<ListXmlSound>(),
+                Conditions = new List<ListXmlCondition>(),
+                Inputs = new List<ListXmlInput>(),
+                DipSwitches = new List<ListXmlDipSwitch>(),
+                Configurations = new List<ListXmlConfiguration>(),
+                Slots = new List<ListXmlSlot>(),
             };
+
+            // Get list for new DatItems
+            List<DatItem> datItems = new List<DatItem>();
 
             while (!reader.EOF)
             {
@@ -183,9 +188,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "biosset":
-                        containsItems = true;
-
-                        DatItem biosset = new BiosSet
+                        datItems.Add(new BiosSet
                         {
                             Name = reader.GetAttribute("name"),
                             Description = reader.GetAttribute("description"),
@@ -196,20 +199,13 @@ namespace SabreTools.Library.DatFiles
                                 Index = indexId,
                                 Name = filename,
                             },
-                        };
-
-                        biosset.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(biosset);
+                        });
 
                         reader.Read();
                         break;
 
                     case "rom":
-                        containsItems = true;
-
-                        DatItem rom = new Rom
+                        datItems.Add(new Rom
                         {
                             Name = reader.GetAttribute("name"),
                             Bios = reader.GetAttribute("bios"),
@@ -234,20 +230,13 @@ namespace SabreTools.Library.DatFiles
                                 Index = indexId,
                                 Name = filename,
                             },
-                        };
-
-                        rom.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(rom);
+                        });
 
                         reader.Read();
                         break;
 
                     case "disk":
-                        containsItems = true;
-
-                        DatItem disk = new Disk
+                        datItems.Add(new Disk
                         {
                             Name = reader.GetAttribute("name"),
                             MD5 = reader.GetAttribute("md5"),
@@ -270,18 +259,12 @@ namespace SabreTools.Library.DatFiles
                                 Index = indexId,
                                 Name = filename,
                             },
-                        };
-
-                        disk.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(disk);
+                        });
 
                         reader.Read();
                         break;
 
                     case "device_ref":
-                        // TODO: Use these device references
                         var deviceReference = new ListXmlDeviceReference();
                         deviceReference.Name = reader.GetAttribute("name");
 
@@ -291,9 +274,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sample":
-                        containsItems = true;
-
-                        DatItem samplerom = new Sample
+                        datItems.Add(new Sample
                         {
                             Name = reader.GetAttribute("name"),
 
@@ -302,29 +283,24 @@ namespace SabreTools.Library.DatFiles
                                 Index = indexId,
                                 Name = filename,
                             },
-                        };
-
-                        samplerom.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(samplerom);
+                        });
 
                         reader.Read();
                         break;
 
                     case "chip":
-                        // TODO: Use these chips
                         var chip = new ListXmlChip();
                         chip.Name = reader.GetAttribute("name");
                         chip.Tag = reader.GetAttribute("tag");
                         chip.Type = reader.GetAttribute("type");
                         chip.Clock = reader.GetAttribute("clock");
 
+                        machine.Chips.Add(chip);
+
                         reader.Read();
                         break;
 
                     case "display":
-                        // TODO: Use these displays
                         var display = new ListXmlDisplay();
                         display.Tag = reader.GetAttribute("tag");
                         display.Type = reader.GetAttribute("type");
@@ -341,30 +317,33 @@ namespace SabreTools.Library.DatFiles
                         display.VBend = reader.GetAttribute("vbend");
                         display.VStart = reader.GetAttribute("vstart");
 
+                        machine.Displays.Add(display);
+
                         reader.Read();
                         break;
 
                     case "sound":
-                        // TODO: Use these sounds
                         var sound = new ListXmlSound();
                         sound.Channels = reader.GetAttribute("channels");
+
+                        machine.Sounds.Add(sound);
 
                         reader.Read();
                         break;
 
                     case "condition":
-                        // TODO: Use these conditions
                         var condition = new ListXmlCondition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
                         condition.Value = reader.GetAttribute("value");
 
+                        machine.Conditions.Add(condition);
+
                         reader.Read();
                         break;
 
                     case "input":
-                        // TODO: Use these inputs
                         var input = new ListXmlInput();
                         input.Service = reader.GetAttribute("service").AsYesNo();
                         input.Tilt = reader.GetAttribute("tilt").AsYesNo();
@@ -374,12 +353,13 @@ namespace SabreTools.Library.DatFiles
                         // Now read the internal tags
                         ReadInput(reader.ReadSubtree(), input);
 
+                        machine.Inputs.Add(input);
+
                         // Skip the input now that we've processed it
                         reader.Skip();
                         break;
 
                     case "dipswitch":
-                        // TODO: Use these dipswitches
                         var dipSwitch = new ListXmlDipSwitch();
                         dipSwitch.Name = reader.GetAttribute("name");
                         dipSwitch.Tag = reader.GetAttribute("tag");
@@ -388,12 +368,13 @@ namespace SabreTools.Library.DatFiles
                         // Now read the internal tags
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
+                        machine.DipSwitches.Add(dipSwitch);
+
                         // Skip the dipswitch now that we've processed it
                         reader.Skip();
                         break;
 
                     case "configuration":
-                        // TODO: Use these configurations
                         var configuration = new ListXmlConfiguration();
                         configuration.Name = reader.GetAttribute("name");
                         configuration.Tag = reader.GetAttribute("tag");
@@ -401,6 +382,8 @@ namespace SabreTools.Library.DatFiles
 
                         // Now read the internal tags
                         ReadConfiguration(reader.ReadSubtree(), configuration);
+
+                        machine.Configurations.Add(configuration);
 
                         // Skip the configuration now that we've processed it
                         reader.Skip();
@@ -451,6 +434,7 @@ namespace SabreTools.Library.DatFiles
 
                         reader.Read();
                         break;
+
                     case "device":
                         // TODO: Use these devices
                         var device = new ListXmlDevice();
@@ -468,12 +452,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "slot":
-                        // TODO: Use these slots
                         var slot = new ListXmlSlot();
                         slot.Name = reader.GetAttribute("name");
 
                         // Now read the internal tags
                         ReadSlot(reader.ReadSubtree(), slot, machine);
+                        machine.Slots.Add(slot);
 
                         // Skip the slot now that we've processed it
                         reader.Skip();
@@ -503,8 +487,18 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
+            // If we found items, copy the machine info and add them
+            if (datItems.Any())
+            {
+                foreach (DatItem datItem in datItems)
+                {
+                    datItem.CopyMachineInformation(machine);
+                    ParseAddHelper(datItem);
+                }
+            }
+
             // If no items were found for this machine, add a Blank placeholder
-            if (!containsItems)
+            else
             {
                 Blank blank = new Blank()
                 {
@@ -557,10 +551,6 @@ namespace SabreTools.Library.DatFiles
                         slotOption.Name = reader.GetAttribute("name");
                         slotOption.DeviceName = reader.GetAttribute("devname");
                         slotOption.Default = reader.GetAttribute("default").AsYesNo();
-
-                        // TODO: Retire this direct machine setter
-                        if (!machine.SlotOptions.Contains(slotOption.DeviceName))
-                            machine.SlotOptions.Add(slotOption.DeviceName);
 
                         slot.SlotOptions.Add(slotOption);
 

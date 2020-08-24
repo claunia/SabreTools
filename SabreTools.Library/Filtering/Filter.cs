@@ -709,14 +709,14 @@ namespace SabreTools.Library.Filtering
                         Runnables.Positive |= value.AsRunnable();
                     break;
 
-                case Field.Devices:
+                case Field.DeviceReferences:
                     if (negate)
                         Devices.NegativeSet.Add(value);
                     else
                         Devices.PositiveSet.Add(value);
                     break;
 
-                case Field.SlotOptions:
+                case Field.Slots:
                     if (negate)
                         SlotOptions.NegativeSet.Add(value);
                     else

@@ -1083,6 +1083,7 @@ namespace SabreTools.Library.DatFiles
                     OneRomPerGame();
 
                 // If we are removing fields, do that now
+                // TODO: If this works, why in the hell do I have all of the "GetField" crap?????
                 if (Header.ExcludeFields != null && Header.ExcludeFields.Any())
                     RemoveFieldsFromItems();
 
@@ -1536,8 +1537,8 @@ namespace SabreTools.Library.DatFiles
                 // If the game has no devices, we continue
                 if (Items[game][0].Machine.DeviceReferences == null
                     || Items[game][0].Machine.DeviceReferences.Count == 0
-                    || (slotoptions && Items[game][0].Machine.SlotOptions == null)
-                    || (slotoptions && Items[game][0].Machine.SlotOptions.Count == 0))
+                    || (slotoptions && Items[game][0].Machine.Slots == null)
+                    || (slotoptions && Items[game][0].Machine.Slots.Count == 0))
                 {
                     continue;
                 }
@@ -1577,36 +1578,39 @@ namespace SabreTools.Library.DatFiles
                 // If we're checking slotoptions too
                 if (slotoptions)
                 {
-                    // Determine if the game has any slotoptions or not
-                    List<string> slotopts = Items[game][0].Machine.SlotOptions;
-                    List<string> newslotopts = new List<string>();
-                    foreach (string slotopt in slotopts)
+                    // Determine if the game has any slots or not
+                    List<ListXmlSlot> slots = Items[game][0].Machine.Slots;
+                    List<ListXmlSlot> newSlots = new List<ListXmlSlot>();
+                    foreach (ListXmlSlot slot in slots)
                     {
-                        // If the slotoption doesn't exist then we continue
-                        if (Items[slotopt].Count == 0)
-                            continue;
-
-                        // Otherwise, copy the items from the slotoption to the current game
-                        DatItem copyFrom = Items[game][0];
-                        List<DatItem> slotItems = Items[slotopt];
-                        foreach (DatItem item in slotItems)
+                        foreach (ListXmlSlotOption slotOption in slot.SlotOptions)
                         {
-                            DatItem datItem = (DatItem)item.Clone();
-                            newslotopts.AddRange(datItem.Machine.SlotOptions ?? new List<string>());
-                            datItem.CopyMachineInformation(copyFrom);
-                            if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
+                            // If the slotoption doesn't exist then we continue
+                            if (Items[slotOption.Name].Count == 0)
+                                continue;
+
+                            // Otherwise, copy the items from the slotoption to the current game
+                            DatItem copyFrom = Items[game][0];
+                            List<DatItem> slotItems = Items[slotOption.Name];
+                            foreach (DatItem item in slotItems)
                             {
-                                foundnew = true;
-                                Items.Add(game, datItem);
+                                DatItem datItem = (DatItem)item.Clone();
+                                newSlots.AddRange(datItem.Machine.Slots ?? new List<ListXmlSlot>());
+
+                                datItem.CopyMachineInformation(copyFrom);
+                                if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
+                                {
+                                    foundnew = true;
+                                    Items.Add(game, datItem);
+                                }
                             }
                         }
                     }
 
-                    // Now that every slotoption is accounted for, add the new list of slotoptions, if they don't already exist
-                    foreach (string slotopt in newslotopts)
+                    // Now that every slotoption is accounted for, add the new list of slots, if they don't already exist
+                    foreach (ListXmlSlot slot in newSlots)
                     {
-                        if (!Items[game][0].Machine.SlotOptions.Contains(slotopt))
-                            Items[game][0].Machine.SlotOptions.Add(slotopt);
+                        Items[game][0].Machine.Slots.Add(slot);
                     }
                 }
             }

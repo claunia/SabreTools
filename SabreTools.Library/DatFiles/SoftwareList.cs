@@ -191,7 +191,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sharedfeat":
-                        machine.SharedFeatures.Add(new SoftwareListSharedFeature(reader.GetAttribute("name"), reader.GetAttribute("value")));
+                        var sharedFeature = new SoftwareListSharedFeature();
+                        sharedFeature.Name = reader.GetAttribute("name");
+                        sharedFeature.Value = reader.GetAttribute("value");
+
+                        machine.SharedFeatures.Add(sharedFeature);
+
                         reader.Read();
                         break;
 
@@ -284,7 +289,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "feature":
-                        features.Add(new SoftwareListFeature(reader.GetAttribute("name"), reader.GetAttribute("value")));
+                        var feature = new SoftwareListFeature();
+                        feature.Name = reader.GetAttribute("name");
+                        feature.Value = reader.GetAttribute("value");
+
+                        features.Add(feature);
+
                         reader.Read();
                         break;
 

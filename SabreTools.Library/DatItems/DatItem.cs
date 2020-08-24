@@ -276,8 +276,8 @@ namespace SabreTools.Library.DatItems
             // ListXML
             Field.SourceFile,
             Field.Runnable,
-            Field.Devices,
-            Field.SlotOptions,
+            Field.DeviceReferences,
+            Field.Slots,
             Field.Infos,
 
             // Logiqx
@@ -352,7 +352,7 @@ namespace SabreTools.Library.DatItems
                 #region OpenMSX
 
                 case Field.Original:
-                    fieldValue = Original.Name;
+                    fieldValue = Original.Content;
                     break;
                 case Field.OpenMSXSubType:
                     fieldValue = OpenMSXSubType.ToString();
@@ -442,7 +442,7 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             if (mappings.Keys.Contains(Field.Original))
-                Original = new OpenMSXOriginal() { Name = mappings[Field.Original] };
+                Original = new OpenMSXOriginal() { Content = mappings[Field.Original] };
 
             if (mappings.Keys.Contains(Field.OpenMSXSubType))
                 OpenMSXSubType = mappings[Field.OpenMSXSubType].AsOpenMSXSubType();
@@ -475,7 +475,12 @@ namespace SabreTools.Library.DatItems
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
-                    Features.Add(new SoftwareListFeature(split[0], split[1]));
+
+                    var feature = new SoftwareListFeature();
+                    feature.Name = split[0];
+                    feature.Value = split[1];
+
+                    Features.Add(feature);
                 }
             }
 
@@ -725,9 +730,9 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             // Filter on original
-            if (filter.Original.MatchesPositiveSet(Original.Name) == false)
+            if (filter.Original.MatchesPositiveSet(Original.Content) == false)
                 return false;
-            if (filter.Original.MatchesNegativeSet(Original.Name) == true)
+            if (filter.Original.MatchesNegativeSet(Original.Content) == true)
                 return false;
 
             // Filter on OpenMSX subtype
