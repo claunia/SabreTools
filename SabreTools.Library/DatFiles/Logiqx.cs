@@ -315,8 +315,6 @@ namespace SabreTools.Library.DatFiles
                 RebuildTo = reader.GetAttribute("rebuildto"),
                 Runnable = reader.GetAttribute("runnable").AsRunnable(), // Used by older DATs
 
-                Comment = string.Empty,
-
                 CloneOf = reader.GetAttribute("cloneof"),
                 RomOf = reader.GetAttribute("romof"),
                 SampleOf = reader.GetAttribute("sampleof"),

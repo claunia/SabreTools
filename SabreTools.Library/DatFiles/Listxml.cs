@@ -140,7 +140,6 @@ namespace SabreTools.Library.DatFiles
             Machine machine = new Machine
             {
                 Name = reader.GetAttribute("name"),
-                Comment = string.Empty,
                 Description = reader.GetAttribute("name"),
                 CloneOf = reader.GetAttribute("cloneof"),
                 RomOf = reader.GetAttribute("romof"),
