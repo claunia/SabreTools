@@ -2990,19 +2990,19 @@ Some special strings that can be used:
         /// <summary>
         /// Get SplitType from feature list
         /// </summary>
-        private SplitType GetSplitType(Dictionary<string, Feature> features)
+        private MergingFlag GetSplitType(Dictionary<string, Feature> features)
         {
-            SplitType splitType = SplitType.None;
+            MergingFlag splitType = MergingFlag.None;
             if (GetBoolean(features, DatDeviceNonMergedValue))
-                splitType = SplitType.DeviceNonMerged;
+                splitType = MergingFlag.Device;
             else if (GetBoolean(features, DatFullNonMergedValue))
-                splitType = SplitType.FullNonMerged;
+                splitType = MergingFlag.Full;
             else if (GetBoolean(features, DatMergedValue))
-                splitType = SplitType.Merged;
+                splitType = MergingFlag.Merged;
             else if (GetBoolean(features, DatNonMergedValue))
-                splitType = SplitType.NonMerged;
+                splitType = MergingFlag.NonMerged;
             else if (GetBoolean(features, DatSplitValue))
-                splitType = SplitType.Split;
+                splitType = MergingFlag.Split;
 
             return splitType;
         }

@@ -686,70 +686,28 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
 
-                    switch (Header.ForcePacking)
+                    if (Header.ForcePacking != PackingFlag.None)
                     {
-                        case PackingFlag.Unzip:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcepacking");
-                            xtw.WriteAttributeString("value", "unzip");
-                            xtw.WriteEndElement();
-                            break;
-                        case PackingFlag.Zip:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcepacking");
-                            xtw.WriteAttributeString("value", "zip");
-                            xtw.WriteEndElement();
-                            break;
+                        xtw.WriteStartElement("flag");
+                        xtw.WriteAttributeString("name", "forcepacking");
+                        xtw.WriteOptionalAttributeString("value", Header.ForcePacking.FromPackingFlag(false));
+                        xtw.WriteEndElement();
                     }
 
-                    switch (Header.ForceMerging)
+                    if (Header.ForceMerging != MergingFlag.None)
                     {
-                        case MergingFlag.Full:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcemerging");
-                            xtw.WriteAttributeString("value", "full");
-                            xtw.WriteEndElement();
-                            break;
-                        case MergingFlag.Split:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcemerging");
-                            xtw.WriteAttributeString("value", "split");
-                            xtw.WriteEndElement();
-                            break;
-                        case MergingFlag.Merged:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcemerging");
-                            xtw.WriteAttributeString("value", "merged");
-                            xtw.WriteEndElement();
-                            break;
-                        case MergingFlag.NonMerged:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcemerging");
-                            xtw.WriteAttributeString("value", "nonmerged");
-                            xtw.WriteEndElement();
-                            break;
+                        xtw.WriteStartElement("flag");
+                        xtw.WriteAttributeString("name", "forcemerging");
+                        xtw.WriteAttributeString("value", Header.ForceMerging.FromMergingFlag(false));
+                        xtw.WriteEndElement();
                     }
 
-                    switch (Header.ForceNodump)
+                    if (Header.ForceNodump != NodumpFlag.None)
                     {
-                        case NodumpFlag.Ignore:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcenodump");
-                            xtw.WriteAttributeString("value", "ignore");
-                            xtw.WriteEndElement();
-                            break;
-                        case NodumpFlag.Obsolete:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcenodump");
-                            xtw.WriteAttributeString("value", "obsolete");
-                            xtw.WriteEndElement();
-                            break;
-                        case NodumpFlag.Required:
-                            xtw.WriteStartElement("flag");
-                            xtw.WriteAttributeString("name", "forcenodump");
-                            xtw.WriteAttributeString("value", "required");
-                            xtw.WriteEndElement();
-                            break;
+                        xtw.WriteStartElement("flag");
+                        xtw.WriteAttributeString("name", "forcenodump");
+                        xtw.WriteAttributeString("value", Header.ForceNodump.FromNodumpFlag());
+                        xtw.WriteEndElement();
                     }
 
                     // End flags
@@ -916,7 +874,7 @@ namespace SabreTools.Library.DatFiles
 
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "status");
-                            xtw.WriteAttributeString("value", disk.ItemStatus.ToString().ToLowerInvariant());
+                            xtw.WriteAttributeString("value", disk.ItemStatus.FromItemStatus(false));
                             xtw.WriteEndElement();
 
                             // End flags
@@ -959,7 +917,7 @@ namespace SabreTools.Library.DatFiles
 
                             xtw.WriteStartElement("flag");
                             xtw.WriteAttributeString("name", "status");
-                            xtw.WriteAttributeString("value", rom.ItemStatus.ToString().ToLowerInvariant());
+                            xtw.WriteAttributeString("value", rom.ItemStatus.FromItemStatus(false));
                             xtw.WriteEndElement();
 
                             // End flags

@@ -6,6 +6,41 @@ namespace SabreTools.Library.Tools
 {
     public static class Converters
     {
+        #region Enum to Enum
+
+        /// <summary>
+        /// Get the field associated with each hash type
+        /// </summary>
+        public static Field AsField(this Hash hash)
+        {
+            switch (hash)
+            {
+                case Hash.CRC:
+                    return Field.CRC;
+                case Hash.MD5:
+                    return Field.MD5;
+#if NET_FRAMEWORK
+                case Hash.RIPEMD160:
+                    return Field.RIPEMD160;
+#endif
+                case Hash.SHA1:
+                    return Field.SHA1;
+                case Hash.SHA256:
+                    return Field.SHA256;
+                case Hash.SHA384:
+                    return Field.SHA384;
+                case Hash.SHA512:
+                    return Field.SHA512;
+
+                default:
+                    return Field.NULL;
+            }
+        }
+
+        #endregion
+
+        #region String to Enum
+
         /// <summary>
         /// Get DatFormat value from input string
         /// </summary>
@@ -82,35 +117,6 @@ namespace SabreTools.Library.Tools
                     return DatFormat.Logiqx;
                 default:
                     return 0x0;
-            }
-        }
-
-        /// <summary>
-        /// Get the field associated with each hash type
-        /// </summary>
-        public static Field AsField(this Hash hash)
-        {
-            switch (hash)
-            {
-                case Hash.CRC:
-                    return Field.CRC;
-                case Hash.MD5:
-                    return Field.MD5;
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-                    return Field.RIPEMD160;
-#endif
-                case Hash.SHA1:
-                    return Field.SHA1;
-                case Hash.SHA256:
-                    return Field.SHA256;
-                case Hash.SHA384:
-                    return Field.SHA384;
-                case Hash.SHA512:
-                    return Field.SHA512;
-
-                default:
-                    return Field.NULL;
             }
         }
 
@@ -632,6 +638,8 @@ namespace SabreTools.Library.Tools
                     return MergingFlag.NonMerged;
                 case "full":
                     return MergingFlag.Full;
+                case "device":
+                    return MergingFlag.Device;
                 case "none":
                 default:
                     return MergingFlag.None;
@@ -776,41 +784,6 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
-        /// Get SplitType value from input ForceMerging
-        /// </summary>
-        /// <param name="forceMerging">ForceMerging to get value from</param>
-        /// <returns>SplitType value corresponding to the string</returns>
-        public static SplitType AsSplitType(this MergingFlag forceMerging)
-        {
-#if NET_FRAMEWORK
-            switch (forceMerging)
-            {
-                case MergingFlag.Split:
-                    return SplitType.Split;
-                case MergingFlag.Merged:
-                    return SplitType.Merged;
-                case MergingFlag.NonMerged:
-                    return SplitType.NonMerged;
-                case MergingFlag.Full:
-                    return SplitType.FullNonMerged;
-                case MergingFlag.None:
-                default:
-                    return SplitType.None;
-            }
-#else
-            return forceMerging switch
-            {
-                MergingFlag.Split => SplitType.Split,
-                MergingFlag.Merged => SplitType.Merged,
-                MergingFlag.NonMerged => SplitType.NonMerged,
-                MergingFlag.Full => SplitType.FullNonMerged,
-                MergingFlag.None => SplitType.None,
-                _ => SplitType.None,
-            };
-#endif
-        }
-
-        /// <summary>
         /// Get StatReportFormat value from input string
         /// </summary>
         /// <param name="input">String to get value from</param>
@@ -910,13 +883,349 @@ namespace SabreTools.Library.Tools
 #endif
         }
 
-        // TODO: Write From variants for all above
+        #endregion
+
+        #region Enum to String
+
+        // TODO: DatFormat -> string
+        // TODO: Field -> string
+
+        /// <summary>
+        /// Get string value from input ItemStatus
+        /// </summary>
+        /// <param name="status">ItemStatus to get value from</param>
+        /// <param name="yesno">True to use Yes/No format instead</param>
+        /// <returns>String value corresponding to the ItemStatus</returns>
+        public static string FromItemStatus(this ItemStatus status, bool yesno)
+        {
+#if NET_FRAMEWORK
+            switch (status)
+            {
+                case ItemStatus.Good:
+                    return "good";
+                case ItemStatus.BadDump:
+                    return "baddump";
+                case ItemStatus.Nodump:
+                    return yesno ? "yes" : "nodump";
+                case ItemStatus.Verified:
+                    return "verified";
+                default:
+                    return null;
+            }
+#else
+            return status switch
+            {
+                ItemStatus.Good => "good",
+                ItemStatus.BadDump => "baddump",
+                ItemStatus.Nodump => yesno ? "yes" : "nodump",
+                ItemStatus.Verified => "verified",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input ItemType?
+        /// </summary>
+        /// <param name="itemType">ItemType? to get value from</param>
+        /// <returns>String value corresponding to the ItemType?</returns>
+        public static string FromItemType(this ItemType? itemType)
+        {
+#if NET_FRAMEWORK
+            switch (itemType)
+            {
+                case ItemType.Archive:
+                    return "archive";
+                case ItemType.BiosSet:
+                    return "biosset";
+                case ItemType.Blank:
+                    return "blank";
+                case ItemType.Disk:
+                    return "disk";
+                case ItemType.Release:
+                    return "release";
+                case ItemType.Rom:
+                    return "rom";
+                case ItemType.Sample:
+                    return "sample";
+                default:
+                    return null;
+            }
+#else
+            return itemType switch
+            {
+                ItemType.Archive => "archive",
+                ItemType.BiosSet => "biosset",
+                ItemType.Blank => "blank",
+                ItemType.Disk => "disk",
+                ItemType.Release => "release",
+                ItemType.Rom => "rom",
+                ItemType.Sample => "sample",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input MachineType
+        /// </summary>
+        /// <param name="gametype">MachineType to get value from</param>
+        /// <param name="romCenter">True to use old naming instead</param>
+        /// <returns>String value corresponding to the MachineType</returns>
+        public static string FromMachineType(this MachineType gametype, bool old)
+        {
+#if NET_FRAMEWORK
+            switch (gametype)
+            {
+                case MachineType.Bios:
+                    return "bios";
+                case MachineType.Device:
+                    return old ? "dev" : "device";
+                case MachineType.Mechanical:
+                    return old ? "mech" : "mechanical";
+                default:
+                    return null;
+            }
+#else
+            return gametype switch
+            {
+                MachineType.Bios => "bios",
+                MachineType.Device => old ? "dev" : "device",
+                MachineType.Mechanical => old ? "mech" : "mechanical",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input MergingFlag
+        /// </summary>
+        /// <param name="merging">MergingFlag to get value from</param>
+        /// <param name="romCenter">True to use RomCenter naming instead</param>
+        /// <returns>String value corresponding to the MergingFlag</returns>
+        public static string FromMergingFlag(this MergingFlag merging, bool romCenter)
+        {
+#if NET_FRAMEWORK
+            switch (merging)
+            {
+                case MergingFlag.Split:
+                    return "split";
+                case MergingFlag.Merged:
+                    return "merged";
+                case MergingFlag.NonMerged:
+                    return romCenter ? "unmerged" : "nonmerged";
+                case MergingFlag.Full:
+                    return "full";
+                case MergingFlag.Device:
+                    return "device";
+                default:
+                    return null;
+            }
+#else
+            return merging switch
+            {
+                MergingFlag.Split => "split",
+                MergingFlag.Merged => "merged",
+                MergingFlag.NonMerged => romCenter ? "unmerged" : "nonmerged",
+                MergingFlag.Full => "full",
+                MergingFlag.Device => "device",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input NodumpFlag
+        /// </summary>
+        /// <param name="nodump">NodumpFlag to get value from</param>
+        /// <returns>String value corresponding to the NodumpFlag</returns>
+        public static string FromNodumpFlag(this NodumpFlag nodump)
+        {
+#if NET_FRAMEWORK
+            switch (nodump)
+            {
+                case NodumpFlag.Obsolete:
+                    return "obsolete";
+                case NodumpFlag.Required:
+                    return "required";
+                case NodumpFlag.Ignore:
+                    return "ignore";
+                default:
+                    return null;
+            }
+#else
+            return nodump switch
+            {
+                NodumpFlag.Obsolete => "obsolete",
+                NodumpFlag.Required => "required",
+                NodumpFlag.Ignore => "ignore",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input OpenMSXSubType
+        /// </summary>
+        /// <param name="itemType">OpenMSXSubType to get value from</param>
+        /// <returns>String value corresponding to the OpenMSXSubType</returns>
+        public static string FromOpenMSXSubType(this OpenMSXSubType itemType)
+        {
+#if NET_FRAMEWORK
+            switch (itemType)
+            {
+                case OpenMSXSubType.Rom:
+                    return "rom";
+                case OpenMSXSubType.MegaRom:
+                    return "megarom";
+                case OpenMSXSubType.SCCPlusCart:
+                    return "sccpluscart";
+                default:
+                    return null;
+            }
+#else
+            return itemType switch
+            {
+                OpenMSXSubType.Rom => "rom",
+                OpenMSXSubType.MegaRom => "megarom",
+                OpenMSXSubType.SCCPlusCart => "sccpluscart",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input PackingFlag
+        /// </summary>
+        /// <param name="packing">PackingFlag to get value from</param>
+        /// <param name="yesno">True to use Yes/No format instead</param>
+        /// <returns>String value corresponding to the PackingFlag</returns>
+        public static string FromPackingFlag(this PackingFlag packing, bool yesno)
+        {
+#if NET_FRAMEWORK
+            switch (packing)
+            {
+                case PackingFlag.Zip:
+                    return yesno ? "yes" : "zip";
+                case PackingFlag.Unzip:
+                    return yesno ? "no" : "unzip";
+                default:
+                    return null;
+            }
+#else
+            return packing switch
+            {
+                PackingFlag.Zip => yesno ? "yes" : "zip",
+                PackingFlag.Unzip => yesno ? "yes" : "zip",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input Runnable
+        /// </summary>
+        /// <param name="runnable">Runnable to get value from</param>
+        /// <returns>String value corresponding to the Runnable</returns>
+        public static string FromRunnable(this Runnable runnable)
+        {
+#if NET_FRAMEWORK
+            switch (runnable)
+            {
+                case Runnable.No:
+                    return "no";
+                case Runnable.Partial:
+                    return "partial";
+                case Runnable.Yes:
+                    return "yes";
+                default:
+                    return null;
+            }
+#else
+            return runnable switch
+            {
+                Runnable.No => "no",
+                Runnable.Partial => "partial",
+                Runnable.Yes => "yes",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input StatReportFormat
+        /// </summary>
+        /// <param name="input">StatReportFormat to get value from</param>
+        /// <returns>String value corresponding to the StatReportFormat</returns>
+        public static string FromStatReportFormat(this StatReportFormat input)
+        {
+#if NET_FRAMEWORK
+            switch (input)
+            {
+                case StatReportFormat.All:
+                    return "all";
+                case StatReportFormat.CSV:
+                    return "csv";
+                case StatReportFormat.HTML:
+                    return "html";
+                case StatReportFormat.SSV:
+                    return "ssv";
+                case StatReportFormat.Textfile:
+                    return "text";
+                case StatReportFormat.TSV:
+                    return "tsv";
+                default:
+                    return null;
+            }
+#else
+            return input switch
+            {
+                StatReportFormat.All => "all",
+                StatReportFormat.CSV => "csv",
+                StatReportFormat.HTML => "html",
+                StatReportFormat.SSV => "ssv",
+                StatReportFormat.Textfile => "text",
+                StatReportFormat.TSV => "tsv",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input Supported
+        /// </summary>
+        /// <param name="supported">Supported to get value from</param>
+        /// <returns>String value corresponding to the Supported</returns>
+        public static string FromSupported(this Supported supported)
+        {
+#if NET_FRAMEWORK
+            switch (supported)
+            {
+                case Supported.No:
+                    return "no";
+                case Supported.Partial:
+                    return "partial";
+                case Supported.Yes:
+                    return "yes";
+                default:
+                    return null;
+            }
+#else
+            return supported switch
+            {
+                Supported.No => "no",
+                Supported.Partial => "partial",
+                Supported.Yes => "yes",
+                _ => null,
+            };
+#endif
+        }
 
         /// <summary>
         /// Get string value from input bool?
         /// </summary>
         /// <param name="yesno">bool? to get value from</param>
-        /// <returns>string corresponding to the bool?</returns>
+        /// <returns>String corresponding to the bool?</returns>
         public static string FromYesNo(this bool? yesno)
         {
 #if NET_FRAMEWORK
@@ -938,5 +1247,7 @@ namespace SabreTools.Library.Tools
             };
 #endif
         }
+
+        #endregion
     }
 }

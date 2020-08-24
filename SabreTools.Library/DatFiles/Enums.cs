@@ -213,6 +213,7 @@ namespace SabreTools.Library.DatFiles
         Merged,
         NonMerged,
         Full,
+        Device, // This is not usually defined for Merging flags
     }
 
     /// <summary>
@@ -244,19 +245,6 @@ namespace SabreTools.Library.DatFiles
         None = 0,
         Archive,
         File,
-    }
-
-    /// <summary>
-    /// Determines how a DAT will be split internally
-    /// </summary>
-    public enum SplitType
-    {
-        None = 0,
-        NonMerged,
-        Merged,
-        FullNonMerged,
-        Split,
-        DeviceNonMerged
     }
 
     /// <summary>

@@ -565,31 +565,11 @@ namespace SabreTools.Library.DatFiles
                 if (!string.IsNullOrWhiteSpace(Header.Comment))
                     cmpw.WriteStandalone("comment", Header.Comment);
 
-                switch (Header.ForcePacking)
-                {
-                    case PackingFlag.Unzip:
-                        cmpw.WriteStandalone("forcezipping", "no", false);
-                        break;
-                    case PackingFlag.Zip:
-                        cmpw.WriteStandalone("forcezipping", "yes", false);
-                        break;
-                }
+                if (Header.ForcePacking != PackingFlag.None)
+                    cmpw.WriteStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
 
-                switch (Header.ForceMerging)
-                {
-                    case MergingFlag.Full:
-                        cmpw.WriteStandalone("forcemerging", "full", false);
-                        break;
-                    case MergingFlag.Split:
-                        cmpw.WriteStandalone("forcemerging", "split", false);
-                        break;
-                    case MergingFlag.Merged:
-                        cmpw.WriteStandalone("forcemerging", "merged", false);
-                        break;
-                    case MergingFlag.NonMerged:
-                        cmpw.WriteStandalone("forcemerging", "nonmerged", false);
-                        break;
-                }
+                if (Header.ForceMerging != MergingFlag.None)
+                    cmpw.WriteStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
 
                 // End clrmamepro
                 cmpw.WriteEndElement();

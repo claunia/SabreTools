@@ -473,7 +473,7 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Internally split a DatFile
         /// </summary>
-        public SplitType InternalSplit { get; set; }
+        public MergingFlag InternalSplit { get; set; }
 
         /// <summary>
         /// Remove all unicode characters

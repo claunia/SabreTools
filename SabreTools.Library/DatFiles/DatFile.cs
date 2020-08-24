@@ -1011,8 +1011,8 @@ namespace SabreTools.Library.DatFiles
                     MachineDescriptionToName();
 
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
-                if (useTags && filter.InternalSplit == SplitType.None)
-                    filter.InternalSplit = Header.ForceMerging.AsSplitType();
+                if (useTags && filter.InternalSplit == MergingFlag.None)
+                    filter.InternalSplit = Header.ForceMerging;
 
                 // Run internal splitting
                 ProcessSplitType(filter.InternalSplit);
@@ -1344,30 +1344,30 @@ namespace SabreTools.Library.DatFiles
         #region Internal Splitting/Merging
 
         /// <summary>
-        /// Process items according to SplitType
+        /// Process items according to split type
         /// </summary>
-        /// <param name="splitType">SplitType to implement</param>
-        public void ProcessSplitType(SplitType splitType)
+        /// <param name="splitType">MergingFlag to implement</param>
+        public void ProcessSplitType(MergingFlag splitType)
         {
             // Now we pre-process the DAT with the splitting/merging mode
             switch (splitType)
             {
-                case SplitType.None:
+                case MergingFlag.None:
                     // No-op
                     break;
-                case SplitType.DeviceNonMerged:
+                case MergingFlag.Device:
                     CreateDeviceNonMergedSets(DedupeType.None);
                     break;
-                case SplitType.FullNonMerged:
+                case MergingFlag.Full:
                     CreateFullyNonMergedSets(DedupeType.None);
                     break;
-                case SplitType.NonMerged:
+                case MergingFlag.NonMerged:
                     CreateNonMergedSets(DedupeType.None);
                     break;
-                case SplitType.Merged:
+                case MergingFlag.Merged:
                     CreateMergedSets(DedupeType.None);
                     break;
-                case SplitType.Split:
+                case MergingFlag.Split:
                     CreateSplitSets(DedupeType.None);
                     break;
             }

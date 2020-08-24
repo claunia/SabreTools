@@ -736,45 +736,9 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("softwarelist");
                 xtw.WriteRequiredAttributeString("name", Header.Name);
                 xtw.WriteRequiredAttributeString("description", Header.Description);
-
-                switch (Header.ForcePacking)
-                {
-                    case PackingFlag.Unzip:
-                        xtw.WriteAttributeString("forcepacking", "unzip");
-                        break;
-                    case PackingFlag.Zip:
-                        xtw.WriteAttributeString("forcepacking", "zip");
-                        break;
-                }
-
-                switch (Header.ForceMerging)
-                {
-                    case MergingFlag.Full:
-                        xtw.WriteAttributeString("forcemerging", "full");
-                        break;
-                    case MergingFlag.Split:
-                        xtw.WriteAttributeString("forcemerging", "split");
-                        break;
-                    case MergingFlag.Merged:
-                        xtw.WriteAttributeString("forcemerging", "merged");
-                        break;
-                    case MergingFlag.NonMerged:
-                        xtw.WriteAttributeString("forcemerging", "nonmerged");
-                        break;
-                }
-
-                switch (Header.ForceNodump)
-                {
-                    case NodumpFlag.Ignore:
-                        xtw.WriteAttributeString("forcenodump", "ignore");
-                        break;
-                    case NodumpFlag.Obsolete:
-                        xtw.WriteAttributeString("forcenodump", "obsolete");
-                        break;
-                    case NodumpFlag.Required:
-                        xtw.WriteAttributeString("forcenodump", "required");
-                        break;
-                }
+                xtw.WriteOptionalAttributeString("forcepacking", Header.ForcePacking.FromPackingFlag(false));
+                xtw.WriteOptionalAttributeString("forcemerging", Header.ForceMerging.FromMergingFlag(false));
+                xtw.WriteOptionalAttributeString("forcenodump", Header.ForceNodump.FromNodumpFlag());
 
                 xtw.Flush();
             }
@@ -807,18 +771,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
 
-                switch (datItem.Machine.Supported)
-                {
-                    case Supported.No:
-                        xtw.WriteAttributeString("supported", "no");
-                        break;
-                    case Supported.Partial:
-                        xtw.WriteAttributeString("supported", "partial");
-                        break;
-                    case Supported.Yes:
-                        xtw.WriteAttributeString("supported", "yes");
-                        break;
-                }
+                xtw.WriteOptionalAttributeString("supported", datItem.Machine.Supported.FromSupported());
 
                 xtw.WriteOptionalElementString("description", datItem.Machine.Description);
                 xtw.WriteOptionalElementString("year", datItem.Machine.Year);
@@ -960,7 +913,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
-                        if (disk.ItemStatus != ItemStatus.None) xtw.WriteAttributeString("status", disk.ItemStatus.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
                         xtw.WriteEndElement();
 
@@ -993,7 +946,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("offset", rom.Offset);
                         xtw.WriteOptionalAttributeString("value", rom.Value);
-                        if (rom.ItemStatus != ItemStatus.None) xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("loadflag", rom.LoadFlag);
                         xtw.WriteEndElement();
 

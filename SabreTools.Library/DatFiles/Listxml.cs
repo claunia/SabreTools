@@ -1034,18 +1034,7 @@ namespace SabreTools.Library.DatFiles
                 if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
                     xtw.WriteAttributeString("ismechanical", "yes");
 
-                switch (datItem.Machine.Runnable)
-                {
-                    case Runnable.No:
-                        xtw.WriteAttributeString("runnable", "no");
-                        break;
-                    case Runnable.Partial:
-                        xtw.WriteAttributeString("runnable", "partial");
-                        break;
-                    case Runnable.Yes:
-                        xtw.WriteAttributeString("runnable", "yes");
-                        break;
-                }
+                xtw.WriteOptionalAttributeString("runnable", datItem.Machine.Runnable.FromRunnable());
 
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
@@ -1150,7 +1139,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("region", disk.Region);
                         xtw.WriteOptionalAttributeString("index", disk.Index);
                         xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
-                        if (disk.ItemStatus != ItemStatus.None) xtw.WriteAttributeString("status", disk.ItemStatus.ToString());
+                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
                         xtw.WriteEndElement();
                         break;
@@ -1173,7 +1162,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
                         xtw.WriteOptionalAttributeString("region", rom.Region);
                         xtw.WriteOptionalAttributeString("offset", rom.Offset);
-                        if (rom.ItemStatus != ItemStatus.None) xtw.WriteAttributeString("status", rom.ItemStatus.ToString().ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("optional", rom.Optional.FromYesNo());
                         xtw.WriteEndElement();
                         break;
