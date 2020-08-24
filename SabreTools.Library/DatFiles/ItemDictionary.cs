@@ -10,12 +10,14 @@ using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Reports;
 using NaturalSort;
+using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
     /// Item dictionary with statistics, bucketing, and sorting
     /// </summary>
+    [JsonObject("items")]
     public class ItemDictionary : IDictionary<string, List<DatItem>>
     {
         #region Private instance variables
@@ -71,104 +73,124 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Overall item count
         /// </summary>
+        [JsonIgnore]
         public long TotalCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Archive items
         /// </summary>
+        [JsonIgnore]
         public long ArchiveCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of BiosSet items
         /// </summary>
+        [JsonIgnore]
         public long BiosSetCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Disk items
         /// </summary>
+        [JsonIgnore]
         public long DiskCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Release items
         /// </summary>
+        [JsonIgnore]
         public long ReleaseCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Rom items
         /// </summary>
+        [JsonIgnore]
         public long RomCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Sample items
         /// </summary>
+        [JsonIgnore]
         public long SampleCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of machines
         /// </summary>
         /// <remarks>Special count only used by statistics output</remarks>
+        [JsonIgnore]
         public long GameCount { get; private set; } = 0;
 
         /// <summary>
         /// Total uncompressed size
         /// </summary>
+        [JsonIgnore]
         public long TotalSize { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a CRC hash
         /// </summary>
+        [JsonIgnore]
         public long CRCCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with an MD5 hash
         /// </summary>
+        [JsonIgnore]
         public long MD5Count { get; private set; } = 0;
 
 #if NET_FRAMEWORK
         /// <summary>
         /// Number of items with a RIPEMD160 hash
         /// </summary>
+        [JsonIgnore]
         public long RIPEMD160Count { get; private set; } = 0;
 #endif
 
         /// <summary>
         /// Number of items with a SHA-1 hash
         /// </summary>
+        [JsonIgnore]
         public long SHA1Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SHA-256 hash
         /// </summary>
+        [JsonIgnore]
         public long SHA256Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SHA-384 hash
         /// </summary>
+        [JsonIgnore]
         public long SHA384Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SHA-512 hash
         /// </summary>
+        [JsonIgnore]
         public long SHA512Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the baddump status
         /// </summary>
+        [JsonIgnore]
         public long BaddumpCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the good status
         /// </summary>
+        [JsonIgnore]
         public long GoodCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the nodump status
         /// </summary>
+        [JsonIgnore]
         public long NodumpCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the verified status
         /// </summary>
+        [JsonIgnore]
         public long VerifiedCount { get; private set; } = 0;
 
         #endregion

@@ -11,6 +11,7 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Represents all possible DAT header information
     /// </summary>
+    [JsonObject("header")]
     public class DatHeader : ICloneable
     {
         #region Fields

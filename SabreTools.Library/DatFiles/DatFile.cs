@@ -16,12 +16,14 @@ using SabreTools.Library.Reports;
 using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;
 using NaturalSort;
+using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
     /// Represents a format-agnostic DAT
     /// </summary>
+    [JsonObject("datfile")]
     public abstract class DatFile
     {
         #region Fields
@@ -29,11 +31,13 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Header values
         /// </summary>
+        [JsonProperty("header")]
         public DatHeader Header { get; set; } = new DatHeader();
 
         /// <summary>
         /// DatItems and related statistics
         /// </summary>
+        [JsonProperty("items")]
         public ItemDictionary Items { get; set; } = new ItemDictionary();
 
         #endregion
