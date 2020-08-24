@@ -375,14 +375,17 @@ namespace SabreTools.Library.DatFiles
         {
             try
             {
+                // Build the state
                 cmpw.WriteStartElement("DOSCenter");
-                cmpw.WriteStandalone("Name:", Header.Name, false);
-                cmpw.WriteStandalone("Description:", Header.Description, false);
-                cmpw.WriteStandalone("Version:", Header.Version, false);
-                cmpw.WriteStandalone("Date:", Header.Date, false);
-                cmpw.WriteStandalone("Author:", Header.Author, false);
-                cmpw.WriteStandalone("Homepage:", Header.Homepage, false);
-                cmpw.WriteStandalone("Comment:", Header.Comment, false);
+
+                cmpw.WriteRequiredStandalone("Name:", Header.Name, false);
+                cmpw.WriteRequiredStandalone("Description:", Header.Description, false);
+                cmpw.WriteRequiredStandalone("Version:", Header.Version, false);
+                cmpw.WriteRequiredStandalone("Date:", Header.Date, false);
+                cmpw.WriteRequiredStandalone("Author:", Header.Author, false);
+                cmpw.WriteRequiredStandalone("Homepage:", Header.Homepage, false);
+                cmpw.WriteRequiredStandalone("Comment:", Header.Comment, false);
+
                 cmpw.WriteEndElement();
 
                 cmpw.Flush();
@@ -411,7 +414,7 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 cmpw.WriteStartElement("game");
-                cmpw.WriteStandalone("name", $"{datItem.Machine.Name}.zip", true);
+                cmpw.WriteRequiredStandalone("name", $"{datItem.Machine.Name}.zip", true);
 
                 cmpw.Flush();
             }

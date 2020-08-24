@@ -289,6 +289,23 @@ namespace SabreTools.Library.IO
         }
 
         /// <summary>
+        /// Ensure writing writing null values as empty strings
+        /// </summary>
+        public void WriteRequiredStandalone(string name, string value, bool? quoteOverride = null)
+        {
+            WriteStandalone(name, value ?? string.Empty, quoteOverride);
+        }
+
+        /// <summary>
+        /// Write an standalone, if the value is not null or empty
+        /// </summary>
+        public void WriteOptionalStandalone(string name, string value, bool? quoteOverride = null)
+        {
+            if (!string.IsNullOrEmpty(value))
+                WriteStandalone(name, value, quoteOverride);
+        }
+
+        /// <summary>
         /// Write a string content value
         /// </summary>
         public void WriteString(string value)

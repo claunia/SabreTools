@@ -142,9 +142,9 @@ namespace SabreTools.Library.DatFiles
                 Name = reader.GetAttribute("name"),
                 Comment = string.Empty,
                 Description = reader.GetAttribute("name"),
-                CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
-                RomOf = reader.GetAttribute("romof") ?? string.Empty,
-                SampleOf = reader.GetAttribute("sampleof") ?? string.Empty,
+                CloneOf = reader.GetAttribute("cloneof"),
+                RomOf = reader.GetAttribute("romof"),
+                SampleOf = reader.GetAttribute("sampleof"),
                 MachineType = (machineType == MachineType.NULL ? MachineType.None : machineType),
 
                 SourceFile = reader.GetAttribute("sourcefile"),

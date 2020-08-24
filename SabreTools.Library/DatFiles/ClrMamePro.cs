@@ -548,28 +548,18 @@ namespace SabreTools.Library.DatFiles
             {
                 cmpw.WriteStartElement("clrmamepro");
 
-                cmpw.WriteStandalone("name", Header.Name);
-                cmpw.WriteStandalone("description", Header.Description);
-                if (!string.IsNullOrWhiteSpace(Header.Category))
-                    cmpw.WriteStandalone("category", Header.Category);
-                cmpw.WriteStandalone("version", Header.Version);
-                if (!string.IsNullOrWhiteSpace(Header.Date))
-                    cmpw.WriteStandalone("date", Header.Date);
-                cmpw.WriteStandalone("author", Header.Author);
-                if (!string.IsNullOrWhiteSpace(Header.Email))
-                    cmpw.WriteStandalone("email", Header.Email);
-                if (!string.IsNullOrWhiteSpace(Header.Homepage))
-                    cmpw.WriteStandalone("homepage", Header.Homepage);
-                if (!string.IsNullOrWhiteSpace(Header.Url))
-                    cmpw.WriteStandalone("url", Header.Url);
-                if (!string.IsNullOrWhiteSpace(Header.Comment))
-                    cmpw.WriteStandalone("comment", Header.Comment);
-
-                if (Header.ForcePacking != PackingFlag.None)
-                    cmpw.WriteStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
-
-                if (Header.ForceMerging != MergingFlag.None)
-                    cmpw.WriteStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
+                cmpw.WriteRequiredStandalone("name", Header.Name);
+                cmpw.WriteRequiredStandalone("description", Header.Description);
+                cmpw.WriteOptionalStandalone("category", Header.Category);
+                cmpw.WriteRequiredStandalone("version", Header.Version);
+                cmpw.WriteOptionalStandalone("date", Header.Date);
+                cmpw.WriteRequiredStandalone("author", Header.Author);
+                cmpw.WriteOptionalStandalone("email", Header.Email);
+                cmpw.WriteOptionalStandalone("homepage", Header.Homepage);
+                cmpw.WriteOptionalStandalone("url", Header.Url);
+                cmpw.WriteOptionalStandalone("comment", Header.Comment);
+                cmpw.WriteOptionalStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
+                cmpw.WriteOptionalStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
 
                 // End clrmamepro
                 cmpw.WriteEndElement();
@@ -600,23 +590,14 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 cmpw.WriteStartElement(datItem.Machine.MachineType == MachineType.Bios ? "resource" : "game");
-                cmpw.WriteStandalone("name", datItem.Machine.Name);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.RomOf))
-                    cmpw.WriteStandalone("romof", datItem.Machine.RomOf);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.CloneOf))
-                    cmpw.WriteStandalone("cloneof", datItem.Machine.CloneOf);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf))
-                    cmpw.WriteStandalone("sampleof", datItem.Machine.SampleOf);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
-                    cmpw.WriteStandalone("description", datItem.Machine.Description);
-                else if (!string.IsNullOrWhiteSpace(datItem.Machine.Description))
-                    cmpw.WriteStandalone("description", datItem.Machine.Name);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Year))
-                    cmpw.WriteStandalone("year", datItem.Machine.Year);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Manufacturer))
-                    cmpw.WriteStandalone("manufacturer", datItem.Machine.Manufacturer);
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.Category))
-                    cmpw.WriteStandalone("category", datItem.Machine.Category);
+
+                cmpw.WriteRequiredStandalone("name", datItem.Machine.Name);
+                cmpw.WriteOptionalStandalone("romof", datItem.Machine.RomOf);
+                cmpw.WriteOptionalStandalone("cloneof", datItem.Machine.CloneOf);
+                cmpw.WriteOptionalStandalone("description", datItem.Machine.Description ?? datItem.Machine.Name);
+                cmpw.WriteOptionalStandalone("year", datItem.Machine.Year);
+                cmpw.WriteOptionalStandalone("manufacturer", datItem.Machine.Manufacturer);
+                cmpw.WriteOptionalStandalone("category", datItem.Machine.Category);
 
                 cmpw.Flush();
             }
@@ -640,8 +621,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // Build the state
-                if (!string.IsNullOrWhiteSpace(datItem.Machine.SampleOf))
-                    cmpw.WriteStandalone("sampleof", datItem.Machine.SampleOf);
+                cmpw.WriteOptionalStandalone("sampleof", datItem.Machine.SampleOf);
 
                 // End game
                 cmpw.WriteEndElement();

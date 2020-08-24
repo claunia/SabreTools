@@ -144,7 +144,7 @@ namespace SabreTools.Library.DatFiles
                 Description = reader.GetAttribute("name"),
                 Supported = reader.GetAttribute("supported").AsSupported(),
 
-                CloneOf = reader.GetAttribute("cloneof") ?? string.Empty,
+                CloneOf = reader.GetAttribute("cloneof"),
                 Infos = new List<ListXmlInfo>(),
                 SharedFeatures = new List<SoftwareListSharedFeature>(),
                 DipSwitches = new List<ListXmlDipSwitch>(),
