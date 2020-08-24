@@ -861,12 +861,12 @@ namespace SabreTools.Library.DatFiles
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("sampleof", datItem.Machine.SampleOf);
 
-                xtw.WriteOptionalAttributeString("comment", datItem.Machine.Comment);
-                xtw.WriteOptionalAttributeString("description", datItem.Machine.Description);
-                xtw.WriteOptionalAttributeString("year", datItem.Machine.Year);
-                xtw.WriteOptionalAttributeString("publisher", datItem.Machine.Publisher);
-                xtw.WriteOptionalAttributeString("manufacturer", datItem.Machine.Manufacturer);
-                xtw.WriteOptionalAttributeString("category", datItem.Machine.Category);
+                xtw.WriteOptionalElementString("comment", datItem.Machine.Comment);
+                xtw.WriteOptionalElementString("description", datItem.Machine.Description);
+                xtw.WriteOptionalElementString("year", datItem.Machine.Year);
+                xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
+                xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
+                xtw.WriteOptionalElementString("category", datItem.Machine.Category);
 
                 if (datItem.Machine.TitleID != null
                     || datItem.Machine.Developer != null
