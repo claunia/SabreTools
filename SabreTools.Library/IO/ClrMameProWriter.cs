@@ -177,6 +177,23 @@ namespace SabreTools.Library.IO
         }
 
         /// <summary>
+        /// Ensure writing writing null values as empty strings
+        /// </summary>
+        public void WriteRequiredElementString(string name, string value)
+        {
+            WriteElementString(name, value ?? string.Empty);
+        }
+
+        /// <summary>
+        /// Write an element, if the value is not null or empty
+        /// </summary>
+        public void WriteOptionalElementString(string name, string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+                WriteElementString(name, value);
+        }
+
+        /// <summary>
         /// Write the start of an attribute node
         /// </summary>
         public void WriteStartAttribute(string name)
@@ -220,6 +237,23 @@ namespace SabreTools.Library.IO
             WriteStartAttribute(name);
             WriteString(value);
             WriteEndAttribute();
+        }
+
+        /// <summary>
+        /// Ensure writing writing null values as empty strings
+        /// </summary>
+        public void WriteRequiredAttributeString(string name, string value)
+        {
+            WriteAttributeString(name, value ?? string.Empty);
+        }
+
+        /// <summary>
+        /// Write an attribute, if the value is not null or empty
+        /// </summary>
+        public void WriteOptionalAttributeString(string name, string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+                WriteAttributeString(name, value);
         }
 
         /// <summary>

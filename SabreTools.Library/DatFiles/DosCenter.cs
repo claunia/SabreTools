@@ -471,13 +471,10 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("file");
-                        cmpw.WriteAttributeString("name", datItem.Name);
-                        if (rom.Size != -1)
-                            cmpw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(rom.Date))
-                            cmpw.WriteAttributeString("date", rom.Date);
-                        if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            cmpw.WriteAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
+                        if (rom.Size != -1) cmpw.WriteAttributeString("size", rom.Size.ToString());
+                        cmpw.WriteOptionalAttributeString("date", rom.Date);
+                        cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
                 }

@@ -681,91 +681,68 @@ namespace SabreTools.Library.DatFiles
                 {
                     case ItemType.Archive:
                         cmpw.WriteStartElement("archive");
-                        cmpw.WriteAttributeString("name", datItem.Name);
+                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         cmpw.WriteStartElement("biosset");
-                        cmpw.WriteAttributeString("name", biosSet.Name);
-                        if (!string.IsNullOrWhiteSpace(biosSet.Description))
-                            cmpw.WriteAttributeString("description", biosSet.Description);
-                        if (biosSet.Default != null)
-                            cmpw.WriteAttributeString("default", biosSet.Default.ToString().ToLowerInvariant());
+                        cmpw.WriteRequiredAttributeString("name", biosSet.Name);
+                        cmpw.WriteOptionalAttributeString("description", biosSet.Description);
+                        cmpw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         cmpw.WriteStartElement("disk");
-                        cmpw.WriteAttributeString("name", disk.Name);
-                        if (!string.IsNullOrWhiteSpace(disk.MD5))
-                            cmpw.WriteAttributeString("md5", disk.MD5?.ToLowerInvariant());
+                        cmpw.WriteRequiredAttributeString("name", disk.Name);
+                        cmpw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(disk.RIPEMD160))
-                            cmpw.WriteAttributeString("ripemd160", disk.RIPEMD160?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160?.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            cmpw.WriteAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA256))
-                            cmpw.WriteAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA384))
-                            cmpw.WriteAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(disk.SHA512))
-                            cmpw.WriteAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
-                        if (disk.ItemStatus != ItemStatus.None)
-                            cmpw.WriteAttributeString("flags", disk.ItemStatus.ToString().ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("flags", disk.ItemStatus.FromItemStatus(false));
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.Release:
                         var release = datItem as Release;
                         cmpw.WriteStartElement("release");
-                        cmpw.WriteAttributeString("name", release.Name);
-                        if (!string.IsNullOrWhiteSpace(release.Region))
-                            cmpw.WriteAttributeString("region", release.Region);
-                        if (!string.IsNullOrWhiteSpace(release.Language))
-                            cmpw.WriteAttributeString("language", release.Language);
-                        if (!string.IsNullOrWhiteSpace(release.Date))
-                            cmpw.WriteAttributeString("date", release.Date);
-                        if (release.Default != null)
-                            cmpw.WriteAttributeString("default", release.Default.ToString().ToLowerInvariant());
+                        cmpw.WriteRequiredAttributeString("name", release.Name);
+                        cmpw.WriteOptionalAttributeString("region", release.Region);
+                        cmpw.WriteOptionalAttributeString("language", release.Language);
+                        cmpw.WriteOptionalAttributeString("date", release.Date);
+                        cmpw.WriteOptionalAttributeString("default", release.Default?.ToString().ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("rom");
-                        cmpw.WriteAttributeString("name", rom.Name);
-                        if (rom.Size != -1)
-                            cmpw.WriteAttributeString("size", rom.Size.ToString());
-                        if (!string.IsNullOrWhiteSpace(rom.CRC))
-                            cmpw.WriteAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.MD5))
-                            cmpw.WriteAttributeString("md5", rom.MD5?.ToLowerInvariant());
+                        cmpw.WriteRequiredAttributeString("name", rom.Name);
+                        if (rom.Size != -1) cmpw.WriteAttributeString("size", rom.Size.ToString());
+                        cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        if (!string.IsNullOrWhiteSpace(rom.RIPEMD160))
-                            cmpw.WriteAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
 #endif
-                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                            cmpw.WriteAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA256))
-                            cmpw.WriteAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA384))
-                            cmpw.WriteAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.SHA512))
-                            cmpw.WriteAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
-                        if (!string.IsNullOrWhiteSpace(rom.Date))
-                            cmpw.WriteAttributeString("date", rom.Date);
-                        if (rom.ItemStatus != ItemStatus.None)
-                            cmpw.WriteAttributeString("flags", rom.ItemStatus.ToString().ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("date", rom.Date);
+                        cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
                         cmpw.WriteEndElement();
                         break;
 
                     case ItemType.Sample:
                         cmpw.WriteStartElement("sample");
-                        cmpw.WriteAttributeString("name", datItem.Name);
+                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
                         cmpw.WriteEndElement();
                         break;
                 }
