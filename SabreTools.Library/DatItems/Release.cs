@@ -104,8 +104,7 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                PartName = this.PartName,
-                PartInterface = this.PartInterface,
+                Part = this.Part,
                 Features = this.Features,
                 AreaName = this.AreaName,
                 AreaSize = this.AreaSize,

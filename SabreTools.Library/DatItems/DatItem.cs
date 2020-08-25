@@ -114,14 +114,8 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
-        [JsonProperty("partname", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string PartName { get; set; }
-
-        /// <summary>
-        /// Original hardware interface associated with the item
-        /// </summary>
-        [JsonProperty("partinterface", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string PartInterface { get; set; }
+        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public SoftwareListPart Part { get; set; }
 
         /// <summary>
         /// Features provided to/by the item
@@ -194,18 +188,18 @@ namespace SabreTools.Library.DatItems
         public static readonly List<Field> DatItemFields = new List<Field>()
         {
             // Common
-            Field.Name,
+            Field.DatItem_Name,
 
             // AttractMode
-            Field.AltName,
-            Field.AltTitle,
+            Field.DatItem_AltName,
+            Field.DatItem_AltTitle,
 
             // OpenMSX
-            Field.Original,
-            Field.OpenMSXSubType,
-            Field.OpenMSXType,
-            Field.Remark,
-            Field.Boot,
+            Field.DatItem_Original,
+            Field.DatItem_OpenMSXSubType,
+            Field.DatItem_OpenMSXType,
+            Field.DatItem_Remark,
+            Field.DatItem_Boot,
 
             //SoftwareList
             Field.PartName,
@@ -256,57 +250,57 @@ namespace SabreTools.Library.DatItems
         public static readonly List<Field> MachineFields = new List<Field>()
         {
             // Common
-            Field.MachineName,
-            Field.Comment,
-            Field.Description,
-            Field.Year,
-            Field.Manufacturer,
-            Field.Publisher,
-            Field.RomOf,
-            Field.CloneOf,
-            Field.SampleOf,
-            Field.MachineType,
+            Field.Machine_Name,
+            Field.Machine_Comment,
+            Field.Machine_Description,
+            Field.Machine_Year,
+            Field.Machine_Manufacturer,
+            Field.Machine_Publisher,
+            Field.Machine_RomOf,
+            Field.Machine_CloneOf,
+            Field.Machine_SampleOf,
+            Field.Machine_Type,
 
             // AttractMode
-            Field.Players,
-            Field.Rotation,
-            Field.Control,
-            Field.SupportStatus,
-            Field.DisplayCount,
-            Field.DisplayType,
-            Field.Buttons,
+            Field.Machine_Players,
+            Field.Machine_Rotation,
+            Field.Machine_Control,
+            Field.Machine_SupportStatus,
+            Field.Machine_DisplayCount,
+            Field.Machine_DisplayType,
+            Field.Machine_Buttons,
 
             // ListXML
-            Field.SourceFile,
-            Field.Runnable,
-            Field.DeviceReferences,
-            Field.Slots,
-            Field.Infos,
+            Field.Machine_SourceFile,
+            Field.Machine_Runnable,
+            Field.Machine_DeviceReference_Name,
+            Field.Machine_Slots,
+            Field.Machine_Infos,
 
             // Logiqx
-            Field.Board,
-            Field.RebuildTo,
+            Field.Machine_Board,
+            Field.Machine_RebuildTo,
 
             // Logiqx EmuArc
-            Field.TitleID,
-            Field.Developer,
-            Field.Genre,
-            Field.Subgenre,
-            Field.Ratings,
-            Field.Score,
-            Field.Enabled,
-            Field.HasCrc,
-            Field.RelatedTo,
+            Field.Machine_TitleID,
+            Field.Machine_Developer,
+            Field.Machine_Genre,
+            Field.Machine_Subgenre,
+            Field.Machine_Ratings,
+            Field.Machine_Score,
+            Field.Machine_Enabled,
+            Field.Machine_HasCrc,
+            Field.Machine_RelatedTo,
 
             // OpenMSX
-            Field.GenMSXID,
-            Field.System,
-            Field.Country,
+            Field.Machine_GenMSXID,
+            Field.Machine_System,
+            Field.Machine_Country,
 
             // SoftwareList
-            Field.Supported,
-            Field.SharedFeatures,
-            Field.DipSwitches,
+            Field.Machine_Supported,
+            Field.Machine_SharedFeatures,
+            Field.Machine_DipSwitches,
         };
 
         #endregion
@@ -328,47 +322,57 @@ namespace SabreTools.Library.DatItems
 
             #region Common
 
-            if (mappings.Keys.Contains(Field.Name))
-                Name = mappings[Field.Name];
+            if (mappings.Keys.Contains(Field.DatItem_Name))
+                Name = mappings[Field.DatItem_Name];
 
             #endregion
 
             #region AttractMode
 
-            if (mappings.Keys.Contains(Field.AltName))
-                AltName = mappings[Field.AltName];
+            if (mappings.Keys.Contains(Field.DatItem_AltName))
+                AltName = mappings[Field.DatItem_AltName];
 
-            if (mappings.Keys.Contains(Field.AltTitle))
-                AltTitle = mappings[Field.AltTitle];
+            if (mappings.Keys.Contains(Field.DatItem_AltTitle))
+                AltTitle = mappings[Field.DatItem_AltTitle];
 
             #endregion
 
             #region OpenMSX
 
-            if (mappings.Keys.Contains(Field.Original))
-                Original = new OpenMSXOriginal() { Content = mappings[Field.Original] };
+            if (mappings.Keys.Contains(Field.DatItem_Original))
+                Original = new OpenMSXOriginal() { Content = mappings[Field.DatItem_Original] };
 
-            if (mappings.Keys.Contains(Field.OpenMSXSubType))
-                OpenMSXSubType = mappings[Field.OpenMSXSubType].AsOpenMSXSubType();
+            if (mappings.Keys.Contains(Field.DatItem_OpenMSXSubType))
+                OpenMSXSubType = mappings[Field.DatItem_OpenMSXSubType].AsOpenMSXSubType();
 
-            if (mappings.Keys.Contains(Field.OpenMSXType))
-                OpenMSXType = mappings[Field.OpenMSXType];
+            if (mappings.Keys.Contains(Field.DatItem_OpenMSXType))
+                OpenMSXType = mappings[Field.DatItem_OpenMSXType];
 
-            if (mappings.Keys.Contains(Field.Remark))
-                Remark = mappings[Field.Remark];
+            if (mappings.Keys.Contains(Field.DatItem_Remark))
+                Remark = mappings[Field.DatItem_Remark];
 
-            if (mappings.Keys.Contains(Field.Boot))
-                Boot = mappings[Field.Boot];
+            if (mappings.Keys.Contains(Field.DatItem_Boot))
+                Boot = mappings[Field.DatItem_Boot];
 
             #endregion
 
             #region SoftwareList
 
             if (mappings.Keys.Contains(Field.PartName))
-                PartName = mappings[Field.PartName];
+            {
+                if (Part == null)
+                    Part = new SoftwareListPart();
+
+                Part.Name = mappings[Field.PartName];
+            }
 
             if (mappings.Keys.Contains(Field.PartInterface))
-                PartInterface = mappings[Field.PartInterface];
+            {
+                if (Part == null)
+                    Part = new SoftwareListPart();
+
+                Part.Interface = mappings[Field.PartInterface];
+            }
 
             if (mappings.Keys.Contains(Field.Features))
             {
@@ -668,15 +672,15 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             // Filter on part name
-            if (filter.PartName.MatchesPositiveSet(PartName) == false)
+            if (filter.PartName.MatchesPositiveSet(Part?.Name) == false)
                 return false;
-            if (filter.PartName.MatchesNegativeSet(PartName) == true)
+            if (filter.PartName.MatchesNegativeSet(Part?.Name) == true)
                 return false;
 
             // Filter on part interface
-            if (filter.PartInterface.MatchesPositiveSet(PartInterface) == false)
+            if (filter.PartInterface.MatchesPositiveSet(Part?.Interface) == false)
                 return false;
-            if (filter.PartInterface.MatchesNegativeSet(PartInterface) == true)
+            if (filter.PartInterface.MatchesNegativeSet(Part?.Interface) == true)
                 return false;
 
             // Filter on area name
@@ -733,47 +737,47 @@ namespace SabreTools.Library.DatItems
 
             #region Common
 
-            if (fields.Contains(Field.Name))
+            if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(Field.AltName))
+            if (fields.Contains(Field.DatItem_AltName))
                 AltName = null;
 
-            if (fields.Contains(Field.AltTitle))
+            if (fields.Contains(Field.DatItem_AltTitle))
                 AltTitle = null;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(Field.Original))
+            if (fields.Contains(Field.DatItem_Original))
                 Original = null;
 
-            if (fields.Contains(Field.OpenMSXSubType))
+            if (fields.Contains(Field.DatItem_OpenMSXSubType))
                 OpenMSXSubType = OpenMSXSubType.NULL;
 
-            if (fields.Contains(Field.OpenMSXType))
+            if (fields.Contains(Field.DatItem_OpenMSXType))
                 OpenMSXType = null;
 
-            if (fields.Contains(Field.Remark))
+            if (fields.Contains(Field.DatItem_Remark))
                 Remark = null;
 
-            if (fields.Contains(Field.Boot))
+            if (fields.Contains(Field.DatItem_Boot))
                 Boot = null;
 
             #endregion
 
             #region SoftwareList
 
-            if (fields.Contains(Field.PartName))
-                PartName = null;
+            if (fields.Contains(Field.PartName) && Part != null)
+                Part.Name = null;
 
-            if (fields.Contains(Field.PartInterface))
-                PartInterface = null;
+            if (fields.Contains(Field.PartInterface) && Part != null)
+                Part.Interface = null;
 
             if (fields.Contains(Field.Features))
                 Features = null;
@@ -823,7 +827,7 @@ namespace SabreTools.Library.DatItems
                     key = Constants.CRCZero;
                     break;
 
-                case Field.MachineName:
+                case Field.Machine_Name:
                     key = (norename ? string.Empty
                         : Source.Index.ToString().PadLeft(10, '0')
                             + "-")
@@ -882,36 +886,36 @@ namespace SabreTools.Library.DatItems
         {
             #region Common
 
-            if (fields.Contains(Field.Name))
+            if (fields.Contains(Field.DatItem_Name))
                 Name = item.Name;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(Field.AltName))
+            if (fields.Contains(Field.DatItem_AltName))
                 AltName = item.AltName;
 
-            if (fields.Contains(Field.AltTitle))
+            if (fields.Contains(Field.DatItem_AltTitle))
                 AltTitle = item.AltTitle;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(Field.Original))
+            if (fields.Contains(Field.DatItem_Original))
                 Original = item.Original;
 
-            if (fields.Contains(Field.OpenMSXSubType))
+            if (fields.Contains(Field.DatItem_OpenMSXSubType))
                 OpenMSXSubType = item.OpenMSXSubType;
 
-            if (fields.Contains(Field.OpenMSXType))
+            if (fields.Contains(Field.DatItem_OpenMSXType))
                 OpenMSXType = item.OpenMSXType;
 
-            if (fields.Contains(Field.Remark))
+            if (fields.Contains(Field.DatItem_Remark))
                 Remark = item.Remark;
 
-            if (fields.Contains(Field.Boot))
+            if (fields.Contains(Field.DatItem_Boot))
                 Boot = item.Boot;
 
             #endregion
@@ -919,10 +923,20 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             if (fields.Contains(Field.PartName))
-                PartName = item.PartName;
+            {
+                if (Part == null)
+                    Part = new SoftwareListPart();
+
+                Part.Name = item.Part?.Name;
+            }
 
             if (fields.Contains(Field.PartInterface))
-                PartInterface = item.PartInterface;
+            {
+                if (Part == null)
+                    Part = new SoftwareListPart();
+
+                Part.Interface = item.Part?.Interface;
+            }
 
             if (fields.Contains(Field.Features))
                 Features = item.Features;

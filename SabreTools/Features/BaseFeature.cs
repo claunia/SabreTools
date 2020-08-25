@@ -2548,13 +2548,13 @@ Some special strings that can be used:
             if (GetBoolean(features, UpdateDescriptionValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateDescriptionValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Description);
+                updateFields.Add(Field.Machine_Description);
             }
 
             if (GetBoolean(features, UpdateGameTypeValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateGameTypeValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.MachineType);
+                updateFields.Add(Field.Machine_Type);
             }
 
             if (GetBoolean(features, UpdateHashesValue))
@@ -2574,27 +2574,27 @@ Some special strings that can be used:
             if (GetBoolean(features, UpdateManufacturerValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateManufacturerValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Manufacturer);
+                updateFields.Add(Field.Machine_Manufacturer);
             }
 
             if (GetBoolean(features, UpdateNamesValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateNamesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Name);
+                updateFields.Add(Field.DatItem_Name);
             }
 
             if (GetBoolean(features, UpdateParentsValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateParentsValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.CloneOf);
-                updateFields.Add(Field.RomOf);
-                updateFields.Add(Field.SampleOf);
+                updateFields.Add(Field.Machine_CloneOf);
+                updateFields.Add(Field.Machine_RomOf);
+                updateFields.Add(Field.Machine_SampleOf);
             }
 
             if (GetBoolean(features, UpdateYearValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateYearValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Year);
+                updateFields.Add(Field.Machine_Year);
             }
 
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
@@ -2756,12 +2756,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotCategoryListValue))
             {
                 Globals.Logger.User($"This flag '{(NotCategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Category, GetList(features, NotCategoryListValue), true);
+                filter.SetFilter(Field.Machine_Category, GetList(features, NotCategoryListValue), true);
             }
             if (features.ContainsKey(CategoryListValue))
             {
                 Globals.Logger.User($"This flag '{(CategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Category, GetList(features, CategoryListValue), false);
+                filter.SetFilter(Field.Machine_Category, GetList(features, CategoryListValue), false);
             }
 
             // CRC
@@ -2780,12 +2780,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotItemNameListValue))
             {
                 Globals.Logger.User($"This flag '{(NotItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Name, GetList(features, NotItemNameListValue), true);
+                filter.SetFilter(Field.DatItem_Name, GetList(features, NotItemNameListValue), true);
             }
             if (features.ContainsKey(ItemNameListValue))
             {
                 Globals.Logger.User($"This flag '{(ItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Name, GetList(features, ItemNameListValue), false);
+                filter.SetFilter(Field.DatItem_Name, GetList(features, ItemNameListValue), false);
             }
 
             // Item status
@@ -2804,48 +2804,48 @@ Some special strings that can be used:
             if (features.ContainsKey(NotItemTypeListValue))
             {
                 Globals.Logger.User($"This flag '{(NotItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.ItemType, GetList(features, NotItemTypeListValue), true);
+                filter.SetFilter(Field.DatItem_Type, GetList(features, NotItemTypeListValue), true);
             }
             if (features.ContainsKey(ItemTypeListValue))
             {
                 Globals.Logger.User($"This flag '{(ItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.ItemType, GetList(features, ItemTypeListValue), false);
+                filter.SetFilter(Field.DatItem_Type, GetList(features, ItemTypeListValue), false);
             }
 
             // Machine description
             if (features.ContainsKey(NotGameDescriptionListValue))
             {
                 Globals.Logger.User($"This flag '{(NotGameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Description, GetList(features, NotGameDescriptionListValue), true);
+                filter.SetFilter(Field.Machine_Description, GetList(features, NotGameDescriptionListValue), true);
             }
             if (features.ContainsKey(GameDescriptionListValue))
             {
                 Globals.Logger.User($"This flag '{(GameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Description, GetList(features, GameDescriptionListValue), false);
+                filter.SetFilter(Field.Machine_Description, GetList(features, GameDescriptionListValue), false);
             }
 
             // Machine name
             if (features.ContainsKey(NotGameNameListValue))
             {
                 Globals.Logger.User($"This flag '{(NotGameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.MachineName, GetList(features, NotGameNameListValue), true);
+                filter.SetFilter(Field.Machine_Name, GetList(features, NotGameNameListValue), true);
             }
             if (features.ContainsKey(GameNameListValue))
             {
                 Globals.Logger.User($"This flag '{(GameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.MachineName, GetList(features, GameNameListValue), false);
+                filter.SetFilter(Field.Machine_Name, GetList(features, GameNameListValue), false);
             }
 
             // Machine type
             if (features.ContainsKey(NotGameTypeListValue))
             {
                 Globals.Logger.User($"This flag '{(NotGameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.MachineType, GetList(features, NotGameTypeListValue), true);
+                filter.SetFilter(Field.Machine_Type, GetList(features, NotGameTypeListValue), true);
             }
             if (features.ContainsKey(GameTypeListValue))
             {
                 Globals.Logger.User($"This flag '{(GameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.MachineType, GetList(features, GameTypeListValue), false);
+                filter.SetFilter(Field.Machine_Type, GetList(features, GameTypeListValue), false);
             }
 
             // MD5
@@ -2878,12 +2878,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotRunnableValue))
             {
                 Globals.Logger.User($"This flag '{NotRunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Runnable, string.Empty, true);
+                filter.SetFilter(Field.Machine_Runnable, string.Empty, true);
             }
             if (features.ContainsKey(RunnableValue))
             {
                 Globals.Logger.User($"This flag '{RunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Runnable, string.Empty, false);
+                filter.SetFilter(Field.Machine_Runnable, string.Empty, false);
             }
 
             // SHA1

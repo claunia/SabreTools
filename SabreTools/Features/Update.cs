@@ -143,7 +143,7 @@ namespace SabreTools.Features
 
             // If no update fields are set, default to Names
             if (updateFields == null || updateFields.Count == 0)
-                updateFields = new List<Field>() { Field.Name };
+                updateFields = new List<Field>() { Field.DatItem_Name };
 
             // Ensure we only have files in the inputs
             List<ParentablePath> inputFileNames = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);

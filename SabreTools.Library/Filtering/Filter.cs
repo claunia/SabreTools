@@ -12,6 +12,7 @@ namespace SabreTools.Library.Filtering
     /// Represents the filtering operations that need to be performed on a set of items, usually a DAT
     /// </summary>
     /// TODO: Can clever use of Filtering allow for easier external splitting methods?
+    /// TODO: Field name for filter population needs to be overhauled
     public class Filter
     {
         #region Fields
@@ -561,77 +562,77 @@ namespace SabreTools.Library.Filtering
 
                 #region Common
 
-                case Field.MachineName:
+                case Field.Machine_Name:
                     if (negate)
                         MachineName.NegativeSet.Add(value);
                     else
                         MachineName.PositiveSet.Add(value);
                     break;
 
-                case Field.Comment:
+                case Field.Machine_Comment:
                     if (negate)
                         Comment.NegativeSet.Add(value);
                     else
                         Comment.PositiveSet.Add(value);
                     break;
 
-                case Field.Description:
+                case Field.Machine_Description:
                     if (negate)
                         MachineDescription.NegativeSet.Add(value);
                     else
                         MachineDescription.PositiveSet.Add(value);
                     break;
 
-                case Field.Year:
+                case Field.Machine_Year:
                     if (negate)
                         Year.NegativeSet.Add(value);
                     else
                         Year.PositiveSet.Add(value);
                     break;
 
-                case Field.Manufacturer:
+                case Field.Machine_Manufacturer:
                     if (negate)
                         Manufacturer.NegativeSet.Add(value);
                     else
                         Manufacturer.PositiveSet.Add(value);
                     break;
 
-                case Field.Publisher:
+                case Field.Machine_Publisher:
                     if (negate)
                         Publisher.NegativeSet.Add(value);
                     else
                         Publisher.PositiveSet.Add(value);
                     break;
 
-                case Field.Category:
+                case Field.Machine_Category:
                     if (negate)
                         Category.NegativeSet.Add(value);
                     else
                         Category.PositiveSet.Add(value);
                     break;
 
-                case Field.RomOf:
+                case Field.Machine_RomOf:
                     if (negate)
                         RomOf.NegativeSet.Add(value);
                     else
                         RomOf.PositiveSet.Add(value);
                     break;
 
-                case Field.CloneOf:
+                case Field.Machine_CloneOf:
                     if (negate)
                         CloneOf.NegativeSet.Add(value);
                     else
                         CloneOf.PositiveSet.Add(value);
                     break;
 
-                case Field.SampleOf:
+                case Field.Machine_SampleOf:
                     if (negate)
                         SampleOf.NegativeSet.Add(value);
                     else
                         SampleOf.PositiveSet.Add(value);
                     break;
 
-                case Field.MachineType:
+                case Field.Machine_Type:
                     if (negate)
                         MachineTypes.Negative |= value.AsMachineType();
                     else
@@ -642,49 +643,49 @@ namespace SabreTools.Library.Filtering
 
                 #region AttractMode
 
-                case Field.Players:
+                case Field.Machine_Players:
                     if (negate)
                         Players.NegativeSet.Add(value);
                     else
                         Players.PositiveSet.Add(value);
                     break;
 
-                case Field.Rotation:
+                case Field.Machine_Rotation:
                     if (negate)
                         Rotation.NegativeSet.Add(value);
                     else
                         Rotation.PositiveSet.Add(value);
                     break;
 
-                case Field.Control:
+                case Field.Machine_Control:
                     if (negate)
                         Control.NegativeSet.Add(value);
                     else
                         Control.PositiveSet.Add(value);
                     break;
 
-                case Field.SupportStatus:
+                case Field.Machine_SupportStatus:
                     if (negate)
                         SupportStatus.NegativeSet.Add(value);
                     else
                         SupportStatus.PositiveSet.Add(value);
                     break;
 
-                case Field.DisplayCount:
+                case Field.Machine_DisplayCount:
                     if (negate)
                         DisplayCount.NegativeSet.Add(value);
                     else
                         DisplayCount.PositiveSet.Add(value);
                     break;
 
-                case Field.DisplayType:
+                case Field.Machine_DisplayType:
                     if (negate)
                         DisplayType.NegativeSet.Add(value);
                     else
                         DisplayType.PositiveSet.Add(value);
                     break;
 
-                case Field.Buttons:
+                case Field.Machine_Buttons:
                     if (negate)
                         Buttons.NegativeSet.Add(value);
                     else
@@ -695,28 +696,28 @@ namespace SabreTools.Library.Filtering
 
                 #region ListXML
 
-                case Field.SourceFile:
+                case Field.Machine_SourceFile:
                     if (negate)
                         SourceFile.NegativeSet.Add(value);
                     else
                         SourceFile.PositiveSet.Add(value);
                     break;
 
-                case Field.Runnable:
+                case Field.Machine_Runnable:
                     if (negate)
                         Runnables.Negative |= value.AsRunnable();
                     else
                         Runnables.Positive |= value.AsRunnable();
                     break;
 
-                case Field.DeviceReferences:
+                case Field.Machine_DeviceReference_Name:
                     if (negate)
                         Devices.NegativeSet.Add(value);
                     else
                         Devices.PositiveSet.Add(value);
                     break;
 
-                case Field.Slots:
+                case Field.Machine_Slots:
                     if (negate)
                         SlotOptions.NegativeSet.Add(value);
                     else
@@ -727,14 +728,14 @@ namespace SabreTools.Library.Filtering
 
                 #region Logiqx
 
-                case Field.Board:
+                case Field.Machine_Board:
                     if (negate)
                         Board.NegativeSet.Add(value);
                     else
                         Board.PositiveSet.Add(value);
                     break;
 
-                case Field.RebuildTo:
+                case Field.Machine_RebuildTo:
                     if (negate)
                         RebuildTo.NegativeSet.Add(value);
                     else
@@ -745,63 +746,63 @@ namespace SabreTools.Library.Filtering
 
                 #region Logiqx EmuArc
 
-                case Field.TitleID:
+                case Field.Machine_TitleID:
                     if (negate)
                         TitleID.NegativeSet.Add(value);
                     else
                         TitleID.PositiveSet.Add(value);
                     break;
 
-                case Field.Developer:
+                case Field.Machine_Developer:
                     if (negate)
                         Developer.NegativeSet.Add(value);
                     else
                         Developer.PositiveSet.Add(value);
                     break;
 
-                case Field.Genre:
+                case Field.Machine_Genre:
                     if (negate)
                         Genre.NegativeSet.Add(value);
                     else
                         Genre.PositiveSet.Add(value);
                     break;
 
-                case Field.Subgenre:
+                case Field.Machine_Subgenre:
                     if (negate)
                         Subgenre.NegativeSet.Add(value);
                     else
                         Subgenre.PositiveSet.Add(value);
                     break;
 
-                case Field.Ratings:
+                case Field.Machine_Ratings:
                     if (negate)
                         Ratings.NegativeSet.Add(value);
                     else
                         Ratings.PositiveSet.Add(value);
                     break;
 
-                case Field.Score:
+                case Field.Machine_Score:
                     if (negate)
                         Score.NegativeSet.Add(value);
                     else
                         Score.PositiveSet.Add(value);
                     break;
 
-                case Field.Enabled:
+                case Field.Machine_Enabled:
                     if (negate)
                         Enabled.NegativeSet.Add(value);
                     else
                         Enabled.PositiveSet.Add(value);
                     break;
 
-                case Field.HasCrc:
+                case Field.Machine_HasCrc:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         HasCrc.Neutral = false;
                     else
                         HasCrc.Neutral = true;
                     break;
 
-                case Field.RelatedTo:
+                case Field.Machine_RelatedTo:
                     if (negate)
                         RelatedTo.NegativeSet.Add(value);
                     else
@@ -812,21 +813,21 @@ namespace SabreTools.Library.Filtering
 
                 #region OpenMSX
 
-                case Field.GenMSXID:
+                case Field.Machine_GenMSXID:
                     if (negate)
                         GenMSXID.NegativeSet.Add(value);
                     else
                         GenMSXID.PositiveSet.Add(value);
                     break;
 
-                case Field.System:
+                case Field.Machine_System:
                     if (negate)
                         System.NegativeSet.Add(value);
                     else
                         System.PositiveSet.Add(value);
                     break;
 
-                case Field.Country:
+                case Field.Machine_Country:
                     if (negate)
                         Country.NegativeSet.Add(value);
                     else
@@ -837,7 +838,7 @@ namespace SabreTools.Library.Filtering
 
                 #region SoftwareList
 
-                case Field.Supported:
+                case Field.Machine_Supported:
                     if (negate)
                         SupportedStatus.Negative |= value.AsSupported();
                     else
@@ -852,14 +853,14 @@ namespace SabreTools.Library.Filtering
 
                 #region Common
 
-                case Field.Name:
+                case Field.DatItem_Name:
                     if (negate)
                         ItemName.NegativeSet.Add(value);
                     else
                         ItemName.PositiveSet.Add(value);
                     break;
 
-                case Field.ItemType:
+                case Field.DatItem_Type:
                     if (value.AsItemType() == null)
                         return;
 
@@ -873,14 +874,14 @@ namespace SabreTools.Library.Filtering
 
                 #region AttractMode
 
-                case Field.AltName:
+                case Field.DatItem_AltName:
                     if (negate)
                         AltName.NegativeSet.Add(value);
                     else
                         AltName.PositiveSet.Add(value);
                     break;
 
-                case Field.AltTitle:
+                case Field.DatItem_AltTitle:
                     if (negate)
                         AltTitle.NegativeSet.Add(value);
                     else
@@ -891,35 +892,35 @@ namespace SabreTools.Library.Filtering
 
                 #region OpenMSX
 
-                case Field.Original:
+                case Field.DatItem_Original:
                     if (negate)
                         Original.NegativeSet.Add(value);
                     else
                         Original.PositiveSet.Add(value);
                     break;
 
-                case Field.OpenMSXSubType:
+                case Field.DatItem_OpenMSXSubType:
                     if (negate)
                         SubType.Negative |= value.AsOpenMSXSubType();
                     else
                         SubType.Positive |= value.AsOpenMSXSubType();
                     break;
 
-                case Field.OpenMSXType:
+                case Field.DatItem_OpenMSXType:
                     if (negate)
                         OpenMSXType.NegativeSet.Add(value);
                     else
                         OpenMSXType.PositiveSet.Add(value);
                     break;
 
-                case Field.Remark:
+                case Field.DatItem_Remark:
                     if (negate)
                         Remark.NegativeSet.Add(value);
                     else
                         Remark.PositiveSet.Add(value);
                     break;
 
-                case Field.Boot:
+                case Field.DatItem_Boot:
                     if (negate)
                         Boot.NegativeSet.Add(value);
                     else

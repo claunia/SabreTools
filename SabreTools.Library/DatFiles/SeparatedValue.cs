@@ -392,13 +392,13 @@ namespace SabreTools.Library.DatFiles
                         // TODO: Add Machine.Slot
 
                         case "Machine.Infos":
-                            machine.Infos = new List<ListXmlInfo>();
+                            machine.Infos = new List<SoftwareListInfo>();
                             var infos = value.Split(';');
                             foreach (var info in infos)
                             {
                                 var infoPair = info.Split('=');
 
-                                var infoObj = new ListXmlInfo();
+                                var infoObj = new SoftwareListInfo();
                                 infoObj.Name = infoPair[0];
                                 infoObj.Value = infoPair[1];
 
@@ -725,8 +725,7 @@ namespace SabreTools.Library.DatFiles
                             Remark = remark,
                             Boot = boot,
 
-                            PartName = partName,
-                            PartInterface = partInterface,
+                            Part = new SoftwareListPart() { Name = partName, Interface = partInterface },
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
@@ -760,8 +759,7 @@ namespace SabreTools.Library.DatFiles
                             Remark = remark,
                             Boot = boot,
 
-                            PartName = partName,
-                            PartInterface = partInterface,
+                            Part = new SoftwareListPart() { Name = partName, Interface = partInterface },
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
@@ -798,8 +796,7 @@ namespace SabreTools.Library.DatFiles
                             Remark = remark,
                             Boot = boot,
 
-                            PartName = partName,
-                            PartInterface = partInterface,
+                            Part = new SoftwareListPart() { Name = partName, Interface = partInterface },
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
@@ -848,8 +845,7 @@ namespace SabreTools.Library.DatFiles
                             Remark = remark,
                             Boot = boot,
 
-                            PartName = partName,
-                            PartInterface = partInterface,
+                            Part = new SoftwareListPart() { Name = partName, Interface = partInterface },
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
@@ -888,8 +884,7 @@ namespace SabreTools.Library.DatFiles
                             Remark = remark,
                             Boot = boot,
 
-                            PartName = partName,
-                            PartInterface = partInterface,
+                            Part = new SoftwareListPart() { Name = partName, Interface = partInterface },
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
@@ -942,8 +937,7 @@ namespace SabreTools.Library.DatFiles
                             Remark = remark,
                             Boot = boot,
 
-                            PartName = partName,
-                            PartInterface = partInterface,
+                            Part = new SoftwareListPart() { Name = partName, Interface = partInterface },
                             Features = features,
                             AreaName = areaName,
                             AreaSize = areaSize,
@@ -969,6 +963,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Get normalized header value for a given separated value header field
         /// </summary>
+        /// TODO: Have this return Field (actually, replace with existing convert at that point)
         private string GetNormalizedHeader(string header)
         {
             switch (header.ToLowerInvariant())

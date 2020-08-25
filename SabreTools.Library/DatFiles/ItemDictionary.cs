@@ -647,7 +647,7 @@ namespace SabreTools.Library.DatFiles
                     DatItem.Sort(ref sortedlist, false);
 
                     // If we're merging the roms, do so
-                    if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == Field.MachineName))
+                    if (dedupeType == DedupeType.Full || (dedupeType == DedupeType.Game && bucketBy == Field.Machine_Name))
                         sortedlist = DatItem.Merge(sortedlist);
 
                     // Add the list back to the dictionary
@@ -1027,7 +1027,7 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.Verbose($"Beginning stat collection for '{file}'", false);
                 List<string> games = new List<string>();
                 DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
-                datdata.Items.BucketBy(Field.MachineName, DedupeType.None, norename: true);
+                datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
                 Globals.Logger.User($"Adding stats for file '{file}'\n", false);

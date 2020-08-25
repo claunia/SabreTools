@@ -224,12 +224,24 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Add all infos to the info list
-                Header.Infos.Add(new OfflineListInfo(
-                    reader.Name.ToLowerInvariant(),
-                    reader.GetAttribute("visible").AsYesNo(),
-                    reader.GetAttribute("inNamingOption").AsYesNo(),
-                    reader.GetAttribute("default").AsYesNo()));
-                reader.Read();
+                switch (reader.Name.ToLowerInvariant())
+                {
+                    case "info":
+                        var info = new OfflineListInfo();
+                        info.Name = reader.Name.ToLowerInvariant();
+                        info.Visible = reader.GetAttribute("visible").AsYesNo();
+                        info.InNamingOption = reader.GetAttribute("inNamingOption").AsYesNo();
+                        info.Default = reader.GetAttribute("default").AsYesNo();
+
+                        Header.Infos.Add(info);
+
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
             }
         }
 
@@ -787,7 +799,7 @@ namespace SabreTools.Library.DatFiles
                     {
                         xtw.WriteStartElement(info.Name);
                         xtw.WriteAttributeString("visible", info.Visible.ToString());
-                        xtw.WriteAttributeString("inNamingOption", info.IsNamingOption.ToString());
+                        xtw.WriteAttributeString("inNamingOption", info.InNamingOption.ToString());
                         xtw.WriteAttributeString("default", info.Default.ToString());
                         xtw.WriteEndElement();
                     }

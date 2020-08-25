@@ -93,7 +93,7 @@ contents of any changed dats.";
                 }
             }
 
-            datroot.Items.BucketBy(Field.MachineName, DedupeType.None, norename: true);
+            datroot.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
             watch.Stop();
 

@@ -125,6 +125,7 @@ namespace SabreTools.Library.Tools
         /// </summary>
         /// <param name="input">String to get value from</param>
         /// <returns>Field value corresponding to the string</returns>
+        /// TODO: Needs to be SEVERELY overhauled. Start using dot notation for fields... (where possible)
         public static Field AsField(this string input)
         {
             switch (input?.ToLowerInvariant())
@@ -139,11 +140,11 @@ namespace SabreTools.Library.Tools
                 case "machine":
                 case "machinename":
                 case "machine-name":
-                    return Field.MachineName;
+                    return Field.Machine_Name;
 
                 case "comment":
                 case "extra":
-                    return Field.Comment;
+                    return Field.Machine_Comment;
 
                 case "desc":
                 case "description":
@@ -155,32 +156,32 @@ namespace SabreTools.Library.Tools
                 case "machinedescription":
                 case "machine-description":
                 case "machine description":
-                    return Field.Description;
+                    return Field.Machine_Description;
 
                 case "year":
-                    return Field.Year;
+                    return Field.Machine_Year;
 
                 case "manufacturer":
-                    return Field.Manufacturer;
+                    return Field.Machine_Manufacturer;
 
                 case "publisher":
-                    return Field.Publisher;
+                    return Field.Machine_Publisher;
 
                 case "category":
                 case "gamecategory":
                 case "game-category":
                 case "machinecategory":
                 case "machine-category":
-                    return Field.Category;
+                    return Field.Machine_Category;
 
                 case "romof":
-                    return Field.RomOf;
+                    return Field.Machine_RomOf;
 
                 case "cloneof":
-                    return Field.CloneOf;
+                    return Field.Machine_CloneOf;
 
                 case "sampleof":
-                    return Field.SampleOf;
+                    return Field.Machine_SampleOf;
 
                 case "gametype":
                 case "game type":
@@ -188,20 +189,20 @@ namespace SabreTools.Library.Tools
                 case "machinetype":
                 case "machine type":
                 case "machine-type":
-                    return Field.MachineType;
+                    return Field.Machine_Type;
 
                 #endregion
 
                 #region AttractMode
 
                 case "players":
-                    return Field.Players;
+                    return Field.Machine_Players;
 
                 case "rotation":
-                    return Field.Rotation;
+                    return Field.Machine_Rotation;
 
                 case "control":
-                    return Field.Control;
+                    return Field.Machine_Control;
 
                 case "amstatus":
                 case "am-status":
@@ -211,19 +212,19 @@ namespace SabreTools.Library.Tools
                 case "machine-status":
                 case "supportstatus":
                 case "support-status":
-                    return Field.SupportStatus;
+                    return Field.Machine_SupportStatus;
 
                 case "displaycount":
                 case "display-count":
                 case "displays":
-                    return Field.DisplayCount;
+                    return Field.Machine_DisplayCount;
 
                 case "displaytype":
                 case "display-type":
-                    return Field.DisplayType;
+                    return Field.Machine_DisplayType;
 
                 case "buttons":
-                    return Field.Buttons;
+                    return Field.Machine_Buttons;
 
                 #endregion
 
@@ -232,33 +233,33 @@ namespace SabreTools.Library.Tools
                 case "sourcefile":
                 case "source file":
                 case "source-file":
-                    return Field.SourceFile;
+                    return Field.Machine_SourceFile;
 
                 case "runnable":
-                    return Field.Runnable;
+                    return Field.Machine_Runnable;
 
                 case "devices":
-                    return Field.DeviceReferences;
+                    return Field.Machine_DeviceReference_Name;
 
                 case "slotoptions":
                 case "slot options":
                 case "slot-options":
-                    return Field.Slots;
+                    return Field.Machine_Slots;
 
                 case "infos":
-                    return Field.Infos;
+                    return Field.Machine_Infos;
 
                 #endregion
 
                 #region Logiqx
 
                 case "board":
-                    return Field.Board;
+                    return Field.Machine_Board;
 
                 case "rebuildto":
                 case "rebuild to":
                 case "rebuild-to":
-                    return Field.RebuildTo;
+                    return Field.Machine_RebuildTo;
 
                 #endregion
 
@@ -267,35 +268,35 @@ namespace SabreTools.Library.Tools
                 case "titleid":
                 case "title id":
                 case "title-id":
-                    return Field.TitleID;
+                    return Field.Machine_TitleID;
 
                 case "developer":
-                    return Field.Developer;
+                    return Field.Machine_Developer;
 
                 case "genre":
-                    return Field.Genre;
+                    return Field.Machine_Genre;
 
                 case "subgenre":
-                    return Field.Subgenre;
+                    return Field.Machine_Subgenre;
 
                 case "ratings":
-                    return Field.Ratings;
+                    return Field.Machine_Ratings;
 
                 case "score":
-                    return Field.Score;
+                    return Field.Machine_Score;
 
                 case "enabled":
-                    return Field.Enabled;
+                    return Field.Machine_Enabled;
 
                 case "hascrc":
                 case "has crc":
                 case "has-crc":
-                    return Field.HasCrc;
+                    return Field.Machine_HasCrc;
 
                 case "relatedto":
                 case "related to":
                 case "related-to":
-                    return Field.RelatedTo;
+                    return Field.Machine_RelatedTo;
 
                 #endregion
 
@@ -306,23 +307,23 @@ namespace SabreTools.Library.Tools
                 case "genmsx-id":
                 case "gen msx id":
                 case "gen-msx-id":
-                    return Field.GenMSXID;
+                    return Field.Machine_GenMSXID;
 
                 case "system":
                 case "msxsystem":
                 case "msx system":
                 case "msx-system":
-                    return Field.System;
+                    return Field.Machine_System;
 
                 case "country":
-                    return Field.Country;
+                    return Field.Machine_Country;
 
                 #endregion
 
                 #region SoftwareList
 
                 case "supported":
-                    return Field.Supported;
+                    return Field.Machine_Supported;
                 case "sharedfeat":
                 case "shared feat":
                 case "shared-feat":
@@ -332,14 +333,14 @@ namespace SabreTools.Library.Tools
                 case "sharedfeatures":
                 case "shared features":
                 case "shared-features":
-                    return Field.SharedFeatures;
+                    return Field.Machine_SharedFeatures;
                 case "dipswitch":
                 case "dip switch":
                 case "dip-switch":
                 case "dipswitches":
                 case "dip switches":
                 case "dip-switches":
-                    return Field.DipSwitches;
+                    return Field.Machine_DipSwitches;
 
                 #endregion
 
@@ -352,11 +353,11 @@ namespace SabreTools.Library.Tools
                 case "itemname":
                 case "item-name":
                 case "name":
-                    return Field.Name;
+                    return Field.DatItem_Name;
                 case "itemtype":
                 case "item-type":
                 case "type":
-                    return Field.ItemType;
+                    return Field.DatItem_Type;
 
                 #endregion
 
@@ -368,32 +369,32 @@ namespace SabreTools.Library.Tools
                 case "altromname":
                 case "alt romname":
                 case "alt-romname":
-                    return Field.AltName;
+                    return Field.DatItem_AltName;
                 case "alttitle":
                 case "alt title":
                 case "alt-title":
                 case "altromtitle":
                 case "alt romtitle":
                 case "alt-romtitle":
-                    return Field.AltTitle;
+                    return Field.DatItem_AltTitle;
 
                 #endregion
 
                 #region OpenMSX
 
                 case "original":
-                    return Field.Original;
+                    return Field.DatItem_Original;
                 case "subtype":
                 case "sub type":
                 case "sub-type":
                 case "openmsx_subtype":
-                    return Field.OpenMSXSubType;
+                    return Field.DatItem_OpenMSXSubType;
                 case "openmsx_type":
-                    return Field.OpenMSXType;
+                    return Field.DatItem_OpenMSXType;
                 case "remark":
-                    return Field.Remark;
+                    return Field.DatItem_Remark;
                 case "boot":
-                    return Field.Boot;
+                    return Field.DatItem_Boot;
 
                 #endregion
 

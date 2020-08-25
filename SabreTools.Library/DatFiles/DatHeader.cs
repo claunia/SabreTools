@@ -126,54 +126,6 @@ namespace SabreTools.Library.DatFiles
         [JsonIgnore]
         public DatFormat DatFormat { get; set; }
 
-        /// <summary>
-        /// Dictionary of fields in machine and items to exclude from writing
-        /// </summary>
-        [JsonIgnore]
-        public List<Field> ExcludeFields { get; set; } = new List<Field>();
-
-        /// <summary>
-        /// Enable "One Rom, One Region (1G1R)" mode
-        /// </summary>
-        [JsonIgnore]
-        public bool OneGamePerRegion { get; set; }
-
-        /// <summary>
-        /// Ordered list of regions for "One Rom, One Region (1G1R)" mode
-        /// </summary>
-        [JsonIgnore]
-        public List<string> RegionList { get; set; }
-
-        /// <summary>
-        /// Ensure each rom is in their own game
-        /// </summary>
-        [JsonIgnore]
-        public bool OneRomPerGame { get; set; }
-
-        /// <summary>
-        /// Keep machines that don't contain any items
-        /// </summary>
-        [JsonIgnore]
-        public bool KeepEmptyGames { get; set; }
-
-        /// <summary>
-        /// Remove scene dates from the beginning of machine names
-        /// </summary>
-        [JsonIgnore]
-        public bool SceneDateStrip { get; set; }
-
-        /// <summary>
-        /// Deduplicate items using the given method
-        /// </summary>
-        [JsonIgnore]
-        public DedupeType DedupeRoms { get; set; }
-
-        /// <summary>
-        /// Strip hash types from items
-        /// </summary>
-        [JsonIgnore]
-        public Hash StripHash { get; private set; }
-
         #endregion
 
         #region ListXML Fields
@@ -308,6 +260,59 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonProperty("rcversion", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RomCenterVersion { get; set; }
+
+        #endregion
+
+        #region Filtering Fields
+
+        /// <summary>
+        /// Dictionary of fields in machine and items to exclude from writing
+        /// </summary>
+        [JsonIgnore]
+        public List<Field> ExcludeFields { get; set; } = new List<Field>();
+
+        /// <summary>
+        /// Enable "One Rom, One Region (1G1R)" mode
+        /// </summary>
+        [JsonIgnore]
+        public bool OneGamePerRegion { get; set; }
+
+        /// <summary>
+        /// Ordered list of regions for "One Rom, One Region (1G1R)" mode
+        /// </summary>
+        [JsonIgnore]
+        public List<string> RegionList { get; set; }
+
+        /// <summary>
+        /// Ensure each rom is in their own game
+        /// </summary>
+        [JsonIgnore]
+        public bool OneRomPerGame { get; set; }
+
+        /// <summary>
+        /// Keep machines that don't contain any items
+        /// </summary>
+        [JsonIgnore]
+        public bool KeepEmptyGames { get; set; }
+
+        /// <summary>
+        /// Remove scene dates from the beginning of machine names
+        /// </summary>
+        [JsonIgnore]
+        public bool SceneDateStrip { get; set; }
+
+        /// <summary>
+        /// Deduplicate items using the given method
+        /// </summary>
+        [JsonIgnore]
+        public DedupeType DedupeRoms { get; set; }
+
+        /// <summary>
+        /// Strip hash types from items
+        /// </summary>
+        [JsonIgnore]
+        public Hash StripHash { get; private set; }
+
 
         #endregion
 

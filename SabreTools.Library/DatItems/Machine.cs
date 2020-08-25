@@ -136,6 +136,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        // TODO: Ensure read/write for all fields here
         #region ListXML Fields
 
         /// <summary>
@@ -203,17 +204,52 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlConfiguration> Configurations { get; set; } = null;
 
         /// <summary>
+        /// List of associated ports
+        /// </summary>
+        [JsonProperty("ports", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlPort> Ports { get; set; } = null;
+
+        /// <summary>
+        /// List of associated adjusters
+        /// </summary>
+        [JsonProperty("adjusters", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlAdjuster> Adjusters { get; set; } = null;
+
+        /// <summary>
+        /// List of associated drivers
+        /// </summary>
+        [JsonProperty("drivers", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlDriver> Drivers { get; set; } = null;
+
+        /// <summary>
+        /// List of associated features
+        /// </summary>
+        [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlFeature> Features { get; set; } = null;
+
+        /// <summary>
+        /// List of associated devices
+        /// </summary>
+        [JsonProperty("devices", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlDevice> Devices { get; set; } = null;
+
+        /// <summary>
         /// List of slot options
         /// </summary>
         [JsonProperty("slots", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlSlot> Slots { get; set; } = null;
 
         /// <summary>
-        /// List of info items
+        /// List of software lists
         /// </summary>
-        /// <remarks>Also in SoftwareList</remarks>
-        [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlInfo> Infos { get; set; } = null;
+        [JsonProperty("softwarelists", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlSoftwareList> SoftwareLists { get; set; } = null;
+
+        /// <summary>
+        /// List of ramoptions
+        /// </summary>
+        [JsonProperty("ramoptions", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<ListXmlRamOption> RamOptions { get; set; } = null;
 
         #endregion
 
@@ -233,6 +269,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        // TODO: Should this be a separate object for TruRip?
         #region Logiqx EmuArc Fields
 
         /// <summary>
@@ -313,6 +350,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        // TODO: Ensure read/write for all fields here
         #region SoftwareList Fields
 
         /// <summary>
@@ -320,6 +358,13 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("supported", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Supported Supported { get; set; } = Supported.NULL;
+
+        /// <summary>
+        /// List of info items
+        /// </summary>
+        /// <remarks>Also in SoftwareList</remarks>
+        [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<SoftwareListInfo> Infos { get; set; } = null;
 
         /// <summary>
         /// List of shared feature items
@@ -341,96 +386,96 @@ namespace SabreTools.Library.DatItems
         {
             #region Common
 
-            if (mappings.Keys.Contains(Field.MachineName))
-                Name = mappings[Field.MachineName];
+            if (mappings.Keys.Contains(Field.Machine_Name))
+                Name = mappings[Field.Machine_Name];
 
-            if (mappings.Keys.Contains(Field.Comment))
-                Comment = mappings[Field.Comment];
+            if (mappings.Keys.Contains(Field.Machine_Comment))
+                Comment = mappings[Field.Machine_Comment];
 
-            if (mappings.Keys.Contains(Field.Description))
-                Description = mappings[Field.Description];
+            if (mappings.Keys.Contains(Field.Machine_Description))
+                Description = mappings[Field.Machine_Description];
 
-            if (mappings.Keys.Contains(Field.Year))
-                Year = mappings[Field.Year];
+            if (mappings.Keys.Contains(Field.Machine_Year))
+                Year = mappings[Field.Machine_Year];
 
-            if (mappings.Keys.Contains(Field.Manufacturer))
-                Manufacturer = mappings[Field.Manufacturer];
+            if (mappings.Keys.Contains(Field.Machine_Manufacturer))
+                Manufacturer = mappings[Field.Machine_Manufacturer];
 
-            if (mappings.Keys.Contains(Field.Publisher))
-                Publisher = mappings[Field.Publisher];
+            if (mappings.Keys.Contains(Field.Machine_Publisher))
+                Publisher = mappings[Field.Machine_Publisher];
 
-            if (mappings.Keys.Contains(Field.Category))
-                Category = mappings[Field.Category];
+            if (mappings.Keys.Contains(Field.Machine_Category))
+                Category = mappings[Field.Machine_Category];
 
-            if (mappings.Keys.Contains(Field.RomOf))
-                RomOf = mappings[Field.RomOf];
+            if (mappings.Keys.Contains(Field.Machine_RomOf))
+                RomOf = mappings[Field.Machine_RomOf];
 
-            if (mappings.Keys.Contains(Field.CloneOf))
-                CloneOf = mappings[Field.CloneOf];
+            if (mappings.Keys.Contains(Field.Machine_CloneOf))
+                CloneOf = mappings[Field.Machine_CloneOf];
 
-            if (mappings.Keys.Contains(Field.SampleOf))
-                SampleOf = mappings[Field.SampleOf];
+            if (mappings.Keys.Contains(Field.Machine_SampleOf))
+                SampleOf = mappings[Field.Machine_SampleOf];
 
-            if (mappings.Keys.Contains(Field.MachineType))
-                MachineType = mappings[Field.MachineType].AsMachineType();
+            if (mappings.Keys.Contains(Field.Machine_Type))
+                MachineType = mappings[Field.Machine_Type].AsMachineType();
 
             #endregion
 
             #region AttractMode
 
-            if (mappings.Keys.Contains(Field.Players))
-                Players = mappings[Field.Players];
+            if (mappings.Keys.Contains(Field.Machine_Players))
+                Players = mappings[Field.Machine_Players];
 
-            if (mappings.Keys.Contains(Field.Rotation))
-                Rotation = mappings[Field.Rotation];
+            if (mappings.Keys.Contains(Field.Machine_Rotation))
+                Rotation = mappings[Field.Machine_Rotation];
 
-            if (mappings.Keys.Contains(Field.Control))
-                Control = mappings[Field.Control];
+            if (mappings.Keys.Contains(Field.Machine_Control))
+                Control = mappings[Field.Machine_Control];
 
-            if (mappings.Keys.Contains(Field.SupportStatus))
-                Status = mappings[Field.SupportStatus];
+            if (mappings.Keys.Contains(Field.Machine_SupportStatus))
+                Status = mappings[Field.Machine_SupportStatus];
 
-            if (mappings.Keys.Contains(Field.DisplayCount))
-                DisplayCount = mappings[Field.DisplayCount];
+            if (mappings.Keys.Contains(Field.Machine_DisplayCount))
+                DisplayCount = mappings[Field.Machine_DisplayCount];
 
-            if (mappings.Keys.Contains(Field.DisplayType))
-                DisplayType = mappings[Field.DisplayType];
+            if (mappings.Keys.Contains(Field.Machine_DisplayType))
+                DisplayType = mappings[Field.Machine_DisplayType];
 
-            if (mappings.Keys.Contains(Field.Buttons))
-                Buttons = mappings[Field.Buttons];
+            if (mappings.Keys.Contains(Field.Machine_Buttons))
+                Buttons = mappings[Field.Machine_Buttons];
 
             #endregion
 
             #region ListXML
 
-            if (mappings.Keys.Contains(Field.SourceFile))
-                SourceFile = mappings[Field.SourceFile];
+            if (mappings.Keys.Contains(Field.Machine_SourceFile))
+                SourceFile = mappings[Field.Machine_SourceFile];
 
-            if (mappings.Keys.Contains(Field.Runnable))
-                Runnable = mappings[Field.Runnable].AsRunnable();
+            if (mappings.Keys.Contains(Field.Machine_Runnable))
+                Runnable = mappings[Field.Machine_Runnable].AsRunnable();
 
-            if (mappings.Keys.Contains(Field.DeviceReferences))
+            if (mappings.Keys.Contains(Field.Machine_DeviceReference_Name))
             {
                 if (DeviceReferences == null)
                     DeviceReferences = new List<ListXmlDeviceReference>();
 
-                var devices = mappings[Field.DeviceReferences].Split(';').Select(d => new ListXmlDeviceReference() { Name = d, });
+                var devices = mappings[Field.Machine_DeviceReference_Name].Split(';').Select(d => new ListXmlDeviceReference() { Name = d, });
                 DeviceReferences.AddRange(devices);
             }
 
             // TODO: Add Field.Slot
 
-            if (mappings.Keys.Contains(Field.Infos))
+            if (mappings.Keys.Contains(Field.Machine_Infos))
             {
                 if (Infos == null)
-                    Infos = new List<ListXmlInfo>();
+                    Infos = new List<SoftwareListInfo>();
 
-                string[] pairs = mappings[Field.Infos].Split(';');
+                string[] pairs = mappings[Field.Machine_Infos].Split(';');
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
 
-                    var infoObj = new ListXmlInfo();
+                    var infoObj = new SoftwareListInfo();
                     infoObj.Name = split[0];
                     infoObj.Value = split[1];
 
@@ -442,69 +487,69 @@ namespace SabreTools.Library.DatItems
 
             #region Logiqx
 
-            if (mappings.Keys.Contains(Field.Board))
-                Board = mappings[Field.Board];
+            if (mappings.Keys.Contains(Field.Machine_Board))
+                Board = mappings[Field.Machine_Board];
 
-            if (mappings.Keys.Contains(Field.RebuildTo))
-                RebuildTo = mappings[Field.RebuildTo];
+            if (mappings.Keys.Contains(Field.Machine_RebuildTo))
+                RebuildTo = mappings[Field.Machine_RebuildTo];
 
             #endregion
 
             #region Logiqx EmuArc
 
-            if (mappings.Keys.Contains(Field.TitleID))
-                TitleID = mappings[Field.TitleID];
+            if (mappings.Keys.Contains(Field.Machine_TitleID))
+                TitleID = mappings[Field.Machine_TitleID];
 
-            if (mappings.Keys.Contains(Field.Developer))
-                Developer = mappings[Field.Developer];
+            if (mappings.Keys.Contains(Field.Machine_Developer))
+                Developer = mappings[Field.Machine_Developer];
 
-            if (mappings.Keys.Contains(Field.Genre))
-                Genre = mappings[Field.Genre];
+            if (mappings.Keys.Contains(Field.Machine_Genre))
+                Genre = mappings[Field.Machine_Genre];
 
-            if (mappings.Keys.Contains(Field.Subgenre))
-                Subgenre = mappings[Field.Subgenre];
+            if (mappings.Keys.Contains(Field.Machine_Subgenre))
+                Subgenre = mappings[Field.Machine_Subgenre];
 
-            if (mappings.Keys.Contains(Field.Ratings))
-                Ratings = mappings[Field.Ratings];
+            if (mappings.Keys.Contains(Field.Machine_Ratings))
+                Ratings = mappings[Field.Machine_Ratings];
 
-            if (mappings.Keys.Contains(Field.Score))
-                Score = mappings[Field.Score];
+            if (mappings.Keys.Contains(Field.Machine_Score))
+                Score = mappings[Field.Machine_Score];
 
-            if (mappings.Keys.Contains(Field.Enabled))
-                Enabled = mappings[Field.Enabled];
+            if (mappings.Keys.Contains(Field.Machine_Enabled))
+                Enabled = mappings[Field.Machine_Enabled];
 
-            if (mappings.Keys.Contains(Field.HasCrc))
-                HasCrc = mappings[Field.HasCrc].AsYesNo();
+            if (mappings.Keys.Contains(Field.Machine_HasCrc))
+                HasCrc = mappings[Field.Machine_HasCrc].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.RelatedTo))
-                RelatedTo = mappings[Field.RelatedTo];
+            if (mappings.Keys.Contains(Field.Machine_RelatedTo))
+                RelatedTo = mappings[Field.Machine_RelatedTo];
 
             #endregion
 
             #region OpenMSX
 
-            if (mappings.Keys.Contains(Field.GenMSXID))
-                GenMSXID = mappings[Field.GenMSXID];
+            if (mappings.Keys.Contains(Field.Machine_GenMSXID))
+                GenMSXID = mappings[Field.Machine_GenMSXID];
 
-            if (mappings.Keys.Contains(Field.System))
-                System = mappings[Field.System];
+            if (mappings.Keys.Contains(Field.Machine_System))
+                System = mappings[Field.Machine_System];
 
-            if (mappings.Keys.Contains(Field.Country))
-                Country = mappings[Field.Country];
+            if (mappings.Keys.Contains(Field.Machine_Country))
+                Country = mappings[Field.Machine_Country];
 
             #endregion
 
             #region SoftwareList
 
-            if (mappings.Keys.Contains(Field.Supported))
-                Supported = mappings[Field.Supported].AsSupported();
+            if (mappings.Keys.Contains(Field.Machine_Supported))
+                Supported = mappings[Field.Machine_Supported].AsSupported();
 
-            if (mappings.Keys.Contains(Field.SharedFeatures))
+            if (mappings.Keys.Contains(Field.Machine_SharedFeatures))
             {
                 if (SharedFeatures == null)
                     SharedFeatures = new List<SoftwareListSharedFeature>();
 
-                string[] pairs = mappings[Field.SharedFeatures].Split(';');
+                string[] pairs = mappings[Field.Machine_SharedFeatures].Split(';');
                 foreach (string pair in pairs)
                 {
                     string[] split = pair.Split('=');
@@ -517,7 +562,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (mappings.Keys.Contains(Field.DipSwitches))
+            if (mappings.Keys.Contains(Field.Machine_DipSwitches))
             {
                 if (DipSwitches == null)
                     DipSwitches = new List<ListXmlDipSwitch>();
@@ -927,148 +972,148 @@ namespace SabreTools.Library.DatItems
         {
             #region Common
 
-            if (fields.Contains(Field.MachineName))
+            if (fields.Contains(Field.Machine_Name))
                 Name = null;
 
-            if (fields.Contains(Field.Comment))
+            if (fields.Contains(Field.Machine_Comment))
                 Comment = null;
 
-            if (fields.Contains(Field.Description))
+            if (fields.Contains(Field.Machine_Description))
                 Description = null;
 
-            if (fields.Contains(Field.Year))
+            if (fields.Contains(Field.Machine_Year))
                 Year = null;
 
-            if (fields.Contains(Field.Manufacturer))
+            if (fields.Contains(Field.Machine_Manufacturer))
                 Manufacturer = null;
 
-            if (fields.Contains(Field.Publisher))
+            if (fields.Contains(Field.Machine_Publisher))
                 Publisher = null;
 
-            if (fields.Contains(Field.Category))
+            if (fields.Contains(Field.Machine_Category))
                 Category = null;
 
-            if (fields.Contains(Field.RomOf))
+            if (fields.Contains(Field.Machine_RomOf))
                 RomOf = null;
 
-            if (fields.Contains(Field.CloneOf))
+            if (fields.Contains(Field.Machine_CloneOf))
                 CloneOf = null;
 
-            if (fields.Contains(Field.SampleOf))
+            if (fields.Contains(Field.Machine_SampleOf))
                 SampleOf = null;
 
-            if (fields.Contains(Field.MachineType))
+            if (fields.Contains(Field.Machine_Type))
                 MachineType = MachineType.NULL;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(Field.Players))
+            if (fields.Contains(Field.Machine_Players))
                 Players = null;
 
-            if (fields.Contains(Field.Rotation))
+            if (fields.Contains(Field.Machine_Rotation))
                 Rotation = null;
 
-            if (fields.Contains(Field.Control))
+            if (fields.Contains(Field.Machine_Control))
                 Control = null;
 
-            if (fields.Contains(Field.SupportStatus))
+            if (fields.Contains(Field.Machine_SupportStatus))
                 Status = null;
 
-            if (fields.Contains(Field.DisplayCount))
+            if (fields.Contains(Field.Machine_DisplayCount))
                 DisplayCount = null;
 
-            if (fields.Contains(Field.DisplayType))
+            if (fields.Contains(Field.Machine_DisplayType))
                 DisplayType = null;
 
-            if (fields.Contains(Field.Buttons))
+            if (fields.Contains(Field.Machine_Buttons))
                 Buttons = null;
 
             #endregion
 
             #region ListXML
 
-            if (fields.Contains(Field.SourceFile))
+            if (fields.Contains(Field.Machine_SourceFile))
                 SourceFile = null;
 
-            if (fields.Contains(Field.Runnable))
+            if (fields.Contains(Field.Machine_Runnable))
                 Runnable = Runnable.NULL;
 
-            if (fields.Contains(Field.DeviceReferences))
+            if (fields.Contains(Field.Machine_DeviceReferences))
                 DeviceReferences = null;
 
-            if (fields.Contains(Field.Slots))
+            if (fields.Contains(Field.Machine_Slots))
                 Slots = null;
 
-            if (fields.Contains(Field.Infos))
+            if (fields.Contains(Field.Machine_Infos))
                 Infos = null;
 
             #endregion
 
             #region Logiqx
 
-            if (fields.Contains(Field.Board))
+            if (fields.Contains(Field.Machine_Board))
                 Board = null;
 
-            if (fields.Contains(Field.RebuildTo))
+            if (fields.Contains(Field.Machine_RebuildTo))
                 RebuildTo = null;
 
             #endregion
 
             #region Logiqx EmuArc
 
-            if (fields.Contains(Field.TitleID))
+            if (fields.Contains(Field.Machine_TitleID))
                 TitleID = null;
 
-            if (fields.Contains(Field.Developer))
+            if (fields.Contains(Field.Machine_Developer))
                 Developer = null;
 
-            if (fields.Contains(Field.Genre))
+            if (fields.Contains(Field.Machine_Genre))
                 Genre = null;
 
-            if (fields.Contains(Field.Subgenre))
+            if (fields.Contains(Field.Machine_Subgenre))
                 Subgenre = null;
 
-            if (fields.Contains(Field.Ratings))
+            if (fields.Contains(Field.Machine_Ratings))
                 Ratings = null;
 
-            if (fields.Contains(Field.Score))
+            if (fields.Contains(Field.Machine_Score))
                 Score = null;
 
-            if (fields.Contains(Field.Enabled))
+            if (fields.Contains(Field.Machine_Enabled))
                 Enabled = null;
 
-            if (fields.Contains(Field.HasCrc))
+            if (fields.Contains(Field.Machine_HasCrc))
                 HasCrc = null;
 
-            if (fields.Contains(Field.RelatedTo))
+            if (fields.Contains(Field.Machine_RelatedTo))
                 RelatedTo = null;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(Field.GenMSXID))
+            if (fields.Contains(Field.Machine_GenMSXID))
                 GenMSXID = null;
 
-            if (fields.Contains(Field.System))
+            if (fields.Contains(Field.Machine_System))
                 System = null;
 
-            if (fields.Contains(Field.Country))
+            if (fields.Contains(Field.Machine_Country))
                 Country = null;
 
             #endregion
 
             #region SoftwareList
 
-            if (fields.Contains(Field.Supported))
+            if (fields.Contains(Field.Machine_Supported))
                 Supported = Supported.NULL;
 
-            if (fields.Contains(Field.SharedFeatures))
+            if (fields.Contains(Field.Machine_SharedFeatures))
                 SharedFeatures = null;
 
-            if (fields.Contains(Field.DipSwitches))
+            if (fields.Contains(Field.Machine_DipSwitches))
                 DipSwitches = null;
 
             #endregion
@@ -1088,151 +1133,151 @@ namespace SabreTools.Library.DatItems
         {
             #region Common
 
-            if (fields.Contains(Field.MachineName))
+            if (fields.Contains(Field.Machine_Name))
                 Name = machine.Name;
 
-            if (fields.Contains(Field.Comment))
+            if (fields.Contains(Field.Machine_Comment))
                 Comment = machine.Comment;
 
-            if (fields.Contains(Field.Description))
+            if (fields.Contains(Field.Machine_Description))
             {
                 if (!onlySame || (onlySame && Name == Description))
                     Description = machine.Description;
             }
 
-            if (fields.Contains(Field.Year))
+            if (fields.Contains(Field.Machine_Year))
                 Year = machine.Year;
 
-            if (fields.Contains(Field.Manufacturer))
+            if (fields.Contains(Field.Machine_Manufacturer))
                 Manufacturer = machine.Manufacturer;
 
-            if (fields.Contains(Field.Publisher))
+            if (fields.Contains(Field.Machine_Publisher))
                 Publisher = machine.Publisher;
 
-            if (fields.Contains(Field.Category))
+            if (fields.Contains(Field.Machine_Category))
                 Category = machine.Category;
 
-            if (fields.Contains(Field.RomOf))
+            if (fields.Contains(Field.Machine_RomOf))
                 RomOf = machine.RomOf;
 
-            if (fields.Contains(Field.CloneOf))
+            if (fields.Contains(Field.Machine_CloneOf))
                 CloneOf = machine.CloneOf;
 
-            if (fields.Contains(Field.SampleOf))
+            if (fields.Contains(Field.Machine_SampleOf))
                 SampleOf = machine.SampleOf;
 
-            if (fields.Contains(Field.MachineType))
+            if (fields.Contains(Field.Machine_Type))
                 MachineType = machine.MachineType;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(Field.Players))
+            if (fields.Contains(Field.Machine_Players))
                 Players = machine.Players;
 
-            if (fields.Contains(Field.Rotation))
+            if (fields.Contains(Field.Machine_Rotation))
                 Rotation = machine.Rotation;
 
-            if (fields.Contains(Field.Control))
+            if (fields.Contains(Field.Machine_Control))
                 Control = machine.Control;
 
-            if (fields.Contains(Field.SupportStatus))
+            if (fields.Contains(Field.Machine_SupportStatus))
                 Status = machine.Status;
 
-            if (fields.Contains(Field.DisplayCount))
+            if (fields.Contains(Field.Machine_DisplayCount))
                 DisplayCount = machine.DisplayCount;
 
-            if (fields.Contains(Field.DisplayType))
+            if (fields.Contains(Field.Machine_DisplayType))
                 DisplayType = machine.DisplayType;
 
-            if (fields.Contains(Field.Buttons))
+            if (fields.Contains(Field.Machine_Buttons))
                 Buttons = machine.Buttons;
 
             #endregion
 
             #region ListXML
 
-            if (fields.Contains(Field.SourceFile))
+            if (fields.Contains(Field.Machine_SourceFile))
                 SourceFile = machine.SourceFile;
 
-            if (fields.Contains(Field.Runnable))
+            if (fields.Contains(Field.Machine_Runnable))
                 Runnable = machine.Runnable;
 
-            if (fields.Contains(Field.DeviceReferences))
+            if (fields.Contains(Field.Machine_DeviceReferences))
                 DeviceReferences = machine.DeviceReferences;
 
-            if (fields.Contains(Field.Slots))
+            if (fields.Contains(Field.Machine_Slots))
                 Slots = machine.Slots;
 
-            if (fields.Contains(Field.Infos))
+            if (fields.Contains(Field.Machine_Infos))
                 Infos = machine.Infos;
 
             #endregion
 
             #region Logiqx
 
-            if (fields.Contains(Field.Board))
+            if (fields.Contains(Field.Machine_Board))
                 Board = machine.Board;
 
-            if (fields.Contains(Field.RebuildTo))
+            if (fields.Contains(Field.Machine_RebuildTo))
                 RebuildTo = machine.RebuildTo;
 
             #endregion
 
             #region Logiqx EmuArc
 
-            if (fields.Contains(Field.TitleID))
+            if (fields.Contains(Field.Machine_TitleID))
                 TitleID = machine.TitleID;
 
-            if (fields.Contains(Field.Developer))
+            if (fields.Contains(Field.Machine_Developer))
                 Developer = machine.Developer;
 
-            if (fields.Contains(Field.Genre))
+            if (fields.Contains(Field.Machine_Genre))
                 Genre = machine.Genre;
 
-            if (fields.Contains(Field.Subgenre))
+            if (fields.Contains(Field.Machine_Subgenre))
                 Subgenre = machine.Subgenre;
 
-            if (fields.Contains(Field.Ratings))
+            if (fields.Contains(Field.Machine_Ratings))
                 Ratings = machine.Ratings;
 
-            if (fields.Contains(Field.Score))
+            if (fields.Contains(Field.Machine_Score))
                 Score = machine.Score;
 
-            if (fields.Contains(Field.Enabled))
+            if (fields.Contains(Field.Machine_Enabled))
                 Enabled = machine.Enabled;
 
-            if (fields.Contains(Field.HasCrc))
+            if (fields.Contains(Field.Machine_HasCrc))
                 HasCrc = machine.HasCrc;
 
-            if (fields.Contains(Field.RelatedTo))
+            if (fields.Contains(Field.Machine_RelatedTo))
                 RelatedTo = machine.RelatedTo;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(Field.GenMSXID))
+            if (fields.Contains(Field.Machine_GenMSXID))
                 GenMSXID = machine.GenMSXID;
 
-            if (fields.Contains(Field.System))
+            if (fields.Contains(Field.Machine_System))
                 System = machine.System;
 
-            if (fields.Contains(Field.Country))
+            if (fields.Contains(Field.Machine_Country))
                 Country = machine.Country;
 
             #endregion
 
             #region SoftwareList
 
-            if (fields.Contains(Field.Supported))
+            if (fields.Contains(Field.Machine_Supported))
                 Supported = machine.Supported;
 
-            if (fields.Contains(Field.SharedFeatures))
+            if (fields.Contains(Field.Machine_SharedFeatures))
                 SharedFeatures = machine.SharedFeatures;
 
-            if (fields.Contains(Field.DipSwitches))
+            if (fields.Contains(Field.Machine_DipSwitches))
                 DipSwitches = machine.DipSwitches;
 
             #endregion

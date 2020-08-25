@@ -286,8 +286,8 @@ namespace SabreTools.Library.DatFiles
                 if (updateFields.Intersect(DatItem.MachineFields).Any())
                 {
                     // For comparison's sake, we want to use Machine Name as the base bucketing
-                    Items.BucketBy(Field.MachineName, DedupeType.Full);
-                    intDat.Items.BucketBy(Field.MachineName, DedupeType.None);
+                    Items.BucketBy(Field.Machine_Name, DedupeType.Full);
+                    intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
 
                     // Then we do a namewise comparison against the base DAT
                     Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
@@ -360,7 +360,7 @@ namespace SabreTools.Library.DatFiles
         {
             // For comparison's sake, we want to use a base ordering
             if (useGames)
-                Items.BucketBy(Field.MachineName, DedupeType.None);
+                Items.BucketBy(Field.Machine_Name, DedupeType.None);
             else
                 Items.BucketBy(Field.CRC, DedupeType.None);
 
@@ -377,7 +377,7 @@ namespace SabreTools.Library.DatFiles
 
                 // For comparison's sake, we want to a the base bucketing
                 if (useGames)
-                    intDat.Items.BucketBy(Field.MachineName, DedupeType.None);
+                    intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
                 else
                     intDat.Items.BucketBy(Field.CRC, DedupeType.Full);
 
@@ -943,7 +943,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // Bucket by game first
-                Items.BucketBy(Field.MachineName, DedupeType.None);
+                Items.BucketBy(Field.Machine_Name, DedupeType.None);
 
                 // Create a new set of mappings based on the items
                 var map = new Dictionary<string, Dictionary<Field, string>>();
@@ -1193,7 +1193,7 @@ namespace SabreTools.Library.DatFiles
         public void OneGamePerRegion()
         {
             // For sake of ease, the first thing we want to do is bucket by game
-            Items.BucketBy(Field.MachineName, DedupeType.None, norename: true);
+            Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
             // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
@@ -1382,7 +1382,7 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Creating device non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            Items.BucketBy(Field.MachineName, mergeroms, norename: true);
+            Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (AddRomsFromDevices(false, false)) ;
@@ -1401,7 +1401,7 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Creating fully non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            Items.BucketBy(Field.MachineName, mergeroms, norename: true);
+            Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (AddRomsFromDevices(true, true)) ;
@@ -1424,7 +1424,7 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Creating merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            Items.BucketBy(Field.MachineName, mergeroms, norename: true);
+            Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddRomsFromChildren();
@@ -1446,7 +1446,7 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Creating non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            Items.BucketBy(Field.MachineName, mergeroms, norename: true);
+            Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddRomsFromParent();
@@ -1468,7 +1468,7 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Creating split sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            Items.BucketBy(Field.MachineName, mergeroms, norename: true);
+            Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             RemoveRomsFromChild();
@@ -3501,7 +3501,7 @@ namespace SabreTools.Library.DatFiles
         public bool SplitByLevel(string outDir, bool shortname, bool basedat)
         {
             // First, bucket by games so that we can do the right thing
-            Items.BucketBy(Field.MachineName, DedupeType.None, lower: false, norename: true);
+            Items.BucketBy(Field.Machine_Name, DedupeType.None, lower: false, norename: true);
 
             // Create a temporary DAT to add things to
             DatFile tempDat = Create(Header);
@@ -3762,7 +3762,7 @@ namespace SabreTools.Library.DatFiles
                 if (Items.RomCount + Items.DiskCount == 0)
                     Items.RecalculateStats();
 
-                Items.BucketBy(Field.MachineName, DedupeType.None, norename: true);
+                Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
                 consoleOutput.ReplaceStatistics(Header.FileName, Items.Keys.Count(), Items);
@@ -3772,10 +3772,10 @@ namespace SabreTools.Library.DatFiles
             if (Header.DedupeRoms == DedupeType.Full)
                 Items.BucketBy(Field.CRC, Header.DedupeRoms, norename: norename);
             else if (Header.DedupeRoms == DedupeType.Game)
-                Items.BucketBy(Field.MachineName, Header.DedupeRoms, norename: norename);
+                Items.BucketBy(Field.Machine_Name, Header.DedupeRoms, norename: norename);
 
             // Bucket roms by game name, if not already
-            Items.BucketBy(Field.MachineName, DedupeType.None, norename: norename);
+            Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: norename);
 
             // Output the number of items we're going to be writing
             Globals.Logger.User($"A total of {Items.TotalCount} items will be written out to '{Header.FileName}'");

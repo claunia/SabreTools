@@ -244,19 +244,19 @@ namespace SabreTools.Library.DatItems
         public string HTotal { get; set; } // TODO: Int32? Float?
 
         [JsonProperty("hbend")]
-        public string HBend { get; set; } // TODO: Int32? Float?
+        public string HBEnd { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("hstart")]
-        public string HStart { get; set; } // TODO: Int32? Float?
+        [JsonProperty("hbstart")]
+        public string HBStart { get; set; } // TODO: Int32? Float?
 
         [JsonProperty("vtotal")]
         public string VTotal { get; set; } // TODO: Int32? Float?
 
         [JsonProperty("vbend")]
-        public string VBend { get; set; } // TODO: Int32? Float?
+        public string VBEnd { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("vstart")]
-        public string VStart { get; set; } // TODO: Int32? Float?
+        [JsonProperty("vbstart")]
+        public string VBStart { get; set; } // TODO: Int32? Float?
     }
 
     /// <summary>
@@ -358,19 +358,6 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("overall")]
         public string Overall { get; set; } // TODO: (unemulated|imperfect)
-    }
-
-    /// <summary>
-    /// Represents one ListXML info
-    /// </summary>
-    [JsonObject("info")]
-    public class ListXmlInfo
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
     }
 
     /// <summary>
@@ -508,6 +495,19 @@ namespace SabreTools.Library.DatItems
     #region SoftwareList
 
     /// <summary>
+    /// Represents one SoftwareList info
+    /// </summary>
+    [JsonObject("info")]
+    public class SoftwareListInfo
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+    }
+
+    /// <summary>
     /// Represents one SoftwareList shared feature object
     /// </summary>
     [JsonObject("sharedfeat")]
@@ -539,6 +539,19 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("value")]
         public string Value { get; set; }
+    }
+
+    /// <summary>
+    /// Represents one SoftwareList part object
+    /// </summary>
+    [JsonObject("part")]
+    public class SoftwareListPart
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("interface")]
+        public string Interface { get; set; }
     }
 
     #endregion

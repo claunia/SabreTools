@@ -148,15 +148,6 @@ namespace SabreTools.Library.DatFiles
 
                 SourceFile = reader.GetAttribute("sourcefile"),
                 Runnable = reader.GetAttribute("runnable").AsRunnable(),
-                DeviceReferences = new List<ListXmlDeviceReference>(),
-                Chips = new List<ListXmlChip>(),
-                Displays = new List<ListXmlDisplay>(),
-                Sounds = new List<ListXmlSound>(),
-                Conditions = new List<ListXmlCondition>(),
-                Inputs = new List<ListXmlInput>(),
-                DipSwitches = new List<ListXmlDipSwitch>(),
-                Configurations = new List<ListXmlConfiguration>(),
-                Slots = new List<ListXmlSlot>(),
             };
 
             // Get list for new DatItems
@@ -267,6 +258,10 @@ namespace SabreTools.Library.DatFiles
                         var deviceReference = new ListXmlDeviceReference();
                         deviceReference.Name = reader.GetAttribute("name");
 
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+
                         machine.DeviceReferences.Add(deviceReference);
 
                         reader.Read();
@@ -294,6 +289,10 @@ namespace SabreTools.Library.DatFiles
                         chip.Type = reader.GetAttribute("type");
                         chip.Clock = reader.GetAttribute("clock");
 
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+
                         machine.Chips.Add(chip);
 
                         reader.Read();
@@ -310,11 +309,15 @@ namespace SabreTools.Library.DatFiles
                         display.Refresh = reader.GetAttribute("refresh");
                         display.PixClock = reader.GetAttribute("pixclock");
                         display.HTotal = reader.GetAttribute("htotal");
-                        display.HBend = reader.GetAttribute("hbend");
-                        display.HStart = reader.GetAttribute("hstart");
+                        display.HBEnd = reader.GetAttribute("hbend");
+                        display.HBStart = reader.GetAttribute("hstart");
                         display.VTotal = reader.GetAttribute("vtotal");
-                        display.VBend = reader.GetAttribute("vbend");
-                        display.VStart = reader.GetAttribute("vstart");
+                        display.VBEnd = reader.GetAttribute("vbend");
+                        display.VBStart = reader.GetAttribute("vstart");
+
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
 
                         machine.Displays.Add(display);
 
@@ -324,6 +327,10 @@ namespace SabreTools.Library.DatFiles
                     case "sound":
                         var sound = new ListXmlSound();
                         sound.Channels = reader.GetAttribute("channels");
+
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
 
                         machine.Sounds.Add(sound);
 
@@ -336,6 +343,10 @@ namespace SabreTools.Library.DatFiles
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
                         condition.Value = reader.GetAttribute("value");
+
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
 
                         machine.Conditions.Add(condition);
 
@@ -352,6 +363,10 @@ namespace SabreTools.Library.DatFiles
                         // Now read the internal tags
                         ReadInput(reader.ReadSubtree(), input);
 
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+
                         machine.Inputs.Add(input);
 
                         // Skip the input now that we've processed it
@@ -366,6 +381,10 @@ namespace SabreTools.Library.DatFiles
 
                         // Now read the internal tags
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
+
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
 
                         machine.DipSwitches.Add(dipSwitch);
 
@@ -382,6 +401,10 @@ namespace SabreTools.Library.DatFiles
                         // Now read the internal tags
                         ReadConfiguration(reader.ReadSubtree(), configuration);
 
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+
                         machine.Configurations.Add(configuration);
 
                         // Skip the configuration now that we've processed it
@@ -389,19 +412,23 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "port":
-                        // TODO: Use these ports
                         var port = new ListXmlPort();
                         port.Tag = reader.GetAttribute("tag");
 
                         // Now read the internal tags
                         ReadPort(reader.ReadSubtree(), port);
 
+                        // Ensure the list exists
+                        if (machine.DeviceReferences == null)
+                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+
+                        machine.Ports.Add(port);
+
                         // Skip the port now that we've processed it
                         reader.Skip();
                         break;
 
                     case "adjuster":
-                        // TODO: Use these adjusters
                         var adjuster = new ListXmlAdjuster();
                         adjuster.Name = reader.GetAttribute("name");
                         adjuster.Default = reader.GetAttribute("default").AsYesNo();
@@ -409,33 +436,48 @@ namespace SabreTools.Library.DatFiles
                         // Now read the internal tags
                         ReadAdjuster(reader.ReadSubtree(), adjuster);
 
+                        // Ensure the list exists
+                        if (machine.Adjusters == null)
+                            machine.Adjusters = new List<ListXmlAdjuster>();
+
+                        machine.Adjusters.Add(adjuster);
+
                         // Skip the adjuster now that we've processed it
                         reader.Skip();
                         break;
 
                     case "driver":
-                        // TODO: Use these drivers
                         var driver = new ListXmlDriver();
                         driver.Status = reader.GetAttribute("status");
                         driver.Emulation = reader.GetAttribute("emulation");
                         driver.Cocktail = reader.GetAttribute("cocktail");
                         driver.SaveState = reader.GetAttribute("savestate");
 
+                        // Ensure the list exists
+                        if (machine.Drivers == null)
+                            machine.Drivers = new List<ListXmlDriver>();
+
+                        machine.Drivers.Add(driver);
+
                         reader.Read();
                         break;
 
                     case "feature":
-                        // TODO: Use these features
                         var feature = new ListXmlFeature();
                         feature.Type = reader.GetAttribute("type");
                         feature.Status = reader.GetAttribute("status");
                         feature.Overall = reader.GetAttribute("overall");
 
+                        // Ensure the list exists
+                        if (machine.Features == null)
+                            machine.Features = new List<ListXmlFeature>();
+
+                        machine.Features.Add(feature);
+
                         reader.Read();
                         break;
 
                     case "device":
-                        // TODO: Use these devices
                         var device = new ListXmlDevice();
                         device.Type = reader.GetAttribute("type");
                         device.Tag = reader.GetAttribute("tag");
@@ -445,6 +487,12 @@ namespace SabreTools.Library.DatFiles
 
                         // Now read the internal tags
                         ReadDevice(reader.ReadSubtree(), device);
+
+                        // Ensure the list exists
+                        if (machine.Devices == null)
+                            machine.Devices = new List<ListXmlDevice>();
+
+                        machine.Devices.Add(device);
 
                         // Skip the device now that we've processed it
                         reader.Skip();
@@ -456,6 +504,11 @@ namespace SabreTools.Library.DatFiles
 
                         // Now read the internal tags
                         ReadSlot(reader.ReadSubtree(), slot, machine);
+
+                        // Ensure the list exists
+                        if (machine.Slots == null)
+                            machine.Slots = new List<ListXmlSlot>();
+
                         machine.Slots.Add(slot);
 
                         // Skip the slot now that we've processed it
@@ -463,19 +516,29 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "softwarelist":
-                        // TODO: Use these softwarelists
                         var softwareList = new ListXmlSoftwareList();
                         softwareList.Name = reader.GetAttribute("name");
                         softwareList.Status = reader.GetAttribute("status");
                         softwareList.Filter = reader.GetAttribute("filter");
 
+                        // Ensure the list exists
+                        if (machine.SoftwareLists == null)
+                            machine.SoftwareLists = new List<ListXmlSoftwareList>();
+
+                        machine.SoftwareLists.Add(softwareList);
+
                         reader.Read();
                         break;
 
                     case "ramoption":
-                        // TODO: Use these ramoptions
                         var ramOption = new ListXmlRamOption();
                         ramOption.Default = reader.GetAttribute("default").AsYesNo();
+
+                        // Ensure the list exists
+                        if (machine.RamOptions == null)
+                            machine.RamOptions = new List<ListXmlRamOption>();
+
+                        machine.RamOptions.Add(ramOption);
 
                         reader.Read();
                         break;
@@ -1046,17 +1109,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalAttributeString("year", datItem.Machine.Year);
                 xtw.WriteOptionalAttributeString("publisher", datItem.Machine.Publisher);
                 xtw.WriteOptionalAttributeString("category", datItem.Machine.Category);
-
-                if (datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
-                {
-                    foreach (ListXmlInfo kvp in datItem.Machine.Infos)
-                    {
-                        xtw.WriteStartElement("info");
-                        xtw.WriteRequiredAttributeString("name", kvp.Name);
-                        xtw.WriteRequiredAttributeString("value", kvp.Value);
-                        xtw.WriteEndElement();
-                    }
-                }
 
                 xtw.Flush();
             }

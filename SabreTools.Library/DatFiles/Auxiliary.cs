@@ -14,16 +14,8 @@ namespace SabreTools.Library.DatFiles
     {
         public string Name { get; set; }
         public bool? Visible { get; set; }
-        public bool? IsNamingOption { get; set; }
+        public bool? InNamingOption { get; set; }
         public bool? Default { get; set; }
-
-        public OfflineListInfo(string name, bool? visible, bool? isNamingOption, bool? def)
-        {
-            Name = name;
-            Visible = visible;
-            IsNamingOption = isNamingOption;
-            Default = def;
-        }
     }
 
     #endregion
