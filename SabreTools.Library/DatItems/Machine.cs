@@ -795,7 +795,434 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_Runnable.MatchesNegative(Runnable.NULL, Runnable) == true)
                 return false;
 
-            // TODO: Add Slot filter
+            #region DeviceReferences
+
+            // Machine_DeviceReferences
+            if (filter.Machine_DeviceReferences.MatchesNeutral(null, DeviceReferences?.Any() ?? null) == false)
+                return false;
+
+            // Machine_DeviceReference_Name
+            if (DeviceReferences.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var deviceReference in DeviceReferences)
+                {
+                    if (filter.Machine_DeviceReference_Name.MatchesPositive(null, deviceReference?.Name) != false)
+                        anyPositive = true;
+                    if (filter.Machine_DeviceReference_Name.MatchesNegative(null, deviceReference?.Name) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            #endregion
+
+            #region Chips
+
+            // Machine_DeviceReferences
+            if (filter.Machine_Chips.MatchesNeutral(null, Chips?.Any() ?? null) == false)
+                return false;
+
+            // Machine_Chip_Name
+            if (Chips.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var chip in Chips)
+                {
+                    if (filter.Machine_Chip_Name.MatchesPositive(null, chip?.Name) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Chip_Name.MatchesNegative(null, chip?.Name) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Chip_Tag
+            if (Chips.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var chip in Chips)
+                {
+                    if (filter.Machine_Chip_Tag.MatchesPositive(null, chip?.Tag) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Chip_Tag.MatchesNegative(null, chip?.Tag) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Chip_Type
+            if (Chips.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var chip in Chips)
+                {
+                    if (filter.Machine_Chip_Type.MatchesPositive(null, chip?.Type) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Chip_Type.MatchesNegative(null, chip?.Type) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Chip_Clock
+            if (Chips.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var chip in Chips)
+                {
+                    if (filter.Machine_Chip_Clock.MatchesPositive(null, chip?.Clock) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Chip_Clock.MatchesNegative(null, chip?.Clock) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            #endregion
+
+            #region Displays
+
+            // Machine_Displays
+            if (filter.Machine_Displays.MatchesNeutral(null, Displays?.Any() ?? null) == false)
+                return false;
+
+            // Machine_Display_Tag
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_Tag.MatchesPositive(null, display?.Tag) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_Tag.MatchesNegative(null, display?.Tag) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_Type
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_Type.MatchesPositive(null, display?.Type) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_Type.MatchesNegative(null, display?.Type) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_Rotate
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_Rotate.MatchesPositive(null, display?.Rotate) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_Rotate.MatchesNegative(null, display?.Rotate) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_FlipX
+            if (Displays.Any())
+            {
+                bool anyNeutral = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_FlipX.MatchesNeutral(null, display?.FlipX) != false)
+                        anyNeutral = true;
+                }
+
+                if (!anyNeutral)
+                    return false;
+            }
+
+            // Machine_Display_Width
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_Width.MatchesPositive(null, display?.Width) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_Width.MatchesNegative(null, display?.Width) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_Height
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_Height.MatchesPositive(null, display?.Height) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_Height.MatchesNegative(null, display?.Height) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_Refresh
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_Refresh.MatchesPositive(null, display?.Refresh) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_Refresh.MatchesNegative(null, display?.Refresh) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_PixClock
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_PixClock.MatchesPositive(null, display?.PixClock) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_PixClock.MatchesNegative(null, display?.PixClock) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_HTotal
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_HTotal.MatchesPositive(null, display?.HTotal) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_HTotal.MatchesNegative(null, display?.HTotal) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_HBEnd
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_HBEnd.MatchesPositive(null, display?.HBEnd) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_HBEnd.MatchesNegative(null, display?.HBEnd) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_HBStart
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_HBStart.MatchesPositive(null, display?.HBStart) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_HBStart.MatchesNegative(null, display?.HBStart) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_VTotal
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_VTotal.MatchesPositive(null, display?.VTotal) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_VTotal.MatchesNegative(null, display?.VTotal) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_VBEnd
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_VBEnd.MatchesPositive(null, display?.VBEnd) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_VBEnd.MatchesNegative(null, display?.VBEnd) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Display_VBStart
+            if (Displays.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var display in Displays)
+                {
+                    if (filter.Machine_Display_VBStart.MatchesPositive(null, display?.VBStart) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Display_VBStart.MatchesNegative(null, display?.VBStart) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            #endregion
+
+            #region Sounds
+
+            // Machine_Sounds
+            if (filter.Machine_Sounds.MatchesNeutral(null, Sounds?.Any() ?? null) == false)
+                return false;
+
+            // Machine_Sound_Channels
+            if (Sounds.Any())
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var sound in Sounds)
+                {
+                    if (filter.Machine_DeviceReference_Name.MatchesPositive(null, sound?.Channels) != false)
+                        anyPositive = true;
+                    if (filter.Machine_DeviceReference_Name.MatchesNegative(null, sound?.Channels) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            #endregion
+
+
 
             // Filter on machine type
             if (filter.Machine_Type.MatchesPositive(MachineType.NULL, MachineType) == false)
@@ -803,7 +1230,7 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_Type.MatchesNegative(MachineType.NULL, MachineType) == true)
                 return false;
 
-            #endregion
+            #endregion // ListXML
 
             #region Logiqx
 
@@ -907,10 +1334,10 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_Supported.MatchesNegative(Supported.NULL, Supported) == true)
                 return false;
 
-            // Infos
+            #region Infos
 
             // Machine_Infos
-            if (filter.Machine_Infos.MatchesNeutral(null, Infos?.Any() ?? false) == false)
+            if (filter.Machine_Infos.MatchesNeutral(null, Infos?.Any() ?? null) == false)
                 return false;
 
             // Machine_Info_Name
@@ -953,7 +1380,9 @@ namespace SabreTools.Library.DatItems
                     return false;
             }
 
-            // SharedFeatures
+            #endregion
+
+            #region SharedFeatures
 
             // Machine_SharedFeatures
             if (filter.Machine_SharedFeatures.MatchesNeutral(null, SharedFeatures?.Any() ?? false) == false)
@@ -1000,6 +1429,8 @@ namespace SabreTools.Library.DatItems
             }
 
             #endregion
+
+            #endregion // SoftwareList
 
             return true;
         }
