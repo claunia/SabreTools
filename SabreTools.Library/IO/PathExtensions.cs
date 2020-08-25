@@ -59,7 +59,7 @@ namespace SabreTools.Library.IO
             }
 
             // Now append the filename
-            path += hash + $"{hash}.gz";
+            path += $"{hash}.gz";
             return path;
         }
 
