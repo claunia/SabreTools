@@ -155,7 +155,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// List of associated device names
         /// </summary>
-        [JsonProperty("devices", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("devicereferences", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlDeviceReference> DeviceReferences { get; set; } = null;
 
         /// <summary>
@@ -733,6 +733,12 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_SampleOf.MatchesNegativeSet(SampleOf) == true)
                 return false;
 
+            // Machine_Type
+            if (filter.Machine_Type.MatchesPositive(MachineType.NULL, MachineType) == false)
+                return false;
+            if (filter.Machine_Type.MatchesNegative(MachineType.NULL, MachineType) == true)
+                return false;
+
             #endregion
 
             #region AttractMode
@@ -783,13 +789,13 @@ namespace SabreTools.Library.DatItems
 
             #region ListXML
 
-            // Filter on source file
+            // Machine_SourceFile
             if (filter.Machine_SourceFile.MatchesPositiveSet(SourceFile) == false)
                 return false;
             if (filter.Machine_SourceFile.MatchesNegativeSet(SourceFile) == true)
                 return false;
 
-            // Filter on runnable
+            // Machine_Runnable
             if (filter.Machine_Runnable.MatchesPositive(Runnable.NULL, Runnable) == false)
                 return false;
             if (filter.Machine_Runnable.MatchesNegative(Runnable.NULL, Runnable) == true)
@@ -802,7 +808,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_DeviceReference_Name
-            if (DeviceReferences.Any())
+            if (DeviceReferences?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -830,7 +836,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_Chip_Name
-            if (Chips.Any())
+            if (Chips?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -850,7 +856,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Chip_Tag
-            if (Chips.Any())
+            if (Chips?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -870,7 +876,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Chip_Type
-            if (Chips.Any())
+            if (Chips?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -890,7 +896,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Chip_Clock
-            if (Chips.Any())
+            if (Chips?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -918,7 +924,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_Display_Tag
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -938,7 +944,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_Type
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -958,7 +964,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_Rotate
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -978,7 +984,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_FlipX
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyNeutral = false;
 
@@ -993,7 +999,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_Width
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1013,7 +1019,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_Height
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1033,7 +1039,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_Refresh
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1053,7 +1059,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_PixClock
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1073,7 +1079,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_HTotal
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1093,7 +1099,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_HBEnd
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1113,7 +1119,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_HBStart
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1133,7 +1139,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_VTotal
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1153,7 +1159,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_VBEnd
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1173,7 +1179,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Display_VBStart
-            if (Displays.Any())
+            if (Displays?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1201,7 +1207,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_Sound_Channels
-            if (Sounds.Any())
+            if (Sounds?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1222,13 +1228,115 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region Conditions
 
+            // Machine_Conditions
+            if (filter.Machine_Conditions.MatchesNeutral(null, Conditions?.Any() ?? null) == false)
+                return false;
 
-            // Filter on machine type
-            if (filter.Machine_Type.MatchesPositive(MachineType.NULL, MachineType) == false)
-                return false;
-            if (filter.Machine_Type.MatchesNegative(MachineType.NULL, MachineType) == true)
-                return false;
+            // Machine_Condition_Tag
+            if (Conditions?.Any() == true)
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var condition in Conditions)
+                {
+                    if (filter.Machine_Condition_Tag.MatchesPositive(null, condition?.Tag) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Condition_Tag.MatchesNegative(null, condition?.Tag) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Condition_Mask
+            if (Conditions?.Any() == true)
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var condition in Conditions)
+                {
+                    if (filter.Machine_Condition_Mask.MatchesPositive(null, condition?.Mask) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Condition_Mask.MatchesNegative(null, condition?.Mask) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Condition_Relation
+            if (Conditions?.Any() == true)
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var condition in Conditions)
+                {
+                    if (filter.Machine_Condition_Relation.MatchesPositive(null, condition?.Relation) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Condition_Relation.MatchesNegative(null, condition?.Relation) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            // Machine_Condition_Value
+            if (Conditions?.Any() == true)
+            {
+                bool anyPositive = false;
+                bool anyNegative = false;
+
+                foreach (var condition in Conditions)
+                {
+                    if (filter.Machine_Condition_Value.MatchesPositive(null, condition?.Value) != false)
+                        anyPositive = true;
+                    if (filter.Machine_Condition_Value.MatchesNegative(null, condition?.Value) == true)
+                        anyNegative = true;
+                }
+
+                if (!anyPositive)
+                    return false;
+                if (anyNegative)
+                    return false;
+            }
+
+            #endregion
+
+            // TODO: Inputs
+            // TODO: Inputs.Controls
+            // TODO: DipSwitches
+            // TODO: DipSwitches.Locations
+            // TODO: DipSwitches.Values
+            // TODO: Configurations
+            // TODO: Configurations.Locations
+            // TODO: Configurations.Settings
+            // TODO: Ports
+            // TODO: Ports.Analogs
+            // TODO: Adjusters
+            // TODO: Adjusters.Conditions
+            // TODO: Drivers
+            // TODO: Features
+            // TODO: Devices
+            // TODO: Devices.Instances
+            // TODO: Devices.Extensions
+            // TODO: Slots
+            // TODO: Slots.SlotOptions
+            // TODO: SoftwareLists
+            // TODO: RamOptions
 
             #endregion // ListXML
 
@@ -1341,7 +1449,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_Info_Name
-            if (Infos.Any())
+            if (Infos?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1361,7 +1469,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_Info_Value
-            if (Infos.Any())
+            if (Infos?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1389,7 +1497,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_SharedFeature_Name
-            if (SharedFeatures.Any())
+            if (SharedFeatures?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
@@ -1409,7 +1517,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // Machine_SharedFeature_Value
-            if (SharedFeatures.Any())
+            if (SharedFeatures?.Any() == true)
             {
                 bool anyPositive = false;
                 bool anyNegative = false;
