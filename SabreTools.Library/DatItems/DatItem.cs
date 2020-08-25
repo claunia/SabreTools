@@ -291,7 +291,7 @@ namespace SabreTools.Library.DatItems
             Field.Machine_Ratings,
             Field.Machine_Score,
             Field.Machine_Enabled,
-            Field.Machine_HasCrc,
+            Field.Machine_CRC,
             Field.Machine_RelatedTo,
 
             // OpenMSX

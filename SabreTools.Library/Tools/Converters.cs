@@ -413,7 +413,6 @@ namespace SabreTools.Library.Tools
                         return Field.Machine_Status;
 
                     case "displaycount":
-                    case "displays":
                         return Field.Machine_DisplayCount;
 
                     case "displaytype":
@@ -456,7 +455,421 @@ namespace SabreTools.Library.Tools
                     case "chip_clock":
                         return Field.Machine_Chip_Clock;
 
-                        #endregion
+                    case "displays":
+                        return Field.Machine_Displays;
+
+                    case "display_tag":
+                        return Field.Machine_Display_Tag;
+
+                    case "display_type":
+                        return Field.Machine_Display_Type;
+
+                    case "display_rotate":
+                        return Field.Machine_Display_Rotate;
+
+                    case "display_flipx":
+                        return Field.Machine_Display_FlipX;
+
+                    case "display_width":
+                        return Field.Machine_Display_Width;
+
+                    case "display_height":
+                        return Field.Machine_Display_Height;
+
+                    case "display_refresh":
+                        return Field.Machine_Display_Refresh;
+
+                    case "display_pixclock":
+                        return Field.Machine_Display_PixClock;
+
+                    case "display_htotal":
+                        return Field.Machine_Display_HTotal;
+
+                    case "display_hbend":
+                        return Field.Machine_Display_HBEnd;
+
+                    case "display_hbstart":
+                        return Field.Machine_Display_HBStart;
+
+                    case "display_vtotal":
+                        return Field.Machine_Display_VTotal;
+
+                    case "display_vbend":
+                        return Field.Machine_Display_VBEnd;
+
+                    case "display_vbstart":
+                        return Field.Machine_Display_VBStart;
+
+                    case "sounds":
+                        return Field.Machine_Sounds;
+
+                    case "sound_channels":
+                        return Field.Machine_Sound_Channels;
+
+                    case "conditions":
+                        return Field.Machine_Conditions;
+
+                    case "condition_tag":
+                        return Field.Machine_Condition_Tag;
+
+                    case "condition_mask":
+                        return Field.Machine_Condition_Mask;
+
+                    case "condition_relation":
+                        return Field.Machine_Condition_Relation;
+
+                    case "condition_value":
+                        return Field.Machine_Condition_Value;
+
+                    case "inputs":
+                        return Field.Machine_Inputs;
+
+                    case "input_service":
+                        return Field.Machine_Input_Service;
+
+                    case "input_tilt":
+                        return Field.Machine_Input_Tilt;
+
+                    case "input_players":
+                        return Field.Machine_Input_Players;
+
+                    case "input_coins":
+                        return Field.Machine_Input_Coins;
+
+                    case "input_controls":
+                        return Field.Machine_Input_Controls;
+
+                    case "input_control_type":
+                        return Field.Machine_Input_Control_Type;
+
+                    case "input_control_player":
+                        return Field.Machine_Input_Control_Player;
+
+                    case "input_control_buttons":
+                        return Field.Machine_Input_Control_Buttons;
+
+                    case "input_control_regbuttons":
+                        return Field.Machine_Input_Control_RegButtons;
+
+                    case "input_control_minimum":
+                        return Field.Machine_Input_Control_Minimum;
+
+                    case "input_control_maximum":
+                        return Field.Machine_Input_Control_Maximum;
+
+                    case "input_control_sensitivity":
+                        return Field.Machine_Input_Control_Sensitivity;
+
+                    case "input_control_keydelta":
+                        return Field.Machine_Input_Control_KeyDelta;
+
+                    case "input_control_reverse":
+                        return Field.Machine_Input_Control_Reverse;
+
+                    case "input_control_ways":
+                        return Field.Machine_Input_Control_Ways;
+
+                    case "input_control_ways2":
+                        return Field.Machine_Input_Control_Ways2;
+
+                    case "input_control_ways3":
+                        return Field.Machine_Input_Control_Ways3;
+
+                    case "dipswitches":
+                        return Field.Machine_DipSwitches;
+
+                    case "dipswitch_name":
+                        return Field.Machine_DipSwitch_Name;
+
+                    case "dipswitch_tag":
+                        return Field.Machine_DipSwitch_Tag;
+
+                    case "dipswitch_mask":
+                        return Field.Machine_DipSwitch_Mask;
+
+                    case "dipswitch_locations":
+                        return Field.Machine_DipSwitch_Locations;
+
+                    case "dipswitch_location_name":
+                        return Field.Machine_DipSwitch_Location_Name;
+
+                    case "dipswitch_location_number":
+                        return Field.Machine_DipSwitch_Location_Number;
+
+                    case "dipswitch_location_inverted":
+                        return Field.Machine_DipSwitch_Location_Inverted;
+
+                    case "dipswitch_values":
+                        return Field.Machine_DipSwitch_Values;
+
+                    case "dipswitch_value_name":
+                        return Field.Machine_DipSwitch_Value_Name;
+
+                    case "dipswitch_value_value":
+                        return Field.Machine_DipSwitch_Value_Value;
+
+                    case "dipswitch_value_default":
+                        return Field.Machine_DipSwitch_Value_Default;
+
+                    case "configurations":
+                        return Field.Machine_Configurations;
+
+                    case "configuration_name":
+                        return Field.Machine_Configuration_Name;
+
+                    case "configuration_tag":
+                        return Field.Machine_Configuration_Tag;
+
+                    case "configuration_mask":
+                        return Field.Machine_Configuration_Mask;
+
+                    case "configuration_locations":
+                        return Field.Machine_Configuration_Locations;
+
+                    case "configuration_location_name":
+                        return Field.Machine_Configuration_Location_Name;
+
+                    case "configuration_location_number":
+                        return Field.Machine_Configuration_Location_Number;
+
+                    case "configuration_location_inverted":
+                        return Field.Machine_Configuration_Location_Inverted;
+
+                    case "configuration_settings":
+                        return Field.Machine_Configuration_Settings;
+
+                    case "configuration_setting_name":
+                        return Field.Machine_Configuration_Setting_Name;
+
+                    case "configuration_setting_value":
+                        return Field.Machine_Configuration_Setting_Value;
+
+                    case "configuration_setting_default":
+                        return Field.Machine_Configuration_Setting_Default;
+
+                    case "ports":
+                        return Field.Machine_Ports;
+
+                    case "port_tag":
+                        return Field.Machine_Port_Tag;
+
+                    case "port_analogs":
+                        return Field.Machine_Port_Analogs;
+
+                    case "port_analog_mask":
+                        return Field.Machine_Port_Analog_Mask;
+
+                    case "adjusters":
+                        return Field.Machine_Adjusters;
+
+                    case "adjuster_name":
+                        return Field.Machine_Adjuster_Name;
+
+                    case "adjuster_default":
+                        return Field.Machine_Adjuster_Default;
+
+                    case "adjuster_conditions":
+                        return Field.Machine_Adjuster_Conditions;
+
+                    case "adjuster_condition_tag":
+                        return Field.Machine_Adjuster_Condition_Tag;
+
+                    case "adjuster_condition_mask":
+                        return Field.Machine_Adjuster_Condition_Mask;
+
+                    case "adjuster_condition_relation":
+                        return Field.Machine_Adjuster_Condition_Relation;
+
+                    case "adjuster_condition_value":
+                        return Field.Machine_Adjuster_Condition_Value;
+
+                    case "drivers":
+                        return Field.Machine_Drivers;
+
+                    case "driver_status":
+                        return Field.Machine_Driver_Status;
+
+                    case "driver_emulation":
+                        return Field.Machine_Driver_Emulation;
+
+                    case "driver_cocktail":
+                        return Field.Machine_Driver_Cocktail;
+
+                    case "driver_savestate":
+                        return Field.Machine_Driver_SaveState;
+
+                    case "features":
+                        return Field.Machine_Features;
+
+                    case "feature_type":
+                        return Field.Machine_Feature_Type;
+
+                    case "feature_status":
+                        return Field.Machine_Feature_Status;
+
+                    case "feature_overall":
+                        return Field.Machine_Feature_Overall;
+
+                    case "devices":
+                        return Field.Machine_Devices;
+
+                    case "device_type":
+                        return Field.Machine_Device_Type;
+
+                    case "device_tag":
+                        return Field.Machine_Device_Tag;
+
+                    case "device_fixedimage":
+                        return Field.Machine_Device_FixedImage;
+
+                    case "device_mandatory":
+                        return Field.Machine_Device_Mandatory;
+
+                    case "device_interface":
+                        return Field.Machine_Device_Interface;
+
+                    case "device_instances":
+                        return Field.Machine_Device_Instances;
+
+                    case "device_instance_name":
+                        return Field.Machine_Device_Instance_Name;
+
+                    case "device_instance_briefname":
+                        return Field.Machine_Device_Instance_BriefName;
+
+                    case "device_extensions":
+                        return Field.Machine_Device_Extensions;
+
+                    case "device_extension_name":
+                        return Field.Machine_Device_Extension_Name;
+
+                    case "slots":
+                        return Field.Machine_Slots;
+
+                    case "slot_name":
+                        return Field.Machine_Slot_Name;
+
+                    case "slot_slotoptions":
+                        return Field.Machine_Slot_SlotOptions;
+
+                    case "slot_slotoption_name":
+                        return Field.Machine_Slot_SlotOption_Name;
+
+                    case "slot_slotoption_devicename":
+                        return Field.Machine_Slot_SlotOption_DeviceName;
+
+                    case "slot_slotoption_default":
+                        return Field.Machine_Slot_SlotOption_Default;
+
+                    case "softwarelists":
+                        return Field.Machine_SoftwareLists;
+
+                    case "softwarelist_name":
+                        return Field.Machine_SoftwareList_Name;
+
+                    case "softwarelist_status":
+                        return Field.Machine_SoftwareList_Status;
+
+                    case "softwarelist_filter":
+                        return Field.Machine_SoftwareList_Filter;
+
+                    case "ramoptions":
+                        return Field.Machine_RamOptions;
+
+                    case "ramoption_default":
+                        return Field.Machine_RamOption_Default;
+
+                    #endregion
+
+                    #region Logiqx
+
+                    case "board":
+                        return Field.Machine_Board;
+
+                    case "rebuildto":
+                    case "rebuild_to":
+                        return Field.Machine_RebuildTo;
+
+                    #endregion
+
+                    #region Logiqx EmuArc
+
+                    case "titleid":
+                    case "title_id":
+                        return Field.Machine_TitleID;
+
+                    case "developer":
+                        return Field.Machine_Developer;
+
+                    case "genre":
+                        return Field.Machine_Genre;
+
+                    case "subgenre":
+                    case "sub_genre":
+                        return Field.Machine_Subgenre;
+
+                    case "ratings":
+                        return Field.Machine_Ratings;
+
+                    case "score":
+                        return Field.Machine_Score;
+
+                    case "enabled":
+                        return Field.Machine_Enabled;
+
+                    case "crc":
+                    case "hascrc":
+                    case "has_crc":
+                        return Field.Machine_CRC;
+
+                    case "relatedto":
+                    case "related_to":
+                        return Field.Machine_RelatedTo;
+
+                    #endregion
+
+                    #region OpenMSX
+
+                    case "genmsxid":
+                    case "genmsx_id":
+                    case "gen_msxid":
+                    case "gen_msx_id":
+                        return Field.Machine_GenMSXID;
+
+                    case "system":
+                    case "msxsystem":
+                    case "msx_system":
+                        return Field.Machine_System;
+
+                    case "country":
+                        return Field.Machine_Country;
+
+                    #endregion
+
+                    #region SoftwareList
+
+                    case "supported":
+                        return Field.Machine_Supported;
+
+                    case "infos":
+                        return Field.Machine_Infos;
+
+                    case "info_name":
+                        return Field.Machine_Info_Name;
+
+                    case "info_value":
+                        return Field.Machine_Info_Value;
+
+                    case "sharedfeatures":
+                        return Field.Machine_SharedFeatures;
+
+                    case "sharedfeature_name":
+                        return Field.Machine_SharedFeature_Name;
+
+                    case "sharedfeature_value":
+                        return Field.Machine_SharedFeature_Value;
+
+                    #endregion
                 }
             }
 
@@ -473,12 +886,206 @@ namespace SabreTools.Library.Tools
                 {
                     #region Common
 
+                    case "name":
+                        return Field.DatItem_Name;
+
+                    case "type":
+                        return Field.DatItem_Type;
+
+                    #endregion
+
+                    #region AttractMode
+
+                    case "altname":
+                    case "alt name":
+                    case "alt-name":
+                    case "altromname":
+                    case "alt romname":
+                    case "alt-romname":
+                        return Field.DatItem_AltName;
+
+                    case "alttitle":
+                    case "alt title":
+                    case "alt-title":
+                    case "altromtitle":
+                    case "alt romtitle":
+                    case "alt-romtitle":
+                        return Field.DatItem_AltTitle;
+
+                    #endregion
+
+                    #region OpenMSX
+
+                    case "original":
+                        return Field.DatItem_Original;
+
+                    case "subtype":
+                    case "sub_type":
+                    case "openmsxsubtype":
+                    case "openmsx_subtype":
+                        return Field.DatItem_OpenMSXSubType;
+
+                    case "openmsxtype":
+                    case "openmsx_type":
+                        return Field.DatItem_OpenMSXType;
+
+                    case "remark":
+                        return Field.DatItem_Remark;
+
+                    case "boot":
+                        return Field.DatItem_Boot;
+
+                    #endregion
+
+                    #region SoftwareList
+
+                    case "part":
+                        return Field.DatItem_Part;
+
+                    case "partname":
+                    case "part_name":
+                        return Field.DatItem_Part_Name;
+
+                    case "partinterface":
+                    case "part_interface":
+                        return Field.DatItem_Part_Interface;
+
+                    case "features":
+                        return Field.DatItem_Features;
+
+                    case "feature_name":
+                        return Field.DatItem_Feature_Name;
+
+                    case "feature_value":
+                        return Field.DatItem_Feature_Value;
+
+                    case "areaname":
+                    case "area_name":
+                        return Field.DatItem_AreaName;
+
+                    case "areasize":
+                    case "area_size":
+                        return Field.DatItem_AreaSize;
+
+                    case "areawidth":
+                    case "area_width":
+                        return Field.DatItem_AreaWidth;
+
+                    case "areaendinanness":
+                    case "area_endianness":
+                        return Field.DatItem_AreaEndianness;
+
+                    case "value":
+                        return Field.DatItem_Value;
+
+                    case "loadflag":
+                    case "load_flag":
+                        return Field.DatItem_LoadFlag;
+
+                    #endregion
+
+                    #region Item-Specific
+
+                    // BiosSet
+                    case "default":
+                        return Field.DatItem_Default;
+
+                    case "description":
+                    case "biosdescription":
+                    case "bios_description":
+                        return Field.DatItem_Description;
+
+                    // Disk
+                    case "md5":
+                    case "md5_hash":
+                        return Field.DatItem_MD5;
+#if NET_FRAMEWORK
+                    case "ripemd160":
+                    case "ripemd160_hash":
+                        return Field.DatItem_RIPEMD160;
+#endif
+                    case "sha1":
+                    case "sha_1":
+                    case "sha1hash":
+                    case "sha1_hash":
+                    case "sha_1hash":
+                    case "sha_1_hash":
+                        return Field.DatItem_SHA1;
+
+                    case "sha256":
+                    case "sha_256":
+                    case "sha256hash":
+                    case "sha256_hash":
+                    case "sha_256hash":
+                    case "sha_256_hash":
+                        return Field.DatItem_SHA256;
+
+                    case "sha384":
+                    case "sha_384":
+                    case "sha384hash":
+                    case "sha384_hash":
+                    case "sha_384hash":
+                    case "sha_384_hash":
+                        return Field.DatItem_SHA384;
+
+                    case "sha512":
+                    case "sha_512":
+                    case "sha512hash":
+                    case "sha512_hash":
+                    case "sha_512hash":
+                    case "sha_512_hash":
+                        return Field.DatItem_SHA512;
+
+                    case "merge":
+                    case "mergetag":
+                    case "merge_tag":
+                        return Field.DatItem_Merge;
+
+                    case "region":
+                        return Field.DatItem_Region;
+
+                    case "index":
+                        return Field.DatItem_Index;
+
+                    case "writable":
+                        return Field.DatItem_Writable;
+
+                    case "status":
+                        return Field.DatItem_Status;
+
+                    case "optional":
+                        return Field.DatItem_Optional;
+
+                    // Release
+                    case "language":
+                        return Field.DatItem_Language;
+
+                    case "date":
+                        return Field.DatItem_Date;
+
+                    // Rom
+                    case "bios":
+                        return Field.DatItem_Bios;
+
+                    case "size":
+                        return Field.DatItem_Size;
+
+                    case "crc":
+                        return Field.DatItem_CRC;
+
+                    case "offset":
+                        return Field.DatItem_Offset;
+
+                    case "inverted":
+                        return Field.DatItem_Inverted;
+
                     #endregion
                 }
             }
 
             // Else, we fall back on the old matching
-            switch (input?.ToLowerInvariant())
+            // TODO: Remove this entirely
+            switch (input)
             {
                 #region Machine
 
@@ -641,7 +1248,7 @@ namespace SabreTools.Library.Tools
                 case "hascrc":
                 case "has crc":
                 case "has-crc":
-                    return Field.Machine_HasCrc;
+                    return Field.Machine_CRC;
 
                 case "relatedto":
                 case "related to":

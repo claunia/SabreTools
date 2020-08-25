@@ -506,8 +506,8 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Machine_Enabled))
                 Enabled = mappings[Field.Machine_Enabled];
 
-            if (mappings.Keys.Contains(Field.Machine_HasCrc))
-                HasCrc = mappings[Field.Machine_HasCrc].AsYesNo();
+            if (mappings.Keys.Contains(Field.Machine_CRC))
+                HasCrc = mappings[Field.Machine_CRC].AsYesNo();
 
             if (mappings.Keys.Contains(Field.Machine_RelatedTo))
                 RelatedTo = mappings[Field.Machine_RelatedTo];
@@ -1049,7 +1049,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_Enabled))
                 Enabled = null;
 
-            if (fields.Contains(Field.Machine_HasCrc))
+            if (fields.Contains(Field.Machine_CRC))
                 HasCrc = null;
 
             if (fields.Contains(Field.Machine_RelatedTo))
@@ -1213,7 +1213,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_Enabled))
                 Enabled = machine.Enabled;
 
-            if (fields.Contains(Field.Machine_HasCrc))
+            if (fields.Contains(Field.Machine_CRC))
                 HasCrc = machine.HasCrc;
 
             if (fields.Contains(Field.Machine_RelatedTo))

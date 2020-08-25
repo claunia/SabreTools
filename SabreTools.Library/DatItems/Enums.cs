@@ -170,25 +170,25 @@ namespace SabreTools.Library.DatItems
 
         // Inputs
         Machine_Inputs, // TODO: Implement Inputs usage
-        Machine_InputService,
-        Machine_InputTilt,
-        Machine_InputPlayers,
-        Machine_InputCoins,
+        Machine_Input_Service,
+        Machine_Input_Tilt,
+        Machine_Input_Players,
+        Machine_Input_Coins,
 
         // Inputs.Controls
-        Machine_InputControls,
-        Machine_InputControl_Type,
-        Machine_InputControl_Player,
-        Machine_InputControl_Buttons,
-        Machine_InputControl_RegButtons,
-        Machine_InputControl_Minimum,
-        Machine_InputControl_Maximum,
-        Machine_InputControl_Sensitivity,
-        Machine_InputControl_KeyDelta,
-        Machine_InputControl_Reverse,
-        Machine_InputControl_Ways,
-        Machine_InputControl_Ways2,
-        Machine_InputControl_Ways3,
+        Machine_Input_Controls,
+        Machine_Input_Control_Type,
+        Machine_Input_Control_Player,
+        Machine_Input_Control_Buttons,
+        Machine_Input_Control_RegButtons,
+        Machine_Input_Control_Minimum,
+        Machine_Input_Control_Maximum,
+        Machine_Input_Control_Sensitivity,
+        Machine_Input_Control_KeyDelta,
+        Machine_Input_Control_Reverse,
+        Machine_Input_Control_Ways,
+        Machine_Input_Control_Ways2,
+        Machine_Input_Control_Ways3,
 
         // DipSwitches
         Machine_DipSwitches, // TODO: Implement DipSwitches usage
@@ -228,11 +228,11 @@ namespace SabreTools.Library.DatItems
 
         // Ports
         Machine_Ports, // TODO: Implement Ports usage
-        Machine_Ports_Tag,
+        Machine_Port_Tag,
 
         // Ports.Analogs
-        Machine_Ports_Analogs,
-        Machine_Ports_Analog_Mask,
+        Machine_Port_Analogs,
+        Machine_Port_Analog_Mask,
 
         // Adjusters
         Machine_Adjusters, // TODO: Implement Adjusters usage
@@ -314,7 +314,7 @@ namespace SabreTools.Library.DatItems
         Machine_Ratings,
         Machine_Score,
         Machine_Enabled,
-        Machine_HasCrc,
+        Machine_CRC,
         Machine_RelatedTo,
 
         #endregion

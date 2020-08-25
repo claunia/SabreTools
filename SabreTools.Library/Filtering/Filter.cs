@@ -795,7 +795,7 @@ namespace SabreTools.Library.Filtering
                         Enabled.PositiveSet.Add(value);
                     break;
 
-                case Field.Machine_HasCrc:
+                case Field.Machine_CRC:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         HasCrc.Neutral = false;
                     else
