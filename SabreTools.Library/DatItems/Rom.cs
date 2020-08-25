@@ -174,58 +174,58 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Rom-specific fields
-            if (mappings.Keys.Contains(Field.Bios))
-                Bios = mappings[Field.Bios];
+            if (mappings.Keys.Contains(Field.DatItem_Bios))
+                Bios = mappings[Field.DatItem_Bios];
 
-            if (mappings.Keys.Contains(Field.Size))
+            if (mappings.Keys.Contains(Field.DatItem_Size))
             {
-                if (Int64.TryParse(mappings[Field.Size], out long size))
+                if (Int64.TryParse(mappings[Field.DatItem_Size], out long size))
                     Size = size;
             }
 
-            if (mappings.Keys.Contains(Field.CRC))
-                CRC = mappings[Field.CRC];
+            if (mappings.Keys.Contains(Field.DatItem_CRC))
+                CRC = mappings[Field.DatItem_CRC];
 
-            if (mappings.Keys.Contains(Field.MD5))
-                MD5 = mappings[Field.MD5];
+            if (mappings.Keys.Contains(Field.DatItem_MD5))
+                MD5 = mappings[Field.DatItem_MD5];
 
 #if NET_FRAMEWORK
-            if (mappings.Keys.Contains(Field.RIPEMD160))
-                RIPEMD160 = mappings[Field.RIPEMD160];
+            if (mappings.Keys.Contains(Field.DatItem_RIPEMD160))
+                RIPEMD160 = mappings[Field.DatItem_RIPEMD160];
 #endif
 
-            if (mappings.Keys.Contains(Field.SHA1))
-                SHA1 = mappings[Field.SHA1];
+            if (mappings.Keys.Contains(Field.DatItem_SHA1))
+                SHA1 = mappings[Field.DatItem_SHA1];
 
-            if (mappings.Keys.Contains(Field.SHA256))
-                SHA256 = mappings[Field.SHA256];
+            if (mappings.Keys.Contains(Field.DatItem_SHA256))
+                SHA256 = mappings[Field.DatItem_SHA256];
 
-            if (mappings.Keys.Contains(Field.SHA384))
-                SHA384 = mappings[Field.SHA384];
+            if (mappings.Keys.Contains(Field.DatItem_SHA384))
+                SHA384 = mappings[Field.DatItem_SHA384];
 
-            if (mappings.Keys.Contains(Field.SHA512))
-                SHA512 = mappings[Field.SHA512];
+            if (mappings.Keys.Contains(Field.DatItem_SHA512))
+                SHA512 = mappings[Field.DatItem_SHA512];
 
-            if (mappings.Keys.Contains(Field.Merge))
-                MergeTag = mappings[Field.Merge];
+            if (mappings.Keys.Contains(Field.DatItem_Merge))
+                MergeTag = mappings[Field.DatItem_Merge];
 
-            if (mappings.Keys.Contains(Field.Region))
-                Region = mappings[Field.Region];
+            if (mappings.Keys.Contains(Field.DatItem_Region))
+                Region = mappings[Field.DatItem_Region];
 
-            if (mappings.Keys.Contains(Field.Offset))
-                Offset = mappings[Field.Offset];
+            if (mappings.Keys.Contains(Field.DatItem_Offset))
+                Offset = mappings[Field.DatItem_Offset];
 
-            if (mappings.Keys.Contains(Field.Date))
-                Date = mappings[Field.Date];
+            if (mappings.Keys.Contains(Field.DatItem_Date))
+                Date = mappings[Field.DatItem_Date];
 
-            if (mappings.Keys.Contains(Field.Status))
-                ItemStatus = mappings[Field.Status].AsItemStatus();
+            if (mappings.Keys.Contains(Field.DatItem_Status))
+                ItemStatus = mappings[Field.DatItem_Status].AsItemStatus();
 
-            if (mappings.Keys.Contains(Field.Optional))
-                Optional = mappings[Field.Optional].AsYesNo();
+            if (mappings.Keys.Contains(Field.DatItem_Optional))
+                Optional = mappings[Field.DatItem_Optional].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.Inverted))
-                Inverted = mappings[Field.Optional].AsYesNo();
+            if (mappings.Keys.Contains(Field.DatItem_Inverted))
+                Inverted = mappings[Field.DatItem_Optional].AsYesNo();
         }
 
         #endregion
@@ -621,54 +621,54 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.Bios))
+            if (fields.Contains(Field.DatItem_Bios))
                 Bios = null;
 
-            if (fields.Contains(Field.Size))
+            if (fields.Contains(Field.DatItem_Size))
                 Size = 0;
 
-            if (fields.Contains(Field.CRC))
+            if (fields.Contains(Field.DatItem_CRC))
                 CRC = null;
 
-            if (fields.Contains(Field.MD5))
+            if (fields.Contains(Field.DatItem_MD5))
                 MD5 = null;
 
 #if NET_FRAMEWORK
-            if (fields.Contains(Field.RIPEMD160))
+            if (fields.Contains(Field.DatItem_RIPEMD160))
                 RIPEMD160 = null;
 #endif
 
-            if (fields.Contains(Field.SHA1))
+            if (fields.Contains(Field.DatItem_SHA1))
                 SHA1 = null;
 
-            if (fields.Contains(Field.SHA256))
+            if (fields.Contains(Field.DatItem_SHA256))
                 SHA256 = null;
 
-            if (fields.Contains(Field.SHA384))
+            if (fields.Contains(Field.DatItem_SHA384))
                 SHA384 = null;
 
-            if (fields.Contains(Field.SHA512))
+            if (fields.Contains(Field.DatItem_SHA512))
                 SHA512 = null;
 
-            if (fields.Contains(Field.Merge))
+            if (fields.Contains(Field.DatItem_Merge))
                 MergeTag = null;
 
-            if (fields.Contains(Field.Region))
+            if (fields.Contains(Field.DatItem_Region))
                 Region = null;
 
-            if (fields.Contains(Field.Offset))
+            if (fields.Contains(Field.DatItem_Offset))
                 Offset = null;
 
-            if (fields.Contains(Field.Date))
+            if (fields.Contains(Field.DatItem_Date))
                 Date = null;
 
-            if (fields.Contains(Field.Status))
+            if (fields.Contains(Field.DatItem_Status))
                 ItemStatus = ItemStatus.NULL;
 
-            if (fields.Contains(Field.Optional))
+            if (fields.Contains(Field.DatItem_Optional))
                 Optional = null;
 
-            if (fields.Contains(Field.Inverted))
+            if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = null;
         }
 
@@ -691,33 +691,33 @@ namespace SabreTools.Library.DatItems
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)
             {
-                case Field.CRC:
+                case Field.DatItem_CRC:
                     key = CRC;
                     break;
 
-                case Field.MD5:
+                case Field.DatItem_MD5:
                     key = MD5;
                     break;
 
 #if NET_FRAMEWORK
-                case Field.RIPEMD160:
+                case Field.DatItem_RIPEMD160:
                     key = RIPEMD160;
                     break;
 #endif
 
-                case Field.SHA1:
+                case Field.DatItem_SHA1:
                     key = SHA1;
                     break;
 
-                case Field.SHA256:
+                case Field.DatItem_SHA256:
                     key = SHA256;
                     break;
 
-                case Field.SHA384:
+                case Field.DatItem_SHA384:
                     key = SHA384;
                     break;
 
-                case Field.SHA512:
+                case Field.DatItem_SHA512:
                     key = SHA512;
                     break;
 
@@ -751,75 +751,75 @@ namespace SabreTools.Library.DatItems
             Rom newItem = item as Rom;
 
             // Replace the fields
-            if (fields.Contains(Field.Bios))
+            if (fields.Contains(Field.DatItem_Bios))
                 Bios = newItem.Bios;
 
-            if (fields.Contains(Field.Size))
+            if (fields.Contains(Field.DatItem_Size))
                 Size = newItem.Size;
 
-            if (fields.Contains(Field.CRC))
+            if (fields.Contains(Field.DatItem_CRC))
             {
                 if (string.IsNullOrEmpty(CRC) && !string.IsNullOrEmpty(newItem.CRC))
                     CRC = newItem.CRC;
             }
 
-            if (fields.Contains(Field.MD5))
+            if (fields.Contains(Field.DatItem_MD5))
             {
                 if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
                     MD5 = newItem.MD5;
             }
 
 #if NET_FRAMEWORK
-            if (fields.Contains(Field.RIPEMD160))
+            if (fields.Contains(Field.DatItem_RIPEMD160))
             {
                 if (string.IsNullOrEmpty(RIPEMD160) && !string.IsNullOrEmpty(newItem.RIPEMD160))
                     RIPEMD160 = newItem.RIPEMD160;
             }
 #endif
 
-            if (fields.Contains(Field.SHA1))
+            if (fields.Contains(Field.DatItem_SHA1))
             {
                 if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
                     SHA1 = newItem.SHA1;
             }
 
-            if (fields.Contains(Field.SHA256))
+            if (fields.Contains(Field.DatItem_SHA256))
             {
                 if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
                     SHA256 = newItem.SHA256;
             }
 
-            if (fields.Contains(Field.SHA384))
+            if (fields.Contains(Field.DatItem_SHA384))
             {
                 if (string.IsNullOrEmpty(SHA384) && !string.IsNullOrEmpty(newItem.SHA384))
                     SHA384 = newItem.SHA384;
             }
 
-            if (fields.Contains(Field.SHA512))
+            if (fields.Contains(Field.DatItem_SHA512))
             {
                 if (string.IsNullOrEmpty(SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
                     SHA512 = newItem.SHA512;
             }
 
-            if (fields.Contains(Field.Merge))
+            if (fields.Contains(Field.DatItem_Merge))
                 MergeTag = newItem.MergeTag;
 
-            if (fields.Contains(Field.Region))
+            if (fields.Contains(Field.DatItem_Region))
                 Region = newItem.Region;
 
-            if (fields.Contains(Field.Offset))
+            if (fields.Contains(Field.DatItem_Offset))
                 Offset = newItem.Offset;
 
-            if (fields.Contains(Field.Date))
+            if (fields.Contains(Field.DatItem_Date))
                 Date = newItem.Date;
 
-            if (fields.Contains(Field.Status))
+            if (fields.Contains(Field.DatItem_Status))
                 ItemStatus = newItem.ItemStatus;
 
-            if (fields.Contains(Field.Optional))
+            if (fields.Contains(Field.DatItem_Optional))
                 Optional = newItem.Optional;
 
-            if (fields.Contains(Field.Inverted))
+            if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = newItem.Inverted;
         }
 

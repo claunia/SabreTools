@@ -432,8 +432,8 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Machine_Control))
                 Control = mappings[Field.Machine_Control];
 
-            if (mappings.Keys.Contains(Field.Machine_SupportStatus))
-                Status = mappings[Field.Machine_SupportStatus];
+            if (mappings.Keys.Contains(Field.Machine_Status))
+                Status = mappings[Field.Machine_Status];
 
             if (mappings.Keys.Contains(Field.Machine_DisplayCount))
                 DisplayCount = mappings[Field.Machine_DisplayCount];
@@ -454,34 +454,22 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Machine_Runnable))
                 Runnable = mappings[Field.Machine_Runnable].AsRunnable();
 
-            if (mappings.Keys.Contains(Field.Machine_DeviceReference_Name))
-            {
-                if (DeviceReferences == null)
-                    DeviceReferences = new List<ListXmlDeviceReference>();
-
-                var devices = mappings[Field.Machine_DeviceReference_Name].Split(';').Select(d => new ListXmlDeviceReference() { Name = d, });
-                DeviceReferences.AddRange(devices);
-            }
-
-            // TODO: Add Field.Slot
-
-            if (mappings.Keys.Contains(Field.Machine_Infos))
-            {
-                if (Infos == null)
-                    Infos = new List<SoftwareListInfo>();
-
-                string[] pairs = mappings[Field.Machine_Infos].Split(';');
-                foreach (string pair in pairs)
-                {
-                    string[] split = pair.Split('=');
-
-                    var infoObj = new SoftwareListInfo();
-                    infoObj.Name = split[0];
-                    infoObj.Value = split[1];
-
-                    Infos.Add(infoObj);
-                }
-            }
+            // TODO: Add Machine_DeviceReference*
+            // TODO: Add Machine_Chip*
+            // TODO: Add Machine_Display*
+            // TODO: Add Machine_Sound*
+            // TODO: Add Machine_Condition*
+            // TODO: Add Machine_Input*
+            // TODO: Add Machine_DipSwitch*
+            // TODO: Add Machine_Configuration*
+            // TODO: Add Machine_Port*
+            // TODO: Add Machine_Adjuster*
+            // TODO: Add Machine_Driver*
+            // TODO: Add Machine_Feature*
+            // TODO: Add Machine_Device*
+            // TODO: Add Machine_Slot*
+            // TODO: Add Machine_SoftwareList*
+            // TODO: Add Machine_RamOption*
 
             #endregion
 
@@ -544,31 +532,8 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Machine_Supported))
                 Supported = mappings[Field.Machine_Supported].AsSupported();
 
-            if (mappings.Keys.Contains(Field.Machine_SharedFeatures))
-            {
-                if (SharedFeatures == null)
-                    SharedFeatures = new List<SoftwareListSharedFeature>();
-
-                string[] pairs = mappings[Field.Machine_SharedFeatures].Split(';');
-                foreach (string pair in pairs)
-                {
-                    string[] split = pair.Split('=');
-
-                    var sharedFeature = new SoftwareListSharedFeature();
-                    sharedFeature.Name = split[0];
-                    sharedFeature.Value = split[1];
-
-                    SharedFeatures.Add(sharedFeature);
-                }
-            }
-
-            if (mappings.Keys.Contains(Field.Machine_DipSwitches))
-            {
-                if (DipSwitches == null)
-                    DipSwitches = new List<ListXmlDipSwitch>();
-
-                // TODO: There's no way this will work... just create the new list for now
-            }
+            // TODO: Add Machine_Info*
+            // TODO: Add Machine_SharedFeature*
 
             #endregion
         }
@@ -1018,7 +983,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_Control))
                 Control = null;
 
-            if (fields.Contains(Field.Machine_SupportStatus))
+            if (fields.Contains(Field.Machine_Status))
                 Status = null;
 
             if (fields.Contains(Field.Machine_DisplayCount))
@@ -1182,7 +1147,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_Control))
                 Control = machine.Control;
 
-            if (fields.Contains(Field.Machine_SupportStatus))
+            if (fields.Contains(Field.Machine_Status))
                 Status = machine.Status;
 
             if (fields.Contains(Field.Machine_DisplayCount))

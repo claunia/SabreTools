@@ -1,6 +1,7 @@
 ﻿using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Reports;
+using System.Text.RegularExpressions;
 
 namespace SabreTools.Library.Tools
 {
@@ -16,21 +17,21 @@ namespace SabreTools.Library.Tools
             switch (hash)
             {
                 case Hash.CRC:
-                    return Field.CRC;
+                    return Field.DatItem_CRC;
                 case Hash.MD5:
-                    return Field.MD5;
+                    return Field.DatItem_MD5;
 #if NET_FRAMEWORK
                 case Hash.RIPEMD160:
-                    return Field.RIPEMD160;
+                    return Field.DatItem_RIPEMD160;
 #endif
                 case Hash.SHA1:
-                    return Field.SHA1;
+                    return Field.DatItem_SHA1;
                 case Hash.SHA256:
-                    return Field.SHA256;
+                    return Field.DatItem_SHA256;
                 case Hash.SHA384:
-                    return Field.SHA384;
+                    return Field.DatItem_SHA384;
                 case Hash.SHA512:
-                    return Field.SHA512;
+                    return Field.DatItem_SHA512;
 
                 default:
                     return Field.NULL;
@@ -128,6 +129,355 @@ namespace SabreTools.Library.Tools
         /// TODO: Needs to be SEVERELY overhauled. Start using dot notation for fields... (where possible)
         public static Field AsField(this string input)
         {
+            // If the input is null, we return null
+            if (input == null)
+                return Field.NULL;
+
+            // Normalize the input
+            input = input.ToLowerInvariant();
+
+            // Create regex strings
+            string headerRegex = @"^(dat|header|datheader)[.-_\s]";
+            string machineRegex = @"^(game|machine)[.-_\s]";
+            string datItemRegex = @"^(item|datitem|archive|biosset|blank|disk|release|rom|sample)[.-_\s]";
+
+            // If we have a header field
+            if (Regex.IsMatch(input, headerRegex))
+            {
+                // Replace the match and re-normalize
+                string headerInput = Regex.Replace(input, headerRegex, string.Empty)
+                    .Replace(' ', '_')
+                    .Replace('-', '_')
+                    .Replace('.', '_');
+
+                switch (headerInput)
+                {
+                    #region Common
+
+                    case "file":
+                    case "filename":
+                    case "file_name":
+                        return Field.DatHeader_FileName;
+
+                    case "dat":
+                    case "datname":
+                    case "dat_name":
+                    case "internalname":
+                    case "internal_name":
+                        return Field.DatHeader_Name;
+
+                    case "desc":
+                    case "description":
+                        return Field.DatHeader_Description;
+
+                    case "root":
+                    case "rootdir":
+                    case "root_dir":
+                    case "rootdirectory":
+                    case "root_directory":
+                        return Field.DatHeader_RootDir;
+
+                    case "category":
+                        return Field.DatHeader_Category;
+
+                    case "version":
+                        return Field.DatHeader_Version;
+
+                    case "date":
+                    case "timestamp":
+                    case "time_stamp":
+                        return Field.DatHeader_Date;
+
+                    case "author":
+                        return Field.DatHeader_Author;
+
+                    case "email":
+                    case "e_mail":
+                        return Field.DatHeader_Email;
+
+                    case "homepage":
+                    case "home_page":
+                        return Field.DatHeader_Homepage;
+
+                    case "url":
+                        return Field.DatHeader_Url;
+
+                    case "comment":
+                        return Field.DatHeader_Comment;
+
+                    case "header":
+                    case "headerskipper":
+                    case "header_skipper":
+                    case "skipper":
+                        return Field.DatHeader_HeaderSkipper;
+
+                    case "dattype":
+                    case "type":
+                    case "superdat":
+                        return Field.DatHeader_Type;
+
+                    case "forcemerging":
+                    case "force_merging":
+                        return Field.DatHeader_ForceMerging;
+
+                    case "forcenodump":
+                    case "force_nodump":
+                        return Field.DatHeader_ForceNodump;
+
+                    case "forcepacking":
+                    case "force_packing":
+                        return Field.DatHeader_ForcePacking;
+
+                    #endregion
+
+                    #region ListXML
+
+                    case "debug":
+                        return Field.DatHeader_Debug;
+
+                    case "mameconfig":
+                    case "mame_config":
+                        return Field.DatHeader_MameConfig;
+
+                    #endregion
+
+                    #region Logiqx
+
+                    case "build":
+                        return Field.DatHeader_Build;
+
+                    case "rommode":
+                    case "rom_mode":
+                        return Field.DatHeader_RomMode;
+
+                    case "biosmode":
+                    case "bios_mode":
+                        return Field.DatHeader_BiosMode;
+
+                    case "samplemode":
+                    case "sample_mode":
+                        return Field.DatHeader_SampleMode;
+
+                    case "lockrommode":
+                    case "lockrom_mode":
+                    case "lock_rommode":
+                    case "lock_rom_mode":
+                        return Field.DatHeader_LockRomMode;
+
+                    case "lockbiosmode":
+                    case "lockbios_mode":
+                    case "lock_biosmode":
+                    case "lock_bios_mode":
+                        return Field.DatHeader_LockBiosMode;
+
+                    case "locksamplemode":
+                    case "locksample_mode":
+                    case "lock_samplemode":
+                    case "lock_sample_mode":
+                        return Field.DatHeader_LockSampleMode;
+
+                    #endregion
+
+                    #region OfflineList
+
+                    case "system":
+                    case "plugin": // Used with RomCenter
+                        return Field.DatHeader_System;
+
+                    case "screenshotwidth":
+                    case "screenshotswidth":
+                    case "screenshot_width":
+                    case "screenshots_width":
+                        return Field.DatHeader_ScreenshotsWidth;
+
+                    case "screenshotheight":
+                    case "screenshotsheight":
+                    case "screenshot_height":
+                    case "screenshots_height":
+                        return Field.DatHeader_ScreenshotsHeight;
+
+                    case "info":
+                    case "infos":
+                        return Field.DatHeader_Infos;
+
+                    case "info_name":
+                    case "infos_name":
+                        return Field.DatHeader_Info_Name;
+
+                    case "info_visible":
+                    case "infos_visible":
+                        return Field.DatHeader_Info_Visible;
+
+                    case "info_isnamingoption":
+                    case "info_is_naming_option":
+                    case "infos_isnamingoption":
+                    case "infos_is_naming_option":
+                        return Field.DatHeader_Info_IsNamingOption;
+
+                    case "info_default":
+                    case "infos_default":
+                        return Field.DatHeader_Info_Default;
+
+                    case "canopen":
+                    case "can_open":
+                        return Field.DatHeader_CanOpen;
+
+                    case "romtitle":
+                    case "rom_title":
+                        return Field.DatHeader_RomTitle;
+
+                    #endregion
+
+                    #region RomCenter
+
+                    case "rcversion":
+                    case "rc_version":
+                    case "romcenterversion":
+                    case "romcenter_version":
+                    case "rom_center_version":
+                        return Field.DatHeader_RomCenterVersion;
+
+                    #endregion
+                }
+            }
+
+            // If we have a machine field
+            else if (Regex.IsMatch(input, machineRegex))
+            {
+                // Replace the match and re-normalize
+                string machineInput = Regex.Replace(input, machineRegex, string.Empty)
+                    .Replace(' ', '_')
+                    .Replace('-', '_')
+                    .Replace('.', '_');
+
+                switch (machineInput)
+                {
+                    #region Common
+
+                    case "name":
+                        return Field.Machine_Name;
+
+                    case "comment":
+                    case "extra": // Used with AttractMode
+                        return Field.Machine_Comment;
+
+                    case "desc":
+                    case "description":
+                        return Field.Machine_Description;
+
+                    case "year":
+                        return Field.Machine_Year;
+
+                    case "manufacturer":
+                        return Field.Machine_Manufacturer;
+
+                    case "publisher":
+                        return Field.Machine_Publisher;
+
+                    case "category":
+                        return Field.Machine_Category;
+
+                    case "romof":
+                    case "rom_of":
+                        return Field.Machine_RomOf;
+
+                    case "cloneof":
+                    case "clone_of":
+                        return Field.Machine_CloneOf;
+
+                    case "sampleof":
+                    case "sample_of":
+                        return Field.Machine_SampleOf;
+
+                    case "type":
+                        return Field.Machine_Type;
+
+                    #endregion
+
+                    #region AttractMode
+
+                    case "players":
+                        return Field.Machine_Players;
+
+                    case "rotation":
+                        return Field.Machine_Rotation;
+
+                    case "control":
+                        return Field.Machine_Control;
+
+                    case "amstatus":
+                    case "am_status":
+                    case "gamestatus":
+                    case "supportstatus":
+                    case "support_status":
+                        return Field.Machine_Status;
+
+                    case "displaycount":
+                    case "displays":
+                        return Field.Machine_DisplayCount;
+
+                    case "displaytype":
+                        return Field.Machine_DisplayType;
+
+                    case "buttons":
+                        return Field.Machine_Buttons;
+
+                    #endregion
+
+                    #region ListXML
+
+                    case "sourcefile":
+                    case "source_file":
+                        return Field.Machine_SourceFile;
+
+                    case "runnable":
+                        return Field.Machine_Runnable;
+
+                    case "devreferences":
+                    case "devicereferences":
+                        return Field.Machine_DeviceReferences;
+
+                    case "devreference_name":
+                    case "devicereference_name":
+                        return Field.Machine_DeviceReference_Name;
+
+                    case "chips":
+                        return Field.Machine_Chips;
+
+                    case "chip_name":
+                        return Field.Machine_Chip_Name;
+
+                    case "chip_tag":
+                        return Field.Machine_Chip_Tag;
+
+                    case "chip_type":
+                        return Field.Machine_Chip_Type;
+
+                    case "chip_clock":
+                        return Field.Machine_Chip_Clock;
+
+                        #endregion
+                }
+            }
+
+            // If we have a datitem field
+            else if (Regex.IsMatch(input, datItemRegex))
+            {
+                // Replace the match and re-normalize
+                string itemInput = Regex.Replace(input, datItemRegex, string.Empty)
+                    .Replace(' ', '_')
+                    .Replace('-', '_')
+                    .Replace('.', '_');
+
+                switch (itemInput)
+                {
+                    #region Common
+
+                    #endregion
+                }
+            }
+
+            // Else, we fall back on the old matching
             switch (input?.ToLowerInvariant())
             {
                 #region Machine
@@ -212,7 +562,7 @@ namespace SabreTools.Library.Tools
                 case "machine-status":
                 case "supportstatus":
                 case "support-status":
-                    return Field.Machine_SupportStatus;
+                    return Field.Machine_Status;
 
                 case "displaycount":
                 case "display-count":
@@ -403,98 +753,98 @@ namespace SabreTools.Library.Tools
                 case "partname":
                 case "part name":
                 case "part-name":
-                    return Field.PartName;
+                    return Field.DatItem_Part_Name;
                 case "partinterface":
                 case "part interface":
                 case "part-interface":
-                    return Field.PartInterface;
+                    return Field.DatItem_Part_Interface;
                 case "features":
-                    return Field.Features;
+                    return Field.DatItem_Features;
                 case "areaname":
                 case "area name":
                 case "area-name":
-                    return Field.AreaName;
+                    return Field.DatItem_AreaName;
                 case "areasize":
                 case "area size":
                 case "area-size":
-                    return Field.AreaSize;
+                    return Field.DatItem_AreaSize;
                 case "areawidth":
                 case "area width":
                 case "area-width":
-                    return Field.AreaWidth;
+                    return Field.DatItem_AreaWidth;
                 case "areaendinanness":
                 case "area endianness":
                 case "area-endianness":
-                    return Field.AreaEndianness;
+                    return Field.DatItem_AreaEndianness;
                 case "value":
-                    return Field.Value;
+                    return Field.DatItem_Value;
                 case "loadflag":
                 case "load flag":
                 case "load-flag":
-                    return Field.LoadFlag;
+                    return Field.DatItem_LoadFlag;
 
                 #endregion
 
                 case "bios":
-                    return Field.Bios;
+                    return Field.DatItem_Bios;
                 case "biosdescription":
                 case "bios-description":
                 case "biossetdescription":
                 case "biosset-description":
                 case "bios-set-description":
-                    return Field.BiosDescription;
+                    return Field.DatItem_Description;
                 case "crc":
                 case "crc32":
-                    return Field.CRC;
+                    return Field.DatItem_CRC;
                 case "default":
-                    return Field.Default;
+                    return Field.DatItem_Default;
                 case "date":
-                    return Field.Date;
+                    return Field.DatItem_Date;
                 case "equal":
                 case "greater":
                 case "less":
                 case "size":
-                    return Field.Size;
+                    return Field.DatItem_Size;
                 case "index":
-                    return Field.Index;
+                    return Field.DatItem_Index;
                 case "inverted":
-                    return Field.Inverted;
+                    return Field.DatItem_Inverted;
                 case "itemtatus":
                 case "item-status":
                 case "status":
-                    return Field.Status;
+                    return Field.DatItem_Status;
                 case "language":
-                    return Field.Language;
+                    return Field.DatItem_Language;
                 case "md5":
-                    return Field.MD5;
+                    return Field.DatItem_MD5;
                 case "merge":
                 case "mergetag":
                 case "merge-tag":
-                    return Field.Merge;
+                    return Field.DatItem_Merge;
                 case "offset":
-                    return Field.Offset;
+                    return Field.DatItem_Offset;
                 case "optional":
-                    return Field.Optional;
+                    return Field.DatItem_Optional;
                 case "region":
-                    return Field.Region;
+                    return Field.DatItem_Region;
 #if NET_FRAMEWORK
                 case "ripemd160":
-                    return Field.RIPEMD160;
+                    return Field.DatItem_RIPEMD160;
 #endif
                 case "sha1":
                 case "sha-1":
-                    return Field.SHA1;
+                    return Field.DatItem_SHA1;
                 case "sha256":
                 case "sha-256":
-                    return Field.SHA256;
+                    return Field.DatItem_SHA256;
                 case "sha384":
                 case "sha-384":
-                    return Field.SHA384;
+                    return Field.DatItem_SHA384;
                 case "sha512":
                 case "sha-512":
-                    return Field.SHA512;
+                    return Field.DatItem_SHA512;
                 case "writable":
-                    return Field.Writable;
+                    return Field.DatItem_Writable;
 
                 #endregion
 

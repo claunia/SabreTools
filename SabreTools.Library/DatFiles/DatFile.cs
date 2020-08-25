@@ -256,8 +256,8 @@ namespace SabreTools.Library.DatFiles
                 if (updateFields.Intersect(DatItem.DatItemFields).Any())
                 {
                     // For comparison's sake, we want to use CRC as the base bucketing
-                    Items.BucketBy(Field.CRC, DedupeType.Full);
-                    intDat.Items.BucketBy(Field.CRC, DedupeType.None);
+                    Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
+                    intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
                     // Then we do a hashwise comparison against the base DAT
                     Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
@@ -362,7 +362,7 @@ namespace SabreTools.Library.DatFiles
             if (useGames)
                 Items.BucketBy(Field.Machine_Name, DedupeType.None);
             else
-                Items.BucketBy(Field.CRC, DedupeType.None);
+                Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
             // Now we want to compare each input DAT against the base
             foreach (ParentablePath path in inputs)
@@ -379,7 +379,7 @@ namespace SabreTools.Library.DatFiles
                 if (useGames)
                     intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
                 else
-                    intDat.Items.BucketBy(Field.CRC, DedupeType.Full);
+                    intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
 
                 // Then we compare against the base DAT
                 List<string> keys = intDat.Items.Keys.ToList();
@@ -508,7 +508,7 @@ namespace SabreTools.Library.DatFiles
             watch.Stop();
 
             // Then, ensure that the internal dat can be bucketed in the best possible way
-            Items.BucketBy(Field.CRC, DedupeType.None);
+            Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating all output DATs");
@@ -1957,7 +1957,7 @@ namespace SabreTools.Library.DatFiles
 
             // If the output type isn't set already, get the internal output type
             Header.DatFormat = (Header.DatFormat == 0 ? currentPath.GetDatFormat() : Header.DatFormat);
-            Items.SetBucketedBy(Field.CRC); // Setting this because it can reduce issues later
+            Items.SetBucketedBy(Field.DatItem_CRC); // Setting this because it can reduce issues later
 
             // Now parse the correct type of DAT
             try
@@ -2083,7 +2083,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Get the key and add the file
-            key = item.GetKey(Field.CRC);
+            key = item.GetKey(Field.DatItem_CRC);
             Items.Add(key, item);
 
             return key;
@@ -2255,7 +2255,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     // Add the list if it doesn't exist already
                     Rom rom = new Rom(baseFile);
-                    Items.Add(rom.GetKey(Field.CRC), rom);
+                    Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
                     Globals.Logger.User($"File added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
                 }
                 else
@@ -2379,7 +2379,7 @@ namespace SabreTools.Library.DatFiles
                 SetDatItemInfo(datItem, item, parent, basepath);
 
                 // Add the file information to the DAT
-                string key = datItem.GetKey(Field.CRC);
+                string key = datItem.GetKey(Field.DatItem_CRC);
                 Items.Add(key, datItem);
 
                 Globals.Logger.User($"File added: {datItem.Name}{Environment.NewLine}");
@@ -2571,7 +2571,7 @@ namespace SabreTools.Library.DatFiles
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            Items.BucketBy(Field.SHA1, DedupeType.None);
+            Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             var keys = Items.SortedKeys.ToList();
@@ -3143,7 +3143,7 @@ namespace SabreTools.Library.DatFiles
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            Items.BucketBy(Field.SHA1, DedupeType.None);
+            Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             var keys = Items.SortedKeys.ToList();
@@ -3247,7 +3247,7 @@ namespace SabreTools.Library.DatFiles
             if (hashOnly)
             {
                 // First we need to bucket and dedupe by hash to get duplicates
-                Items.BucketBy(Field.CRC, DedupeType.Full);
+                Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
 
                 // Then follow the same tactics as before
                 var keys = Items.SortedKeys.ToList();
@@ -3770,7 +3770,7 @@ namespace SabreTools.Library.DatFiles
 
             // Bucket and dedupe according to the flag
             if (Header.DedupeRoms == DedupeType.Full)
-                Items.BucketBy(Field.CRC, Header.DedupeRoms, norename: norename);
+                Items.BucketBy(Field.DatItem_CRC, Header.DedupeRoms, norename: norename);
             else if (Header.DedupeRoms == DedupeType.Game)
                 Items.BucketBy(Field.Machine_Name, Header.DedupeRoms, norename: norename);
 

@@ -41,11 +41,11 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle BiosSet-specific fields
-            if (mappings.Keys.Contains(Field.Default))
-                Default = mappings[Field.Default].AsYesNo();
+            if (mappings.Keys.Contains(Field.DatItem_Default))
+                Default = mappings[Field.DatItem_Default].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.BiosDescription))
-                Description = mappings[Field.BiosDescription];
+            if (mappings.Keys.Contains(Field.DatItem_Description))
+                Description = mappings[Field.DatItem_Description];
         }
 
         #endregion
@@ -155,10 +155,10 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.BiosDescription))
+            if (fields.Contains(Field.DatItem_Description))
                 Description = null;
 
-            if (fields.Contains(Field.Default))
+            if (fields.Contains(Field.DatItem_Default))
                 Default = null;
         }
 
@@ -184,10 +184,10 @@ namespace SabreTools.Library.DatItems
             BiosSet newItem = item as BiosSet;
 
             // Replace the fields
-            if (fields.Contains(Field.BiosDescription))
+            if (fields.Contains(Field.DatItem_Description))
                 Description = newItem.Description;
 
-            if (fields.Contains(Field.Default))
+            if (fields.Contains(Field.DatItem_Default))
                 Default = newItem.Default;
         }
 

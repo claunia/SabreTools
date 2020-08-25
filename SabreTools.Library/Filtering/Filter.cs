@@ -664,7 +664,7 @@ namespace SabreTools.Library.Filtering
                         Control.PositiveSet.Add(value);
                     break;
 
-                case Field.Machine_SupportStatus:
+                case Field.Machine_Status:
                     if (negate)
                         SupportStatus.NegativeSet.Add(value);
                     else
@@ -931,28 +931,28 @@ namespace SabreTools.Library.Filtering
 
                 #region SoftwareList
 
-                case Field.PartName:
+                case Field.DatItem_Part_Name:
                     if (negate)
                         PartName.NegativeSet.Add(value);
                     else
                         PartName.PositiveSet.Add(value);
                     break;
 
-                case Field.PartInterface:
+                case Field.DatItem_Part_Interface:
                     if (negate)
                         PartInterface.NegativeSet.Add(value);
                     else
                         PartInterface.PositiveSet.Add(value);
                     break;
 
-                case Field.AreaName:
+                case Field.DatItem_AreaName:
                     if (negate)
                         AreaName.NegativeSet.Add(value);
                     else
                         AreaName.PositiveSet.Add(value);
                     break;
 
-                case Field.AreaSize:
+                case Field.DatItem_AreaSize:
                     bool? asOperation = null;
                     if (value.StartsWith(">"))
                         asOperation = true;
@@ -1004,28 +1004,28 @@ namespace SabreTools.Library.Filtering
 
                     break;
 
-                case Field.AreaWidth:
+                case Field.DatItem_AreaWidth:
                     if (negate)
                         AreaWidth.NegativeSet.Add(value);
                     else
                         AreaWidth.PositiveSet.Add(value);
                     break;
 
-                case Field.AreaEndianness:
+                case Field.DatItem_AreaEndianness:
                     if (negate)
                         AreaEndianness.NegativeSet.Add(value);
                     else
                         AreaEndianness.PositiveSet.Add(value);
                     break;
 
-                case Field.Value:
+                case Field.DatItem_Value:
                     if (negate)
                         Value.NegativeSet.Add(value);
                     else
                         Value.PositiveSet.Add(value);
                     break;
 
-                case Field.LoadFlag:
+                case Field.DatItem_LoadFlag:
                     if (negate)
                         LoadFlag.NegativeSet.Add(value);
                     else
@@ -1034,21 +1034,21 @@ namespace SabreTools.Library.Filtering
 
                 #endregion
 
-                case Field.Default:
+                case Field.DatItem_Default:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         Default.Neutral = false;
                     else
                         Default.Neutral = true;
                     break;
 
-                case Field.BiosDescription:
+                case Field.DatItem_Description:
                     if (negate)
                         Description.NegativeSet.Add(value);
                     else
                         Description.PositiveSet.Add(value);
                     break;
 
-                case Field.Size:
+                case Field.DatItem_Size:
                     bool? sOperation = null;
                     if (value.StartsWith(">"))
                         sOperation = true;
@@ -1100,14 +1100,14 @@ namespace SabreTools.Library.Filtering
 
                     break;
 
-                case Field.CRC:
+                case Field.DatItem_CRC:
                     if (negate)
                         CRC.NegativeSet.Add(value);
                     else
                         CRC.PositiveSet.Add(value);
                     break;
 
-                case Field.MD5:
+                case Field.DatItem_MD5:
                     if (negate)
                         MD5.NegativeSet.Add(value);
                     else
@@ -1115,7 +1115,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
 #if NET_FRAMEWORK
-                case Field.RIPEMD160:
+                case Field.DatItem_RIPEMD160:
                     if (negate)
                         RIPEMD160.NegativeSet.Add(value);
                     else
@@ -1123,105 +1123,105 @@ namespace SabreTools.Library.Filtering
                     break;
 #endif
 
-                case Field.SHA1:
+                case Field.DatItem_SHA1:
                     if (negate)
                         SHA1.NegativeSet.Add(value);
                     else
                         SHA1.PositiveSet.Add(value);
                     break;
 
-                case Field.SHA256:
+                case Field.DatItem_SHA256:
                     if (negate)
                         SHA256.NegativeSet.Add(value);
                     else
                         SHA256.PositiveSet.Add(value);
                     break;
 
-                case Field.SHA384:
+                case Field.DatItem_SHA384:
                     if (negate)
                         SHA384.NegativeSet.Add(value);
                     else
                         SHA384.PositiveSet.Add(value);
                     break;
 
-                case Field.SHA512:
+                case Field.DatItem_SHA512:
                     if (negate)
                         SHA512.NegativeSet.Add(value);
                     else
                         SHA512.PositiveSet.Add(value);
                     break;
 
-                case Field.Merge:
+                case Field.DatItem_Merge:
                     if (negate)
                         MergeTag.NegativeSet.Add(value);
                     else
                         MergeTag.PositiveSet.Add(value);
                     break;
 
-                case Field.Region:
+                case Field.DatItem_Region:
                     if (negate)
                         Region.NegativeSet.Add(value);
                     else
                         Region.PositiveSet.Add(value);
                     break;
 
-                case Field.Index:
+                case Field.DatItem_Index:
                     if (negate)
                         Index.NegativeSet.Add(value);
                     else
                         Index.PositiveSet.Add(value);
                     break;
 
-                case Field.Writable:
+                case Field.DatItem_Writable:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         Writable.Neutral = false;
                     else
                         Writable.Neutral = true;
                     break;
 
-                case Field.Optional:
+                case Field.DatItem_Optional:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         Optional.Neutral = false;
                     else
                         Optional.Neutral = true;
                     break;
 
-                case Field.Status:
+                case Field.DatItem_Status:
                     if (negate)
                         Status.Negative |= value.AsItemStatus();
                     else
                         Status.Positive |= value.AsItemStatus();
                     break;
 
-                case Field.Language:
+                case Field.DatItem_Language:
                     if (negate)
                         Language.NegativeSet.Add(value);
                     else
                         Language.PositiveSet.Add(value);
                     break;
 
-                case Field.Date:
+                case Field.DatItem_Date:
                     if (negate)
                         Date.NegativeSet.Add(value);
                     else
                         Date.PositiveSet.Add(value);
                     break;
 
-                case Field.Bios:
+                case Field.DatItem_Bios:
                     if (negate)
                         Bios.NegativeSet.Add(value);
                     else
                         Bios.PositiveSet.Add(value);
                     break;
 
-                case Field.Offset:
+                case Field.DatItem_Offset:
                     if (negate)
                         Offset.NegativeSet.Add(value);
                     else
                         Offset.PositiveSet.Add(value);
                     break;
 
-                case Field.Inverted:
+                case Field.DatItem_Inverted:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         Inverted.Neutral = false;
                     else

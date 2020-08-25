@@ -185,6 +185,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Fields unique to a DatItem
         /// </summary>
+        /// TODO: Ensure list
         public static readonly List<Field> DatItemFields = new List<Field>()
         {
             // Common
@@ -202,51 +203,52 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Boot,
 
             //SoftwareList
-            Field.PartName,
-            Field.PartInterface,
-            Field.Features,
-            Field.AreaName,
-            Field.AreaSize,
-            Field.AreaWidth,
-            Field.AreaEndianness,
-            Field.Value,
-            Field.LoadFlag,
+            Field.DatItem_Part_Name,
+            Field.DatItem_Part_Interface,
+            Field.DatItem_Features,
+            Field.DatItem_AreaName,
+            Field.DatItem_AreaSize,
+            Field.DatItem_AreaWidth,
+            Field.DatItem_AreaEndianness,
+            Field.DatItem_Value,
+            Field.DatItem_LoadFlag,
 
             // BiosSet
-            Field.BiosDescription,
-            Field.Default,
+            Field.DatItem_Description,
+            Field.DatItem_Default,
 
             // Disk
-            Field.MD5,
+            Field.DatItem_MD5,
 #if NET_FRAMEWORK
-            Field.RIPEMD160,
+            Field.DatItem_RIPEMD160,
 #endif
-            Field.SHA1,
-            Field.SHA256,
-            Field.SHA384,
-            Field.SHA512,
-            Field.Merge,
-            Field.Region,
-            Field.Index,
-            Field.Writable,
-            Field.Optional,
-            Field.Status,
+            Field.DatItem_SHA1,
+            Field.DatItem_SHA256,
+            Field.DatItem_SHA384,
+            Field.DatItem_SHA512,
+            Field.DatItem_Merge,
+            Field.DatItem_Region,
+            Field.DatItem_Index,
+            Field.DatItem_Writable,
+            Field.DatItem_Optional,
+            Field.DatItem_Status,
 
             // Release
-            Field.Language,
-            Field.Date,
+            Field.DatItem_Language,
+            Field.DatItem_Date,
 
             // Rom
-            Field.Bios,
-            Field.Size,
-            Field.CRC,
-            Field.Offset,
-            Field.Inverted,
+            Field.DatItem_Bios,
+            Field.DatItem_Size,
+            Field.DatItem_CRC,
+            Field.DatItem_Offset,
+            Field.DatItem_Inverted,
         };
 
         /// <summary>
         /// Fields unique to a Machine
         /// </summary>
+        /// TODO: Ensure list
         public static readonly List<Field> MachineFields = new List<Field>()
         {
             // Common
@@ -265,7 +267,7 @@ namespace SabreTools.Library.DatItems
             Field.Machine_Players,
             Field.Machine_Rotation,
             Field.Machine_Control,
-            Field.Machine_SupportStatus,
+            Field.Machine_Status,
             Field.Machine_DisplayCount,
             Field.Machine_DisplayType,
             Field.Machine_Buttons,
@@ -318,6 +320,9 @@ namespace SabreTools.Library.DatItems
         public virtual void SetFields(Dictionary<Field, string> mappings)
         {
             // Set machine fields
+            if (Machine == null)
+                Machine = new Machine();
+
             Machine.SetFields(mappings);
 
             #region Common
@@ -358,60 +363,30 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (mappings.Keys.Contains(Field.PartName))
+            // TODO: Add DatItem_Part*
+            // TODO: Add DatItem_Feature*
+
+            // TODO: These might be replaced by dataarea/diskarea
+            if (mappings.Keys.Contains(Field.DatItem_AreaName))
+                AreaName = mappings[Field.DatItem_AreaName];
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaSize))
             {
-                if (Part == null)
-                    Part = new SoftwareListPart();
-
-                Part.Name = mappings[Field.PartName];
-            }
-
-            if (mappings.Keys.Contains(Field.PartInterface))
-            {
-                if (Part == null)
-                    Part = new SoftwareListPart();
-
-                Part.Interface = mappings[Field.PartInterface];
-            }
-
-            if (mappings.Keys.Contains(Field.Features))
-            {
-                if (Features == null)
-                    Features = new List<SoftwareListFeature>();
-
-                string[] pairs = mappings[Field.Features].Split(';');
-                foreach (string pair in pairs)
-                {
-                    string[] split = pair.Split('=');
-
-                    var feature = new SoftwareListFeature();
-                    feature.Name = split[0];
-                    feature.Value = split[1];
-
-                    Features.Add(feature);
-                }
-            }
-
-            if (mappings.Keys.Contains(Field.AreaName))
-                AreaName = mappings[Field.AreaName];
-
-            if (mappings.Keys.Contains(Field.AreaSize))
-            {
-                if (Int64.TryParse(mappings[Field.AreaSize], out long areaSize))
+                if (Int64.TryParse(mappings[Field.DatItem_AreaSize], out long areaSize))
                     AreaSize = areaSize;
             }
 
-            if (mappings.Keys.Contains(Field.AreaWidth))
-                AreaWidth = mappings[Field.AreaWidth];
+            if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
+                AreaWidth = mappings[Field.DatItem_AreaWidth];
 
-            if (mappings.Keys.Contains(Field.AreaEndianness))
-                AreaEndianness = mappings[Field.AreaEndianness];
+            if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
+                AreaEndianness = mappings[Field.DatItem_AreaEndianness];
 
-            if (mappings.Keys.Contains(Field.Value))
-                Value = mappings[Field.Value];
+            if (mappings.Keys.Contains(Field.DatItem_Value))
+                Value = mappings[Field.DatItem_Value];
 
-            if (mappings.Keys.Contains(Field.LoadFlag))
-                LoadFlag = mappings[Field.LoadFlag];
+            if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
+                LoadFlag = mappings[Field.DatItem_LoadFlag];
 
             #endregion
         }
@@ -425,7 +400,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <param name="itemType">Type of the DatItem to be created</param>
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
-        public static DatItem Create(ItemType itemType)
+        public static DatItem Create(ItemType? itemType)
         {
 #if NET_FRAMEWORK
             switch (itemType)
@@ -773,31 +748,31 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (fields.Contains(Field.PartName) && Part != null)
+            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
                 Part.Name = null;
 
-            if (fields.Contains(Field.PartInterface) && Part != null)
+            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
                 Part.Interface = null;
 
-            if (fields.Contains(Field.Features))
+            if (fields.Contains(Field.DatItem_Features))
                 Features = null;
 
-            if (fields.Contains(Field.AreaName))
+            if (fields.Contains(Field.DatItem_AreaName))
                 AreaName = null;
 
-            if (fields.Contains(Field.AreaSize))
+            if (fields.Contains(Field.DatItem_AreaSize))
                 AreaSize = null;
 
-            if (fields.Contains(Field.AreaWidth))
+            if (fields.Contains(Field.DatItem_AreaWidth))
                 AreaWidth = null;
 
-            if (fields.Contains(Field.AreaEndianness))
+            if (fields.Contains(Field.DatItem_AreaEndianness))
                 AreaEndianness = null;
 
-            if (fields.Contains(Field.Value))
+            if (fields.Contains(Field.DatItem_Value))
                 Value = null;
 
-            if (fields.Contains(Field.LoadFlag))
+            if (fields.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = null;
 
             #endregion
@@ -823,7 +798,7 @@ namespace SabreTools.Library.DatItems
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)
             {
-                case Field.CRC:
+                case Field.DatItem_CRC:
                     key = Constants.CRCZero;
                     break;
 
@@ -843,29 +818,29 @@ namespace SabreTools.Library.DatItems
                     key = WebUtility.HtmlEncode(key);
                     break;
 
-                case Field.MD5:
+                case Field.DatItem_MD5:
                     key = Constants.MD5Zero;
                     break;
 
 #if NET_FRAMEWORK
-                case Field.RIPEMD160:
+                case Field.DatItem_RIPEMD160:
                     key = Constants.RIPEMD160Zero;
                     break;
 #endif
 
-                case Field.SHA1:
+                case Field.DatItem_SHA1:
                     key = Constants.SHA1Zero;
                     break;
 
-                case Field.SHA256:
+                case Field.DatItem_SHA256:
                     key = Constants.SHA256Zero;
                     break;
 
-                case Field.SHA384:
+                case Field.DatItem_SHA384:
                     key = Constants.SHA384Zero;
                     break;
 
-                case Field.SHA512:
+                case Field.DatItem_SHA512:
                     key = Constants.SHA512Zero;
                     break;
             }
@@ -922,7 +897,7 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (fields.Contains(Field.PartName))
+            if (fields.Contains(Field.DatItem_Part_Name))
             {
                 if (Part == null)
                     Part = new SoftwareListPart();
@@ -930,7 +905,7 @@ namespace SabreTools.Library.DatItems
                 Part.Name = item.Part?.Name;
             }
 
-            if (fields.Contains(Field.PartInterface))
+            if (fields.Contains(Field.DatItem_Part_Interface))
             {
                 if (Part == null)
                     Part = new SoftwareListPart();
@@ -938,25 +913,25 @@ namespace SabreTools.Library.DatItems
                 Part.Interface = item.Part?.Interface;
             }
 
-            if (fields.Contains(Field.Features))
+            if (fields.Contains(Field.DatItem_Features))
                 Features = item.Features;
 
-            if (fields.Contains(Field.AreaName))
+            if (fields.Contains(Field.DatItem_AreaName))
                 AreaName = item.AreaName;
 
-            if (fields.Contains(Field.AreaSize))
+            if (fields.Contains(Field.DatItem_AreaSize))
                 AreaSize = item.AreaSize;
 
-            if (fields.Contains(Field.AreaWidth))
+            if (fields.Contains(Field.DatItem_AreaWidth))
                 AreaWidth = item.AreaWidth;
 
-            if (fields.Contains(Field.AreaEndianness))
+            if (fields.Contains(Field.DatItem_AreaEndianness))
                 AreaEndianness = item.AreaEndianness;
 
-            if (fields.Contains(Field.Value))
+            if (fields.Contains(Field.DatItem_Value))
                 Value = item.Value;
 
-            if (fields.Contains(Field.LoadFlag))
+            if (fields.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = item.LoadFlag;
 
             #endregion

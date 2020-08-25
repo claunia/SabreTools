@@ -2560,15 +2560,15 @@ Some special strings that can be used:
             if (GetBoolean(features, UpdateHashesValue))
             {
                 Globals.Logger.User($"This flag '{(UpdateHashesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.CRC);
-                updateFields.Add(Field.MD5);
+                updateFields.Add(Field.DatItem_CRC);
+                updateFields.Add(Field.DatItem_MD5);
 #if NET_FRAMEWORK
-                updateFields.Add(Field.RIPEMD160);
+                updateFields.Add(Field.DatItem_RIPEMD160);
 #endif
-                updateFields.Add(Field.SHA1);
-                updateFields.Add(Field.SHA256);
-                updateFields.Add(Field.SHA384);
-                updateFields.Add(Field.SHA512);
+                updateFields.Add(Field.DatItem_SHA1);
+                updateFields.Add(Field.DatItem_SHA256);
+                updateFields.Add(Field.DatItem_SHA384);
+                updateFields.Add(Field.DatItem_SHA512);
             }
 
             if (GetBoolean(features, UpdateManufacturerValue))
@@ -2768,12 +2768,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotCrcListValue))
             {
                 Globals.Logger.User($"This flag '{(NotCrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.CRC, GetList(features, NotCrcListValue), true);
+                filter.SetFilter(Field.DatItem_CRC, GetList(features, NotCrcListValue), true);
             }
             if (features.ContainsKey(CrcListValue))
             {
                 Globals.Logger.User($"This flag '{(CrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.CRC, GetList(features, NotCrcListValue), false);
+                filter.SetFilter(Field.DatItem_CRC, GetList(features, NotCrcListValue), false);
             }
 
             // Item name
@@ -2792,12 +2792,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotStatusListValue))
             {
                 Globals.Logger.User($"This flag '{(NotStatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Status, GetList(features, NotStatusListValue), true);
+                filter.SetFilter(Field.DatItem_Status, GetList(features, NotStatusListValue), true);
             }
             if (features.ContainsKey(StatusListValue))
             {
                 Globals.Logger.User($"This flag '{(StatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Status, GetList(features, StatusListValue), false);
+                filter.SetFilter(Field.DatItem_Status, GetList(features, StatusListValue), false);
             }
 
             // Item type
@@ -2852,12 +2852,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotMd5ListValue))
             {
                 Globals.Logger.User($"This flag '{(NotMd5ListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.MD5, GetList(features, NotMd5ListValue), true);
+                filter.SetFilter(Field.DatItem_MD5, GetList(features, NotMd5ListValue), true);
             }
             if (features.ContainsKey(Md5ListValue))
             {
                 Globals.Logger.User($"This flag '{Md5ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.MD5, GetList(features, Md5ListValue), false);
+                filter.SetFilter(Field.DatItem_MD5, GetList(features, Md5ListValue), false);
             }
 
 #if NET_FRAMEWORK
@@ -2865,12 +2865,12 @@ Some special strings that can be used:
             if (features.ContainsKey(NotRipeMd160ListValue))
             {
                 Globals.Logger.User($"This flag '{NotRipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.RIPEMD160, GetList(features, NotRipeMd160ListValue), true);
+                filter.SetFilter(Field.DatItem_RIPEMD160, GetList(features, NotRipeMd160ListValue), true);
             }
             if (features.ContainsKey(RipeMd160ListValue))
             {
                 Globals.Logger.User($"This flag '{RipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.RIPEMD160, GetList(features, RipeMd160ListValue), false);
+                filter.SetFilter(Field.DatItem_RIPEMD160, GetList(features, RipeMd160ListValue), false);
             }
 #endif
 
@@ -2890,48 +2890,48 @@ Some special strings that can be used:
             if (features.ContainsKey(NotSha1ListValue))
             {
                 Globals.Logger.User($"This flag '{NotSha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA1, GetList(features, NotSha1ListValue), true);
+                filter.SetFilter(Field.DatItem_SHA1, GetList(features, NotSha1ListValue), true);
             }
             if (features.ContainsKey(Sha1ListValue))
             {
                 Globals.Logger.User($"This flag '{Sha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA1, GetList(features, Sha1ListValue), false);
+                filter.SetFilter(Field.DatItem_SHA1, GetList(features, Sha1ListValue), false);
             }
 
             // SHA256
             if (features.ContainsKey(NotSha256ListValue))
             {
                 Globals.Logger.User($"This flag '{NotSha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA256, GetList(features, NotSha256ListValue), true);
+                filter.SetFilter(Field.DatItem_SHA256, GetList(features, NotSha256ListValue), true);
             }
             if (features.ContainsKey(Sha256ListValue))
             {
                 Globals.Logger.User($"This flag '{Sha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA256, GetList(features, Sha256ListValue), false);
+                filter.SetFilter(Field.DatItem_SHA256, GetList(features, Sha256ListValue), false);
             }
 
             // SHA384
             if (features.ContainsKey(NotSha384ListValue))
             {
                 Globals.Logger.User($"This flag '{NotSha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA384, GetList(features, NotSha384ListValue), true);
+                filter.SetFilter(Field.DatItem_SHA384, GetList(features, NotSha384ListValue), true);
             }
             if (features.ContainsKey(Sha384ListValue))
             {
                 Globals.Logger.User($"This flag '{Sha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA384, GetList(features, Sha384ListValue), false);
+                filter.SetFilter(Field.DatItem_SHA384, GetList(features, Sha384ListValue), false);
             }
 
             // SHA512
             if (features.ContainsKey(NotSha512ListValue))
             {
                 Globals.Logger.User($"This flag '{NotSha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA512, GetList(features, NotSha512ListValue), true);
+                filter.SetFilter(Field.DatItem_SHA512, GetList(features, NotSha512ListValue), true);
             }
             if (features.ContainsKey(Sha512ListValue))
             {
                 Globals.Logger.User($"This flag '{Sha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.SHA512, GetList(features, Sha512ListValue), false);
+                filter.SetFilter(Field.DatItem_SHA512, GetList(features, Sha512ListValue), false);
             }
 
             // Size
@@ -2939,19 +2939,19 @@ Some special strings that can be used:
             {
                 Globals.Logger.User($"This flag '{LessStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
                 var value = Sanitizer.ToSize(GetString(features, LessStringValue));
-                filter.SetFilter(Field.Size, $"<{value}", false);
+                filter.SetFilter(Field.DatItem_Size, $"<{value}", false);
             }
             if (features.ContainsKey(EqualStringValue))
             {
                 Globals.Logger.User($"This flag '{EqualStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
                 var value = Sanitizer.ToSize(GetString(features, EqualStringValue));
-                filter.SetFilter(Field.Size, $"={value}", false);
+                filter.SetFilter(Field.DatItem_Size, $"={value}", false);
             }
             if (features.ContainsKey(GreaterStringValue))
             {
                 Globals.Logger.User($"This flag '{GreaterStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
                 var value = Sanitizer.ToSize(GetString(features, GreaterStringValue));
-                filter.SetFilter(Field.Size, $">{value}", false);
+                filter.SetFilter(Field.DatItem_Size, $">{value}", false);
             }
 
             #endregion

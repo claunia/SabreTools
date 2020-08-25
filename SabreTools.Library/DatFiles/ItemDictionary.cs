@@ -806,33 +806,33 @@ namespace SabreTools.Library.DatFiles
         {
             // If all items are supposed to have a SHA-512, we bucket by that
             if (RomCount + DiskCount - NodumpCount == SHA512Count)
-                return Field.SHA512;
+                return Field.DatItem_SHA512;
 
             // If all items are supposed to have a SHA-384, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA384Count)
-                return Field.SHA384;
+                return Field.DatItem_SHA384;
 
             // If all items are supposed to have a SHA-256, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA256Count)
-                return Field.SHA256;
+                return Field.DatItem_SHA256;
 
             // If all items are supposed to have a SHA-1, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == SHA1Count)
-                return Field.SHA1;
+                return Field.DatItem_SHA1;
 
 #if NET_FRAMEWORK
             // If all items are supposed to have a RIPEMD160, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == RIPEMD160Count)
-                return Field.RIPEMD160;
+                return Field.DatItem_RIPEMD160;
 #endif
 
             // If all items are supposed to have a MD5, we bucket by that
             else if (RomCount + DiskCount - NodumpCount == MD5Count)
-                return Field.MD5;
+                return Field.DatItem_MD5;
 
             // Otherwise, we bucket by CRC
             else
-                return Field.CRC;
+                return Field.DatItem_CRC;
         }
 
         /// <summary>

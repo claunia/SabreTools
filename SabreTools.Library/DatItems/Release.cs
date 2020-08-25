@@ -53,17 +53,17 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Release-specific fields
-            if (mappings.Keys.Contains(Field.Region))
-                Region = mappings[Field.Region];
+            if (mappings.Keys.Contains(Field.DatItem_Region))
+                Region = mappings[Field.DatItem_Region];
 
-            if (mappings.Keys.Contains(Field.Language))
-                Language = mappings[Field.Language];
+            if (mappings.Keys.Contains(Field.DatItem_Language))
+                Language = mappings[Field.DatItem_Language];
 
-            if (mappings.Keys.Contains(Field.Date))
-                Date = mappings[Field.Date];
+            if (mappings.Keys.Contains(Field.DatItem_Date))
+                Date = mappings[Field.DatItem_Date];
 
-            if (mappings.Keys.Contains(Field.Default))
-                Default = mappings[Field.Default].AsYesNo();
+            if (mappings.Keys.Contains(Field.DatItem_Default))
+                Default = mappings[Field.DatItem_Default].AsYesNo();
         }
 
         #endregion
@@ -195,16 +195,16 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.Region))
+            if (fields.Contains(Field.DatItem_Region))
                 Region = null;
 
-            if (fields.Contains(Field.Language))
+            if (fields.Contains(Field.DatItem_Language))
                 Language = null;
 
-            if (fields.Contains(Field.Date))
+            if (fields.Contains(Field.DatItem_Date))
                 Date = null;
 
-            if (fields.Contains(Field.Default))
+            if (fields.Contains(Field.DatItem_Default))
                 Default = null;
         }
 
@@ -230,16 +230,16 @@ namespace SabreTools.Library.DatItems
             Release newItem = item as Release;
 
             // Replace the fields
-            if (fields.Contains(Field.Region))
+            if (fields.Contains(Field.DatItem_Region))
                 Region = newItem.Region;
 
-            if (fields.Contains(Field.Language))
+            if (fields.Contains(Field.DatItem_Language))
                 Language = newItem.Language;
 
-            if (fields.Contains(Field.Date))
+            if (fields.Contains(Field.DatItem_Date))
                 Date = newItem.Date;
 
-            if (fields.Contains(Field.Default))
+            if (fields.Contains(Field.DatItem_Default))
                 Default = newItem.Default;
         }
 

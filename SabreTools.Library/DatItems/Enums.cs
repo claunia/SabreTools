@@ -117,7 +117,7 @@ namespace SabreTools.Library.DatItems
         Machine_Players,
         Machine_Rotation,
         Machine_Control,
-        Machine_SupportStatus,
+        Machine_Status,
         Machine_DisplayCount,
         Machine_DisplayType,
         Machine_Buttons,
@@ -371,51 +371,61 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        // TODO: Left off here on renaming
         #region SoftwareList
 
-        PartName,
-        PartInterface,
-        Features,
-        AreaName,
-        AreaSize,
-        AreaWidth,
-        AreaEndianness,
-        Value,
-        LoadFlag,
+        // Part
+        DatItem_Part, // TODO: Fully implement Part
+        DatItem_Part_Name,
+        DatItem_Part_Interface,
+
+        // Feature
+        DatItem_Features, // TODO: Fully implement Feature
+        DatItem_Feature_Name,
+        DatItem_Feature_Value,
+
+        DatItem_AreaName,
+        DatItem_AreaSize,
+        DatItem_AreaWidth,
+        DatItem_AreaEndianness,
+        DatItem_Value,
+        DatItem_LoadFlag,
 
         #endregion
 
+        #region Item-Specific
+
         // BiosSet
-        Default,
-        BiosDescription,
+        DatItem_Default,
+        DatItem_Description,
 
         // Disk
-        MD5,
+        DatItem_MD5,
 #if NET_FRAMEWORK
-        RIPEMD160,
+        DatItem_RIPEMD160,
 #endif
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512,
-        Merge,
-        Region,
-        Index,
-        Writable,
-        Optional,
-        Status,
+        DatItem_SHA1,
+        DatItem_SHA256,
+        DatItem_SHA384,
+        DatItem_SHA512,
+        DatItem_Merge,
+        DatItem_Region,
+        DatItem_Index,
+        DatItem_Writable,
+        DatItem_Status,
+        DatItem_Optional,
 
         // Release
-        Language,
-        Date,
+        DatItem_Language,
+        DatItem_Date,
 
         // Rom
-        Bios,
-        Size,
-        CRC,
-        Offset,
-        Inverted,
+        DatItem_Bios,
+        DatItem_Size,
+        DatItem_CRC,
+        DatItem_Offset,
+        DatItem_Inverted,
+
+        #endregion
 
         #endregion // DatItem
     }

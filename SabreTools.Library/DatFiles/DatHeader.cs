@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatFiles
@@ -381,6 +383,133 @@ namespace SabreTools.Library.DatFiles
         #endregion
 
         #region Instance Methods
+
+        #region Accessors
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        public void SetFields(Dictionary<Field, string> mappings)
+        {
+            #region Common
+
+            if (mappings.Keys.Contains(Field.DatHeader_FileName))
+                FileName = mappings[Field.DatHeader_FileName];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Name))
+                Name = mappings[Field.DatHeader_Name];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Description))
+                Description = mappings[Field.DatHeader_Description];
+
+            if (mappings.Keys.Contains(Field.DatHeader_RootDir))
+                RootDir = mappings[Field.DatHeader_RootDir];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Category))
+                Category = mappings[Field.DatHeader_Category];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Version))
+                Version = mappings[Field.DatHeader_Version];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Date))
+                Date = mappings[Field.DatHeader_Date];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Author))
+                Author = mappings[Field.DatHeader_Author];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Email))
+                Email = mappings[Field.DatHeader_Email];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Homepage))
+                Homepage = mappings[Field.DatHeader_Homepage];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Url))
+                Url = mappings[Field.DatHeader_Url];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Comment))
+                Comment = mappings[Field.DatHeader_Comment];
+
+            if (mappings.Keys.Contains(Field.DatHeader_HeaderSkipper))
+                HeaderSkipper = mappings[Field.DatHeader_HeaderSkipper];
+
+            if (mappings.Keys.Contains(Field.DatHeader_Type))
+                Type = mappings[Field.DatHeader_Type];
+
+            if (mappings.Keys.Contains(Field.DatHeader_ForceMerging))
+                ForceMerging = mappings[Field.DatHeader_ForceMerging].AsMergingFlag();
+
+            if (mappings.Keys.Contains(Field.DatHeader_ForceNodump))
+                ForceNodump = mappings[Field.DatHeader_ForceNodump].AsNodumpFlag();
+
+            if (mappings.Keys.Contains(Field.DatHeader_ForcePacking))
+                ForcePacking = mappings[Field.DatHeader_ForcePacking].AsPackingFlag();
+
+            #endregion
+
+            #region ListXML
+
+            if (mappings.Keys.Contains(Field.DatHeader_Debug))
+                Debug = mappings[Field.DatHeader_Debug].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.DatHeader_MameConfig))
+                MameConfig = mappings[Field.DatHeader_MameConfig];
+
+            #endregion
+
+            #region Logiqx
+
+            if (mappings.Keys.Contains(Field.DatHeader_Build))
+                Build = mappings[Field.DatHeader_Build];
+
+            if (mappings.Keys.Contains(Field.DatHeader_RomMode))
+                RomMode = mappings[Field.DatHeader_RomMode].AsMergingFlag();
+
+            if (mappings.Keys.Contains(Field.DatHeader_BiosMode))
+                BiosMode = mappings[Field.DatHeader_BiosMode].AsMergingFlag();
+
+            if (mappings.Keys.Contains(Field.DatHeader_SampleMode))
+                SampleMode = mappings[Field.DatHeader_SampleMode].AsMergingFlag();
+
+            if (mappings.Keys.Contains(Field.DatHeader_LockRomMode))
+                LockRomMode = mappings[Field.DatHeader_LockRomMode].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.DatHeader_LockBiosMode))
+                LockBiosMode = mappings[Field.DatHeader_LockBiosMode].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.DatHeader_LockSampleMode))
+                LockSampleMode = mappings[Field.DatHeader_LockSampleMode].AsYesNo();
+
+            #endregion
+
+            #region OfflineList
+
+            if (mappings.Keys.Contains(Field.DatHeader_System))
+                System = mappings[Field.DatHeader_System];
+
+            if (mappings.Keys.Contains(Field.DatHeader_ScreenshotsWidth))
+                ScreenshotsWidth = mappings[Field.DatHeader_ScreenshotsWidth];
+
+            if (mappings.Keys.Contains(Field.DatHeader_ScreenshotsHeight))
+                ScreenshotsHeight = mappings[Field.DatHeader_ScreenshotsHeight];
+
+            // TODO: Add DatHeader_Info*
+            // TDOO: Add DatHeader_CanOpen*
+
+            if (mappings.Keys.Contains(Field.DatHeader_RomTitle))
+                RomTitle = mappings[Field.DatHeader_RomTitle];
+
+            #endregion
+
+            #region RomCenter
+
+            if (mappings.Keys.Contains(Field.DatHeader_RomCenterVersion))
+                RomCenterVersion = mappings[Field.DatHeader_RomCenterVersion];
+
+            #endregion
+        }
+
+        #endregion
 
         #region Cloning Methods
 
