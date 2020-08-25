@@ -513,99 +513,99 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on bios
-            if (filter.Bios.MatchesPositiveSet(Bios) == false)
+            if (filter.DatItem_Bios.MatchesPositiveSet(Bios) == false)
                 return false;
-            if (filter.Bios.MatchesNegativeSet(Bios) == true)
+            if (filter.DatItem_Bios.MatchesNegativeSet(Bios) == true)
                 return false;
 
             // Filter on rom size
-            if (filter.Size.MatchesNeutral(-1, Size) == false)
+            if (filter.DatItem_Size.MatchesNeutral(-1, Size) == false)
                 return false;
-            else if (filter.Size.MatchesPositive(-1, Size) == false)
+            else if (filter.DatItem_Size.MatchesPositive(-1, Size) == false)
                 return false;
-            else if (filter.Size.MatchesNegative(-1, Size) == false)
+            else if (filter.DatItem_Size.MatchesNegative(-1, Size) == false)
                 return false;
 
             // Filter on CRC
-            if (filter.CRC.MatchesPositiveSet(CRC) == false)
+            if (filter.DatItem_CRC.MatchesPositiveSet(CRC) == false)
                 return false;
-            if (filter.CRC.MatchesNegativeSet(CRC) == true)
+            if (filter.DatItem_CRC.MatchesNegativeSet(CRC) == true)
                 return false;
 
             // Filter on MD5
-            if (filter.MD5.MatchesPositiveSet(MD5) == false)
+            if (filter.DatItem_MD5.MatchesPositiveSet(MD5) == false)
                 return false;
-            if (filter.MD5.MatchesNegativeSet(MD5) == true)
+            if (filter.DatItem_MD5.MatchesNegativeSet(MD5) == true)
                 return false;
 
 #if NET_FRAMEWORK
             // Filter on RIPEMD160
-            if (filter.RIPEMD160.MatchesPositiveSet(RIPEMD160) == false)
+            if (filter.DatItem_RIPEMD160.MatchesPositiveSet(RIPEMD160) == false)
                 return false;
-            if (filter.RIPEMD160.MatchesNegativeSet(RIPEMD160) == true)
+            if (filter.DatItem_RIPEMD160.MatchesNegativeSet(RIPEMD160) == true)
                 return false;
 #endif
 
             // Filter on SHA-1
-            if (filter.SHA1.MatchesPositiveSet(SHA1) == false)
+            if (filter.DatItem_SHA1.MatchesPositiveSet(SHA1) == false)
                 return false;
-            if (filter.SHA1.MatchesNegativeSet(SHA1) == true)
+            if (filter.DatItem_SHA1.MatchesNegativeSet(SHA1) == true)
                 return false;
 
             // Filter on SHA-256
-            if (filter.SHA256.MatchesPositiveSet(SHA256) == false)
+            if (filter.DatItem_SHA256.MatchesPositiveSet(SHA256) == false)
                 return false;
-            if (filter.SHA256.MatchesNegativeSet(SHA256) == true)
+            if (filter.DatItem_SHA256.MatchesNegativeSet(SHA256) == true)
                 return false;
 
             // Filter on SHA-384
-            if (filter.SHA384.MatchesPositiveSet(SHA384) == false)
+            if (filter.DatItem_SHA384.MatchesPositiveSet(SHA384) == false)
                 return false;
-            if (filter.SHA384.MatchesNegativeSet(SHA384) == true)
+            if (filter.DatItem_SHA384.MatchesNegativeSet(SHA384) == true)
                 return false;
 
             // Filter on SHA-512
-            if (filter.SHA512.MatchesPositiveSet(SHA512) == false)
+            if (filter.DatItem_SHA512.MatchesPositiveSet(SHA512) == false)
                 return false;
-            if (filter.SHA512.MatchesNegativeSet(SHA512) == true)
+            if (filter.DatItem_SHA512.MatchesNegativeSet(SHA512) == true)
                 return false;
 
             // Filter on merge tag
-            if (filter.MergeTag.MatchesPositiveSet(MergeTag) == false)
+            if (filter.DatItem_Merge.MatchesPositiveSet(MergeTag) == false)
                 return false;
-            if (filter.MergeTag.MatchesNegativeSet(MergeTag) == true)
+            if (filter.DatItem_Merge.MatchesNegativeSet(MergeTag) == true)
                 return false;
 
             // Filter on region
-            if (filter.Region.MatchesPositiveSet(Region) == false)
+            if (filter.DatItem_Region.MatchesPositiveSet(Region) == false)
                 return false;
-            if (filter.Region.MatchesNegativeSet(Region) == true)
+            if (filter.DatItem_Region.MatchesNegativeSet(Region) == true)
                 return false;
 
             // Filter on offset
-            if (filter.Offset.MatchesPositiveSet(Offset) == false)
+            if (filter.DatItem_Offset.MatchesPositiveSet(Offset) == false)
                 return false;
-            if (filter.Offset.MatchesNegativeSet(Offset) == true)
+            if (filter.DatItem_Offset.MatchesNegativeSet(Offset) == true)
                 return false;
 
             // Filter on date
-            if (filter.Date.MatchesPositiveSet(Date) == false)
+            if (filter.DatItem_Date.MatchesPositiveSet(Date) == false)
                 return false;
-            if (filter.Date.MatchesNegativeSet(Date) == true)
+            if (filter.DatItem_Date.MatchesNegativeSet(Date) == true)
                 return false;
 
             // Filter on status
-            if (filter.Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
+            if (filter.DatItem_Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
                 return false;
-            if (filter.Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
+            if (filter.DatItem_Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
                 return false;
 
             // Filter on optional
-            if (filter.Optional.MatchesNeutral(null, Optional) == false)
+            if (filter.DatItem_Optional.MatchesNeutral(null, Optional) == false)
                 return false;
 
             // Filter on inverted
-            if (filter.Inverted.MatchesNeutral(null, Inverted) == false)
+            if (filter.DatItem_Inverted.MatchesNeutral(null, Inverted) == false)
                 return false;
 
             return true;

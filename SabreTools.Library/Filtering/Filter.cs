@@ -272,215 +272,83 @@ namespace SabreTools.Library.Filtering
 
         #region Common
 
-        /// <summary>
-        /// Include or exclude item names
-        /// </summary>
-        public FilterItem<string> ItemName { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude item types
-        /// </summary>
-        public FilterItem<string> ItemTypes { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Type { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region AttractMode
 
-        /// <summary>
-        /// Include or exclude alt names
-        /// </summary>
-        public FilterItem<string> AltName { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude alt titles
-        /// </summary>
-        public FilterItem<string> AltTitle { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_AltName { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_AltTitle { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region OpenMSX
 
-        /// <summary>
-        /// Include or exclude original value
-        /// </summary>
-        public FilterItem<string> Original { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude items of a certain OpenMSX subtype
-        /// </summary>
-        public FilterItem<OpenMSXSubType> SubType { get; private set; } = new FilterItem<OpenMSXSubType>() { Positive = OpenMSXSubType.NULL, Negative = OpenMSXSubType.NULL };
-
-        /// <summary>
-        /// Include or exclude OpenMSX type
-        /// </summary>
-        public FilterItem<string> OpenMSXType { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude remarks
-        /// </summary>
-        public FilterItem<string> Remark { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude boots
-        /// </summary>
-        public FilterItem<string> Boot { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Original { get; private set; } = new FilterItem<string>();
+        public FilterItem<OpenMSXSubType> DatItem_OpenMSXSubType { get; private set; } = new FilterItem<OpenMSXSubType>() { Positive = OpenMSXSubType.NULL, Negative = OpenMSXSubType.NULL };
+        public FilterItem<string> DatItem_OpenMSXType { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Remark { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Boot { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region SoftwareList
 
-        /// <summary>
-        /// Include or exclude part names
-        /// </summary>
-        public FilterItem<string> PartName { get; private set; } = new FilterItem<string>();
+        // Part
+        public FilterItem<bool?> DatItem_Part { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Part_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Part_Interface { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude part interfaces
-        /// </summary>
-        public FilterItem<string> PartInterface { get; private set; } = new FilterItem<string>();
+        // Feature
+        public FilterItem<bool?> DatItem_Features { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Feature_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Feature_Value { get; private set; } = new FilterItem<string>();
 
-        // TODO: DatItem.Features - List<SoftwareListFeature>
-
-        /// <summary>
-        /// Include or exclude area names
-        /// </summary>
-        public FilterItem<string> AreaName { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude area sizes
-        /// </summary>
-        /// <remarks>Positive means "Greater than or equal", Negative means "Less than or equal", Neutral means "Equal"</remarks>
-        public FilterItem<long?> AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-
-        /// <summary>
-        /// Include or exclude area byte widths
-        /// </summary>
-        public FilterItem<string> AreaWidth { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude area endianness
-        /// </summary>
-        public FilterItem<string> AreaEndianness { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude softwarelist value
-        /// </summary>
-        public FilterItem<string> Value { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude load flag
-        /// </summary>
-        public FilterItem<string> LoadFlag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_AreaName { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<string> DatItem_AreaWidth { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_AreaEndianness { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Value { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_LoadFlag { get; private set; } = new FilterItem<string>();
 
         #endregion
 
-        /// <summary>
-        /// Include or exclude items with the "Default" tag
-        /// </summary>
-        public FilterItem<bool?> Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        #region Item-Specific
 
-        /// <summary>
-        /// Include or exclude descriptions
-        /// </summary>
-        public FilterItem<string> Description { get; private set; } = new FilterItem<string>();
+        // BiosSet
+        public FilterItem<bool?> DatItem_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Description { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude item sizes
-        /// </summary>
-        /// <remarks>Positive means "Greater than or equal", Negative means "Less than or equal", Neutral means "Equal"</remarks>
-        public FilterItem<long> Size { get; private set; } = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
-
-        /// <summary>
-        /// Include or exclude CRC32 hashes
-        /// </summary>
-        public FilterItem<string> CRC { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude MD5 hashes
-        /// </summary>
-        public FilterItem<string> MD5 { get; private set; } = new FilterItem<string>();
-
+        // Disk
+        public FilterItem<string> DatItem_MD5 { get; private set; } = new FilterItem<string>();
 #if NET_FRAMEWORK
-        /// <summary>
-        /// Include or exclude RIPEMD160 hashes
-        /// </summary>
-        public FilterItem<string> RIPEMD160 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_RIPEMD160 { get; private set; } = new FilterItem<string>();
 #endif
+        public FilterItem<string> DatItem_SHA1 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SHA256 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SHA384 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SHA512 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Merge { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Region { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Index { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Writable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> DatItem_Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<ItemStatus> DatItem_Status { get; private set; } = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
 
-        /// <summary>
-        /// Include or exclude SHA-1 hashes
-        /// </summary>
-        public FilterItem<string> SHA1 { get; private set; } = new FilterItem<string>();
+        // Release
+        public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Date { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude SHA-256 hashes
-        /// </summary>
-        public FilterItem<string> SHA256 { get; private set; } = new FilterItem<string>();
+        // Rom
+        public FilterItem<string> DatItem_Bios { get; private set; } = new FilterItem<string>();
+        public FilterItem<long> DatItem_Size { get; private set; } = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
+        public FilterItem<string> DatItem_CRC { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Offset { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Inverted { get; private set; } = new FilterItem<bool?>();
 
-        /// <summary>
-        /// Include or exclude SHA-384 hashes
-        /// </summary>
-        public FilterItem<string> SHA384 { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude SHA-512 hashes
-        /// </summary>
-        public FilterItem<string> SHA512 { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude merge tags
-        /// </summary>
-        public FilterItem<string> MergeTag { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude regions
-        /// </summary>
-        public FilterItem<string> Region { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude indexes
-        /// </summary>
-        public FilterItem<string> Index { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude items with the "Writable" tag
-        /// </summary>
-        public FilterItem<bool?> Writable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        /// <summary>
-        /// Include or exclude items with the "Writable" tag
-        /// </summary>
-        public FilterItem<bool?> Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        /// <summary>
-        /// Include or exclude item statuses
-        /// </summary>
-        public FilterItem<ItemStatus> Status { get; private set; } = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
-
-        /// <summary>
-        /// Include or exclude languages
-        /// </summary>
-        public FilterItem<string> Language { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude dates
-        /// </summary>
-        public FilterItem<string> Date { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude bioses
-        /// </summary>
-        public FilterItem<string> Bios { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude offsets
-        /// </summary>
-        public FilterItem<string> Offset { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude offsets
-        /// </summary>
-        public FilterItem<bool?> Inverted { get; private set; } = new FilterItem<bool?>();
+        #endregion
 
         #endregion // DatItem Filters
 
@@ -871,9 +739,9 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Name:
                     if (negate)
-                        ItemName.NegativeSet.Add(value);
+                        DatItem_Name.NegativeSet.Add(value);
                     else
-                        ItemName.PositiveSet.Add(value);
+                        DatItem_Name.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Type:
@@ -881,9 +749,9 @@ namespace SabreTools.Library.Filtering
                         return;
 
                     if (negate)
-                        ItemTypes.NegativeSet.Add(value);
+                        DatItem_Type.NegativeSet.Add(value);
                     else
-                        ItemTypes.PositiveSet.Add(value);
+                        DatItem_Type.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -892,16 +760,16 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_AltName:
                     if (negate)
-                        AltName.NegativeSet.Add(value);
+                        DatItem_AltName.NegativeSet.Add(value);
                     else
-                        AltName.PositiveSet.Add(value);
+                        DatItem_AltName.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_AltTitle:
                     if (negate)
-                        AltTitle.NegativeSet.Add(value);
+                        DatItem_AltTitle.NegativeSet.Add(value);
                     else
-                        AltTitle.PositiveSet.Add(value);
+                        DatItem_AltTitle.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -910,37 +778,37 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Original:
                     if (negate)
-                        Original.NegativeSet.Add(value);
+                        DatItem_Original.NegativeSet.Add(value);
                     else
-                        Original.PositiveSet.Add(value);
+                        DatItem_Original.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_OpenMSXSubType:
                     if (negate)
-                        SubType.Negative |= value.AsOpenMSXSubType();
+                        DatItem_OpenMSXSubType.Negative |= value.AsOpenMSXSubType();
                     else
-                        SubType.Positive |= value.AsOpenMSXSubType();
+                        DatItem_OpenMSXSubType.Positive |= value.AsOpenMSXSubType();
                     break;
 
                 case Field.DatItem_OpenMSXType:
                     if (negate)
-                        OpenMSXType.NegativeSet.Add(value);
+                        DatItem_OpenMSXType.NegativeSet.Add(value);
                     else
-                        OpenMSXType.PositiveSet.Add(value);
+                        DatItem_OpenMSXType.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Remark:
                     if (negate)
-                        Remark.NegativeSet.Add(value);
+                        DatItem_Remark.NegativeSet.Add(value);
                     else
-                        Remark.PositiveSet.Add(value);
+                        DatItem_Remark.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Boot:
                     if (negate)
-                        Boot.NegativeSet.Add(value);
+                        DatItem_Boot.NegativeSet.Add(value);
                     else
-                        Boot.PositiveSet.Add(value);
+                        DatItem_Boot.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -949,23 +817,23 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Part_Name:
                     if (negate)
-                        PartName.NegativeSet.Add(value);
+                        DatItem_Part_Name.NegativeSet.Add(value);
                     else
-                        PartName.PositiveSet.Add(value);
+                        DatItem_Part_Name.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Part_Interface:
                     if (negate)
-                        PartInterface.NegativeSet.Add(value);
+                        DatItem_Part_Interface.NegativeSet.Add(value);
                     else
-                        PartInterface.PositiveSet.Add(value);
+                        DatItem_Part_Interface.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_AreaName:
                     if (negate)
-                        AreaName.NegativeSet.Add(value);
+                        DatItem_AreaName.NegativeSet.Add(value);
                     else
-                        AreaName.PositiveSet.Add(value);
+                        DatItem_AreaName.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_AreaSize:
@@ -984,84 +852,84 @@ namespace SabreTools.Library.Filtering
                     // Equal
                     if (asOperation == null && !negate)
                     {
-                        AreaSize.Neutral = areasize;
+                        DatItem_AreaSize.Neutral = areasize;
                     }
 
                     // Not Equal
                     else if (asOperation == null && negate)
                     {
-                        AreaSize.Negative = areasize - 1;
-                        AreaSize.Positive = areasize + 1;
+                        DatItem_AreaSize.Negative = areasize - 1;
+                        DatItem_AreaSize.Positive = areasize + 1;
                     }
 
                     // Greater Than or Equal
                     else if (asOperation == true && !negate)
                     {
-                        AreaSize.Positive = areasize;
+                        DatItem_AreaSize.Positive = areasize;
                     }
 
                     // Strictly Less Than
                     else if (asOperation == true && negate)
                     {
-                        AreaSize.Negative = areasize - 1;
+                        DatItem_AreaSize.Negative = areasize - 1;
                     }
 
                     // Less Than or Equal
                     else if (asOperation == false && !negate)
                     {
-                        AreaSize.Negative = areasize;
+                        DatItem_AreaSize.Negative = areasize;
                     }
 
                     // Strictly Greater Than
                     else if (asOperation == false && negate)
                     {
-                        AreaSize.Positive = areasize + 1;
+                        DatItem_AreaSize.Positive = areasize + 1;
                     }
 
                     break;
 
                 case Field.DatItem_AreaWidth:
                     if (negate)
-                        AreaWidth.NegativeSet.Add(value);
+                        DatItem_AreaWidth.NegativeSet.Add(value);
                     else
-                        AreaWidth.PositiveSet.Add(value);
+                        DatItem_AreaWidth.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_AreaEndianness:
                     if (negate)
-                        AreaEndianness.NegativeSet.Add(value);
+                        DatItem_AreaEndianness.NegativeSet.Add(value);
                     else
-                        AreaEndianness.PositiveSet.Add(value);
+                        DatItem_AreaEndianness.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Value:
                     if (negate)
-                        Value.NegativeSet.Add(value);
+                        DatItem_Value.NegativeSet.Add(value);
                     else
-                        Value.PositiveSet.Add(value);
+                        DatItem_Value.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_LoadFlag:
                     if (negate)
-                        LoadFlag.NegativeSet.Add(value);
+                        DatItem_LoadFlag.NegativeSet.Add(value);
                     else
-                        LoadFlag.PositiveSet.Add(value);
+                        DatItem_LoadFlag.PositiveSet.Add(value);
                     break;
 
                 #endregion
 
                 case Field.DatItem_Default:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Default.Neutral = false;
+                        DatItem_Default.Neutral = false;
                     else
-                        Default.Neutral = true;
+                        DatItem_Default.Neutral = true;
                     break;
 
                 case Field.DatItem_Description:
                     if (negate)
-                        Description.NegativeSet.Add(value);
+                        DatItem_Description.NegativeSet.Add(value);
                     else
-                        Description.PositiveSet.Add(value);
+                        DatItem_Description.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Size:
@@ -1080,168 +948,168 @@ namespace SabreTools.Library.Filtering
                     // Equal
                     if (sOperation == null && !negate)
                     {
-                        Size.Neutral = size;
+                        DatItem_Size.Neutral = size;
                     }
 
                     // Not Equal
                     else if (sOperation == null && negate)
                     {
-                        Size.Negative = size - 1;
-                        Size.Positive = size + 1;
+                        DatItem_Size.Negative = size - 1;
+                        DatItem_Size.Positive = size + 1;
                     }
 
                     // Greater Than or Equal
                     else if (sOperation == true && !negate)
                     {
-                        Size.Positive = size;
+                        DatItem_Size.Positive = size;
                     }
 
                     // Strictly Less Than
                     else if (sOperation == true && negate)
                     {
-                        Size.Negative = size - 1;
+                        DatItem_Size.Negative = size - 1;
                     }
 
                     // Less Than or Equal
                     else if (sOperation == false && !negate)
                     {
-                        Size.Negative = size;
+                        DatItem_Size.Negative = size;
                     }
 
                     // Strictly Greater Than
                     else if (sOperation == false && negate)
                     {
-                        Size.Positive = size + 1;
+                        DatItem_Size.Positive = size + 1;
                     }
 
                     break;
 
                 case Field.DatItem_CRC:
                     if (negate)
-                        CRC.NegativeSet.Add(value);
+                        DatItem_CRC.NegativeSet.Add(value);
                     else
-                        CRC.PositiveSet.Add(value);
+                        DatItem_CRC.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_MD5:
                     if (negate)
-                        MD5.NegativeSet.Add(value);
+                        DatItem_MD5.NegativeSet.Add(value);
                     else
-                        MD5.PositiveSet.Add(value);
+                        DatItem_MD5.PositiveSet.Add(value);
                     break;
 
 #if NET_FRAMEWORK
                 case Field.DatItem_RIPEMD160:
                     if (negate)
-                        RIPEMD160.NegativeSet.Add(value);
+                        DatItem_RIPEMD160.NegativeSet.Add(value);
                     else
-                        RIPEMD160.PositiveSet.Add(value);
+                        DatItem_RIPEMD160.PositiveSet.Add(value);
                     break;
 #endif
 
                 case Field.DatItem_SHA1:
                     if (negate)
-                        SHA1.NegativeSet.Add(value);
+                        DatItem_SHA1.NegativeSet.Add(value);
                     else
-                        SHA1.PositiveSet.Add(value);
+                        DatItem_SHA1.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_SHA256:
                     if (negate)
-                        SHA256.NegativeSet.Add(value);
+                        DatItem_SHA256.NegativeSet.Add(value);
                     else
-                        SHA256.PositiveSet.Add(value);
+                        DatItem_SHA256.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_SHA384:
                     if (negate)
-                        SHA384.NegativeSet.Add(value);
+                        DatItem_SHA384.NegativeSet.Add(value);
                     else
-                        SHA384.PositiveSet.Add(value);
+                        DatItem_SHA384.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_SHA512:
                     if (negate)
-                        SHA512.NegativeSet.Add(value);
+                        DatItem_SHA512.NegativeSet.Add(value);
                     else
-                        SHA512.PositiveSet.Add(value);
+                        DatItem_SHA512.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Merge:
                     if (negate)
-                        MergeTag.NegativeSet.Add(value);
+                        DatItem_Merge.NegativeSet.Add(value);
                     else
-                        MergeTag.PositiveSet.Add(value);
+                        DatItem_Merge.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Region:
                     if (negate)
-                        Region.NegativeSet.Add(value);
+                        DatItem_Region.NegativeSet.Add(value);
                     else
-                        Region.PositiveSet.Add(value);
+                        DatItem_Region.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Index:
                     if (negate)
-                        Index.NegativeSet.Add(value);
+                        DatItem_Index.NegativeSet.Add(value);
                     else
-                        Index.PositiveSet.Add(value);
+                        DatItem_Index.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Writable:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Writable.Neutral = false;
+                        DatItem_Writable.Neutral = false;
                     else
-                        Writable.Neutral = true;
+                        DatItem_Writable.Neutral = true;
                     break;
 
                 case Field.DatItem_Optional:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Optional.Neutral = false;
+                        DatItem_Optional.Neutral = false;
                     else
-                        Optional.Neutral = true;
+                        DatItem_Optional.Neutral = true;
                     break;
 
                 case Field.DatItem_Status:
                     if (negate)
-                        Status.Negative |= value.AsItemStatus();
+                        DatItem_Status.Negative |= value.AsItemStatus();
                     else
-                        Status.Positive |= value.AsItemStatus();
+                        DatItem_Status.Positive |= value.AsItemStatus();
                     break;
 
                 case Field.DatItem_Language:
                     if (negate)
-                        Language.NegativeSet.Add(value);
+                        DatItem_Language.NegativeSet.Add(value);
                     else
-                        Language.PositiveSet.Add(value);
+                        DatItem_Language.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Date:
                     if (negate)
-                        Date.NegativeSet.Add(value);
+                        DatItem_Date.NegativeSet.Add(value);
                     else
-                        Date.PositiveSet.Add(value);
+                        DatItem_Date.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Bios:
                     if (negate)
-                        Bios.NegativeSet.Add(value);
+                        DatItem_Bios.NegativeSet.Add(value);
                     else
-                        Bios.PositiveSet.Add(value);
+                        DatItem_Bios.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Offset:
                     if (negate)
-                        Offset.NegativeSet.Add(value);
+                        DatItem_Offset.NegativeSet.Add(value);
                     else
-                        Offset.PositiveSet.Add(value);
+                        DatItem_Offset.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Inverted:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Inverted.Neutral = false;
+                        DatItem_Inverted.Neutral = false;
                     else
-                        Inverted.Neutral = true;
+                        DatItem_Inverted.Neutral = true;
                     break;
 
                     #endregion // DatItem Filters

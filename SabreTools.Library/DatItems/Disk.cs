@@ -476,73 +476,73 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on MD5
-            if (filter.MD5.MatchesPositiveSet(MD5) == false)
+            if (filter.DatItem_MD5.MatchesPositiveSet(MD5) == false)
                 return false;
-            if (filter.MD5.MatchesNegativeSet(MD5) == true)
+            if (filter.DatItem_MD5.MatchesNegativeSet(MD5) == true)
                 return false;
 
 #if NET_FRAMEWORK
             // Filter on RIPEMD160
-            if (filter.RIPEMD160.MatchesPositiveSet(RIPEMD160) == false)
+            if (filter.DatItem_RIPEMD160.MatchesPositiveSet(RIPEMD160) == false)
                 return false;
-            if (filter.RIPEMD160.MatchesNegativeSet(RIPEMD160) == true)
+            if (filter.DatItem_RIPEMD160.MatchesNegativeSet(RIPEMD160) == true)
                 return false;
 #endif
 
             // Filter on SHA-1
-            if (filter.SHA1.MatchesPositiveSet(SHA1) == false)
+            if (filter.DatItem_SHA1.MatchesPositiveSet(SHA1) == false)
                 return false;
-            if (filter.SHA1.MatchesNegativeSet(SHA1) == true)
+            if (filter.DatItem_SHA1.MatchesNegativeSet(SHA1) == true)
                 return false;
 
             // Filter on SHA-256
-            if (filter.SHA256.MatchesPositiveSet(SHA256) == false)
+            if (filter.DatItem_SHA256.MatchesPositiveSet(SHA256) == false)
                 return false;
-            if (filter.SHA256.MatchesNegativeSet(SHA256) == true)
+            if (filter.DatItem_SHA256.MatchesNegativeSet(SHA256) == true)
                 return false;
 
             // Filter on SHA-384
-            if (filter.SHA384.MatchesPositiveSet(SHA384) == false)
+            if (filter.DatItem_SHA384.MatchesPositiveSet(SHA384) == false)
                 return false;
-            if (filter.SHA384.MatchesNegativeSet(SHA384) == true)
+            if (filter.DatItem_SHA384.MatchesNegativeSet(SHA384) == true)
                 return false;
 
             // Filter on SHA-512
-            if (filter.SHA512.MatchesPositiveSet(SHA512) == false)
+            if (filter.DatItem_SHA512.MatchesPositiveSet(SHA512) == false)
                 return false;
-            if (filter.SHA512.MatchesNegativeSet(SHA512) == true)
+            if (filter.DatItem_SHA512.MatchesNegativeSet(SHA512) == true)
                 return false;
 
             // Filter on merge tag
-            if (filter.MergeTag.MatchesPositiveSet(MergeTag) == false)
+            if (filter.DatItem_Merge.MatchesPositiveSet(MergeTag) == false)
                 return false;
-            if (filter.MergeTag.MatchesNegativeSet(MergeTag) == true)
+            if (filter.DatItem_Merge.MatchesNegativeSet(MergeTag) == true)
                 return false;
 
             // Filter on region
-            if (filter.Region.MatchesPositiveSet(Region) == false)
+            if (filter.DatItem_Region.MatchesPositiveSet(Region) == false)
                 return false;
-            if (filter.Region.MatchesNegativeSet(Region) == true)
+            if (filter.DatItem_Region.MatchesNegativeSet(Region) == true)
                 return false;
 
             // Filter on index
-            if (filter.Index.MatchesPositiveSet(Index) == false)
+            if (filter.DatItem_Index.MatchesPositiveSet(Index) == false)
                 return false;
-            if (filter.Index.MatchesNegativeSet(Index) == true)
+            if (filter.DatItem_Index.MatchesNegativeSet(Index) == true)
                 return false;
 
             // Filter on writable
-            if (filter.Writable.MatchesNeutral(null, Writable) == false)
+            if (filter.DatItem_Writable.MatchesNeutral(null, Writable) == false)
                 return false;
 
             // Filter on status
-            if (filter.Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
+            if (filter.DatItem_Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
                 return false;
-            if (filter.Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
+            if (filter.DatItem_Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
                 return false;
 
             // Filter on optional
-            if (filter.Optional.MatchesNeutral(null, Optional) == false)
+            if (filter.DatItem_Optional.MatchesNeutral(null, Optional) == false)
                 return false;
 
             return true;

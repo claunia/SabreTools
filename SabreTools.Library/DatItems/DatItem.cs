@@ -581,15 +581,15 @@ namespace SabreTools.Library.DatItems
             #region Common
 
             // Filter on item name
-            if (filter.ItemName.MatchesPositiveSet(Name) == false)
+            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.ItemName.MatchesNegativeSet(Name) == true)
+            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
             // Filter on item type
-            if (filter.ItemTypes.MatchesPositiveSet(ItemType.ToString()) == false)
+            if (filter.DatItem_Type.MatchesPositiveSet(ItemType.ToString()) == false)
                 return false;
-            if (filter.ItemTypes.MatchesNegativeSet(ItemType.ToString()) == true)
+            if (filter.DatItem_Type.MatchesNegativeSet(ItemType.ToString()) == true)
                 return false;
 
             #endregion
@@ -597,15 +597,15 @@ namespace SabreTools.Library.DatItems
             #region AttractMode
 
             // Filter on alt name
-            if (filter.AltName.MatchesPositiveSet(AltName) == false)
+            if (filter.DatItem_AltName.MatchesPositiveSet(AltName) == false)
                 return false;
-            if (filter.AltName.MatchesNegativeSet(AltName) == true)
+            if (filter.DatItem_AltName.MatchesNegativeSet(AltName) == true)
                 return false;
 
             // Filter on alt title
-            if (filter.AltTitle.MatchesPositiveSet(AltTitle) == false)
+            if (filter.DatItem_AltTitle.MatchesPositiveSet(AltTitle) == false)
                 return false;
-            if (filter.AltTitle.MatchesNegativeSet(AltTitle) == true)
+            if (filter.DatItem_AltTitle.MatchesNegativeSet(AltTitle) == true)
                 return false;
 
             #endregion
@@ -613,33 +613,33 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             // Filter on original
-            if (filter.Original.MatchesPositiveSet(Original?.Content) == false)
+            if (filter.DatItem_Original.MatchesPositiveSet(Original?.Content) == false)
                 return false;
-            if (filter.Original.MatchesNegativeSet(Original?.Content) == true)
+            if (filter.DatItem_Original.MatchesNegativeSet(Original?.Content) == true)
                 return false;
 
             // Filter on OpenMSX subtype
-            if (filter.SubType.MatchesPositiveSet(OpenMSXSubType) == false)
+            if (filter.DatItem_OpenMSXSubType.MatchesPositiveSet(OpenMSXSubType) == false)
                 return false;
-            if (filter.SubType.MatchesNegativeSet(OpenMSXSubType) == true)
+            if (filter.DatItem_OpenMSXSubType.MatchesNegativeSet(OpenMSXSubType) == true)
                 return false;
 
             // Filter on OpenMSX type
-            if (filter.OpenMSXType.MatchesPositiveSet(OpenMSXType) == false)
+            if (filter.DatItem_OpenMSXType.MatchesPositiveSet(OpenMSXType) == false)
                 return false;
-            if (filter.OpenMSXType.MatchesNegativeSet(OpenMSXType) == true)
+            if (filter.DatItem_OpenMSXType.MatchesNegativeSet(OpenMSXType) == true)
                 return false;
 
             // Filter on remark
-            if (filter.Remark.MatchesPositiveSet(Remark) == false)
+            if (filter.DatItem_Remark.MatchesPositiveSet(Remark) == false)
                 return false;
-            if (filter.Remark.MatchesNegativeSet(Remark) == true)
+            if (filter.DatItem_Remark.MatchesNegativeSet(Remark) == true)
                 return false;
 
             // Filter on boot
-            if (filter.Boot.MatchesPositiveSet(Boot) == false)
+            if (filter.DatItem_Boot.MatchesPositiveSet(Boot) == false)
                 return false;
-            if (filter.Boot.MatchesNegativeSet(Boot) == true)
+            if (filter.DatItem_Boot.MatchesNegativeSet(Boot) == true)
                 return false;
 
             #endregion
@@ -647,53 +647,53 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             // Filter on part name
-            if (filter.PartName.MatchesPositiveSet(Part?.Name) == false)
+            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
                 return false;
-            if (filter.PartName.MatchesNegativeSet(Part?.Name) == true)
+            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
                 return false;
 
             // Filter on part interface
-            if (filter.PartInterface.MatchesPositiveSet(Part?.Interface) == false)
+            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
                 return false;
-            if (filter.PartInterface.MatchesNegativeSet(Part?.Interface) == true)
+            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
                 return false;
 
             // Filter on area name
-            if (filter.AreaName.MatchesPositiveSet(AreaName) == false)
+            if (filter.DatItem_AreaName.MatchesPositiveSet(AreaName) == false)
                 return false;
-            if (filter.AreaName.MatchesNegativeSet(AreaName) == true)
+            if (filter.DatItem_AreaName.MatchesNegativeSet(AreaName) == true)
                 return false;
 
             // Filter on area size
-            if (filter.AreaSize.MatchesNeutral(null, AreaSize) == false)
+            if (filter.DatItem_AreaSize.MatchesNeutral(null, AreaSize) == false)
                 return false;
-            else if (filter.AreaSize.MatchesPositive(null, AreaSize) == false)
+            else if (filter.DatItem_AreaSize.MatchesPositive(null, AreaSize) == false)
                 return false;
-            else if (filter.AreaSize.MatchesNegative(null, AreaSize) == false)
+            else if (filter.DatItem_AreaSize.MatchesNegative(null, AreaSize) == false)
                 return false;
 
             // Filter on area byte width
-            if (filter.AreaWidth.MatchesPositiveSet(AreaWidth) == false)
+            if (filter.DatItem_AreaWidth.MatchesPositiveSet(AreaWidth) == false)
                 return false;
-            if (filter.AreaWidth.MatchesNegativeSet(AreaWidth) == true)
+            if (filter.DatItem_AreaWidth.MatchesNegativeSet(AreaWidth) == true)
                 return false;
 
             // Filter on area endianness
-            if (filter.AreaEndianness.MatchesPositiveSet(AreaEndianness) == false)
+            if (filter.DatItem_AreaEndianness.MatchesPositiveSet(AreaEndianness) == false)
                 return false;
-            if (filter.AreaEndianness.MatchesNegativeSet(AreaEndianness) == true)
+            if (filter.DatItem_AreaEndianness.MatchesNegativeSet(AreaEndianness) == true)
                 return false;
 
             // Filter on softwarelist value
-            if (filter.Value.MatchesPositiveSet(Value) == false)
+            if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
                 return false;
-            if (filter.Value.MatchesNegativeSet(Value) == true)
+            if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
                 return false;
 
             // Filter on load flag
-            if (filter.LoadFlag.MatchesPositiveSet(LoadFlag) == false)
+            if (filter.DatItem_LoadFlag.MatchesPositiveSet(LoadFlag) == false)
                 return false;
-            if (filter.LoadFlag.MatchesNegativeSet(LoadFlag) == true)
+            if (filter.DatItem_LoadFlag.MatchesNegativeSet(LoadFlag) == true)
                 return false;
 
             #endregion

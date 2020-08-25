@@ -133,13 +133,13 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on description
-            if (filter.Description.MatchesPositiveSet(Description) == false)
+            if (filter.DatItem_Description.MatchesPositiveSet(Description) == false)
                 return false;
-            if (filter.Description.MatchesNegativeSet(Description) == true)
+            if (filter.DatItem_Description.MatchesNegativeSet(Description) == true)
                 return false;
 
             // Filter on default
-            if (filter.Default.MatchesNeutral(null, Default) == false)
+            if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
                 return false;
 
             return true;
