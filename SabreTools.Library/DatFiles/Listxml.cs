@@ -290,8 +290,8 @@ namespace SabreTools.Library.DatFiles
                         chip.Clock = reader.GetAttribute("clock");
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Chips == null)
+                            machine.Chips = new List<ListXmlChip>();
 
                         machine.Chips.Add(chip);
 
@@ -310,14 +310,14 @@ namespace SabreTools.Library.DatFiles
                         display.PixClock = reader.GetAttribute("pixclock");
                         display.HTotal = reader.GetAttribute("htotal");
                         display.HBEnd = reader.GetAttribute("hbend");
-                        display.HBStart = reader.GetAttribute("hstart");
+                        display.HBStart = reader.GetAttribute("hbstart");
                         display.VTotal = reader.GetAttribute("vtotal");
                         display.VBEnd = reader.GetAttribute("vbend");
-                        display.VBStart = reader.GetAttribute("vstart");
+                        display.VBStart = reader.GetAttribute("vbstart");
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Displays == null)
+                            machine.Displays = new List<ListXmlDisplay>();
 
                         machine.Displays.Add(display);
 
@@ -329,8 +329,8 @@ namespace SabreTools.Library.DatFiles
                         sound.Channels = reader.GetAttribute("channels");
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Sounds == null)
+                            machine.Sounds = new List<ListXmlSound>();
 
                         machine.Sounds.Add(sound);
 
@@ -345,8 +345,8 @@ namespace SabreTools.Library.DatFiles
                         condition.Value = reader.GetAttribute("value");
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Conditions == null)
+                            machine.Conditions = new List<ListXmlCondition>();
 
                         machine.Conditions.Add(condition);
 
@@ -364,8 +364,8 @@ namespace SabreTools.Library.DatFiles
                         ReadInput(reader.ReadSubtree(), input);
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Inputs == null)
+                            machine.Inputs = new List<ListXmlInput>();
 
                         machine.Inputs.Add(input);
 
@@ -383,8 +383,8 @@ namespace SabreTools.Library.DatFiles
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.DipSwitches == null)
+                            machine.DipSwitches = new List<ListXmlDipSwitch>();
 
                         machine.DipSwitches.Add(dipSwitch);
 
@@ -402,8 +402,8 @@ namespace SabreTools.Library.DatFiles
                         ReadConfiguration(reader.ReadSubtree(), configuration);
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Configurations == null)
+                            machine.Configurations = new List<ListXmlConfiguration>();
 
                         machine.Configurations.Add(configuration);
 
@@ -419,8 +419,8 @@ namespace SabreTools.Library.DatFiles
                         ReadPort(reader.ReadSubtree(), port);
 
                         // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
+                        if (machine.Ports == null)
+                            machine.Ports = new List<ListXmlPort>();
 
                         machine.Ports.Add(port);
 
@@ -1105,10 +1105,393 @@ namespace SabreTools.Library.DatFiles
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("sampleof", datItem.Machine.SampleOf);
 
-                xtw.WriteOptionalAttributeString("description", datItem.Machine.Description);
-                xtw.WriteOptionalAttributeString("year", datItem.Machine.Year);
-                xtw.WriteOptionalAttributeString("publisher", datItem.Machine.Publisher);
-                xtw.WriteOptionalAttributeString("category", datItem.Machine.Category);
+                xtw.WriteOptionalElementString("description", datItem.Machine.Description);
+                xtw.WriteOptionalElementString("year", datItem.Machine.Year);
+                xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
+                xtw.WriteOptionalElementString("category", datItem.Machine.Category);
+
+                if (datItem.Machine.DeviceReferences != null)
+                {
+                    foreach (var deviceReference in datItem.Machine.DeviceReferences)
+                    {
+                        xtw.WriteStartElement("device_ref");
+
+                        xtw.WriteOptionalAttributeString("name", deviceReference.Name);
+
+                        // End device_ref
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Chips != null)
+                {
+                    foreach (var chip in datItem.Machine.Chips)
+                    {
+                        xtw.WriteStartElement("chip");
+
+                        xtw.WriteOptionalAttributeString("name", chip.Name);
+                        xtw.WriteOptionalAttributeString("tag", chip.Tag);
+                        xtw.WriteOptionalAttributeString("type", chip.Type);
+                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
+
+                        // End chip
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Displays != null)
+                {
+                    foreach (var display in datItem.Machine.Displays)
+                    {
+                        xtw.WriteStartElement("display");
+
+                        xtw.WriteOptionalAttributeString("tag", display.Tag);
+                        xtw.WriteOptionalAttributeString("type", display.Type);
+                        xtw.WriteOptionalAttributeString("rotate", display.Rotate);
+                        xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
+                        xtw.WriteOptionalAttributeString("width", display.Width);
+                        xtw.WriteOptionalAttributeString("height", display.Height);
+                        xtw.WriteOptionalAttributeString("refresh", display.Refresh);
+                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock);
+                        xtw.WriteOptionalAttributeString("htotal", display.HTotal);
+                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
+                        xtw.WriteOptionalAttributeString("hstart", display.HBStart);
+                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
+                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
+                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
+
+                        // End display
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Sounds != null)
+                {
+                    foreach (var sound in datItem.Machine.Sounds)
+                    {
+                        xtw.WriteStartElement("sound");
+
+                        xtw.WriteOptionalAttributeString("channels", sound.Channels);
+
+                        // End sound
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Conditions != null)
+                {
+                    foreach (var condition in datItem.Machine.Conditions)
+                    {
+                        xtw.WriteStartElement("condition");
+
+                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                        xtw.WriteOptionalAttributeString("value", condition.Value);
+
+                        // End condition
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Inputs != null)
+                {
+                    foreach (var input in datItem.Machine.Inputs)
+                    {
+                        xtw.WriteStartElement("input");
+
+                        xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
+                        xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
+                        xtw.WriteOptionalAttributeString("players", input.Players);
+                        xtw.WriteOptionalAttributeString("coins", input.Coins);
+
+                        if (input.Controls != null)
+                        {
+                            foreach (var control in input.Controls)
+                            {
+                                xtw.WriteStartElement("control");
+
+                                xtw.WriteOptionalAttributeString("type", control.Type);
+                                xtw.WriteOptionalAttributeString("player", control.Player);
+                                xtw.WriteOptionalAttributeString("buttons", control.Buttons);
+                                xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
+                                xtw.WriteOptionalAttributeString("minimum", control.Minimum);
+                                xtw.WriteOptionalAttributeString("maximum", control.Maximum);
+                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity);
+                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta);
+                                xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
+                                xtw.WriteOptionalAttributeString("ways", control.Ways);
+                                xtw.WriteOptionalAttributeString("ways2", control.Ways2);
+                                xtw.WriteOptionalAttributeString("ways3", control.Ways3);
+
+                                // End control
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End input
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.DipSwitches != null)
+                {
+                    foreach (var dipSwitches in datItem.Machine.DipSwitches)
+                    {
+                        xtw.WriteStartElement("dipswitch");
+
+                        xtw.WriteOptionalAttributeString("name", dipSwitches.Name);
+                        xtw.WriteOptionalAttributeString("tag", dipSwitches.Tag);
+                        xtw.WriteOptionalAttributeString("mask", dipSwitches.Mask);
+
+                        if (dipSwitches.Locations != null)
+                        {
+                            foreach (var location in dipSwitches.Locations)
+                            {
+                                xtw.WriteStartElement("diplocation");
+
+                                xtw.WriteOptionalAttributeString("name", location.Name);
+                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+
+                                // End diplocation
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (dipSwitches.Values != null)
+                        {
+                            foreach (var value in dipSwitches.Values)
+                            {
+                                xtw.WriteStartElement("dipvalue");
+
+                                xtw.WriteOptionalAttributeString("name", value.Name);
+                                xtw.WriteOptionalAttributeString("value", value.Value);
+                                xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
+
+                                // End dipvalue
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End dipswitch
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Configurations != null)
+                {
+                    foreach (var configuration in datItem.Machine.Configurations)
+                    {
+                        xtw.WriteStartElement("configuration");
+
+                        xtw.WriteOptionalAttributeString("name", configuration.Name);
+                        xtw.WriteOptionalAttributeString("tag", configuration.Tag);
+                        xtw.WriteOptionalAttributeString("mask", configuration.Mask);
+
+                        if (configuration.Locations != null)
+                        {
+                            foreach (var location in configuration.Locations)
+                            {
+                                xtw.WriteStartElement("conflocation");
+
+                                xtw.WriteOptionalAttributeString("name", location.Name);
+                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+
+                                // End conflocation
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (configuration.Settings != null)
+                        {
+                            foreach (var setting in configuration.Settings)
+                            {
+                                xtw.WriteStartElement("confsetting");
+
+                                xtw.WriteOptionalAttributeString("name", setting.Name);
+                                xtw.WriteOptionalAttributeString("value", setting.Value);
+                                xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
+
+                                // End confsetting
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End configuration
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Ports != null)
+                {
+                    foreach (var port in datItem.Machine.Ports)
+                    {
+                        xtw.WriteStartElement("port");
+
+                        xtw.WriteOptionalAttributeString("tag", port.Tag);
+
+                        if (port.Analogs != null)
+                        {
+                            foreach (var analog in port.Analogs)
+                            {
+                                xtw.WriteStartElement("analog");
+
+                                xtw.WriteOptionalAttributeString("mask", analog.Mask);
+
+                                // End analog
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End port
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Adjusters != null)
+                {
+                    foreach (var adjuster in datItem.Machine.Adjusters)
+                    {
+                        xtw.WriteStartElement("adjuster");
+
+                        xtw.WriteOptionalAttributeString("name", adjuster.Name);
+                        xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
+
+                        if (adjuster.Conditions != null)
+                        {
+                            foreach (var condition in adjuster.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+
+                                // End condition
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End adjuster
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Drivers != null)
+                {
+                    foreach (var driver in datItem.Machine.Drivers)
+                    {
+                        xtw.WriteStartElement("driver");
+
+                        xtw.WriteOptionalAttributeString("status", driver.Status);
+                        xtw.WriteOptionalAttributeString("emulation", driver.Emulation);
+                        xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail);
+                        xtw.WriteOptionalAttributeString("savestate", driver.SaveState);
+
+                        // End driver
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Features != null)
+                {
+                    foreach (var feature in datItem.Machine.Features)
+                    {
+                        xtw.WriteStartElement("feature");
+
+                        xtw.WriteOptionalAttributeString("type", feature.Type);
+                        xtw.WriteOptionalAttributeString("status", feature.Status);
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall);
+
+                        // End feature
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Devices != null)
+                {
+                    foreach (var device in datItem.Machine.Devices)
+                    {
+                        xtw.WriteStartElement("device");
+
+                        xtw.WriteOptionalAttributeString("type", device.Type);
+                        xtw.WriteOptionalAttributeString("tag", device.Tag);
+                        xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
+                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
+                        xtw.WriteOptionalAttributeString("interface", device.Interface);
+
+                        if (device.Instances != null)
+                        {
+                            foreach (var instance in device.Instances)
+                            {
+                                xtw.WriteStartElement("instance");
+
+                                xtw.WriteOptionalAttributeString("name", instance.Name);
+                                xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
+
+                                // End instance
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (device.Extensions != null)
+                        {
+                            foreach (var extension in device.Extensions)
+                            {
+                                xtw.WriteStartElement("extension");
+
+                                xtw.WriteOptionalAttributeString("name", extension.Name);
+
+                                // End extension
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End device
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.Slots != null)
+                {
+                    foreach (var slot in datItem.Machine.Slots)
+                    {
+                        xtw.WriteStartElement("slot");
+
+                        xtw.WriteOptionalAttributeString("name", slot.Name);
+
+                        if (slot.SlotOptions != null)
+                        {
+                            foreach (var slotOption in slot.SlotOptions)
+                            {
+                                xtw.WriteStartElement("slotoption");
+
+                                xtw.WriteOptionalAttributeString("name", slotOption.Name);
+                                xtw.WriteOptionalAttributeString("devname", slotOption.DeviceName);
+                                xtw.WriteOptionalAttributeString("default", slotOption.Default.FromYesNo());
+
+                                // End slotoption
+                                xtw.WriteEndElement();
+                            }
+                        }
+
+                        // End slot
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.SoftwareLists != null)
+                {
+                    foreach (var softwarelist in datItem.Machine.SoftwareLists)
+                    {
+                        xtw.WriteStartElement("softwarelist");
+
+                        xtw.WriteOptionalAttributeString("name", softwarelist.Name);
+                        xtw.WriteOptionalAttributeString("status", softwarelist.Status);
+                        xtw.WriteOptionalAttributeString("filter", softwarelist.Filter);
+
+                        // End softwarelist
+                        xtw.WriteEndElement();
+                    }
+                }
+                if (datItem.Machine.RamOptions != null)
+                {
+                    foreach (var ramOption in datItem.Machine.RamOptions)
+                    {
+                        xtw.WriteStartElement("ramoption");
+
+                        xtw.WriteOptionalAttributeString("default", ramOption.Default.FromYesNo());
+
+                        // End softwarelist
+                        xtw.WriteEndElement();
+                    }
+                }
 
                 xtw.Flush();
             }
