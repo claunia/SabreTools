@@ -608,6 +608,837 @@ namespace SabreTools.Library.Filtering
                         Machine_Runnable.Positive |= value.AsRunnable();
                     break;
 
+                // DeviceReferences
+                case Field.Machine_DeviceReferences:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_DeviceReferences.Neutral = false;
+                    else
+                        Machine_DeviceReferences.Neutral = true;
+                    break;
+
+                case Field.Machine_DeviceReference_Name:
+                    if (negate)
+                        Machine_DeviceReference_Name.NegativeSet.Add(value);
+                    else
+                        Machine_DeviceReference_Name.PositiveSet.Add(value);
+                    break;
+
+                // Chips
+                case Field.Machine_Chips:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Chips.Neutral = false;
+                    else
+                        Machine_Chips.Neutral = true;
+                    break;
+
+                case Field.Machine_Chip_Name:
+                    if (negate)
+                        Machine_Chip_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Chip_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Chip_Tag:
+                    if (negate)
+                        Machine_Chip_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Chip_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Chip_Type:
+                    if (negate)
+                        Machine_Chip_Type.NegativeSet.Add(value);
+                    else
+                        Machine_Chip_Type.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Chip_Clock:
+                    if (negate)
+                        Machine_Chip_Clock.NegativeSet.Add(value);
+                    else
+                        Machine_Chip_Clock.PositiveSet.Add(value);
+                    break;
+
+                // Displays
+                case Field.Machine_Displays:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Displays.Neutral = false;
+                    else
+                        Machine_Displays.Neutral = true;
+                    break;
+
+                case Field.Machine_Display_Tag:
+                    if (negate)
+                        Machine_Display_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Display_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_Type:
+                    if (negate)
+                        Machine_Display_Type.NegativeSet.Add(value);
+                    else
+                        Machine_Display_Type.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_Rotate:
+                    if (negate)
+                        Machine_Display_Rotate.NegativeSet.Add(value);
+                    else
+                        Machine_Display_Rotate.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_FlipX:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Display_FlipX.Neutral = false;
+                    else
+                        Machine_Display_FlipX.Neutral = true;
+                    break;
+
+                case Field.Machine_Display_Width:
+                    if (negate)
+                        Machine_Display_Width.NegativeSet.Add(value);
+                    else
+                        Machine_Display_Width.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_Height:
+                    if (negate)
+                        Machine_Display_Height.NegativeSet.Add(value);
+                    else
+                        Machine_Display_Height.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_Refresh:
+                    if (negate)
+                        Machine_Display_Refresh.NegativeSet.Add(value);
+                    else
+                        Machine_Display_Refresh.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_PixClock:
+                    if (negate)
+                        Machine_Display_PixClock.NegativeSet.Add(value);
+                    else
+                        Machine_Display_PixClock.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_HTotal:
+                    if (negate)
+                        Machine_Display_HTotal.NegativeSet.Add(value);
+                    else
+                        Machine_Display_HTotal.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_HBEnd:
+                    if (negate)
+                        Machine_Display_HBEnd.NegativeSet.Add(value);
+                    else
+                        Machine_Display_HBEnd.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_HBStart:
+                    if (negate)
+                        Machine_Display_HBStart.NegativeSet.Add(value);
+                    else
+                        Machine_Display_HBStart.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_VTotal:
+                    if (negate)
+                        Machine_Display_VTotal.NegativeSet.Add(value);
+                    else
+                        Machine_Display_VTotal.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_VBEnd:
+                    if (negate)
+                        Machine_Display_VBEnd.NegativeSet.Add(value);
+                    else
+                        Machine_Display_VBEnd.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Display_VBStart:
+                    if (negate)
+                        Machine_Display_VBStart.NegativeSet.Add(value);
+                    else
+                        Machine_Display_VBStart.PositiveSet.Add(value);
+                    break;
+
+                // Sounds
+                case Field.Machine_Sounds:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Sounds.Neutral = false;
+                    else
+                        Machine_Sounds.Neutral = true;
+                    break;
+
+                case Field.Machine_Sound_Channels:
+                    if (negate)
+                        Machine_Sound_Channels.NegativeSet.Add(value);
+                    else
+                        Machine_Sound_Channels.PositiveSet.Add(value);
+                    break;
+
+                // Conditions
+                case Field.Machine_Conditions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Conditions.Neutral = false;
+                    else
+                        Machine_Conditions.Neutral = true;
+                    break;
+
+                case Field.Machine_Condition_Tag:
+                    if (negate)
+                        Machine_Condition_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Condition_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Condition_Mask:
+                    if (negate)
+                        Machine_Condition_Mask.NegativeSet.Add(value);
+                    else
+                        Machine_Condition_Mask.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Condition_Relation:
+                    if (negate)
+                        Machine_Condition_Relation.NegativeSet.Add(value);
+                    else
+                        Machine_Condition_Relation.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Condition_Value:
+                    if (negate)
+                        Machine_Condition_Value.NegativeSet.Add(value);
+                    else
+                        Machine_Condition_Value.PositiveSet.Add(value);
+                    break;
+
+                // Inputs
+                case Field.Machine_Inputs:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Inputs.Neutral = false;
+                    else
+                        Machine_Inputs.Neutral = true;
+                    break;
+
+                case Field.Machine_Input_Service:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Input_Service.Neutral = false;
+                    else
+                        Machine_Input_Service.Neutral = true;
+                    break;
+
+                case Field.Machine_Input_Tilt:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Input_Tilt.Neutral = false;
+                    else
+                        Machine_Input_Tilt.Neutral = true;
+                    break;
+
+                case Field.Machine_Input_Players:
+                    if (negate)
+                        Machine_Input_Players.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Players.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Coins:
+                    if (negate)
+                        Machine_Input_Coins.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Coins.PositiveSet.Add(value);
+                    break;
+
+                // Inputs.Controls
+                case Field.Machine_Input_Controls:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Input_Controls.Neutral = false;
+                    else
+                        Machine_Input_Controls.Neutral = true;
+                    break;
+
+                case Field.Machine_Input_Control_Type:
+                    if (negate)
+                        Machine_Input_Control_Type.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Type.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Player:
+                    if (negate)
+                        Machine_Input_Control_Player.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Player.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Buttons:
+                    if (negate)
+                        Machine_Input_Control_Buttons.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Buttons.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_RegButtons:
+                    if (negate)
+                        Machine_Input_Control_RegButtons.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_RegButtons.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Minimum:
+                    if (negate)
+                        Machine_Input_Control_Minimum.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Minimum.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Maximum:
+                    if (negate)
+                        Machine_Input_Control_Maximum.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Maximum.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Sensitivity:
+                    if (negate)
+                        Machine_Input_Control_Sensitivity.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Sensitivity.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_KeyDelta:
+                    if (negate)
+                        Machine_Input_Control_KeyDelta.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_KeyDelta.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Reverse:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Input_Control_Reverse.Neutral = false;
+                    else
+                        Machine_Input_Control_Reverse.Neutral = true;
+                    break;
+
+                case Field.Machine_Input_Control_Ways:
+                    if (negate)
+                        Machine_Input_Control_Ways.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Ways.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Ways2:
+                    if (negate)
+                        Machine_Input_Control_Ways2.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Ways2.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Input_Control_Ways3:
+                    if (negate)
+                        Machine_Input_Control_Ways3.NegativeSet.Add(value);
+                    else
+                        Machine_Input_Control_Ways3.PositiveSet.Add(value);
+                    break;
+
+                // DipSwitches
+                case Field.Machine_DipSwitches:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_DipSwitches.Neutral = false;
+                    else
+                        Machine_DipSwitches.Neutral = true;
+                    break;
+
+                case Field.Machine_DipSwitch_Name:
+                    if (negate)
+                        Machine_DipSwitch_Name.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_DipSwitch_Tag:
+                    if (negate)
+                        Machine_DipSwitch_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_DipSwitch_Mask:
+                    if (negate)
+                        Machine_DipSwitch_Mask.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Mask.PositiveSet.Add(value);
+                    break;
+
+                // DipSwitches.Locations
+                case Field.Machine_DipSwitch_Locations:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_DipSwitch_Locations.Neutral = false;
+                    else
+                        Machine_DipSwitch_Locations.Neutral = true;
+                    break;
+
+                case Field.Machine_DipSwitch_Location_Name:
+                    if (negate)
+                        Machine_DipSwitch_Location_Name.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Location_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_DipSwitch_Location_Number:
+                    if (negate)
+                        Machine_DipSwitch_Location_Number.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Location_Number.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_DipSwitch_Location_Inverted:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_DipSwitch_Location_Inverted.Neutral = false;
+                    else
+                        Machine_DipSwitch_Location_Inverted.Neutral = true;
+                    break;
+
+                // DipSwitches.Values
+                case Field.Machine_DipSwitch_Values:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_DipSwitch_Values.Neutral = false;
+                    else
+                        Machine_DipSwitch_Values.Neutral = true;
+                    break;
+
+                case Field.Machine_DipSwitch_Value_Name:
+                    if (negate)
+                        Machine_DipSwitch_Value_Name.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Value_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_DipSwitch_Value_Value:
+                    if (negate)
+                        Machine_DipSwitch_Value_Value.NegativeSet.Add(value);
+                    else
+                        Machine_DipSwitch_Value_Value.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_DipSwitch_Value_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_DipSwitch_Value_Default.Neutral = false;
+                    else
+                        Machine_DipSwitch_Value_Default.Neutral = true;
+                    break;
+
+                // Configurations
+                case Field.Machine_Configurations:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Configurations.Neutral = false;
+                    else
+                        Machine_Configurations.Neutral = true;
+                    break;
+
+                case Field.Machine_Configuration_Name:
+                    if (negate)
+                        Machine_Configuration_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Configuration_Tag:
+                    if (negate)
+                        Machine_Configuration_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Configuration_Mask:
+                    if (negate)
+                        Machine_Configuration_Mask.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Mask.PositiveSet.Add(value);
+                    break;
+
+                // Configurations.Locations
+                case Field.Machine_Configuration_Locations:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Configuration_Locations.Neutral = false;
+                    else
+                        Machine_Configuration_Locations.Neutral = true;
+                    break;
+
+                case Field.Machine_Configuration_Location_Name:
+                    if (negate)
+                        Machine_Configuration_Location_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Location_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Configuration_Location_Number:
+                    if (negate)
+                        Machine_Configuration_Location_Number.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Location_Number.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Configuration_Location_Inverted:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Configuration_Location_Inverted.Neutral = false;
+                    else
+                        Machine_Configuration_Location_Inverted.Neutral = true;
+                    break;
+
+                // Configurations.Settings
+                case Field.Machine_Configuration_Settings:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Configuration_Settings.Neutral = false;
+                    else
+                        Machine_Configuration_Settings.Neutral = true;
+                    break;
+
+                case Field.Machine_Configuration_Setting_Name:
+                    if (negate)
+                        Machine_Configuration_Setting_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Setting_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Configuration_Setting_Value:
+                    if (negate)
+                        Machine_Configuration_Setting_Value.NegativeSet.Add(value);
+                    else
+                        Machine_Configuration_Setting_Value.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Configuration_Setting_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Configuration_Setting_Default.Neutral = false;
+                    else
+                        Machine_Configuration_Setting_Default.Neutral = true;
+                    break;
+
+                // Ports
+                case Field.Machine_Ports:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Ports.Neutral = false;
+                    else
+                        Machine_Ports.Neutral = true;
+                    break;
+
+                case Field.Machine_Port_Tag:
+                    if (negate)
+                        Machine_Port_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Port_Tag.PositiveSet.Add(value);
+                    break;
+
+                // Ports.Analogs
+                case Field.Machine_Port_Analogs:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Port_Analogs.Neutral = false;
+                    else
+                        Machine_Port_Analogs.Neutral = true;
+                    break;
+
+                case Field.Machine_Port_Analog_Mask:
+                    if (negate)
+                        Machine_Port_Analog_Mask.NegativeSet.Add(value);
+                    else
+                        Machine_Port_Analog_Mask.PositiveSet.Add(value);
+                    break;
+
+                // Adjusters
+                case Field.Machine_Adjusters:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Adjusters.Neutral = false;
+                    else
+                        Machine_Adjusters.Neutral = true;
+                    break;
+
+                case Field.Machine_Adjuster_Name:
+                    if (negate)
+                        Machine_Adjuster_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Adjuster_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Adjuster_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Adjuster_Default.Neutral = false;
+                    else
+                        Machine_Adjuster_Default.Neutral = true;
+                    break;
+
+                // Adjusters.Conditions
+                case Field.Machine_Adjuster_Conditions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Adjuster_Conditions.Neutral = false;
+                    else
+                        Machine_Adjuster_Conditions.Neutral = true;
+                    break;
+
+                case Field.Machine_Adjuster_Condition_Tag:
+                    if (negate)
+                        Machine_Adjuster_Condition_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Adjuster_Condition_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Adjuster_Condition_Mask:
+                    if (negate)
+                        Machine_Adjuster_Condition_Mask.NegativeSet.Add(value);
+                    else
+                        Machine_Adjuster_Condition_Mask.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Adjuster_Condition_Relation:
+                    if (negate)
+                        Machine_Adjuster_Condition_Relation.NegativeSet.Add(value);
+                    else
+                        Machine_Adjuster_Condition_Relation.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Adjuster_Condition_Value:
+                    if (negate)
+                        Machine_Adjuster_Condition_Value.NegativeSet.Add(value);
+                    else
+                        Machine_Adjuster_Condition_Value.PositiveSet.Add(value);
+                    break;
+
+                // Drivers
+                case Field.Machine_Drivers:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Drivers.Neutral = false;
+                    else
+                        Machine_Drivers.Neutral = true;
+                    break;
+
+                case Field.Machine_Driver_Status:
+                    if (negate)
+                        Machine_Driver_Status.NegativeSet.Add(value);
+                    else
+                        Machine_Driver_Status.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Driver_Emulation:
+                    if (negate)
+                        Machine_Driver_Emulation.NegativeSet.Add(value);
+                    else
+                        Machine_Driver_Emulation.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Driver_Cocktail:
+                    if (negate)
+                        Machine_Driver_Cocktail.NegativeSet.Add(value);
+                    else
+                        Machine_Driver_Cocktail.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Driver_SaveState:
+                    if (negate)
+                        Machine_Driver_SaveState.NegativeSet.Add(value);
+                    else
+                        Machine_Driver_SaveState.PositiveSet.Add(value);
+                    break;
+
+                // Features
+                case Field.Machine_Features:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Features.Neutral = false;
+                    else
+                        Machine_Features.Neutral = true;
+                    break;
+
+                case Field.Machine_Feature_Type:
+                    if (negate)
+                        Machine_Feature_Type.NegativeSet.Add(value);
+                    else
+                        Machine_Feature_Type.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Feature_Status:
+                    if (negate)
+                        Machine_Feature_Status.NegativeSet.Add(value);
+                    else
+                        Machine_Feature_Status.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Feature_Overall:
+                    if (negate)
+                        Machine_Feature_Overall.NegativeSet.Add(value);
+                    else
+                        Machine_Feature_Overall.PositiveSet.Add(value);
+                    break;
+
+                // Devices
+                case Field.Machine_Devices:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Devices.Neutral = false;
+                    else
+                        Machine_Devices.Neutral = true;
+                    break;
+
+                case Field.Machine_Device_Type:
+                    if (negate)
+                        Machine_Device_Type.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Type.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Device_Tag:
+                    if (negate)
+                        Machine_Device_Tag.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Device_FixedImage:
+                    if (negate)
+                        Machine_Device_FixedImage.NegativeSet.Add(value);
+                    else
+                        Machine_Device_FixedImage.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Device_Mandatory:
+                    if (negate)
+                        Machine_Device_Mandatory.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Mandatory.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Device_Interface:
+                    if (negate)
+                        Machine_Device_Interface.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Interface.PositiveSet.Add(value);
+                    break;
+
+                // Devices.Instances
+                case Field.Machine_Device_Instances:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Device_Instances.Neutral = false;
+                    else
+                        Machine_Device_Instances.Neutral = true;
+                    break;
+
+                case Field.Machine_Device_Instance_Name:
+                    if (negate)
+                        Machine_Device_Instance_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Instance_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Device_Instance_BriefName:
+                    if (negate)
+                        Machine_Device_Instance_BriefName.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Instance_BriefName.PositiveSet.Add(value);
+                    break;
+
+                // Devices.Extensions
+                case Field.Machine_Device_Extensions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Device_Extensions.Neutral = false;
+                    else
+                        Machine_Device_Extensions.Neutral = true;
+                    break;
+
+                case Field.Machine_Device_Extension_Name:
+                    if (negate)
+                        Machine_Device_Extension_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Device_Extension_Name.PositiveSet.Add(value);
+                    break;
+
+                // Slots
+                case Field.Machine_Slots:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Slots.Neutral = false;
+                    else
+                        Machine_Slots.Neutral = true;
+                    break;
+
+                case Field.Machine_Slot_Name:
+                    if (negate)
+                        Machine_Slot_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Slot_Name.PositiveSet.Add(value);
+                    break;
+
+                // Slots.SlotOptions
+                case Field.Machine_Slot_SlotOptions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Slot_SlotOptions.Neutral = false;
+                    else
+                        Machine_Slot_SlotOptions.Neutral = true;
+                    break;
+
+                case Field.Machine_Slot_SlotOption_Name:
+                    if (negate)
+                        Machine_Slot_SlotOption_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Slot_SlotOption_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Slot_SlotOption_DeviceName:
+                    if (negate)
+                        Machine_Slot_SlotOption_DeviceName.NegativeSet.Add(value);
+                    else
+                        Machine_Slot_SlotOption_DeviceName.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Slot_SlotOption_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Slot_SlotOption_Default.Neutral = false;
+                    else
+                        Machine_Slot_SlotOption_Default.Neutral = true;
+                    break;
+
+                // SoftwareLists
+                case Field.Machine_SoftwareLists:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_SoftwareLists.Neutral = false;
+                    else
+                        Machine_SoftwareLists.Neutral = true;
+                    break;
+
+                case Field.Machine_SoftwareList_Name:
+                    if (negate)
+                        Machine_SoftwareList_Name.NegativeSet.Add(value);
+                    else
+                        Machine_SoftwareList_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_SoftwareList_Status:
+                    if (negate)
+                        Machine_SoftwareList_Status.NegativeSet.Add(value);
+                    else
+                        Machine_SoftwareList_Status.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_SoftwareList_Filter:
+                    if (negate)
+                        Machine_SoftwareList_Filter.NegativeSet.Add(value);
+                    else
+                        Machine_SoftwareList_Filter.PositiveSet.Add(value);
+                    break;
+
+                // RamOptions
+                case Field.Machine_RamOptions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_RamOptions.Neutral = false;
+                    else
+                        Machine_RamOptions.Neutral = true;
+                    break;
+
+                case Field.Machine_RamOption_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_RamOption_Default.Neutral = false;
+                    else
+                        Machine_RamOption_Default.Neutral = true;
+                    break;
+
                 #endregion
 
                 #region Logiqx
@@ -729,6 +1560,50 @@ namespace SabreTools.Library.Filtering
                         Machine_Supported.Positive |= value.AsSupported();
                     break;
 
+                // Infos
+                case Field.Machine_Infos:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_Infos.Neutral = false;
+                    else
+                        Machine_Infos.Neutral = true;
+                    break;
+
+                case Field.Machine_Info_Name:
+                    if (negate)
+                        Machine_Info_Name.NegativeSet.Add(value);
+                    else
+                        Machine_Info_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_Info_Value:
+                    if (negate)
+                        Machine_Info_Value.NegativeSet.Add(value);
+                    else
+                        Machine_Info_Value.PositiveSet.Add(value);
+                    break;
+
+                // SharedFeatures
+                case Field.Machine_SharedFeatures:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        Machine_SharedFeatures.Neutral = false;
+                    else
+                        Machine_SharedFeatures.Neutral = true;
+                    break;
+
+                case Field.Machine_SharedFeature_Name:
+                    if (negate)
+                        Machine_SharedFeature_Name.NegativeSet.Add(value);
+                    else
+                        Machine_SharedFeature_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.Machine_SharedFeature_Value:
+                    if (negate)
+                        Machine_SharedFeature_Value.NegativeSet.Add(value);
+                    else
+                        Machine_SharedFeature_Value.PositiveSet.Add(value);
+                    break;
+
                 #endregion
 
                 #endregion // Machine Filters
@@ -815,6 +1690,14 @@ namespace SabreTools.Library.Filtering
 
                 #region SoftwareList
 
+                // Part
+                case Field.DatItem_Part:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Part.Neutral = false;
+                    else
+                        DatItem_Part.Neutral = true;
+                    break;
+
                 case Field.DatItem_Part_Name:
                     if (negate)
                         DatItem_Part_Name.NegativeSet.Add(value);
@@ -827,6 +1710,28 @@ namespace SabreTools.Library.Filtering
                         DatItem_Part_Interface.NegativeSet.Add(value);
                     else
                         DatItem_Part_Interface.PositiveSet.Add(value);
+                    break;
+
+                // Feature
+                case Field.DatItem_Features:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Features.Neutral = false;
+                    else
+                        DatItem_Features.Neutral = true;
+                    break;
+
+                case Field.DatItem_Feature_Name:
+                    if (negate)
+                        DatItem_Feature_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_Feature_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Feature_Value:
+                    if (negate)
+                        DatItem_Feature_Value.NegativeSet.Add(value);
+                    else
+                        DatItem_Feature_Value.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_AreaName:
@@ -918,6 +1823,9 @@ namespace SabreTools.Library.Filtering
 
                 #endregion
 
+                #region Item-Specific
+
+                // BiosSet
                 case Field.DatItem_Default:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                         DatItem_Default.Neutral = false;
@@ -932,65 +1840,7 @@ namespace SabreTools.Library.Filtering
                         DatItem_Description.PositiveSet.Add(value);
                     break;
 
-                case Field.DatItem_Size:
-                    bool? sOperation = null;
-                    if (value.StartsWith(">"))
-                        sOperation = true;
-                    else if (value.StartsWith("<"))
-                        sOperation = false;
-                    else if (value.StartsWith("="))
-                        sOperation = null;
-
-                    string sizeString = value.TrimStart('>', '<', '=');
-                    if (!Int64.TryParse(sizeString, out long size))
-                        return;
-
-                    // Equal
-                    if (sOperation == null && !negate)
-                    {
-                        DatItem_Size.Neutral = size;
-                    }
-
-                    // Not Equal
-                    else if (sOperation == null && negate)
-                    {
-                        DatItem_Size.Negative = size - 1;
-                        DatItem_Size.Positive = size + 1;
-                    }
-
-                    // Greater Than or Equal
-                    else if (sOperation == true && !negate)
-                    {
-                        DatItem_Size.Positive = size;
-                    }
-
-                    // Strictly Less Than
-                    else if (sOperation == true && negate)
-                    {
-                        DatItem_Size.Negative = size - 1;
-                    }
-
-                    // Less Than or Equal
-                    else if (sOperation == false && !negate)
-                    {
-                        DatItem_Size.Negative = size;
-                    }
-
-                    // Strictly Greater Than
-                    else if (sOperation == false && negate)
-                    {
-                        DatItem_Size.Positive = size + 1;
-                    }
-
-                    break;
-
-                case Field.DatItem_CRC:
-                    if (negate)
-                        DatItem_CRC.NegativeSet.Add(value);
-                    else
-                        DatItem_CRC.PositiveSet.Add(value);
-                    break;
-
+                // Disk
                 case Field.DatItem_MD5:
                     if (negate)
                         DatItem_MD5.NegativeSet.Add(value);
@@ -1077,6 +1927,7 @@ namespace SabreTools.Library.Filtering
                         DatItem_Status.Positive |= value.AsItemStatus();
                     break;
 
+                // Release
                 case Field.DatItem_Language:
                     if (negate)
                         DatItem_Language.NegativeSet.Add(value);
@@ -1091,11 +1942,71 @@ namespace SabreTools.Library.Filtering
                         DatItem_Date.PositiveSet.Add(value);
                     break;
 
+                // Rom
                 case Field.DatItem_Bios:
                     if (negate)
                         DatItem_Bios.NegativeSet.Add(value);
                     else
                         DatItem_Bios.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Size:
+                    bool? sOperation = null;
+                    if (value.StartsWith(">"))
+                        sOperation = true;
+                    else if (value.StartsWith("<"))
+                        sOperation = false;
+                    else if (value.StartsWith("="))
+                        sOperation = null;
+
+                    string sizeString = value.TrimStart('>', '<', '=');
+                    if (!Int64.TryParse(sizeString, out long size))
+                        return;
+
+                    // Equal
+                    if (sOperation == null && !negate)
+                    {
+                        DatItem_Size.Neutral = size;
+                    }
+
+                    // Not Equal
+                    else if (sOperation == null && negate)
+                    {
+                        DatItem_Size.Negative = size - 1;
+                        DatItem_Size.Positive = size + 1;
+                    }
+
+                    // Greater Than or Equal
+                    else if (sOperation == true && !negate)
+                    {
+                        DatItem_Size.Positive = size;
+                    }
+
+                    // Strictly Less Than
+                    else if (sOperation == true && negate)
+                    {
+                        DatItem_Size.Negative = size - 1;
+                    }
+
+                    // Less Than or Equal
+                    else if (sOperation == false && !negate)
+                    {
+                        DatItem_Size.Negative = size;
+                    }
+
+                    // Strictly Greater Than
+                    else if (sOperation == false && negate)
+                    {
+                        DatItem_Size.Positive = size + 1;
+                    }
+
+                    break;
+
+                case Field.DatItem_CRC:
+                    if (negate)
+                        DatItem_CRC.NegativeSet.Add(value);
+                    else
+                        DatItem_CRC.PositiveSet.Add(value);
                     break;
 
                 case Field.DatItem_Offset:
@@ -1112,7 +2023,9 @@ namespace SabreTools.Library.Filtering
                         DatItem_Inverted.Neutral = true;
                     break;
 
-                    #endregion // DatItem Filters
+                #endregion
+
+                #endregion // DatItem Filters
             }
         }
 
