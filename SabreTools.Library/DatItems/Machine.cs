@@ -136,7 +136,6 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        // TODO: Ensure read/write for all fields here
         #region ListXML Fields
 
         /// <summary>
@@ -350,7 +349,6 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        // TODO: Ensure read/write for all fields here
         #region SoftwareList Fields
 
         /// <summary>
@@ -663,76 +661,76 @@ namespace SabreTools.Library.DatItems
             #region Common
 
             // Filter on machine name
-            bool? machineNameFound = filter.MachineName.MatchesPositiveSet(Name);
+            bool? machineNameFound = filter.Machine_Name.MatchesPositiveSet(Name);
             if (filter.IncludeOfInGame)
             {
-                machineNameFound |= (filter.MachineName.MatchesPositiveSet(CloneOf) == true);
-                machineNameFound |= (filter.MachineName.MatchesPositiveSet(RomOf) == true);
+                machineNameFound |= (filter.Machine_Name.MatchesPositiveSet(CloneOf) == true);
+                machineNameFound |= (filter.Machine_Name.MatchesPositiveSet(RomOf) == true);
             }
             if (machineNameFound == false)
                 return false;
 
-            machineNameFound = filter.MachineName.MatchesNegativeSet(Name);
+            machineNameFound = filter.Machine_Name.MatchesNegativeSet(Name);
             if (filter.IncludeOfInGame)
             {
-                machineNameFound |= (filter.MachineName.MatchesNegativeSet(CloneOf) == true);
-                machineNameFound |= (filter.MachineName.MatchesNegativeSet(RomOf) == true);
+                machineNameFound |= (filter.Machine_Name.MatchesNegativeSet(CloneOf) == true);
+                machineNameFound |= (filter.Machine_Name.MatchesNegativeSet(RomOf) == true);
             }
             if (machineNameFound == false)
                 return false;
 
             // Filter on comment
-            if (filter.Comment.MatchesPositiveSet(Comment) == false)
+            if (filter.Machine_Comment.MatchesPositiveSet(Comment) == false)
                 return false;
-            if (filter.Comment.MatchesNegativeSet(Comment) == true)
+            if (filter.Machine_Comment.MatchesNegativeSet(Comment) == true)
                 return false;
 
             // Filter on machine description
-            if (filter.MachineDescription.MatchesPositiveSet(Description) == false)
+            if (filter.Machine_Description.MatchesPositiveSet(Description) == false)
                 return false;
-            if (filter.MachineDescription.MatchesNegativeSet(Description) == true)
+            if (filter.Machine_Description.MatchesNegativeSet(Description) == true)
                 return false;
 
             // Filter on year
-            if (filter.Year.MatchesPositiveSet(Year) == false)
+            if (filter.Machine_Year.MatchesPositiveSet(Year) == false)
                 return false;
-            if (filter.Year.MatchesNegativeSet(Year) == true)
+            if (filter.Machine_Year.MatchesNegativeSet(Year) == true)
                 return false;
 
             // Filter on manufacturer
-            if (filter.Manufacturer.MatchesPositiveSet(Manufacturer) == false)
+            if (filter.Machine_Manufacturer.MatchesPositiveSet(Manufacturer) == false)
                 return false;
-            if (filter.Manufacturer.MatchesNegativeSet(Manufacturer) == true)
+            if (filter.Machine_Manufacturer.MatchesNegativeSet(Manufacturer) == true)
                 return false;
 
             // Filter on publisher
-            if (filter.Publisher.MatchesPositiveSet(Publisher) == false)
+            if (filter.Machine_Publisher.MatchesPositiveSet(Publisher) == false)
                 return false;
-            if (filter.Publisher.MatchesNegativeSet(Publisher) == true)
+            if (filter.Machine_Publisher.MatchesNegativeSet(Publisher) == true)
                 return false;
 
             // Filter on category
-            if (filter.Category.MatchesPositiveSet(Category) == false)
+            if (filter.Machine_Category.MatchesPositiveSet(Category) == false)
                 return false;
-            if (filter.Category.MatchesNegativeSet(Category) == true)
+            if (filter.Machine_Category.MatchesNegativeSet(Category) == true)
                 return false;
 
             // Filter on romof
-            if (filter.RomOf.MatchesPositiveSet(RomOf) == false)
+            if (filter.Machine_RomOf.MatchesPositiveSet(RomOf) == false)
                 return false;
-            if (filter.RomOf.MatchesNegativeSet(RomOf) == true)
+            if (filter.Machine_RomOf.MatchesNegativeSet(RomOf) == true)
                 return false;
 
             // Filter on cloneof
-            if (filter.CloneOf.MatchesPositiveSet(CloneOf) == false)
+            if (filter.Machine_CloneOf.MatchesPositiveSet(CloneOf) == false)
                 return false;
-            if (filter.CloneOf.MatchesNegativeSet(CloneOf) == true)
+            if (filter.Machine_CloneOf.MatchesNegativeSet(CloneOf) == true)
                 return false;
 
             // Filter on sampleof
-            if (filter.SampleOf.MatchesPositiveSet(SampleOf) == false)
+            if (filter.Machine_SampleOf.MatchesPositiveSet(SampleOf) == false)
                 return false;
-            if (filter.SampleOf.MatchesNegativeSet(SampleOf) == true)
+            if (filter.Machine_SampleOf.MatchesNegativeSet(SampleOf) == true)
                 return false;
 
             #endregion
@@ -740,45 +738,45 @@ namespace SabreTools.Library.DatItems
             #region AttractMode
 
             // Filter on players
-            if (filter.Players.MatchesPositiveSet(Players) == false)
+            if (filter.Machine_Players.MatchesPositiveSet(Players) == false)
                 return false;
-            if (filter.Players.MatchesNegativeSet(Players) == true)
+            if (filter.Machine_Players.MatchesNegativeSet(Players) == true)
                 return false;
 
             // Filter on rotation
-            if (filter.Rotation.MatchesPositiveSet(Rotation) == false)
+            if (filter.Machine_Rotation.MatchesPositiveSet(Rotation) == false)
                 return false;
-            if (filter.Rotation.MatchesNegativeSet(Rotation) == true)
+            if (filter.Machine_Rotation.MatchesNegativeSet(Rotation) == true)
                 return false;
 
             // Filter on control
-            if (filter.Control.MatchesPositiveSet(Control) == false)
+            if (filter.Machine_Control.MatchesPositiveSet(Control) == false)
                 return false;
-            if (filter.Control.MatchesNegativeSet(Control) == true)
+            if (filter.Machine_Control.MatchesNegativeSet(Control) == true)
                 return false;
 
             // Filter on support status
-            if (filter.SupportStatus.MatchesPositiveSet(Status) == false)
+            if (filter.Machine_Status.MatchesPositiveSet(Status) == false)
                 return false;
-            if (filter.SupportStatus.MatchesNegativeSet(Status) == true)
+            if (filter.Machine_Status.MatchesNegativeSet(Status) == true)
                 return false;
 
             // Filter on display count
-            if (filter.DisplayCount.MatchesPositiveSet(DisplayCount) == false)
+            if (filter.Machine_DisplayCount.MatchesPositiveSet(DisplayCount) == false)
                 return false;
-            if (filter.DisplayCount.MatchesNegativeSet(DisplayCount) == true)
+            if (filter.Machine_DisplayCount.MatchesNegativeSet(DisplayCount) == true)
                 return false;
 
             // Filter on display type
-            if (filter.DisplayType.MatchesPositiveSet(DisplayType) == false)
+            if (filter.Machine_DisplayType.MatchesPositiveSet(DisplayType) == false)
                 return false;
-            if (filter.DisplayType.MatchesNegativeSet(DisplayType) == true)
+            if (filter.Machine_DisplayType.MatchesNegativeSet(DisplayType) == true)
                 return false;
 
             // Filter on buttons
-            if (filter.Buttons.MatchesPositiveSet(Buttons) == false)
+            if (filter.Machine_Buttons.MatchesPositiveSet(Buttons) == false)
                 return false;
-            if (filter.Buttons.MatchesNegativeSet(Buttons) == true)
+            if (filter.Machine_Buttons.MatchesNegativeSet(Buttons) == true)
                 return false;
 
             #endregion
@@ -786,38 +784,23 @@ namespace SabreTools.Library.DatItems
             #region ListXML
 
             // Filter on source file
-            if (filter.SourceFile.MatchesPositiveSet(SourceFile) == false)
+            if (filter.Machine_SourceFile.MatchesPositiveSet(SourceFile) == false)
                 return false;
-            if (filter.SourceFile.MatchesNegativeSet(SourceFile) == true)
+            if (filter.Machine_SourceFile.MatchesNegativeSet(SourceFile) == true)
                 return false;
 
             // Filter on runnable
-            if (filter.Runnables.MatchesPositive(Runnable.NULL, Runnable) == false)
+            if (filter.Machine_Runnable.MatchesPositive(Runnable.NULL, Runnable) == false)
                 return false;
-            if (filter.Runnables.MatchesNegative(Runnable.NULL, Runnable) == true)
+            if (filter.Machine_Runnable.MatchesNegative(Runnable.NULL, Runnable) == true)
                 return false;
-
-            // Filter on devices
-            if (DeviceReferences != null && DeviceReferences.Any())
-            {
-                bool anyPositiveDevice = false;
-                bool anyNegativeDevice = false;
-                foreach (ListXmlDeviceReference device in DeviceReferences)
-                {
-                    anyPositiveDevice |= filter.Devices.MatchesPositiveSet(device.Name) != false;
-                    anyNegativeDevice |= filter.Devices.MatchesNegativeSet(device.Name) == false;
-                }
-
-                if (!anyPositiveDevice || anyNegativeDevice)
-                    return false;
-            }
 
             // TODO: Add Slot filter
 
             // Filter on machine type
-            if (filter.MachineTypes.MatchesPositive(MachineType.NULL, MachineType) == false)
+            if (filter.Machine_Type.MatchesPositive(MachineType.NULL, MachineType) == false)
                 return false;
-            if (filter.MachineTypes.MatchesNegative(MachineType.NULL, MachineType) == true)
+            if (filter.Machine_Type.MatchesNegative(MachineType.NULL, MachineType) == true)
                 return false;
 
             #endregion
@@ -825,15 +808,15 @@ namespace SabreTools.Library.DatItems
             #region Logiqx
 
             // Filter on board
-            if (filter.Board.MatchesPositiveSet(Board) == false)
+            if (filter.Machine_Board.MatchesPositiveSet(Board) == false)
                 return false;
-            if (filter.Board.MatchesNegativeSet(Board) == true)
+            if (filter.Machine_Board.MatchesNegativeSet(Board) == true)
                 return false;
 
             // Filter on rebuildto
-            if (filter.RebuildTo.MatchesPositiveSet(RebuildTo) == false)
+            if (filter.Machine_RebuildTo.MatchesPositiveSet(RebuildTo) == false)
                 return false;
-            if (filter.RebuildTo.MatchesNegativeSet(RebuildTo) == true)
+            if (filter.Machine_RebuildTo.MatchesNegativeSet(RebuildTo) == true)
                 return false;
 
             #endregion
@@ -841,55 +824,55 @@ namespace SabreTools.Library.DatItems
             #region Logiqx EmuArc
 
             // Filter on title ID
-            if (filter.TitleID.MatchesPositiveSet(TitleID) == false)
+            if (filter.Machine_TitleID.MatchesPositiveSet(TitleID) == false)
                 return false;
-            if (filter.TitleID.MatchesNegativeSet(TitleID) == true)
+            if (filter.Machine_TitleID.MatchesNegativeSet(TitleID) == true)
                 return false;
 
             // Filter on developer
-            if (filter.Developer.MatchesPositiveSet(Developer) == false)
+            if (filter.Machine_Developer.MatchesPositiveSet(Developer) == false)
                 return false;
-            if (filter.Developer.MatchesNegativeSet(Developer) == true)
+            if (filter.Machine_Developer.MatchesNegativeSet(Developer) == true)
                 return false;
 
             // Filter on genre
-            if (filter.Genre.MatchesPositiveSet(Genre) == false)
+            if (filter.Machine_Genre.MatchesPositiveSet(Genre) == false)
                 return false;
-            if (filter.Genre.MatchesNegativeSet(Genre) == true)
+            if (filter.Machine_Genre.MatchesNegativeSet(Genre) == true)
                 return false;
 
             // Filter on rebuildto
-            if (filter.Subgenre.MatchesPositiveSet(Subgenre) == false)
+            if (filter.Machine_Subgenre.MatchesPositiveSet(Subgenre) == false)
                 return false;
-            if (filter.Subgenre.MatchesNegativeSet(Subgenre) == true)
+            if (filter.Machine_Subgenre.MatchesNegativeSet(Subgenre) == true)
                 return false;
 
             // Filter on subgenre
-            if (filter.Ratings.MatchesPositiveSet(Ratings) == false)
+            if (filter.Machine_Ratings.MatchesPositiveSet(Ratings) == false)
                 return false;
-            if (filter.Ratings.MatchesNegativeSet(Ratings) == true)
+            if (filter.Machine_Ratings.MatchesNegativeSet(Ratings) == true)
                 return false;
 
             // Filter on score
-            if (filter.Score.MatchesPositiveSet(Score) == false)
+            if (filter.Machine_Score.MatchesPositiveSet(Score) == false)
                 return false;
-            if (filter.Score.MatchesNegativeSet(Score) == true)
+            if (filter.Machine_Score.MatchesNegativeSet(Score) == true)
                 return false;
 
             // Filter on enabled
-            if (filter.Enabled.MatchesPositiveSet(Enabled) == false)
+            if (filter.Machine_Enabled.MatchesPositiveSet(Enabled) == false)
                 return false;
-            if (filter.Enabled.MatchesNegativeSet(Enabled) == true)
+            if (filter.Machine_Enabled.MatchesNegativeSet(Enabled) == true)
                 return false;
 
             // Filter on has CRC flag
-            if (filter.HasCrc.MatchesNeutral(null, HasCrc) == false)
+            if (filter.Machine_CRC.MatchesNeutral(null, HasCrc) == false)
                 return false;
 
             // Filter on related to
-            if (filter.RelatedTo.MatchesPositiveSet(RelatedTo) == false)
+            if (filter.Machine_RelatedTo.MatchesPositiveSet(RelatedTo) == false)
                 return false;
-            if (filter.RelatedTo.MatchesNegativeSet(RelatedTo) == true)
+            if (filter.Machine_RelatedTo.MatchesNegativeSet(RelatedTo) == true)
                 return false;
 
             #endregion
@@ -897,21 +880,21 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             // Filter on Generation MSX ID
-            if (filter.GenMSXID.MatchesPositiveSet(GenMSXID) == false)
+            if (filter.Machine_GenMSXID.MatchesPositiveSet(GenMSXID) == false)
                 return false;
-            if (filter.GenMSXID.MatchesNegativeSet(GenMSXID) == true)
+            if (filter.Machine_GenMSXID.MatchesNegativeSet(GenMSXID) == true)
                 return false;
 
             // Filter on system
-            if (filter.System.MatchesPositiveSet(System) == false)
+            if (filter.Machine_System.MatchesPositiveSet(System) == false)
                 return false;
-            if (filter.System.MatchesNegativeSet(System) == true)
+            if (filter.Machine_System.MatchesNegativeSet(System) == true)
                 return false;
 
             // Filter on country
-            if (filter.Country.MatchesPositiveSet(Country) == false)
+            if (filter.Machine_Country.MatchesPositiveSet(Country) == false)
                 return false;
-            if (filter.Country.MatchesNegativeSet(Country) == true)
+            if (filter.Machine_Country.MatchesNegativeSet(Country) == true)
                 return false;
 
             #endregion
@@ -919,9 +902,9 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             // Filter on supported
-            if (filter.SupportedStatus.MatchesPositive(Supported.NULL, Supported) == false)
+            if (filter.Machine_Supported.MatchesPositive(Supported.NULL, Supported) == false)
                 return false;
-            if (filter.SupportedStatus.MatchesNegative(Supported.NULL, Supported) == true)
+            if (filter.Machine_Supported.MatchesNegative(Supported.NULL, Supported) == true)
                 return false;
 
             #endregion

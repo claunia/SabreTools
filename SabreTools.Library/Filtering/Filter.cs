@@ -21,218 +21,248 @@ namespace SabreTools.Library.Filtering
 
         #region Common
 
-        /// <summary>
-        /// Include or exclude machine names
-        /// </summary>
-        public FilterItem<string> MachineName { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine comments
-        /// </summary>
-        public FilterItem<string> Comment { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine descriptions
-        /// </summary>
-        public FilterItem<string> MachineDescription { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine years
-        /// </summary>
-        public FilterItem<string> Year { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine manufacturers
-        /// </summary>
-        public FilterItem<string> Manufacturer { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine publishers
-        /// </summary>
-        public FilterItem<string> Publisher { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine categories
-        /// </summary>
-        public FilterItem<string> Category { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine romof
-        /// </summary>
-        public FilterItem<string> RomOf { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine cloneof
-        /// </summary>
-        public FilterItem<string> CloneOf { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine sampleof
-        /// </summary>
-        public FilterItem<string> SampleOf { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Comment { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Description { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Year { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Manufacturer { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Publisher { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Category { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_RomOf { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_CloneOf { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_SampleOf { get; private set; } = new FilterItem<string>();
+        public FilterItem<MachineType> Machine_Type { get; private set; } = new FilterItem<MachineType>() { Positive = MachineType.NULL, Negative = MachineType.NULL };
 
         #endregion
 
         #region AttractMode
 
-        /// <summary>
-        /// Include or exclude machine players
-        /// </summary>
-        public FilterItem<string> Players { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine rotation
-        /// </summary>
-        public FilterItem<string> Rotation { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine control
-        /// </summary>
-        public FilterItem<string> Control { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine support status
-        /// </summary>
-        public FilterItem<string> SupportStatus { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine display count
-        /// </summary>
-        public FilterItem<string> DisplayCount { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine display type
-        /// </summary>
-        public FilterItem<string> DisplayType { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine buttons
-        /// </summary>
-        public FilterItem<string> Buttons { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Players { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Rotation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Control { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Status { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_DisplayCount { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_DisplayType { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Buttons { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region ListXML
 
-        /// <summary>
-        /// Include or exclude machine source file
-        /// </summary>
-        public FilterItem<string> SourceFile { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_SourceFile { get; private set; } = new FilterItem<string>();
+        public FilterItem<Runnable> Machine_Runnable { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
+        
+        // DeviceReferences
+        public FilterItem<bool?> Machine_DeviceReferences { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_DeviceReference_Name { get; private set; } = new FilterItem<string>();
+        
+        // Chips
+        public FilterItem<bool?> Machine_Chips { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Chip_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Chip_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Chip_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Chip_Clock { get; private set; } = new FilterItem<string>();
+        
+        // Displays
+        public FilterItem<bool?> Machine_Displays { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Display_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_Rotate { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_Display_FlipX { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Display_Width { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_Height { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_Refresh { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_PixClock { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_HTotal { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_HBEnd { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_HBStart { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_VTotal { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_VBEnd { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Display_VBStart { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude items with the "Runnable" tag
-        /// </summary>
-        public FilterItem<Runnable> Runnables { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
+        // Sounds
+        public FilterItem<bool?> Machine_Sounds { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Sound_Channels { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude machine devices
-        /// </summary>
-        public FilterItem<string> Devices { get; private set; } = new FilterItem<string>();
+        // Conditions
+        public FilterItem<bool?> Machine_Conditions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Condition_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Condition_Mask { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Condition_Relation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Condition_Value { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude machine slotoptions
-        /// </summary>
-        public FilterItem<string> SlotOptions { get; private set; } = new FilterItem<string>();
+        // Inputs
+        public FilterItem<bool?> Machine_Inputs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Machine_Input_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Machine_Input_Tilt { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Input_Players { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Coins { get; private set; } = new FilterItem<string>();
 
-        // TODO: Machine.Infos - List<ListXmlInfo>
+        // Inputs.Controls
+        public FilterItem<bool?> Machine_Input_Controls { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Input_Control_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Player { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Buttons { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_RegButtons { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Minimum { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Maximum { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Sensitivity { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_KeyDelta { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_Input_Control_Reverse { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Input_Control_Ways { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Ways2 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Input_Control_Ways3 { get; private set; } = new FilterItem<string>();
 
-        /// <summary>
-        /// Include or exclude machine types
-        /// </summary>
-        public FilterItem<MachineType> MachineTypes { get; private set; } = new FilterItem<MachineType>() { Positive = MachineType.NULL, Negative = MachineType.NULL };
+        // DipSwitches
+        public FilterItem<bool?> Machine_DipSwitches { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_DipSwitch_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_DipSwitch_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_DipSwitch_Mask { get; private set; } = new FilterItem<string>();
+
+        // DipSwitches.Locations
+        public FilterItem<bool?> Machine_DipSwitch_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_DipSwitch_Location_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_DipSwitch_Location_Number { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_DipSwitch_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // DipSwitches.Values
+        public FilterItem<bool?> Machine_DipSwitch_Values { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_DipSwitch_Value_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_DipSwitch_Value_Value { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_DipSwitch_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Configurations
+        public FilterItem<bool?> Machine_Configurations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Configuration_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Configuration_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Configuration_Mask { get; private set; } = new FilterItem<string>();
+
+        // Configurations.Locations
+        public FilterItem<bool?> Machine_Configuration_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Configuration_Location_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Configuration_Location_Number { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_Configuration_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Configurations.Settings
+        public FilterItem<bool?> Machine_Configuration_Settings { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Configuration_Setting_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Configuration_Setting_Value { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_Configuration_Setting_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Ports
+        public FilterItem<bool?> Machine_Ports { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Port_Tag { get; private set; } = new FilterItem<string>();
+
+        // Ports.Analogs
+        public FilterItem<bool?> Machine_Port_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Port_Analog_Mask { get; private set; } = new FilterItem<string>();
+
+        // Adjusters
+        public FilterItem<bool?> Machine_Adjusters { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Adjuster_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_Adjuster_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Adjusters.Conditions
+        public FilterItem<bool?> Machine_Adjuster_Conditions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Adjuster_Condition_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Adjuster_Condition_Mask { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Adjuster_Condition_Relation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Adjuster_Condition_Value { get; private set; } = new FilterItem<string>();
+
+        // Drivers
+        public FilterItem<bool?> Machine_Drivers { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Driver_Status { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Driver_Emulation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Driver_Cocktail { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Driver_SaveState { get; private set; } = new FilterItem<string>();
+
+        // Features
+        public FilterItem<bool?> Machine_Features { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Feature_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Feature_Status { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Feature_Overall { get; private set; } = new FilterItem<string>();
+
+        // Devices
+        public FilterItem<bool?> Machine_Devices { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Device_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Device_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Device_FixedImage { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Device_Mandatory { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Device_Interface { get; private set; } = new FilterItem<string>();
+
+        // Devices.Instances
+        public FilterItem<bool?> Machine_Device_Instances { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Device_Instance_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Device_Instance_BriefName { get; private set; } = new FilterItem<string>();
+
+        // Devices.Extensions
+        public FilterItem<bool?> Machine_Device_Extensions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Device_Extension_Name { get; private set; } = new FilterItem<string>();
+
+        // Slots
+        public FilterItem<bool?> Machine_Slots { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Slot_Name { get; private set; } = new FilterItem<string>();
+
+        // Slots.SlotOptions
+        public FilterItem<bool?> Machine_Slot_SlotOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Slot_SlotOption_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Slot_SlotOption_DeviceName { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_Slot_SlotOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // SoftwareLists
+        public FilterItem<bool?> Machine_SoftwareLists { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_SoftwareList_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_SoftwareList_Status { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_SoftwareList_Filter { get; private set; } = new FilterItem<string>();
+
+        // RamOptions
+        public FilterItem<bool?> Machine_RamOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Machine_RamOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         #endregion
 
         #region Logiqx
 
-        /// <summary>
-        /// Include or exclude machine board
-        /// </summary>
-        public FilterItem<string> Board { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine rebuildto
-        /// </summary>
-        public FilterItem<string> RebuildTo { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Board { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_RebuildTo { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region Logiqx EmuArc
 
-        /// <summary>
-        /// Include or exclude machine title ID
-        /// </summary>
-        public FilterItem<string> TitleID { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine developer
-        /// </summary>
-        public FilterItem<string> Developer { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine genre
-        /// </summary>
-        public FilterItem<string> Genre { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine subgenre
-        /// </summary>
-        public FilterItem<string> Subgenre { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine ratings
-        /// </summary>
-        public FilterItem<string> Ratings { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine score
-        /// </summary>
-        public FilterItem<string> Score { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine enabled
-        /// </summary>
-        public FilterItem<string> Enabled { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude items with the "crc" tag
-        /// </summary>
-        public FilterItem<bool?> HasCrc { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        /// <summary>
-        /// Include or exclude machine related to
-        /// </summary>
-        public FilterItem<string> RelatedTo { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_TitleID { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Developer { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Genre { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Subgenre { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Ratings { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Score { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Enabled { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> Machine_CRC { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_RelatedTo { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region OpenMSX
 
-        /// <summary>
-        /// Include or exclude machine Generation MSX ID
-        /// </summary>
-        public FilterItem<string> GenMSXID { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine system
-        /// </summary>
-        public FilterItem<string> System { get; private set; } = new FilterItem<string>();
-
-        /// <summary>
-        /// Include or exclude machine country
-        /// </summary>
-        public FilterItem<string> Country { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_GenMSXID { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_System { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Country { get; private set; } = new FilterItem<string>();
 
         #endregion
 
         #region SoftwareList
 
-        /// <summary>
-        /// Include or exclude items with the "Supported" tag
-        /// </summary>
-        public FilterItem<Supported> SupportedStatus { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
+        public FilterItem<Supported> Machine_Supported { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
 
-        // TODO: Machine.SharedFeatures - List<SoftwareListSharedFeature>
+        // Infos
+        public FilterItem<bool?> Machine_Infos { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_Info_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_Info_Value { get; private set; } = new FilterItem<string>();
+
+        // SharedFeatures
+        public FilterItem<bool?> Machine_SharedFeatures { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> Machine_SharedFeature_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Machine_SharedFeature_Value { get; private set; } = new FilterItem<string>();
 
         #endregion
 
@@ -564,79 +594,79 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_Name:
                     if (negate)
-                        MachineName.NegativeSet.Add(value);
+                        Machine_Name.NegativeSet.Add(value);
                     else
-                        MachineName.PositiveSet.Add(value);
+                        Machine_Name.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Comment:
                     if (negate)
-                        Comment.NegativeSet.Add(value);
+                        Machine_Comment.NegativeSet.Add(value);
                     else
-                        Comment.PositiveSet.Add(value);
+                        Machine_Comment.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Description:
                     if (negate)
-                        MachineDescription.NegativeSet.Add(value);
+                        Machine_Description.NegativeSet.Add(value);
                     else
-                        MachineDescription.PositiveSet.Add(value);
+                        Machine_Description.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Year:
                     if (negate)
-                        Year.NegativeSet.Add(value);
+                        Machine_Year.NegativeSet.Add(value);
                     else
-                        Year.PositiveSet.Add(value);
+                        Machine_Year.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Manufacturer:
                     if (negate)
-                        Manufacturer.NegativeSet.Add(value);
+                        Machine_Manufacturer.NegativeSet.Add(value);
                     else
-                        Manufacturer.PositiveSet.Add(value);
+                        Machine_Manufacturer.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Publisher:
                     if (negate)
-                        Publisher.NegativeSet.Add(value);
+                        Machine_Publisher.NegativeSet.Add(value);
                     else
-                        Publisher.PositiveSet.Add(value);
+                        Machine_Publisher.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Category:
                     if (negate)
-                        Category.NegativeSet.Add(value);
+                        Machine_Category.NegativeSet.Add(value);
                     else
-                        Category.PositiveSet.Add(value);
+                        Machine_Category.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_RomOf:
                     if (negate)
-                        RomOf.NegativeSet.Add(value);
+                        Machine_RomOf.NegativeSet.Add(value);
                     else
-                        RomOf.PositiveSet.Add(value);
+                        Machine_RomOf.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_CloneOf:
                     if (negate)
-                        CloneOf.NegativeSet.Add(value);
+                        Machine_CloneOf.NegativeSet.Add(value);
                     else
-                        CloneOf.PositiveSet.Add(value);
+                        Machine_CloneOf.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_SampleOf:
                     if (negate)
-                        SampleOf.NegativeSet.Add(value);
+                        Machine_SampleOf.NegativeSet.Add(value);
                     else
-                        SampleOf.PositiveSet.Add(value);
+                        Machine_SampleOf.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Type:
                     if (negate)
-                        MachineTypes.Negative |= value.AsMachineType();
+                        Machine_Type.Negative |= value.AsMachineType();
                     else
-                        MachineTypes.Positive |= value.AsMachineType();
+                        Machine_Type.Positive |= value.AsMachineType();
                     break;
 
                 #endregion
@@ -645,51 +675,51 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_Players:
                     if (negate)
-                        Players.NegativeSet.Add(value);
+                        Machine_Players.NegativeSet.Add(value);
                     else
-                        Players.PositiveSet.Add(value);
+                        Machine_Players.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Rotation:
                     if (negate)
-                        Rotation.NegativeSet.Add(value);
+                        Machine_Rotation.NegativeSet.Add(value);
                     else
-                        Rotation.PositiveSet.Add(value);
+                        Machine_Rotation.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Control:
                     if (negate)
-                        Control.NegativeSet.Add(value);
+                        Machine_Control.NegativeSet.Add(value);
                     else
-                        Control.PositiveSet.Add(value);
+                        Machine_Control.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Status:
                     if (negate)
-                        SupportStatus.NegativeSet.Add(value);
+                        Machine_Status.NegativeSet.Add(value);
                     else
-                        SupportStatus.PositiveSet.Add(value);
+                        Machine_Status.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_DisplayCount:
                     if (negate)
-                        DisplayCount.NegativeSet.Add(value);
+                        Machine_DisplayCount.NegativeSet.Add(value);
                     else
-                        DisplayCount.PositiveSet.Add(value);
+                        Machine_DisplayCount.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_DisplayType:
                     if (negate)
-                        DisplayType.NegativeSet.Add(value);
+                        Machine_DisplayType.NegativeSet.Add(value);
                     else
-                        DisplayType.PositiveSet.Add(value);
+                        Machine_DisplayType.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Buttons:
                     if (negate)
-                        Buttons.NegativeSet.Add(value);
+                        Machine_Buttons.NegativeSet.Add(value);
                     else
-                        Buttons.PositiveSet.Add(value);
+                        Machine_Buttons.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -698,30 +728,16 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_SourceFile:
                     if (negate)
-                        SourceFile.NegativeSet.Add(value);
+                        Machine_SourceFile.NegativeSet.Add(value);
                     else
-                        SourceFile.PositiveSet.Add(value);
+                        Machine_SourceFile.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Runnable:
                     if (negate)
-                        Runnables.Negative |= value.AsRunnable();
+                        Machine_Runnable.Negative |= value.AsRunnable();
                     else
-                        Runnables.Positive |= value.AsRunnable();
-                    break;
-
-                case Field.Machine_DeviceReference_Name:
-                    if (negate)
-                        Devices.NegativeSet.Add(value);
-                    else
-                        Devices.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Slots:
-                    if (negate)
-                        SlotOptions.NegativeSet.Add(value);
-                    else
-                        SlotOptions.PositiveSet.Add(value);
+                        Machine_Runnable.Positive |= value.AsRunnable();
                     break;
 
                 #endregion
@@ -730,16 +746,16 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_Board:
                     if (negate)
-                        Board.NegativeSet.Add(value);
+                        Machine_Board.NegativeSet.Add(value);
                     else
-                        Board.PositiveSet.Add(value);
+                        Machine_Board.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_RebuildTo:
                     if (negate)
-                        RebuildTo.NegativeSet.Add(value);
+                        Machine_RebuildTo.NegativeSet.Add(value);
                     else
-                        RebuildTo.PositiveSet.Add(value);
+                        Machine_RebuildTo.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -748,65 +764,65 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_TitleID:
                     if (negate)
-                        TitleID.NegativeSet.Add(value);
+                        Machine_TitleID.NegativeSet.Add(value);
                     else
-                        TitleID.PositiveSet.Add(value);
+                        Machine_TitleID.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Developer:
                     if (negate)
-                        Developer.NegativeSet.Add(value);
+                        Machine_Developer.NegativeSet.Add(value);
                     else
-                        Developer.PositiveSet.Add(value);
+                        Machine_Developer.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Genre:
                     if (negate)
-                        Genre.NegativeSet.Add(value);
+                        Machine_Genre.NegativeSet.Add(value);
                     else
-                        Genre.PositiveSet.Add(value);
+                        Machine_Genre.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Subgenre:
                     if (negate)
-                        Subgenre.NegativeSet.Add(value);
+                        Machine_Subgenre.NegativeSet.Add(value);
                     else
-                        Subgenre.PositiveSet.Add(value);
+                        Machine_Subgenre.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Ratings:
                     if (negate)
-                        Ratings.NegativeSet.Add(value);
+                        Machine_Ratings.NegativeSet.Add(value);
                     else
-                        Ratings.PositiveSet.Add(value);
+                        Machine_Ratings.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Score:
                     if (negate)
-                        Score.NegativeSet.Add(value);
+                        Machine_Score.NegativeSet.Add(value);
                     else
-                        Score.PositiveSet.Add(value);
+                        Machine_Score.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Enabled:
                     if (negate)
-                        Enabled.NegativeSet.Add(value);
+                        Machine_Enabled.NegativeSet.Add(value);
                     else
-                        Enabled.PositiveSet.Add(value);
+                        Machine_Enabled.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_CRC:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        HasCrc.Neutral = false;
+                        Machine_CRC.Neutral = false;
                     else
-                        HasCrc.Neutral = true;
+                        Machine_CRC.Neutral = true;
                     break;
 
                 case Field.Machine_RelatedTo:
                     if (negate)
-                        RelatedTo.NegativeSet.Add(value);
+                        Machine_RelatedTo.NegativeSet.Add(value);
                     else
-                        RelatedTo.PositiveSet.Add(value);
+                        Machine_RelatedTo.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -815,23 +831,23 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_GenMSXID:
                     if (negate)
-                        GenMSXID.NegativeSet.Add(value);
+                        Machine_GenMSXID.NegativeSet.Add(value);
                     else
-                        GenMSXID.PositiveSet.Add(value);
+                        Machine_GenMSXID.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_System:
                     if (negate)
-                        System.NegativeSet.Add(value);
+                        Machine_System.NegativeSet.Add(value);
                     else
-                        System.PositiveSet.Add(value);
+                        Machine_System.PositiveSet.Add(value);
                     break;
 
                 case Field.Machine_Country:
                     if (negate)
-                        Country.NegativeSet.Add(value);
+                        Machine_Country.NegativeSet.Add(value);
                     else
-                        Country.PositiveSet.Add(value);
+                        Machine_Country.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -840,9 +856,9 @@ namespace SabreTools.Library.Filtering
 
                 case Field.Machine_Supported:
                     if (negate)
-                        SupportedStatus.Negative |= value.AsSupported();
+                        Machine_Supported.Negative |= value.AsSupported();
                     else
-                        SupportedStatus.Positive |= value.AsSupported();
+                        Machine_Supported.Positive |= value.AsSupported();
                     break;
 
                 #endregion
