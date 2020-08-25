@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Represents parsing and writing of a JSON DAT
+    /// Represents parsing and writing of a reference JSON DAT
     /// </summary>
     internal class Json : DatFile
     {
@@ -27,7 +27,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Parse a Logiqx XML DAT and return all found games and roms within
+        /// Parse a reference JSON DAT and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
@@ -362,7 +362,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out DAT header using the supplied StreamWriter
+        /// Write out DAT header using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <returns>True if the data was written, false on error</returns>
@@ -392,7 +392,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out Game start using the supplied StreamWriter
+        /// Write out Game start using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
@@ -427,7 +427,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out Game end using the supplied StreamWriter
+        /// Write out Game end using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <returns>True if the data was written, false on error</returns>
@@ -453,7 +453,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out DatItem using the supplied StreamWriter
+        /// Write out DatItem using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
@@ -497,7 +497,7 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out DAT footer using the supplied StreamWriter
+        /// Write out DAT footer using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <returns>True if the data was written, false on error</returns>
