@@ -40,6 +40,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML chip
     /// </summary>
+    /// TODO: Promote this to the same level as Sample
     [JsonObject("chip")]
     public class ListXmlChip
     {
@@ -203,6 +204,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML deviceref
     /// </summary>
+    /// TODO: Promote this to the same level as Sample
     [JsonObject("deviceref")]
     public class ListXmlDeviceReference
     {
@@ -450,6 +452,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML softwarelist
     /// </summary>
+    /// TODO: Promote this to the same level as Sample?
     [JsonObject("softwarelist")]
     public class ListXmlSoftwareList
     {

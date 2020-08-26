@@ -317,7 +317,7 @@ namespace SabreTools.Library.DatItems
         /// Does the game have a CRC check
         /// </summary>
         [JsonProperty("hascrc", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? HasCrc { get; set; } = null;
+        public bool? Crc { get; set; } = null;
 
         /// <summary>
         /// Machine relations
@@ -505,7 +505,7 @@ namespace SabreTools.Library.DatItems
                 Enabled = mappings[Field.Machine_Enabled];
 
             if (mappings.Keys.Contains(Field.Machine_CRC))
-                HasCrc = mappings[Field.Machine_CRC].AsYesNo();
+                Crc = mappings[Field.Machine_CRC].AsYesNo();
 
             if (mappings.Keys.Contains(Field.Machine_RelatedTo))
                 RelatedTo = mappings[Field.Machine_RelatedTo];
@@ -582,6 +582,7 @@ namespace SabreTools.Library.DatItems
                 RomOf = this.RomOf,
                 CloneOf = this.CloneOf,
                 SampleOf = this.SampleOf,
+                MachineType = this.MachineType,
 
                 #endregion
 
@@ -602,9 +603,21 @@ namespace SabreTools.Library.DatItems
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
                 DeviceReferences = this.DeviceReferences,
+                Chips = this.Chips,
+                Displays = this.Displays,
+                Sounds = this.Sounds,
+                Conditions = this.Conditions,
+                Inputs = this.Inputs,
+                DipSwitches = this.DipSwitches,
+                Configurations = this.Configurations,
+                Ports = this.Ports,
+                Adjusters = this.Adjusters,
+                Drivers = this.Drivers,
+                Features = this.Features,
+                Devices = this.Devices,
                 Slots = this.Slots,
-                Infos = this.Infos,
-                MachineType = this.MachineType,
+                SoftwareLists = this.SoftwareLists,
+                RamOptions = this.RamOptions,
 
                 #endregion
 
@@ -624,7 +637,7 @@ namespace SabreTools.Library.DatItems
                 Ratings = this.Ratings,
                 Score = this.Score,
                 Enabled = this.Enabled,
-                HasCrc = this.HasCrc,
+                Crc = this.Crc,
                 RelatedTo = this.RelatedTo,
 
                 #endregion
@@ -640,8 +653,8 @@ namespace SabreTools.Library.DatItems
                 #region SoftwareList
 
                 Supported = this.Supported,
+                Infos = this.Infos,
                 SharedFeatures = this.SharedFeatures,
-                DipSwitches = this.DipSwitches,
 
                 #endregion
             };
@@ -1401,7 +1414,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_CRC
-            if (filter.Machine_CRC.MatchesNeutral(null, HasCrc) == false)
+            if (filter.Machine_CRC.MatchesNeutral(null, Crc) == false)
                 return false;
 
             // Machine_RelatedTo
@@ -1547,6 +1560,7 @@ namespace SabreTools.Library.DatItems
         /// Remove fields from the Machine
         /// </summary>
         /// <param name="fields">List of Fields to remove</param>
+        /// TODO: Add new ListXML and SoftwareList fields
         public void RemoveFields(List<Field> fields)
         {
             #region Common
@@ -1664,7 +1678,7 @@ namespace SabreTools.Library.DatItems
                 Enabled = null;
 
             if (fields.Contains(Field.Machine_CRC))
-                HasCrc = null;
+                Crc = null;
 
             if (fields.Contains(Field.Machine_RelatedTo))
                 RelatedTo = null;
@@ -1708,6 +1722,7 @@ namespace SabreTools.Library.DatItems
         /// <param name="item">DatItem to pull new information from</param>
         /// <param name="fields">List of Fields representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
+        /// TODO: Add new ListXML and SoftwareList fields
         public void ReplaceFields(Machine machine, List<Field> fields, bool onlySame)
         {
             #region Common
@@ -1828,7 +1843,7 @@ namespace SabreTools.Library.DatItems
                 Enabled = machine.Enabled;
 
             if (fields.Contains(Field.Machine_CRC))
-                HasCrc = machine.HasCrc;
+                Crc = machine.Crc;
 
             if (fields.Contains(Field.Machine_RelatedTo))
                 RelatedTo = machine.RelatedTo;

@@ -620,7 +620,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "crc":
-                        machine.HasCrc = reader.ReadElementContentAsString().AsYesNo();
+                        machine.Crc = reader.ReadElementContentAsString().AsYesNo();
                         break;
 
                     case "source":
@@ -873,7 +873,7 @@ namespace SabreTools.Library.DatFiles
                     || datItem.Machine.Ratings != null
                     || datItem.Machine.Score != null
                     || datItem.Machine.Enabled != null
-                    || datItem.Machine.HasCrc != null
+                    || datItem.Machine.Crc != null
                     || datItem.Machine.RelatedTo != null)
                 {
                     xtw.WriteStartElement("trurip");
@@ -889,7 +889,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteOptionalElementString("players", datItem.Machine.Players);
                     xtw.WriteOptionalElementString("enabled", datItem.Machine.Enabled);
                     xtw.WriteOptionalElementString("titleid", datItem.Machine.TitleID);
-                    xtw.WriteOptionalElementString("crc", datItem.Machine.HasCrc.FromYesNo());
+                    xtw.WriteOptionalElementString("crc", datItem.Machine.Crc.FromYesNo());
                     xtw.WriteOptionalElementString("source", datItem.Machine.SourceFile);
                     xtw.WriteOptionalElementString("cloneof", datItem.Machine.CloneOf);
                     xtw.WriteOptionalElementString("relatedto", datItem.Machine.RelatedTo);

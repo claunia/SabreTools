@@ -1003,7 +1003,7 @@ namespace SabreTools.Library.DatFiles
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
                         if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
-                            WriteEndGame(xtw);
+                            WriteEndGame(xtw, rom);
 
                         // If we have a new game, output the beginning of the new item
                         if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
@@ -1107,9 +1107,9 @@ namespace SabreTools.Library.DatFiles
 
                 xtw.WriteOptionalElementString("description", datItem.Machine.Description);
                 xtw.WriteOptionalElementString("year", datItem.Machine.Year);
-                xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
-                xtw.WriteOptionalElementString("category", datItem.Machine.Category);
+                xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
 
+                // TODO: These should go *after* the datitems
                 if (datItem.Machine.DeviceReferences != null)
                 {
                     foreach (var deviceReference in datItem.Machine.DeviceReferences)
@@ -1230,17 +1230,17 @@ namespace SabreTools.Library.DatFiles
                 }
                 if (datItem.Machine.DipSwitches != null)
                 {
-                    foreach (var dipSwitches in datItem.Machine.DipSwitches)
+                    foreach (var dipSwitch in datItem.Machine.DipSwitches)
                     {
                         xtw.WriteStartElement("dipswitch");
 
-                        xtw.WriteOptionalAttributeString("name", dipSwitches.Name);
-                        xtw.WriteOptionalAttributeString("tag", dipSwitches.Tag);
-                        xtw.WriteOptionalAttributeString("mask", dipSwitches.Mask);
+                        xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
+                        xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
+                        xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
 
-                        if (dipSwitches.Locations != null)
+                        if (dipSwitch.Locations != null)
                         {
-                            foreach (var location in dipSwitches.Locations)
+                            foreach (var location in dipSwitch.Locations)
                             {
                                 xtw.WriteStartElement("diplocation");
 
@@ -1252,9 +1252,9 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteEndElement();
                             }
                         }
-                        if (dipSwitches.Values != null)
+                        if (dipSwitch.Values != null)
                         {
-                            foreach (var value in dipSwitches.Values)
+                            foreach (var value in dipSwitch.Values)
                             {
                                 xtw.WriteStartElement("dipvalue");
 
@@ -1508,8 +1508,9 @@ namespace SabreTools.Library.DatFiles
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
+        /// <param name="datItem">DatItem object to be output</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(XmlTextWriter xtw)
+        private bool WriteEndGame(XmlTextWriter xtw, DatItem datItem)
         {
             try
             {
