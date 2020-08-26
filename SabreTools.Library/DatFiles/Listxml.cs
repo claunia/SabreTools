@@ -1586,7 +1586,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", rom?.RIPEMD160.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("ripemd160", rom?.RIPEMD160?.ToLowerInvariant());
 #endif
                         xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
