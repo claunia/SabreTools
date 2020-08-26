@@ -159,12 +159,6 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlDeviceReference> DeviceReferences { get; set; } = null;
 
         /// <summary>
-        /// List of associated chips
-        /// </summary>
-        [JsonProperty("chips", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlChip> Chips { get; set; } = null;
-
-        /// <summary>
         /// List of associated displays
         /// </summary>
         [JsonProperty("displays", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -603,7 +597,6 @@ namespace SabreTools.Library.DatItems
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
                 DeviceReferences = this.DeviceReferences,
-                Chips = this.Chips,
                 Displays = this.Displays,
                 Sounds = this.Sounds,
                 Conditions = this.Conditions,
@@ -831,94 +824,6 @@ namespace SabreTools.Library.DatItems
                     if (filter.Machine_DeviceReference_Name.MatchesPositiveSet(deviceReference?.Name) != false)
                         anyPositive = true;
                     if (filter.Machine_DeviceReference_Name.MatchesNegativeSet(deviceReference?.Name) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            #endregion
-
-            #region Chips
-
-            // Machine_DeviceReferences
-            if (filter.Machine_Chips.MatchesNeutral(null, Chips?.Any() ?? null) == false)
-                return false;
-
-            // Machine_Chip_Name
-            if (Chips?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var chip in Chips)
-                {
-                    if (filter.Machine_Chip_Name.MatchesPositiveSet(chip?.Name) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Chip_Name.MatchesNegativeSet(chip?.Name) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Chip_Tag
-            if (Chips?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var chip in Chips)
-                {
-                    if (filter.Machine_Chip_Tag.MatchesPositiveSet(chip?.Tag) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Chip_Tag.MatchesNegativeSet(chip?.Tag) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Chip_Type
-            if (Chips?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var chip in Chips)
-                {
-                    if (filter.Machine_Chip_Type.MatchesPositiveSet(chip?.Type) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Chip_Type.MatchesNegativeSet(chip?.Type) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Chip_Clock
-            if (Chips?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var chip in Chips)
-                {
-                    if (filter.Machine_Chip_Clock.MatchesPositiveSet(chip?.Clock) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Chip_Clock.MatchesNegativeSet(chip?.Clock) == true)
                         anyNegative = true;
                 }
 

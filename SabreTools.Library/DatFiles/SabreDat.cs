@@ -383,6 +383,22 @@ namespace SabreTools.Library.DatFiles
                                 };
                                 break;
 
+                            case "chip":
+                                datItem = new Chip
+                                {
+                                    Name = reader.GetAttribute("name"),
+                                    Tag = reader.GetAttribute("tag"),
+                                    ChipType = reader.GetAttribute("chiptype"),
+                                    Clock = reader.GetAttribute("clock"),
+
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
+                                };
+                                break;
+
                             case "disk":
                                 datItem = new Disk
                                 {
@@ -852,6 +868,17 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", biosSet.Name);
                         xtw.WriteOptionalAttributeString("description", biosSet.Description);
                         xtw.WriteOptionalAttributeString("default", biosSet.Default.FromYesNo());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Chip:
+                        var chip = datItem as Chip;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "chip");
+                        xtw.WriteRequiredAttributeString("name", chip.Name);
+                        xtw.WriteOptionalAttributeString("tag", chip.Tag);
+                        xtw.WriteOptionalAttributeString("chiptype", chip.ChipType);
+                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
                         xtw.WriteEndElement();
                         break;
 

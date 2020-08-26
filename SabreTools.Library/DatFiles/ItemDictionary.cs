@@ -89,6 +89,12 @@ namespace SabreTools.Library.DatFiles
         public long BiosSetCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Chip items
+        /// </summary>
+        [JsonIgnore]
+        public long ChipCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Disk items
         /// </summary>
         [JsonIgnore]
@@ -388,6 +394,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.BiosSet:
                     BiosSetCount += 1;
                     break;
+                case ItemType.Chip:
+                    ChipCount += 1;
+                    break;
                 case ItemType.Disk:
                     DiskCount += 1;
                     if (((Disk)item).ItemStatus != ItemStatus.Nodump)
@@ -507,6 +516,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.BiosSet:
                     BiosSetCount -= 1;
+                    break;
+                case ItemType.Chip:
+                    ChipCount -= 1;
                     break;
                 case ItemType.Disk:
                     DiskCount -= 1;

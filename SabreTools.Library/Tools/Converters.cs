@@ -440,21 +440,6 @@ namespace SabreTools.Library.Tools
                     case "devicereference_name":
                         return Field.Machine_DeviceReference_Name;
 
-                    case "chips":
-                        return Field.Machine_Chips;
-
-                    case "chip_name":
-                        return Field.Machine_Chip_Name;
-
-                    case "chip_tag":
-                        return Field.Machine_Chip_Tag;
-
-                    case "chip_type":
-                        return Field.Machine_Chip_Type;
-
-                    case "chip_clock":
-                        return Field.Machine_Chip_Clock;
-
                     case "displays":
                         return Field.Machine_Displays;
 
@@ -995,15 +980,28 @@ namespace SabreTools.Library.Tools
                     case "bios_description":
                         return Field.DatItem_Description;
 
+                    // Chip
+                    case "tag":
+                        return Field.DatItem_Tag;
+
+                    case "chiptype":
+                    case "chip_type":
+                        return Field.DatItem_ChipType;
+
+                    case "clock":
+                        return Field.DatItem_Clock;
+
                     // Disk
                     case "md5":
                     case "md5_hash":
                         return Field.DatItem_MD5;
+
 #if NET_FRAMEWORK
                     case "ripemd160":
                     case "ripemd160_hash":
                         return Field.DatItem_RIPEMD160;
 #endif
+
                     case "sha1":
                     case "sha_1":
                     case "sha1hash":
@@ -1400,6 +1398,17 @@ namespace SabreTools.Library.Tools
                 case "biosset-description":
                 case "bios-set-description":
                     return Field.DatItem_Description;
+
+                case "tag":
+                    return Field.DatItem_Tag;
+
+                case "chiptype":
+                case "chip_type":
+                    return Field.DatItem_ChipType;
+
+                case "clock":
+                    return Field.DatItem_Clock;
+                
                 case "crc":
                 case "crc32":
                     return Field.DatItem_CRC;
@@ -1515,6 +1524,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.BiosSet;
                 case "blank":
                     return ItemType.Blank;
+                case "chip":
+                    return ItemType.Chip;
                 case "disk":
                     return ItemType.Disk;
                 case "release":
@@ -1532,6 +1543,7 @@ namespace SabreTools.Library.Tools
                 "archive" => ItemType.Archive,
                 "biosset" => ItemType.BiosSet,
                 "blank" => ItemType.Blank,
+                "chip" => ItemType.Chip,
                 "disk" => ItemType.Disk,
                 "release" => ItemType.Release,
                 "rom" => ItemType.Rom,
@@ -1898,6 +1910,8 @@ namespace SabreTools.Library.Tools
                     return "biosset";
                 case ItemType.Blank:
                     return "blank";
+                case ItemType.Chip:
+                    return "chip";
                 case ItemType.Disk:
                     return "disk";
                 case ItemType.Release:
@@ -1915,6 +1929,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Archive => "archive",
                 ItemType.BiosSet => "biosset",
                 ItemType.Blank => "blank",
+                ItemType.Chip => "chip",
                 ItemType.Disk => "disk",
                 ItemType.Release => "release",
                 ItemType.Rom => "rom",

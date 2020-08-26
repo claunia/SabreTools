@@ -271,6 +271,9 @@ namespace SabreTools.Library.DatFiles
                         case "biosset":
                             itemType = ItemType.BiosSet;
                             break;
+                        case "chip":
+                            itemType = ItemType.Chip;
+                            break;
                         case "disk":
                             itemType = ItemType.Disk;
                             break;
@@ -387,24 +390,39 @@ namespace SabreTools.Library.DatFiles
                                 break;
                             case "default":
                                 if (item.ItemType == ItemType.BiosSet)
-                                    ((BiosSet)item).Default = attrVal.ToLowerInvariant().AsYesNo();
+                                    ((BiosSet)item).Default = attrVal.AsYesNo();
                                 else if (item.ItemType == ItemType.Release)
-                                    ((Release)item).Default = attrVal.ToLowerInvariant().AsYesNo();
+                                    ((Release)item).Default = attrVal.AsYesNo();
 
                                 break;
                             case "description":
                                 if (item.ItemType == ItemType.BiosSet)
-                                    ((BiosSet)item).Description = attrVal.ToLowerInvariant();
+                                    ((BiosSet)item).Description = attrVal;
 
                                 break;
                             case "region":
                                 if (item.ItemType == ItemType.Release)
-                                    ((Release)item).Region = attrVal.ToLowerInvariant();
+                                    ((Release)item).Region = attrVal;
 
                                 break;
                             case "language":
                                 if (item.ItemType == ItemType.Release)
-                                    ((Release)item).Language = attrVal.ToLowerInvariant();
+                                    ((Release)item).Language = attrVal;
+
+                                break;
+                            case "tag":
+                                if (item.ItemType == ItemType.Chip)
+                                    ((Chip)item).Tag = attrVal;
+
+                                break;
+                            case "type":
+                                if (item.ItemType == ItemType.Chip)
+                                    ((Chip)item).ChipType = attrVal;
+
+                                break;
+                            case "clock":
+                                if (item.ItemType == ItemType.Chip)
+                                    ((Chip)item).Clock = attrVal;
 
                                 break;
                         }
@@ -671,6 +689,16 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteRequiredAttributeString("name", biosSet.Name);
                         cmpw.WriteOptionalAttributeString("description", biosSet.Description);
                         cmpw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
+                        cmpw.WriteEndElement();
+                        break;
+
+                    case ItemType.Chip:
+                        var chip = datItem as Chip;
+                        cmpw.WriteStartElement("chip");
+                        cmpw.WriteRequiredAttributeString("name", chip.Name);
+                        cmpw.WriteOptionalAttributeString("tag", chip.Tag);
+                        cmpw.WriteOptionalAttributeString("type", chip.ChipType);
+                        cmpw.WriteOptionalAttributeString("clock", chip.Clock);
                         cmpw.WriteEndElement();
                         break;
 

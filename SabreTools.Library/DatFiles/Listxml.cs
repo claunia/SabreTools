@@ -283,17 +283,19 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "chip":
-                        var chip = new ListXmlChip();
-                        chip.Name = reader.GetAttribute("name");
-                        chip.Tag = reader.GetAttribute("tag");
-                        chip.Type = reader.GetAttribute("type");
-                        chip.Clock = reader.GetAttribute("clock");
+                        datItems.Add(new Chip
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Tag = reader.GetAttribute("tag"),
+                            ChipType = reader.GetAttribute("type"),
+                            Clock = reader.GetAttribute("clock"),
 
-                        // Ensure the list exists
-                        if (machine.Chips == null)
-                            machine.Chips = new List<ListXmlChip>();
-
-                        machine.Chips.Add(chip);
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
 
                         reader.Read();
                         break;
@@ -1122,21 +1124,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Chips != null)
-                {
-                    foreach (var chip in datItem.Machine.Chips)
-                    {
-                        xtw.WriteStartElement("chip");
-
-                        xtw.WriteOptionalAttributeString("name", chip.Name);
-                        xtw.WriteOptionalAttributeString("tag", chip.Tag);
-                        xtw.WriteOptionalAttributeString("type", chip.Type);
-                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
-
-                        // End chip
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Displays != null)
                 {
                     foreach (var display in datItem.Machine.Displays)
@@ -1555,6 +1542,16 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", biosSet.Name);
                         xtw.WriteOptionalAttributeString("description", biosSet.Description);
                         xtw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Chip:
+                        var chip = datItem as Chip;
+                        xtw.WriteStartElement("chip");
+                        xtw.WriteRequiredAttributeString("name", chip.Name);
+                        xtw.WriteOptionalAttributeString("tag", chip.Tag);
+                        xtw.WriteOptionalAttributeString("type", chip.ChipType);
+                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
                         xtw.WriteEndElement();
                         break;
 

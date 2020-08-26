@@ -133,13 +133,6 @@ namespace SabreTools.Library.DatItems
         Machine_DeviceReferences, // TODO: Double-check DeviceReferences usage
         Machine_DeviceReference_Name,
 
-        // Chips
-        Machine_Chips, // TODO: Implement Chips usage
-        Machine_Chip_Name,
-        Machine_Chip_Tag,
-        Machine_Chip_Type,
-        Machine_Chip_Clock,
-
         // Displays
         Machine_Displays, // TODO: Implement Displays usage
         Machine_Display_Tag,
@@ -398,6 +391,11 @@ namespace SabreTools.Library.DatItems
         DatItem_Default,
         DatItem_Description,
 
+        // Chip
+        DatItem_Tag,
+        DatItem_ChipType,
+        DatItem_Clock,
+
         // Disk
         DatItem_MD5,
 #if NET_FRAMEWORK
@@ -459,6 +457,7 @@ namespace SabreTools.Library.DatItems
         Release = 3,
         BiosSet = 4,
         Archive = 5,
+        Chip = 6,
 
         Blank = 99, // This is not a real type, only used internally
     }

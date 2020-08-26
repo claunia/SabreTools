@@ -185,27 +185,44 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Fields unique to a DatItem
         /// </summary>
-        /// TODO: Ensure list
         public static readonly List<Field> DatItemFields = new List<Field>()
         {
-            // Common
-            Field.DatItem_Name,
+            #region Common
 
-            // AttractMode
+            Field.DatItem_Name,
+            Field.DatItem_Type,
+
+            #endregion
+
+            #region AttractMode
+
             Field.DatItem_AltName,
             Field.DatItem_AltTitle,
 
-            // OpenMSX
+            #endregion
+
+            #region OpenMSX
+
             Field.DatItem_Original,
             Field.DatItem_OpenMSXSubType,
             Field.DatItem_OpenMSXType,
             Field.DatItem_Remark,
             Field.DatItem_Boot,
 
-            //SoftwareList
+            #endregion
+
+            #region SoftwareList
+
+            // Part
+            Field.DatItem_Part,
             Field.DatItem_Part_Name,
             Field.DatItem_Part_Interface,
+
+            // Feature
             Field.DatItem_Features,
+            Field.DatItem_Feature_Name,
+            Field.DatItem_Feature_Value,
+
             Field.DatItem_AreaName,
             Field.DatItem_AreaSize,
             Field.DatItem_AreaWidth,
@@ -213,9 +230,18 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Value,
             Field.DatItem_LoadFlag,
 
+            #endregion
+
+            #region Item-Specific
+
             // BiosSet
-            Field.DatItem_Description,
             Field.DatItem_Default,
+            Field.DatItem_Description,
+
+            // Chip
+            Field.DatItem_Tag,
+            Field.DatItem_ChipType,
+            Field.DatItem_Clock,
 
             // Disk
             Field.DatItem_MD5,
@@ -230,8 +256,8 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Region,
             Field.DatItem_Index,
             Field.DatItem_Writable,
-            Field.DatItem_Optional,
             Field.DatItem_Status,
+            Field.DatItem_Optional,
 
             // Release
             Field.DatItem_Language,
@@ -243,6 +269,8 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_CRC,
             Field.DatItem_Offset,
             Field.DatItem_Inverted,
+
+            #endregion
         };
 
         /// <summary>
@@ -413,6 +441,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Blank:
                     return new Blank();
+
+                case ItemType.Chip:
+                    return new Chip();
 
                 case ItemType.Disk:
                     return new Disk();

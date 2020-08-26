@@ -56,13 +56,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> Machine_DeviceReferences { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_DeviceReference_Name { get; private set; } = new FilterItem<string>();
         
-        // Chips
-        public FilterItem<bool?> Machine_Chips { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Chip_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Chip_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Chip_Type { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Chip_Clock { get; private set; } = new FilterItem<string>();
-        
         // Displays
         public FilterItem<bool?> Machine_Displays { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Display_Tag { get; private set; } = new FilterItem<string>();
@@ -320,6 +313,11 @@ namespace SabreTools.Library.Filtering
         // BiosSet
         public FilterItem<bool?> DatItem_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> DatItem_Description { get; private set; } = new FilterItem<string>();
+
+        // Chip
+        public FilterItem<string> DatItem_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_ChipType { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
 
         // Disk
         public FilterItem<string> DatItem_MD5 { get; private set; } = new FilterItem<string>();
@@ -621,42 +619,6 @@ namespace SabreTools.Library.Filtering
                         Machine_DeviceReference_Name.NegativeSet.Add(value);
                     else
                         Machine_DeviceReference_Name.PositiveSet.Add(value);
-                    break;
-
-                // Chips
-                case Field.Machine_Chips:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Chips.Neutral = false;
-                    else
-                        Machine_Chips.Neutral = true;
-                    break;
-
-                case Field.Machine_Chip_Name:
-                    if (negate)
-                        Machine_Chip_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Chip_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Chip_Tag:
-                    if (negate)
-                        Machine_Chip_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Chip_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Chip_Type:
-                    if (negate)
-                        Machine_Chip_Type.NegativeSet.Add(value);
-                    else
-                        Machine_Chip_Type.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Chip_Clock:
-                    if (negate)
-                        Machine_Chip_Clock.NegativeSet.Add(value);
-                    else
-                        Machine_Chip_Clock.PositiveSet.Add(value);
                     break;
 
                 // Displays
@@ -1838,6 +1800,28 @@ namespace SabreTools.Library.Filtering
                         DatItem_Description.NegativeSet.Add(value);
                     else
                         DatItem_Description.PositiveSet.Add(value);
+                    break;
+
+                // Chip
+                case Field.DatItem_Tag:
+                    if (negate)
+                        DatItem_Tag.NegativeSet.Add(value);
+                    else
+                        DatItem_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_ChipType:
+                    if (negate)
+                        DatItem_ChipType.NegativeSet.Add(value);
+                    else
+                        DatItem_ChipType.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Clock:
+                    if (negate)
+                        DatItem_Clock.NegativeSet.Add(value);
+                    else
+                        DatItem_Clock.PositiveSet.Add(value);
                     break;
 
                 // Disk

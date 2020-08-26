@@ -232,6 +232,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Blank:
                         datItem = datItemObj.ToObject<Blank>();
                         break;
+                    case ItemType.Chip:
+                        datItem = datItemObj.ToObject<Chip>();
+                        break;
                     case ItemType.Disk:
                         datItem = datItemObj.ToObject<Disk>();
                         break;

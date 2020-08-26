@@ -38,26 +38,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML chip
-    /// </summary>
-    /// TODO: Promote this to the same level as Sample
-    [JsonObject("chip")]
-    public class ListXmlChip
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("tag")]
-        public string Tag { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; } // TODO: (cpu|audio)
-
-        [JsonProperty("clock")]
-        public string Clock { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML condition
     /// </summary>
     [JsonObject("condition")]
