@@ -272,7 +272,7 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("tag")]
         public string Tag { get; set; }
 
-        [JsonProperty("tag")]
+        [JsonProperty("mask")]
         public string Mask { get; set; }
 
         [JsonProperty("locations")]
