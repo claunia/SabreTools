@@ -245,19 +245,16 @@ namespace SabreTools.Library.DatItems
 
             // Disk
             Field.DatItem_MD5,
-#if NET_FRAMEWORK
-            Field.DatItem_RIPEMD160,
-#endif
             Field.DatItem_SHA1,
-            Field.DatItem_SHA256,
-            Field.DatItem_SHA384,
-            Field.DatItem_SHA512,
             Field.DatItem_Merge,
             Field.DatItem_Region,
             Field.DatItem_Index,
             Field.DatItem_Writable,
             Field.DatItem_Status,
             Field.DatItem_Optional,
+
+            // Media
+            Field.DatItem_SHA256,
 
             // Release
             Field.DatItem_Language,
@@ -267,6 +264,11 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Bios,
             Field.DatItem_Size,
             Field.DatItem_CRC,
+#if NET_FRAMEWORK
+            Field.DatItem_RIPEMD160,
+#endif
+            Field.DatItem_SHA384,
+            Field.DatItem_SHA512,
             Field.DatItem_Offset,
             Field.DatItem_Inverted,
 
@@ -448,6 +450,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Disk:
                     return new Disk();
 
+                case ItemType.Media:
+                    return new Media();
+
                 case ItemType.Release:
                     return new Release();
 
@@ -484,6 +489,9 @@ namespace SabreTools.Library.DatItems
         {
             switch (baseFile.Type)
             {
+                case FileType.AaruFormat:
+                    return new Media(baseFile);
+
                 case FileType.CHD:
                     return new Disk(baseFile);
 
@@ -1016,8 +1024,8 @@ namespace SabreTools.Library.DatItems
             {
                 DatItem file = infiles[f];
 
-                // If we don't have a Rom or a Disk, we skip checking for duplicates
-                if (file.ItemType != ItemType.Rom && file.ItemType != ItemType.Disk)
+                // If we don't have a Dis, Media, or Rom, we skip checking for duplicates
+                if (file.ItemType != ItemType.Disk && file.ItemType != ItemType.Media && file.ItemType != ItemType.Rom)
                     continue;
 
                 // If it's a nodump, add and skip
@@ -1057,9 +1065,11 @@ namespace SabreTools.Library.DatItems
                         saveditem = lastrom;
                         pos = i;
 
-                        // Disks and Roms have more information to fill
+                        // Disks, Media, and Roms have more information to fill
                         if (file.ItemType == ItemType.Disk)
                             (saveditem as Disk).FillMissingInformation(file as Disk);
+                        else if (file.ItemType == ItemType.Media)
+                            (saveditem as Media).FillMissingInformation(file as Media);
                         else if (file.ItemType == ItemType.Rom)
                             (saveditem as Rom).FillMissingInformation(file as Rom);
 
@@ -1142,7 +1152,7 @@ namespace SabreTools.Library.DatItems
                 {
                     Globals.Logger.Verbose($"Name duplicate found for '{datItem.Name}'");
 
-                    if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Rom)
+                    if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
                     {
                         datItem.Name += GetDuplicateSuffix(datItem);
 #if NET_FRAMEWORK
@@ -1192,6 +1202,8 @@ namespace SabreTools.Library.DatItems
         {
             if (datItem.ItemType == ItemType.Disk)
                 return (datItem as Disk).GetDuplicateSuffix();
+            else if (datItem.ItemType == ItemType.Media)
+                return (datItem as Media).GetDuplicateSuffix();
             else if (datItem.ItemType == ItemType.Rom)
                 return (datItem as Rom).GetDuplicateSuffix();
 
@@ -1215,10 +1227,11 @@ namespace SabreTools.Library.DatItems
                     {
                         if (x.Machine.Name == y.Machine.Name)
                         {
-                            // Special case for comparing a Disk or Rom to another item type
-                            if ((x.ItemType == ItemType.Disk || x.ItemType == ItemType.Rom) ^ (y.ItemType == ItemType.Disk || y.ItemType == ItemType.Rom))
+                            // Special case for comparing a Disk, Media, or Rom to another item type
+                            if ((x.ItemType == ItemType.Disk || x.ItemType == ItemType.Media || x.ItemType == ItemType.Rom)
+                                ^ (y.ItemType == ItemType.Disk || y.ItemType == ItemType.Media || x.ItemType == ItemType.Rom))
                             {
-                                if (x.ItemType == ItemType.Disk || x.ItemType == ItemType.Rom)
+                                if (x.ItemType == ItemType.Disk || x.ItemType == ItemType.Media || x.ItemType == ItemType.Rom)
                                     return -1;
                                 else
                                     return 1;

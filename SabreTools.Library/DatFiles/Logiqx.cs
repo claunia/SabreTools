@@ -237,13 +237,13 @@ namespace SabreTools.Library.DatFiles
                         if (Header.System == null)
                             Header.System = reader.GetAttribute("plugin");
 
-                        if (Header.RomMode == null)
+                        if (Header.RomMode == MergingFlag.None)
                             Header.RomMode = reader.GetAttribute("rommode").AsMergingFlag();
 
-                        if (Header.BiosMode == null)
+                        if (Header.BiosMode == MergingFlag.None)
                             Header.BiosMode = reader.GetAttribute("biosmode").AsMergingFlag();
 
-                        if (Header.SampleMode == null)
+                        if (Header.SampleMode == MergingFlag.None)
                             Header.SampleMode = reader.GetAttribute("samplemode").AsMergingFlag();
 
                         if (Header.LockRomMode == null)
@@ -372,6 +372,128 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
+                    case "archive":
+                        containsItems = true;
+
+                        DatItem archive = new Archive
+                        {
+                            Name = reader.GetAttribute("name"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        archive.CopyMachineInformation(machine);
+
+                        // Now process and add the archive
+                        key = ParseAddHelper(archive);
+
+                        reader.Read();
+                        break;
+
+                    case "biosset":
+                        containsItems = true;
+
+                        DatItem biosSet = new BiosSet
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Description = reader.GetAttribute("description"),
+                            Default = reader.GetAttribute("default").AsYesNo(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        biosSet.CopyMachineInformation(machine);
+
+                        // Now process and add the biosSet
+                        key = ParseAddHelper(biosSet);
+
+                        reader.Read();
+                        break;
+
+                    case "chip":
+                        containsItems = true;
+
+                        DatItem chip = new Chip
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Tag = reader.GetAttribute("tag"),
+                            ChipType = reader.GetAttribute("type"),
+                            Clock = reader.GetAttribute("clock"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        chip.CopyMachineInformation(machine);
+
+                        // Now process and add the chip
+                        key = ParseAddHelper(chip);
+
+                        reader.Read();
+                        break;
+
+                    case "disk":
+                        containsItems = true;
+
+                        DatItem disk = new Disk
+                        {
+                            Name = reader.GetAttribute("name"),
+                            MD5 = reader.GetAttribute("md5"),
+                            SHA1 = reader.GetAttribute("sha1"),
+                            MergeTag = reader.GetAttribute("merge"),
+                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        disk.CopyMachineInformation(machine);
+
+                        // Now process and add the disk
+                        key = ParseAddHelper(disk);
+
+                        reader.Read();
+                        break;
+
+                    case "media":
+                        containsItems = true;
+
+                        DatItem media = new Media
+                        {
+                            Name = reader.GetAttribute("name"),
+                            MD5 = reader.GetAttribute("md5"),
+                            SHA1 = reader.GetAttribute("sha1"),
+                            SHA256 = reader.GetAttribute("sha256"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        media.CopyMachineInformation(machine);
+
+                        // Now process and add the media
+                        key = ParseAddHelper(media);
+
+                        reader.Read();
+                        break;
+
                     case "release":
                         containsItems = true;
 
@@ -386,32 +508,8 @@ namespace SabreTools.Library.DatFiles
 
                         release.CopyMachineInformation(machine);
 
-                        // Now process and add the rom
+                        // Now process and add the release
                         key = ParseAddHelper(release);
-
-                        reader.Read();
-                        break;
-
-                    case "biosset":
-                        containsItems = true;
-
-                        DatItem biosset = new BiosSet
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Description = reader.GetAttribute("description"),
-                            Default = reader.GetAttribute("default").AsYesNo(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        biosset.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(biosset);
 
                         reader.Read();
                         break;
@@ -452,42 +550,10 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
-                    case "disk":
-                        containsItems = true;
-
-                        DatItem disk = new Disk
-                        {
-                            Name = reader.GetAttribute("name"),
-                            MD5 = reader.GetAttribute("md5"),
-#if NET_FRAMEWORK
-                            RIPEMD160 = reader.GetAttribute("ripemd160"),
-#endif
-                            SHA1 = reader.GetAttribute("sha1"),
-                            SHA256 = reader.GetAttribute("sha256"),
-                            SHA384 = reader.GetAttribute("sha384"),
-                            SHA512 = reader.GetAttribute("sha512"),
-                            MergeTag = reader.GetAttribute("merge"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        disk.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(disk);
-
-                        reader.Read();
-                        break;
-
                     case "sample":
                         containsItems = true;
 
-                        DatItem samplerom = new Sample
+                        DatItem sample = new Sample
                         {
                             Name = reader.GetAttribute("name"),
 
@@ -498,57 +564,10 @@ namespace SabreTools.Library.DatFiles
                             },
                         };
 
-                        samplerom.CopyMachineInformation(machine);
+                        sample.CopyMachineInformation(machine);
 
-                        // Now process and add the rom
-                        key = ParseAddHelper(samplerom);
-
-                        reader.Read();
-                        break;
-
-                    case "archive":
-                        containsItems = true;
-
-                        DatItem archiverom = new Archive
-                        {
-                            Name = reader.GetAttribute("name"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        archiverom.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(archiverom);
-
-                        reader.Read();
-                        break;
-
-                    case "chip":
-                        containsItems = true;
-
-                        DatItem chiprom = new Chip
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Tag = reader.GetAttribute("tag"),
-                            ChipType = reader.GetAttribute("type"),
-                            Clock = reader.GetAttribute("clock"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        chiprom.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        key = ParseAddHelper(chiprom);
+                        // Now process and add the sample
+                        key = ParseAddHelper(sample);
 
                         reader.Read();
                         break;
@@ -729,22 +748,22 @@ namespace SabreTools.Library.DatFiles
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
                         if (rom.ItemType == ItemType.Rom
-                            && ((Rom)rom).Size == -1
-                            && ((Rom)rom).CRC == "null")
+                            && (rom as Rom).Size == -1
+                            && (rom as Rom).CRC == "null")
                         {
                             Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
                             rom.Name = (rom.Name == "null" ? "-" : rom.Name);
-                            ((Rom)rom).Size = Constants.SizeZero;
-                            ((Rom)rom).CRC = ((Rom)rom).CRC == "null" ? Constants.CRCZero : null;
-                            ((Rom)rom).MD5 = ((Rom)rom).MD5 == "null" ? Constants.MD5Zero : null;
+                            (rom as Rom).Size = Constants.SizeZero;
+                            (rom as Rom).CRC = (rom as Rom).CRC == "null" ? Constants.CRCZero : null;
+                            (rom as Rom).MD5 = (rom as Rom).MD5 == "null" ? Constants.MD5Zero : null;
 #if NET_FRAMEWORK
-                            ((Rom)rom).RIPEMD160 = ((Rom)rom).RIPEMD160 == "null" ? Constants.RIPEMD160Zero : null;
+                            (rom as Rom).RIPEMD160 = (rom as Rom).RIPEMD160 == "null" ? Constants.RIPEMD160Zero : null;
 #endif
-                            ((Rom)rom).SHA1 = ((Rom)rom).SHA1 == "null" ? Constants.SHA1Zero : null;
-                            ((Rom)rom).SHA256 = ((Rom)rom).SHA256 == "null" ? Constants.SHA256Zero : null;
-                            ((Rom)rom).SHA384 = ((Rom)rom).SHA384 == "null" ? Constants.SHA384Zero : null;
-                            ((Rom)rom).SHA512 = ((Rom)rom).SHA512 == "null" ? Constants.SHA512Zero : null;
+                            (rom as Rom).SHA1 = (rom as Rom).SHA1 == "null" ? Constants.SHA1Zero : null;
+                            (rom as Rom).SHA256 = (rom as Rom).SHA256 == "null" ? Constants.SHA256Zero : null;
+                            (rom as Rom).SHA384 = (rom as Rom).SHA384 == "null" ? Constants.SHA384Zero : null;
+                            (rom as Rom).SHA512 = (rom as Rom).SHA512 == "null" ? Constants.SHA512Zero : null;
                         }
 
                         // Now, output the rom data
@@ -1008,14 +1027,18 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("disk");
                         xtw.WriteRequiredAttributeString("name", disk.Name);
                         xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
-#if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160?.ToLowerInvariant());
-#endif
                         xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Media:
+                        var media = datItem as Media;
+                        xtw.WriteStartElement("media");
+                        xtw.WriteRequiredAttributeString("name", media.Name);
+                        xtw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
 

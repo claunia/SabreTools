@@ -404,14 +404,24 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
                                     MD5 = reader.GetAttribute("md5"),
-#if NET_FRAMEWORK
-                                    RIPEMD160 = reader.GetAttribute("ripemd160"),
-#endif
+                                    SHA1 = reader.GetAttribute("sha1"),
+                                    ItemStatus = its,
+
+                                    Source = new Source
+                                    {
+                                        Index = indexId,
+                                        Name = filename,
+                                    },
+                                };
+                                break;
+
+                            case "media":
+                                datItem = new Media
+                                {
+                                    Name = reader.GetAttribute("name"),
+                                    MD5 = reader.GetAttribute("md5"),
                                     SHA1 = reader.GetAttribute("sha1"),
                                     SHA256 = reader.GetAttribute("sha256"),
-                                    SHA384 =reader.GetAttribute("sha384"),
-                                    SHA512 = reader.GetAttribute("sha512"),
-                                    ItemStatus = its,
 
                                     Source = new Source
                                     {
@@ -628,8 +638,8 @@ namespace SabreTools.Library.DatFiles
 
                         // If we have a "null" game (created by DATFromDir or something similar), log it to file
                         if (rom.ItemType == ItemType.Rom
-                            && ((Rom)rom).Size == -1
-                            && ((Rom)rom).CRC == "null")
+                            && (rom as Rom).Size == -1
+                            && (rom as Rom).CRC == "null")
                         {
                             Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
 
@@ -888,13 +898,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("type", "disk");
                         xtw.WriteRequiredAttributeString("name", disk.Name);
                         xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
-#if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", disk.RIPEMD160?.ToLowerInvariant());
-#endif
                         xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha256", disk.SHA256?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha384", disk.SHA384?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha512", disk.SHA512?.ToLowerInvariant());
                         if (disk.ItemStatus != ItemStatus.None)
                         {
                             xtw.WriteStartElement("flags");
@@ -907,6 +911,17 @@ namespace SabreTools.Library.DatFiles
                             // End flags
                             xtw.WriteEndElement();
                         }
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Media:
+                        var media = datItem as Media;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "media");
+                        xtw.WriteRequiredAttributeString("name", media.Name);
+                        xtw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
 

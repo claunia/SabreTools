@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -10,15 +11,17 @@ using Newtonsoft.Json.Converters;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents Compressed Hunks of Data (CHD) formatted disks which use internal hashes
+    /// Represents Aaruformat images which use internal hashes
     /// </summary>
-    [JsonObject("disk")]
-    public class Disk : DatItem
+    [JsonObject("media")]
+    public class Media : DatItem
     {
         #region Private instance variables
 
         private byte[] _md5; // 16 bytes
         private byte[] _sha1; // 20 bytes
+        private byte[] _sha256; // 32 bytes
+        // TODO: Implement SpamSum
 
         #endregion
 
@@ -45,41 +48,14 @@ namespace SabreTools.Library.DatItems
         }
 
         /// <summary>
-        /// Disk name to merge from parent
+        /// Data SHA-256 hash
         /// </summary>
-        [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string MergeTag { get; set; }
-
-        /// <summary>
-        /// Disk region
-        /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Region { get; set; }
-
-        /// <summary>
-        /// Disk index
-        /// </summary>
-        [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Index { get; set; }
-
-        /// <summary>
-        /// Disk writable flag
-        /// </summary>
-        [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Writable { get; set; }
-
-        /// <summary>
-        /// Disk dump status
-        /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ItemStatus ItemStatus { get; set; }
-
-        /// <summary>
-        /// Determine if the disk is optional in the set
-        /// </summary>
-        [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Optional { get; set; }
+        [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string SHA256
+        {
+            get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
+            set { _sha256 = Utilities.StringToByteArray(Sanitizer.CleanSHA256(value)); }
+        }
 
         #endregion
 
@@ -94,30 +70,15 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Disk-specific fields
+            // Handle Media-specific fields
             if (mappings.Keys.Contains(Field.DatItem_MD5))
                 MD5 = mappings[Field.DatItem_MD5];
 
             if (mappings.Keys.Contains(Field.DatItem_SHA1))
                 SHA1 = mappings[Field.DatItem_SHA1];
 
-            if (mappings.Keys.Contains(Field.DatItem_Merge))
-                MergeTag = mappings[Field.DatItem_Merge];
-
-            if (mappings.Keys.Contains(Field.DatItem_Region))
-                Region = mappings[Field.DatItem_Region];
-
-            if (mappings.Keys.Contains(Field.DatItem_Index))
-                Index = mappings[Field.DatItem_Index];
-
-            if (mappings.Keys.Contains(Field.DatItem_Writable))
-                Writable = mappings[Field.DatItem_Writable].AsYesNo();
-
-            if (mappings.Keys.Contains(Field.DatItem_Status))
-                ItemStatus = mappings[Field.DatItem_Status].AsItemStatus();
-
-            if (mappings.Keys.Contains(Field.DatItem_Optional))
-                Optional = mappings[Field.DatItem_Optional].AsYesNo();
+            if (mappings.Keys.Contains(Field.DatItem_SHA256))
+                SHA256 = mappings[Field.DatItem_SHA256];
         }
 
         #endregion
@@ -125,29 +86,28 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Disk object
+        /// Create a default, empty Media object
         /// </summary>
-        public Disk()
+        public Media()
         {
             Name = string.Empty;
-            ItemType = ItemType.Disk;
+            ItemType = ItemType.Media;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
         }
 
         /// <summary>
-        /// Create a Disk object from a BaseFile
+        /// Create a Media object from a BaseFile
         /// </summary>
         /// <param name="baseFile"></param>
-        public Disk(BaseFile baseFile)
+        public Media(BaseFile baseFile)
         {
             Name = baseFile.Filename;
             _md5 = baseFile.MD5;
             _sha1 = baseFile.SHA1;
+            _sha256 = baseFile.SHA256;
 
-            ItemType = ItemType.Disk;
+            ItemType = ItemType.Media;
             DupeType = 0x00;
-            ItemStatus = ItemStatus.None;
         }
 
         #endregion
@@ -156,7 +116,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Disk()
+            return new Media()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -186,12 +146,7 @@ namespace SabreTools.Library.DatItems
 
                 _md5 = this._md5,
                 _sha1 = this._sha1,
-                MergeTag = this.MergeTag,
-                Region = this.Region,
-                Index = this.Index,
-                Writable = this.Writable,
-                ItemStatus = this.ItemStatus,
-                Optional = this.Optional,
+                _sha256 = this._sha256,
             };
         }
 
@@ -203,7 +158,7 @@ namespace SabreTools.Library.DatItems
         {
             var rom = new Rom()
             {
-                Name = this.Name + ".chd",
+                Name = this.Name + ".aif",
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
 
@@ -229,13 +184,9 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                MergeTag = this.MergeTag,
-                Region = this.Region,
-                ItemStatus = this.ItemStatus,
-                Optional = this.Optional,
-
                 MD5 = this.MD5,
                 SHA1 = this.SHA1,
+                SHA256 = this.SHA256,
             };
 
             return rom;
@@ -249,41 +200,34 @@ namespace SabreTools.Library.DatItems
         {
             bool dupefound = false;
 
-            // If we don't have a rom, return false
+            // If we don't have a Media, return false
             if (ItemType != other.ItemType)
                 return dupefound;
 
-            // Otherwise, treat it as a Disk
-            Disk newOther = other as Disk;
+            // Otherwise, treat it as a Media
+            Media newOther = other as Media;
 
-            // If all hashes are empty but they're both nodump and the names match, then they're dupes
-            if ((ItemStatus == ItemStatus.Nodump && newOther.ItemStatus == ItemStatus.Nodump)
-                && Name == newOther.Name
-                && !HasHashes() && !newOther.HasHashes())
-            {
+            // If we get a partial match
+            if (HashMatch(newOther))
                 dupefound = true;
-            }
-
-            // Otherwise if we get a partial match
-            else if (HashMatch(newOther))
-            {
-                dupefound = true;
-            }
 
             return dupefound;
         }
 
         /// <summary>
-        /// Fill any missing size and hash information from another Disk
+        /// Fill any missing size and hash information from another Media
         /// </summary>
-        /// <param name="other">Disk to fill information from</param>
-        public void FillMissingInformation(Disk other)
+        /// <param name="other">Media to fill information from</param>
+        public void FillMissingInformation(Media other)
         {
             if (_md5.IsNullOrEmpty() && !other._md5.IsNullOrEmpty())
                 _md5 = other._md5;
 
             if (_sha1.IsNullOrEmpty() && !other._sha1.IsNullOrEmpty())
                 _sha1 = other._sha1;
+
+            if (_sha256.IsNullOrEmpty() && !other._sha256.IsNullOrEmpty())
+                _sha256 = other._sha256;
         }
 
         /// <summary>
@@ -292,41 +236,45 @@ namespace SabreTools.Library.DatItems
         /// <returns>String representing the suffix</returns>
         public string GetDuplicateSuffix()
         {
-            if (!_md5.IsNullOrEmpty())
+             if (!_md5.IsNullOrEmpty())
                 return $"_{MD5}";
             else if (!_sha1.IsNullOrEmpty())
                 return $"_{SHA1}";
+            else if (!_sha256.IsNullOrEmpty())
+                return $"_{SHA256}";
             else
                 return "_1";
         }
 
         /// <summary>
-        /// Returns if there are no, non-empty hashes in common with another Disk
+        /// Returns if there are no, non-empty hashes in common with another Media
         /// </summary>
-        /// <param name="other">Disk to compare against</param>
+        /// <param name="other">Media to compare against</param>
         /// <returns>True if at least one hash is not mutually exclusive, false otherwise</returns>
-        private bool HasCommonHash(Disk other)
+        private bool HasCommonHash(Media other)
         {
             return !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
-                || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty());
+                || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
+                || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty());
         }
 
         /// <summary>
-        /// Returns if the Disk contains any hashes
+        /// Returns if the Media contains any hashes
         /// </summary>
         /// <returns>True if any hash exists, false otherwise</returns>
         private bool HasHashes()
         {
             return !_md5.IsNullOrEmpty()
-                || !_sha1.IsNullOrEmpty();
+                || !_sha1.IsNullOrEmpty()
+                || !_sha256.IsNullOrEmpty();
         }
 
         /// <summary>
-        /// Returns if any hashes are common with another Disk
+        /// Returns if any hashes are common with another Media
         /// </summary>
-        /// <param name="other">Disk to compare against</param>
+        /// <param name="other">Media to compare against</param>
         /// <returns>True if any hashes are in common, false otherwise</returns>
-        private bool HashMatch(Disk other)
+        private bool HashMatch(Media other)
         {
             // If either have no hashes, we return false, otherwise this would be a false positive
             if (!HasHashes() || !other.HasHashes())
@@ -338,7 +286,8 @@ namespace SabreTools.Library.DatItems
 
             // Return if all hashes match according to merge rules
             return ConditionalHashEquals(_md5, other._md5)
-                && ConditionalHashEquals(_sha1, other._sha1);
+                && ConditionalHashEquals(_sha1, other._sha1)
+                && ConditionalHashEquals(_sha256, other._sha256);
         }
 
         #endregion
@@ -368,36 +317,10 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_SHA1.MatchesNegativeSet(SHA1) == true)
                 return false;
 
-            // Filter on merge tag
-            if (filter.DatItem_Merge.MatchesPositiveSet(MergeTag) == false)
+            // Filter on SHA-256
+            if (filter.DatItem_SHA256.MatchesPositiveSet(SHA256) == false)
                 return false;
-            if (filter.DatItem_Merge.MatchesNegativeSet(MergeTag) == true)
-                return false;
-
-            // Filter on region
-            if (filter.DatItem_Region.MatchesPositiveSet(Region) == false)
-                return false;
-            if (filter.DatItem_Region.MatchesNegativeSet(Region) == true)
-                return false;
-
-            // Filter on index
-            if (filter.DatItem_Index.MatchesPositiveSet(Index) == false)
-                return false;
-            if (filter.DatItem_Index.MatchesNegativeSet(Index) == true)
-                return false;
-
-            // Filter on writable
-            if (filter.DatItem_Writable.MatchesNeutral(null, Writable) == false)
-                return false;
-
-            // Filter on status
-            if (filter.DatItem_Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
-                return false;
-            if (filter.DatItem_Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
-                return false;
-
-            // Filter on optional
-            if (filter.DatItem_Optional.MatchesNeutral(null, Optional) == false)
+            if (filter.DatItem_SHA256.MatchesNegativeSet(SHA256) == true)
                 return false;
 
             return true;
@@ -419,23 +342,8 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_SHA1))
                 SHA1 = null;
 
-            if (fields.Contains(Field.DatItem_Merge))
-                MergeTag = null;
-
-            if (fields.Contains(Field.DatItem_Region))
-                Region = null;
-
-            if (fields.Contains(Field.DatItem_Index))
-                Index = null;
-
-            if (fields.Contains(Field.DatItem_Writable))
-                Writable = null;
-
-            if (fields.Contains(Field.DatItem_Status))
-                ItemStatus = ItemStatus.NULL;
-
-            if (fields.Contains(Field.DatItem_Optional))
-                Optional = null;
+            if (fields.Contains(Field.DatItem_SHA256))
+                SHA256 = null;
         }
 
         #endregion
@@ -465,6 +373,10 @@ namespace SabreTools.Library.DatItems
                     key = SHA1;
                     break;
 
+                case Field.DatItem_SHA256:
+                    key = SHA256;
+                    break;
+
                 // Let the base handle generic stuff
                 default:
                     return base.GetKey(bucketedBy, lower, norename);
@@ -487,12 +399,12 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Disk to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Disk)
+            // If we don't have a Media to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Media)
                 return;
 
             // Cast for easier access
-            Disk newItem = item as Disk;
+            Media newItem = item as Media;
 
             // Replace the fields
             if (fields.Contains(Field.DatItem_MD5))
@@ -507,23 +419,11 @@ namespace SabreTools.Library.DatItems
                     SHA1 = newItem.SHA1;
             }
 
-            if (fields.Contains(Field.DatItem_Merge))
-                MergeTag = newItem.MergeTag;
-
-            if (fields.Contains(Field.DatItem_Region))
-                Region = newItem.Region;
-
-            if (fields.Contains(Field.DatItem_Index))
-                Index = newItem.Index;
-
-            if (fields.Contains(Field.DatItem_Writable))
-                Writable = newItem.Writable;
-
-            if (fields.Contains(Field.DatItem_Status))
-                ItemStatus = newItem.ItemStatus;
-
-            if (fields.Contains(Field.DatItem_Optional))
-                Optional = newItem.Optional;
+            if (fields.Contains(Field.DatItem_SHA256))
+            {
+                if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
+                    SHA256 = newItem.SHA256;
+            }
         }
 
         #endregion
