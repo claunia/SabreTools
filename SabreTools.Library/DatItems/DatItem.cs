@@ -1211,7 +1211,7 @@ namespace SabreTools.Library.DatItems
         }
 
         /// <summary>
-        /// Sort a list of File objects by SystemID, SourceID, Game, and Name (in order)
+        /// Sort a list of File objects by SourceID, Game, and Name (in order)
         /// </summary>
         /// <param name="roms">List of File objects representing the roms to be sorted</param>
         /// <param name="norename">True if files are not renamed, false otherwise</param>

@@ -209,28 +209,30 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="input">Input stream to try seeking on</param>
         /// <param name="offset">Optional offset to seek to</param>
-        private static long SeekIfPossible(this Stream input, long offset = 0)
+        public static long SeekIfPossible(this Stream input, long offset = 0)
         {
-            if (input.CanSeek)
+            try
             {
-                try
+                if (input.CanSeek)
                 {
                     if (offset < 0)
                         return input.Seek(offset, SeekOrigin.End);
                     else if (offset >= 0)
                         return input.Seek(offset, SeekOrigin.Begin);
                 }
-                catch (NotSupportedException)
-                {
-                    Globals.Logger.Verbose("Stream does not support seeking to starting offset. Stream position not changed");
-                }
-                catch (NotImplementedException)
-                {
-                    Globals.Logger.Warning("Stream does not support seeking to starting offset. Stream position not changed");
-                }
+
+                return input.Position;
+            }
+            catch (NotSupportedException)
+            {
+                Globals.Logger.Verbose("Stream does not support seeking to starting offset. Stream position not changed");
+            }
+            catch (NotImplementedException)
+            {
+                Globals.Logger.Warning("Stream does not support seeking to starting offset. Stream position not changed");
             }
 
-            return input.Position;
+            return -1;
         }
     }
 }

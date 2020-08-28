@@ -316,7 +316,7 @@ namespace SabreTools.Library.FileTypes
                     // Otherwise, use the stream directly
                     else
                     {
-                        BaseFile zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), omitFromScan: omitFromScan, keepReadOpen: true);
+                        BaseFile zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), omitFromScan: omitFromScan, keepReadOpen: true, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
                         zipEntryRom.Filename = zf.Filename(i);
                         zipEntryRom.Parent = gamename;
                         found.Add(zipEntryRom);

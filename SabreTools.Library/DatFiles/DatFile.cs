@@ -1908,7 +1908,7 @@ namespace SabreTools.Library.DatFiles
                 });
 
                 // Now find all folders that are empty, if we are supposed to
-                if (!(Header.OutputDepot?.IsActive ?? false) && addBlanks)
+                if (Header.OutputDepot?.IsActive != true && addBlanks)
                 {
                     List<string> empties = DirectoryExtensions.ListEmpty(basePath);
                     Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
@@ -1979,7 +1979,7 @@ namespace SabreTools.Library.DatFiles
             bool copyFiles)
         {
             // Special case for if we are in Depot mode (all names are supposed to be SHA-1 hashes)
-            if (Header.OutputDepot?.IsActive ?? false)
+            if (Header.OutputDepot?.IsActive == true)
             {
                 GZipArchive gzarc = new GZipArchive(item);
                 BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
@@ -2980,11 +2980,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(
-            List<string> inputs,
-            bool hashOnly = false,
-            bool quickScan = false,
-            TreatAsFiles asFiles = 0x00)
+        public bool VerifyGeneric(List<string> inputs, bool hashOnly, bool quickScan, TreatAsFiles asFiles = 0x00)
         {
             bool success = true;
 
@@ -2996,45 +2992,27 @@ namespace SabreTools.Library.DatFiles
                 PopulateFromDir(input, quickScan ? Hash.SecureHashes : Hash.DeepHashes, asFiles: asFiles);
             }
 
-            // If we are checking hashes only, essentially diff the inputs
+            // Force bucketing according to the flags
+            Items.SetBucketedBy(Field.NULL);
             if (hashOnly)
-            {
-                // First we need to bucket and dedupe by hash to get duplicates
                 Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
-
-                var keys = Items.SortedKeys.ToList();
-                foreach (string key in keys)
-                {
-                    List<DatItem> items = Items[key];
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        // Unmatched items will have a source ID of 99, remove all others
-                        if (items[i].Source.Index != 99)
-                            items[i].Remove = true;
-                    }
-
-                    // Set the list back, just in case
-                    Items[key] = items;
-                }
-            }
-            // If we are checking full names, get only files found in directory
             else
-            {
-                var keys = Items.SortedKeys.ToList();
-                foreach (string key in keys)
-                {
-                    List<DatItem> items = Items[key];
-                    List<DatItem> newItems = DatItem.Merge(items);
-                    for (int i = 0; i < newItems.Count; i++)
-                    {
-                        // Unmatched items will have a source ID of 99, remove all others
-                        if (newItems[i].Source.Index != 99)
-                            newItems[i].Remove = true;
-                    }
+                Items.BucketBy(Field.Machine_Name, DedupeType.Full);
 
-                    // Set the list back, just in case
-                    Items[key] = newItems;
+            // Then mark items for removal
+            var keys = Items.SortedKeys.ToList();
+            foreach (string key in keys)
+            {
+                List<DatItem> items = Items[key];
+                for (int i = 0; i < items.Count; i++)
+                {
+                    // Unmatched items will have a source ID of 99, remove all others
+                    if (items[i].Source.Index != 99)
+                        items[i].Remove = true;
                 }
+
+                // Set the list back, just in case
+                Items[key] = items;
             }
 
             // Set fixdat headers in case of writing out
@@ -3618,7 +3596,7 @@ namespace SabreTools.Library.DatFiles
             string post = CreatePrefixPostfix(item, false);
 
             // If we're in Depot mode, take care of that instead
-            if (Header.OutputDepot?.IsActive ?? false)
+            if (Header.OutputDepot?.IsActive == true)
             {
                 if (item.ItemType == ItemType.Disk)
                 {

@@ -374,6 +374,27 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Reset a key from the file dictionary if it exists
+        /// </summary>
+        /// <param name="key">Key in the dictionary to reset</param>
+        public bool Reset(string key)
+        {
+            // If the key doesn't exist, return
+            if (!ContainsKey(key))
+                return false;
+
+            // Remove the statistics first
+            foreach (DatItem item in items[key])
+            {
+                RemoveItemStatistics(item);
+            }
+
+            // Remove the key from the dictionary
+            items[key] = new List<DatItem>();
+            return true;
+        }
+
+        /// <summary>
         /// Override the internal Field value
         /// </summary>
         /// <param name="newBucket"></param>
@@ -658,10 +679,11 @@ namespace SabreTools.Library.DatFiles
                 // Set the sorted type
                 mergedBy = dedupeType;
 
-                Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+                List<string> keys = Keys.ToList();
+                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
                     // Get the possibly unsorted list
-                    List<DatItem> sortedlist = this[key];
+                    List<DatItem> sortedlist = this[key].ToList();
 
                     // Sort the list of items to be consistent
                     DatItem.Sort(ref sortedlist, false);
@@ -671,14 +693,15 @@ namespace SabreTools.Library.DatFiles
                         sortedlist = DatItem.Merge(sortedlist);
 
                     // Add the list back to the dictionary
-                    Remove(key);
+                    Reset(key);
                     AddRange(key, sortedlist);
                 });
             }
             // If the merge type is the same, we want to sort the dictionary to be consistent
             else
             {
-                Parallel.ForEach(Keys, Globals.ParallelOptions, key =>
+                List<string> keys = Keys.ToList();
+                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
                     // Get the possibly unsorted list
                     List<DatItem> sortedlist = this[key];
@@ -811,9 +834,12 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         private void ClearEmpty()
         {
-            var keys = items.Keys.ToList();
+            var keys = items.Keys.Where(k => k != null).ToList();
             foreach (string key in keys)
             {
+                if (!items.ContainsKey(key))
+                    continue;
+
                 if (items[key] == null || items[key].Count == 0)
                     items.Remove(key);
             }

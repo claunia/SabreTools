@@ -70,7 +70,7 @@ namespace SabreTools.Library.FileTypes
             {
                 // Validate that this is actually a valid AaruFormat (by magic string alone)
                 bool validated = ValidateHeader(aarustream);
-                aarustream.Seek(-8, SeekOrigin.Current); // Seek back to start
+                aarustream.SeekIfPossible(); // Seek back to start
                 if (!validated)
                     return null;
 

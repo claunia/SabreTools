@@ -46,7 +46,7 @@ namespace SabreTools.Library.FileTypes
             {
                 // Read the standard CHD headers
                 (char[] tag, uint length, uint version) = GetHeaderValues(chdstream);
-                chdstream.Seek(-16, SeekOrigin.Current); // Seek back to start
+                chdstream.SeekIfPossible(); // Seek back to start
 
                 // Validate that this is actually a valid CHD
                 uint validatedVersion = ValidateHeader(tag, length, version);

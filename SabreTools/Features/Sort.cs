@@ -68,13 +68,17 @@ namespace SabreTools.Features
             bool updateDat = GetBoolean(features, UpdateDatValue);
             var outputFormat = GetOutputFormat(features);
 
-            // If we have TorrentGzip output and the romba flag, update
-            if ((Header.OutputDepot?.IsActive ?? false) && outputFormat == OutputFormat.TorrentGzip)
-                outputFormat = OutputFormat.TorrentGzipRomba;
+            // If we have the romba flag
+            if (Header.OutputDepot?.IsActive == true)
+            {
+                // Update TorrentGzip output
+                if (outputFormat == OutputFormat.TorrentGzip)
+                    outputFormat = OutputFormat.TorrentGzipRomba;
 
-            // If we hae TorrentXZ output and the romba flag, update
-            if ((Header.OutputDepot?.IsActive ?? false) && outputFormat == OutputFormat.TorrentXZ)
-                outputFormat = OutputFormat.TorrentXZRomba;
+                // Update TorrentXz output
+                else if (outputFormat == OutputFormat.TorrentXZ)
+                    outputFormat = OutputFormat.TorrentXZRomba;
+            }
 
             // Get a list of files from the input datfiles
             var datfiles = GetList(features, DatListValue);
