@@ -766,6 +766,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filter">Filter to use</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
+        /// TODO: Re-evaluate what should be in here and see if we need to have a "Cleaner" class
         public bool ApplyFilter(Filter filter, bool useTags)
         {
             try
@@ -890,7 +891,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inputs">List of inputs to use for renaming</param>
         public void ApplySuperDAT(List<ParentablePath> inputs)
         {
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            List<string> keys = Items.Keys.ToList();
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
                 List<DatItem> items = Items[key].ToList();
                 List<DatItem> newItems = new List<DatItem>();
