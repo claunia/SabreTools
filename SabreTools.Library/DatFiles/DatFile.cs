@@ -1934,7 +1934,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        // TODO: See if any of the helper methods can be broken up a bit more neatly
+        // TODO: See if any of the methods can be broken up a bit more neatly
         #region Populate DAT from Directory
 
         /// <summary>
@@ -2012,8 +2012,15 @@ namespace SabreTools.Library.DatFiles
             }
             else if (File.Exists(basePath))
             {
-                CheckFileForHashes(basePath, Path.GetDirectoryName(Path.GetDirectoryName(basePath)), omitFromScan, asFiles,
-                    skipFileType, addBlanks, addDate, copyFiles);
+                CheckFileForHashes(
+                    basePath,
+                    Path.GetDirectoryName(Path.GetDirectoryName(basePath)),
+                    omitFromScan,
+                    asFiles,
+                    skipFileType,
+                    addBlanks,
+                    addDate,
+                    copyFiles);
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
@@ -2045,39 +2052,12 @@ namespace SabreTools.Library.DatFiles
             bool addDate,
             bool copyFiles)
         {
-            // Special case for if we are in Depot mode (all names are supposed to be SHA-1 hashes)
-            if (Header.OutputDepot?.IsActive == true)
-            {
-                GZipArchive gzarc = new GZipArchive(item);
-                BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
-
-                // If the rom is valid, write it out
-                if (baseFile != null && baseFile.Filename != null)
-                {
-                    // Add the list if it doesn't exist already
-                    Rom rom = new Rom(baseFile);
-                    Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
-                    Globals.Logger.User($"File added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
-                }
-                else
-                {
-                    Globals.Logger.User($"File not added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
-                    return;
-                }
-
+            // If we're in depot mode, process it separately
+            if (CheckDepotFile(item))
                 return;
-            }
 
             // If we're copying files, copy it first and get the new filename
-            string newItem = item;
-            string newBasePath = basePath;
-            if (copyFiles)
-            {
-                newBasePath = Path.Combine(Globals.TempDir, Guid.NewGuid().ToString());
-                newItem = Path.GetFullPath(Path.Combine(newBasePath, Path.GetFullPath(item).Remove(0, basePath.Length + 1)));
-                DirectoryExtensions.TryCreateDirectory(Path.GetDirectoryName(newItem));
-                File.Copy(item, newItem, true);
-            }
+            (string newItem, string newBasePath) = CopyIfNeeded(item, basePath, copyFiles);
 
             // Initialize possible archive variables
             BaseArchive archive = BaseArchive.Create(newItem);
@@ -2096,47 +2076,107 @@ namespace SabreTools.Library.DatFiles
 
             // If the extracted list is null, just scan the item itself
             if (extracted == null)
-            {
                 ProcessFile(newItem, newBasePath, omitFromScan, addDate, asFiles);
-            }
 
             // Otherwise, add all of the found items
             else
-            {
-                // First take care of the found items
-                Parallel.ForEach(extracted, Globals.ParallelOptions, rom =>
-                {
-                    DatItem datItem = DatItem.Create(rom);
-                    ProcessFileHelper(newItem,
-                        datItem,
-                        basePath,
-                        (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item));
-                });
-
-                // Then, if we're looking for blanks, get all of the blank folders and add them
-                if (addBlanks)
-                {
-                    List<string> empties = new List<string>();
-
-                    // Now get all blank folders from the archive
-                    if (archive != null)
-                        empties = archive.GetEmptyFolders();
-
-                    // Add add all of the found empties to the DAT
-                    Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
-                    {
-                        Rom emptyRom = new Rom(Path.Combine(empty, "_"), newItem);
-                        ProcessFileHelper(newItem,
-                            emptyRom,
-                            basePath,
-                            (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item));
-                    });
-                }
-            }
+                ProcessArchive(newItem, newBasePath, addBlanks, archive, extracted);
 
             // Cue to delete the file if it's a copy
             if (copyFiles && item != newItem)
                 DirectoryExtensions.TryDelete(newBasePath);
+        }
+
+        /// <summary>
+        /// Check an item as if it's supposed to be in a depot
+        /// </summary>
+        /// <param name="item">Filename of the item to be checked</param>
+        /// <returns>True if we checked a depot file, false otherwise</returns>
+        private bool CheckDepotFile(string item)
+        {
+            // If we're not in Depot mode, return false
+            if (Header.OutputDepot?.IsActive != true)
+                return false;
+
+            // Check the file as if it were in a depot
+            GZipArchive gzarc = new GZipArchive(item);
+            BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
+
+            // If the rom is valid, add it
+            if (baseFile != null && baseFile.Filename != null)
+            {
+                // Add the list if it doesn't exist already
+                Rom rom = new Rom(baseFile);
+                Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
+                Globals.Logger.User($"File added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
+            }
+            else
+            {
+                Globals.Logger.User($"File not added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
+                return true;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Copy a file to the temp directory if needed and return the new paths
+        /// </summary>
+        /// <param name="item">Filename of the item to be checked</param>
+        /// <param name="basePath">Base folder to be used in creating the DAT</param>
+        /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
+        /// <returns>New item and base path strings</returns>
+        private static (string item, string basePath) CopyIfNeeded(string item, string basePath, bool copyFiles)
+        {
+            string newItem = item;
+            string newBasePath = basePath;
+            if (copyFiles)
+            {
+                newBasePath = Path.Combine(Globals.TempDir, Guid.NewGuid().ToString());
+                newItem = Path.GetFullPath(Path.Combine(newBasePath, Path.GetFullPath(item).Remove(0, basePath.Length + 1)));
+                DirectoryExtensions.TryCreateDirectory(Path.GetDirectoryName(newItem));
+                File.Copy(item, newItem, true);
+            }
+
+            return (newItem, newBasePath);
+        }
+
+        /// <summary>
+        /// Process a single file as an archive
+        /// </summary>
+        /// <param name="item">File to be added</param>
+        /// <param name="basePath">Path the represents the parent directory</param>
+        /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
+        /// <param name="archive">BaseArchive to get blank folders from, if necessary</param>
+        /// <param name="extracted">List of BaseFiles representing the internal files</param>
+        private void ProcessArchive(string item, string basePath, bool addBlanks, BaseArchive archive, List<BaseFile> extracted)
+        {
+            // Get the parent path for all items
+            string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
+
+            // First take care of the found items
+            Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
+            {
+                DatItem datItem = DatItem.Create(baseFile);
+                ProcessFileHelper(item, datItem, basePath, parent);
+            });
+
+            // Then, if we're looking for blanks, get all of the blank folders and add them
+            if (addBlanks)
+            {
+                List<string> empties = new List<string>();
+
+                // Now get all blank folders from the archive
+                if (archive != null)
+                    empties = archive.GetEmptyFolders();
+
+                // Add add all of the found empties to the DAT
+                Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
+                {
+                    Rom emptyRom = new Rom(Path.Combine(empty, "_"), item);
+                    ProcessFileHelper(item, emptyRom, basePath, parent);
+                });
+            }
         }
 
         /// <summary>
@@ -2150,12 +2190,7 @@ namespace SabreTools.Library.DatFiles
         private void ProcessFile(string item, string basePath, Hash omitFromScan, bool addDate, TreatAsFiles asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = FileExtensions.GetInfo(
-                item,
-                omitFromScan: omitFromScan,
-                date: addDate,
-                header: Header.HeaderSkipper,
-                asFiles: asFiles);
+            BaseFile baseFile = FileExtensions.GetInfo(item, omitFromScan, addDate, Header.HeaderSkipper, asFiles);
             ProcessFileHelper(item, DatItem.Create(baseFile), basePath, string.Empty);
         }
 
