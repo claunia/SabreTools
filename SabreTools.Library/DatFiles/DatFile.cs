@@ -1112,6 +1112,12 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        // TODO: Should any of these create a new DatFile in the process?
+        // The reason this comes up is that doing any of the splits or merges
+        // is an inherently destructive process. Making it output a new DatFile
+        // might make it easier to deal with multiple internal steps. On the other
+        // hand, this will increase memory usage significantly and would force the
+        // existing paths to behave entirely differently
         #region Internal Splitting/Merging
 
         /// <summary>
@@ -1876,6 +1882,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Output directory to </param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+        /// TODO: Look into removing "copyFiles". I don't think it's useful anymore
         public bool PopulateFromDir(
             string basePath,
             Hash omitFromScan = Hash.DeepHashes,
@@ -2884,12 +2891,11 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Process the DAT and verify from the depots
+        /// Verify a DatFile against a set of depots, leaving only missing files
         /// </summary>
         /// <param name="inputs">List of input directories to compare against</param>
-        /// <param name="outDir">Optional param for output directory</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyDepot(List<string> inputs, string outDir = null)
+        public bool VerifyDepot(List<string> inputs)
         {
             bool success = true;
 
@@ -2957,21 +2963,19 @@ namespace SabreTools.Library.DatFiles
 
             watch.Stop();
 
-            // If there are any entries in the DAT, output to the rebuild directory
+            // Set fixdat headers in case of writing out
             Header.FileName = $"fixDAT_{Header.FileName}";
             Header.Name = $"fixDAT_{Header.Name}";
             Header.Description = $"fixDAT_{Header.Description}";
             Items.ClearMarked();
-            Write(outDir, stats: true);
 
             return success;
         }
 
         /// <summary>
-        /// Process the DAT and verify the output directory
+        /// Verify a DatFile against a set of inputs, leaving only missing files
         /// </summary>
         /// <param name="inputs">List of input directories to compare against</param>
-        /// <param name="outDir">Optional param for output directory</param>
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
@@ -2980,36 +2984,23 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if verification was a success, false otherwise</returns>
         public bool VerifyGeneric(
             List<string> inputs,
-            string outDir = null,
             bool hashOnly = false,
             bool quickScan = false,
             TreatAsFiles asFiles = 0x00,
             ExtraIni extras = null,
             Filter filter = null)
         {
-            // TODO: We want the cross section of what's the folder and what's in the DAT. Right now, it just has what's in the DAT that's not in the folder
             bool success = true;
 
-            // Then, loop through and check each of the inputs
+            // Loop through and check each of the inputs
             Globals.Logger.User("Processing files:\n");
             foreach (string input in inputs)
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                PopulateFromDir(
-                    input,
-                    quickScan ? Hash.SecureHashes : Hash.DeepHashes,
-                    asFiles: asFiles);
+                PopulateFromDir(input, quickScan ? Hash.SecureHashes : Hash.DeepHashes, asFiles: asFiles);
                 ApplyExtras(extras);
                 ApplyFilter(filter, false);
             }
-
-            // Setup the fixdat
-            DatFile matched = Create(Header);
-            matched.Items = new ItemDictionary();
-            matched.Header.FileName = $"fixDat_{matched.Header.FileName}";
-            matched.Header.Name = $"fixDat_{matched.Header.Name}";
-            matched.Header.Description = $"fixDat_{matched.Header.Description}";
-            matched.Header.DatFormat = DatFormat.Logiqx;
 
             // If we are checking hashes only, essentially diff the inputs
             if (hashOnly)
@@ -3017,43 +3008,46 @@ namespace SabreTools.Library.DatFiles
                 // First we need to bucket and dedupe by hash to get duplicates
                 Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
 
-                // Then follow the same tactics as before
                 var keys = Items.SortedKeys.ToList();
                 foreach (string key in keys)
                 {
                     List<DatItem> items = Items[key];
-                    foreach (DatItem datItem in items)
+                    for (int i = 0; i < items.Count; i++)
                     {
-                        if (datItem.Source.Index == 99)
-                        {
-                            if (datItem.ItemType == ItemType.Disk)
-                                matched.Items.Add((datItem as Disk).SHA1, datItem);
-                            else if (datItem.ItemType == ItemType.Media)
-                                matched.Items.Add((datItem as Media).SHA1, datItem);
-                            else if (datItem.ItemType == ItemType.Rom)
-                                matched.Items.Add((datItem as Rom).SHA1, datItem);
-                        }
+                        // Unmatched items will have a source ID of 99, remove all others
+                        if (items[i].Source.Index != 99)
+                            items[i].Remove = true;
                     }
+
+                    // Set the list back, just in case
+                    Items[key] = items;
                 }
             }
             // If we are checking full names, get only files found in directory
             else
             {
-                foreach (string key in Items.Keys)
+                var keys = Items.SortedKeys.ToList();
+                foreach (string key in keys)
                 {
                     List<DatItem> items = Items[key];
                     List<DatItem> newItems = DatItem.Merge(items);
-                    foreach (Rom rom in newItems)
+                    for (int i = 0; i < newItems.Count; i++)
                     {
-                        if (rom.Source.Index == 99)
-                            matched.Items.Add($"{rom.Size}-{rom.CRC}", rom);
+                        // Unmatched items will have a source ID of 99, remove all others
+                        if (newItems[i].Source.Index != 99)
+                            newItems[i].Remove = true;
                     }
+
+                    // Set the list back, just in case
+                    Items[key] = newItems;
                 }
             }
 
-            // Now output the fixdat to the main folder
+            // Set fixdat headers in case of writing out
+            Header.FileName = $"fixDAT_{Header.FileName}";
+            Header.Name = $"fixDAT_{Header.Name}";
+            Header.Description = $"fixDAT_{Header.Description}";
             Items.ClearMarked();
-            success &= matched.Write(outDir, stats: true);
 
             return success;
         }

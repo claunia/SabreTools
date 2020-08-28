@@ -68,9 +68,12 @@ namespace SabreTools.Features
 
                     // If we have the depot flag, respect it
                     if (Header.InputDepot?.IsActive ?? false)
-                        datdata.VerifyDepot(Inputs, OutputDir);
+                        datdata.VerifyDepot(Inputs);
                     else
-                        datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Extras, Filter);
+                        datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles, Extras, Filter);
+
+                    // Now write out if there are any items left
+                    datdata.Write(OutputDir, stats: true);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -98,9 +101,12 @@ namespace SabreTools.Features
 
                 // If we have the depot flag, respect it
                 if (Header.InputDepot?.IsActive ?? false)
-                    datdata.VerifyDepot(Inputs, OutputDir);
+                    datdata.VerifyDepot(Inputs);
                 else
-                    datdata.VerifyGeneric(Inputs, OutputDir, hashOnly, quickScan, asFiles, Extras, Filter);
+                    datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles, Extras, Filter);
+
+                // Now write out if there are any items left
+                datdata.Write(OutputDir, stats: true);
             }
         }
     }
