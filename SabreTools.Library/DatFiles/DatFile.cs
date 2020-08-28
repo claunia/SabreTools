@@ -695,7 +695,6 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        // TODO: Should the ApplyFilter method contain the splitting logic?
         #region Filtering
 
         /// <summary>
@@ -705,35 +704,43 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if cleaning was successful, false on error</returns>
         public bool ApplyCleaning(Cleaner cleaner)
         {
-            // Perform item-level cleaning
-            CleanDatItems(cleaner);
+            try
+            {
+                // Perform item-level cleaning
+                CleanDatItems(cleaner);
 
-            // Process description to machine name
-            if (cleaner?.DescriptionAsName == true)
-                MachineDescriptionToName();
+                // Process description to machine name
+                if (cleaner?.DescriptionAsName == true)
+                    MachineDescriptionToName();
 
-            // If we are removing scene dates, do that now
-            if (cleaner?.SceneDateStrip == true)
-                StripSceneDatesFromItems();
+                // If we are removing scene dates, do that now
+                if (cleaner?.SceneDateStrip == true)
+                    StripSceneDatesFromItems();
 
-            // Run the one rom per game logic, if required
-            if (cleaner?.OneGamePerRegion == true)
-                OneGamePerRegion(cleaner.RegionList);
+                // Run the one rom per game logic, if required
+                if (cleaner?.OneGamePerRegion == true)
+                    OneGamePerRegion(cleaner.RegionList);
 
-            // Run the one rom per game logic, if required
-            if (cleaner?.OneRomPerGame == true)
-                OneRomPerGame();
+                // Run the one rom per game logic, if required
+                if (cleaner?.OneRomPerGame == true)
+                    OneRomPerGame();
 
-            // If we are removing fields, do that now
-            if (cleaner.ExcludeFields != null && cleaner.ExcludeFields.Any())
-                RemoveFieldsFromItems(cleaner.ExcludeFields);
+                // If we are removing fields, do that now
+                if (cleaner.ExcludeFields != null && cleaner.ExcludeFields.Any())
+                    RemoveFieldsFromItems(cleaner.ExcludeFields);
 
-            // Remove all marked items
-            Items.ClearMarked();
+                // Remove all marked items
+                Items.ClearMarked();
 
-            // We remove any blanks, if we aren't supposed to have any
-            if (cleaner?.KeepEmptyGames == false)
-                Items.ClearEmpty();
+                // We remove any blanks, if we aren't supposed to have any
+                if (cleaner?.KeepEmptyGames == false)
+                    Items.ClearEmpty();
+            }
+            catch (Exception ex)
+            {
+                Globals.Logger.Error(ex.ToString());
+                return false;
+            }
 
             return true;
         }
@@ -807,6 +814,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filter">Filter to use</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
+        /// TODO: Fully decouple splitting
         public bool ApplyFilter(Filter filter, bool useTags)
         {
             // If we have a null filter, return false
@@ -815,12 +823,8 @@ namespace SabreTools.Library.DatFiles
 
             try
             {
-                // If we are using tags from the DAT, set the proper input for split type unless overridden
-                if (useTags && filter.InternalSplit == MergingFlag.None)
-                    filter.InternalSplit = Header.ForceMerging;
-
-                // Run internal splitting
-                ProcessSplitType(filter.InternalSplit);
+                // Apply splitting, if necessary
+                ApplySplitting(filter.InternalSplit, useTags);
 
                 // Loop over every key in the dictionary
                 List<string> keys = Items.Keys.ToList();
@@ -841,6 +845,52 @@ namespace SabreTools.Library.DatFiles
 
                     // Assign back for caution
                     Items[key] = items;
+                }
+            }
+            catch (Exception ex)
+            {
+                Globals.Logger.Error(ex.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Apply splitting on the DatFile
+        /// </summary>
+        /// <param name="splitType">Split type to try</param>
+        /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
+        /// <returns>True if the DatFile was split, false on error</returns>
+        public bool ApplySplitting(MergingFlag splitType, bool useTags)
+        {
+            try
+            {
+                // If we are using tags from the DAT, set the proper input for split type unless overridden
+                if (useTags && splitType == MergingFlag.None)
+                    splitType = Header.ForceMerging;
+
+                // Run internal splitting
+                switch (splitType)
+                {
+                    case MergingFlag.None:
+                        // No-op
+                        break;
+                    case MergingFlag.Device:
+                        CreateDeviceNonMergedSets(DedupeType.None);
+                        break;
+                    case MergingFlag.Full:
+                        CreateFullyNonMergedSets(DedupeType.None);
+                        break;
+                    case MergingFlag.NonMerged:
+                        CreateNonMergedSets(DedupeType.None);
+                        break;
+                    case MergingFlag.Merged:
+                        CreateMergedSets(DedupeType.None);
+                        break;
+                    case MergingFlag.Split:
+                        CreateSplitSets(DedupeType.None);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -1170,36 +1220,6 @@ namespace SabreTools.Library.DatFiles
         // hand, this will increase memory usage significantly and would force the
         // existing paths to behave entirely differently
         #region Internal Splitting/Merging
-
-        /// <summary>
-        /// Process items according to split type
-        /// </summary>
-        /// <param name="splitType">MergingFlag to implement</param>
-        public void ProcessSplitType(MergingFlag splitType)
-        {
-            // Now we pre-process the DAT with the splitting/merging mode
-            switch (splitType)
-            {
-                case MergingFlag.None:
-                    // No-op
-                    break;
-                case MergingFlag.Device:
-                    CreateDeviceNonMergedSets(DedupeType.None);
-                    break;
-                case MergingFlag.Full:
-                    CreateFullyNonMergedSets(DedupeType.None);
-                    break;
-                case MergingFlag.NonMerged:
-                    CreateNonMergedSets(DedupeType.None);
-                    break;
-                case MergingFlag.Merged:
-                    CreateMergedSets(DedupeType.None);
-                    break;
-                case MergingFlag.Split:
-                    CreateSplitSets(DedupeType.None);
-                    break;
-            }
-        }
 
         /// <summary>
         /// Use cdevice_ref tags to get full non-merged sets and remove parenting tags

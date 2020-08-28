@@ -214,7 +214,7 @@ Reset the internal state:           reset();";
                                 MergingFlag mergingFlag = command.Arguments[0].AsMergingFlag();
 
                                 // Apply the merging flag
-                                datFile.ProcessSplitType(mergingFlag);
+                                datFile.ApplySplitting(mergingFlag, false);
 
                                 break;
 
