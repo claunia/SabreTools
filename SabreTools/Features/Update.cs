@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Threading.Tasks;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -155,7 +156,7 @@ namespace SabreTools.Features
             if (updateMode == UpdateMode.None)
             {
                 // Loop through each input and update
-                foreach (ParentablePath inputPath in inputPaths)
+                Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
@@ -172,7 +173,7 @@ namespace SabreTools.Features
 
                     // Try to output the file, overwriting only if it's not in the current directory
                     datFile.Write(realOutDir, overwrite: GetBoolean(features, InplaceValue));
-                }
+                });
 
                 return;
             }
@@ -218,19 +219,44 @@ namespace SabreTools.Features
             // Output cascaded diffs
             if (updateMode.HasFlag(UpdateMode.DiffCascade))
             {
-                userInputDat.DiffCascade(
-                    inputPaths,
-                    datHeaders,
-                    OutputDir,
-                    GetBoolean(features, InplaceValue),
-                    GetBoolean(features, SkipFirstOutputValue));
+                // Preprocess the DatHeaders
+                Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
+                {
+                    // If we're outputting to the runtime folder, rename
+                    if (!GetBoolean(features, InplaceValue) && OutputDir == Environment.CurrentDirectory)
+                    {
+                        string innerpost = $" ({j} - {inputPaths[j].GetNormalizedFileName(true)} Only)";
+
+                        datHeaders[j] = userInputDat.Header;
+                        datHeaders[j].FileName += innerpost;
+                        datHeaders[j].Name += innerpost;
+                        datHeaders[j].Description += innerpost;
+                    }
+                });
+
+                // Get all of the output DatFiles
+                List<DatFile> datFiles = userInputDat.DiffCascade(datHeaders);
+
+                // Loop through and output the new DatFiles
+                InternalStopwatch watch = new InternalStopwatch("Outputting all created DATs");
+
+                int startIndex = GetBoolean(features, SkipFirstOutputValue) ? 1 : 0;
+                Parallel.For(startIndex, inputPaths.Count, Globals.ParallelOptions, j =>
+                {
+                    string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+
+                    // Try to output the file
+                    datFiles[j].Write(path, overwrite: GetBoolean(features, InplaceValue));
+                });
+
+                watch.Stop();
             }
 
             // Output differences against a base DAT
             if (updateMode.HasFlag(UpdateMode.DiffAgainst))
             {
                 // Loop through each input and diff against the base
-                foreach (ParentablePath inputPath in inputPaths)
+                Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
                     // Parse, extras, and filter the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
@@ -244,14 +270,14 @@ namespace SabreTools.Features
                     // Finally output the diffed DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
                     repDat.Write(interOutDir, overwrite: GetBoolean(features, InplaceValue));
-                }
+                });
             }
 
             // Output DATs after replacing fields from a base DatFile
             if (updateMode.HasFlag(UpdateMode.BaseReplace))
             {
                 // Loop through each input and apply the base DatFile
-                foreach (ParentablePath inputPath in inputPaths)
+                Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
                     // Parse, extras, and filter the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
@@ -265,7 +291,7 @@ namespace SabreTools.Features
                     // Finally output the replaced DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
                     repDat.Write(interOutDir, overwrite: GetBoolean(features, InplaceValue));
-                }
+                });
             }
 
             // Merge all input files and write

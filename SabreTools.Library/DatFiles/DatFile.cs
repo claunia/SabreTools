@@ -296,6 +296,31 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Fill a DatFile with all items with a particular source index ID
+        /// </summary>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="index">Source index ID to retrieve items for</param>
+        /// <returns>DatFile containing all items with the source index ID/returns>
+        public void FillWithSourceIndex(DatFile indexDat, int index)
+        {
+            // Loop through and add the items for this index to the output
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = DatItem.Merge(Items[key]);
+
+                // If the rom list is empty or null, just skip it
+                if (items == null || items.Count == 0)
+                    return;
+
+                foreach (DatItem item in items)
+                {
+                    if (item.Source.Index == index)
+                        indexDat.Items.Add(key, item);
+                }
+            });
+        }
+
+        /// <summary>
         /// Output diffs against a base set represented by the current DAT
         /// </summary>
         /// <param name="intDat">DatFile to replace the values in</param>
@@ -369,110 +394,33 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Output cascading diffs
         /// </summary>
-        /// <param name="inputs">List of inputs to write out from</param>
         /// <param name="datHeaders">Dat headers used optionally</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        /// <param name="inplace">True if cascaded diffs are outputted in-place, false otherwise</param>
-        /// <param name="skip">True if the first cascaded diff file should be skipped on output, false otherwise</param>
-        public void DiffCascade(
-            List<string> inputs,
-            List<DatHeader> datHeaders,
-            string outDir,
-            bool inplace,
-            bool skip)
-        {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffCascade(paths, datHeaders, outDir, inplace, skip);
-        }
-
-        /// <summary>
-        /// Output cascading diffs
-        /// </summary>
-        /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="datHeaders">Dat headers used optionally</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        /// <param name="inplace">True if cascaded diffs are outputted in-place, false otherwise</param>
-        /// <param name="skip">True if the first cascaded diff file should be skipped on output, false otherwise</param>
-        public void DiffCascade(
-            List<ParentablePath> inputs,
-            List<DatHeader> datHeaders,
-            string outDir,
-            bool inplace,
-            bool skip)
+        /// <returns>List of DatFiles representing the individually indexed items</returns>
+        public List<DatFile> DiffCascade(List<DatHeader> datHeaders)
         {
             // Create a list of DatData objects representing output files
             List<DatFile> outDats = new List<DatFile>();
 
+            // Ensure the current DatFile is sorted optimally
+            Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
+
             // Loop through each of the inputs and get or create a new DatData object
-            InternalStopwatch watch = new InternalStopwatch("Initializing all output DATs");
+            InternalStopwatch watch = new InternalStopwatch("Initializing and filling all output DATs");
 
-            DatFile[] outDatsArray = new DatFile[inputs.Count];
-            Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
+            // Create the DatFiles from the set of headers
+            DatFile[] outDatsArray = new DatFile[datHeaders.Count];
+            Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
             {
-                string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData;
-
-                // If we're in inplace mode or the output directory is set, take the appropriate DatData object already stored
-                if (inplace || outDir != Environment.CurrentDirectory)
-                {
-                    diffData = Create(datHeaders[j]);
-                }
-                else
-                {
-                    diffData = Create(Header);
-                    diffData.Header.FileName += innerpost;
-                    diffData.Header.Name += innerpost;
-                    diffData.Header.Description += innerpost;
-                }
-
+                DatFile diffData = Create(datHeaders[j]);
                 diffData.Items = new ItemDictionary();
+                FillWithSourceIndex(diffData, j);
                 outDatsArray[j] = diffData;
             });
 
             outDats = outDatsArray.ToList();
             watch.Stop();
 
-            // Then, ensure that the internal dat can be bucketed in the best possible way
-            Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
-
-            // Now, loop through the dictionary and populate the correct DATs
-            watch.Start("Populating all output DATs");
-
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
-            {
-                List<DatItem> items = DatItem.Merge(Items[key]);
-
-                // If the rom list is empty or null, just skip it
-                if (items == null || items.Count == 0)
-                    return;
-
-                foreach (DatItem item in items)
-                {
-                    // There's odd cases where there are items with System ID < 0. Skip them for now
-                    if (item.Source.Index < 0)
-                    {
-                        Globals.Logger.Warning($"Item found with a <0 SystemID: {item.Name}");
-                        continue;
-                    }
-
-                    outDats[item.Source.Index].Items.Add(key, item);
-                }
-            });
-
-            watch.Stop();
-
-            // Finally, loop through and output each of the DATs
-            watch.Start("Outputting all created DATs");
-
-            Parallel.For((skip ? 1 : 0), inputs.Count, Globals.ParallelOptions, j =>
-            {
-                string path = inputs[j].GetOutputPath(outDir, inplace);
-
-                // Try to output the file
-                outDats[j].Write(path, overwrite: inplace);
-            });
-
-            watch.Stop();
+            return outDats;
         }
 
         /// <summary>
