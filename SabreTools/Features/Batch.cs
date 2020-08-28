@@ -30,6 +30,7 @@ The following commands are currently implemented:
 
 Set a header field (if default):    set(header.field, value);
 Parse new file(s):                  input(datpath, ...);
+Perform a dir2dat:                  d2d(path, ...);
 Filter on a field and value:        filter(machine.field|item.field, value, [negate = false]);
 Apply a MAME Extra INI for a field: extra(field, inipath);
 Perform a split/merge:              merge(split|merged|nonmerged|full|device);
@@ -121,12 +122,32 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Get only files from inputs
-                                List<ParentablePath> onlyFiles = DirectoryExtensions.GetFilesOnly(command.Arguments);
+                                List<ParentablePath> datFilePaths = DirectoryExtensions.GetFilesOnly(command.Arguments);
 
                                 // Assume there could be multiple
-                                foreach (ParentablePath input in onlyFiles)
+                                foreach (ParentablePath datFilePath in datFilePaths)
                                 {
-                                    datFile.Parse(input, index++);
+                                    datFile.Parse(datFilePath, index++);
+                                }
+
+                                break;
+
+                            // Run DFD/D2D on path(s)
+                            case "d2d":
+                            case "dfd":
+                                if (command.Arguments.Count == 0)
+                                {
+                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    Globals.Logger.User("Usage: d2d(path, ...);");
+                                    continue;
+                                }
+
+                                // TODO: Should any of the other options be added for D2D?
+
+                                // Assume there could be multiple
+                                foreach (string input in command.Arguments)
+                                {
+                                    datFile.PopulateFromDir(input);
                                 }
 
                                 break;
