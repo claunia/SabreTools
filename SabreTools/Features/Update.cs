@@ -195,9 +195,13 @@ namespace SabreTools.Features
             // Populate using the correct set
             List<DatHeader> datHeaders;
             if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
-                datHeaders = userInputDat.PopulateUserData(basePaths, Extras, Filter);
+                datHeaders = userInputDat.PopulateUserData(basePaths);
             else
-                datHeaders = userInputDat.PopulateUserData(inputPaths, Extras, Filter);
+                datHeaders = userInputDat.PopulateUserData(inputPaths);
+
+            // Apply the extras and filter
+            userInputDat.ApplyExtras(Extras);
+            userInputDat.ApplyFilter(Filter, false);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))

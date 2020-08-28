@@ -701,26 +701,22 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Populate the user DatData object from the input files
+        /// Populate from multiple paths while returning the invividual headers
         /// </summary>
         /// <param name="inputs">Paths to DATs to parse</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <returns>List of DatData objects representing headers</returns>
-        public List<DatHeader> PopulateUserData(List<string> inputs, ExtraIni extras, Filter filter)
+        /// <returns>List of DatHeader objects representing headers</returns>
+        public List<DatHeader> PopulateUserData(List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            return PopulateUserData(paths, extras, filter);
+            return PopulateUserData(paths);
         }
 
         /// <summary>
-        /// Populate the user DatData object from the input files
+        /// Populate from multiple paths while returning the invividual headers
         /// </summary>
         /// <param name="inputs">Paths to DATs to parse</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <returns>List of DatData objects representing headers</returns>
-        public List<DatHeader> PopulateUserData(List<ParentablePath> inputs, ExtraIni extras, Filter filter)
+        /// <returns>List of DatHeader objects representing headers</returns>
+        public List<DatHeader> PopulateUserData(List<ParentablePath> inputs)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
@@ -741,10 +737,6 @@ namespace SabreTools.Library.DatFiles
             {
                 AddFromExisting(datFiles[i], true);
             }
-
-            // Now that we have a merged DAT, apply extras and filter it
-            ApplyExtras(extras);
-            ApplyFilter(filter, false /* useTags */);
 
             watch.Stop();
 
