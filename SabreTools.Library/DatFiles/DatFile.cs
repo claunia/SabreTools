@@ -695,6 +695,13 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        // TODO: Is it possible for all non-cleaning operations to be non-destructive?
+        // If items are not flat out removed and just marked for removal instead, this
+        // could allow for rolling back removals and effectively "unfiltering" a DatFile
+        // without too much hassle. On write it would have to take into account these
+        // removed items, however. Similarly, this could lead to interesting issues
+        // with merging and splitting since removed items might end up causing empty
+        // machines on the other side
         #region Filtering
 
         /// <summary>
