@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -31,13 +32,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(
-            // Standard Dat parsing
-            string filename,
-            int indexId,
-
-            // Miscellaneous
-            bool keep)
+        protected override void ParseFile(string filename, int indexId, bool keep)
         {
             // Prepare all internal variables
             XmlReader xtr = filename.GetXmlTextReader();
@@ -99,12 +94,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="reader">XmlReader representing a machine block</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadSoftware(
-            XmlReader reader,
-
-            // Standard Dat parsing
-            string filename,
-            int indexId)
+        private void ReadSoftware(XmlReader reader, string filename, int indexId)
         {
             // If we have an empty machine, skip it
             if (reader == null)
@@ -546,46 +536,32 @@ namespace SabreTools.Library.DatFiles
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> roms = Items[key];
+                    List<DatItem> datItems = Items.FilteredItems(key);
 
                     // Resolve the names in the block
-                    roms = DatItem.ResolveNames(roms);
+                    datItems = DatItem.ResolveNames(datItems);
 
-                    for (int index = 0; index < roms.Count; index++)
+                    for (int index = 0; index < datItems.Count; index++)
                     {
-                        DatItem rom = roms[index];
-
-                        // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.Machine.Name == null)
-                        {
-                            Globals.Logger.Warning("Null rom found!");
-                            continue;
-                        }
+                        DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
                             WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
-                            WriteStartGame(xtw, rom);
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
+                            WriteStartGame(xtw, datItem);
 
-                        // If we have a "null" game (created by DATFromDir or something similar), log it to file
-                        if (rom.ItemType == ItemType.Rom
-                            && (rom as Rom).Size == -1
-                            && (rom as Rom).CRC == "null")
-                        {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
+                        // Check for a "null" item
+                        datItem = ProcessNullifiedItem(datItem);
 
-                            lastgame = rom.Machine.Name;
-                            continue;
-                        }
-
-                        // Now, output the rom data
-                        WriteDatItem(xtw, rom, ignoreblanks);
+                        // Write out the item if we're not ignoring
+                        if (!ShouldIgnore(datItem, ignoreblanks))
+                            WriteDatItem(xtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = rom.Machine.Name;
+                        lastgame = datItem.Machine.Name;
                     }
                 }
 
@@ -706,14 +682,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(XmlTextWriter xtw, DatItem datItem, bool ignoreblanks = false)
+        private bool WriteDatItem(XmlTextWriter xtw, DatItem datItem)
         {
-            // If we are in ignore blanks mode AND we have a blank (0-size) rom, skip
-            if (ignoreblanks && (datItem.ItemType == ItemType.Rom && ((datItem as Rom).Size == 0 || (datItem as Rom).Size == -1)))
-                return true;
-
             try
             {
                 // Pre-process the item name

@@ -337,6 +337,31 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Get a list of filtered items for a given key
+        /// </summary>
+        /// <param name="key">Key in the dictionary to retrieve</param>
+        public List<DatItem> FilteredItems(string key)
+        {
+            lock (key)
+            {
+                // Get the list, if possible
+                List<DatItem> fi = items[key];
+                if (fi == null)
+                    return new List<DatItem>();
+
+                // Filter the list
+                fi = fi.Where(i => i != null)
+                    .Where(i => !i.Remove)
+                    .Where(i => i.Name != null)
+                    .Where(i => i.Machine?.Name != null)
+                    .ToList();
+
+                // Return the list
+                return fi;
+            }
+        }
+
+        /// <summary>
         /// Remove a key from the file dictionary if it exists
         /// </summary>
         /// <param name="key">Key in the dictionary to remove</param>

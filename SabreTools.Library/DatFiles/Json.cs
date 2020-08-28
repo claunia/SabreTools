@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -32,13 +33,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(
-            // Standard Dat parsing
-            string filename,
-            int indexId,
-
-            // Miscellaneous
-            bool keep)
+        protected override void ParseFile(string filename, int indexId, bool keep)
         {
             // Prepare all internal variables
             StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), new UTF8Encoding(false));
@@ -112,12 +107,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="itr">JsonTextReader to use to parse the machine</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadMachines(
-            JsonTextReader jtr,
-
-            // Standard Dat parsing
-            string filename,
-            int indexId)
+        private void ReadMachines(JsonTextReader jtr, string filename, int indexId)
         {
             // If the reader is invalid, skip
             if (jtr == null)
@@ -141,12 +131,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="machineObj">JObject representing a single machine</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadMachine(
-            JObject machineObj,
-
-            // Standard Dat parsing
-            string filename,
-            int indexId)
+        private void ReadMachine(JObject machineObj, string filename, int indexId)
         {
             // If object is invalid, skip it
             if (machineObj == null)
@@ -299,55 +284,32 @@ namespace SabreTools.Library.DatFiles
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> roms = Items[key];
+                    List<DatItem> datItems = Items.FilteredItems(key);
 
                     // Resolve the names in the block
-                    roms = DatItem.ResolveNames(roms);
+                    datItems = DatItem.ResolveNames(datItems);
 
-                    for (int index = 0; index < roms.Count; index++)
+                    for (int index = 0; index < datItems.Count; index++)
                     {
-                        DatItem rom = roms[index];
-
-                        // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.Machine.Name == null)
-                        {
-                            Globals.Logger.Warning("Null rom found!");
-                            continue;
-                        }
+                        DatItem datItem = datItems[index];
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
+                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
                             WriteEndGame(jtw);
 
                         // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != rom.Machine.Name.ToLowerInvariant())
-                            WriteStartGame(jtw, rom);
+                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
+                            WriteStartGame(jtw, datItem);
 
-                        // If we have a "null" game (created by DATFromDir or something similar), log it to file
-                        if (rom.ItemType == ItemType.Rom
-                            && (rom as Rom).Size == -1
-                            && (rom as Rom).CRC == "null")
-                        {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
+                        // Check for a "null" item
+                        datItem = ProcessNullifiedItem(datItem);
 
-                            rom.Name = (rom.Name == "null" ? "-" : rom.Name);
-                            (rom as Rom).Size = Constants.SizeZero;
-                            (rom as Rom).CRC = (rom as Rom).CRC == "null" ? Constants.CRCZero : null;
-                            (rom as Rom).MD5 = (rom as Rom).MD5 == "null" ? Constants.MD5Zero : null;
-#if NET_FRAMEWORK
-                            (rom as Rom).RIPEMD160 = (rom as Rom).RIPEMD160 == "null" ? Constants.RIPEMD160Zero : null;
-#endif
-                            (rom as Rom).SHA1 = (rom as Rom).SHA1 == "null" ? Constants.SHA1Zero : null;
-                            (rom as Rom).SHA256 = (rom as Rom).SHA256 == "null" ? Constants.SHA256Zero : null;
-                            (rom as Rom).SHA384 = (rom as Rom).SHA384 == "null" ? Constants.SHA384Zero : null;
-                            (rom as Rom).SHA512 = (rom as Rom).SHA512 == "null" ? Constants.SHA512Zero : null;
-                        }
-
-                        // Now, output the rom data
-                        WriteDatItem(jtw, rom, ignoreblanks);
+                        // Write out the item if we're not ignoring
+                        if (!ShouldIgnore(datItem, ignoreblanks))
+                            WriteDatItem(jtw, datItem);
 
                         // Set the new data to compare against
-                        lastgame = rom.Machine.Name;
+                        lastgame = datItem.Machine.Name;
                     }
                 }
 
@@ -463,18 +425,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(JsonTextWriter jtw, DatItem datItem, bool ignoreblanks = false)
+        private bool WriteDatItem(JsonTextWriter jtw, DatItem datItem)
         {
-            // If we are in ignore blanks mode AND we have a blank (0-size) rom, skip
-            if (ignoreblanks && (datItem.ItemType == ItemType.Rom && ((datItem as Rom).Size == 0 || (datItem as Rom).Size == -1)))
-                return true;
-
-            // If we have the blank item type somehow, skip
-            if (datItem.ItemType == ItemType.Blank)
-                return true;
-
             try
             {
                 // Pre-process the item name

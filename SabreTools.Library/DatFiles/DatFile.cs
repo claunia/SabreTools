@@ -3606,6 +3606,83 @@ namespace SabreTools.Library.DatFiles
         public abstract bool WriteToFile(string outfile, bool ignoreblanks = false);
 
         /// <summary>
+        /// Create a prefix or postfix from inputs
+        /// </summary>
+        /// <param name="item">DatItem to create a prefix/postfix for</param>
+        /// <param name="prefix">True for prefix, false for postfix</param>
+        /// <returns>Sanitized string representing the postfix or prefix</returns>
+        protected string CreatePrefixPostfix(DatItem item, bool prefix)
+        {
+            // Initialize strings
+            string fix = string.Empty,
+                game = item.Machine.Name,
+                name = item.Name,
+                crc = string.Empty,
+                md5 = string.Empty,
+                ripemd160 = string.Empty,
+                sha1 = string.Empty,
+                sha256 = string.Empty,
+                sha384 = string.Empty,
+                sha512 = string.Empty,
+                size = string.Empty;
+
+            // If we have a prefix
+            if (prefix)
+                fix = Header.Prefix + (Header.Quotes ? "\"" : string.Empty);
+
+            // If we have a postfix
+            else
+                fix = (Header.Quotes ? "\"" : string.Empty) + Header.Postfix;
+
+            // Ensure we have the proper values for replacement
+            if (item.ItemType == ItemType.Disk)
+            {
+                md5 = (item as Disk).MD5 ?? string.Empty;
+                sha1 = (item as Disk).SHA1 ?? string.Empty;
+            }
+            else if (item.ItemType == ItemType.Media)
+            {
+                md5 = (item as Media).MD5 ?? string.Empty;
+                sha1 = (item as Media).SHA1 ?? string.Empty;
+                sha256 = (item as Media).SHA256 ?? string.Empty;
+            }
+            else if (item.ItemType == ItemType.Rom)
+            {
+                crc = (item as Rom).CRC ?? string.Empty;
+                md5 = (item as Rom).MD5 ?? string.Empty;
+#if NET_FRAMEWORK
+                ripemd160 = (item as Rom).RIPEMD160 ?? string.Empty;
+#endif
+                sha1 = (item as Rom).SHA1 ?? string.Empty;
+                sha256 = (item as Rom).SHA256 ?? string.Empty;
+                sha384 = (item as Rom).SHA384 ?? string.Empty;
+                sha512 = (item as Rom).SHA512 ?? string.Empty;
+                size = (item as Rom).Size.ToString();
+            }
+
+            // Now do bulk replacement where possible
+            fix = fix
+                .Replace("%game%", game)
+                .Replace("%machine%", game)
+                .Replace("%name%", name)
+                .Replace("%manufacturer%", item.Machine.Manufacturer ?? string.Empty)
+                .Replace("%publisher%", item.Machine.Publisher ?? string.Empty)
+                .Replace("%category%", item.Machine.Category ?? string.Empty)
+                .Replace("%crc%", crc)
+                .Replace("%md5%", md5)
+                .Replace("%ripemd160%", ripemd160)
+                .Replace("%sha1%", sha1)
+                .Replace("%sha256%", sha256)
+                .Replace("%sha384%", sha384)
+                .Replace("%sha512%", sha512)
+                .Replace("%size%", size);
+
+            // TODO: Add GameName logic here too?
+
+            return fix;
+        }
+
+        /// <summary>
         /// Process an item and correctly set the item name
         /// </summary>
         /// <param name="item">DatItem to update</param>
@@ -3696,80 +3773,67 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Create a prefix or postfix from inputs
+        /// Process any DatItems that are "null", usually created from directory population
         /// </summary>
-        /// <param name="item">DatItem to create a prefix/postfix for</param>
-        /// <param name="prefix">True for prefix, false for postfix</param>
-        /// <returns>Sanitized string representing the postfix or prefix</returns>
-        protected string CreatePrefixPostfix(DatItem item, bool prefix)
+        /// <param name="datItem">DatItem to check for "null" status</param>
+        /// <returns>Cleaned DatItem</returns>
+        protected DatItem ProcessNullifiedItem(DatItem datItem)
         {
-            // Initialize strings
-            string fix = string.Empty,
-                game = item.Machine.Name,
-                name = item.Name,
-                crc = string.Empty,
-                md5 = string.Empty,
-                ripemd160 = string.Empty,
-                sha1 = string.Empty,
-                sha256 = string.Empty,
-                sha384 = string.Empty,
-                sha512 = string.Empty,
-                size = string.Empty;
+            // If we don't have a Rom, we can ignore it
+            if (datItem.ItemType != ItemType.Rom)
+                return datItem;
 
-            // If we have a prefix
-            if (prefix)
-                fix = Header.Prefix + (Header.Quotes ? "\"" : string.Empty);
+            // Cast for easier parsing
+            Rom rom = datItem as Rom;
 
-            // If we have a postfix
-            else
-                fix = (Header.Quotes ? "\"" : string.Empty) + Header.Postfix;
+            // If the Rom has "null" characteristics, ensure all fields
+            if (rom.Size == -1 && rom.CRC == "null")
+            {
+                Globals.Logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
 
-            // Ensure we have the proper values for replacement
-            if (item.ItemType == ItemType.Disk)
-            {
-                md5 = (item as Disk).MD5 ?? string.Empty;
-                sha1 = (item as Disk).SHA1 ?? string.Empty;
-            }
-            else if (item.ItemType == ItemType.Media)
-            {
-                md5 = (item as Media).MD5 ?? string.Empty;
-                sha1 = (item as Media).SHA1 ?? string.Empty;
-                sha256 = (item as Media).SHA256 ?? string.Empty;
-            }
-            else if (item.ItemType == ItemType.Rom)
-            {
-                crc = (item as Rom).CRC ?? string.Empty;
-                md5 = (item as Rom).MD5 ?? string.Empty;
+                datItem.Name = (datItem.Name == "null" ? "-" : datItem.Name);
+                rom.Size = Constants.SizeZero;
+                rom.CRC = rom.CRC == "null" ? Constants.CRCZero : null;
+                rom.MD5 = rom.MD5 == "null" ? Constants.MD5Zero : null;
 #if NET_FRAMEWORK
-                ripemd160 = (item as Rom).RIPEMD160 ?? string.Empty;
+                rom.RIPEMD160 = rom.RIPEMD160 == "null" ? Constants.RIPEMD160Zero : null;
 #endif
-                sha1 = (item as Rom).SHA1 ?? string.Empty;
-                sha256 = (item as Rom).SHA256 ?? string.Empty;
-                sha384 = (item as Rom).SHA384 ?? string.Empty;
-                sha512 = (item as Rom).SHA512 ?? string.Empty;
-                size = (item as Rom).Size.ToString();
+                rom.SHA1 = rom.SHA1 == "null" ? Constants.SHA1Zero : null;
+                rom.SHA256 = rom.SHA256 == "null" ? Constants.SHA256Zero : null;
+                rom.SHA384 = rom.SHA384 == "null" ? Constants.SHA384Zero : null;
+                rom.SHA512 = rom.SHA512 == "null" ? Constants.SHA512Zero : null;
             }
 
-            // Now do bulk replacement where possible
-            fix = fix
-                .Replace("%game%", game)
-                .Replace("%machine%", game)
-                .Replace("%name%", name)
-                .Replace("%manufacturer%", item.Machine.Manufacturer ?? string.Empty)
-                .Replace("%publisher%", item.Machine.Publisher ?? string.Empty)
-                .Replace("%category%", item.Machine.Category ?? string.Empty)
-                .Replace("%crc%", crc)
-                .Replace("%md5%", md5)
-                .Replace("%ripemd160%", ripemd160)
-                .Replace("%sha1%", sha1)
-                .Replace("%sha256%", sha256)
-                .Replace("%sha384%", sha384)
-                .Replace("%sha512%", sha512)
-                .Replace("%size%", size);
+            return rom;
+        }
 
-            // TODO: Add GameName logic here too?
+        /// <summary>
+        /// Get if an item should be ignored on write
+        /// </summary>
+        /// <param name="datItem">DatItem to check</param>
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        /// <returns>True if the item should be skipped on write, false otherwise</returns>
+        protected bool ShouldIgnore(DatItem datItem, bool ignoreBlanks)
+        {
+            // If the item is supposed to be removed, we ignore
+            if (datItem.Remove)
+                return true;
 
-            return fix;
+            // If we have the Blank dat item, we ignore
+            if (datItem.ItemType == ItemType.Blank)
+                return true;
+
+            // If we're ignoring blanks and we have a Rom
+            if (ignoreBlanks && datItem.ItemType == ItemType.Rom)
+            {
+                Rom rom = datItem as Rom;
+
+                // If we have a 0-size or blank rom, then we ignore
+                if (rom.Size == 0 || rom.Size == -1)
+                    return true;
+            }
+
+            return false;
         }
 
         #endregion

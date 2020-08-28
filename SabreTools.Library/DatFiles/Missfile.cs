@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -29,13 +30,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(
-            // Standard Dat parsing
-            string filename,
-            int indexId,
-
-            // Miscellaneous
-            bool keep)
+        protected override void ParseFile(string filename, int indexId, bool keep)
         {
             // There is no consistent way to parse a missfile...
             throw new NotImplementedException();
@@ -69,37 +64,24 @@ namespace SabreTools.Library.DatFiles
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> roms = Items[key];
+                    List<DatItem> datItems = Items.FilteredItems(key);
 
                     // Resolve the names in the block
-                    roms = DatItem.ResolveNames(roms);
+                    datItems = DatItem.ResolveNames(datItems);
 
-                    for (int index = 0; index < roms.Count; index++)
+                    for (int index = 0; index < datItems.Count; index++)
                     {
-                        DatItem rom = roms[index];
+                        DatItem datItem = datItems[index];
 
-                        // There are apparently times when a null rom can skip by, skip them
-                        if (rom.Name == null || rom.Machine.Name == null)
-                        {
-                            Globals.Logger.Warning("Null rom found!");
-                            continue;
-                        }
+                        // Check for a "null" item
+                        datItem = ProcessNullifiedItem(datItem);
 
-                        // If we have a "null" game (created by DATFromDir or something similar), log it to file
-                        if (rom.ItemType == ItemType.Rom
-                            && (rom as Rom).Size == -1
-                            && (rom as Rom).CRC == "null")
-                        {
-                            Globals.Logger.Verbose($"Empty folder found: {rom.Machine.Name}");
-                            lastgame = rom.Machine.Name;
-                            continue;
-                        }
-
-                        // Now, output the rom data
-                        WriteDatItem(sw, rom, lastgame, ignoreblanks);
+                        // Write out the item if we're not ignoring
+                        if (!ShouldIgnore(datItem, ignoreblanks))
+                            WriteDatItem(sw, datItem, lastgame);
 
                         // Set the new data to compare against
-                        lastgame = rom.Machine.Name;
+                        lastgame = datItem.Machine.Name;
                     }
                 }
 
@@ -122,14 +104,9 @@ namespace SabreTools.Library.DatFiles
         /// <param name="sw">StreamWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
         /// <param name="lastgame">The name of the last game to be output</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(StreamWriter sw, DatItem datItem, string lastgame, bool ignoreblanks = false)
+        private bool WriteDatItem(StreamWriter sw, DatItem datItem, string lastgame)
         {
-            // If we are in ignore blanks mode AND we have a blank (0-size) rom, skip
-            if (ignoreblanks && (datItem.ItemType == ItemType.Rom && ((datItem as Rom).Size == 0 || (datItem as Rom).Size == -1)))
-                return true;
-
             try
             {
                 // Process the item name
