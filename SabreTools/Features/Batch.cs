@@ -164,7 +164,7 @@ Reset the internal state:           reset();";
                                 // Read in the individual arguments
                                 Field filterField = command.Arguments[0].AsField();
                                 string filterValue = command.Arguments[1];
-                                bool filterNegate = (command.Arguments.Count == 3 ? command.Arguments[2].AsYesNo() ?? false : false);
+                                bool filterNegate = (command.Arguments.Count == 3 && (command.Arguments[2].AsYesNo() ?? false));
 
                                 // Create a filter with this new set of fields
                                 Filter filter = new Filter();
@@ -329,7 +329,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Get overwrite value, if possible
-                                bool overwrite = command.Arguments.Count == 1 ? command.Arguments[0].AsYesNo() ?? true : true;
+                                bool overwrite = command.Arguments.Count != 1 || (command.Arguments[0].AsYesNo() ?? true);
 
                                 // Write out the dat with the current state
                                 datFile.Write(outputDirectory, overwrite: overwrite);
