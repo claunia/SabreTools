@@ -2530,6 +2530,26 @@ Some special strings that can be used:
         }
 
         /// <summary>
+        /// Get SplitType from feature list
+        /// </summary>
+        protected MergingFlag GetSplitType(Dictionary<string, Feature> features)
+        {
+            MergingFlag splitType = MergingFlag.None;
+            if (GetBoolean(features, DatDeviceNonMergedValue))
+                splitType = MergingFlag.Device;
+            else if (GetBoolean(features, DatFullNonMergedValue))
+                splitType = MergingFlag.Full;
+            else if (GetBoolean(features, DatMergedValue))
+                splitType = MergingFlag.Merged;
+            else if (GetBoolean(features, DatNonMergedValue))
+                splitType = MergingFlag.NonMerged;
+            else if (GetBoolean(features, DatSplitValue))
+                splitType = MergingFlag.Split;
+
+            return splitType;
+        }
+
+        /// <summary>
         /// Get StatReportFormat from feature list
         /// </summary>
         protected StatReportFormat GetStatReportFormat(Dictionary<string, Feature> features)
@@ -3001,32 +3021,9 @@ Some special strings that can be used:
             // Include 'of" in game filters
             filter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
 
-            // Internal splitting
-            filter.InternalSplit = GetSplitType(features);
-
             #endregion
 
             return filter;
-        }
-
-        /// <summary>
-        /// Get SplitType from feature list
-        /// </summary>
-        private MergingFlag GetSplitType(Dictionary<string, Feature> features)
-        {
-            MergingFlag splitType = MergingFlag.None;
-            if (GetBoolean(features, DatDeviceNonMergedValue))
-                splitType = MergingFlag.Device;
-            else if (GetBoolean(features, DatFullNonMergedValue))
-                splitType = MergingFlag.Full;
-            else if (GetBoolean(features, DatMergedValue))
-                splitType = MergingFlag.Merged;
-            else if (GetBoolean(features, DatNonMergedValue))
-                splitType = MergingFlag.NonMerged;
-            else if (GetBoolean(features, DatSplitValue))
-                splitType = MergingFlag.Split;
-
-            return splitType;
         }
 
         #endregion

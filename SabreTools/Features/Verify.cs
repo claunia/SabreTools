@@ -48,6 +48,7 @@ namespace SabreTools.Features
             TreatAsFiles asFiles = GetTreatAsFiles(features);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
+            var splitType = GetSplitType(features);
 
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
@@ -57,7 +58,8 @@ namespace SabreTools.Features
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
                     datdata.ApplyExtras(Extras);
-                    datdata.ApplyFilter(Filter, true);
+                    datdata.ApplySplitting(splitType, true);
+                    datdata.ApplyFilter(Filter);
                     datdata.ApplyCleaning(Cleaner);
 
                     // Set depot information
@@ -88,7 +90,8 @@ namespace SabreTools.Features
                 {
                     datdata.Parse(datfile, 99, keep: true);
                     datdata.ApplyExtras(Extras);
-                    datdata.ApplyFilter(Filter, true);
+                    datdata.ApplySplitting(splitType, true);
+                    datdata.ApplyFilter(Filter);
                     datdata.ApplyCleaning(Cleaner);
                 }
 

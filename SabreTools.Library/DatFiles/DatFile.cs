@@ -812,10 +812,8 @@ namespace SabreTools.Library.DatFiles
         /// Apply a Filter on the DatFile
         /// </summary>
         /// <param name="filter">Filter to use</param>
-        /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
-        /// TODO: Fully decouple splitting
-        public bool ApplyFilter(Filter filter, bool useTags)
+        public bool ApplyFilter(Filter filter)
         {
             // If we have a null filter, return false
             if (filter == null)
@@ -823,9 +821,6 @@ namespace SabreTools.Library.DatFiles
 
             try
             {
-                // Apply splitting, if necessary
-                ApplySplitting(filter.InternalSplit, useTags);
-
                 // Loop over every key in the dictionary
                 List<string> keys = Items.Keys.ToList();
                 foreach (string key in keys)

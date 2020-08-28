@@ -167,7 +167,8 @@ namespace SabreTools.Features
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
                     datFile.ApplyExtras(Extras);
-                    datFile.ApplyFilter(Filter, false);
+                    datFile.ApplySplitting(GetSplitType(features), false);
+                    datFile.ApplyFilter(Filter);
                     datFile.ApplyCleaning(Cleaner);
 
                     // Get the correct output path
@@ -204,7 +205,8 @@ namespace SabreTools.Features
 
             // Apply the extras, filter, and cleaning
             userInputDat.ApplyExtras(Extras);
-            userInputDat.ApplyFilter(Filter, false);
+            userInputDat.ApplySplitting(GetSplitType(features), false);
+            userInputDat.ApplyFilter(Filter);
             userInputDat.ApplyCleaning(Cleaner);
 
             // Output only DatItems that are duplicated across inputs
@@ -293,7 +295,8 @@ namespace SabreTools.Features
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
                     repDat.Parse(inputPath, indexId: 1, keep: true);
                     repDat.ApplyExtras(Extras);
-                    repDat.ApplyFilter(Filter, false);
+                    repDat.ApplySplitting(GetSplitType(features), false);
+                    repDat.ApplyFilter(Filter);
                     repDat.ApplyCleaning(Cleaner);
 
                     // Now replace the fields from the base DatFile
@@ -315,7 +318,8 @@ namespace SabreTools.Features
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
                     repDat.Parse(inputPath, indexId: 1, keep: true);
                     repDat.ApplyExtras(Extras);
-                    repDat.ApplyFilter(Filter, false);
+                    repDat.ApplySplitting(GetSplitType(features), false);
+                    repDat.ApplyFilter(Filter);
                     repDat.ApplyCleaning(Cleaner);
 
                     // Now replace the fields from the base DatFile

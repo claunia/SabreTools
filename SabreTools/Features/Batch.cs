@@ -171,7 +171,7 @@ Reset the internal state:           reset();";
                                 filter.SetFilter(filterField, filterValue, filterNegate);
 
                                 // Apply the filter blindly
-                                datFile.ApplyFilter(filter, false);
+                                datFile.ApplyFilter(filter);
                                 datFile.Items.ClearMarked(); // TODO: We might not want to remove immediately
 
                                 break;

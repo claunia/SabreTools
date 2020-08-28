@@ -359,11 +359,6 @@ namespace SabreTools.Library.Filtering
         /// </summary>
         public bool IncludeOfInGame { get; set; }
 
-        /// <summary>
-        /// Internally split a DatFile
-        /// </summary>
-        public MergingFlag InternalSplit { get; set; }
-
         #endregion
 
         #endregion // Fields

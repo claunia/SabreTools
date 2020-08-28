@@ -64,6 +64,7 @@ namespace SabreTools.Features
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var omitFromScan = GetOmitFromScan(features);
             var skipFileType = GetSkipFileType(features);
+            var splitType = GetSplitType(features);
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header);
@@ -94,7 +95,8 @@ namespace SabreTools.Features
                     if (success)
                     {
                         datdata.ApplyExtras(Extras);
-                        datdata.ApplyFilter(Filter, false);
+                        datdata.ApplySplitting(splitType, false);
+                        datdata.ApplyFilter(Filter);
                         datdata.ApplyCleaning(Cleaner);
                         datdata.Write(OutputDir);
                     }
