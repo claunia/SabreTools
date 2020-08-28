@@ -185,6 +185,7 @@ Options:
 
 	  Set a header field (if default):    set(header.field, value);
 	  Parse new file(s):                  input(datpath, ...);
+	  Perform a dir2dat:                  d2d(path, ...);
 	  Filter on a field and value:        filter(machine.field|item.field, value, [negate = false]);
 	  Apply a MAME Extra INI for a field: extra(field, inipath);
 	  Perform a split/merge:              merge(split|merged|nonmerged|full|device);
