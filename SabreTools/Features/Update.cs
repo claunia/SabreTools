@@ -167,7 +167,8 @@ namespace SabreTools.Features
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
                     datFile.ApplyExtras(Extras);
-                    datFile.ApplyFilter(Filter, false /* useTags */);
+                    datFile.ApplyFilter(Filter, false);
+                    datFile.ApplyCleaning(Cleaner);
 
                     // Get the correct output path
                     string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
@@ -201,9 +202,10 @@ namespace SabreTools.Features
             else
                 datHeaders = userInputDat.PopulateUserData(inputPaths);
 
-            // Apply the extras and filter
+            // Apply the extras, filter, and cleaning
             userInputDat.ApplyExtras(Extras);
             userInputDat.ApplyFilter(Filter, false);
+            userInputDat.ApplyCleaning(Cleaner);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
@@ -287,11 +289,12 @@ namespace SabreTools.Features
                 // Loop through each input and diff against the base
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
-                    // Parse, extras, and filter the path to a new DatFile
+                    // Parse and process the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
                     repDat.Parse(inputPath, indexId: 1, keep: true);
                     repDat.ApplyExtras(Extras);
                     repDat.ApplyFilter(Filter, false);
+                    repDat.ApplyCleaning(Cleaner);
 
                     // Now replace the fields from the base DatFile
                     userInputDat.DiffAgainst(repDat, GetBoolean(Features, ByGameValue));
@@ -308,11 +311,12 @@ namespace SabreTools.Features
                 // Loop through each input and apply the base DatFile
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
-                    // Parse, extras, and filter the path to a new DatFile
+                    // Parse and process the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
                     repDat.Parse(inputPath, indexId: 1, keep: true);
                     repDat.ApplyExtras(Extras);
                     repDat.ApplyFilter(Filter, false);
+                    repDat.ApplyCleaning(Cleaner);
 
                     // Now replace the fields from the base DatFile
                     userInputDat.BaseReplace(repDat, updateFields, GetBoolean(features, OnlySameValue));

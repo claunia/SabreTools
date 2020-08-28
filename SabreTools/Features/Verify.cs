@@ -58,6 +58,7 @@ namespace SabreTools.Features
                     datdata.Parse(datfile, 99, keep: true);
                     datdata.ApplyExtras(Extras);
                     datdata.ApplyFilter(Filter, true);
+                    datdata.ApplyCleaning(Cleaner);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -88,6 +89,7 @@ namespace SabreTools.Features
                     datdata.Parse(datfile, 99, keep: true);
                     datdata.ApplyExtras(Extras);
                     datdata.ApplyFilter(Filter, true);
+                    datdata.ApplyCleaning(Cleaner);
                 }
 
                 // Set depot information

@@ -716,6 +716,28 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Remove any keys that have null or empty values
+        /// </summary>
+        public void ClearEmpty()
+        {
+            var keys = items.Keys.Where(k => k != null).ToList();
+            foreach (string key in keys)
+            {
+                // If the key doesn't exist, skip
+                if (!items.ContainsKey(key))
+                    continue;
+
+                // If the value is null, remove
+                else if (items[key] == null)
+                    items.Remove(key);
+
+                // If there are no non-blank items, remove
+                else if (items[key].Count(i => i != null && i.ItemType != ItemType.Blank) == 0)
+                    items.Remove(key);
+            }
+        }
+
+        /// <summary>
         /// Remove all items marked for removal
         /// </summary>
         public void ClearMarked()
@@ -827,22 +849,6 @@ namespace SabreTools.Library.DatFiles
                     AddItemStatistics(item);
                 }
             });
-        }
-
-        /// <summary>
-        /// Remove any keys that have null or empty values
-        /// </summary>
-        private void ClearEmpty()
-        {
-            var keys = items.Keys.Where(k => k != null).ToList();
-            foreach (string key in keys)
-            {
-                if (!items.ContainsKey(key))
-                    continue;
-
-                if (items[key] == null || items[key].Count == 0)
-                    items.Remove(key);
-            }
         }
 
         /// <summary>

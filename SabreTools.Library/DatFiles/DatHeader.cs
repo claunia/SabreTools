@@ -268,42 +268,6 @@ namespace SabreTools.Library.DatFiles
         #region Filtering Fields
 
         /// <summary>
-        /// Dictionary of fields in machine and items to exclude from writing
-        /// </summary>
-        [JsonIgnore]
-        public List<Field> ExcludeFields { get; set; } = new List<Field>();
-
-        /// <summary>
-        /// Enable "One Rom, One Region (1G1R)" mode
-        /// </summary>
-        [JsonIgnore]
-        public bool OneGamePerRegion { get; set; }
-
-        /// <summary>
-        /// Ordered list of regions for "One Rom, One Region (1G1R)" mode
-        /// </summary>
-        [JsonIgnore]
-        public List<string> RegionList { get; set; }
-
-        /// <summary>
-        /// Ensure each rom is in their own game
-        /// </summary>
-        [JsonIgnore]
-        public bool OneRomPerGame { get; set; }
-
-        /// <summary>
-        /// Keep machines that don't contain any items
-        /// </summary>
-        [JsonIgnore]
-        public bool KeepEmptyGames { get; set; }
-
-        /// <summary>
-        /// Remove scene dates from the beginning of machine names
-        /// </summary>
-        [JsonIgnore]
-        public bool SceneDateStrip { get; set; }
-
-        /// <summary>
         /// Deduplicate items using the given method
         /// </summary>
         [JsonIgnore]
@@ -314,7 +278,6 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public Hash StripHash { get; private set; }
-
 
         #endregion
 
@@ -538,12 +501,6 @@ namespace SabreTools.Library.DatFiles
                 ForceNodump = this.ForceNodump,
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
-                ExcludeFields = this.ExcludeFields,
-                OneGamePerRegion = this.OneGamePerRegion,
-                RegionList = this.RegionList,
-                OneRomPerGame = this.OneRomPerGame,
-                KeepEmptyGames = this.KeepEmptyGames,
-                SceneDateStrip = this.SceneDateStrip,
                 DedupeRoms = this.DedupeRoms,
                 StripHash = this.StripHash,
 
@@ -585,12 +542,6 @@ namespace SabreTools.Library.DatFiles
                 ForceNodump = this.ForceNodump,
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
-                ExcludeFields = this.ExcludeFields,
-                OneGamePerRegion = this.OneGamePerRegion,
-                RegionList = this.RegionList,
-                OneRomPerGame = this.OneRomPerGame,
-                KeepEmptyGames = this.KeepEmptyGames,
-                SceneDateStrip = this.SceneDateStrip,
                 DedupeRoms = this.DedupeRoms,
                 StripHash = this.StripHash,
             };
@@ -604,10 +555,6 @@ namespace SabreTools.Library.DatFiles
             return new DatHeader()
             {
                 DatFormat = this.DatFormat,
-                ExcludeFields = this.ExcludeFields,
-                OneRomPerGame = this.OneRomPerGame,
-                KeepEmptyGames = this.KeepEmptyGames,
-                SceneDateStrip = this.SceneDateStrip,
                 DedupeRoms = this.DedupeRoms,
                 StripHash = this.StripHash,
 
@@ -684,12 +631,6 @@ namespace SabreTools.Library.DatFiles
             if (datHeader.DatFormat != 0x00)
                 DatFormat = datHeader.DatFormat;
 
-            if (datHeader.ExcludeFields != null)
-                ExcludeFields = datHeader.ExcludeFields;
-
-            OneRomPerGame = datHeader.OneRomPerGame;
-            KeepEmptyGames = datHeader.KeepEmptyGames;
-            SceneDateStrip = datHeader.SceneDateStrip;
             DedupeRoms = datHeader.DedupeRoms;
             //StripHash = datHeader.StripHash;
 

@@ -172,6 +172,7 @@ Reset the internal state:           reset();";
 
                                 // Apply the filter blindly
                                 datFile.ApplyFilter(filter, false);
+                                datFile.Items.ClearMarked(); // TODO: We might not want to remove immediately
 
                                 break;
 
@@ -240,15 +241,8 @@ Reset the internal state:           reset();";
                                     continue;
                                 }
 
-                                // Set the region list
-                                var tempRegionList = datFile.Header.RegionList;
-                                datFile.Header.RegionList = command.Arguments;
-
                                 // Run the 1G1R functionality
-                                datFile.OneGamePerRegion();
-
-                                // Reset the header value
-                                datFile.Header.RegionList = tempRegionList;
+                                datFile.OneGamePerRegion(command.Arguments);
 
                                 break;
 
@@ -275,15 +269,8 @@ Reset the internal state:           reset();";
                                     continue;
                                 }
 
-                                // Set the field list
-                                var tempRemoveFields = datFile.Header.ExcludeFields;
-                                datFile.Header.ExcludeFields = command.Arguments.Select(s => s.AsField()).ToList();
-
                                 // Run the removal functionality
-                                datFile.RemoveFieldsFromItems();
-
-                                // Reset the header value
-                                datFile.Header.ExcludeFields = tempRemoveFields;
+                                datFile.RemoveFieldsFromItems(command.Arguments.Select(s => s.AsField()).ToList());
 
                                 break;
 

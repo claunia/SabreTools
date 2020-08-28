@@ -695,14 +695,48 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        // TODO: Is it possible for all non-cleaning operations to be non-destructive?
-        // If items are not flat out removed and just marked for removal instead, this
-        // could allow for rolling back removals and effectively "unfiltering" a DatFile
-        // without too much hassle. On write it would have to take into account these
-        // removed items, however. Similarly, this could lead to interesting issues
-        // with merging and splitting since removed items might end up causing empty
-        // machines on the other side
+        // TODO: Should the ApplyFilter method contain the splitting logic?
         #region Filtering
+
+        /// <summary>
+        /// Apply cleaning methods to the DatFile
+        /// </summary>
+        /// <param name="cleaner">Cleaner to use</param>
+        /// <returns>True if cleaning was successful, false on error</returns>
+        public bool ApplyCleaning(Cleaner cleaner)
+        {
+            // Perform item-level cleaning
+            CleanDatItems(cleaner);
+
+            // Process description to machine name
+            if (cleaner?.DescriptionAsName == true)
+                MachineDescriptionToName();
+
+            // If we are removing scene dates, do that now
+            if (cleaner?.SceneDateStrip == true)
+                StripSceneDatesFromItems();
+
+            // Run the one rom per game logic, if required
+            if (cleaner?.OneGamePerRegion == true)
+                OneGamePerRegion(cleaner.RegionList);
+
+            // Run the one rom per game logic, if required
+            if (cleaner?.OneRomPerGame == true)
+                OneRomPerGame();
+
+            // If we are removing fields, do that now
+            if (cleaner.ExcludeFields != null && cleaner.ExcludeFields.Any())
+                RemoveFieldsFromItems(cleaner.ExcludeFields);
+
+            // Remove all marked items
+            Items.ClearMarked();
+
+            // We remove any blanks, if we aren't supposed to have any
+            if (cleaner?.KeepEmptyGames == false)
+                Items.ClearEmpty();
+
+            return true;
+        }
 
         /// <summary>
         /// Apply a set of Extra INIs on the DatFile
@@ -773,15 +807,14 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filter">Filter to use</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
-        /// TODO: Re-evaluate what should be in here and see if we need to have a "Cleaner" class
         public bool ApplyFilter(Filter filter, bool useTags)
         {
+            // If we have a null filter, return false
+            if (filter == null)
+                return false;
+
             try
             {
-                // Process description to machine name
-                if (filter.DescriptionAsName)
-                    MachineDescriptionToName();
-
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
                 if (useTags && filter.InternalSplit == MergingFlag.None)
                     filter.InternalSplit = Header.ForceMerging;
@@ -801,90 +834,13 @@ namespace SabreTools.Library.DatFiles
                         if (item == null)
                             continue;
 
-                        // If the rom passes the filter, include it
-                        if (item.PassesFilter(filter))
-                        {
-                            // If we're stripping unicode characters, do so from all relevant things
-                            if (filter.RemoveUnicode)
-                            {
-                                item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
-                                item.Machine.Name = Sanitizer.RemoveUnicodeCharacters(item.Machine.Name);
-                                item.Machine.Description = Sanitizer.RemoveUnicodeCharacters(item.Machine.Description);
-                            }
-
-                            // If we're in cleaning mode, do so from all relevant things
-                            if (filter.Clean)
-                            {
-                                item.Machine.Name = Sanitizer.CleanGameName(item.Machine.Name);
-                                item.Machine.Description = Sanitizer.CleanGameName(item.Machine.Description);
-                            }
-
-                            // If we are in single game mode, rename all games
-                            if (filter.Single)
-                                item.Machine.Name = "!";
-
-                            // If we are in NTFS trim mode, trim the game name
-                            if (filter.Trim)
-                            {
-                                // Windows max name length is 260
-                                int usableLength = 260 - item.Machine.Name.Length - filter.Root.Length;
-                                if (item.Name.Length > usableLength)
-                                {
-                                    string ext = Path.GetExtension(item.Name);
-                                    item.Name = item.Name.Substring(0, usableLength - ext.Length);
-                                    item.Name += ext;
-                                }
-                            }
-                        }
-
-                        // Otherwise mark for removal
-                        else
-                        {
+                        // If the rom doesn't pass the filter, mark for removal
+                        if (!item.PassesFilter(filter))
                             item.Remove = true;
-                        }
                     }
 
                     // Assign back for caution
                     Items[key] = items;
-                }
-
-                // If we are removing scene dates, do that now
-                if (Header.SceneDateStrip)
-                    StripSceneDatesFromItems();
-
-                // Run the one rom per game logic, if required
-                if (Header.OneGamePerRegion)
-                    OneGamePerRegion();
-
-                // Run the one rom per game logic, if required
-                if (Header.OneRomPerGame)
-                    OneRomPerGame();
-
-                // If we are removing fields, do that now
-                if (Header.ExcludeFields != null && Header.ExcludeFields.Any())
-                    RemoveFieldsFromItems();
-
-                // Remove all marked items
-                Items.ClearMarked();
-
-                // We remove any blanks, if we aren't supposed to have any
-                if (!Header.KeepEmptyGames)
-                {
-                    List<string> possiblyEmptyKeys = Items.Keys.ToList();
-                    foreach (string key in possiblyEmptyKeys)
-                    {
-                        List<DatItem> items = Items[key];
-                        if (items == null || items.Count == 0)
-                        {
-                            Items.Remove(key);
-                            continue;
-                        }
-
-                        List<DatItem> newitems = items.Where(i => i.ItemType != ItemType.Blank).ToList();
-
-                        Items.Remove(key);
-                        Items.AddRange(key, newitems);
-                    }
                 }
             }
             catch (Exception ex)
@@ -927,6 +883,61 @@ namespace SabreTools.Library.DatFiles
                 Items.Remove(key);
                 Items.AddRange(key, newItems);
             });
+        }
+
+        /// <summary>
+        /// Clean individual items based on the current filter
+        /// </summary>
+        /// <param name="cleaner">Cleaner to use</param>
+        public void CleanDatItems(Cleaner cleaner)
+        {
+            List<string> keys = Items.Keys.ToList();
+            foreach (string key in keys)
+            {
+                // For every item in the current key
+                List<DatItem> items = Items[key];
+                foreach (DatItem item in items)
+                {
+                    // If we have a null item, we can't clean it it
+                    if (item == null)
+                        continue;
+
+                    // If we're stripping unicode characters, do so from all relevant things
+                    if (cleaner?.RemoveUnicode == true)
+                    {
+                        item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
+                        item.Machine.Name = Sanitizer.RemoveUnicodeCharacters(item.Machine.Name);
+                        item.Machine.Description = Sanitizer.RemoveUnicodeCharacters(item.Machine.Description);
+                    }
+
+                    // If we're in cleaning mode, do so from all relevant things
+                    if (cleaner?.Clean == true)
+                    {
+                        item.Machine.Name = Sanitizer.CleanGameName(item.Machine.Name);
+                        item.Machine.Description = Sanitizer.CleanGameName(item.Machine.Description);
+                    }
+
+                    // If we are in single game mode, rename all games
+                    if (cleaner?.Single == true)
+                        item.Machine.Name = "!";
+
+                    // If we are in NTFS trim mode, trim the game name
+                    if (cleaner?.Trim == true)
+                    {
+                        // Windows max name length is 260
+                        int usableLength = 260 - item.Machine.Name.Length - (cleaner.Root?.Length ?? 0);
+                        if (item.Name.Length > usableLength)
+                        {
+                            string ext = Path.GetExtension(item.Name);
+                            item.Name = item.Name.Substring(0, usableLength - ext.Length);
+                            item.Name += ext;
+                        }
+                    }
+                }
+
+                // Assign back for caution
+                Items[key] = items;
+            }
         }
 
         /// <summary>
@@ -989,6 +1000,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Filter a DAT using 1G1R logic given an ordered set of regions
         /// </summary>
+        /// <param name="regions">Ordered list of regions to use</param>
         /// <remarks>
         /// In the most technical sense, the way that the region list is being used does not
         /// confine its values to be just regions. Since it's essentially acting like a
@@ -999,8 +1011,12 @@ namespace SabreTools.Library.DatFiles
         /// to clone sets based on name, nor does it have the ability to match on the 
         /// Release DatItem type.
         /// </remarks>
-        public void OneGamePerRegion()
+        public void OneGamePerRegion(List<string> regions)
         {
+            // If we have null region list, make it empty
+            if (regions == null)
+                regions = new List<string>();
+
             // For sake of ease, the first thing we want to do is bucket by game
             Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
@@ -1037,11 +1053,6 @@ namespace SabreTools.Library.DatFiles
                     parents[item.Machine.Name.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
                 }
             }
-
-            // If we have null region list, make it empty
-            List<string> regions = Header.RegionList;
-            if (regions == null)
-                regions = new List<string>();
 
             // Once we have the full list of mappings, filter out games to keep
             foreach (string key in parents.Keys)
@@ -1094,13 +1105,15 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Remove fields as per the header
         /// </summary>
-        public void RemoveFieldsFromItems()
+        /// <param name="fields">List of fields to use</param>
+        public void RemoveFieldsFromItems(List<Field> fields)
         {
+            // If we have null field list, make it empty
+            if (fields == null)
+                fields = new List<Field>();
+
             // Output the logging statement
             Globals.Logger.User("Removing filtered fields");
-
-            // Get the array of fields from the header
-            List<Field> fields = Header.ExcludeFields;
 
             // Now process all of the roms
             Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>

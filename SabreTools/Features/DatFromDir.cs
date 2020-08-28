@@ -95,6 +95,7 @@ namespace SabreTools.Features
                     {
                         datdata.ApplyExtras(Extras);
                         datdata.ApplyFilter(Filter, false);
+                        datdata.ApplyCleaning(Cleaner);
                         datdata.Write(OutputDir);
                     }
                     else

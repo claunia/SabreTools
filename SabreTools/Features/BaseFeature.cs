@@ -2303,6 +2303,11 @@ Some special strings that can be used:
         #region Fields
 
         /// <summary>
+        /// Preconfigured Cleaner
+        /// </summary>
+        protected Cleaner Cleaner { get; set; }
+
+        /// <summary>
         /// Preconfigured ExtraIni set
         /// </summary>
         protected ExtraIni Extras { get; set; }
@@ -2419,6 +2424,7 @@ Some special strings that can be used:
         public override void ProcessFeatures(Dictionary<string, Feature> features)
         {
             // Generic feature flags
+            Cleaner = GetCleaner(features);
             Extras = GetExtras(features);
             Filter = GetFilter(features);
             Header = GetDatHeader(features);
@@ -2666,6 +2672,34 @@ Some special strings that can be used:
         #region Private Specific Extraction
 
         /// <summary>
+        /// Get Cleaner from feature list
+        /// </summary>
+        private Cleaner GetCleaner(Dictionary<string, Feature> features)
+        {
+            Cleaner cleaner = new Cleaner()
+            {
+                Clean = GetBoolean(features, CleanValue),
+                DescriptionAsName = GetBoolean(features, DescriptionAsNameValue),
+                KeepEmptyGames = GetBoolean(features, KeepEmptyGamesValue),
+                OneGamePerRegion = GetBoolean(features, OneGamePerRegionValue),
+                RegionList = GetList(features, RegionListValue),
+                OneRomPerGame = GetBoolean(features, OneRomPerGameValue),
+                RemoveUnicode = GetBoolean(features, RemoveUnicodeValue),
+                Root = GetString(features, RootDirStringValue),
+                SceneDateStrip = GetBoolean(features, SceneDateStripValue),
+                Single = GetBoolean(features, SingleSetValue),
+                Trim = GetBoolean(features, TrimValue),
+            };
+
+            foreach (string fieldName in GetList(features, ExcludeFieldListValue))
+            {
+                cleaner.ExcludeFields.Add(fieldName.AsField());
+            }
+
+            return cleaner;
+        }
+
+        /// <summary>
         /// Get DatHeader from feature list
         /// </summary>
         private DatHeader GetDatHeader(Dictionary<string, Feature> features)
@@ -2688,18 +2722,13 @@ Some special strings that can be used:
                 GameName = GetBoolean(features, GamePrefixValue),
                 HeaderSkipper = GetString(features, HeaderStringValue),
                 Homepage = GetString(features, HomepageStringValue),
-                KeepEmptyGames = GetBoolean(features, KeepEmptyGamesValue),
                 Name = GetString(features, NameStringValue),
-                OneGamePerRegion = GetBoolean(features, OneGamePerRegionValue),
-                OneRomPerGame = GetBoolean(features, OneRomPerGameValue),
                 Postfix = GetString(features, PostfixStringValue),
                 Prefix = GetString(features, PrefixStringValue),
                 Quotes = GetBoolean(features, QuotesValue),
-                RegionList = GetList(features, RegionListValue),
                 RemoveExtension = GetBoolean(features, RemoveExtensionsValue),
                 ReplaceExtension = GetString(features, ReplaceExtensionStringValue),
                 RootDir = GetString(features, RootStringValue),
-                SceneDateStrip = GetBoolean(features, SceneDateStripValue),
                 Type = GetBoolean(features, SuperdatValue) ? "SuperDAT" : null,
                 Url = GetString(features, UrlStringValue),
                 UseRomName = GetBoolean(features, RomsValue),
@@ -2722,11 +2751,6 @@ Some special strings that can be used:
                     datHeader.DatFormat |= DatFormat.LogiqxDeprecated;
                 else
                     datHeader.DatFormat |= dftemp;
-            }
-
-            foreach (string fieldName in GetList(features, ExcludeFieldListValue))
-            {
-                datHeader.ExcludeFields.Add(fieldName.AsField());
             }
 
             return datHeader;
@@ -2972,31 +2996,13 @@ Some special strings that can be used:
 
             #endregion
 
-            #region Filter manipulation flags
-
-            // Clean names
-            filter.Clean = GetBoolean(features, CleanValue);
-
-            // Machine description as machine name
-            filter.DescriptionAsName = GetBoolean(features, DescriptionAsNameValue);
+            #region Additional Filter flags
 
             // Include 'of" in game filters
             filter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
 
             // Internal splitting
             filter.InternalSplit = GetSplitType(features);
-
-            // Remove unicode characters
-            filter.RemoveUnicode = GetBoolean(features, RemoveUnicodeValue);
-
-            // Root directory
-            filter.Root = GetString(features, RootDirStringValue);
-
-            // Single game in output
-            filter.Single = GetBoolean(features, SingleSetValue);
-
-            // Trim to NTFS length
-            filter.Trim = GetBoolean(features, TrimValue);
 
             #endregion
 

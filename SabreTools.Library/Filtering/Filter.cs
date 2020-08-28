@@ -352,17 +352,7 @@ namespace SabreTools.Library.Filtering
 
         #endregion // DatItem Filters
 
-        #region Manipulation Flags
-
-        /// <summary>
-        /// Clean all names to WoD standards
-        /// </summary>
-        public bool Clean { get; set; }
-
-        /// <summary>
-        /// Set Machine Description from Machine Name
-        /// </summary>
-        public bool DescriptionAsName { get; set; }
+        #region Additional Flags
 
         /// <summary>
         /// Include romof and cloneof when filtering machine names
@@ -373,26 +363,6 @@ namespace SabreTools.Library.Filtering
         /// Internally split a DatFile
         /// </summary>
         public MergingFlag InternalSplit { get; set; }
-
-        /// <summary>
-        /// Remove all unicode characters
-        /// </summary>
-        public bool RemoveUnicode { get; set; }
-
-        /// <summary>
-        /// Include root directory when determing trim sizes
-        /// </summary>
-        public string Root { get; set; }
-
-        /// <summary>
-        /// Change all machine names to "!"
-        /// </summary>
-        public bool Single { get; set; }
-
-        /// <summary>
-        /// Trim total machine and item name to not exceed NTFS limits
-        /// </summary>
-        public bool Trim { get; set; }
 
         #endregion
 
