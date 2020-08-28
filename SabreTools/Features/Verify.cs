@@ -100,7 +100,7 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
-                if (Header.InputDepot?.IsActive ?? false)s
+                if (Header.InputDepot?.IsActive ?? false)
                     datdata.VerifyDepot(Inputs);
                 else
                     datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles);
