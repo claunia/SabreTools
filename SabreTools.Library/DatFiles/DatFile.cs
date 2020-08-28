@@ -195,6 +195,34 @@ namespace SabreTools.Library.DatFiles
             Header.ConditionalCopy(datHeader);
         }
 
+        /// <summary>
+        /// Fill the header values based on existing Header and path
+        /// </summary>
+        /// <param name="path">Path used for creating a name, if necessary</param>
+        /// <param name="bare">True if the date should be omitted from name and description, false otherwise</param>
+        public void FillHeaderFromPath(string path, bool bare)
+        {
+            // If the description is defined but not the name, set the name from the description
+            if (string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
+            {
+                Header.Name = Header.Description;
+            }
+
+            // If the name is defined but not the description, set the description from the name
+            else if (!string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+            {
+                Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
+            }
+
+            // If neither the name or description are defined, set them from the automatic values
+            else if (string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+            {
+                string[] splitpath = path.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
+                Header.Name = splitpath.Last();
+                Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
+            }
+        }
+
         #endregion
 
         #region Converting and Updating
@@ -2098,50 +2126,22 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
-        /// <param name="bare">True if the date should be omitted from the DAT, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="outDir">Output directory to </param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
         /// TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
         public bool PopulateFromDir(
             string basePath,
             Hash omitFromScan = Hash.DeepHashes,
-            bool bare = false,
             TreatAsFiles asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
             bool addBlanks = false,
             bool addDate = false,
-            bool copyFiles = false,
-            ExtraIni extras = null,
-            Filter filter = null,
-            bool useTags = false)
+            bool copyFiles = false)
         {
-            // If the description is defined but not the name, set the name from the description
-            if (string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.Name = Header.Description;
-            }
-
-            // If the name is defined but not the description, set the description from the name
-            else if (!string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
-            }
-
-            // If neither the name or description are defined, set them from the automatic values
-            else if (string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
-            {
-                string[] splitpath = basePath.TrimEnd(Path.DirectorySeparatorChar).Split(Path.DirectorySeparatorChar);
-                Header.Name = splitpath.Last();
-                Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
-            }
-
             // Clean the temp directory path
             Globals.TempDir = DirectoryExtensions.Ensure(Globals.TempDir, temp: true);
 
@@ -2203,14 +2203,6 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Cleaning temp folder");
             if (Globals.TempDir != Path.GetTempPath())
                 DirectoryExtensions.TryDelete(Globals.TempDir);
-
-            // If we have valid extras, perform the application now
-            if (extras != null && extras != default(ExtraIni))
-                ApplyExtras(extras);
-
-            // If we have a valid filter, perform the filtering now
-            if (filter != null && filter != default(Filter))
-                ApplyFilter(filter, useTags);
 
             return true;
         }
@@ -2346,8 +2338,7 @@ namespace SabreTools.Library.DatFiles
                 omitFromScan: omitFromScan,
                 date: addDate,
                 header: Header.HeaderSkipper,
-                aaruFormatAsFiles: asFiles.HasFlag(TreatAsFiles.AaruFormats),
-                chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
+                asFiles: asFiles);
             ProcessFileHelper(item, DatItem.Create(baseFile), basePath, string.Empty);
         }
 
@@ -2676,7 +2667,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
-        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
+        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildGeneric(
             List<string> inputs,
@@ -2811,7 +2802,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
-        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
+        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         private void RebuildGenericHelper(
             string file,
             string outDir,
@@ -2837,8 +2828,7 @@ namespace SabreTools.Library.DatFiles
                 file,
                 omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes),
                 header: Header.HeaderSkipper,
-                aaruFormatAsFiles: asFiles.HasFlag(TreatAsFiles.AaruFormats),
-                chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
+                asFiles: asFiles);
 
             DatItem externalDatItem = null;
             if (externalFileInfo.Type == FileType.AaruFormat)
@@ -2876,8 +2866,7 @@ namespace SabreTools.Library.DatFiles
                 BaseFile internalFileInfo = FileExtensions.GetInfo(
                     file,
                     omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes),
-                    aaruFormatAsFiles: asFiles.HasFlag(TreatAsFiles.AaruFormats),
-                    chdsAsFiles: asFiles.HasFlag(TreatAsFiles.CHDs));
+                    asFiles: asFiles);
 
                 DatItem internalDatItem = null;
                 if (internalFileInfo.Type == FileType.AaruFormat)
@@ -2937,7 +2926,7 @@ namespace SabreTools.Library.DatFiles
                 outputFormat = OutputFormat.Folder;
             }
 
-            // If we have a disk or media, change it into a Rom for later use
+            // If we have a Disk or Media, change it into a Rom for later use
             if (datItem.ItemType == ItemType.Disk)
                 datItem = (datItem as Disk).ConvertToRom();
             if (datItem.ItemType == ItemType.Media)
@@ -3266,10 +3255,9 @@ namespace SabreTools.Library.DatFiles
                 PopulateFromDir(
                     input,
                     quickScan ? Hash.SecureHashes : Hash.DeepHashes,
-                    bare: true,
-                    asFiles: asFiles,
-                    extras: extras,
-                    filter: filter);
+                    asFiles: asFiles);
+                ApplyExtras(extras);
+                ApplyFilter(filter, false);
             }
 
             // Setup the fixdat
@@ -3465,22 +3453,26 @@ namespace SabreTools.Library.DatFiles
                     {
                         nodump.Items.Add(key, item);
                     }
+
                     // If the file has a SHA-512
                     else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA512)))
                     {
                         sha512.Items.Add(key, item);
                     }
+
                     // If the file has a SHA-384
                     else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA384)))
                     {
                         sha384.Items.Add(key, item);
                     }
+
                     // If the file has a SHA-256
                     else if ((item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).SHA256))
                         || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).SHA256)))
                     {
                         sha256.Items.Add(key, item);
                     }
+
                     // If the file has a SHA-1
                     else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk).SHA1))
                         || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).SHA1))
@@ -3488,6 +3480,7 @@ namespace SabreTools.Library.DatFiles
                     {
                         sha1.Items.Add(key, item);
                     }
+
 #if NET_FRAMEWORK
                     // If the file has a RIPEMD160
                     else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).RIPEMD160)))
@@ -3495,11 +3488,11 @@ namespace SabreTools.Library.DatFiles
                         ripemd160.Items.Add(key, item);
                     }
 #endif
+
                     // If the file has an MD5
                     else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk).MD5))
-                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).MD5)
+                        || (item.ItemType == ItemType.Media && !string.IsNullOrWhiteSpace((item as Media).MD5))
                         || (item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).MD5)))
-                        )
                     {
                         md5.Items.Add(key, item);
                     }
@@ -3714,8 +3707,8 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> items = Items[key];
                 foreach (DatItem item in items)
                 {
-                    // If the file is a Disk
-                    if (item.ItemType == ItemType.Disk)
+                     // If the file is a Disk
+                     if (item.ItemType == ItemType.Disk)
                         diskdat.Items.Add(key, item);
 
                     // If the file is a Media
@@ -3929,7 +3922,6 @@ namespace SabreTools.Library.DatFiles
                         item.Name = $"{pre}{name}{post}";
                     }
                 }
-
 
                 return;
             }

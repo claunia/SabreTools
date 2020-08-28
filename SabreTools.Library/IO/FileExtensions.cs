@@ -339,10 +339,9 @@ namespace SabreTools.Library.IO
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated (defaults to none)</param>
         /// <param name="date">True if the file Date should be included, false otherwise (default)</param>
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
-        /// <param name="aaruFormatAsFiles">True if AaruFormats should be treated like regular files, false otherwise</param>
-        /// <param name="chdsAsFiles">True if CHDs should be treated like regular files, false otherwise</param>
+        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(string input, Hash omitFromScan = 0x0, bool date = false, string header = null, bool aaruFormatAsFiles = true, bool chdsAsFiles = true)
+        public static BaseFile GetInfo(string input, Hash omitFromScan = 0x0, bool date = false, string header = null, TreatAsFiles asFiles = 0x00)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
@@ -363,7 +362,7 @@ namespace SabreTools.Library.IO
 
                     // Transform the stream and get the information from it
                     rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
-                    baseFile = outputStream.GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, aaruFormatAsFiles: aaruFormatAsFiles, chdsAsFiles: chdsAsFiles);
+                    baseFile = outputStream.GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, asFiles: asFiles);
 
                     // Dispose of the streams
                     outputStream.Dispose();
@@ -372,12 +371,12 @@ namespace SabreTools.Library.IO
                 // Otherwise, just get the info
                 else
                 {
-                    baseFile = TryOpenRead(input).GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, aaruFormatAsFiles: aaruFormatAsFiles, chdsAsFiles: chdsAsFiles);
+                    baseFile = TryOpenRead(input).GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, asFiles: asFiles);
                 }
             }
             else
             {
-                baseFile = TryOpenRead(input).GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, aaruFormatAsFiles: aaruFormatAsFiles, chdsAsFiles: chdsAsFiles);
+                baseFile = TryOpenRead(input).GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, asFiles: asFiles);
             }
 
             // Add unique data from the file

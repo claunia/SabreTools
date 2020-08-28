@@ -77,21 +77,24 @@ namespace SabreTools.Features
                     // Clone the base Dat for information
                     DatFile datdata = DatFile.Create(basedat.Header);
 
+                    // Get the base path and fill the header, if needed
                     string basePath = Path.GetFullPath(path);
+                    datdata.FillHeaderFromPath(basePath, noAutomaticDate);
+
+                    // Now populate from the path
                     bool success = datdata.PopulateFromDir(
                         basePath,
                         omitFromScan,
-                        noAutomaticDate,
                         asFiles,
                         skipFileType,
                         addBlankFiles,
                         addFileDates,
-                        copyFiles,
-                        Extras,
-                        Filter);
+                        copyFiles);
 
                     if (success)
                     {
+                        datdata.ApplyExtras(Extras);
+                        datdata.ApplyFilter(Filter, false);
                         datdata.Write(OutputDir);
                     }
                     else
