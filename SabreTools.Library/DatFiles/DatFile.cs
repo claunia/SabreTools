@@ -2979,16 +2979,12 @@ namespace SabreTools.Library.DatFiles
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
         /// <returns>True if verification was a success, false otherwise</returns>
         public bool VerifyGeneric(
             List<string> inputs,
             bool hashOnly = false,
             bool quickScan = false,
-            TreatAsFiles asFiles = 0x00,
-            ExtraIni extras = null,
-            Filter filter = null)
+            TreatAsFiles asFiles = 0x00)
         {
             bool success = true;
 
@@ -2998,8 +2994,6 @@ namespace SabreTools.Library.DatFiles
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                 PopulateFromDir(input, quickScan ? Hash.SecureHashes : Hash.DeepHashes, asFiles: asFiles);
-                ApplyExtras(extras);
-                ApplyFilter(filter, false);
             }
 
             // If we are checking hashes only, essentially diff the inputs
