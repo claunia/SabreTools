@@ -166,6 +166,8 @@ namespace SabreTools.Features
                         keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
+
+                    // Perform additional processing steps
                     datFile.ApplyExtras(Extras);
                     datFile.ApplySplitting(GetSplitType(features), false);
                     datFile.ApplyFilter(Filter);
@@ -203,7 +205,7 @@ namespace SabreTools.Features
             else
                 datHeaders = userInputDat.PopulateUserData(inputPaths);
 
-            // Apply the extras, filter, and cleaning
+            // Perform additional processing steps
             userInputDat.ApplyExtras(Extras);
             userInputDat.ApplySplitting(GetSplitType(features), false);
             userInputDat.ApplyFilter(Filter);
@@ -291,9 +293,11 @@ namespace SabreTools.Features
                 // Loop through each input and diff against the base
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
-                    // Parse and process the path to a new DatFile
+                    // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
                     repDat.Parse(inputPath, indexId: 1, keep: true);
+
+                    // Perform additional processing steps
                     repDat.ApplyExtras(Extras);
                     repDat.ApplySplitting(GetSplitType(features), false);
                     repDat.ApplyFilter(Filter);
@@ -314,9 +318,11 @@ namespace SabreTools.Features
                 // Loop through each input and apply the base DatFile
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
-                    // Parse and process the path to a new DatFile
+                    // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
                     repDat.Parse(inputPath, indexId: 1, keep: true);
+
+                    // Perform additional processing steps
                     repDat.ApplyExtras(Extras);
                     repDat.ApplySplitting(GetSplitType(features), false);
                     repDat.ApplyFilter(Filter);

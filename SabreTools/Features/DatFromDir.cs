@@ -94,10 +94,13 @@ namespace SabreTools.Features
 
                     if (success)
                     {
+                        // Perform additional processing steps
                         datdata.ApplyExtras(Extras);
                         datdata.ApplySplitting(splitType, false);
                         datdata.ApplyFilter(Filter);
                         datdata.ApplyCleaning(Cleaner);
+
+                        // Write out the file
                         datdata.Write(OutputDir);
                     }
                     else

@@ -55,8 +55,11 @@ namespace SabreTools.Features
             {
                 foreach (ParentablePath datfile in datfilePaths)
                 {
+                    // Parse in from the file
                     DatFile datdata = DatFile.Create();
                     datdata.Parse(datfile, 99, keep: true);
+
+                    // Perform additional processing steps
                     datdata.ApplyExtras(Extras);
                     datdata.ApplySplitting(splitType, true);
                     datdata.ApplyFilter(Filter);
@@ -89,11 +92,13 @@ namespace SabreTools.Features
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     datdata.Parse(datfile, 99, keep: true);
-                    datdata.ApplyExtras(Extras);
-                    datdata.ApplySplitting(splitType, true);
-                    datdata.ApplyFilter(Filter);
-                    datdata.ApplyCleaning(Cleaner);
                 }
+
+                // Perform additional processing steps
+                datdata.ApplyExtras(Extras);
+                datdata.ApplySplitting(splitType, true);
+                datdata.ApplyFilter(Filter);
+                datdata.ApplyCleaning(Cleaner);
 
                 // Set depot information
                 datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
