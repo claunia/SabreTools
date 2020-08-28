@@ -230,161 +230,77 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Replace item values from the base set represented by the current DAT
         /// </summary>
-        /// <param name="inputs">Names of the input files</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
+        /// <param name="updateFields">List of Fields representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public void BaseReplace(
-            List<string> inputs,
-            string outDir,
-            bool inplace,
-            ExtraIni extras,
-            Filter filter,
-            List<Field> updateFields,
-            bool onlySame)
+        public void BaseReplace(DatFile intDat, List<Field> updateFields, bool onlySame)
         {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            BaseReplace(paths, outDir, inplace, extras, filter, updateFields, onlySame);
-        }
+            Globals.Logger.User($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
 
-        /// <summary>
-        /// Replace item values from the base set represented by the current DAT
-        /// </summary>
-        /// <param name="inputs">Names of the input files</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <param name="updateFields">List of Fields representing what should be updated [only for base replacement]</param>
-        /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public void BaseReplace(
-            List<ParentablePath> inputs,
-            string outDir,
-            bool inplace,
-            ExtraIni extras,
-            Filter filter,
-            List<Field> updateFields,
-            bool onlySame)
-        {
-            // We want to try to replace each item in each input DAT from the base
-            foreach (ParentablePath path in inputs)
+            // If we are matching based on DatItem fields of any sort
+            if (updateFields.Intersect(DatItem.DatItemFields).Any())
             {
-                Globals.Logger.User($"Replacing items in '{path.CurrentPath}' from the base DAT");
+                // For comparison's sake, we want to use CRC as the base bucketing
+                Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
+                intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
-                // First we parse in the DAT internally
-                DatFile intDat = Create(Header.CloneFiltering());
-                intDat.Parse(path, 1, keep: true);
-                intDat.ApplyExtras(extras);
-                intDat.ApplyFilter(filter, false /* useTags */);
-
-                // If we are matching based on DatItem fields of any sort
-                if (updateFields.Intersect(DatItem.DatItemFields).Any())
+                // Then we do a hashwise comparison against the base DAT
+                Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    // For comparison's sake, we want to use CRC as the base bucketing
-                    Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
-                    intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
-
-                    // Then we do a hashwise comparison against the base DAT
-                    Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
+                    List<DatItem> datItems = intDat.Items[key];
+                    List<DatItem> newDatItems = new List<DatItem>();
+                    foreach (DatItem datItem in datItems)
                     {
-                        List<DatItem> datItems = intDat.Items[key];
-                        List<DatItem> newDatItems = new List<DatItem>();
-                        foreach (DatItem datItem in datItems)
-                        {
-                            List<DatItem> dupes = Items.GetDuplicates(datItem, sorted: true);
-                            DatItem newDatItem = datItem.Clone() as DatItem;
+                        List<DatItem> dupes = Items.GetDuplicates(datItem, sorted: true);
+                        DatItem newDatItem = datItem.Clone() as DatItem;
 
-                            // Replace fields from the first duplicate, if we have one
-                            if (dupes.Count > 0)
-                                newDatItem.ReplaceFields(dupes.First(), updateFields);
+                        // Replace fields from the first duplicate, if we have one
+                        if (dupes.Count > 0)
+                            newDatItem.ReplaceFields(dupes.First(), updateFields);
 
-                            newDatItems.Add(newDatItem);
-                        }
+                        newDatItems.Add(newDatItem);
+                    }
 
-                        // Now add the new list to the key
-                        intDat.Items.Remove(key);
-                        intDat.Items.AddRange(key, newDatItems);
-                    });
-                }
+                    // Now add the new list to the key
+                    intDat.Items.Remove(key);
+                    intDat.Items.AddRange(key, newDatItems);
+                });
+            }
 
-                // If we are matching based on Machine fields of any sort
-                if (updateFields.Intersect(DatItem.MachineFields).Any())
+            // If we are matching based on Machine fields of any sort
+            if (updateFields.Intersect(DatItem.MachineFields).Any())
+            {
+                // For comparison's sake, we want to use Machine Name as the base bucketing
+                Items.BucketBy(Field.Machine_Name, DedupeType.Full);
+                intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+
+                // Then we do a namewise comparison against the base DAT
+                Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    // For comparison's sake, we want to use Machine Name as the base bucketing
-                    Items.BucketBy(Field.Machine_Name, DedupeType.Full);
-                    intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
-
-                    // Then we do a namewise comparison against the base DAT
-                    Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
+                    List<DatItem> datItems = intDat.Items[key];
+                    List<DatItem> newDatItems = new List<DatItem>();
+                    foreach (DatItem datItem in datItems)
                     {
-                        List<DatItem> datItems = intDat.Items[key];
-                        List<DatItem> newDatItems = new List<DatItem>();
-                        foreach (DatItem datItem in datItems)
-                        {
-                            DatItem newDatItem = datItem.Clone() as DatItem;
-                            if (Items.ContainsKey(key) && Items[key].Count() > 0)
-                                newDatItem.Machine.ReplaceFields(Items[key][0].Machine, updateFields, onlySame);
+                        DatItem newDatItem = datItem.Clone() as DatItem;
+                        if (Items.ContainsKey(key) && Items[key].Count() > 0)
+                            newDatItem.Machine.ReplaceFields(Items[key][0].Machine, updateFields, onlySame);
 
-                            newDatItems.Add(newDatItem);
-                        }
+                        newDatItems.Add(newDatItem);
+                    }
 
-                        // Now add the new list to the key
-                        intDat.Items.Remove(key);
-                        intDat.Items.AddRange(key, newDatItems);
-                    });
-                }
-
-                // Determine the output path for the DAT
-                string interOutDir = path.GetOutputPath(outDir, inplace);
-
-                // Once we're done, try writing out
-                intDat.Write(interOutDir, overwrite: inplace);
-
-                // Due to possible memory requirements, we force a garbage collection
-                GC.Collect();
+                    // Now add the new list to the key
+                    intDat.Items.Remove(key);
+                    intDat.Items.AddRange(key, newDatItems);
+                });
             }
         }
 
         /// <summary>
         /// Output diffs against a base set represented by the current DAT
         /// </summary>
-        /// <param name="inputs">Names of the input files</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
+        /// <param name="intDat">DatFile to replace the values in</param>
         /// <param name="useGames">True to diff using games, false to use hashes</param>
-        public void DiffAgainst(
-            List<string> inputs,
-            string outDir,
-            bool inplace,
-            ExtraIni extras,
-            Filter filter,
-            bool useGames)
-        {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffAgainst(paths, outDir, inplace, extras, filter, useGames);
-        }
-
-        /// <summary>
-        /// Output diffs against a base set represented by the current DAT
-        /// </summary>
-        /// <param name="inputs">Names of the input files</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        /// <param name="useGames">True to diff using games, false to use hashes</param>
-        public void DiffAgainst(
-            List<ParentablePath> inputs,
-            string outDir,
-            bool inplace,
-            ExtraIni extras,
-            Filter filter,
-            bool useGames)
+        public void DiffAgainst(DatFile intDat, bool useGames)
         {
             // For comparison's sake, we want to use a base ordering
             if (useGames)
@@ -392,81 +308,62 @@ namespace SabreTools.Library.DatFiles
             else
                 Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
-            // Now we want to compare each input DAT against the base
-            foreach (ParentablePath path in inputs)
+            Globals.Logger.User($"Comparing '{intDat.Header.FileName}' to base DAT");
+
+            // For comparison's sake, we want to a the base bucketing
+            if (useGames)
+                intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+            else
+                intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
+
+            // Then we compare against the base DAT
+            List<string> keys = intDat.Items.Keys.ToList();
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
-                Globals.Logger.User($"Comparing '{path.CurrentPath}' to base DAT");
-
-                // First we parse in the DAT internally
-                DatFile intDat = Create(Header.CloneFiltering());
-                intDat.Parse(path, 1, keep: true);
-                intDat.ApplyExtras(extras);
-                intDat.ApplyFilter(filter, false /* useTags */);
-
-                // For comparison's sake, we want to a the base bucketing
+                // Game Against uses game names
                 if (useGames)
-                    intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
-                else
-                    intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
-
-                // Then we compare against the base DAT
-                List<string> keys = intDat.Items.Keys.ToList();
-                Parallel.ForEach(keys, Globals.ParallelOptions, key =>
                 {
-                    // Game Against uses game names
-                    if (useGames)
+                    // If the base DAT doesn't contain the key, keep it
+                    if (!Items.ContainsKey(key))
+                        return;
+
+                    // If the number of items is different, then keep it
+                    if (Items[key].Count != intDat.Items[key].Count)
+                        return;
+
+                    // Otherwise, compare by name and hash the remaining files
+                    bool exactMatch = true;
+                    foreach (DatItem item in intDat.Items[key])
                     {
-                        // If the base DAT doesn't contain the key, keep it
-                        if (!Items.ContainsKey(key))
-                            return;
-
-                        // If the number of items is different, then keep it
-                        if (Items[key].Count != intDat.Items[key].Count)
-                            return;
-
-                        // Otherwise, compare by name and hash the remaining files
-                        bool exactMatch = true;
-                        foreach (DatItem item in intDat.Items[key])
+                        // TODO: Make this granular to name as well
+                        if (!Items[key].Contains(item))
                         {
-                            // TODO: Make this granular to name as well
-                            if (!Items[key].Contains(item))
-                            {
-                                exactMatch = false;
-                                break;
-                            }
+                            exactMatch = false;
+                            break;
                         }
-
-                        // If we have an exact match, remove the game
-                        if (exactMatch)
-                            intDat.Items.Remove(key);
                     }
 
-                    // Standard Against uses hashes
-                    else
-                    {
-                        List<DatItem> datItems = intDat.Items[key];
-                        List<DatItem> keepDatItems = new List<DatItem>();
-                        foreach (DatItem datItem in datItems)
-                        {
-                            if (!Items.HasDuplicates(datItem, true))
-                                keepDatItems.Add(datItem);
-                        }
-
-                        // Now add the new list to the key
+                    // If we have an exact match, remove the game
+                    if (exactMatch)
                         intDat.Items.Remove(key);
-                        intDat.Items.AddRange(key, keepDatItems);
+                }
+
+                // Standard Against uses hashes
+                else
+                {
+                    List<DatItem> datItems = intDat.Items[key];
+                    List<DatItem> keepDatItems = new List<DatItem>();
+                    foreach (DatItem datItem in datItems)
+                    {
+                        if (!Items.HasDuplicates(datItem, true))
+                            keepDatItems.Add(datItem);
                     }
-                });
 
-                // Determine the output path for the DAT
-                string interOutDir = path.GetOutputPath(outDir, inplace);
-
-                // Once we're done, try writing out
-                intDat.Write(interOutDir, overwrite: inplace);
-
-                // Due to possible memory requirements, we force a garbage collection
-                GC.Collect();
-            }
+                    // Now add the new list to the key
+                    intDat.Items.Remove(key);
+                    intDat.Items.AddRange(key, keepDatItems);
+                }
+            });
         }
 
         /// <summary>
@@ -804,55 +701,6 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Output user defined merge
-        /// </summary>
-        /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void MergeNoDiff(List<string> inputs, string outDir)
-        {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            MergeNoDiff(paths, outDir);
-        }
-
-        /// <summary>
-        /// Output user defined merge
-        /// </summary>
-        /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void MergeNoDiff(List<ParentablePath> inputs, string outDir)
-        {
-            // If we're in SuperDAT mode, prefix all games with their respective DATs
-            if (Header.Type == "SuperDAT")
-            {
-                Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
-                {
-                    List<DatItem> items = Items[key].ToList();
-                    List<DatItem> newItems = new List<DatItem>();
-                    foreach (DatItem item in items)
-                    {
-                        DatItem newItem = item;
-                        string filename = inputs[newItem.Source.Index].CurrentPath;
-                        string rootpath = inputs[newItem.Source.Index].ParentPath;
-
-                        rootpath += (string.IsNullOrWhiteSpace(rootpath) ? string.Empty : Path.DirectorySeparatorChar.ToString());
-                        filename = filename.Remove(0, rootpath.Length);
-                        newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
-                            + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
-                            + newItem.Machine.Name;
-
-                        newItems.Add(newItem);
-                    }
-
-                    Items.Remove(key);
-                    Items.AddRange(key, newItems);
-                });
-            }
-
-            // Try to output the file
-            Write(outDir, overwrite: false);
-        }
-
-        /// <summary>
         /// Populate the user DatData object from the input files
         /// </summary>
         /// <param name="inputs">Paths to DATs to parse</param>
@@ -901,60 +749,6 @@ namespace SabreTools.Library.DatFiles
             watch.Stop();
 
             return datFiles.Select(d => d.Header).ToList();
-        }
-
-        /// <summary>
-        /// Convert, update, and filter a DAT file or set of files
-        /// </summary>
-        /// <param name="inputs">Names of the input files and/or folders</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        public void Update(
-            List<string> inputs,
-            string outDir,
-            bool inplace,
-            ExtraIni extras,
-            Filter filter)
-        {
-            List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            Update(paths, outDir, inplace, extras, filter);
-        }
-
-        /// <summary>
-        /// Convert, update, and filter a DAT file or set of files
-        /// </summary>
-        /// <param name="inputs">Names of the input files and/or folders</param>
-        /// <param name="outDir">Optional param for output directory</param>
-        /// <param name="inplace">True if the output files should overwrite their inputs, false otherwise</param>
-        /// <param name="extras">ExtraIni object to apply to the DatFile</param>
-        /// <param name="filter">Filter object to be passed to the DatItem level</param>
-        public void Update(
-            List<ParentablePath> inputs,
-            string outDir,
-            bool inplace,
-            ExtraIni extras,
-            Filter filter)
-        {
-            // Iterate over the files
-            foreach (ParentablePath file in inputs)
-            {
-                DatFile innerDatdata = Create(Header);
-                Globals.Logger.User($"Processing '{Path.GetFileName(file.CurrentPath)}'");
-                innerDatdata.Parse(file, keep: true,
-                    keepext: innerDatdata.Header.DatFormat.HasFlag(DatFormat.TSV)
-                        || innerDatdata.Header.DatFormat.HasFlag(DatFormat.CSV)
-                        || innerDatdata.Header.DatFormat.HasFlag(DatFormat.SSV));
-                innerDatdata.ApplyExtras(extras);
-                innerDatdata.ApplyFilter(filter, false /* useTags */);
-
-                // Get the correct output path
-                string realOutDir = file.GetOutputPath(outDir, inplace);
-
-                // Try to output the file, overwriting only if it's not in the current directory
-                innerDatdata.Write(realOutDir, overwrite: inplace);
-            }
         }
 
         #endregion
@@ -1146,6 +940,38 @@ namespace SabreTools.Library.DatFiles
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Apply SuperDAT naming logic to a merged DatFile
+        /// </summary>
+        /// <param name="inputs">List of inputs to use for renaming</param>
+        public void ApplySuperDAT(List<ParentablePath> inputs)
+        {
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = Items[key].ToList();
+                List<DatItem> newItems = new List<DatItem>();
+                foreach (DatItem item in items)
+                {
+                    DatItem newItem = item;
+                    string filename = inputs[newItem.Source.Index].CurrentPath;
+                    string rootpath = inputs[newItem.Source.Index].ParentPath;
+
+                    if (!string.IsNullOrWhiteSpace(rootpath))
+                        rootpath += Path.DirectorySeparatorChar.ToString();
+
+                    filename = filename.Remove(0, rootpath.Length);
+                    newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                        + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
+                        + newItem.Machine.Name;
+
+                    newItems.Add(newItem);
+                }
+
+                Items.Remove(key);
+                Items.AddRange(key, newItems);
+            });
         }
 
         /// <summary>

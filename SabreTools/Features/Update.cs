@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
+using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Help;
@@ -146,19 +148,32 @@ namespace SabreTools.Features
                 updateFields = new List<Field>() { Field.DatItem_Name };
 
             // Ensure we only have files in the inputs
-            List<ParentablePath> inputFileNames = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
-            List<ParentablePath> baseFileNames = DirectoryExtensions.GetFilesOnly(GetList(features, BaseDatListValue));
+            List<ParentablePath> inputPaths = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
+            List<ParentablePath> basePaths = DirectoryExtensions.GetFilesOnly(GetList(features, BaseDatListValue));
 
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)
             {
-                DatFile datFile = DatFile.Create(Header);
-                datFile.Update(
-                    inputFileNames,
-                    OutputDir,
-                    GetBoolean(features, InplaceValue),
-                    Extras,
-                    Filter);
+                // Loop through each input and update
+                foreach (ParentablePath inputPath in inputPaths)
+                {
+                    // Create a new base DatFile
+                    DatFile datFile = DatFile.Create(Header);
+                    Globals.Logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
+                    datFile.Parse(inputPath, keep: true,
+                        keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
+                            || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
+                            || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
+                    datFile.ApplyExtras(Extras);
+                    datFile.ApplyFilter(Filter, false /* useTags */);
+
+                    // Get the correct output path
+                    string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+
+                    // Try to output the file, overwriting only if it's not in the current directory
+                    datFile.Write(realOutDir, overwrite: GetBoolean(features, InplaceValue));
+                }
+
                 return;
             }
 
@@ -166,12 +181,12 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffReverseCascade))
             {
                 updateMode |= UpdateMode.DiffCascade;
-                inputFileNames.Reverse();
+                inputPaths.Reverse();
             }
             if (updateMode.HasFlag(UpdateMode.ReverseBaseReplace))
             {
                 updateMode |= UpdateMode.BaseReplace;
-                baseFileNames.Reverse();
+                basePaths.Reverse();
             }
 
             // Create a DAT to capture inputs
@@ -180,27 +195,27 @@ namespace SabreTools.Features
             // Populate using the correct set
             List<DatHeader> datHeaders;
             if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
-                datHeaders = userInputDat.PopulateUserData(baseFileNames, Extras, Filter);
+                datHeaders = userInputDat.PopulateUserData(basePaths, Extras, Filter);
             else
-                datHeaders = userInputDat.PopulateUserData(inputFileNames, Extras, Filter);
+                datHeaders = userInputDat.PopulateUserData(inputPaths, Extras, Filter);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
-                userInputDat.DiffDuplicates(inputFileNames, OutputDir);
+                userInputDat.DiffDuplicates(inputPaths, OutputDir);
 
             // Output only DatItems that are not duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffNoDupesOnly))
-                userInputDat.DiffNoDuplicates(inputFileNames, OutputDir);
+                userInputDat.DiffNoDuplicates(inputPaths, OutputDir);
 
             // Output only DatItems that are unique to each input
             if (updateMode.HasFlag(UpdateMode.DiffIndividualsOnly))
-                userInputDat.DiffIndividuals(inputFileNames, OutputDir);
+                userInputDat.DiffIndividuals(inputPaths, OutputDir);
 
             // Output cascaded diffs
             if (updateMode.HasFlag(UpdateMode.DiffCascade))
             {
                 userInputDat.DiffCascade(
-                    inputFileNames,
+                    inputPaths,
                     datHeaders,
                     OutputDir,
                     GetBoolean(features, InplaceValue),
@@ -210,32 +225,55 @@ namespace SabreTools.Features
             // Output differences against a base DAT
             if (updateMode.HasFlag(UpdateMode.DiffAgainst))
             {
-                userInputDat.DiffAgainst(
-                    inputFileNames,
-                    OutputDir,
-                    GetBoolean(features, InplaceValue),
-                    Extras,
-                    Filter,
-                    GetBoolean(Features, ByGameValue));
+                // Loop through each input and diff against the base
+                foreach (ParentablePath inputPath in inputPaths)
+                {
+                    // Parse, extras, and filter the path to a new DatFile
+                    DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
+                    repDat.Parse(inputPath, indexId: 1, keep: true);
+                    repDat.ApplyExtras(Extras);
+                    repDat.ApplyFilter(Filter, false);
+
+                    // Now replace the fields from the base DatFile
+                    userInputDat.DiffAgainst(repDat, GetBoolean(Features, ByGameValue));
+
+                    // Finally output the diffed DatFile
+                    string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    repDat.Write(interOutDir, overwrite: GetBoolean(features, InplaceValue));
+                }
             }
 
-            // Output DATs after replacing fields from a base DAT
+            // Output DATs after replacing fields from a base DatFile
             if (updateMode.HasFlag(UpdateMode.BaseReplace))
             {
-                userInputDat.BaseReplace(
-                    inputFileNames,
-                    OutputDir,
-                    GetBoolean(features, InplaceValue),
-                    Extras,
-                    Filter,
-                    updateFields,
-                    GetBoolean(features, OnlySameValue));
+                // Loop through each input and apply the base DatFile
+                foreach (ParentablePath inputPath in inputPaths)
+                {
+                    // Parse, extras, and filter the path to a new DatFile
+                    DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
+                    repDat.Parse(inputPath, indexId: 1, keep: true);
+                    repDat.ApplyExtras(Extras);
+                    repDat.ApplyFilter(Filter, false);
+
+                    // Now replace the fields from the base DatFile
+                    userInputDat.BaseReplace(repDat, updateFields, GetBoolean(features, OnlySameValue));
+
+                    // Finally output the replaced DatFile
+                    string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+                    repDat.Write(interOutDir, overwrite: GetBoolean(features, InplaceValue));
+                }
             }
 
             // Merge all input files and write
             // This has to be last due to the SuperDAT handling
             if (updateMode.HasFlag(UpdateMode.Merge))
-                userInputDat.MergeNoDiff(inputFileNames, OutputDir);
+            {
+                // If we're in SuperDAT mode, prefix all games with their respective DATs
+                if (string.Equals(userInputDat.Header.Type, "SuperDAT", StringComparison.OrdinalIgnoreCase))
+                    userInputDat.ApplySuperDAT(inputPaths);
+
+                userInputDat.Write(OutputDir);
+            }
         }
     }
 }

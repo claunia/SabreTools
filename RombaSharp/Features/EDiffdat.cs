@@ -53,15 +53,12 @@ namespace RombaSharp.Features
             }
 
             // Create the encapsulating datfile
-            DatFile datfile = DatFile.Create();
+            DatFile datfile = DatFile.CreateAndParse(olddat);
 
-            // Create the inputs
-            List<string> dats = new List<string> { newdat };
-            List<string> basedats = new List<string> { olddat };
-
-            // Now run the diff on the inputs
-            datfile.PopulateUserData(basedats, new ExtraIni(), new Filter());
-            datfile.DiffAgainst(dats, outdat, false, new ExtraIni(), new Filter(), false);
+            // Diff against the new datfile
+            DatFile intDat = DatFile.CreateAndParse(newdat);
+            datfile.DiffAgainst(intDat, false);
+            intDat.Write(outdat);
         }
     }
 }

@@ -61,14 +61,12 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = name;
             datfile.Header.Description = description;
+            datfile.Parse(olddat);
 
-            // Create the inputs
-            List<string> dats = new List<string> { newdat };
-            List<string> basedats = new List<string> { olddat };
-
-            // Now run the diff on the inputs
-            datfile.PopulateUserData(basedats, new ExtraIni(), new Filter());
-            datfile.DiffAgainst(dats, outdat, false, new ExtraIni(), new Filter(), false);
+            // Diff against the new datfile
+            DatFile intDat = DatFile.CreateAndParse(newdat);
+            datfile.DiffAgainst(intDat, false);
+            intDat.Write(outdat);
         }
     }
 }
