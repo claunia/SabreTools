@@ -795,7 +795,6 @@ namespace SabreTools.Library.DatFiles
                 {
                     // For every item in the current key
                     List<DatItem> items = Items[key];
-                    List<DatItem> newitems = new List<DatItem>();
                     foreach (DatItem item in items)
                     {
                         // If we have a null item, we can't pass it
@@ -836,14 +835,17 @@ namespace SabreTools.Library.DatFiles
                                     item.Name += ext;
                                 }
                             }
+                        }
 
-                            // Add the item to the output
-                            newitems.Add(item);
+                        // Otherwise mark for removal
+                        else
+                        {
+                            item.Remove = true;
                         }
                     }
 
-                    Items.Remove(key);
-                    Items.AddRange(key, newitems);
+                    // Assign back for caution
+                    Items[key] = items;
                 }
 
                 // If we are removing scene dates, do that now
@@ -859,9 +861,11 @@ namespace SabreTools.Library.DatFiles
                     OneRomPerGame();
 
                 // If we are removing fields, do that now
-                // TODO: If this works, why in the hell do I have all of the "GetField" crap?????
                 if (Header.ExcludeFields != null && Header.ExcludeFields.Any())
                     RemoveFieldsFromItems();
+
+                // Remove all marked items
+                Items.ClearMarked();
 
                 // We remove any blanks, if we aren't supposed to have any
                 if (!Header.KeepEmptyGames)
