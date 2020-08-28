@@ -427,19 +427,17 @@ namespace SabreTools.Library.DatFiles
         /// Output duplicate item diff
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void DiffDuplicates(List<string> inputs, string outDir)
+        public DatFile DiffDuplicates(List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffDuplicates(paths, outDir);
+            return DiffDuplicates(paths);
         }
 
         /// <summary>
         /// Output duplicate item diff
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void DiffDuplicates(List<ParentablePath> inputs, string outDir)
+        public DatFile DiffDuplicates(List<ParentablePath> inputs)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing duplicate DAT");
 
@@ -488,29 +486,24 @@ namespace SabreTools.Library.DatFiles
 
             watch.Stop();
 
-            // Finally, loop through and output each of the DATs
-            watch.Start("Outputting duplicate DAT");
-            dupeData.Write(outDir, overwrite: false);
-            watch.Stop();
+            return dupeData;
         }
 
         /// <summary>
         /// Output non-cascading diffs
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void DiffIndividuals(List<string> inputs, string outDir)
+        public List<DatFile> DiffIndividuals(List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffIndividuals(paths, outDir);
+            return DiffIndividuals(paths);
         }
 
         /// <summary>
         /// Output non-cascading diffs
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void DiffIndividuals(List<ParentablePath> inputs, string outDir)
+        public List<DatFile> DiffIndividuals(List<ParentablePath> inputs)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing all individual DATs");
 
@@ -564,37 +557,24 @@ namespace SabreTools.Library.DatFiles
 
             watch.Stop();
 
-            // Finally, loop through and output each of the DATs
-            watch.Start("Outputting all individual DATs");
-
-            Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
-            {
-                string path = inputs[j].GetOutputPath(outDir, false /* inplace */);
-
-                // Try to output the file
-                outDats[j].Write(path, overwrite: false);
-            });
-
-            watch.Stop();
+            return outDats.ToList();
         }
 
         /// <summary>
         /// Output non-duplicate item diff
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void DiffNoDuplicates(List<string> inputs, string outDir)
+        public DatFile DiffNoDuplicates(List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            DiffNoDuplicates(paths, outDir);
+            return DiffNoDuplicates(paths);
         }
 
         /// <summary>
         /// Output non-duplicate item diff
         /// </summary>
         /// <param name="inputs">List of inputs to write out from</param>
-        /// <param name="outDir">Output directory to write the DATs to</param>
-        public void DiffNoDuplicates(List<ParentablePath> inputs, string outDir)
+        public DatFile DiffNoDuplicates(List<ParentablePath> inputs)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing no duplicate DAT");
 
@@ -642,10 +622,7 @@ namespace SabreTools.Library.DatFiles
 
             watch.Stop();
 
-            // Finally, loop through and output each of the DATs
-            watch.Start("Outputting no duplicate DAT");
-            outerDiffData.Write(outDir, overwrite: false);
-            watch.Stop();
+            return outerDiffData;
         }
 
         /// <summary>

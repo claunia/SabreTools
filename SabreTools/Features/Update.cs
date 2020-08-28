@@ -206,15 +206,43 @@ namespace SabreTools.Features
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
-                userInputDat.DiffDuplicates(inputPaths, OutputDir);
+            {
+                DatFile dupeData = userInputDat.DiffDuplicates(inputPaths);
+
+                InternalStopwatch watch = new InternalStopwatch("Outputting duplicate DAT");
+                dupeData.Write(OutputDir, overwrite: false);
+                watch.Stop();
+            }
 
             // Output only DatItems that are not duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffNoDupesOnly))
-                userInputDat.DiffNoDuplicates(inputPaths, OutputDir);
+            {
+                DatFile outerDiffData = userInputDat.DiffNoDuplicates(inputPaths);
+
+                InternalStopwatch watch = new InternalStopwatch("Outputting no duplicate DAT");
+                outerDiffData.Write(OutputDir, overwrite: false);
+                watch.Stop();
+            }
 
             // Output only DatItems that are unique to each input
             if (updateMode.HasFlag(UpdateMode.DiffIndividualsOnly))
-                userInputDat.DiffIndividuals(inputPaths, OutputDir);
+            {
+                // Get all of the output DatFiles
+                List<DatFile> datFiles = userInputDat.DiffIndividuals(inputPaths);
+
+                // Loop through and output the new DatFiles
+                InternalStopwatch watch = new InternalStopwatch("Outputting all individual DATs");
+
+                Parallel.For(0, inputPaths.Count, Globals.ParallelOptions, j =>
+                {
+                    string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
+
+                    // Try to output the file
+                    datFiles[j].Write(path, overwrite: GetBoolean(features, InplaceValue));
+                });
+
+                watch.Stop();
+            }
 
             // Output cascaded diffs
             if (updateMode.HasFlag(UpdateMode.DiffCascade))
