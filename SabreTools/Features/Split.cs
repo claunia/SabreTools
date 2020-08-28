@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
+using SabreTools.Library.DatItems;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -61,10 +64,15 @@ namespace SabreTools.Features
                 // Extension splitting
                 if (splittingMode.HasFlag(SplittingMode.Extension))
                 {
-                    internalDat.SplitByExtension(
-                        OutputDir,
-                        GetList(features, ExtAListValue),
-                        GetList(features, ExtBListValue));
+                    (DatFile extADat, DatFile extBDat) = internalDat.SplitByExtension(GetList(features, ExtAListValue), GetList(features, ExtBListValue));
+
+                    InternalStopwatch watch = new InternalStopwatch("Outputting extension-split DATs");
+
+                    // Output both possible DatFiles
+                    extADat.Write(OutputDir);
+                    extBDat.Write(OutputDir);
+
+                    watch.Stop();
                 }
 
                 // Hash splitting
@@ -83,11 +91,33 @@ namespace SabreTools.Features
 
                 // Size splitting
                 if (splittingMode.HasFlag(SplittingMode.Size))
-                    internalDat.SplitBySize(OutputDir, GetInt64(features, RadixInt64Value));
+                {
+                    (DatFile lessThan, DatFile greaterThan) = internalDat.SplitBySize(GetInt64(features, RadixInt64Value));
+
+                    InternalStopwatch watch = new InternalStopwatch("Outputting size-split DATs");
+
+                    // Output both possible DatFiles
+                    lessThan.Write(OutputDir);
+                    greaterThan.Write(OutputDir);
+
+                    watch.Stop();
+                }
 
                 // Type splitting
                 if (splittingMode.HasFlag(SplittingMode.Type))
-                    internalDat.SplitByType(OutputDir);
+                {
+                    Dictionary<ItemType, DatFile> typeDats = internalDat.SplitByType();
+
+                    InternalStopwatch watch = new InternalStopwatch("Outputting ItemType DATs");
+
+                    // Loop through each type DatFile
+                    Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
+                    {
+                        typeDats[itemType].Write(OutputDir);
+                    });
+
+                    watch.Stop();
+                }
             }
         }
     }

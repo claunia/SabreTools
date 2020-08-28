@@ -296,31 +296,6 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Fill a DatFile with all items with a particular source index ID
-        /// </summary>
-        /// <param name="indexDat">DatFile to add found items to</param>
-        /// <param name="index">Source index ID to retrieve items for</param>
-        /// <returns>DatFile containing all items with the source index ID/returns>
-        public void FillWithSourceIndex(DatFile indexDat, int index)
-        {
-            // Loop through and add the items for this index to the output
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
-            {
-                List<DatItem> items = DatItem.Merge(Items[key]);
-
-                // If the rom list is empty or null, just skip it
-                if (items == null || items.Count == 0)
-                    return;
-
-                foreach (DatItem item in items)
-                {
-                    if (item.Source.Index == index)
-                        indexDat.Items.Add(key, item);
-                }
-            });
-        }
-
-        /// <summary>
         /// Output diffs against a base set represented by the current DAT
         /// </summary>
         /// <param name="intDat">DatFile to replace the values in</param>
@@ -623,6 +598,56 @@ namespace SabreTools.Library.DatFiles
             watch.Stop();
 
             return outerDiffData;
+        }
+
+        /// <summary>
+        /// Fill a DatFile with all items with a particular ItemType
+        /// </summary>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="itemType">ItemType to retrieve items for</param>
+        /// <returns>DatFile containing all items with the ItemType/returns>
+        public void FillWithItemType(DatFile indexDat, ItemType itemType)
+        {
+            // Loop through and add the items for this index to the output
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = DatItem.Merge(Items[key]);
+
+                // If the rom list is empty or null, just skip it
+                if (items == null || items.Count == 0)
+                    return;
+
+                foreach (DatItem item in items)
+                {
+                    if (item.ItemType == itemType)
+                        indexDat.Items.Add(key, item);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Fill a DatFile with all items with a particular source index ID
+        /// </summary>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="index">Source index ID to retrieve items for</param>
+        /// <returns>DatFile containing all items with the source index ID/returns>
+        public void FillWithSourceIndex(DatFile indexDat, int index)
+        {
+            // Loop through and add the items for this index to the output
+            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = DatItem.Merge(Items[key]);
+
+                // If the rom list is empty or null, just skip it
+                if (items == null || items.Count == 0)
+                    return;
+
+                foreach (DatItem item in items)
+                {
+                    if (item.Source.Index == index)
+                        indexDat.Items.Add(key, item);
+                }
+            });
         }
 
         /// <summary>
@@ -1868,6 +1893,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        // TODO: See if any of the helper methods can be broken up a bit more neatly
         #region Populate DAT from Directory
 
         /// <summary>
@@ -2223,6 +2249,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
+        // TODO: See if any of the helper methods can be broken up a bit more neatly
         #region Rebuilding and Verifying
 
         /// <summary>
@@ -3032,15 +3059,14 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Split a DAT by input extensions
         /// </summary>
-        /// <param name="outDir">Name of the directory to write the DATs out to</param>
         /// <param name="extA">List of extensions to split on (first DAT)</param>
         /// <param name="extB">List of extensions to split on (second DAT)</param>
-        /// <returns>True if split succeeded, false otherwise</returns>
-        public bool SplitByExtension(string outDir, List<string> extA, List<string> extB)
+        /// <returns>Extension Set A and Extension Set B DatFiles</returns>
+        public (DatFile extADat, DatFile extBDat) SplitByExtension(List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
             if (Items.TotalCount == 0)
-                return false;
+                return (null, null);
 
             // Make sure all of the extensions don't have a dot at the beginning
             var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant());
@@ -3050,15 +3076,15 @@ namespace SabreTools.Library.DatFiles
             string newExtBString = string.Join(",", newExtB);
 
             // Set all of the appropriate outputs for each of the subsets
-            DatFile datdataA = Create(Header.CloneStandard());
-            datdataA.Header.FileName += $" ({newExtAString})";
-            datdataA.Header.Name += $" ({newExtAString})";
-            datdataA.Header.Description += $" ({newExtAString})";
+            DatFile extADat = Create(Header.CloneStandard());
+            extADat.Header.FileName += $" ({newExtAString})";
+            extADat.Header.Name += $" ({newExtAString})";
+            extADat.Header.Description += $" ({newExtAString})";
 
-            DatFile datdataB = Create(Header.CloneStandard());
-            datdataB.Header.FileName += $" ({newExtBString})";
-            datdataB.Header.Name += $" ({newExtBString})";
-            datdataB.Header.Description += $" ({newExtBString})";
+            DatFile extBDat = Create(Header.CloneStandard());
+            extBDat.Header.FileName += $" ({newExtBString})";
+            extBDat.Header.Name += $" ({newExtBString})";
+            extBDat.Header.Description += $" ({newExtBString})";
 
             // Now separate the roms accordingly
             Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
@@ -3068,25 +3094,22 @@ namespace SabreTools.Library.DatFiles
                 {
                     if (newExtA.Contains(PathExtensions.GetNormalizedExtension(item.Name)))
                     {
-                        datdataA.Items.Add(key, item);
+                        extADat.Items.Add(key, item);
                     }
                     else if (newExtB.Contains(PathExtensions.GetNormalizedExtension(item.Name)))
                     {
-                        datdataB.Items.Add(key, item);
+                        extBDat.Items.Add(key, item);
                     }
                     else
                     {
-                        datdataA.Items.Add(key, item);
-                        datdataB.Items.Add(key, item);
+                        extADat.Items.Add(key, item);
+                        extBDat.Items.Add(key, item);
                     }
                 }
             });
 
-            // Then write out both files
-            bool success = datdataA.Write(outDir);
-            success &= datdataB.Write(outDir);
-
-            return success;
+            // Then return both DatFiles
+            return (extADat, extBDat);
         }
 
         /// <summary>
@@ -3094,6 +3117,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outDir">Name of the directory to write the DATs out to</param>
         /// <returns>True if split succeeded, false otherwise</returns>
+        /// TODO: Can this follow the same pattern as type split?
         public bool SplitByHash(string outDir)
         {
             // Create each of the respective output DATs
@@ -3333,23 +3357,22 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Split a DAT by size of Rom
         /// </summary>
-        /// <param name="outDir">Name of the directory to write the DATs out to</param>
         /// <param name="radix">Long value representing the split point</param>
-        /// <returns>True if split succeeded, false otherwise</returns>
-        public bool SplitBySize(string outDir, long radix)
+        /// <returns>Less Than and Greater Than DatFiles</returns>
+        public (DatFile lessThan, DatFile greaterThan) SplitBySize(long radix)
         {
             // Create each of the respective output DATs
             Globals.Logger.User("Creating and populating new DATs");
 
-            DatFile lessDat = Create(Header.CloneStandard());
-            lessDat.Header.FileName += $" (less than {radix})";
-            lessDat.Header.Name += $" (less than {radix})";
-            lessDat.Header.Description += $" (less than {radix})";
+            DatFile lessThan = Create(Header.CloneStandard());
+            lessThan.Header.FileName += $" (less than {radix})";
+            lessThan.Header.Name += $" (less than {radix})";
+            lessThan.Header.Description += $" (less than {radix})";
 
-            DatFile greaterEqualDat = Create(Header.CloneStandard());
-            greaterEqualDat.Header.FileName += $" (equal-greater than {radix})";
-            greaterEqualDat.Header.Name += $" (equal-greater than {radix})";
-            greaterEqualDat.Header.Description += $" (equal-greater than {radix})";
+            DatFile greaterThan = Create(Header.CloneStandard());
+            greaterThan.Header.FileName += $" (equal-greater than {radix})";
+            greaterThan.Header.Name += $" (equal-greater than {radix})";
+            greaterThan.Header.Description += $" (equal-greater than {radix})";
 
             // Now populate each of the DAT objects in turn
             Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
@@ -3359,90 +3382,59 @@ namespace SabreTools.Library.DatFiles
                 {
                     // If the file is not a Rom, it automatically goes in the "lesser" dat
                     if (item.ItemType != ItemType.Rom)
-                        lessDat.Items.Add(key, item);
+                        lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
                     else if (item.ItemType == ItemType.Rom && (item as Rom).Size < radix)
-                        lessDat.Items.Add(key, item);
+                        lessThan.Items.Add(key, item);
 
                     // If the file is a Rom and greater than or equal to the radix, put it in the "greater" dat
                     else if (item.ItemType == ItemType.Rom && (item as Rom).Size >= radix)
-                        greaterEqualDat.Items.Add(key, item);
+                        greaterThan.Items.Add(key, item);
                 }
             });
 
-            // Now, output all of the files to the output directory
-            Globals.Logger.User("DAT information created, outputting new files");
-            bool success = true;
-            success &= lessDat.Write(outDir);
-            success &= greaterEqualDat.Write(outDir);
-
-            return success;
+            // Then return both DatFiles
+            return (lessThan, greaterThan);
         }
 
         /// <summary>
         /// Split a DAT by type of DatItem
         /// </summary>
-        /// <param name="outDir">Name of the directory to write the DATs out to</param>
-        /// <returns>True if split succeeded, false otherwise</returns>
-        public bool SplitByType(string outDir)
+        /// <returns>Dictionary of ItemType to DatFile mappings</returns>
+        public Dictionary<ItemType, DatFile> SplitByType()
         {
             // Create each of the respective output DATs
             Globals.Logger.User("Creating and populating new DATs");
 
-            DatFile diskdat = Create(Header.CloneStandard());
-            diskdat.Header.FileName += " (Disk)";
-            diskdat.Header.Name += " (Disk)";
-            diskdat.Header.Description += " (Disk)";
+            // Create the set of type-to-dat mappings
+            Dictionary<ItemType, DatFile> typeDats = new Dictionary<ItemType, DatFile>();
 
-            DatFile mediadat = Create(Header.CloneStandard());
-            mediadat.Header.FileName += " (Media)";
-            mediadat.Header.Name += " (Media)";
-            mediadat.Header.Description += " (Media)";
+            // We only care about a subset of types
+            List<ItemType> outputTypes = new List<ItemType>
+            {
+                ItemType.Disk,
+                ItemType.Media,
+                ItemType.Rom,
+                ItemType.Sample,
+            };
 
-            DatFile romdat = Create(Header.CloneStandard());
-            romdat.Header.FileName += " (Rom)";
-            romdat.Header.Name += " (Rom)";
-            romdat.Header.Description += " (Rom)";
-
-            DatFile sampledat = Create(Header.CloneStandard());
-            sampledat.Header.FileName += " (Sample)";
-            sampledat.Header.Name += " (Sample)";
-            sampledat.Header.Description += " (Sample)";
+            // Setup all of the DatFiles
+            foreach (ItemType itemType in outputTypes)
+            {
+                typeDats[itemType] = Create(Header.CloneStandard());
+                typeDats[itemType].Header.FileName += $" ({itemType})";
+                typeDats[itemType].Header.Name += $" ({itemType})";
+                typeDats[itemType].Header.Description += $" ({itemType})";
+            }
 
             // Now populate each of the DAT objects in turn
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(outputTypes, Globals.ParallelOptions, itemType =>
             {
-                List<DatItem> items = Items[key];
-                foreach (DatItem item in items)
-                {
-                     // If the file is a Disk
-                     if (item.ItemType == ItemType.Disk)
-                        diskdat.Items.Add(key, item);
-
-                    // If the file is a Media
-                    else if (item.ItemType == ItemType.Media)
-                        mediadat.Items.Add(key, item);
-
-                    // If the file is a Rom
-                    else if (item.ItemType == ItemType.Rom)
-                        romdat.Items.Add(key, item);
-
-                    // If the file is a Sample
-                    else if (item.ItemType == ItemType.Sample)
-                        sampledat.Items.Add(key, item);
-                }
+                FillWithItemType(typeDats[itemType], itemType);
             });
 
-            // Now, output all of the files to the output directory
-            Globals.Logger.User("DAT information created, outputting new files");
-            bool success = true;
-            success &= diskdat.Write(outDir);
-            success &= mediadat.Write(outDir);
-            success &= romdat.Write(outDir);
-            success &= sampledat.Write(outDir);
-
-            return success;
+            return typeDats;
         }
 
         #endregion
