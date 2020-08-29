@@ -2362,21 +2362,7 @@ namespace SabreTools.Library.DatFiles
 
             // Now we want to get forcepack flag if it's not overridden
             if (outputFormat == OutputFormat.Folder && Header.ForcePacking != PackingFlag.None)
-            {
-                switch (Header.ForcePacking)
-                {
-                    case PackingFlag.Zip:
-                        outputFormat = OutputFormat.TorrentZip;
-                        break;
-                    case PackingFlag.Unzip:
-                    case PackingFlag.Partial:
-                        outputFormat = OutputFormat.Folder;
-                        break;
-                    case PackingFlag.Flat:
-                        outputFormat = OutputFormat.ParentFolder;
-                        break;
-                }
-            }
+                outputFormat = Header.ForcePacking.AsOutputFormat();
 
             // Preload the Skipper list
             Transform.Init();
@@ -2387,38 +2373,7 @@ namespace SabreTools.Library.DatFiles
 
             #region Rebuild from depots in order
 
-            string format = string.Empty;
-            switch (outputFormat)
-            {
-                case OutputFormat.Folder:
-                case OutputFormat.ParentFolder:
-                    format = "directory";
-                    break;
-                case OutputFormat.TapeArchive:
-                    format = "TAR";
-                    break;
-                case OutputFormat.Torrent7Zip:
-                    format = "Torrent7Z";
-                    break;
-                case OutputFormat.TorrentGzip:
-                case OutputFormat.TorrentGzipRomba:
-                    format = "TorrentGZ";
-                    break;
-                case OutputFormat.TorrentLRZip:
-                    format = "TorrentLRZ";
-                    break;
-                case OutputFormat.TorrentRar:
-                    format = "TorrentRAR";
-                    break;
-                case OutputFormat.TorrentXZ:
-                case OutputFormat.TorrentXZRomba:
-                    format = "TorrentXZ";
-                    break;
-                case OutputFormat.TorrentZip:
-                    format = "TorrentZip";
-                    break;
-            }
-
+            string format = outputFormat.FromOutputFormat() ?? string.Empty;
             InternalStopwatch watch = new InternalStopwatch($"Rebuilding all files to {format}");
 
             // Now loop through and get only directories from the input paths
@@ -2560,21 +2515,7 @@ namespace SabreTools.Library.DatFiles
 
             // Now we want to get forcepack flag if it's not overridden
             if (outputFormat == OutputFormat.Folder && Header.ForcePacking != PackingFlag.None)
-            {
-                switch (Header.ForcePacking)
-                {
-                    case PackingFlag.Zip:
-                        outputFormat = OutputFormat.TorrentZip;
-                        break;
-                    case PackingFlag.Unzip:
-                    case PackingFlag.Partial:
-                        outputFormat = OutputFormat.Folder;
-                        break;
-                    case PackingFlag.Flat:
-                        outputFormat = OutputFormat.ParentFolder;
-                        break;
-                }
-            }
+                outputFormat = Header.ForcePacking.AsOutputFormat();
 
             // Preload the Skipper list
             Transform.Init();
@@ -2585,38 +2526,7 @@ namespace SabreTools.Library.DatFiles
 
             #region Rebuild from sources in order
 
-            string format = string.Empty;
-            switch (outputFormat)
-            {
-                case OutputFormat.Folder:
-                case OutputFormat.ParentFolder:
-                    format = "directory";
-                    break;
-                case OutputFormat.TapeArchive:
-                    format = "TAR";
-                    break;
-                case OutputFormat.Torrent7Zip:
-                    format = "Torrent7Z";
-                    break;
-                case OutputFormat.TorrentGzip:
-                case OutputFormat.TorrentGzipRomba:
-                    format = "TorrentGZ";
-                    break;
-                case OutputFormat.TorrentLRZip:
-                    format = "TorrentLRZ";
-                    break;
-                case OutputFormat.TorrentRar:
-                    format = "TorrentRAR";
-                    break;
-                case OutputFormat.TorrentXZ:
-                case OutputFormat.TorrentXZRomba:
-                    format = "TorrentXZ";
-                    break;
-                case OutputFormat.TorrentZip:
-                    format = "TorrentZip";
-                    break;
-            }
-
+            string format = outputFormat.FromOutputFormat() ?? string.Empty;
             InternalStopwatch watch = new InternalStopwatch($"Rebuilding all files to {format}");
 
             // Now loop through all of the files in all of the inputs

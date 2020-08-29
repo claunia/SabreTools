@@ -1,7 +1,10 @@
-﻿using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.Reports;
+﻿using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+
+using SabreTools.Library.DatFiles;
+using SabreTools.Library.DatItems;
+using SabreTools.Library.FileTypes;
+using SabreTools.Library.Reports;
 
 namespace SabreTools.Library.Tools
 {
@@ -35,6 +38,28 @@ namespace SabreTools.Library.Tools
 
                 default:
                     return Field.NULL;
+            }
+        }
+
+        /// <summary>
+        /// Get the default OutputFormat associated with each PackingFlag
+        /// </summary>
+        /// <param name="packing"></param>
+        /// <returns></returns>
+        public static OutputFormat AsOutputFormat(this PackingFlag packing)
+        {
+            switch (packing)
+            {
+                case PackingFlag.Zip:
+                    return OutputFormat.TorrentZip;
+                case PackingFlag.Unzip:
+                case PackingFlag.Partial:
+                    return OutputFormat.Folder;
+                case PackingFlag.Flat:
+                    return OutputFormat.ParentFolder;
+                case PackingFlag.None:
+                default:
+                    return OutputFormat.Folder;
             }
         }
 
@@ -2074,6 +2099,57 @@ namespace SabreTools.Library.Tools
                 OpenMSXSubType.Rom => "rom",
                 OpenMSXSubType.MegaRom => "megarom",
                 OpenMSXSubType.SCCPlusCart => "sccpluscart",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input OutputFormat
+        /// </summary>
+        /// <param name="itemType">OutputFormat to get value from</param>
+        /// <returns>String value corresponding to the OutputFormat</returns>
+        public static string FromOutputFormat(this OutputFormat itemType)
+        {
+#if NET_FRAMEWORK
+            switch (itemType)
+            {
+                case OutputFormat.Folder:
+                case OutputFormat.ParentFolder:
+                    return "directory";
+                case OutputFormat.TapeArchive:
+                    return "TAR";
+                case OutputFormat.Torrent7Zip:
+                    return "Torrent7Z";
+                case OutputFormat.TorrentGzip:
+                case OutputFormat.TorrentGzipRomba:
+                    return "TorrentGZ";
+                case OutputFormat.TorrentLRZip:
+                    return "TorrentLRZ";
+                case OutputFormat.TorrentRar:
+                    return "TorrentRAR";
+                case OutputFormat.TorrentXZ:
+                case OutputFormat.TorrentXZRomba:
+                    return "TorrentXZ";
+                case OutputFormat.TorrentZip:
+                    return "TorrentZip";
+                default:
+                    return null;
+            }
+#else
+            return itemType switch
+            {
+                OutputFormat.Folder => "directory",
+                OutputFormat.ParentFolder => "directory",
+                OutputFormat.TapeArchive => "TAR",
+                OutputFormat.Torrent7Zip => "Torrent7Z",
+                OutputFormat.TorrentGzip => "TorrentGZ",
+                OutputFormat.TorrentGzipRomba => "TorrentGZ",
+                OutputFormat.TorrentLRZip => "TorrentLRZ",
+                OutputFormat.TorrentRar => "TorrentRAR",
+                OutputFormat.TorrentXZ => "TorrentXZ",
+                OutputFormat.TorrentXZRomba => "TorrentXZ",
+                OutputFormat.TorrentZip => "TorrentZip",
                 _ => null,
             };
 #endif
