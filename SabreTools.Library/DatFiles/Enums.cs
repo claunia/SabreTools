@@ -233,8 +233,26 @@ namespace SabreTools.Library.DatFiles
     public enum PackingFlag
     {
         None = 0,
+
+        /// <summary>
+        /// Force all sets to be in archives, except disk and media
+        /// </summary>
         Zip,
+
+        /// <summary>
+        /// Force all sets to be extracted into subfolders
+        /// </summary>
         Unzip,
+
+        /// <summary>
+        /// Force sets with single items to be extracted to the parent folder
+        /// </summary>
+        Partial,
+
+        /// <summary>
+        /// Force all sets to be extracted to the parent folder
+        /// </summary>
+        Flat,
     }
 
     /// <summary>

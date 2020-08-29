@@ -2371,6 +2371,7 @@ namespace SabreTools.Library.DatFiles
                     case PackingFlag.Unzip:
                         outputFormat = OutputFormat.Folder;
                         break;
+                    // TODO: Check what output format would be for Partial and Flat
                 }
             }
 
@@ -2560,6 +2561,7 @@ namespace SabreTools.Library.DatFiles
                     case PackingFlag.Unzip:
                         outputFormat = OutputFormat.Folder;
                         break;
+                    // TODO: Check what output format would be for Partial and Flat
                 }
             }
 

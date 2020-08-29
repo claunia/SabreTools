@@ -1709,6 +1709,10 @@ namespace SabreTools.Library.Tools
                 case "no":
                 case "unzip":
                     return PackingFlag.Unzip;
+                case "partial":
+                    return PackingFlag.Partial;
+                case "flat":
+                    return PackingFlag.Flat;
                 case "none":
                 default:
                     return PackingFlag.None;
@@ -1720,6 +1724,8 @@ namespace SabreTools.Library.Tools
                 "zip" => PackingFlag.Zip,
                 "no" => PackingFlag.Unzip,
                 "unzip" => PackingFlag.Unzip,
+                "partial" => PackingFlag.Partial,
+                "flat" => PackingFlag.Flat,
                 "none" => PackingFlag.None,
                 _ => PackingFlag.None,
             };
@@ -2088,6 +2094,10 @@ namespace SabreTools.Library.Tools
                     return yesno ? "yes" : "zip";
                 case PackingFlag.Unzip:
                     return yesno ? "no" : "unzip";
+                case PackingFlag.Partial:
+                    return "partial";
+                case PackingFlag.Flat:
+                    return "flat";
                 default:
                     return null;
             }
@@ -2096,6 +2106,8 @@ namespace SabreTools.Library.Tools
             {
                 PackingFlag.Zip => yesno ? "yes" : "zip",
                 PackingFlag.Unzip => yesno ? "yes" : "zip",
+                PackingFlag.Partial => "partial",
+                PackingFlag.Flat => "flat",
                 _ => null,
             };
 #endif
