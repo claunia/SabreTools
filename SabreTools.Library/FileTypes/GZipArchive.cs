@@ -491,6 +491,7 @@ namespace SabreTools.Library.FileTypes
                     ds.Write(ibuffer, 0, ilen);
                     ds.Flush();
                 }
+
                 ds.Dispose();
 
                 // Now write the standard footer
@@ -500,7 +501,6 @@ namespace SabreTools.Library.FileTypes
                 // Dispose of everything
                 sw.Dispose();
                 outputStream.Dispose();
-                inputStream.Dispose();
             }
 
             return true;

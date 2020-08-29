@@ -373,7 +373,6 @@ namespace SabreTools.Library.FileTypes
 
                 // Dispose of everything
                 outputStream.Dispose();
-                inputStream.Dispose();
             }
 
             return true;

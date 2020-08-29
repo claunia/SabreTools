@@ -328,15 +328,11 @@ namespace SabreTools.Library.FileTypes
 
             // If either input is null or empty, return
             if (inputStream == null || rom == null || rom.Name == null)
-            {
                 return success;
-            }
 
             // If the stream is not readable, return
             if (!inputStream.CanRead)
-            {
                 return success;
-            }
 
             // Set internal variables
             FileStream outputStream = null;
@@ -352,9 +348,7 @@ namespace SabreTools.Library.FileTypes
             {
                 // If the full output path doesn't exist, create it
                 if (!Directory.Exists(Path.GetDirectoryName(fileName)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(fileName));
-                }
 
                 // Overwrite output files by default
                 outputStream = FileExtensions.TryCreate(fileName);
@@ -372,14 +366,13 @@ namespace SabreTools.Library.FileTypes
                         outputStream.Write(ibuffer, 0, ilen);
                         outputStream.Flush();
                     }
+
                     outputStream.Dispose();
 
                     if (rom.ItemType == ItemType.Rom)
                     {
                         if (date && !string.IsNullOrWhiteSpace((rom as Rom).Date))
-                        {
                             File.SetCreationTime(fileName, DateTime.Parse((rom as Rom).Date));
-                        }
                     }
 
                     success = true;
@@ -392,7 +385,6 @@ namespace SabreTools.Library.FileTypes
             }
             finally
             {
-                inputStream.Dispose();
                 outputStream?.Dispose();
             }
 

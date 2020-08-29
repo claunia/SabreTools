@@ -2686,28 +2686,7 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Set the deletion variables
-            bool usedExternally, usedInternally = false;
-
-            // Scan the file externally
-
-            // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-            BaseFile externalFileInfo = FileExtensions.GetInfo(
-                file,
-                omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes),
-                header: Header.HeaderSkipper,
-                asFiles: asFiles);
-
-            DatItem externalDatItem = null;
-            if (externalFileInfo.Type == FileType.AaruFormat)
-                externalDatItem = new Media(externalFileInfo);
-            else if (externalFileInfo.Type == FileType.CHD)
-                externalDatItem = new Disk(externalFileInfo);
-            else if (externalFileInfo.Type == FileType.None)
-                externalDatItem = new Rom(externalFileInfo);
-
-            usedExternally = RebuildIndividualFile(externalDatItem, file, outDir, date, inverse, outputFormat, updateDat, null /* isZip */);
-
-            // Scan the file internally
+            bool usedExternally = false, usedInternally = false;
 
             // Create an empty list of BaseFile for archive entries
             List<BaseFile> entries = null;
@@ -2726,7 +2705,7 @@ namespace SabreTools.Library.DatFiles
                 entries = archive.GetChildren(omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes), date: date);
             }
 
-            // If the entries list is null, we encountered an error and should scan exteranlly
+            // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && File.Exists(file))
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually

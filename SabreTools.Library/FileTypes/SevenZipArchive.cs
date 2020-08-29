@@ -438,15 +438,11 @@ namespace SabreTools.Library.FileTypes
 
             // If either input is null or empty, return
             if (inputStream == null || rom == null || rom.Name == null)
-            {
                 return success;
-            }
 
             // If the stream is not readable, return
             if (!inputStream.CanRead)
-            {
                 return success;
-            }
 
             // Seek to the beginning of the stream
             inputStream.Seek(0, SeekOrigin.Begin);
@@ -464,9 +460,7 @@ namespace SabreTools.Library.FileTypes
             {
                 // If the full output path doesn't exist, create it
                 if (!Directory.Exists(Path.GetDirectoryName(archiveFileName)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName));
-                }
 
                 // If the archive doesn't exist, create it and put the single file
                 if (!File.Exists(archiveFileName))
@@ -496,7 +490,7 @@ namespace SabreTools.Library.FileTypes
                         writeStream.Write(ibuffer, 0, ilen);
                         writeStream.Flush();
                     }
-                    inputStream.Dispose();
+
                     zipFile.ZipFileCloseWriteStream(Utilities.StringToByteArray(rom.CRC));
                 }
 
@@ -572,7 +566,6 @@ namespace SabreTools.Library.FileTypes
                                 writeStream.Flush();
                             }
 
-                            inputStream.Dispose();
                             zipFile.ZipFileCloseWriteStream(Utilities.StringToByteArray(rom.CRC));
                         }
 
@@ -611,14 +604,12 @@ namespace SabreTools.Library.FileTypes
             }
             finally
             {
-                inputStream?.Dispose();
             }
 
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
-            {
                 FileExtensions.TryDelete(archiveFileName);
-            }
+
             File.Move(tempFile, archiveFileName);
 
             return true;

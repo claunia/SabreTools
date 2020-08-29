@@ -313,15 +313,11 @@ namespace SabreTools.Library.FileTypes
 
             // If either input is null or empty, return
             if (inputStream == null || rom == null || rom.Name == null)
-            {
                 return success;
-            }
 
             // If the stream is not readable, return
             if (!inputStream.CanRead)
-            {
                 return success;
-            }
 
             // Get the output archive name from the first rebuild rom
             string archiveFileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Machine.Name) + (rom.Machine.Name.EndsWith(".tar") ? string.Empty : ".tar"));
@@ -334,9 +330,7 @@ namespace SabreTools.Library.FileTypes
             {
                 // If the full output path doesn't exist, create it
                 if (!Directory.Exists(Path.GetDirectoryName(archiveFileName)))
-                {
                     Directory.CreateDirectory(Path.GetDirectoryName(archiveFileName));
-                }
 
                 // If the archive doesn't exist, create it and put the single file
                 if (!File.Exists(archiveFileName))
@@ -344,9 +338,7 @@ namespace SabreTools.Library.FileTypes
                     // Get temporary date-time if possible
                     DateTime? usableDate = null;
                     if (date && !string.IsNullOrWhiteSpace(rom.Date) && DateTime.TryParse(rom.Date.Replace('\\', '/'), out DateTime dt))
-                    {
                         usableDate = dt;
-                    }
 
                     // Copy the input stream to the output
                     inputStream.Seek(0, SeekOrigin.Begin);
@@ -367,9 +359,7 @@ namespace SabreTools.Library.FileTypes
 
                     // If the old one doesn't contain the new file, then add it
                     if (!entries.Contains(rom.Name.Replace('\\', '/')))
-                    {
                         inputIndexMap.Add(rom.Name.Replace('\\', '/'), -1);
-                    }
 
                     // Then add all of the old entries to it too
                     for (int i = 0; i < entries.Count; i++)
@@ -397,9 +387,7 @@ namespace SabreTools.Library.FileTypes
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
                         if (date && !string.IsNullOrWhiteSpace(rom.Date) && DateTime.TryParse(rom.Date.Replace('\\', '/'), out DateTime dt))
-                        {
                             usableDate = dt;
-                        }
 
                         // If we have the input file, add it now
                         if (index < 0)
@@ -435,16 +423,14 @@ namespace SabreTools.Library.FileTypes
             }
             finally
             {
-                inputStream.Dispose();
                 tarFile.Dispose();
                 oldTarFile.Dispose();
             }
 
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
-            {
                 FileExtensions.TryDelete(archiveFileName);
-            }
+
             File.Move(tempFile, archiveFileName);
 
             return success;
