@@ -10,7 +10,7 @@ The SabreTools project started as a desktop port of some core features of Wizard
 
 ## Features
 
-For the most complete set of information, see the [README.1ST](https://raw.githubusercontent.com/SabreTools/SabreTools/main/SabreTools.Library/README.1ST) file. Currently, the SabreTools suite consists of the following programs:
+For the most complete set of information, see the the [Wiki](https://github.com/SabreTools/SabreTools/wiki) or the [README.1ST](https://raw.githubusercontent.com/SabreTools/SabreTools/main/SabreTools.Library/README.1ST) file. Currently, the SabreTools suite consists of the following programs:
 
 ### SabreTools / SabreTools.Library
 
@@ -75,8 +75,6 @@ An in-progress tool that will try to act as a C# port of the Go-based [Romba](ht
 Last stable releases can be found on [the Releases tab](https://github.com/SabreTools/SabreTools/releases).
 
 Latest unstable builds can be found on [AppVeyor](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main).
-
-For older test versions, please see the old [MEGA link](https://mega.nz/#F!8JUhWZxT!h4DnCsgcBsMH3RRDKv27CA). Note that older test versions had wonky naming, didn't always include all variants, and may be feature incomplete or not working at all.
 
 ## Licensing
 
