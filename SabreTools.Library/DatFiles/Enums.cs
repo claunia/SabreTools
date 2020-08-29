@@ -213,7 +213,9 @@ namespace SabreTools.Library.DatFiles
         Merged,
         NonMerged,
         Full,
-        Device, // This is not usually defined for Merging flags
+
+        /// <remarks>This is not usually defined for Merging flags</remarks>
+        Device,
     }
 
     /// <summary>

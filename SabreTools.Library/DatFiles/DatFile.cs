@@ -2340,7 +2340,7 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildDepot(
             List<string> inputs,
-            string outDir = null,
+            string outDir,
             bool date = false,
             bool delete = false,
             bool inverse = false,
@@ -2475,7 +2475,7 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildGeneric(
             List<string> inputs,
-            string outDir = null,
+            string outDir,
             bool quickScan = false,
             bool date = false,
             bool delete = false,
