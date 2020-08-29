@@ -19,6 +19,11 @@ namespace SabreTools.Library.FileTypes
         #region Protected instance variables
 
         protected List<BaseFile> _children;
+        
+        /// <summary>
+        /// Flag specific to Folder to omit Machine name from output path
+        /// </summary>
+        private bool writeToParent = false;
 
         #endregion
 
@@ -27,10 +32,12 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Create a new folder with no base file
         /// </summary>
-        public Folder()
+        /// <param name="writeToParent">True to write directly to parent, false otherwise</param>
+        public Folder(bool writeToParent = false)
             : base()
         {
             this.Type = FileType.Folder;
+            this.writeToParent = writeToParent;
         }
 
         /// <summary>
@@ -55,7 +62,10 @@ namespace SabreTools.Library.FileTypes
             switch (outputFormat)
             {
                 case OutputFormat.Folder:
-                    return new Folder();
+                    return new Folder(false);
+
+                case OutputFormat.ParentFolder:
+                    return new Folder(true);
 
                 case OutputFormat.TapeArchive:
                     return new TapeArchive();
@@ -332,7 +342,11 @@ namespace SabreTools.Library.FileTypes
             FileStream outputStream = null;
 
             // Get the output folder name from the first rebuild rom
-            string fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Machine.Name), Sanitizer.RemovePathUnsafeCharacters(rom.Name));
+            string fileName;
+            if (writeToParent)
+                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Name));
+            else
+                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Machine.Name), Sanitizer.RemovePathUnsafeCharacters(rom.Name));
 
             try
             {

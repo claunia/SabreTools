@@ -1283,6 +1283,7 @@ namespace SabreTools.Library.FileTypes
     {
         // Currently implemented
         Folder,
+        ParentFolder,
         TorrentZip,
         TorrentGzip,
         TorrentGzipRomba,

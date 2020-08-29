@@ -2369,9 +2369,12 @@ namespace SabreTools.Library.DatFiles
                         outputFormat = OutputFormat.TorrentZip;
                         break;
                     case PackingFlag.Unzip:
+                    case PackingFlag.Partial:
                         outputFormat = OutputFormat.Folder;
                         break;
-                    // TODO: Check what output format would be for Partial and Flat
+                    case PackingFlag.Flat:
+                        outputFormat = OutputFormat.ParentFolder;
+                        break;
                 }
             }
 
@@ -2388,6 +2391,7 @@ namespace SabreTools.Library.DatFiles
             switch (outputFormat)
             {
                 case OutputFormat.Folder:
+                case OutputFormat.ParentFolder:
                     format = "directory";
                     break;
                 case OutputFormat.TapeArchive:
@@ -2559,9 +2563,12 @@ namespace SabreTools.Library.DatFiles
                         outputFormat = OutputFormat.TorrentZip;
                         break;
                     case PackingFlag.Unzip:
+                    case PackingFlag.Partial:
                         outputFormat = OutputFormat.Folder;
                         break;
-                    // TODO: Check what output format would be for Partial and Flat
+                    case PackingFlag.Flat:
+                        outputFormat = OutputFormat.ParentFolder;
+                        break;
                 }
             }
 
@@ -2578,6 +2585,7 @@ namespace SabreTools.Library.DatFiles
             switch (outputFormat)
             {
                 case OutputFormat.Folder:
+                case OutputFormat.ParentFolder:
                     format = "directory";
                     break;
                 case OutputFormat.TapeArchive:
@@ -2855,7 +2863,7 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Get a generic stream for the file
-                Stream fileStream = new MemoryStream();
+                Stream fileStream = null;
 
                 // If we have a zipfile, extract the stream to memory
                 if (isZip != null)
