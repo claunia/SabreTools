@@ -782,10 +782,9 @@ namespace SabreTools.Library.DatFiles
         /// List all duplicates found in a DAT based on a DatItem
         /// </summary>
         /// <param name="datItem">Item to try to match</param>
-        /// <param name="remove">True to mark matched roms for removal from the input, false otherwise (default)</param>
         /// <param name="sorted">True if the DAT is already sorted accordingly, false otherwise (default)</param>
         /// <returns>List of matched DatItem objects</returns>
-        public List<DatItem> GetDuplicates(DatItem datItem, bool remove = false, bool sorted = false)
+        public List<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
             List<DatItem> output = new List<DatItem>();
 
@@ -806,6 +805,8 @@ namespace SabreTools.Library.DatFiles
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];
+                if (other.Remove)
+                    continue;
 
                 if (datItem.Equals(other))
                 {
@@ -818,13 +819,10 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
-            // If we're in removal mode, add back all roms with the proper flags
-            if (remove)
-            {
-                Remove(key);
-                AddRange(key, output);
-                AddRange(key, left);
-            }
+            // Add back all roms with the proper flags
+            Remove(key);
+            AddRange(key, output);
+            AddRange(key, left);
 
             return output;
         }

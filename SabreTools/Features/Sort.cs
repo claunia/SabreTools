@@ -101,10 +101,21 @@ namespace SabreTools.Features
                         datdata.Header.HeaderSkipper = Header.HeaderSkipper;
 
                     // If we have the depot flag, respect it
+                    bool success;
                     if (Header.InputDepot?.IsActive ?? false)
-                        datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat, updateDat);
+                        success = datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
                     else
-                        datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                        success = datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
+
+                    // If we have a success and we're updating the DAT, write it out
+                    if (success && updateDat)
+                    {
+                        datdata.Header.FileName = $"fixDAT_{Header.FileName}";
+                        datdata.Header.Name = $"fixDAT_{Header.Name}";
+                        datdata.Header.Description = $"fixDAT_{Header.Description}";
+                        datdata.Items.ClearMarked();
+                        datdata.Write(OutputDir);
+                    }
                 }
             }
 
@@ -131,10 +142,21 @@ namespace SabreTools.Features
                 watch.Stop();
 
                 // If we have the depot flag, respect it
+                bool success;
                 if (Header.InputDepot?.IsActive ?? false)
-                    datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat, updateDat);
+                    success = datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat);
                 else
-                    datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                    success = datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+
+                // If we have a success and we're updating the DAT, write it out
+                if (success && updateDat)
+                {
+                    datdata.Header.FileName = $"fixDAT_{Header.FileName}";
+                    datdata.Header.Name = $"fixDAT_{Header.Name}";
+                    datdata.Header.Description = $"fixDAT_{Header.Description}";
+                    datdata.Items.ClearMarked();
+                    datdata.Write(OutputDir);
+                }
             }
         }
     }

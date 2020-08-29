@@ -193,7 +193,6 @@ have a current entry in the DAT index.";
                 onlyDirs,
                 outDir: _depots.Keys.ToList()[0],
                 outputFormat: OutputFormat.TorrentGzipRomba,
-                updateDat: false,
                 asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
         }
     }

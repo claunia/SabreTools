@@ -2337,7 +2337,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildDepot(
             List<string> inputs,
@@ -2345,8 +2344,7 @@ namespace SabreTools.Library.DatFiles
             bool date = false,
             bool delete = false,
             bool inverse = false,
-            OutputFormat outputFormat = OutputFormat.Folder,
-            bool updateDat = true)
+            OutputFormat outputFormat = OutputFormat.Folder)
         {
             #region Perform setup
 
@@ -2445,11 +2443,11 @@ namespace SabreTools.Library.DatFiles
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
                 if (Items[hash][0].ItemType == ItemType.Disk)
-                    usedInternally = RebuildIndividualFile(new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, updateDat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, false /* isZip */);
                 else if (Items[hash][0].ItemType == ItemType.Media)
-                    usedInternally = RebuildIndividualFile(new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, updateDat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, false /* isZip */);
                 else
-                    usedInternally = RebuildIndividualFile(new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, updateDat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, false /* isZip */);
 
                 // If we are supposed to delete the depot file, do so
                 if (delete && usedInternally)
@@ -2459,16 +2457,6 @@ namespace SabreTools.Library.DatFiles
             watch.Stop();
 
             #endregion
-
-            // If we're updating the DAT, output to the rebuild directory
-            if (updateDat)
-            {
-                Header.FileName = $"fixDAT_{Header.FileName}";
-                Header.Name = $"fixDAT_{Header.Name}";
-                Header.Description = $"fixDAT_{Header.Description}";
-                Items.ClearMarked();
-                Write(outDir);
-            }
 
             return success;
         }
@@ -2483,7 +2471,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
         public bool RebuildGeneric(
@@ -2494,7 +2481,6 @@ namespace SabreTools.Library.DatFiles
             bool delete = false,
             bool inverse = false,
             OutputFormat outputFormat = OutputFormat.Folder,
-            bool updateDat = true,
             TreatAsFiles asFiles = 0x00)
         {
             #region Perform setup
@@ -2536,7 +2522,7 @@ namespace SabreTools.Library.DatFiles
                 if (File.Exists(input))
                 {
                     Globals.Logger.User($"Checking file: {input}");
-                    RebuildGenericHelper(input, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                    RebuildGenericHelper(input, outDir, quickScan, date, delete, inverse, outputFormat, asFiles);
                 }
 
                 // If the input is a directory
@@ -2546,7 +2532,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
                     {
                         Globals.Logger.User($"Checking file: {file}");
-                        RebuildGenericHelper(file, outDir, quickScan, date, delete, inverse, outputFormat, updateDat, asFiles);
+                        RebuildGenericHelper(file, outDir, quickScan, date, delete, inverse, outputFormat, asFiles);
                     }
                 }
             }
@@ -2554,16 +2540,6 @@ namespace SabreTools.Library.DatFiles
             watch.Stop();
 
             #endregion
-
-            // If we're updating the DAT, output to the rebuild directory
-            if (updateDat)
-            {
-                Header.FileName = $"fixDAT_{Header.FileName}";
-                Header.Name = $"fixDAT_{Header.Name}";
-                Header.Description = $"fixDAT_{Header.Description}";
-                Items.ClearMarked();
-                Write(outDir);
-            }
 
             return success;
         }
@@ -2578,7 +2554,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="delete">True if input files should be deleted, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         private void RebuildGenericHelper(
             string file,
@@ -2588,7 +2563,6 @@ namespace SabreTools.Library.DatFiles
             bool delete,
             bool inverse,
             OutputFormat outputFormat,
-            bool updateDat,
             TreatAsFiles asFiles)
         {
             // If we somehow have a null filename, return
@@ -2632,7 +2606,7 @@ namespace SabreTools.Library.DatFiles
                 else if (internalFileInfo.Type == FileType.None)
                     internalDatItem = new Rom(internalFileInfo);
 
-                usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, updateDat, null /* isZip */);
+                usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, null /* isZip */);
             }
             // Otherwise, loop through the entries and try to match
             else
@@ -2640,7 +2614,7 @@ namespace SabreTools.Library.DatFiles
                 foreach (BaseFile entry in entries)
                 {
                     DatItem internalDatItem = DatItem.Create(entry);
-                    usedInternally |= RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, updateDat, !isTorrentGzip /* isZip */);
+                    usedInternally |= RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, !isTorrentGzip /* isZip */);
                 }
             }
 
@@ -2658,7 +2632,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="updateDat">True if the updated DAT should be output, false otherwise</param>
         /// <param name="isZip">True if the input file is an archive, false if the file is TGZ, null otherwise</param>
         /// <returns>True if the file was able to be rebuilt, false otherwise</returns>
         private bool RebuildIndividualFile(
@@ -2668,7 +2641,6 @@ namespace SabreTools.Library.DatFiles
             bool date,
             bool inverse,
             OutputFormat outputFormat,
-            bool updateDat,
             bool? isZip)
         {
             // Set the initial output value
@@ -2693,7 +2665,7 @@ namespace SabreTools.Library.DatFiles
             string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
 
             // Find if the file has duplicates in the DAT
-            List<DatItem> dupes = Items.GetDuplicates(datItem, remove: updateDat);
+            List<DatItem> dupes = Items.GetDuplicates(datItem);
             bool hasDuplicates = dupes.Count > 0;
 
             // If either we have duplicates or we're filtering
@@ -2867,7 +2839,7 @@ namespace SabreTools.Library.DatFiles
                         Rom headerless = new Rom(transformStream.GetInfo(keepReadOpen: true));
 
                         // Find if the file has duplicates in the DAT
-                        dupes = Items.GetDuplicates(headerless, remove: updateDat);
+                        dupes = Items.GetDuplicates(headerless);
                         hasDuplicates = dupes.Count > 0;
 
                         // If it has duplicates and we're not filtering, rebuild it
@@ -2977,8 +2949,8 @@ namespace SabreTools.Library.DatFiles
                     continue;
 
                 // Now we want to remove all duplicates from the DAT
-                Items.GetDuplicates(new Rom(fileinfo), remove: true)
-                    .AddRange(Items.GetDuplicates(new Disk(fileinfo), remove: true));
+                Items.GetDuplicates(new Rom(fileinfo))
+                    .AddRange(Items.GetDuplicates(new Disk(fileinfo)));
             }
 
             watch.Stop();

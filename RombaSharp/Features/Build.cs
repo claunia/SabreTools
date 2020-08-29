@@ -67,8 +67,7 @@ structure according to the original DAT master directory tree structure.";
                 datFile.RebuildDepot(
                     onlineDepots,
                     outDir: outputFolder,
-                    outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip),
-                    updateDat: false);
+                    outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip));
             }
         }
     }
