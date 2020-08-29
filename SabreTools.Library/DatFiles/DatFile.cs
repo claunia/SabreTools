@@ -2479,6 +2479,10 @@ namespace SabreTools.Library.DatFiles
                 if (fileinfo == null)
                     continue;
 
+                // If we have partial, just ensure we are sorted correctly
+                if (outputFormat == OutputFormat.Folder && Header.ForcePacking == PackingFlag.Partial)
+                    Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
+
                 // If there are no items in the hash, we continue
                 if (Items[hash] == null || Items[hash].Count == 0)
                     continue;
@@ -2909,9 +2913,23 @@ namespace SabreTools.Library.DatFiles
                 Globals.Logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.Name)}', rebuilding accordingly...");
                 rebuilt = true;
 
+                // Special case for partial packing mode
+                bool shouldCheck = false;
+                if (outputFormat == OutputFormat.Folder && Header.ForcePacking == PackingFlag.Partial)
+                {
+                    shouldCheck = true;
+                    Items.BucketBy(Field.Machine_Name, DedupeType.None, lower: false);
+                }
+
                 // Now loop through the list and rebuild accordingly
                 foreach (DatItem item in dupes)
                 {
+                    // If we should check for the items in the machine
+                    if (shouldCheck && Items[item.Machine.Name].Count > 1)
+                        outputFormat = OutputFormat.Folder;
+                    else if (shouldCheck && Items[item.Machine.Name].Count == 1)
+                        outputFormat = OutputFormat.ParentFolder;
+
                     // Get the output archive, if possible
                     Folder outputArchive = Folder.Create(outputFormat);
 

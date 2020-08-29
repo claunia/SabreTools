@@ -854,7 +854,6 @@ namespace SabreTools.Library.DatItems
                     if (key == null)
                         key = "null";
 
-                    key = WebUtility.HtmlEncode(key);
                     break;
 
                 case Field.DatItem_MD5:
