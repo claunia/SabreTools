@@ -77,7 +77,19 @@ namespace SabreTools.Features
 
                 // Hash splitting
                 if (splittingMode.HasFlag(SplittingMode.Hash))
-                    internalDat.SplitByHash(OutputDir);
+                {
+                    Dictionary<Field, DatFile> typeDats = internalDat.SplitByHash();
+
+                    InternalStopwatch watch = new InternalStopwatch("Outputting hash-split DATs");
+
+                    // Loop through each type DatFile
+                    Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
+                    {
+                        typeDats[itemType].Write(OutputDir);
+                    });
+
+                    watch.Stop();
+                }
 
                 // Level splitting
                 if (splittingMode.HasFlag(SplittingMode.Level))
