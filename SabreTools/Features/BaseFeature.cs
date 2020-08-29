@@ -2032,7 +2032,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     "Set force merging",
                     FeatureType.String,
                     longDescription: @"Set the forcemerging tag to the given value.
-Possible values are: None, Split, Merged, Nonmerged, Full");
+Possible values are: None, Split, Device, Merged, Nonmerged, Full");
             }
         }
 
@@ -2062,7 +2062,7 @@ Possible values are: None, Obsolete, Required, Ignore");
                     "Set force packing",
                     FeatureType.String,
                     longDescription: @"Set the forcepacking tag to the given value.
-Possible values are: None, Zip, Unzip");
+Possible values are: None, Zip, Unzip, Partial, Flat");
             }
         }
 

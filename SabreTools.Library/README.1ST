@@ -341,7 +341,7 @@ Options:
 
 	  -fm=, --forcemerging=	   Set force merging
 		  Set the forcemerging tag to the given value.
-		  Possible values are: None, Split, Merged, Nonmerged, Full
+		  Possible values are: None, Split, Device, Merged, Nonmerged, Full
 
 	  -fn=, --forcenodump=		Set force nodump
 		  Set the forcenodump tag to the given value.
@@ -349,7 +349,7 @@ Options:
 
 	  -fp=, --forcepacking=	   Set force packing
 		  Set the forcepacking tag to the given value.
-		  Possible values are: None, Zip, Unzip
+		  Possible values are: None, Zip, Unzip, Partial, Flat
 
 	  -ef=, --exclude-field=	  Exclude a game/rom field from outputs
 		  Exclude any valid item or machine field from outputs. Examples
@@ -1109,7 +1109,7 @@ Options:
 
 	  -fm=, --forcemerging=	   Set force merging
 		  Set the forcemerging tag to the given value.
-		  Possible values are: None, Split, Merged, Nonmerged, Full
+		  Possible values are: None, Split, Device, Merged, Nonmerged, Full
 
 	  -fn=, --forcenodump=		Set force nodump
 		  Set the forcenodump tag to the given value.
@@ -1117,7 +1117,7 @@ Options:
 
 	  -fp=, --forcepacking=	   Set force packing
 		  Set the forcepacking tag to the given value.
-		  Possible values are: None, Zip, Unzip
+		  Possible values are: None, Zip, Unzip, Partial, Flat
 
 	  -ef=, --exclude-field=	  Exclude a game/rom field from outputs
 		  Exclude any valid item or machine field from outputs. Examples
