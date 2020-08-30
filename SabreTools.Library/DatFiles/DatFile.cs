@@ -3405,8 +3405,25 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
         public bool Write(string outDir, bool norename = true, bool stats = false, bool ignoreblanks = false, bool overwrite = true)
         {
+            // Force a statistics recheck, just in case
+            Items.RecalculateStats();
+
             // If there's nothing there, abort
             if (Items.TotalCount == 0)
+            {
+                Globals.Logger.User("There were no items to write out!");
+                return false;
+            }
+
+            // Get a count of all removed items
+            long removed = 0;
+            foreach (string key in Items.Keys)
+            {
+                removed += Items[key].Count(i => i.Remove);
+            }
+
+            // If every item is removed, abort
+            if (Items.TotalCount == removed)
             {
                 Globals.Logger.User("There were no items to write out!");
                 return false;
