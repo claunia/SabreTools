@@ -860,7 +860,7 @@ namespace SabreTools.Library.DatFiles
             ResetStatistics();
 
             // If we have a blank Dat in any way, return
-            if (this == null || TotalCount == 0)
+            if (items == null)
                 return;
 
             // Loop through and add
