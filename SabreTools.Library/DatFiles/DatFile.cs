@@ -3438,6 +3438,8 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Bucket and dedupe according to the flag
+            // TODO: Can this be made into a cleaning flag instead of a header one?
+            // TODO: Should this be run as a cleaning step?
             if (Header.DedupeRoms == DedupeType.Full)
                 Items.BucketBy(Field.DatItem_CRC, Header.DedupeRoms, norename: norename);
             else if (Header.DedupeRoms == DedupeType.Game)
