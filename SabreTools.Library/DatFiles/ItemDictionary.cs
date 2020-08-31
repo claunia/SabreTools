@@ -200,6 +200,12 @@ namespace SabreTools.Library.DatFiles
         public long NodumpCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of items with the remove flag
+        /// </summary>
+        [JsonIgnore]
+        public long RemovedCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of items with the verified status
         /// </summary>
         [JsonIgnore]
@@ -233,6 +239,7 @@ namespace SabreTools.Library.DatFiles
             }
             set
             {
+                Remove(key);
                 AddRange(key, value);
             }
         }
@@ -434,23 +441,27 @@ namespace SabreTools.Library.DatFiles
         /// <param name="item">Item to add info from</param>
         private void AddItemStatistics(DatItem item)
         {
-            // No matter what the item is, we increate the count
-            TotalCount += 1;
+            // No matter what the item is, we increment the count
+            TotalCount++;
+
+            // Increment removal count
+            if (item.Remove)
+                RemovedCount++;
 
             // Now we do different things for each item type
             switch (item.ItemType)
             {
                 case ItemType.Archive:
-                    ArchiveCount += 1;
+                    ArchiveCount++;
                     break;
                 case ItemType.BiosSet:
-                    BiosSetCount += 1;
+                    BiosSetCount++;
                     break;
                 case ItemType.Chip:
-                    ChipCount += 1;
+                    ChipCount++;
                     break;
                 case ItemType.Disk:
-                    DiskCount += 1;
+                    DiskCount++;
                     if ((item as Disk).ItemStatus != ItemStatus.Nodump)
                     {
                         MD5Count += (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
@@ -463,16 +474,16 @@ namespace SabreTools.Library.DatFiles
                     VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
                 case ItemType.Media:
-                    MediaCount += 1;
+                    MediaCount++;
                     MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
                     break;
                 case ItemType.Release:
-                    ReleaseCount += 1;
+                    ReleaseCount++;
                     break;
                 case ItemType.Rom:
-                    RomCount += 1;
+                    RomCount++;
                     if ((item as Rom).ItemStatus != ItemStatus.Nodump)
                     {
                         TotalSize += (item as Rom).Size;
@@ -493,7 +504,7 @@ namespace SabreTools.Library.DatFiles
                     VerifiedCount += ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
                 case ItemType.Sample:
-                    SampleCount += 1;
+                    SampleCount++;
                     break;
             }
         }
@@ -534,6 +545,7 @@ namespace SabreTools.Library.DatFiles
             BaddumpCount += stats.BaddumpCount;
             GoodCount += stats.GoodCount;
             NodumpCount += stats.NodumpCount;
+            RemovedCount += stats.RemovedCount;
             VerifiedCount += stats.VerifiedCount;
         }
 
@@ -558,24 +570,27 @@ namespace SabreTools.Library.DatFiles
             if (item == null)
                 return;
 
-            // No matter what the item is, we increate the count
-            TotalCount -= 1;
+            // No matter what the item is, we decrease the count
+            TotalCount--;
+
+            // Decrement removal count
+            if (item.Remove)
+                RemovedCount--;
 
             // Now we do different things for each item type
-
             switch (item.ItemType)
             {
                 case ItemType.Archive:
-                    ArchiveCount -= 1;
+                    ArchiveCount--;
                     break;
                 case ItemType.BiosSet:
-                    BiosSetCount -= 1;
+                    BiosSetCount--;
                     break;
                 case ItemType.Chip:
-                    ChipCount -= 1;
+                    ChipCount--;
                     break;
                 case ItemType.Disk:
-                    DiskCount -= 1;
+                    DiskCount--;
                     if ((item as Disk).ItemStatus != ItemStatus.Nodump)
                     {
                         MD5Count -= (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
@@ -588,16 +603,16 @@ namespace SabreTools.Library.DatFiles
                     VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
                 case ItemType.Media:
-                    MediaCount -= 1;
+                    MediaCount--;
                     MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
                     break;
                 case ItemType.Release:
-                    ReleaseCount -= 1;
+                    ReleaseCount--;
                     break;
                 case ItemType.Rom:
-                    RomCount -= 1;
+                    RomCount--;
                     if ((item as Rom).ItemStatus != ItemStatus.Nodump)
                     {
                         TotalSize -= (item as Rom).Size;
@@ -618,7 +633,7 @@ namespace SabreTools.Library.DatFiles
                     VerifiedCount -= ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
                 case ItemType.Sample:
-                    SampleCount -= 1;
+                    SampleCount--;
                     break;
             }
         }
@@ -864,14 +879,14 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Loop through and add
-            Parallel.ForEach(items.Keys, Globals.ParallelOptions, key =>
+            foreach (string key in items.Keys)
             {
                 List<DatItem> datItems = items[key];
                 foreach (DatItem item in datItems)
                 {
                     AddItemStatistics(item);
                 }
-            });
+            }
         }
 
         /// <summary>
@@ -943,6 +958,7 @@ namespace SabreTools.Library.DatFiles
             BaddumpCount = 0;
             GoodCount = 0;
             NodumpCount = 0;
+            RemovedCount = 0;
             VerifiedCount = 0;
         }
 

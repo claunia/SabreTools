@@ -3495,7 +3495,7 @@ namespace SabreTools.Library.DatFiles
             Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: norename);
 
             // Output the number of items we're going to be writing
-            Globals.Logger.User($"A total of {Items.TotalCount} items will be written out to '{Header.FileName}'");
+            Globals.Logger.User($"A total of {Items.TotalCount - Items.RemovedCount} items will be written out to '{Header.FileName}'");
 
             // Get the outfile names
             Dictionary<DatFormat, string> outfiles = Header.CreateOutFileNames(outDir, overwrite);
