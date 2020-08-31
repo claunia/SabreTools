@@ -3405,25 +3405,8 @@ namespace SabreTools.Library.DatFiles
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
         public bool Write(string outDir, bool norename = true, bool stats = false, bool ignoreblanks = false, bool overwrite = true)
         {
-            // Force a statistics recheck, just in case
-            Items.RecalculateStats();
-
-            // If there's nothing there, abort
-            if (Items.TotalCount == 0)
-            {
-                Globals.Logger.User("There were no items to write out!");
-                return false;
-            }
-
-            // Get a count of all removed items
-            long removed = 0;
-            foreach (string key in Items.Keys)
-            {
-                removed += Items[key].Count(i => i.Remove);
-            }
-
-            // If every item is removed, abort
-            if (Items.TotalCount == removed)
+            // If we have nothing writable, abort
+            if (!HasWritable())
             {
                 Globals.Logger.User("There were no items to write out!");
                 return false;
@@ -3440,38 +3423,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Make sure that the three essential fields are filled in
-            if (string.IsNullOrWhiteSpace(Header.FileName) && string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.FileName = Header.Name = Header.Description = "Default";
-            }
-            else if (string.IsNullOrWhiteSpace(Header.FileName) && string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.FileName = Header.Name = Header.Description;
-            }
-            else if (string.IsNullOrWhiteSpace(Header.FileName) && !string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.FileName = Header.Description = Header.Name;
-            }
-            else if (string.IsNullOrWhiteSpace(Header.FileName) && !string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.FileName = Header.Description;
-            }
-            else if (!string.IsNullOrWhiteSpace(Header.FileName) && string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.Name = Header.Description = Header.FileName;
-            }
-            else if (!string.IsNullOrWhiteSpace(Header.FileName) && string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.Name = Header.Description;
-            }
-            else if (!string.IsNullOrWhiteSpace(Header.FileName) && !string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
-            {
-                Header.Description = Header.Name;
-            }
-            else if (!string.IsNullOrWhiteSpace(Header.FileName) && !string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
-            {
-                // Nothing is needed
-            }
+            EnsureHeaderFields();
 
             // Output initial statistics, for kicks
             if (stats)
@@ -3763,6 +3715,61 @@ namespace SabreTools.Library.DatFiles
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Ensure that FileName, Name, and Description are filled with some value
+        /// </summary>
+        private void EnsureHeaderFields()
+        {
+            // Empty FileName
+            if (string.IsNullOrWhiteSpace(Header.FileName))
+            {
+                if (string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+                    Header.FileName = Header.Name = Header.Description = "Default";
+
+                else if (string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
+                    Header.FileName = Header.Name = Header.Description;
+
+                else if (!string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+                    Header.FileName = Header.Description = Header.Name;
+
+                else if (!string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
+                    Header.FileName = Header.Description;
+            }
+
+            // Filled FileName
+            else
+            {
+                if (string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+                    Header.Name = Header.Description = Header.FileName;
+
+                else if (string.IsNullOrWhiteSpace(Header.Name) && !string.IsNullOrWhiteSpace(Header.Description))
+                    Header.Name = Header.Description;
+
+                else if (!string.IsNullOrWhiteSpace(Header.Name) && string.IsNullOrWhiteSpace(Header.Description))
+                    Header.Description = Header.Name;
+            }
+        }
+
+        /// <summary>
+        /// Get if the DatFile has any writable items
+        /// </summary>
+        /// <returns>True if there are any writable items, false otherwise</returns>
+        private bool HasWritable()
+        {
+            // Force a statistics recheck, just in case
+            Items.RecalculateStats();
+
+            // If there's nothing there, abort
+            if (Items.TotalCount == 0)
+                return false;
+
+            // If every item is removed, abort
+            if (Items.TotalCount == Items.RemovedCount)
+                return false;
+
+            return true;
         }
 
         #endregion
