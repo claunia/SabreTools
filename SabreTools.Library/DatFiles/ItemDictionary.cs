@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Internal dictionary for the class
         /// </summary>
-        private Dictionary<string, List<DatItem>> items;
+        private ConcurrentDictionary<string, List<DatItem>> items;
 
         #endregion
 
@@ -385,7 +386,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Remove the key from the dictionary
-            return items.Remove(key);
+            return items.TryRemove(key, out _);
         }
 
         /// <summary>
@@ -557,7 +558,7 @@ namespace SabreTools.Library.DatFiles
         {
             // If the key is missing from the dictionary, add it
             if (!items.ContainsKey(key))
-                items.Add(key, new List<DatItem>());
+                items.TryAdd(key, new List<DatItem>());
         }
 
         /// <summary>
@@ -649,7 +650,7 @@ namespace SabreTools.Library.DatFiles
         {
             bucketedBy = Field.NULL;
             mergedBy = DedupeType.None;
-            items = new Dictionary<string, List<DatItem>>();
+            items = new ConcurrentDictionary<string, List<DatItem>>();
         }
 
         #endregion
@@ -766,11 +767,11 @@ namespace SabreTools.Library.DatFiles
 
                 // If the value is null, remove
                 else if (items[key] == null)
-                    items.Remove(key);
+                    items.TryRemove(key, out _);
 
                 // If there are no non-blank items, remove
                 else if (items[key].Count(i => i != null && i.ItemType != ItemType.Blank) == 0)
-                    items.Remove(key);
+                    items.TryRemove(key, out _);
             }
         }
 
