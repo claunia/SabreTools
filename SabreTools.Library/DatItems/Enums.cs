@@ -453,14 +453,17 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     public enum ItemType
     {
+        // "Actionable" item types
         Rom = 0,
         Disk = 1,
-        Sample = 2,
-        Release = 3,
+        Media = 2,
+
+        // "Auxiliary" item types
+        Archive = 3,
         BiosSet = 4,
-        Archive = 5,
-        Chip = 6,
-        Media = 7,
+        Chip = 5,
+        Release = 6,
+        Sample = 7,
 
         Blank = 99, // This is not a real type, only used internally
     }
