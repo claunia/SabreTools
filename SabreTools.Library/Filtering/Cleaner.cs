@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 
 namespace SabreTools.Library.Filtering
@@ -13,6 +14,12 @@ namespace SabreTools.Library.Filtering
         /// Clean all names to WoD standards
         /// </summary>
         public bool Clean { get; set; }
+
+        /// <summary>
+        /// Deduplicate items using the given method
+        /// </summary>
+        public DedupeType DedupeRoms { get; set; }
+
 
         /// <summary>
         /// Set Machine Description from Machine Name

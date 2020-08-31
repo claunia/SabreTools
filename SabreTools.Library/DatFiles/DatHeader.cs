@@ -265,22 +265,6 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        #region Filtering Fields
-
-        /// <summary>
-        /// Deduplicate items using the given method
-        /// </summary>
-        [JsonIgnore]
-        public DedupeType DedupeRoms { get; set; }
-
-        /// <summary>
-        /// Strip hash types from items
-        /// </summary>
-        [JsonIgnore]
-        public Hash StripHash { get; private set; }
-
-        #endregion
-
         #region Write pre-processing
 
         /// <summary>
@@ -501,8 +485,6 @@ namespace SabreTools.Library.DatFiles
                 ForceNodump = this.ForceNodump,
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
-                DedupeRoms = this.DedupeRoms,
-                StripHash = this.StripHash,
 
                 UseRomName = this.UseRomName,
                 Prefix = this.Prefix,
@@ -542,8 +524,6 @@ namespace SabreTools.Library.DatFiles
                 ForceNodump = this.ForceNodump,
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
-                DedupeRoms = this.DedupeRoms,
-                StripHash = this.StripHash,
             };
         }
 
@@ -555,8 +535,6 @@ namespace SabreTools.Library.DatFiles
             return new DatHeader()
             {
                 DatFormat = this.DatFormat,
-                DedupeRoms = this.DedupeRoms,
-                StripHash = this.StripHash,
 
                 UseRomName = this.UseRomName,
                 Prefix = this.Prefix,
@@ -630,9 +608,6 @@ namespace SabreTools.Library.DatFiles
 
             if (datHeader.DatFormat != 0x00)
                 DatFormat = datHeader.DatFormat;
-
-            DedupeRoms = datHeader.DedupeRoms;
-            //StripHash = datHeader.StripHash;
 
             if (!string.IsNullOrWhiteSpace(datHeader.Prefix))
                 Prefix = datHeader.Prefix;

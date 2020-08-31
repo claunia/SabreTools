@@ -125,14 +125,14 @@ namespace SabreTools.Features
                 {
                     Header.Name = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
                         + (Header.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
-                        + (Header.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty);
+                        + (Cleaner.DedupeRoms != DedupeType.None ? "-deduped" : string.Empty);
                 }
 
                 if (string.IsNullOrWhiteSpace(Header.Description))
                 {
                     Header.Description = (updateMode != 0 ? "DiffDAT" : "MergeDAT")
                         + (Header.Type == "SuperDAT" ? "-SuperDAT" : string.Empty)
-                        + (Header.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty);
+                        + (Cleaner.DedupeRoms != DedupeType.None ? " - deduped" : string.Empty);
 
                     if (!GetBoolean(features, NoAutomaticDateValue))
                         Header.Description += $" ({Header.Date})";

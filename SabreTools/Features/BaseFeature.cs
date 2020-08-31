@@ -2699,6 +2699,7 @@ Some special strings that can be used:
             Cleaner cleaner = new Cleaner()
             {
                 Clean = GetBoolean(features, CleanValue),
+                DedupeRoms = GetDedupeType(features),
                 DescriptionAsName = GetBoolean(features, DescriptionAsNameValue),
                 KeepEmptyGames = GetBoolean(features, KeepEmptyGamesValue),
                 OneGamePerRegion = GetBoolean(features, OneGamePerRegionValue),
@@ -2732,7 +2733,6 @@ Some special strings that can be used:
                 Category = GetString(features, CategoryStringValue),
                 Comment = GetString(features, CommentStringValue),
                 Date = GetString(features, DateStringValue),
-                DedupeRoms = GetDedupeType(features),
                 Description = GetString(features, DescriptionStringValue),
                 Email = GetString(features, EmailStringValue),
                 FileName = GetString(features, FilenameStringValue),

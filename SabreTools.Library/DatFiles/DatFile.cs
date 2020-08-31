@@ -709,6 +709,12 @@ namespace SabreTools.Library.DatFiles
                 // Perform item-level cleaning
                 CleanDatItems(cleaner);
 
+                // Bucket and dedupe according to the flag
+                if (cleaner?.DedupeRoms == DedupeType.Full)
+                    Items.BucketBy(Field.DatItem_CRC, cleaner.DedupeRoms);
+                else if (cleaner?.DedupeRoms == DedupeType.Game)
+                    Items.BucketBy(Field.Machine_Name, cleaner.DedupeRoms);
+
                 // Process description to machine name
                 if (cleaner?.DescriptionAsName == true)
                     MachineDescriptionToName();
@@ -3436,14 +3442,6 @@ namespace SabreTools.Library.DatFiles
                 var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
                 consoleOutput.ReplaceStatistics(Header.FileName, Items.Keys.Count(), Items);
             }
-
-            // Bucket and dedupe according to the flag
-            // TODO: Can this be made into a cleaning flag instead of a header one?
-            // TODO: Should this be run as a cleaning step?
-            if (Header.DedupeRoms == DedupeType.Full)
-                Items.BucketBy(Field.DatItem_CRC, Header.DedupeRoms, norename: norename);
-            else if (Header.DedupeRoms == DedupeType.Game)
-                Items.BucketBy(Field.Machine_Name, Header.DedupeRoms, norename: norename);
 
             // Bucket roms by game name, if not already
             Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: norename);
