@@ -85,7 +85,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
-        public MachineType MachineType { get; set; } = MachineType.NULL;
+        public MachineType MachineType { get; set; } = 0x0;
 
         #endregion
 
@@ -740,9 +740,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Machine_Type
-            if (filter.Machine_Type.MatchesPositive(MachineType.NULL, MachineType) == false)
+            if (filter.Machine_Type.MatchesPositive(0x0, MachineType) == false)
                 return false;
-            if (filter.Machine_Type.MatchesNegative(MachineType.NULL, MachineType) == true)
+            if (filter.Machine_Type.MatchesNegative(0x0, MachineType) == true)
                 return false;
 
             #endregion
@@ -1501,7 +1501,7 @@ namespace SabreTools.Library.DatItems
                 SampleOf = null;
 
             if (fields.Contains(Field.Machine_Type))
-                MachineType = MachineType.NULL;
+                MachineType = 0x0;
 
             #endregion
 

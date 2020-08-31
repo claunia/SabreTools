@@ -1383,87 +1383,112 @@ namespace SabreTools.Library.DatFiles
                 if (Items[game] == null || Items[game].Count == 0)
                     continue;
 
-                // If the game (is/is not) a bios, we want to continue
+                // If the game (is/is not) a device, we want to continue
                 if (dev ^ (Items[game][0].Machine.MachineType.HasFlag(MachineType.Device)))
                     continue;
 
-                // If the game has no devices, we continue
+                // If the game has no devices, mark it
+                bool devices = true;
                 if (Items[game][0].Machine.DeviceReferences == null
-                    || Items[game][0].Machine.DeviceReferences.Count == 0
-                    || (slotoptions && Items[game][0].Machine.Slots == null)
-                    || (slotoptions && Items[game][0].Machine.Slots.Count == 0))
+                    || Items[game][0].Machine.DeviceReferences.Count == 0)
                 {
-                    continue;
+                    devices = false;
                 }
 
-                // Determine if the game has any devices or not
-                List<ListXmlDeviceReference> deviceReferences = Items[game][0].Machine.DeviceReferences;
-                List<ListXmlDeviceReference> newdevs = new List<ListXmlDeviceReference>();
-                foreach (ListXmlDeviceReference deviceReference in deviceReferences)
+                // If we're checking devices
+                if (devices)
                 {
-                    // If the device doesn't exist then we continue
-                    if (Items[deviceReference.Name].Count == 0)
-                        continue;
-
-                    // Otherwise, copy the items from the device to the current game
-                    DatItem copyFrom = Items[game][0];
-                    List<DatItem> devItems = Items[deviceReference.Name];
-                    foreach (DatItem item in devItems)
+                    // Determine if the game has any devices or not
+                    List<string> deviceReferences = Items[game][0].Machine.DeviceReferences.Select(d => d.Name).ToList();
+                    List<string> newdevs = new List<string>();
+                    foreach (string deviceReference in deviceReferences)
                     {
-                        DatItem datItem = (DatItem)item.Clone();
-                        newdevs.AddRange(datItem.Machine.DeviceReferences ?? new List<ListXmlDeviceReference>());
-                        datItem.CopyMachineInformation(copyFrom);
-                        if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
+                        // If the device doesn't exist then we continue
+                        if (Items[deviceReference] == null || Items[deviceReference].Count == 0)
+                            continue;
+
+                        // Otherwise, copy the items from the device to the current game
+                        DatItem copyFrom = Items[game][0];
+                        List<DatItem> devItems = Items[deviceReference];
+                        foreach (DatItem item in devItems)
                         {
-                            foundnew = true;
-                            Items.Add(game, datItem);
-                        }
-                    }
-                }
-
-                // Now that every device is accounted for, add the new list of devices, if they don't already exist
-                foreach (ListXmlDeviceReference device in newdevs)
-                {
-                    if (!Items[game][0].Machine.DeviceReferences.Select(d => d.Name).Contains(device.Name))
-                        Items[game][0].Machine.DeviceReferences.Add(new ListXmlDeviceReference() { Name = device.Name });
-                }
-
-                // If we're checking slotoptions too
-                if (slotoptions)
-                {
-                    // Determine if the game has any slots or not
-                    List<ListXmlSlot> slots = Items[game][0].Machine.Slots;
-                    List<ListXmlSlot> newSlots = new List<ListXmlSlot>();
-                    foreach (ListXmlSlot slot in slots)
-                    {
-                        foreach (ListXmlSlotOption slotOption in slot.SlotOptions)
-                        {
-                            // If the slotoption doesn't exist then we continue
-                            if (Items[slotOption.Name].Count == 0)
-                                continue;
-
-                            // Otherwise, copy the items from the slotoption to the current game
-                            DatItem copyFrom = Items[game][0];
-                            List<DatItem> slotItems = Items[slotOption.Name];
-                            foreach (DatItem item in slotItems)
+                            DatItem datItem = (DatItem)item.Clone();
+                            newdevs.AddRange((datItem.Machine.DeviceReferences ?? new List<ListXmlDeviceReference>()).Select(d => d.Name).ToList());
+                            datItem.CopyMachineInformation(copyFrom);
+                            if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
                             {
-                                DatItem datItem = (DatItem)item.Clone();
-                                newSlots.AddRange(datItem.Machine.Slots ?? new List<ListXmlSlot>());
-
-                                datItem.CopyMachineInformation(copyFrom);
-                                if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
-                                {
-                                    foundnew = true;
-                                    Items.Add(game, datItem);
-                                }
+                                foundnew = true;
+                                Items.Add(game, datItem);
                             }
                         }
                     }
 
-                    // Now that every slotoption is accounted for, add the new list of slots, if they don't already exist
-                    foreach (ListXmlSlot slot in newSlots)
+                    // Now that every device is accounted for, add the new list of devices, if they don't already exist
+                    foreach (string device in newdevs)
                     {
-                        Items[game][0].Machine.Slots.Add(slot);
+                        if (!deviceReferences.Contains(device))
+                            Items[game][0].Machine.DeviceReferences.Add(new ListXmlDeviceReference() { Name = device });
+                    }
+                }
+                
+
+                // If we're checking slotoptions
+                if (slotoptions)
+                {
+                    // If the game has no slot options, we continue
+                    if (Items[game][0].Machine.Slots == null
+                        || Items[game][0].Machine.Slots
+                            .SelectMany(s => s.SlotOptions ?? new List<ListXmlSlotOption>()).Count() == 0)
+                    {
+                        continue;
+                    }
+
+                    // Determine if the game has any slot options or not
+                    List<string> slotOptions = Items[game][0].Machine.Slots
+                        .Where(s => s.SlotOptions != null && s.SlotOptions.Count != 0)
+                        .SelectMany(s => s.SlotOptions)
+                        .Select(o => o.DeviceName)
+                        .Distinct()
+                        .ToList();
+                    List<string> newSlotOptions = new List<string>();
+                    foreach (string slotOption in slotOptions)
+                    {
+                        // If the slot option doesn't exist then we continue
+                        if (Items[slotOption] == null || Items[slotOption].Count == 0)
+                            continue;
+
+                        // Otherwise, copy the items from the slot option to the current game
+                        DatItem copyFrom = Items[game][0];
+                        List<DatItem> slotOptionItems = Items[slotOption];
+                        foreach (DatItem item in slotOptionItems)
+                        {
+                            DatItem datItem = (DatItem)item.Clone();
+                            List<string> machineSlotOptions =
+                                (datItem.Machine.Slots ?? new List<ListXmlSlot>())
+                                .Where(s => s.SlotOptions != null && s.SlotOptions.Count != 0)
+                                .SelectMany(s => s.SlotOptions)
+                                .Select(o => o.DeviceName)
+                                .Distinct()
+                                .ToList();
+
+                            newSlotOptions.AddRange(machineSlotOptions);
+                            datItem.CopyMachineInformation(copyFrom);
+                            if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0)
+                            {
+                                foundnew = true;
+                                Items.Add(game, datItem);
+                            }
+                        }
+                    }
+
+                    // Ensure we don't have unnecessary duplicates
+                    newSlotOptions = newSlotOptions.Distinct().ToList();
+
+                    // Now that every slot option is accounted for, add the new list of options, if they don't already exist
+                    foreach (string slotOption in newSlotOptions)
+                    {
+                        if (!slotOptions.Contains(slotOption))
+                            Items[game][0].Machine.Slots.Add(new ListXmlSlot() { SlotOptions = new List<ListXmlSlotOption> { new ListXmlSlotOption { DeviceName = slotOption } } });
                     }
                 }
             }

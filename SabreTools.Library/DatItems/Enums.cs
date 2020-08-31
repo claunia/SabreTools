@@ -439,7 +439,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// This is a fake flag that is used for filter only
         /// </summary>
-        NULL = 0x00,
+        NULL = 0,
 
         None = 1 << 0,
         Good = 1 << 1,
@@ -471,10 +471,14 @@ namespace SabreTools.Library.DatItems
     [Flags]
     public enum OpenMSXSubType
     {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
         NULL = 0,
-        Rom = 1,
-        MegaRom = 2,
-        SCCPlusCart = 3,
+
+        Rom = 1 << 0,
+        MegaRom = 1 << 1,
+        SCCPlusCart = 1 << 2,
     }
 
     /// <summary>
@@ -483,10 +487,14 @@ namespace SabreTools.Library.DatItems
     [Flags]
     public enum MachineType
     {
-        NULL = 0x00,
-        Bios = 1 << 0,
-        Device = 1 << 1,
-        Mechanical = 1 << 2,
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 1 << 0,
+
+        Bios = 1 << 1,
+        Device = 1 << 2,
+        Mechanical = 1 << 3,
     }
 
     /// <summary>
@@ -495,10 +503,14 @@ namespace SabreTools.Library.DatItems
     [Flags]
     public enum Runnable
     {
-        NULL,
-        No,
-        Partial,
-        Yes,
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        No = 1 << 0,
+        Partial = 1 << 1,
+        Yes = 1 << 2,
     }
 
     /// <summary>
@@ -507,9 +519,13 @@ namespace SabreTools.Library.DatItems
     [Flags]
     public enum Supported
     {
-        NULL,
-        No,
-        Partial,
-        Yes,
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        No = 1 << 0,
+        Partial = 1 << 1,
+        Yes = 1 << 2,
     }
 }

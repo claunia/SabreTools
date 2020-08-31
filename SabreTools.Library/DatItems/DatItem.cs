@@ -1226,24 +1226,10 @@ namespace SabreTools.Library.DatItems
                     {
                         if (x.Machine.Name == y.Machine.Name)
                         {
-                            // Special case for comparing a Disk, Media, or Rom to another item type
-                            if ((x.ItemType == ItemType.Disk || x.ItemType == ItemType.Media || x.ItemType == ItemType.Rom)
-                                ^ (y.ItemType == ItemType.Disk || y.ItemType == ItemType.Media || x.ItemType == ItemType.Rom))
-                            {
-                                if (x.ItemType == ItemType.Disk || x.ItemType == ItemType.Media || x.ItemType == ItemType.Rom)
-                                    return -1;
-                                else
-                                    return 1;
-                            }
+                            if (Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)) == Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)))
+                                return nc.Compare(Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
 
-                            // Otherwise, we compare names naturally
-                            else
-                            {
-                                if (Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)) == Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)))
-                                    return nc.Compare(Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
-
-                                return nc.Compare(Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
-                            }
+                            return nc.Compare(Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
                         }
 
                         return nc.Compare(x.Machine.Name, y.Machine.Name);

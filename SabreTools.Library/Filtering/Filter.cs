@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
 
@@ -31,7 +30,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_RomOf { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_CloneOf { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_SampleOf { get; private set; } = new FilterItem<string>();
-        public FilterItem<MachineType> Machine_Type { get; private set; } = new FilterItem<MachineType>() { Positive = MachineType.NULL, Negative = MachineType.NULL };
+        public FilterItem<MachineType> Machine_Type { get; private set; } = new FilterItem<MachineType>() { Positive = 0x0, Negative = 0x0 };
 
         #endregion
 
@@ -51,7 +50,7 @@ namespace SabreTools.Library.Filtering
 
         public FilterItem<string> Machine_SourceFile { get; private set; } = new FilterItem<string>();
         public FilterItem<Runnable> Machine_Runnable { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
-        
+
         // DeviceReferences
         public FilterItem<bool?> Machine_DeviceReferences { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_DeviceReference_Name { get; private set; } = new FilterItem<string>();

@@ -116,7 +116,7 @@ namespace SabreTools.Library.DatFiles
             reader.MoveToContent();
 
             // Create a new machine
-            MachineType machineType = MachineType.NULL;
+            MachineType machineType = 0x0;
             if (reader.GetAttribute("isbios").AsYesNo() == true)
                 machineType |= MachineType.Bios;
 
@@ -133,7 +133,7 @@ namespace SabreTools.Library.DatFiles
                 CloneOf = reader.GetAttribute("cloneof"),
                 RomOf = reader.GetAttribute("romof"),
                 SampleOf = reader.GetAttribute("sampleof"),
-                MachineType = (machineType == MachineType.NULL ? MachineType.NULL : machineType),
+                MachineType = (machineType == 0x0 ? MachineType.NULL : machineType),
 
                 SourceFile = reader.GetAttribute("sourcefile"),
                 Runnable = reader.GetAttribute("runnable").AsRunnable(),

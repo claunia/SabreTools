@@ -750,9 +750,6 @@ namespace SabreTools.Library.DatFiles
                     DatItem.Sort(ref sortedlist, false);
                 });
             }
-
-            // Now clean up all empty keys
-            ClearEmpty();
         }
 
         /// <summary>
