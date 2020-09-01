@@ -14,6 +14,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML adjuster
     /// </summary>
+    /// TODO: Promote to DatItem level
     [JsonObject("adjuster")]
     public class ListXmlAdjuster
     {
@@ -59,6 +60,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML configuration
     /// </summary>
+    /// TODO: Promote to DatItem level
     [JsonObject("configuration")]
     public class ListXmlConfiguration
     {
@@ -156,6 +158,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML device
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("device")]
     public class ListXmlDevice
     {
@@ -184,6 +187,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML display
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("display")]
     public class ListXmlDisplay
     {
@@ -234,6 +238,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one ListXML dipswitch
     /// </summary>
     /// <remarks>Also used by SoftwareList</remarks>
+    /// TODO: Promote to DatItem level
     [JsonObject("dipswitch")]
     public class ListXmlDipSwitch
     {
@@ -289,6 +294,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML driver
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("driver")]
     public class ListXmlDriver
     {
@@ -318,6 +324,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML feature
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("feature")]
     public class ListXmlFeature
     {
@@ -334,6 +341,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML input
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("input")]
     public class ListXmlInput
     {
@@ -369,6 +377,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML port
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("port")]
     public class ListXmlPort
     {
@@ -382,6 +391,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML ramoption
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("ramoption")]
     public class ListXmlRamOption
     {
@@ -392,6 +402,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML slot
     /// </summary>
+    /// TODO: Promote to DatItem level
     [JsonObject("slot")]
     public class ListXmlSlot
     {
@@ -421,6 +432,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML sound
     /// </summary>
+    /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("sound")]
     public class ListXmlSound
     {
