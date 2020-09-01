@@ -235,9 +235,9 @@ namespace SabreTools.Library.DatFiles
                         fields[7] = disk.Name;
                         fields[8] = string.Empty;
                         fields[9] = string.Empty;
-                        fields[10] = disk.MD5.ToLowerInvariant();
+                        fields[10] = disk.MD5?.ToLowerInvariant();
                         //fields[11] = string.Empty;
-                        fields[11] = disk.SHA1.ToLowerInvariant();
+                        fields[11] = disk.SHA1?.ToLowerInvariant();
                         fields[12] = string.Empty;
                         //fields[13] = string.Empty;
                         //fields[14] = string.Empty;
@@ -251,9 +251,9 @@ namespace SabreTools.Library.DatFiles
                         fields[7] = media.Name;
                         fields[8] = string.Empty;
                         fields[9] = string.Empty;
-                        fields[10] = media.MD5.ToLowerInvariant();
+                        fields[10] = media.MD5?.ToLowerInvariant();
                         //fields[11] = string.Empty;
-                        fields[11] = media.SHA1.ToLowerInvariant();
+                        fields[11] = media.SHA1?.ToLowerInvariant();
                         fields[12] = media.SHA256?.ToLowerInvariant();
                         //fields[13] = string.Empty;
                         //fields[14] = string.Empty;
