@@ -1415,7 +1415,7 @@ namespace SabreTools.Library.DatFiles
                             DatItem datItem = (DatItem)item.Clone();
                             newdevs.AddRange((datItem.Machine.DeviceReferences ?? new List<ListXmlDeviceReference>()).Select(d => d.Name).ToList());
                             datItem.CopyMachineInformation(copyFrom);
-                            if (!Items[game].Contains(datItem))
+                            if (Items[game].Where(i => i.ItemType == datItem.ItemType && i.Name == datItem.Name).Count() == 0)
                             {
                                 foundnew = true;
                                 Items.Add(game, datItem);
@@ -1473,7 +1473,7 @@ namespace SabreTools.Library.DatFiles
 
                             newSlotOptions.AddRange(machineSlotOptions);
                             datItem.CopyMachineInformation(copyFrom);
-                            if (!Items[game].Contains(datItem))
+                            if (Items[game].Where(i => i.ItemType == datItem.ItemType && i.Name == datItem.Name).Count() == 0)
                             {
                                 foundnew = true;
                                 Items.Add(game, datItem);
