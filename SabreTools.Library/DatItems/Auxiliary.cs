@@ -199,33 +199,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML dipswitch
-    /// </summary>
-    /// <remarks>Also used by SoftwareList</remarks>
-    /// TODO: Promote to DatItem level (contains list)
-    [JsonObject("dipswitch")]
-    public class ListXmlDipSwitch
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("tag")]
-        public string Tag { get; set; }
-
-        [JsonProperty("mask")]
-        public string Mask { get; set; }
-
-        [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
-
-        [JsonProperty("locations")]
-        public List<ListXmlDipLocation> Locations { get; set; }
-
-        [JsonProperty("values")]
-        public List<ListXmlDipValue> Values { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML diplocation
     /// </summary>
     [JsonObject("diplocation")]

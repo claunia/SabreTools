@@ -114,6 +114,12 @@ namespace SabreTools.Library.DatFiles
         public long DeviceReferenceCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of DIP Switch items
+        /// </summary>
+        [JsonIgnore]
+        public long DipSwitchCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Disk items
         /// </summary>
         [JsonIgnore]
@@ -500,6 +506,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.DeviceReference:
                     DeviceReferenceCount++;
                     break;
+                case ItemType.DipSwitch:
+                    DipSwitchCount++;
+                    break;
                 case ItemType.Disk:
                     DiskCount++;
                     if ((item as Disk).ItemStatus != ItemStatus.Nodump)
@@ -643,6 +652,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.DeviceReference:
                     DeviceReferenceCount--;
+                    break;
+                case ItemType.DipSwitch:
+                    DipSwitchCount--;
                     break;
                 case ItemType.Disk:
                     DiskCount--;

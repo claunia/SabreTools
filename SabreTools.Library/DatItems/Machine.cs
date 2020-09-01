@@ -177,14 +177,6 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlInput> Inputs { get; set; } = null;
 
         /// <summary>
-        /// List of associated dipswitches
-        /// </summary>
-        /// <remarks>Also in SoftwareList</remarks>
-        /// TODO: Order ListXML and SoftwareList outputs by area names
-        [JsonProperty("dipswitches", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlDipSwitch> DipSwitches { get; set; } = null;
-
-        /// <summary>
         /// List of associated ports
         /// </summary>
         [JsonProperty("ports", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -570,7 +562,6 @@ namespace SabreTools.Library.DatItems
                 Sounds = this.Sounds,
                 Conditions = this.Conditions,
                 Inputs = this.Inputs,
-                DipSwitches = this.DipSwitches,
                 Ports = this.Ports,
                 Drivers = this.Drivers,
                 Features = this.Features,
@@ -1173,16 +1164,8 @@ namespace SabreTools.Library.DatItems
 
             // TODO: Inputs
             // TODO: Inputs.Controls
-            // TODO: DipSwitches
-            // TODO: DipSwitches.Locations
-            // TODO: DipSwitches.Values
-            // TODO: Configurations
-            // TODO: Configurations.Locations
-            // TODO: Configurations.Settings
             // TODO: Ports
             // TODO: Ports.Analogs
-            // TODO: Adjusters
-            // TODO: Adjusters.Conditions
             // TODO: Drivers
             // TODO: Features
             // TODO: Devices
@@ -1190,8 +1173,6 @@ namespace SabreTools.Library.DatItems
             // TODO: Devices.Extensions
             // TODO: Slots
             // TODO: Slots.SlotOptions
-            // TODO: SoftwareLists
-            // TODO: RamOptions
 
             #endregion // ListXML
 
@@ -1545,9 +1526,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_SharedFeatures))
                 SharedFeatures = null;
 
-            if (fields.Contains(Field.Machine_DipSwitches))
-                DipSwitches = null;
-
             #endregion
         }
 
@@ -1706,9 +1684,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_SharedFeatures))
                 SharedFeatures = machine.SharedFeatures;
-
-            if (fields.Contains(Field.Machine_DipSwitches))
-                DipSwitches = machine.DipSwitches;
 
             #endregion
         }

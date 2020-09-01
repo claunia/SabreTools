@@ -7,42 +7,42 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents which Configuration(s) is associated with a set
+    /// Represents which DIP Switch(es) is associated with a set
     /// </summary>
-    [JsonObject("configuration")]
-    public class Configuration : DatItem
+    [JsonObject("dipswitch")]
+    public class DipSwitch : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Tag associated with the configuration
+        /// Tag associated with the dipswitch
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tag { get; set; }
 
         /// <summary>
-        /// Mask associated with the configuration
+        /// Mask associated with the dipswitch
         /// </summary>
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Mask { get; set; }
 
         /// <summary>
-        /// Conditions associated with the configuration
+        /// Conditions associated with the dipswitch
         /// </summary>
         [JsonProperty("conditions")]
         public List<ListXmlCondition> Conditions { get; set; }
 
         /// <summary>
-        /// Locations associated with the configuration
+        /// Locations associated with the dipswitch
         /// </summary>
         [JsonProperty("locations")]
-        public List<ListXmlConfLocation> Locations { get; set; }
+        public List<ListXmlDipLocation> Locations { get; set; }
 
         /// <summary>
-        /// Settings associated with the configuration
+        /// Settings associated with the dipswitch
         /// </summary>
-        [JsonProperty("settings")]
-        public List<ListXmlConfSetting> Settings { get; set; }
+        [JsonProperty("values")]
+        public List<ListXmlDipValue> Values { get; set; }
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Configuration-specific fields
+            // Handle DipSwitch-specific fields
             if (mappings.Keys.Contains(Field.DatItem_Tag))
                 Tag = mappings[Field.DatItem_Tag];
 
@@ -66,7 +66,7 @@ namespace SabreTools.Library.DatItems
 
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Setting*
+            // TODO: Handle DatItem_Value*
         }
 
         #endregion
@@ -74,12 +74,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Configuration object
+        /// Create a default, empty DipSwitch object
         /// </summary>
-        public Configuration()
+        public DipSwitch()
         {
             Name = string.Empty;
-            ItemType = ItemType.Configuration;
+            ItemType = ItemType.DipSwitch;
         }
 
         #endregion
@@ -88,7 +88,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Configuration()
+            return new DipSwitch()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -120,7 +120,7 @@ namespace SabreTools.Library.DatItems
                 Mask = this.Mask,
                 Conditions = this.Conditions,
                 Locations = this.Locations,
-                Settings = this.Settings,
+                Values = this.Values,
             };
         }
 
@@ -130,19 +130,19 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a Configuration, return false
+            // If we don't have a DipSwitch, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a Configuration
-            Configuration newOther = other as Configuration;
+            // Otherwise, treat it as a DipSwitch
+            DipSwitch newOther = other as DipSwitch;
 
-            // If the Configuration information matches
+            // If the DipSwitch information matches
             return (Name == newOther.Name && Tag == newOther.Tag && Mask == newOther.Mask);
             
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Setting*
+            // TODO: Handle DatItem_Value*
         }
 
         #endregion
@@ -174,7 +174,7 @@ namespace SabreTools.Library.DatItems
 
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Setting*
+            // TODO: Handle DatItem_Value*
 
             return true;
         }
@@ -201,12 +201,12 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Locations))
                 Locations = null;
 
-            if (fields.Contains(Field.DatItem_Settings))
-                Settings = null;
+            if (fields.Contains(Field.DatItem_Values))
+                Values = null;
 
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Setting*
+            // TODO: Handle DatItem_Value*
         }
 
         #endregion
@@ -223,12 +223,12 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Configuration to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Configuration)
+            // If we don't have a DipSwitch to replace from, ignore specific fields
+            if (item.ItemType != ItemType.DipSwitch)
                 return;
 
             // Cast for easier access
-            Configuration newItem = item as Configuration;
+            DipSwitch newItem = item as DipSwitch;
 
             // Replace the fields
             if (fields.Contains(Field.DatItem_Tag))
@@ -243,12 +243,12 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Locations))
                 Locations = newItem.Locations;
 
-            if (fields.Contains(Field.DatItem_Settings))
-                Settings = newItem.Settings;
+            if (fields.Contains(Field.DatItem_Values))
+                Values = newItem.Values;
 
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Setting*
+            // TODO: Handle DatItem_Value*
         }
 
         #endregion

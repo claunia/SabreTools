@@ -336,19 +336,20 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipswitch":
-                        var dipSwitch = new ListXmlDipSwitch();
-                        dipSwitch.Name = reader.GetAttribute("name");
-                        dipSwitch.Tag = reader.GetAttribute("tag");
-                        dipSwitch.Mask = reader.GetAttribute("mask");
+                        var dipSwitch = new DipSwitch
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Conditions = new List<ListXmlCondition>(),
+                            Locations = new List<ListXmlDipLocation>(),
+                            Values = new List<ListXmlDipValue>(),
+                        };
 
                         // Now read the internal tags
                         ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
 
-                        // Ensure the list exists
-                        if (machine.DipSwitches == null)
-                            machine.DipSwitches = new List<ListXmlDipSwitch>();
-
-                        machine.DipSwitches.Add(dipSwitch);
+                        items.Add(dipSwitch);
 
                         // Skip the dipswitch now that we've processed it
                         reader.Skip();
@@ -517,8 +518,8 @@ namespace SabreTools.Library.DatFiles
         /// Read DipSwitch DipValues information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="dipSwitch">ListXMLDipSwitch to populate</param>
-        private void ReadDipSwitch(XmlReader reader, ListXmlDipSwitch dipSwitch)
+        /// <param name="dipSwitch">DipSwitch to populate</param>
+        private void ReadDipSwitch(XmlReader reader, DipSwitch dipSwitch)
         {
             // If we have an empty dipswitch, skip it
             if (reader == null)
@@ -720,29 +721,6 @@ namespace SabreTools.Library.DatFiles
                     }
                 }
 
-                if (datItem.Machine.DipSwitches != null && datItem.Machine.DipSwitches.Count > 0)
-                {
-                    foreach (ListXmlDipSwitch dip in datItem.Machine.DipSwitches)
-                    {
-                        xtw.WriteStartElement("dipswitch");
-                        xtw.WriteRequiredAttributeString("name", dip.Name);
-                        xtw.WriteRequiredAttributeString("tag", dip.Tag);
-                        xtw.WriteRequiredAttributeString("mask", dip.Mask);
-
-                        foreach (ListXmlDipValue dipval in dip.Values)
-                        {
-                            xtw.WriteStartElement("dipvalue");
-                            xtw.WriteRequiredAttributeString("name", dipval.Name);
-                            xtw.WriteRequiredAttributeString("value", dipval.Value);
-                            xtw.WriteRequiredAttributeString("default", dipval.Default == true ? "yes" : "no");
-                            xtw.WriteEndElement();
-                        }
-
-                        // End dipswitch
-                        xtw.WriteEndElement();
-                    }
-                }
-
                 xtw.Flush();
             }
             catch (Exception ex)
@@ -809,6 +787,26 @@ namespace SabreTools.Library.DatFiles
                 string areaName = datItem.AreaName;
                 switch (datItem.ItemType)
                 {
+                    case ItemType.DipSwitch:
+                        var dipSwitch = datItem as DipSwitch;
+                        xtw.WriteStartElement("dipswitch");
+                        xtw.WriteRequiredAttributeString("name", dipSwitch.Name);
+                        xtw.WriteRequiredAttributeString("tag", dipSwitch.Tag);
+                        xtw.WriteRequiredAttributeString("mask", dipSwitch.Mask);
+                        if (dipSwitch.Values != null)
+                        {
+                            foreach (ListXmlDipValue dipValue in dipSwitch.Values)
+                            {
+                                xtw.WriteStartElement("dipvalue");
+                                xtw.WriteRequiredAttributeString("name", dipValue.Name);
+                                xtw.WriteOptionalAttributeString("value", dipValue.Value);
+                                xtw.WriteOptionalAttributeString("default", dipValue.Default.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         if (string.IsNullOrWhiteSpace(areaName))

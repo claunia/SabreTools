@@ -279,6 +279,12 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Tag,
             Field.DatItem_ChipType,
             Field.DatItem_Clock,
+            
+            // DIP Switch.Values
+            Field.DatItem_Values,
+            Field.DatItem_Value_Name,
+            Field.DatItem_Value_Value,
+            Field.DatItem_Value_Default,
 
             // Ram Option
             Field.DatItem_Content,
@@ -347,7 +353,6 @@ namespace SabreTools.Library.DatItems
             // SoftwareList
             Field.Machine_Supported,
             Field.Machine_SharedFeatures,
-            Field.Machine_DipSwitches,
         };
 
         #endregion
@@ -470,6 +475,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.DeviceReference:
                     return new DeviceReference();
+
+                case ItemType.DipSwitch:
+                    return new DipSwitch();
 
                 case ItemType.Disk:
                     return new Disk();

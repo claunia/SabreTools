@@ -101,24 +101,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Input_Control_Ways2 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_Input_Control_Ways3 { get; private set; } = new FilterItem<string>();
 
-        // DipSwitches
-        public FilterItem<bool?> Machine_DipSwitches { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_DipSwitch_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_DipSwitch_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_DipSwitch_Mask { get; private set; } = new FilterItem<string>();
-
-        // DipSwitches.Locations
-        public FilterItem<bool?> Machine_DipSwitch_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_DipSwitch_Location_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_DipSwitch_Location_Number { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_DipSwitch_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        // DipSwitches.Values
-        public FilterItem<bool?> Machine_DipSwitch_Values { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_DipSwitch_Value_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_DipSwitch_Value_Value { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_DipSwitch_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
         // Ports
         public FilterItem<bool?> Machine_Ports { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Port_Tag { get; private set; } = new FilterItem<string>();
@@ -325,6 +307,12 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Setting_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Setting_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Setting_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // DipSwitch.Values
+        public FilterItem<bool?> DatItem_Values { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Value_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Value_Value { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // Ram Option
         public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
@@ -846,93 +834,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Input_Control_Ways3.NegativeSet.Add(value);
                     else
                         Machine_Input_Control_Ways3.PositiveSet.Add(value);
-                    break;
-
-                // DipSwitches
-                case Field.Machine_DipSwitches:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_DipSwitches.Neutral = false;
-                    else
-                        Machine_DipSwitches.Neutral = true;
-                    break;
-
-                case Field.Machine_DipSwitch_Name:
-                    if (negate)
-                        Machine_DipSwitch_Name.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_DipSwitch_Tag:
-                    if (negate)
-                        Machine_DipSwitch_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_DipSwitch_Mask:
-                    if (negate)
-                        Machine_DipSwitch_Mask.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Mask.PositiveSet.Add(value);
-                    break;
-
-                // DipSwitches.Locations
-                case Field.Machine_DipSwitch_Locations:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_DipSwitch_Locations.Neutral = false;
-                    else
-                        Machine_DipSwitch_Locations.Neutral = true;
-                    break;
-
-                case Field.Machine_DipSwitch_Location_Name:
-                    if (negate)
-                        Machine_DipSwitch_Location_Name.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Location_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_DipSwitch_Location_Number:
-                    if (negate)
-                        Machine_DipSwitch_Location_Number.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Location_Number.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_DipSwitch_Location_Inverted:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_DipSwitch_Location_Inverted.Neutral = false;
-                    else
-                        Machine_DipSwitch_Location_Inverted.Neutral = true;
-                    break;
-
-                // DipSwitches.Values
-                case Field.Machine_DipSwitch_Values:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_DipSwitch_Values.Neutral = false;
-                    else
-                        Machine_DipSwitch_Values.Neutral = true;
-                    break;
-
-                case Field.Machine_DipSwitch_Value_Name:
-                    if (negate)
-                        Machine_DipSwitch_Value_Name.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Value_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_DipSwitch_Value_Value:
-                    if (negate)
-                        Machine_DipSwitch_Value_Value.NegativeSet.Add(value);
-                    else
-                        Machine_DipSwitch_Value_Value.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_DipSwitch_Value_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_DipSwitch_Value_Default.Neutral = false;
-                    else
-                        Machine_DipSwitch_Value_Default.Neutral = true;
                     break;
 
                 // Ports
@@ -1858,6 +1759,35 @@ namespace SabreTools.Library.Filtering
                         DatItem_Setting_Default.Neutral = false;
                     else
                         DatItem_Setting_Default.Neutral = true;
+                    break;
+
+                // DipSwitches.Values
+                case Field.DatItem_Values:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Values.Neutral = false;
+                    else
+                        DatItem_Values.Neutral = true;
+                    break;
+
+                case Field.DatItem_Value_Name:
+                    if (negate)
+                        DatItem_Value_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_Value_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Value_Value:
+                    if (negate)
+                        DatItem_Value_Value.NegativeSet.Add(value);
+                    else
+                        DatItem_Value_Value.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Value_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Value_Default.Neutral = false;
+                    else
+                        DatItem_Value_Default.Neutral = true;
                     break;
 
                 // Ram Option

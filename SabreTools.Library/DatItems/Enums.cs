@@ -179,24 +179,6 @@ namespace SabreTools.Library.DatItems
         Machine_Input_Control_Ways2,
         Machine_Input_Control_Ways3,
 
-        // DipSwitches
-        Machine_DipSwitches,
-        Machine_DipSwitch_Name,
-        Machine_DipSwitch_Tag,
-        Machine_DipSwitch_Mask,
-
-        // DipSwitches.Locations
-        Machine_DipSwitch_Locations,
-        Machine_DipSwitch_Location_Name,
-        Machine_DipSwitch_Location_Number,
-        Machine_DipSwitch_Location_Inverted,
-
-        // DipSwitches.Values
-        Machine_DipSwitch_Values,
-        Machine_DipSwitch_Value_Name,
-        Machine_DipSwitch_Value_Value,
-        Machine_DipSwitch_Value_Default,
-
         // Ports
         Machine_Ports,
         Machine_Port_Tag,
@@ -404,6 +386,12 @@ namespace SabreTools.Library.DatItems
         DatItem_Setting_Value,
         DatItem_Setting_Default,
 
+        // DIP Switch.Values
+        DatItem_Values,
+        DatItem_Value_Name,
+        DatItem_Value_Value,
+        DatItem_Value_Default,
+
         // Ram Option
         DatItem_Content,
 
@@ -456,6 +444,7 @@ namespace SabreTools.Library.DatItems
         Chip,
         Configuration,
         DeviceReference,
+        DipSwitch,
         RamOption,
         Release,
         Sample,

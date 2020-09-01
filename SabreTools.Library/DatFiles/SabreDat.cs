@@ -218,6 +218,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// TODO: This is horrendeously out of date. Once all done promoting, try to make this like JSON
         private bool ReadDirectory(
             XmlReader reader,
             List<string> parent,
@@ -350,6 +351,21 @@ namespace SabreTools.Library.DatFiles
                         DatItem datItem;
                         switch (reader.GetAttribute("type").ToLowerInvariant())
                         {
+                            case "adjuster":
+                                datItem = new Adjuster
+                                {
+                                    Name = reader.GetAttribute("name"),
+                                    Default = reader.GetAttribute("default").AsYesNo(),
+                                    Conditions = new List<ListXmlCondition>(),
+                                };
+
+                                // Now read the internal tags
+                                ReadAdjuster(reader.ReadSubtree(), datItem);
+
+                                // Skip the adjuster now that we've processed it
+                                reader.Skip();
+                                break;
+
                             case "archive":
                                 datItem = new Archive
                                 {
@@ -392,6 +408,51 @@ namespace SabreTools.Library.DatFiles
                                         Name = filename,
                                     },
                                 };
+                                break;
+
+                            case "configuration":
+                                datItem = new Configuration
+                                {
+                                    Name = reader.GetAttribute("name"),
+                                    Tag = reader.GetAttribute("tag"),
+                                    Mask = reader.GetAttribute("mask"),
+                                    Conditions = new List<ListXmlCondition>(),
+                                    Locations = new List<ListXmlConfLocation>(),
+                                    Settings = new List<ListXmlConfSetting>(),
+                                };
+
+                                // Now read the internal tags
+                                ReadConfiguration(reader.ReadSubtree(), datItem);
+
+                                // Skip the configuration now that we've processed it
+                                reader.Skip();
+                                break;
+
+                            case "device_ref":
+                                datItem = new DeviceReference
+                                {
+                                    Name = reader.GetAttribute("name"),
+                                };
+
+                                reader.Read();
+                                break;
+
+                            case "dipswitch":
+                                datItem = new DipSwitch
+                                {
+                                    Name = reader.GetAttribute("name"),
+                                    Tag = reader.GetAttribute("tag"),
+                                    Mask = reader.GetAttribute("mask"),
+                                    Conditions = new List<ListXmlCondition>(),
+                                    Locations = new List<ListXmlDipLocation>(),
+                                    Values = new List<ListXmlDipValue>(),
+                                };
+
+                                // Now read the internal tags
+                                ReadDipSwitch(reader.ReadSubtree(), datItem);
+
+                                // Skip the dipswitch now that we've processed it
+                                reader.Skip();
                                 break;
 
                             case "disk":
@@ -555,6 +616,314 @@ namespace SabreTools.Library.DatFiles
                                     break;
                             }
                         }
+
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read Adjuster information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="adjuster">Adjuster to populate</param>
+        private void ReadAdjuster(XmlReader reader, DatItem adjuster)
+        {
+            // If we have an empty port, skip it
+            if (reader == null)
+                return;
+
+            // If the DatItem isn't an Adjuster, skip it
+            if (adjuster.ItemType != ItemType.Adjuster)
+                return;
+
+            // Get list ready
+            (adjuster as Adjuster).Conditions = new List<ListXmlCondition>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the adjuster
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        (adjuster as Adjuster).Conditions.Add(condition);
+
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read Configuration information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="configuration">Configuration to populate</param>
+        private void ReadConfiguration(XmlReader reader, DatItem configuration)
+        {
+            // If we have an empty configuration, skip it
+            if (reader == null)
+                return;
+
+            // If the DatItem isn't an Configuration, skip it
+            if (configuration.ItemType != ItemType.Configuration)
+                return;
+
+            // Get lists ready
+            (configuration as Configuration).Conditions = new List<ListXmlCondition>();
+            (configuration as Configuration).Locations = new List<ListXmlConfLocation>();
+            (configuration as Configuration).Settings = new List<ListXmlConfSetting>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipswitch
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        (configuration as Configuration).Conditions.Add(condition);
+
+                        reader.Read();
+                        break;
+
+                    case "conflocation":
+                        var confLocation = new ListXmlConfLocation();
+                        confLocation.Name = reader.GetAttribute("name");
+                        confLocation.Number = reader.GetAttribute("number");
+                        confLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
+
+                        (configuration as Configuration).Locations.Add(confLocation);
+
+                        reader.Read();
+                        break;
+
+                    case "confsetting":
+                        var confSetting = new ListXmlConfSetting();
+                        confSetting.Name = reader.GetAttribute("name");
+                        confSetting.Value = reader.GetAttribute("value");
+                        confSetting.Default = reader.GetAttribute("default").AsYesNo();
+
+                        // Now read the internal tags
+                        ReadConfSetting(reader, confSetting);
+
+                        (configuration as Configuration).Settings.Add(confSetting);
+
+                        // Skip the dipvalue now that we've processed it
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read ConfSetting information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="confSetting">ListXmlConfSetting to populate</param>
+        private void ReadConfSetting(XmlReader reader, ListXmlConfSetting confSetting)
+        {
+            // If we have an empty confsetting, skip it
+            if (reader == null)
+                return;
+
+            // Get list ready
+            confSetting.Conditions = new List<ListXmlCondition>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the confsetting
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        confSetting.Conditions.Add(condition);
+
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read DipSwitch information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="dipSwitch">DipSwitch to populate</param>
+        private void ReadDipSwitch(XmlReader reader, DatItem dipSwitch)
+        {
+            // If we have an empty dipswitch, skip it
+            if (reader == null)
+                return;
+
+            // If the DatItem isn't an DipSwitch, skip it
+            if (dipSwitch.ItemType != ItemType.DipSwitch)
+                return;
+
+            // Get lists ready
+            (dipSwitch as DipSwitch).Conditions = new List<ListXmlCondition>();
+            (dipSwitch as DipSwitch).Locations = new List<ListXmlDipLocation>();
+            (dipSwitch as DipSwitch).Values = new List<ListXmlDipValue>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipswitch
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        (dipSwitch as DipSwitch).Conditions.Add(condition);
+
+                        reader.Read();
+                        break;
+
+                    case "diplocation":
+                        var dipLocation = new ListXmlDipLocation();
+                        dipLocation.Name = reader.GetAttribute("name");
+                        dipLocation.Number = reader.GetAttribute("number");
+                        dipLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
+
+                        (dipSwitch as DipSwitch).Locations.Add(dipLocation);
+
+                        reader.Read();
+                        break;
+
+                    case "dipvalue":
+                        var dipValue = new ListXmlDipValue();
+                        dipValue.Name = reader.GetAttribute("name");
+                        dipValue.Value = reader.GetAttribute("value");
+                        dipValue.Default = reader.GetAttribute("default").AsYesNo();
+
+                        // Now read the internal tags
+                        ReadDipValue(reader, dipValue);
+
+                        (dipSwitch as DipSwitch).Values.Add(dipValue);
+
+                        // Skip the dipvalue now that we've processed it
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read DipValue information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="dipValue">ListXmlDipValue to populate</param>
+        private void ReadDipValue(XmlReader reader, ListXmlDipValue dipValue)
+        {
+            // If we have an empty dipvalue, skip it
+            if (reader == null)
+                return;
+
+            // Get list ready
+            dipValue.Conditions = new List<ListXmlCondition>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipvalue
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        dipValue.Conditions.Add(condition);
 
                         reader.Read();
                         break;
@@ -937,6 +1306,62 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "device_ref");
                         xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.DipSwitch:
+                        var dipSwitch = datItem as DipSwitch;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "dipswitch");
+                        xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
+                        xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
+                        xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
+                        if (dipSwitch.Conditions != null)
+                        {
+                            foreach (var condition in dipSwitch.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (dipSwitch.Locations != null)
+                        {
+                            foreach (var location in dipSwitch.Locations)
+                            {
+                                xtw.WriteStartElement("diplocation");
+                                xtw.WriteOptionalAttributeString("name", location.Name);
+                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (dipSwitch.Values != null)
+                        {
+                            foreach (var value in dipSwitch.Values)
+                            {
+                                xtw.WriteStartElement("dipvalue");
+                                xtw.WriteOptionalAttributeString("name", value.Name);
+                                xtw.WriteOptionalAttributeString("value", value.Value);
+                                xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
+                                if (value.Conditions != null)
+                                {
+                                    foreach (var condition in value.Conditions)
+                                    {
+                                        xtw.WriteStartElement("condition");
+                                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                        xtw.WriteOptionalAttributeString("value", condition.Value);
+                                        xtw.WriteEndElement();
+                                    }
+                                }
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 

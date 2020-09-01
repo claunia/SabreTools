@@ -575,42 +575,6 @@ namespace SabreTools.Library.Tools
                     case "input_control_ways3":
                         return Field.Machine_Input_Control_Ways3;
 
-                    case "dipswitches":
-                        return Field.Machine_DipSwitches;
-
-                    case "dipswitch_name":
-                        return Field.Machine_DipSwitch_Name;
-
-                    case "dipswitch_tag":
-                        return Field.Machine_DipSwitch_Tag;
-
-                    case "dipswitch_mask":
-                        return Field.Machine_DipSwitch_Mask;
-
-                    case "dipswitch_locations":
-                        return Field.Machine_DipSwitch_Locations;
-
-                    case "dipswitch_location_name":
-                        return Field.Machine_DipSwitch_Location_Name;
-
-                    case "dipswitch_location_number":
-                        return Field.Machine_DipSwitch_Location_Number;
-
-                    case "dipswitch_location_inverted":
-                        return Field.Machine_DipSwitch_Location_Inverted;
-
-                    case "dipswitch_values":
-                        return Field.Machine_DipSwitch_Values;
-
-                    case "dipswitch_value_name":
-                        return Field.Machine_DipSwitch_Value_Name;
-
-                    case "dipswitch_value_value":
-                        return Field.Machine_DipSwitch_Value_Value;
-
-                    case "dipswitch_value_default":
-                        return Field.Machine_DipSwitch_Value_Default;
-
                     case "ports":
                         return Field.Machine_Ports;
 
@@ -1061,6 +1025,19 @@ namespace SabreTools.Library.Tools
                     case "setting_default":
                         return Field.DatItem_Setting_Default;
 
+                    // DIP Switch
+                    case "values":
+                        return Field.DatItem_Values;
+
+                    case "value_name":
+                        return Field.DatItem_Value_Name;
+
+                    case "value_value":
+                        return Field.DatItem_Value_Value;
+
+                    case "value_default":
+                        return Field.DatItem_Value_Default;
+
                     // Ram Option
                     case "content":
                         return Field.DatItem_Content;
@@ -1288,13 +1265,6 @@ namespace SabreTools.Library.Tools
                 case "shared features":
                 case "shared-features":
                     return Field.Machine_SharedFeatures;
-                case "dipswitch":
-                case "dip switch":
-                case "dip-switch":
-                case "dipswitches":
-                case "dip switches":
-                case "dip-switches":
-                    return Field.Machine_DipSwitches;
 
                 #endregion
 
@@ -1605,6 +1575,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Configuration;
                 case "device_ref":
                     return ItemType.DeviceReference;
+                case "dipswitch":
+                    return ItemType.DipSwitch;
                 case "disk":
                     return ItemType.Disk;
                 case "media":
@@ -1632,6 +1604,7 @@ namespace SabreTools.Library.Tools
                 "chip" => ItemType.Chip,
                 "configuration" => ItemType.Configuration,
                 "device_ref" => ItemType.DeviceReference,
+                "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
                 "media" => ItemType.Media,
                 "ramoption" => ItemType.RamOption,
@@ -2044,6 +2017,8 @@ namespace SabreTools.Library.Tools
                     return "configuration";
                 case ItemType.DeviceReference:
                     return "device_ref";
+                case ItemType.DipSwitch:
+                    return "dipswitch";
                 case ItemType.Disk:
                     return "disk";
                 case ItemType.Media:
@@ -2071,6 +2046,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Chip => "chip",
                 ItemType.Configuration => "configuration",
                 ItemType.DeviceReference => "device_ref",
+                ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",
                 ItemType.Media => "media",
                 ItemType.RamOption => "ramoption",

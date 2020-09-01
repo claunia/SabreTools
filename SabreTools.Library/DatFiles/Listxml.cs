@@ -247,6 +247,24 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "dipswitch":
+                        var dipSwitch = new DipSwitch
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Conditions = new List<ListXmlCondition>(),
+                            Locations = new List<ListXmlDipLocation>(),
+                            Values = new List<ListXmlDipValue>(),
+                        };
+
+                        // Now read the internal tags
+                        ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
+
+                        // Skip the dipswitch now that we've processed it
+                        reader.Skip();
+                        break;
+
                     case "disk":
                         datItems.Add(new Disk
                         {
@@ -408,25 +426,6 @@ namespace SabreTools.Library.DatFiles
                         machine.Inputs.Add(input);
 
                         // Skip the input now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "dipswitch":
-                        var dipSwitch = new ListXmlDipSwitch();
-                        dipSwitch.Name = reader.GetAttribute("name");
-                        dipSwitch.Tag = reader.GetAttribute("tag");
-                        dipSwitch.Mask = reader.GetAttribute("mask");
-
-                        // Now read the internal tags
-                        ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
-
-                        // Ensure the list exists
-                        if (machine.DipSwitches == null)
-                            machine.DipSwitches = new List<ListXmlDipSwitch>();
-
-                        machine.DipSwitches.Add(dipSwitch);
-
-                        // Skip the dipswitch now that we've processed it
                         reader.Skip();
                         break;
 
@@ -658,8 +657,8 @@ namespace SabreTools.Library.DatFiles
         /// Read DipSwitch information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="dipSwitch">ListXmlDipSwitch to populate</param>
-        private void ReadDipSwitch(XmlReader reader, ListXmlDipSwitch dipSwitch)
+        /// <param name="dipSwitch">DipSwitch to populate</param>
+        private void ReadDipSwitch(XmlReader reader, DipSwitch dipSwitch)
         {
             // If we have an empty dipswitch, skip it
             if (reader == null)
@@ -1289,80 +1288,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.DipSwitches != null)
-                {
-                    foreach (var dipSwitch in datItem.Machine.DipSwitches)
-                    {
-                        xtw.WriteStartElement("dipswitch");
-
-                        xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
-                        xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
-                        xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
-
-                        if (dipSwitch.Conditions != null)
-                        {
-                            foreach (var condition in dipSwitch.Conditions)
-                            {
-                                xtw.WriteStartElement("condition");
-
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
-
-                                // End condition
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        if (dipSwitch.Locations != null)
-                        {
-                            foreach (var location in dipSwitch.Locations)
-                            {
-                                xtw.WriteStartElement("diplocation");
-
-                                xtw.WriteOptionalAttributeString("name", location.Name);
-                                xtw.WriteOptionalAttributeString("number", location.Number);
-                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
-
-                                // End diplocation
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        if (dipSwitch.Values != null)
-                        {
-                            foreach (var value in dipSwitch.Values)
-                            {
-                                xtw.WriteStartElement("dipvalue");
-
-                                xtw.WriteOptionalAttributeString("name", value.Name);
-                                xtw.WriteOptionalAttributeString("value", value.Value);
-                                xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
-
-                                if (value.Conditions != null)
-                                {
-                                    foreach (var condition in value.Conditions)
-                                    {
-                                        xtw.WriteStartElement("condition");
-
-                                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                        xtw.WriteOptionalAttributeString("value", condition.Value);
-
-                                        // End condition
-                                        xtw.WriteEndElement();
-                                    }
-                                }
-
-                                // End dipvalue
-                                xtw.WriteEndElement();
-                            }
-                        }
-
-                        // End dipswitch
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Ports != null)
                 {
                     foreach (var port in datItem.Machine.Ports)
@@ -1623,6 +1548,61 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.DeviceReference:
                         xtw.WriteStartElement("device_ref");
                         xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.DipSwitch:
+                        var dipSwitch = datItem as DipSwitch;
+                        xtw.WriteStartElement("dipswitch");
+                        xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
+                        xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
+                        xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
+                        if (dipSwitch.Conditions != null)
+                        {
+                            foreach (var condition in dipSwitch.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (dipSwitch.Locations != null)
+                        {
+                            foreach (var location in dipSwitch.Locations)
+                            {
+                                xtw.WriteStartElement("diplocation");
+                                xtw.WriteOptionalAttributeString("name", location.Name);
+                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (dipSwitch.Values != null)
+                        {
+                            foreach (var value in dipSwitch.Values)
+                            {
+                                xtw.WriteStartElement("dipvalue");
+                                xtw.WriteOptionalAttributeString("name", value.Name);
+                                xtw.WriteOptionalAttributeString("value", value.Value);
+                                xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
+                                if (value.Conditions != null)
+                                {
+                                    foreach (var condition in value.Conditions)
+                                    {
+                                        xtw.WriteStartElement("condition");
+                                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                        xtw.WriteOptionalAttributeString("value", condition.Value);
+                                        xtw.WriteEndElement();
+                                    }
+                                }
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 

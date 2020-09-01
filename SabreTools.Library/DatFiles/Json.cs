@@ -229,6 +229,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.DeviceReference:
                         datItem = datItemObj.ToObject<DeviceReference>();
                         break;
+                    case ItemType.DipSwitch:
+                        datItem = datItemObj.ToObject<DipSwitch>();
+                        break;
                     case ItemType.Disk:
                         datItem = datItemObj.ToObject<Disk>();
                         break;
