@@ -356,7 +356,7 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
                                     Default = reader.GetAttribute("default").AsYesNo(),
-                                    Conditions = new List<ListXmlCondition>(),
+                                    Conditions = new List<Condition>(),
                                 };
 
                                 // Now read the internal tags
@@ -416,9 +416,9 @@ namespace SabreTools.Library.DatFiles
                                     Name = reader.GetAttribute("name"),
                                     Tag = reader.GetAttribute("tag"),
                                     Mask = reader.GetAttribute("mask"),
-                                    Conditions = new List<ListXmlCondition>(),
-                                    Locations = new List<ListXmlConfLocation>(),
-                                    Settings = new List<ListXmlConfSetting>(),
+                                    Conditions = new List<Condition>(),
+                                    Locations = new List<Location>(),
+                                    Settings = new List<Setting>(),
                                 };
 
                                 // Now read the internal tags
@@ -443,9 +443,9 @@ namespace SabreTools.Library.DatFiles
                                     Name = reader.GetAttribute("name"),
                                     Tag = reader.GetAttribute("tag"),
                                     Mask = reader.GetAttribute("mask"),
-                                    Conditions = new List<ListXmlCondition>(),
-                                    Locations = new List<ListXmlDipLocation>(),
-                                    Values = new List<ListXmlDipValue>(),
+                                    Conditions = new List<Condition>(),
+                                    Locations = new List<Location>(),
+                                    Values = new List<Setting>(),
                                 };
 
                                 // Now read the internal tags
@@ -643,7 +643,7 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get list ready
-            (adjuster as Adjuster).Conditions = new List<ListXmlCondition>();
+            (adjuster as Adjuster).Conditions = new List<Condition>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -661,7 +661,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new ListXmlCondition();
+                        var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
@@ -695,9 +695,9 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get lists ready
-            (configuration as Configuration).Conditions = new List<ListXmlCondition>();
-            (configuration as Configuration).Locations = new List<ListXmlConfLocation>();
-            (configuration as Configuration).Settings = new List<ListXmlConfSetting>();
+            (configuration as Configuration).Conditions = new List<Condition>();
+            (configuration as Configuration).Locations = new List<Location>();
+            (configuration as Configuration).Settings = new List<Setting>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -715,7 +715,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new ListXmlCondition();
+                        var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
@@ -727,7 +727,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "conflocation":
-                        var confLocation = new ListXmlConfLocation();
+                        var confLocation = new Location();
                         confLocation.Name = reader.GetAttribute("name");
                         confLocation.Number = reader.GetAttribute("number");
                         confLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
@@ -738,7 +738,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "confsetting":
-                        var confSetting = new ListXmlConfSetting();
+                        var confSetting = new Setting();
                         confSetting.Name = reader.GetAttribute("name");
                         confSetting.Value = reader.GetAttribute("value");
                         confSetting.Default = reader.GetAttribute("default").AsYesNo();
@@ -764,14 +764,14 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
         /// <param name="confSetting">ListXmlConfSetting to populate</param>
-        private void ReadConfSetting(XmlReader reader, ListXmlConfSetting confSetting)
+        private void ReadConfSetting(XmlReader reader, Setting confSetting)
         {
             // If we have an empty confsetting, skip it
             if (reader == null)
                 return;
 
             // Get list ready
-            confSetting.Conditions = new List<ListXmlCondition>();
+            confSetting.Conditions = new List<Condition>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -789,7 +789,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new ListXmlCondition();
+                        var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
@@ -823,9 +823,9 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get lists ready
-            (dipSwitch as DipSwitch).Conditions = new List<ListXmlCondition>();
-            (dipSwitch as DipSwitch).Locations = new List<ListXmlDipLocation>();
-            (dipSwitch as DipSwitch).Values = new List<ListXmlDipValue>();
+            (dipSwitch as DipSwitch).Conditions = new List<Condition>();
+            (dipSwitch as DipSwitch).Locations = new List<Location>();
+            (dipSwitch as DipSwitch).Values = new List<Setting>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -843,7 +843,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new ListXmlCondition();
+                        var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
@@ -855,7 +855,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "diplocation":
-                        var dipLocation = new ListXmlDipLocation();
+                        var dipLocation = new Location();
                         dipLocation.Name = reader.GetAttribute("name");
                         dipLocation.Number = reader.GetAttribute("number");
                         dipLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
@@ -866,7 +866,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipvalue":
-                        var dipValue = new ListXmlDipValue();
+                        var dipValue = new Setting();
                         dipValue.Name = reader.GetAttribute("name");
                         dipValue.Value = reader.GetAttribute("value");
                         dipValue.Default = reader.GetAttribute("default").AsYesNo();
@@ -891,15 +891,15 @@ namespace SabreTools.Library.DatFiles
         /// Read DipValue information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="dipValue">ListXmlDipValue to populate</param>
-        private void ReadDipValue(XmlReader reader, ListXmlDipValue dipValue)
+        /// <param name="dipValue">Setting to populate</param>
+        private void ReadDipValue(XmlReader reader, Setting dipValue)
         {
             // If we have an empty dipvalue, skip it
             if (reader == null)
                 return;
 
             // Get list ready
-            dipValue.Conditions = new List<ListXmlCondition>();
+            dipValue.Conditions = new List<Condition>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -917,7 +917,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new ListXmlCondition();
+                        var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
                         condition.Relation = reader.GetAttribute("relation");
@@ -1455,6 +1455,25 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "sample");
                         xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Slot:
+                        var slot = datItem as Slot;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "slot");
+                        xtw.WriteOptionalAttributeString("name", slot.Name);
+                        if (slot.SlotOptions != null)
+                        {
+                            foreach (var slotOption in slot.SlotOptions)
+                            {
+                                xtw.WriteStartElement("slotoption");
+                                xtw.WriteOptionalAttributeString("name", slotOption.Name);
+                                xtw.WriteOptionalAttributeString("devname", slotOption.DeviceName);
+                                xtw.WriteOptionalAttributeString("default", slotOption.Default.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 

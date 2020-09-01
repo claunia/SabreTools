@@ -21,10 +21,10 @@ namespace RombaSharp.Features
             Description = "Rescan a specific depot to get new information";
             _featureType = FeatureType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, SabreTools.Library.Help.Feature>();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
             Globals.Logger.Error("This feature is not yet implemented: rescan-depots");

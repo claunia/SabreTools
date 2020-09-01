@@ -289,6 +289,12 @@ namespace SabreTools.Library.DatItems
             // Ram Option
             Field.DatItem_Content,
 
+            // Slot.SlotOptions
+            Field.DatItem_SlotOptions,
+            Field.DatItem_SlotOption_Name,
+            Field.DatItem_SlotOption_DeviceName,
+            Field.DatItem_SlotOption_Default,
+
             // Release
             Field.DatItem_Language,
 
@@ -327,7 +333,6 @@ namespace SabreTools.Library.DatItems
             // ListXML
             Field.Machine_SourceFile,
             Field.Machine_Runnable,
-            Field.Machine_Slots,
             Field.Machine_Infos,
 
             // Logiqx
@@ -496,6 +501,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Sample:
                     return new Sample();
+
+                case ItemType.Slot:
+                    return new Slot();
 
                 case ItemType.SoftwareList:
                     return new SoftwareList();

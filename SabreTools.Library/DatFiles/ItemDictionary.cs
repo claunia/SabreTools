@@ -156,6 +156,12 @@ namespace SabreTools.Library.DatFiles
         public long SampleCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Slot items
+        /// </summary>
+        [JsonIgnore]
+        public long SlotCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of SoftwareList items
         /// </summary>
         [JsonIgnore]
@@ -558,6 +564,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Sample:
                     SampleCount++;
                     break;
+                case ItemType.Slot:
+                    SlotCount++;
+                    break;
                 case ItemType.SoftwareList:
                     SoftwareListCount++;
                     break;
@@ -704,6 +713,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Sample:
                     SampleCount--;
+                    break;
+                case ItemType.Slot:
+                    SlotCount--;
                     break;
                 case ItemType.SoftwareList:
                     SoftwareListCount--;

@@ -19,11 +19,11 @@ namespace RombaSharp.Features
         #region Private Flag features
 
         internal const string CopyValue = "copy";
-        internal static Feature CopyFlag
+        internal static SabreTools.Library.Help.Feature CopyFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     CopyValue,
                     "-copy",
                     "Copy files to output instead of rebuilding",
@@ -32,11 +32,11 @@ namespace RombaSharp.Features
         } // Unique to RombaSharp
 
         internal const string FixdatOnlyValue = "fixdat-only";
-        internal static Feature FixdatOnlyFlag
+        internal static SabreTools.Library.Help.Feature FixdatOnlyFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     FixdatOnlyValue,
                     "-fixdatOnly",
                     "only fix dats and don't generate torrentzips",
@@ -45,11 +45,11 @@ namespace RombaSharp.Features
         }
 
         internal const string LogOnlyValue = "log-only";
-        internal static Feature LogOnlyFlag
+        internal static SabreTools.Library.Help.Feature LogOnlyFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                 LogOnlyValue,
                 "-log-only",
                 "Only write out actions to log",
@@ -58,11 +58,11 @@ namespace RombaSharp.Features
         }
 
         internal const string NoDbValue = "no-db";
-        internal static Feature NoDbFlag
+        internal static SabreTools.Library.Help.Feature NoDbFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     NoDbValue,
                     "-no-db",
                     "archive into depot but do not touch DB index and ignore only-needed flag",
@@ -71,11 +71,11 @@ namespace RombaSharp.Features
         }
 
         internal const string OnlyNeededValue = "only-needed";
-        internal static Feature OnlyNeededFlag
+        internal static SabreTools.Library.Help.Feature OnlyNeededFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     OnlyNeededValue,
                     "-only-needed",
                     "only archive ROM files actually referenced by DAT files from the DAT index",
@@ -84,11 +84,11 @@ namespace RombaSharp.Features
         }
 
         internal const string SkipInitialScanValue = "skip-initial-scan";
-        internal static Feature SkipInitialScanFlag
+        internal static SabreTools.Library.Help.Feature SkipInitialScanFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     SkipInitialScanValue,
                     "-skip-initial-scan",
                     "skip the initial scan of the files to determine amount of work",
@@ -97,11 +97,11 @@ namespace RombaSharp.Features
         }
 
         internal const string UseGolangZipValue = "use-golang-zip";
-        internal static Feature UseGolangZipFlag
+        internal static SabreTools.Library.Help.Feature UseGolangZipFlag
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     UseGolangZipValue,
                     "-use-golang-zip",
                     "use go zip implementation instead of zlib",
@@ -114,11 +114,11 @@ namespace RombaSharp.Features
         #region Private Int32 features
 
         internal const string Include7ZipsInt32Value = "include-7zips";
-        internal static Feature Include7ZipsInt32Input
+        internal static SabreTools.Library.Help.Feature Include7ZipsInt32Input
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     Include7ZipsInt32Value,
                     "-include-7zips",
                     "flag value == 0 means: add 7zip files themselves into the depot in addition to their contents, flag value == 2 means add 7zip files themselves but don't add content",
@@ -127,11 +127,11 @@ namespace RombaSharp.Features
         }
 
         internal const string IncludeGZipsInt32Value = "include-gzips";
-        internal static Feature IncludeGZipsInt32Input
+        internal static SabreTools.Library.Help.Feature IncludeGZipsInt32Input
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     IncludeGZipsInt32Value,
                     "-include-gzips",
                     "flag value == 0 means: add gzip files themselves into the depot in addition to their contents, flag value == 2 means add gzip files themselves but don't add content",
@@ -140,11 +140,11 @@ namespace RombaSharp.Features
         }
 
         internal const string IncludeZipsInt32Value = "include-zips";
-        internal static Feature IncludeZipsInt32Input
+        internal static SabreTools.Library.Help.Feature IncludeZipsInt32Input
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     IncludeZipsInt32Value,
                     "-include-zips",
                     "flag value == 0 means: add zip files themselves into the depot in addition to their contents, flag value == 2 means add zip files themselves but don't add content",
@@ -153,11 +153,11 @@ namespace RombaSharp.Features
         }
 
         internal const string SubworkersInt32Value = "subworkers";
-        internal static Feature SubworkersInt32Input
+        internal static SabreTools.Library.Help.Feature SubworkersInt32Input
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     SubworkersInt32Value,
                     "-subworkers",
                     "how many subworkers to launch for each worker",
@@ -166,11 +166,11 @@ namespace RombaSharp.Features
         } // Defaults to Workers count in config
 
         internal const string WorkersInt32Value = "workers";
-        internal static Feature WorkersInt32Input
+        internal static SabreTools.Library.Help.Feature WorkersInt32Input
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     WorkersInt32Value,
                     "-workers",
                     "how many workers to launch for the job",
@@ -183,11 +183,11 @@ namespace RombaSharp.Features
         #region Private Int64 features
 
         internal const string SizeInt64Value = "size";
-        internal static Feature SizeInt64Input
+        internal static SabreTools.Library.Help.Feature SizeInt64Input
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     SizeInt64Value,
                     "-size",
                     "size of the rom to lookup",
@@ -200,11 +200,11 @@ namespace RombaSharp.Features
         #region Private List<String> features
 
         internal const string DatsListStringValue = "dats";
-        internal static Feature DatsListStringInput
+        internal static SabreTools.Library.Help.Feature DatsListStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     DatsListStringValue,
                     "-dats",
                     "purge only roms declared in these dats",
@@ -213,11 +213,11 @@ namespace RombaSharp.Features
         }
 
         internal const string DepotListStringValue = "depot";
-        internal static Feature DepotListStringInput
+        internal static SabreTools.Library.Help.Feature DepotListStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     DepotListStringValue,
                     "-depot",
                     "work only on specified depot path",
@@ -230,11 +230,11 @@ namespace RombaSharp.Features
         #region Private String features
 
         internal const string BackupStringValue = "backup";
-        internal static Feature BackupStringInput
+        internal static SabreTools.Library.Help.Feature BackupStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     BackupStringValue,
                     "-backup",
                     "backup directory where backup files are moved to",
@@ -243,11 +243,11 @@ namespace RombaSharp.Features
         }
 
         internal const string DescriptionStringValue = "description";
-        internal static Feature DescriptionStringInput
+        internal static SabreTools.Library.Help.Feature DescriptionStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     DescriptionStringValue,
                     "-description",
                     "description value in DAT header",
@@ -256,11 +256,11 @@ namespace RombaSharp.Features
         }
 
         internal const string MissingSha1sStringValue = "missing-sha1s";
-        internal static Feature MissingSha1sStringInput
+        internal static SabreTools.Library.Help.Feature MissingSha1sStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     MissingSha1sStringValue,
                     "-missingSha1s",
                     "write paths of dats with missing sha1s into this file",
@@ -269,11 +269,11 @@ namespace RombaSharp.Features
         }
 
         internal const string NameStringValue = "name";
-        internal static Feature NameStringInput
+        internal static SabreTools.Library.Help.Feature NameStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     NameStringValue,
                     "-name",
                     "name value in DAT header",
@@ -282,11 +282,11 @@ namespace RombaSharp.Features
         }
 
         internal const string NewStringValue = "new";
-        internal static Feature NewStringInput
+        internal static SabreTools.Library.Help.Feature NewStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     NewStringValue,
                     "-new",
                     "new DAT file",
@@ -295,11 +295,11 @@ namespace RombaSharp.Features
         }
 
         internal const string OldStringValue = "old";
-        internal static Feature OldStringInput
+        internal static SabreTools.Library.Help.Feature OldStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     OldStringValue,
                     "-old",
                     "old DAT file",
@@ -308,11 +308,11 @@ namespace RombaSharp.Features
         }
 
         internal const string OutStringValue = "out";
-        internal static Feature OutStringInput
+        internal static SabreTools.Library.Help.Feature OutStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     OutStringValue,
                     "-out",
                     "output file",
@@ -321,11 +321,11 @@ namespace RombaSharp.Features
         }
 
         internal const string ResumeStringValue = "resume";
-        internal static Feature ResumeStringInput
+        internal static SabreTools.Library.Help.Feature ResumeStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     ResumeStringValue,
                     "-resume",
                     "resume a previously interrupted operation from the specified path",
@@ -334,11 +334,11 @@ namespace RombaSharp.Features
         }
 
         internal const string SourceStringValue = "source";
-        internal static Feature SourceStringInput
+        internal static SabreTools.Library.Help.Feature SourceStringInput
         {
             get
             {
-                return new Feature(
+                return new SabreTools.Library.Help.Feature(
                     SourceStringValue,
                     "-source",
                     "source directory",
@@ -370,7 +370,7 @@ namespace RombaSharp.Features
         internal const string _dbSchema = "rombasharp";
         internal static string _connectionString;
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
         {
             InitializeConfiguration();
             DatabaseTools.EnsureDatabase(_dbSchema, _db, _connectionString);

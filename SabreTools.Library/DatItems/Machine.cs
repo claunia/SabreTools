@@ -156,55 +156,49 @@ namespace SabreTools.Library.DatItems
         /// List of associated displays
         /// </summary>
         [JsonProperty("displays", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlDisplay> Displays { get; set; } = null;
+        public List<Display> Displays { get; set; } = null;
 
         /// <summary>
         /// List of associated sounds
         /// </summary>
         [JsonProperty("sounds", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlSound> Sounds { get; set; } = null;
+        public List<Sound> Sounds { get; set; } = null;
 
         /// <summary>
         /// List of associated conditions
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlCondition> Conditions { get; set; } = null;
+        public List<Condition> Conditions { get; set; } = null;
 
         /// <summary>
         /// List of associated inputs
         /// </summary>
         [JsonProperty("inputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlInput> Inputs { get; set; } = null;
+        public List<Input> Inputs { get; set; } = null;
 
         /// <summary>
         /// List of associated ports
         /// </summary>
         [JsonProperty("ports", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlPort> Ports { get; set; } = null;
+        public List<Port> Ports { get; set; } = null;
 
         /// <summary>
         /// List of associated drivers
         /// </summary>
         [JsonProperty("drivers", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlDriver> Drivers { get; set; } = null;
+        public List<Driver> Drivers { get; set; } = null;
 
         /// <summary>
         /// List of associated features
         /// </summary>
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlFeature> Features { get; set; } = null;
+        public List<Feature> Features { get; set; } = null;
 
         /// <summary>
         /// List of associated devices
         /// </summary>
         [JsonProperty("devices", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlDevice> Devices { get; set; } = null;
-
-        /// <summary>
-        /// List of slot options
-        /// </summary>
-        [JsonProperty("slots", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlSlot> Slots { get; set; } = null;
+        public List<Device> Devices { get; set; } = null;
 
         #endregion
 
@@ -566,7 +560,6 @@ namespace SabreTools.Library.DatItems
                 Drivers = this.Drivers,
                 Features = this.Features,
                 Devices = this.Devices,
-                Slots = this.Slots,
 
                 #endregion
 
@@ -1456,9 +1449,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_Runnable))
                 Runnable = Runnable.NULL;
 
-            if (fields.Contains(Field.Machine_Slots))
-                Slots = null;
-
             if (fields.Contains(Field.Machine_Infos))
                 Infos = null;
 
@@ -1614,9 +1604,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_Runnable))
                 Runnable = machine.Runnable;
-
-            if (fields.Contains(Field.Machine_Slots))
-                Slots = machine.Slots;
 
             if (fields.Contains(Field.Machine_Infos))
                 Infos = machine.Infos;

@@ -1441,17 +1441,18 @@ namespace SabreTools.Library.DatFiles
                 if (slotoptions)
                 {
                     // If the game has no slot options, we continue
-                    if (Items[game][0].Machine.Slots == null
-                        || Items[game][0].Machine.Slots
-                            .SelectMany(s => s.SlotOptions ?? new List<ListXmlSlotOption>()).Count() == 0)
+                    if (Items[game]
+                        .Where(i => i.ItemType == ItemType.Slot)
+                        .SelectMany(s => (s as Slot).SlotOptions ?? new List<SlotOption>()).Count() == 0)
                     {
                         continue;
                     }
 
                     // Determine if the game has any slot options or not
-                    List<string> slotOptions = Items[game][0].Machine.Slots
-                        .Where(s => s.SlotOptions != null && s.SlotOptions.Count != 0)
-                        .SelectMany(s => s.SlotOptions)
+                    List<string> slotOptions = Items[game]
+                        .Where(i => i.ItemType == ItemType.Slot)
+                        .Where(s => (s as Slot).SlotOptions != null && (s as Slot).SlotOptions.Count != 0)
+                        .SelectMany(s => (s as Slot).SlotOptions)
                         .Select(o => o.DeviceName)
                         .Distinct()
                         .ToList();
@@ -1465,18 +1466,15 @@ namespace SabreTools.Library.DatFiles
                         // Otherwise, copy the items from the slot option to the current game
                         DatItem copyFrom = Items[game][0];
                         List<DatItem> slotOptionItems = Items[slotOption];
+                        newSlotOptions.AddRange((Items[slotOption] ?? new List<DatItem>())
+                            .Where(i => i.ItemType == ItemType.Slot)
+                            .Where(s => (s as Slot).SlotOptions != null && (s as Slot).SlotOptions.Count != 0)
+                            .SelectMany(s => (s as Slot).SlotOptions)
+                            .Select(o => o.DeviceName));
+
                         foreach (DatItem item in slotOptionItems)
                         {
                             DatItem datItem = (DatItem)item.Clone();
-                            List<string> machineSlotOptions =
-                                (datItem.Machine.Slots ?? new List<ListXmlSlot>())
-                                .Where(s => s.SlotOptions != null && s.SlotOptions.Count != 0)
-                                .SelectMany(s => s.SlotOptions)
-                                .Select(o => o.DeviceName)
-                                .Distinct()
-                                .ToList();
-
-                            newSlotOptions.AddRange(machineSlotOptions);
                             datItem.CopyMachineInformation(copyFrom);
                             if (Items[game].Where(i => i.ItemType == datItem.ItemType && i.Name == datItem.Name).Count() == 0)
                             {
@@ -1493,7 +1491,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (string slotOption in newSlotOptions)
                     {
                         if (!slotOptions.Contains(slotOption))
-                            Items[game][0].Machine.Slots.Add(new ListXmlSlot() { SlotOptions = new List<ListXmlSlotOption> { new ListXmlSlotOption { DeviceName = slotOption } } });
+                            Items[game].Add(new Slot() { SlotOptions = new List<SlotOption> { new SlotOption { DeviceName = slotOption } } });
                     }
                 }
             }

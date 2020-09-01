@@ -24,13 +24,13 @@ namespace RombaSharp.Features
 Detects any changes in the DAT master directory tree and updates the DAT index
 accordingly, marking deleted or overwritten dats as orphaned and updating
 contents of any changed dats.";
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, SabreTools.Library.Help.Feature>();
 
             AddFeature(WorkersInt32Input);
             AddFeature(MissingSha1sStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

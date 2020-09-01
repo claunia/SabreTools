@@ -139,16 +139,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> Machine_Device_Extensions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Device_Extension_Name { get; private set; } = new FilterItem<string>();
 
-        // Slots
-        public FilterItem<bool?> Machine_Slots { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Slot_Name { get; private set; } = new FilterItem<string>();
-
-        // Slots.SlotOptions
-        public FilterItem<bool?> Machine_Slot_SlotOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Slot_SlotOption_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Slot_SlotOption_DeviceName { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_Slot_SlotOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
         #endregion
 
         #region Logiqx
@@ -319,6 +309,12 @@ namespace SabreTools.Library.Filtering
 
         // Release
         public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
+
+        // Slots.SlotOptions
+        public FilterItem<bool?> DatItem_SlotOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_SlotOption_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SlotOption_DeviceName { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_SlotOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // Software List
         public FilterItem<SoftwareListStatus> DatItem_SoftwareListStatus { get; private set; } = new FilterItem<SoftwareListStatus>() { Positive = SoftwareListStatus.NULL, Negative = SoftwareListStatus.NULL };
@@ -1009,50 +1005,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Device_Extension_Name.NegativeSet.Add(value);
                     else
                         Machine_Device_Extension_Name.PositiveSet.Add(value);
-                    break;
-
-                // Slots
-                case Field.Machine_Slots:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Slots.Neutral = false;
-                    else
-                        Machine_Slots.Neutral = true;
-                    break;
-
-                case Field.Machine_Slot_Name:
-                    if (negate)
-                        Machine_Slot_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Slot_Name.PositiveSet.Add(value);
-                    break;
-
-                // Slots.SlotOptions
-                case Field.Machine_Slot_SlotOptions:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Slot_SlotOptions.Neutral = false;
-                    else
-                        Machine_Slot_SlotOptions.Neutral = true;
-                    break;
-
-                case Field.Machine_Slot_SlotOption_Name:
-                    if (negate)
-                        Machine_Slot_SlotOption_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Slot_SlotOption_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Slot_SlotOption_DeviceName:
-                    if (negate)
-                        Machine_Slot_SlotOption_DeviceName.NegativeSet.Add(value);
-                    else
-                        Machine_Slot_SlotOption_DeviceName.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Slot_SlotOption_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Slot_SlotOption_Default.Neutral = false;
-                    else
-                        Machine_Slot_SlotOption_Default.Neutral = true;
                     break;
 
                 #endregion
@@ -1804,6 +1756,35 @@ namespace SabreTools.Library.Filtering
                         DatItem_Language.NegativeSet.Add(value);
                     else
                         DatItem_Language.PositiveSet.Add(value);
+                    break;
+
+                // Slots.SlotOptions
+                case Field.DatItem_SlotOptions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_SlotOptions.Neutral = false;
+                    else
+                        DatItem_SlotOptions.Neutral = true;
+                    break;
+
+                case Field.DatItem_SlotOption_Name:
+                    if (negate)
+                        DatItem_SlotOption_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_SlotOption_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_SlotOption_DeviceName:
+                    if (negate)
+                        DatItem_SlotOption_DeviceName.NegativeSet.Add(value);
+                    else
+                        DatItem_SlotOption_DeviceName.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_SlotOption_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_SlotOption_Default.Neutral = false;
+                    else
+                        DatItem_SlotOption_Default.Neutral = true;
                     break;
 
                 // Software List

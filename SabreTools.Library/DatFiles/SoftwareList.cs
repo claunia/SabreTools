@@ -341,9 +341,9 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Tag = reader.GetAttribute("tag"),
                             Mask = reader.GetAttribute("mask"),
-                            Conditions = new List<ListXmlCondition>(),
-                            Locations = new List<ListXmlDipLocation>(),
-                            Values = new List<ListXmlDipValue>(),
+                            Conditions = new List<Condition>(),
+                            Locations = new List<Location>(),
+                            Values = new List<Setting>(),
                         };
 
                         // Now read the internal tags
@@ -526,7 +526,7 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get list ready
-            dipSwitch.Values = new List<ListXmlDipValue>();
+            dipSwitch.Values = new List<Setting>();
 
             // Otherwise, add what is possible
             reader.MoveToContent();
@@ -544,7 +544,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "dipvalue":
-                        var dipValue = new ListXmlDipValue();
+                        var dipValue = new Setting();
                         dipValue.Name = reader.GetAttribute("name");
                         dipValue.Value = reader.GetAttribute("value");
                         dipValue.Default = reader.GetAttribute("default").AsYesNo();
@@ -795,7 +795,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("mask", dipSwitch.Mask);
                         if (dipSwitch.Values != null)
                         {
-                            foreach (ListXmlDipValue dipValue in dipSwitch.Values)
+                            foreach (Setting dipValue in dipSwitch.Values)
                             {
                                 xtw.WriteStartElement("dipvalue");
                                 xtw.WriteRequiredAttributeString("name", dipValue.Name);

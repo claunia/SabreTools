@@ -30,19 +30,19 @@ namespace SabreTools.Library.DatItems
         /// Conditions associated with the configuration
         /// </summary>
         [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
+        public List<Condition> Conditions { get; set; }
 
         /// <summary>
         /// Locations associated with the configuration
         /// </summary>
         [JsonProperty("locations")]
-        public List<ListXmlConfLocation> Locations { get; set; }
+        public List<Location> Locations { get; set; }
 
         /// <summary>
         /// Settings associated with the configuration
         /// </summary>
         [JsonProperty("settings")]
-        public List<ListXmlConfSetting> Settings { get; set; }
+        public List<Setting> Settings { get; set; }
 
         #endregion
 

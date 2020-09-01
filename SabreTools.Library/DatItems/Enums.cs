@@ -217,16 +217,6 @@ namespace SabreTools.Library.DatItems
         Machine_Device_Extensions,
         Machine_Device_Extension_Name,
 
-        // Slots
-        Machine_Slots,
-        Machine_Slot_Name,
-
-        // Slots.SlotOptions
-        Machine_Slot_SlotOptions,
-        Machine_Slot_SlotOption_Name,
-        Machine_Slot_SlotOption_DeviceName,
-        Machine_Slot_SlotOption_Default,
-
         #endregion
 
         #region Logiqx
@@ -398,6 +388,12 @@ namespace SabreTools.Library.DatItems
         // Release
         DatItem_Language,
 
+        // Slot.SlotOptions
+        DatItem_SlotOptions,
+        DatItem_SlotOption_Name,
+        DatItem_SlotOption_DeviceName,
+        DatItem_SlotOption_Default,
+
         // Software List
         DatItem_SoftwareListStatus,
         DatItem_Filter,
@@ -448,6 +444,7 @@ namespace SabreTools.Library.DatItems
         RamOption,
         Release,
         Sample,
+        Slot,
         SoftwareList,
 
         Blank = 99, // This is not a real type, only used internally

@@ -21,7 +21,7 @@ namespace SabreTools.Features
             Description = "Split input DATs by a given criteria";
             _featureType = FeatureType.Flag;
             LongDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, Library.Help.Feature>();
 
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
@@ -39,7 +39,7 @@ namespace SabreTools.Features
             AddFeature(TypeFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
             SplittingMode splittingMode = GetSplittingMode(features);

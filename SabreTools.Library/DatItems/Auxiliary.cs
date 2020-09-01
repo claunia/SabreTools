@@ -15,7 +15,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one ListXML analog
     /// </summary>
     [JsonObject("analog")]
-    public class ListXmlAnalog
+    public class Analog
     {
         [JsonProperty("mask")]
         public string Mask { get; set; }
@@ -26,7 +26,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// TODO: Promote to DatItem level? (Both used at ListXML level AND under a lot of stuff)
     [JsonObject("condition")]
-    public class ListXmlCondition
+    public class Condition
     {
         [JsonProperty("tag")]
         public string Tag { get; set; }
@@ -42,45 +42,10 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML conflocation
-    /// </summary>
-    [JsonObject("conflocation")]
-    public class ListXmlConfLocation
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("number")]
-        public string Number { get; set; }
-
-        [JsonProperty("inverted")]
-        public bool? Inverted { get; set; }
-    }
-
-    /// <summary>
-    /// Represents one ListXML confsetting
-    /// </summary>
-    [JsonObject("confsetting")]
-    public class ListXmlConfSetting
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
-
-        [JsonProperty("default")]
-        public bool? Default { get; set; }
-
-        [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML control
     /// </summary>
     [JsonObject("control")]
-    public class ListXmlControl
+    public class Control
     {
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -124,7 +89,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
     [JsonObject("device")]
-    public class ListXmlDevice
+    public class Device
     {
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -142,10 +107,10 @@ namespace SabreTools.Library.DatItems
         public string Interface { get; set; }
 
         [JsonProperty("instances")]
-        public List<ListXmlInstance> Instances { get; set; }
+        public List<Instance> Instances { get; set; }
 
         [JsonProperty("extensions")]
-        public List<ListXmlExtension> Extensions { get; set; }
+        public List<Extension> Extensions { get; set; }
     }
 
     /// <summary>
@@ -153,7 +118,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("display")]
-    public class ListXmlDisplay
+    public class Display
     {
         [JsonProperty("tag")]
         public string Tag { get; set; }
@@ -199,47 +164,11 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML diplocation
-    /// </summary>
-    [JsonObject("diplocation")]
-    public class ListXmlDipLocation
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("number")]
-        public string Number { get; set; }
-
-        [JsonProperty("inverted")]
-        public bool? Inverted { get; set; }
-    }
-
-    /// <summary>
-    /// Represents one ListXML dipvalue
-    /// </summary>
-    /// <remarks>Also used by SoftwareList</remarks>
-    [JsonObject("dipvalue")]
-    public class ListXmlDipValue
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
-
-        [JsonProperty("default")]
-        public bool? Default { get; set; }
-
-        [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML driver
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("driver")]
-    public class ListXmlDriver
+    public class Driver
     {
         [JsonProperty("status")]
         public string Status { get; set; } // TODO: (good|imperfect|preliminary)
@@ -258,7 +187,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one ListXML extension
     /// </summary>
     [JsonObject("extension")]
-    public class ListXmlExtension
+    public class Extension
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -269,7 +198,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("feature")]
-    public class ListXmlFeature
+    public class Feature
     {
         [JsonProperty("type")]
         public string Type { get; set; } // TODO: (protection|palette|graphics|sound|controls|keyboard|mouse|microphone|camera|disk|printer|lan|wan|timing)
@@ -286,7 +215,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
     [JsonObject("input")]
-    public class ListXmlInput
+    public class Input
     {
         [JsonProperty("service")]
         public bool? Service { get; set; }
@@ -301,14 +230,14 @@ namespace SabreTools.Library.DatItems
         public string Coins { get; set; } // TODO: Int32?
 
         [JsonProperty("controls")]
-        public List<ListXmlControl> Controls { get; set; }
+        public List<Control> Controls { get; set; }
     }
 
     /// <summary>
     /// Represents one ListXML instance
     /// </summary>
     [JsonObject("instance")]
-    public class ListXmlInstance
+    public class Instance
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -318,38 +247,59 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Represents one ListXML conflocation or diplocation
+    /// </summary>
+    [JsonObject("location")]
+    public class Location
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("number")]
+        public string Number { get; set; }
+
+        [JsonProperty("inverted")]
+        public bool? Inverted { get; set; }
+    }
+
+    /// <summary>
     /// Represents one ListXML port
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
     [JsonObject("port")]
-    public class ListXmlPort
+    public class Port
     {
         [JsonProperty("tag")]
         public string Tag { get; set; }
 
         [JsonProperty("analogs")]
-        public List<ListXmlAnalog> Analogs { get; set; }
+        public List<Analog> Analogs { get; set; }
     }
 
     /// <summary>
-    /// Represents one ListXML slot
+    /// Represents one ListXML confsetting or dipvalue
     /// </summary>
-    /// TODO: Promote to DatItem level (contains list)
-    [JsonObject("slot")]
-    public class ListXmlSlot
+    [JsonObject("setting")]
+    public class Setting
     {
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("slotoptions")]
-        public List<ListXmlSlotOption> SlotOptions { get; set; }
+        [JsonProperty("value")]
+        public string Value { get; set; }
+
+        [JsonProperty("default")]
+        public bool? Default { get; set; }
+
+        [JsonProperty("conditions")]
+        public List<Condition> Conditions { get; set; }
     }
 
     /// <summary>
     /// Represents one ListXML slotoption
     /// </summary>
     [JsonObject("slotoption")]
-    public class ListXmlSlotOption
+    public class SlotOption
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -366,7 +316,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// TODO: Promote to DatItem level (doesn't have "name" field?)
     [JsonObject("sound")]
-    public class ListXmlSound
+    public class Sound
     {
         [JsonProperty("channels")]
         public string Channels { get; set; } // TODO: Int32?

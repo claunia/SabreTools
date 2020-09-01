@@ -67,11 +67,11 @@ namespace SabreTools.Features
         #region Flag features
 
         internal const string AaruFormatsAsFilesValue = "aaruformats-as-files";
-        internal static Feature AaruFormatsAsFilesFlag
+        internal static Library.Help.Feature AaruFormatsAsFilesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     AaruFormatsAsFilesValue,
                     new List<string>() { "-caf", "--aaruformats-as-files" },
                     "Treat AaruFormats as files",
@@ -81,11 +81,11 @@ namespace SabreTools.Features
         }
 
         internal const string AddBlankFilesValue = "add-blank-files";
-        internal static Feature AddBlankFilesFlag
+        internal static Library.Help.Feature AddBlankFilesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     AddBlankFilesValue,
                     new List<string>() { "-ab", "--add-blank-files" },
                     "Output blank files for folders",
@@ -95,11 +95,11 @@ namespace SabreTools.Features
         }
 
         internal const string AddDateValue = "add-date";
-        internal static Feature AddDateFlag
+        internal static Library.Help.Feature AddDateFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     AddDateValue,
                     new List<string>() { "-ad", "--add-date" },
                     "Add dates to items, where posible",
@@ -109,11 +109,11 @@ namespace SabreTools.Features
         }
 
         internal const string ArchivesAsFilesValue = "archives-as-files";
-        internal static Feature ArchivesAsFilesFlag
+        internal static Library.Help.Feature ArchivesAsFilesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ArchivesAsFilesValue,
                     new List<string>() { "-aaf", "--archives-as-files" },
                     "Treat archives as files",
@@ -123,11 +123,11 @@ namespace SabreTools.Features
         }
 
         internal const string BaddumpColumnValue = "baddump-column";
-        internal static Feature BaddumpColumnFlag
+        internal static Library.Help.Feature BaddumpColumnFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     BaddumpColumnValue,
                     new List<string>() { "-bc", "--baddump-column" },
                     "Add baddump stats to output",
@@ -137,11 +137,11 @@ namespace SabreTools.Features
         }
 
         internal const string BaseValue = "base";
-        internal static Feature BaseFlag
+        internal static Library.Help.Feature BaseFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     BaseValue,
                     new List<string>() { "-ba", "--base" },
                     "Use source DAT as base name for outputs",
@@ -151,11 +151,11 @@ namespace SabreTools.Features
         }
 
         internal const string BaseReplaceValue = "base-replace";
-        internal static Feature BaseReplaceFlag
+        internal static Library.Help.Feature BaseReplaceFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     BaseReplaceValue,
                     new List<string>() { "-br", "--base-replace" },
                     "Replace from base DATs in order",
@@ -165,11 +165,11 @@ namespace SabreTools.Features
         }
 
         internal const string ByGameValue = "by-game";
-        internal static Feature ByGameFlag
+        internal static Library.Help.Feature ByGameFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ByGameValue,
                     new List<string>() { "-bg", "--by-game" },
                     "Diff against by game instead of hashes",
@@ -179,11 +179,11 @@ namespace SabreTools.Features
         }
 
         internal const string ChdsAsFilesValue = "chds-as-files";
-        internal static Feature ChdsAsFilesFlag
+        internal static Library.Help.Feature ChdsAsFilesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ChdsAsFilesValue,
                     new List<string>() { "-ic", "--chds-as-files" },
                     "Treat CHDs as regular files",
@@ -193,11 +193,11 @@ namespace SabreTools.Features
         }
 
         internal const string CleanValue = "clean";
-        internal static Feature CleanFlag
+        internal static Library.Help.Feature CleanFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     CleanValue,
                     new List<string>() { "-clean", "--clean" },
                     "Clean game names according to WoD standards",
@@ -207,11 +207,11 @@ namespace SabreTools.Features
         }
 
         internal const string CopyFilesValue = "copy-files";
-        internal static Feature CopyFilesFlag
+        internal static Library.Help.Feature CopyFilesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     CopyFilesValue,
                     new List<string>() { "-cf", "--copy-files" },
                     "Copy files to the temp directory before parsing",
@@ -221,11 +221,11 @@ namespace SabreTools.Features
         }
 
         internal const string DatDeviceNonMergedValue = "dat-device-non-merged";
-        internal static Feature DatDeviceNonMergedFlag
+        internal static Library.Help.Feature DatDeviceNonMergedFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DatDeviceNonMergedValue,
                     new List<string>() { "-dnd", "--dat-device-non-merged" },
                     "Create device non-merged sets",
@@ -235,11 +235,11 @@ namespace SabreTools.Features
         }
 
         internal const string DatFullNonMergedValue = "dat-full-non-merged";
-        internal static Feature DatFullNonMergedFlag
+        internal static Library.Help.Feature DatFullNonMergedFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DatFullNonMergedValue,
                     new List<string>() { "-df", "--dat-full-non-merged" },
                     "Create fully non-merged sets",
@@ -249,11 +249,11 @@ namespace SabreTools.Features
         }
 
         internal const string DatMergedValue = "dat-merged";
-        internal static Feature DatMergedFlag
+        internal static Library.Help.Feature DatMergedFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DatMergedValue,
                     new List<string>() { "-dm", "--dat-merged" },
                     "Force creating merged sets",
@@ -263,11 +263,11 @@ namespace SabreTools.Features
         }
 
         internal const string DatNonMergedValue = "dat-non-merged";
-        internal static Feature DatNonMergedFlag
+        internal static Library.Help.Feature DatNonMergedFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DatNonMergedValue,
                     new List<string>() { "-dnm", "--dat-non-merged" },
                     "Force creating non-merged sets",
@@ -277,11 +277,11 @@ namespace SabreTools.Features
         }
 
         internal const string DatSplitValue = "dat-split";
-        internal static Feature DatSplitFlag
+        internal static Library.Help.Feature DatSplitFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DatSplitValue,
                     new List<string>() { "-ds", "--dat-split" },
                     "Force creating split sets",
@@ -291,11 +291,11 @@ namespace SabreTools.Features
         }
 
         internal const string DedupValue = "dedup";
-        internal static Feature DedupFlag
+        internal static Library.Help.Feature DedupFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DedupValue,
                     new List<string>() { "-dd", "--dedup" },
                     "Enable deduping in the created DAT",
@@ -305,11 +305,11 @@ namespace SabreTools.Features
         }
 
         internal const string DeleteValue = "delete";
-        internal static Feature DeleteFlag
+        internal static Library.Help.Feature DeleteFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DeleteValue,
                     new List<string>() { "-del", "--delete" },
                     "Delete fully rebuilt input files",
@@ -319,11 +319,11 @@ namespace SabreTools.Features
         }
 
         internal const string DepotValue = "depot";
-        internal static Feature DepotFlag
+        internal static Library.Help.Feature DepotFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DepotValue,
                     new List<string>() { "-dep", "--depot" },
                     "Assume directories are Romba depots",
@@ -333,11 +333,11 @@ namespace SabreTools.Features
         }
 
         internal const string DeprecatedValue = "deprecated";
-        internal static Feature DeprecatedFlag
+        internal static Library.Help.Feature DeprecatedFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DeprecatedValue,
                     new List<string>() { "-dpc", "--deprecated" },
                     "Output 'game' instead of 'machine'",
@@ -347,11 +347,11 @@ namespace SabreTools.Features
         }
 
         internal const string DescriptionAsNameValue = "description-as-name";
-        internal static Feature DescriptionAsNameFlag
+        internal static Library.Help.Feature DescriptionAsNameFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DescriptionAsNameValue,
                     new List<string>() { "-dan", "--description-as-name" },
                     "Use description instead of machine name",
@@ -361,11 +361,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffAgainstValue = "diff-against";
-        internal static Feature DiffAgainstFlag
+        internal static Library.Help.Feature DiffAgainstFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffAgainstValue,
                     new List<string>() { "-dag", "--diff-against" },
                     "Diff all inputs against a set of base DATs",
@@ -375,11 +375,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffAllValue = "diff-all";
-        internal static Feature DiffAllFlag
+        internal static Library.Help.Feature DiffAllFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffAllValue,
                     new List<string>() { "-di", "--diff-all" },
                     "Create diffdats from inputs (all standard outputs)",
@@ -389,11 +389,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffCascadeValue = "diff-cascade";
-        internal static Feature DiffCascadeFlag
+        internal static Library.Help.Feature DiffCascadeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffCascadeValue,
                     new List<string>() { "-dc", "--diff-cascade" },
                     "Enable cascaded diffing",
@@ -403,11 +403,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffDuplicatesValue = "diff-duplicates";
-        internal static Feature DiffDuplicatesFlag
+        internal static Library.Help.Feature DiffDuplicatesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffDuplicatesValue,
                     new List<string>() { "-did", "--diff-duplicates" },
                     "Create diffdat containing just duplicates",
@@ -417,11 +417,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffIndividualsValue = "diff-individuals";
-        internal static Feature DiffIndividualsFlag
+        internal static Library.Help.Feature DiffIndividualsFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffIndividualsValue,
                     new List<string>() { "-dii", "--diff-individuals" },
                     "Create diffdats for individual DATs",
@@ -431,11 +431,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffNoDuplicatesValue = "diff-no-duplicates";
-        internal static Feature DiffNoDuplicatesFlag
+        internal static Library.Help.Feature DiffNoDuplicatesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffNoDuplicatesValue,
                     new List<string>() { "-din", "--diff-no-duplicates" },
                     "Create diffdat containing no duplicates",
@@ -445,11 +445,11 @@ namespace SabreTools.Features
         }
 
         internal const string DiffReverseCascadeValue = "diff-reverse-cascade";
-        internal static Feature DiffReverseCascadeFlag
+        internal static Library.Help.Feature DiffReverseCascadeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DiffReverseCascadeValue,
                     new List<string>() { "-drc", "--diff-reverse-cascade" },
                     "Enable reverse cascaded diffing",
@@ -459,11 +459,11 @@ namespace SabreTools.Features
         }
 
         internal const string ExtensionValue = "extension";
-        internal static Feature ExtensionFlag
+        internal static Library.Help.Feature ExtensionFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ExtensionValue,
                     new List<string>() { "-es", "--extension" },
                     "Split DAT(s) by two file extensions",
@@ -473,11 +473,11 @@ namespace SabreTools.Features
         }
 
         internal const string GameDedupValue = "game-dedup";
-        internal static Feature GameDedupFlag
+        internal static Library.Help.Feature GameDedupFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     GameDedupValue,
                     new List<string>() { "-gdd", "--game-dedup" },
                     "Enable deduping within games in the created DAT",
@@ -487,11 +487,11 @@ namespace SabreTools.Features
         }
 
         internal const string GamePrefixValue = "game-prefix";
-        internal static Feature GamePrefixFlag
+        internal static Library.Help.Feature GamePrefixFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     GamePrefixValue,
                     new List<string>() { "-gp", "--game-prefix" },
                     "Add game name as a prefix",
@@ -501,11 +501,11 @@ namespace SabreTools.Features
         }
 
         internal const string HashValue = "hash";
-        internal static Feature HashFlag
+        internal static Library.Help.Feature HashFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     HashValue,
                     new List<string>() { "-hs", "--hash" },
                     "Split DAT(s) or folder by best-available hashes",
@@ -515,11 +515,11 @@ namespace SabreTools.Features
         }
 
         internal const string HashOnlyValue = "hash-only";
-        internal static Feature HashOnlyFlag
+        internal static Library.Help.Feature HashOnlyFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     HashOnlyValue,
                     new List<string>() { "-ho", "--hash-only" },
                     "Check files by hash only",
@@ -529,11 +529,11 @@ namespace SabreTools.Features
         }
 
         internal const string IndividualValue = "individual";
-        internal static Feature IndividualFlag
+        internal static Library.Help.Feature IndividualFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     IndividualValue,
                     new List<string>() { "-ind", "--individual" },
                     "Process input DATs individually",
@@ -543,11 +543,11 @@ namespace SabreTools.Features
         }
 
         internal const string InplaceValue = "inplace";
-        internal static Feature InplaceFlag
+        internal static Library.Help.Feature InplaceFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     InplaceValue,
                     new List<string>() { "-ip", "--inplace" },
                     "Write to the input directories, where possible",
@@ -557,11 +557,11 @@ namespace SabreTools.Features
         }
 
         internal const string InverseValue = "inverse";
-        internal static Feature InverseFlag
+        internal static Library.Help.Feature InverseFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     InverseValue,
                     new List<string>() { "-in", "--inverse" },
                     "Rebuild only files not in DAT",
@@ -571,11 +571,11 @@ namespace SabreTools.Features
         }
 
         internal const string KeepEmptyGamesValue = "keep-empty-games";
-        internal static Feature KeepEmptyGamesFlag
+        internal static Library.Help.Feature KeepEmptyGamesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     KeepEmptyGamesValue,
                     new List<string>() { "-keg", "--keep-empty-games" },
                     "Keep originally empty sets from the input(s)",
@@ -585,11 +585,11 @@ namespace SabreTools.Features
         }
 
         internal const string LevelValue = "level";
-        internal static Feature LevelFlag
+        internal static Library.Help.Feature LevelFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     LevelValue,
                     new List<string>() { "-ls", "--level" },
                     "Split a SuperDAT or folder by lowest available level",
@@ -599,11 +599,11 @@ namespace SabreTools.Features
         }
 
         internal const string MatchOfTagsValue = "match-of-tags";
-        internal static Feature MatchOfTagsFlag
+        internal static Library.Help.Feature MatchOfTagsFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     MatchOfTagsValue,
                     new List<string>() { "-ofg", "--match-of-tags" },
                     "Allow cloneof and romof tags to match game name filters",
@@ -613,11 +613,11 @@ namespace SabreTools.Features
         }
 
         internal const string MergeValue = "merge";
-        internal static Feature MergeFlag
+        internal static Library.Help.Feature MergeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     MergeValue,
                     new List<string>() { "-m", "--merge" },
                     "Merge the input DATs",
@@ -627,11 +627,11 @@ namespace SabreTools.Features
         }
 
         internal const string NoAutomaticDateValue = "no-automatic-date";
-        internal static Feature NoAutomaticDateFlag
+        internal static Library.Help.Feature NoAutomaticDateFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NoAutomaticDateValue,
                     new List<string>() { "-b", "--no-automatic-date" },
                     "Don't include date in file name",
@@ -641,11 +641,11 @@ namespace SabreTools.Features
         }
 
         internal const string NodumpColumnValue = "nodump-column";
-        internal static Feature NodumpColumnFlag
+        internal static Library.Help.Feature NodumpColumnFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NodumpColumnValue,
                     new List<string>() { "-nc", "--nodump-column" },
                     "Add statistics for nodumps to output",
@@ -655,11 +655,11 @@ namespace SabreTools.Features
         }
 
         internal const string NoStoreHeaderValue = "no-store-header";
-        internal static Feature NoStoreHeaderFlag
+        internal static Library.Help.Feature NoStoreHeaderFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NoStoreHeaderValue,
                     new List<string>() { "-nsh", "--no-store-header" },
                     "Don't store the extracted header",
@@ -669,11 +669,11 @@ namespace SabreTools.Features
         }
 
         internal const string NotRunnableValue = "not-runnable";
-        internal static Feature NotRunnableFlag
+        internal static Library.Help.Feature NotRunnableFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotRunnableValue,
                     new List<string>() { "-nrun", "--not-runnable" },
                     "Include only items that are not marked runnable",
@@ -683,11 +683,11 @@ namespace SabreTools.Features
         }
 
         internal const string OneGamePerRegionValue = "one-game-per-region";
-        internal static Feature OneGamePerRegionFlag
+        internal static Library.Help.Feature OneGamePerRegionFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     OneGamePerRegionValue,
                     new List<string>() { "-1g1r", "--one-game-per-region" },
                     "Try to ensure one game per user-defined region",
@@ -697,11 +697,11 @@ namespace SabreTools.Features
         }
 
         internal const string OneRomPerGameValue = "one-rom-per-game";
-        internal static Feature OneRomPerGameFlag
+        internal static Library.Help.Feature OneRomPerGameFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     OneRomPerGameValue,
                     new List<string>() { "-orpg", "--one-rom-per-game" },
                     "Try to ensure each rom has its own game",
@@ -711,11 +711,11 @@ namespace SabreTools.Features
         }
 
         internal const string OnlySameValue = "only-same";
-        internal static Feature OnlySameFlag
+        internal static Library.Help.Feature OnlySameFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     OnlySameValue,
                     new List<string>() { "-ons", "--only-same" },
                     "Only update description if machine name matches description",
@@ -725,11 +725,11 @@ namespace SabreTools.Features
         }
 
         internal const string QuickValue = "quick";
-        internal static Feature QuickFlag
+        internal static Library.Help.Feature QuickFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     QuickValue,
                     new List<string>() { "-qs", "--quick" },
                     "Enable quick scanning of archives",
@@ -739,11 +739,11 @@ namespace SabreTools.Features
         }
 
         internal const string QuotesValue = "quotes";
-        internal static Feature QuotesFlag
+        internal static Library.Help.Feature QuotesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     QuotesValue,
                     new List<string>() { "-q", "--quotes" },
                     "Double-quote each item",
@@ -753,11 +753,11 @@ namespace SabreTools.Features
         }
 
         internal const string RemoveExtensionsValue = "remove-extensions";
-        internal static Feature RemoveExtensionsFlag
+        internal static Library.Help.Feature RemoveExtensionsFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RemoveExtensionsValue,
                     new List<string>() { "-rme", "--remove-extensions" },
                     "Remove all extensions from all items",
@@ -767,11 +767,11 @@ namespace SabreTools.Features
         }
 
         internal const string RemoveUnicodeValue = "remove-unicode";
-        internal static Feature RemoveUnicodeFlag
+        internal static Library.Help.Feature RemoveUnicodeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RemoveUnicodeValue,
                     new List<string>() { "-ru", "--remove-unicode" },
                     "Remove unicode characters from names",
@@ -781,11 +781,11 @@ namespace SabreTools.Features
         }
 
         internal const string ReverseBaseReplaceValue = "reverse-base-replace";
-        internal static Feature ReverseBaseReplaceFlag
+        internal static Library.Help.Feature ReverseBaseReplaceFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ReverseBaseReplaceValue,
                     new List<string>() { "-rbr", "--reverse-base-replace" },
                     "Replace item names from base DATs in reverse",
@@ -795,11 +795,11 @@ namespace SabreTools.Features
         }
 
         internal const string RombaValue = "romba";
-        internal static Feature RombaFlag
+        internal static Library.Help.Feature RombaFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RombaValue,
                     new List<string>() { "-ro", "--romba" },
                     "Treat like a Romba depot (requires SHA-1)",
@@ -809,11 +809,11 @@ namespace SabreTools.Features
         }
 
         internal const string RomsValue = "roms";
-        internal static Feature RomsFlag
+        internal static Library.Help.Feature RomsFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RomsValue,
                     new List<string>() { "-r", "--roms" },
                     "Output roms to miss instead of sets",
@@ -823,11 +823,11 @@ namespace SabreTools.Features
         }
 
         internal const string RunnableValue = "runnable";
-        internal static Feature RunnableFlag
+        internal static Library.Help.Feature RunnableFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RunnableValue,
                     new List<string>() { "-run", "--runnable" },
                     "Include only items that are marked runnable",
@@ -837,11 +837,11 @@ namespace SabreTools.Features
         }
 
         internal const string SceneDateStripValue = "scene-date-strip";
-        internal static Feature SceneDateStripFlag
+        internal static Library.Help.Feature SceneDateStripFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SceneDateStripValue,
                     new List<string>() { "-sds", "--scene-date-strip" },
                     "Remove date from scene-named sets",
@@ -851,11 +851,11 @@ namespace SabreTools.Features
         }
 
         internal const string ShortValue = "short";
-        internal static Feature ShortFlag
+        internal static Library.Help.Feature ShortFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ShortValue,
                     new List<string>() { "-s", "--short" },
                     "Use short output names",
@@ -865,11 +865,11 @@ namespace SabreTools.Features
         }
 
         internal const string SingleSetValue = "single-set";
-        internal static Feature SingleSetFlag
+        internal static Library.Help.Feature SingleSetFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SingleSetValue,
                     new List<string>() { "-si", "--single-set" },
                     "All game names replaced by '!'",
@@ -879,11 +879,11 @@ namespace SabreTools.Features
         }
 
         internal const string SizeValue = "size";
-        internal static Feature SizeFlag
+        internal static Library.Help.Feature SizeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SizeValue,
                     new List<string>() { "-szs", "--size" },
                     "Split DAT(s) or folder by file sizes",
@@ -893,11 +893,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipArchivesValue = "skip-archives";
-        internal static Feature SkipArchivesFlag
+        internal static Library.Help.Feature SkipArchivesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipArchivesValue,
                     new List<string>() { "-ska", "--skip-archives" },
                     "Skip all archives",
@@ -907,11 +907,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipFilesValue = "skip-files";
-        internal static Feature SkipFilesFlag
+        internal static Library.Help.Feature SkipFilesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipFilesValue,
                     new List<string>() { "-skf", "--skip-files" },
                     "Skip all non-archives",
@@ -921,11 +921,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipFirstOutputValue = "skip-first-output";
-        internal static Feature SkipFirstOutputFlag
+        internal static Library.Help.Feature SkipFirstOutputFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipFirstOutputValue,
                     new List<string>() { "-sf", "--skip-first-output" },
                     "Skip output of first DAT",
@@ -935,11 +935,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipMd5Value = "skip-md5";
-        internal static Feature SkipMd5Flag
+        internal static Library.Help.Feature SkipMd5Flag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipMd5Value,
                     new List<string>() { "-nm", "--skip-md5" },
                     "Don't include MD5 in output",
@@ -950,11 +950,11 @@ namespace SabreTools.Features
 
 #if NET_FRAMEWORK
         internal const string SkipRipeMd160Value = "skip-ripemd160";
-        internal static Feature SkipRipeMd160Flag
+        internal static Library.Help.Feature SkipRipeMd160Flag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipRipeMd160Value,
                     new List<string>() { "-nr160", "--skip-ripemd160" },
                     "Include RIPEMD160 in output", // TODO: This needs to be inverted later
@@ -965,11 +965,11 @@ namespace SabreTools.Features
 #endif
 
         internal const string SkipSha1Value = "skip-sha1";
-        internal static Feature SkipSha1Flag
+        internal static Library.Help.Feature SkipSha1Flag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipSha1Value,
                     new List<string>() { "-ns", "--skip-sha1" },
                     "Don't include SHA-1 in output",
@@ -979,11 +979,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipSha256Value = "skip-sha256";
-        internal static Feature SkipSha256Flag
+        internal static Library.Help.Feature SkipSha256Flag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipSha256Value,
                     new List<string>() { "-ns256", "--skip-sha256" },
                     "Include SHA-256 in output", // TODO: This needs to be inverted later
@@ -993,11 +993,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipSha384Value = "skip-sha384";
-        internal static Feature SkipSha384Flag
+        internal static Library.Help.Feature SkipSha384Flag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipSha384Value,
                     new List<string>() { "-ns384", "--skip-sha384" },
                     "Include SHA-384 in output", // TODO: This needs to be inverted later
@@ -1007,11 +1007,11 @@ namespace SabreTools.Features
         }
 
         internal const string SkipSha512Value = "skip-sha512";
-        internal static Feature SkipSha512Flag
+        internal static Library.Help.Feature SkipSha512Flag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SkipSha512Value,
                     new List<string>() { "-ns512", "--skip-sha512" },
                     "Include SHA-512 in output", // TODO: This needs to be inverted later
@@ -1021,11 +1021,11 @@ namespace SabreTools.Features
         }
 
         internal const string SuperdatValue = "superdat";
-        internal static Feature SuperdatFlag
+        internal static Library.Help.Feature SuperdatFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     SuperdatValue,
                     new List<string>() { "-sd", "--superdat" },
                     "Enable SuperDAT creation",
@@ -1035,11 +1035,11 @@ namespace SabreTools.Features
         }
 
         internal const string TarValue = "tar";
-        internal static Feature TarFlag
+        internal static Library.Help.Feature TarFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     TarValue,
                     new List<string>() { "-tar", "--tar" },
                     "Enable Tape ARchive output",
@@ -1049,11 +1049,11 @@ namespace SabreTools.Features
         }
 
         internal const string Torrent7zipValue = "torrent-7zip";
-        internal static Feature Torrent7zipFlag
+        internal static Library.Help.Feature Torrent7zipFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     Torrent7zipValue,
                     new List<string>() { "-t7z", "--torrent-7zip" },
                     "Enable Torrent7Zip output",
@@ -1063,11 +1063,11 @@ namespace SabreTools.Features
         }
 
         internal const string TorrentGzipValue = "torrent-gzip";
-        internal static Feature TorrentGzipFlag
+        internal static Library.Help.Feature TorrentGzipFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     TorrentGzipValue,
                     new List<string>() { "-tgz", "--torrent-gzip" },
                     "Enable Torrent GZip output",
@@ -1077,11 +1077,11 @@ namespace SabreTools.Features
         }
 
         internal const string TorrentZipValue = "torrent-zip";
-        internal static Feature TorrentZipFlag
+        internal static Library.Help.Feature TorrentZipFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     TorrentZipValue,
                     new List<string>() { "-tzip", "--torrent-zip" },
                     "Enable Torrent Zip output",
@@ -1091,11 +1091,11 @@ namespace SabreTools.Features
         }
 
         internal const string TrimValue = "trim";
-        internal static Feature TrimFlag
+        internal static Library.Help.Feature TrimFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     TrimValue,
                     new List<string>() { "-trim", "--trim" },
                     "Trim file names to fit NTFS length",
@@ -1105,11 +1105,11 @@ namespace SabreTools.Features
         }
 
         internal const string TypeValue = "type";
-        internal static Feature TypeFlag
+        internal static Library.Help.Feature TypeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     TypeValue,
                     new List<string>() { "-ts", "--type" },
                     "Split DAT(s) or folder by file types (rom/disk)",
@@ -1119,11 +1119,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateDatValue = "update-dat";
-        internal static Feature UpdateDatFlag
+        internal static Library.Help.Feature UpdateDatFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateDatValue,
                     new List<string>() { "-ud", "--update-dat" },
                     "Output updated DAT to output directory",
@@ -1133,11 +1133,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateDescriptionValue = "update-description";
-        internal static Feature UpdateDescriptionFlag
+        internal static Library.Help.Feature UpdateDescriptionFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateDescriptionValue,
                     new List<string>() { "-udd", "--update-description" },
                     "Update machine descriptions from base DATs",
@@ -1147,11 +1147,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateGameTypeValue = "update-game-type";
-        internal static Feature UpdateGameTypeFlag
+        internal static Library.Help.Feature UpdateGameTypeFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateGameTypeValue,
                     new List<string>() { "-ugt", "--update-game-type" },
                     "Update machine type from base DATs",
@@ -1161,11 +1161,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateHashesValue = "update-hashes";
-        internal static Feature UpdateHashesFlag
+        internal static Library.Help.Feature UpdateHashesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateHashesValue,
                     new List<string>() { "-uh", "--update-hashes" },
                     "Update hashes from base DATs",
@@ -1175,11 +1175,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateManufacturerValue = "update-manufacturer";
-        internal static Feature UpdateManufacturerFlag
+        internal static Library.Help.Feature UpdateManufacturerFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateManufacturerValue,
                     new List<string>() { "-um", "--update-manufacturer" },
                     "Update machine manufacturers from base DATs",
@@ -1189,11 +1189,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateNamesValue = "update-names";
-        internal static Feature UpdateNamesFlag
+        internal static Library.Help.Feature UpdateNamesFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateNamesValue,
                     new List<string>() { "-un", "--update-names" },
                     "Update item names from base DATs",
@@ -1203,11 +1203,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateParentsValue = "update-parents";
-        internal static Feature UpdateParentsFlag
+        internal static Library.Help.Feature UpdateParentsFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateParentsValue,
                     new List<string>() { "-up", "--update-parents" },
                     "Update machine parents from base DATs",
@@ -1217,11 +1217,11 @@ namespace SabreTools.Features
         }
 
         internal const string UpdateYearValue = "update-year";
-        internal static Feature UpdateYearFlag
+        internal static Library.Help.Feature UpdateYearFlag
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateYearValue,
                     new List<string>() { "-uy", "--update-year" },
                     "Update machine years from base DATs",
@@ -1235,11 +1235,11 @@ namespace SabreTools.Features
         #region Int32 features
 
         internal const string DepotDepthInt32Value = "depot-depth";
-        internal static Feature DepotDepthInt32Input
+        internal static Library.Help.Feature DepotDepthInt32Input
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DepotDepthInt32Value,
                     new List<string>() { "-depd", "--depot-depth" },
                     "Set depth of depot for inputs",
@@ -1249,11 +1249,11 @@ namespace SabreTools.Features
         }
 
         internal const string RombaDepthInt32Value = "romba-depth";
-        internal static Feature RombaDepthInt32Input
+        internal static Library.Help.Feature RombaDepthInt32Input
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RombaDepthInt32Value,
                     new List<string>() { "-depr", "--romba-depth" },
                     "Set depth of depot for outputs",
@@ -1263,11 +1263,11 @@ namespace SabreTools.Features
         }
 
         internal const string ThreadsInt32Value = "threads";
-        internal static Feature ThreadsInt32Input
+        internal static Library.Help.Feature ThreadsInt32Input
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ThreadsInt32Value,
                     new List<string>() { "-mt", "--threads" },
                     "Amount of threads to use (default = # cores)",
@@ -1281,11 +1281,11 @@ namespace SabreTools.Features
         #region Int64 features
 
         internal const string RadixInt64Value = "radix";
-        internal static Feature RadixInt64Input
+        internal static Library.Help.Feature RadixInt64Input
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RadixInt64Value,
                     new List<string>() { "-rad", "--radix" },
                     "Set the midpoint to split at",
@@ -1299,11 +1299,11 @@ namespace SabreTools.Features
         #region List<string> features
 
         internal const string BaseDatListValue = "base-dat";
-        internal static Feature BaseDatListInput
+        internal static Library.Help.Feature BaseDatListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     BaseDatListValue,
                     new List<string>() { "-bd", "--base-dat" },
                     "Add a base DAT for processing",
@@ -1313,11 +1313,11 @@ namespace SabreTools.Features
         }
 
         internal const string CategoryListValue = "category-filter";
-        internal static Feature CategoryListInput
+        internal static Library.Help.Feature CategoryListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     CategoryListValue,
                     new List<string>() { "-cat", "--category-filter" },
                     "Filter by Category",
@@ -1327,11 +1327,11 @@ namespace SabreTools.Features
         }
 
         internal const string CrcListValue = "crc";
-        internal static Feature CrcListInput
+        internal static Library.Help.Feature CrcListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     CrcListValue,
                     new List<string>() { "-crc", "--crc" },
                     "Filter by CRC hash",
@@ -1341,11 +1341,11 @@ namespace SabreTools.Features
         }
 
         internal const string DatListValue = "dat";
-        internal static Feature DatListInput
+        internal static Library.Help.Feature DatListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DatListValue,
                     new List<string>() { "-dat", "--dat" },
                     "Input DAT to be used",
@@ -1355,11 +1355,11 @@ namespace SabreTools.Features
         }
 
         internal const string ExcludeFieldListValue = "exclude-field";
-        internal static Feature ExcludeFieldListInput
+        internal static Library.Help.Feature ExcludeFieldListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ExcludeFieldListValue,
                     new List<string>() { "-ef", "--exclude-field" },
                     "Exclude a game/rom field from outputs",
@@ -1369,11 +1369,11 @@ namespace SabreTools.Features
         }
 
         internal const string ExtAListValue = "exta";
-        internal static Feature ExtaListInput
+        internal static Library.Help.Feature ExtaListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ExtAListValue,
                     new List<string>() { "-exta", "--exta" },
                     "Set extension to be included in first DAT",
@@ -1383,11 +1383,11 @@ namespace SabreTools.Features
         }
 
         internal const string ExtBListValue = "extb";
-        internal static Feature ExtbListInput
+        internal static Library.Help.Feature ExtbListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ExtBListValue,
                     new List<string>() { "-extb", "--extb" },
                     "Set extension to be included in second DAT",
@@ -1397,11 +1397,11 @@ namespace SabreTools.Features
         }
 
         internal const string ExtraIniListValue = "extra-ini";
-        internal static Feature ExtraIniListInput
+        internal static Library.Help.Feature ExtraIniListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ExtraIniListValue,
                     new List<string>() { "-ini", "--extra-ini" },
                     "Apply a MAME INI for given field(s)",
@@ -1411,11 +1411,11 @@ namespace SabreTools.Features
         }
 
         internal const string FilterListValue = "filter";
-        internal static Feature FilterListInput
+        internal static Library.Help.Feature FilterListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     FilterListValue,
                     new List<string>() { "-fi", "--filter" },
                     "Filter a game/rom field with the given value(s)",
@@ -1425,11 +1425,11 @@ namespace SabreTools.Features
         }
 
         internal const string GameDescriptionListValue = "game-description";
-        internal static Feature GameDescriptionListInput
+        internal static Library.Help.Feature GameDescriptionListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     GameDescriptionListValue,
                     new List<string>() { "-gd", "--game-description" },
                     "Filter by game description",
@@ -1439,11 +1439,11 @@ namespace SabreTools.Features
         }
 
         internal const string GameNameListValue = "game-name";
-        internal static Feature GameNameListInput
+        internal static Library.Help.Feature GameNameListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     GameNameListValue,
                     new List<string>() { "-gn", "--game-name" },
                     "Filter by game name",
@@ -1453,11 +1453,11 @@ namespace SabreTools.Features
         }
 
         internal const string GameTypeListValue = "game-type";
-        internal static Feature GameTypeListInput
+        internal static Library.Help.Feature GameTypeListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     GameTypeListValue,
                     new List<string>() { "-gt", "--game-type" },
                     "Include only games with a given type",
@@ -1468,11 +1468,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string ItemNameListValue = "item-name";
-        internal static Feature ItemNameListInput
+        internal static Library.Help.Feature ItemNameListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ItemNameListValue,
                     new List<string>() { "-rn", "--item-name" },
                     "Filter by item name",
@@ -1482,11 +1482,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string ItemTypeListValue = "item-type";
-        internal static Feature ItemTypeListInput
+        internal static Library.Help.Feature ItemTypeListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ItemTypeListValue,
                     new List<string>() { "-rt", "--item-type" },
                     "Filter by item type",
@@ -1496,11 +1496,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string Md5ListValue = "md5";
-        internal static Feature Md5ListInput
+        internal static Library.Help.Feature Md5ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     Md5ListValue,
                     new List<string>() { "-md5", "--md5" },
                     "Filter by MD5 hash",
@@ -1510,11 +1510,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotCategoryListValue = "not-category";
-        internal static Feature NotCategoryListInput
+        internal static Library.Help.Feature NotCategoryListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotCategoryListValue,
                     new List<string>() { "-ncat", "--not-category" },
                     "Filter by not Category",
@@ -1524,11 +1524,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotCrcListValue = "not-crc";
-        internal static Feature NotCrcListInput
+        internal static Library.Help.Feature NotCrcListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotCrcListValue,
                     new List<string>() { "-ncrc", "--not-crc" },
                     "Filter by not CRC hash",
@@ -1538,11 +1538,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotGameDescriptionListValue = "not-game-description";
-        internal static Feature NotGameDescriptionListInput
+        internal static Library.Help.Feature NotGameDescriptionListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotGameDescriptionListValue,
                     new List<string>() { "-ngd", "--not-game-description" },
                     "Filter by not game description",
@@ -1552,11 +1552,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotGameNameListValue = "not-game-name";
-        internal static Feature NotGameNameListInput
+        internal static Library.Help.Feature NotGameNameListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotGameNameListValue,
                     new List<string>() { "-ngn", "--not-game-name" },
                     "Filter by not game name",
@@ -1566,11 +1566,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotGameTypeListValue = "not-game-type";
-        internal static Feature NotGameTypeListInput
+        internal static Library.Help.Feature NotGameTypeListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotGameTypeListValue,
                     new List<string>() { "-ngt", "--not-game-type" },
                     "Exclude only games with a given type",
@@ -1581,11 +1581,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotItemNameListValue = "not-item-name";
-        internal static Feature NotItemNameListInput
+        internal static Library.Help.Feature NotItemNameListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotItemNameListValue,
                     new List<string>() { "-nrn", "--not-item-name" },
                     "Filter by not item name",
@@ -1595,11 +1595,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotItemTypeListValue = "not-item-type";
-        internal static Feature NotItemTypeListInput
+        internal static Library.Help.Feature NotItemTypeListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotItemTypeListValue,
                     new List<string>() { "-nrt", "--not-item-type" },
                     "Filter by not item type",
@@ -1609,11 +1609,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotMd5ListValue = "not-md5";
-        internal static Feature NotMd5ListInput
+        internal static Library.Help.Feature NotMd5ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotMd5ListValue,
                     new List<string>() { "-nmd5", "--not-md5" },
                     "Filter by not MD5 hash",
@@ -1624,11 +1624,11 @@ Possible values are: None, Bios, Device, Mechanical");
 
 #if NET_FRAMEWORK
         internal const string NotRipeMd160ListValue = "not-ripemd160";
-        internal static Feature NotRipeMd160ListInput
+        internal static Library.Help.Feature NotRipeMd160ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotRipeMd160ListValue,
                     new List<string>() { "-nripemd160", "--not-ripemd160" },
                     "Filter by not RIPEMD160 hash",
@@ -1639,11 +1639,11 @@ Possible values are: None, Bios, Device, Mechanical");
 #endif
 
         internal const string NotSha1ListValue = "not-sha1";
-        internal static Feature NotSha1ListInput
+        internal static Library.Help.Feature NotSha1ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotSha1ListValue,
                     new List<string>() { "-nsha1", "--not-sha1" },
                     "Filter by not SHA-1 hash",
@@ -1653,11 +1653,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotSha256ListValue = "not-sha256";
-        internal static Feature NotSha256ListInput
+        internal static Library.Help.Feature NotSha256ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotSha256ListValue,
                     new List<string>() { "-nsha256", "--not-sha256" },
                     "Filter by not SHA-256 hash",
@@ -1667,11 +1667,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotSha384ListValue = "not-sha384";
-        internal static Feature NotSha384ListInput
+        internal static Library.Help.Feature NotSha384ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotSha384ListValue,
                     new List<string>() { "-nsha384", "--not-sha384" },
                     "Filter by not SHA-384 hash",
@@ -1681,11 +1681,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotSha512ListValue = "not-sha512";
-        internal static Feature NotSha512ListInput
+        internal static Library.Help.Feature NotSha512ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotSha512ListValue,
                     new List<string>() { "-nsha512", "--not-sha512" },
                     "Filter by not SHA-512 hash",
@@ -1695,11 +1695,11 @@ Possible values are: None, Bios, Device, Mechanical");
         }
 
         internal const string NotStatusListValue = "not-status";
-        internal static Feature NotStatusListInput
+        internal static Library.Help.Feature NotStatusListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NotStatusListValue,
                     new List<string>() { "-nis", "--not-status" },
                     "Exclude only items with a given status",
@@ -1710,11 +1710,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string OutputTypeListValue = "output-type";
-        internal static Feature OutputTypeListInput
+        internal static Library.Help.Feature OutputTypeListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     OutputTypeListValue,
                     new List<string>() { "-ot", "--output-type" },
                     "Output DATs to a specified format",
@@ -1755,11 +1755,11 @@ Possible values are:
         }
 
         internal const string RegionListValue = "region";
-        internal static Feature RegionListInput
+        internal static Library.Help.Feature RegionListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RegionListValue,
                     new List<string>() { "-reg", "--region" },
                     "Add a region for 1G1R",
@@ -1769,11 +1769,11 @@ Possible values are:
         }
 
         internal const string ReportTypeListValue = "report-type";
-        internal static Feature ReportTypeListInput
+        internal static Library.Help.Feature ReportTypeListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ReportTypeListValue,
                     new List<string>() { "-srt", "--report-type" },
                     "Output statistics to a specified format",
@@ -1792,11 +1792,11 @@ Possible values are:
 
 #if NET_FRAMEWORK
         internal const string RipeMd160ListValue = "ripemd160";
-        internal static Feature RipeMd160ListInput
+        internal static Library.Help.Feature RipeMd160ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RipeMd160ListValue,
                     new List<string>() { "-ripemd160", "--ripemd160" },
                     "Filter by RIPEMD160 hash",
@@ -1807,11 +1807,11 @@ Possible values are:
 #endif
 
         internal const string Sha1ListValue = "sha1";
-        internal static Feature Sha1ListInput
+        internal static Library.Help.Feature Sha1ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     Sha1ListValue,
                     new List<string>() { "-sha1", "--sha1" },
                     "Filter by SHA-1 hash",
@@ -1821,11 +1821,11 @@ Possible values are:
         }
 
         internal const string Sha256ListValue = "sha256";
-        internal static Feature Sha256ListInput
+        internal static Library.Help.Feature Sha256ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     Sha256ListValue,
                     new List<string>() { "-sha256", "--sha256" },
                     "Filter by SHA-256 hash",
@@ -1835,11 +1835,11 @@ Possible values are:
         }
 
         internal const string Sha384ListValue = "sha384";
-        internal static Feature Sha384ListInput
+        internal static Library.Help.Feature Sha384ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     Sha384ListValue,
                     new List<string>() { "-sha384", "--sha384" },
                     "Filter by SHA-384 hash",
@@ -1849,11 +1849,11 @@ Possible values are:
         }
 
         internal const string Sha512ListValue = "sha512";
-        internal static Feature Sha512ListInput
+        internal static Library.Help.Feature Sha512ListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     Sha512ListValue,
                     new List<string>() { "-sha512", "--sha512" },
                     "Filter by SHA-512 hash",
@@ -1863,11 +1863,11 @@ Possible values are:
         }
 
         internal const string StatusListValue = "status";
-        internal static Feature StatusListInput
+        internal static Library.Help.Feature StatusListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     StatusListValue,
                     new List<string>() { "-is", "--status" },
                     "Include only items with a given status",
@@ -1878,11 +1878,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string UpdateFieldListValue = "update-field";
-        internal static Feature UpdateFieldListInput
+        internal static Library.Help.Feature UpdateFieldListInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UpdateFieldListValue,
                     new List<string>() { "-uf", "--update-field" },
                     "Update a game/rom field from base DATs",
@@ -1896,11 +1896,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         #region String features
 
         internal const string AddExtensionStringValue = "add-extension";
-        internal static Feature AddExtensionStringInput
+        internal static Library.Help.Feature AddExtensionStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     AddExtensionStringValue,
                     new List<string>() { "-ae", "--add-extension" },
                     "Add an extension to each item",
@@ -1910,11 +1910,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string AuthorStringValue = "author";
-        internal static Feature AuthorStringInput
+        internal static Library.Help.Feature AuthorStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     AuthorStringValue,
                     new List<string>() { "-au", "--author" },
                     "Set the author of the DAT",
@@ -1924,11 +1924,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string CategoryStringValue = "category";
-        internal static Feature CategoryStringInput
+        internal static Library.Help.Feature CategoryStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     CategoryStringValue,
                     new List<string>() { "-c", "--category" },
                     "Set the category of the DAT",
@@ -1938,11 +1938,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string CommentStringValue = "comment";
-        internal static Feature CommentStringInput
+        internal static Library.Help.Feature CommentStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     CommentStringValue,
                     new List<string>() { "-co", "--comment" },
                     "Set a new comment of the DAT",
@@ -1952,11 +1952,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string DateStringValue = "date";
-        internal static Feature DateStringInput
+        internal static Library.Help.Feature DateStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DateStringValue,
                     new List<string>() { "-da", "--date" },
                     "Set a new date",
@@ -1966,11 +1966,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string DescriptionStringValue = "description";
-        internal static Feature DescriptionStringInput
+        internal static Library.Help.Feature DescriptionStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     DescriptionStringValue,
                     new List<string>() { "-de", "--description" },
                     "Set the description of the DAT",
@@ -1980,11 +1980,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string EmailStringValue = "email";
-        internal static Feature EmailStringInput
+        internal static Library.Help.Feature EmailStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     EmailStringValue,
                     new List<string>() { "-em", "--email" },
                     "Set a new email of the DAT",
@@ -1994,11 +1994,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string EqualStringValue = "equal";
-        internal static Feature EqualStringInput
+        internal static Library.Help.Feature EqualStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     EqualStringValue,
                     new List<string>() { "-seq", "--equal" },
                     "Filter by size ==",
@@ -2008,11 +2008,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string FilenameStringValue = "filename";
-        internal static Feature FilenameStringInput
+        internal static Library.Help.Feature FilenameStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     FilenameStringValue,
                     new List<string>() { "-f", "--filename" },
                     "Set the external name of the DAT",
@@ -2022,11 +2022,11 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
         }
 
         internal const string ForceMergingStringValue = "forcemerging";
-        internal static Feature ForceMergingStringInput
+        internal static Library.Help.Feature ForceMergingStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ForceMergingStringValue,
                     new List<string>() { "-fm", "--forcemerging" },
                     "Set force merging",
@@ -2037,11 +2037,11 @@ Possible values are: None, Split, Device, Merged, Nonmerged, Full");
         }
 
         internal const string ForceNodumpStringValue = "forcenodump";
-        internal static Feature ForceNodumpStringInput
+        internal static Library.Help.Feature ForceNodumpStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ForceNodumpStringValue,
                     new List<string>() { "-fn", "--forcenodump" },
                     "Set force nodump",
@@ -2052,11 +2052,11 @@ Possible values are: None, Obsolete, Required, Ignore");
         }
 
         internal const string ForcePackingStringValue = "forcepacking";
-        internal static Feature ForcePackingStringInput
+        internal static Library.Help.Feature ForcePackingStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ForcePackingStringValue,
                     new List<string>() { "-fp", "--forcepacking" },
                     "Set force packing",
@@ -2067,11 +2067,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string GreaterStringValue = "greater";
-        internal static Feature GreaterStringInput
+        internal static Library.Help.Feature GreaterStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     GreaterStringValue,
                     new List<string>() { "-sgt", "--greater" },
                     "Filter by size >=",
@@ -2081,11 +2081,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string HeaderStringValue = "header";
-        internal static Feature HeaderStringInput
+        internal static Library.Help.Feature HeaderStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     HeaderStringValue,
                     new List<string>() { "-h", "--header" },
                     "Set a header skipper to use, blank means all",
@@ -2096,11 +2096,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string HomepageStringValue = "homepage";
-        internal static Feature HomepageStringInput
+        internal static Library.Help.Feature HomepageStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     HomepageStringValue,
                     new List<string>() { "-hp", "--homepage" },
                     "Set a new homepage of the DAT",
@@ -2110,11 +2110,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string LessStringValue = "less";
-        internal static Feature LessStringInput
+        internal static Library.Help.Feature LessStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     LessStringValue,
                     new List<string>() { "-slt", "--less" },
                     "Filter by size =<",
@@ -2124,11 +2124,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string NameStringValue = "name";
-        internal static Feature NameStringInput
+        internal static Library.Help.Feature NameStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     NameStringValue,
                     new List<string>() { "-n", "--name" },
                     "Set the internal name of the DAT",
@@ -2138,11 +2138,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string OutputDirStringValue = "output-dir";
-        internal static Feature OutputDirStringInput
+        internal static Library.Help.Feature OutputDirStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     OutputDirStringValue,
                     new List<string>() { "-out", "--output-dir" },
                     "Output directory",
@@ -2152,11 +2152,11 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
         }
 
         internal const string PostfixStringValue = "postfix";
-        internal static Feature PostfixStringInput
+        internal static Library.Help.Feature PostfixStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     PostfixStringValue,
                     new List<string>() { "-post", "--postfix" },
                     "Set postfix for all lines",
@@ -2185,11 +2185,11 @@ Some special strings that can be used:
         }
 
         internal const string PrefixStringValue = "prefix";
-        internal static Feature PrefixStringInput
+        internal static Library.Help.Feature PrefixStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     PrefixStringValue,
                     new List<string>() { "-pre", "--prefix" },
                     "Set prefix for all lines",
@@ -2213,11 +2213,11 @@ Some special strings that can be used:
         }
 
         internal const string ReplaceExtensionStringValue = "replace-extension";
-        internal static Feature ReplaceExtensionStringInput
+        internal static Library.Help.Feature ReplaceExtensionStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     ReplaceExtensionStringValue,
                     new List<string>() { "-rep", "--replace-extension" },
                     "Replace all extensions with specified",
@@ -2227,11 +2227,11 @@ Some special strings that can be used:
         }
 
         internal const string RootStringValue = "root";
-        internal static Feature RootStringInput
+        internal static Library.Help.Feature RootStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RootStringValue,
                     new List<string>() { "-r", "--root" },
                     "Set a new rootdir",
@@ -2241,11 +2241,11 @@ Some special strings that can be used:
         }
 
         internal const string RootDirStringValue = "root-dir";
-        internal static Feature RootDirStringInput
+        internal static Library.Help.Feature RootDirStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     RootDirStringValue,
                     new List<string>() { "-rd", "--root-dir" },
                     "Set the root directory for calc",
@@ -2255,11 +2255,11 @@ Some special strings that can be used:
         }
 
         internal const string TempStringValue = "temp";
-        internal static Feature TempStringInput
+        internal static Library.Help.Feature TempStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     TempStringValue,
                     new List<string>() { "-t", "--temp" },
                     "Set the temporary directory to use",
@@ -2269,11 +2269,11 @@ Some special strings that can be used:
         }
 
         internal const string UrlStringValue = "url";
-        internal static Feature UrlStringInput
+        internal static Library.Help.Feature UrlStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     UrlStringValue,
                     new List<string>() { "-u", "--url" },
                     "Set a new URL of the DAT",
@@ -2283,11 +2283,11 @@ Some special strings that can be used:
         }
 
         internal const string VersionStringValue = "version";
-        internal static Feature VersionStringInput
+        internal static Library.Help.Feature VersionStringInput
         {
             get
             {
-                return new Feature(
+                return new Library.Help.Feature(
                     VersionStringValue,
                     new List<string>() { "-v", "--version" },
                     "Set the version of the DAT",
@@ -2421,7 +2421,7 @@ Some special strings that can be used:
 
         #endregion
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
         {
             // Generic feature flags
             Cleaner = GetCleaner(features);
@@ -2444,7 +2444,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get omit from scan from feature list
         /// </summary>
-        protected Hash GetOmitFromScan(Dictionary<string, Feature> features)
+        protected Hash GetOmitFromScan(Dictionary<string, Library.Help.Feature> features)
         {
             Hash omitFromScan = Hash.DeepHashes; // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
 
@@ -2469,7 +2469,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get OutputFormat from feature list
         /// </summary>
-        protected OutputFormat GetOutputFormat(Dictionary<string, Feature> features)
+        protected OutputFormat GetOutputFormat(Dictionary<string, Library.Help.Feature> features)
         {
             if (GetBoolean(features, TarValue))
                 return OutputFormat.TapeArchive;
@@ -2498,7 +2498,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get SkipFileType from feature list
         /// </summary>
-        protected SkipFileType GetSkipFileType(Dictionary<string, Feature> features)
+        protected SkipFileType GetSkipFileType(Dictionary<string, Library.Help.Feature> features)
         {
             if (GetBoolean(features, SkipArchivesValue))
                 return SkipFileType.Archive;
@@ -2511,7 +2511,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get SplittingMode from feature list
         /// </summary>
-        protected SplittingMode GetSplittingMode(Dictionary<string, Feature> features)
+        protected SplittingMode GetSplittingMode(Dictionary<string, Library.Help.Feature> features)
         {
             SplittingMode splittingMode = SplittingMode.None;
 
@@ -2532,7 +2532,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get SplitType from feature list
         /// </summary>
-        protected MergingFlag GetSplitType(Dictionary<string, Feature> features)
+        protected MergingFlag GetSplitType(Dictionary<string, Library.Help.Feature> features)
         {
             MergingFlag splitType = MergingFlag.None;
             if (GetBoolean(features, DatDeviceNonMergedValue))
@@ -2552,7 +2552,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get StatReportFormat from feature list
         /// </summary>
-        protected StatReportFormat GetStatReportFormat(Dictionary<string, Feature> features)
+        protected StatReportFormat GetStatReportFormat(Dictionary<string, Library.Help.Feature> features)
         {
             StatReportFormat statDatFormat = StatReportFormat.None;
 
@@ -2567,7 +2567,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get TreatAsFiles from feature list
         /// </summary>
-        protected TreatAsFiles GetTreatAsFiles(Dictionary<string, Feature> features)
+        protected TreatAsFiles GetTreatAsFiles(Dictionary<string, Library.Help.Feature> features)
         {
             TreatAsFiles asFiles = 0x00;
             if (GetBoolean(features, AaruFormatsAsFilesValue))
@@ -2583,7 +2583,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get update fields from feature list
         /// </summary>
-        protected List<Field> GetUpdateFields(Dictionary<string, Feature> features)
+        protected List<Field> GetUpdateFields(Dictionary<string, Library.Help.Feature> features)
         {
             List<Field> updateFields = new List<Field>();
 
@@ -2650,7 +2650,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get UpdateMode from feature list
         /// </summary>
-        protected UpdateMode GetUpdateMode(Dictionary<string, Feature> features)
+        protected UpdateMode GetUpdateMode(Dictionary<string, Library.Help.Feature> features)
         {
             UpdateMode updateMode = UpdateMode.None;
 
@@ -2694,7 +2694,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get Cleaner from feature list
         /// </summary>
-        private Cleaner GetCleaner(Dictionary<string, Feature> features)
+        private Cleaner GetCleaner(Dictionary<string, Library.Help.Feature> features)
         {
             Cleaner cleaner = new Cleaner()
             {
@@ -2723,7 +2723,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get DatHeader from feature list
         /// </summary>
-        private DatHeader GetDatHeader(Dictionary<string, Feature> features)
+        private DatHeader GetDatHeader(Dictionary<string, Library.Help.Feature> features)
         {
             // TODO: Sort this by region, like the actual header
             DatHeader datHeader = new DatHeader
@@ -2779,7 +2779,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get DedupeType from feature list
         /// </summary>
-        private DedupeType GetDedupeType(Dictionary<string, Feature> features)
+        private DedupeType GetDedupeType(Dictionary<string, Library.Help.Feature> features)
         {
             if (GetBoolean(features, DedupValue))
                 return DedupeType.Full;
@@ -2792,7 +2792,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get ExtraIni from feature list
         /// </summary>
-        private ExtraIni GetExtras(Dictionary<string, Feature> features)
+        private ExtraIni GetExtras(Dictionary<string, Library.Help.Feature> features)
         {
             ExtraIni extraIni = new ExtraIni();
             extraIni.PopulateFromList(GetList(features, ExtraIniListValue));
@@ -2802,7 +2802,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get Filter from feature list
         /// </summary>
-        private Filter GetFilter(Dictionary<string, Feature> features)
+        private Filter GetFilter(Dictionary<string, Library.Help.Feature> features)
         {
             Filter filter = new Filter();
 

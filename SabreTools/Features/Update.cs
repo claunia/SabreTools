@@ -23,7 +23,7 @@ namespace SabreTools.Features
             Description = "Update and manipulate DAT(s)";
             _featureType = FeatureType.Flag;
             LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, Library.Help.Feature>();
 
             // Output Formats
             AddFeature(OutputTypeListInput);
@@ -98,7 +98,7 @@ namespace SabreTools.Features
             AddFeature(ThreadsInt32Input);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

@@ -43,10 +43,10 @@ Add new output format(s):           format(datformat, ...);
 Set the output directory:           output(outdir);
 Write the internal items:           write([overwrite = true]);
 Reset the internal state:           reset();";
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, Library.Help.Feature>();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

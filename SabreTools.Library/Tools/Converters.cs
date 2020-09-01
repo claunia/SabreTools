@@ -647,24 +647,6 @@ namespace SabreTools.Library.Tools
                     case "device_extension_name":
                         return Field.Machine_Device_Extension_Name;
 
-                    case "slots":
-                        return Field.Machine_Slots;
-
-                    case "slot_name":
-                        return Field.Machine_Slot_Name;
-
-                    case "slot_slotoptions":
-                        return Field.Machine_Slot_SlotOptions;
-
-                    case "slot_slotoption_name":
-                        return Field.Machine_Slot_SlotOption_Name;
-
-                    case "slot_slotoption_devicename":
-                        return Field.Machine_Slot_SlotOption_DeviceName;
-
-                    case "slot_slotoption_default":
-                        return Field.Machine_Slot_SlotOption_Default;
-
                     #endregion
 
                     #region Logiqx
@@ -1046,6 +1028,19 @@ namespace SabreTools.Library.Tools
                     case "language":
                         return Field.DatItem_Language;
 
+                    // Slot
+                    case "slotoptions":
+                        return Field.DatItem_SlotOptions;
+
+                    case "slotoption_name":
+                        return Field.DatItem_SlotOption_Name;
+
+                    case "slotoption_devicename":
+                        return Field.DatItem_SlotOption_DeviceName;
+
+                    case "slotoption_default":
+                        return Field.DatItem_SlotOption_Default;
+
                     // Software List
                     case "softwareliststatus":
                     case "softwarelist_status":
@@ -1171,11 +1166,6 @@ namespace SabreTools.Library.Tools
 
                 case "runnable":
                     return Field.Machine_Runnable;
-
-                case "slotoptions":
-                case "slot options":
-                case "slot-options":
-                    return Field.Machine_Slots;
 
                 case "infos":
                     return Field.Machine_Infos;
@@ -1589,6 +1579,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Rom;
                 case "sample":
                     return ItemType.Sample;
+                case "slot":
+                    return ItemType.Slot;
                 case "softwarelist":
                     return ItemType.SoftwareList;
                 default:
@@ -1611,6 +1603,7 @@ namespace SabreTools.Library.Tools
                 "release" => ItemType.Release,
                 "rom" => ItemType.Rom,
                 "sample" => ItemType.Sample,
+                "slot" => ItemType.Slot,
                 "softwarelist" => ItemType.SoftwareList,
                 _ => null,
             };
@@ -2031,6 +2024,8 @@ namespace SabreTools.Library.Tools
                     return "rom";
                 case ItemType.Sample:
                     return "sample";
+                case ItemType.Slot:
+                    return "slot";
                 case ItemType.SoftwareList:
                     return "softwarelist";
                 default:
@@ -2053,6 +2048,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Release => "release",
                 ItemType.Rom => "rom",
                 ItemType.Sample => "sample",
+                ItemType.Slot => "slot",
                 ItemType.SoftwareList => "softwarelist",
                 _ => null,
             };

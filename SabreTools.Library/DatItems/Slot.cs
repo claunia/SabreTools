@@ -1,31 +1,23 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 using SabreTools.Library.Filtering;
-using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents which Adjuster(s) is associated with a set
+    /// Represents which Slot(s) is associated with a set
     /// </summary>
-    [JsonObject("adjuster")]
-    public class Adjuster : DatItem
+    [JsonObject("slot")]
+    public class Slot : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Determine whether the value is default
+        /// Slot options associated with the slot
         /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Default { get; set; }
-
-        /// <summary>
-        /// Conditions associated with the adjustment
-        /// </summary>
-        [JsonProperty("conditions")]
-        public List<Condition> Conditions { get; set; }
+        [JsonProperty("slotoptions")]
+        public List<SlotOption> SlotOptions { get; set; }
 
         #endregion
 
@@ -40,11 +32,9 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Adjuster-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Default))
-                Default = mappings[Field.DatItem_Default].AsYesNo();
+            // Handle Slot-specific fields
 
-            // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_SlotOption*
         }
 
         #endregion
@@ -52,12 +42,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Adjuster object
+        /// Create a default, empty Slot object
         /// </summary>
-        public Adjuster()
+        public Slot()
         {
             Name = string.Empty;
-            ItemType = ItemType.Adjuster;
+            ItemType = ItemType.Slot;
         }
 
         #endregion
@@ -66,7 +56,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Adjuster()
+            return new Slot()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -94,8 +84,7 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                Default = this.Default,
-                Conditions = this.Conditions,
+                SlotOptions = this.SlotOptions,
             };
         }
 
@@ -105,15 +94,15 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a Adjuster, return false
+            // If we don't have a Slot, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a Adjuster
-            Adjuster newOther = other as Adjuster;
+            // Otherwise, treat it as a Slot
+            Slot newOther = other as Slot;
 
-            // If the Adjuster information matches
-            return (Name == newOther.Name && Default == newOther.Default); // TODO: Handle DatItem_Condition*
+            // If the Slot information matches
+            return (Name == newOther.Name); // TODO: Handle DatItem_SlotOption*
         }
 
         #endregion
@@ -131,11 +120,7 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on default
-            if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
-                return false;
-
-            // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_SlotOption*
 
             return true;
         }
@@ -150,13 +135,10 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Default))
-                Default = null;
+            if (fields.Contains(Field.DatItem_SlotOptions))
+                SlotOptions = null;
 
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = null;
-
-            // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_SlotOption*
         }
 
         #endregion
@@ -173,21 +155,18 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Adjuster to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Adjuster)
+            // If we don't have a Slot to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Slot)
                 return;
 
             // Cast for easier access
-            Adjuster newItem = item as Adjuster;
+            Slot newItem = item as Slot;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Default))
-                Default = newItem.Default;
+            if (fields.Contains(Field.DatItem_SlotOptions))
+                SlotOptions = newItem.SlotOptions;
 
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = newItem.Conditions;
-
-            // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_SlotOption*
         }
 
         #endregion

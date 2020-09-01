@@ -30,19 +30,19 @@ namespace SabreTools.Library.DatItems
         /// Conditions associated with the dipswitch
         /// </summary>
         [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
+        public List<Condition> Conditions { get; set; }
 
         /// <summary>
         /// Locations associated with the dipswitch
         /// </summary>
         [JsonProperty("locations")]
-        public List<ListXmlDipLocation> Locations { get; set; }
+        public List<Location> Locations { get; set; }
 
         /// <summary>
         /// Settings associated with the dipswitch
         /// </summary>
         [JsonProperty("values")]
-        public List<ListXmlDipValue> Values { get; set; }
+        public List<Setting> Values { get; set; }
 
         #endregion
 
