@@ -197,24 +197,6 @@ namespace SabreTools.Library.DatItems
         Machine_DipSwitch_Value_Value,
         Machine_DipSwitch_Value_Default,
 
-        // Configurations
-        Machine_Configurations,
-        Machine_Configuration_Name,
-        Machine_Configuration_Tag,
-        Machine_Configuration_Mask,
-
-        // Configurations.Locations
-        Machine_Configuration_Locations,
-        Machine_Configuration_Location_Name,
-        Machine_Configuration_Location_Number,
-        Machine_Configuration_Location_Inverted,
-
-        // Configurations.Settings
-        Machine_Configuration_Settings,
-        Machine_Configuration_Setting_Name,
-        Machine_Configuration_Setting_Value,
-        Machine_Configuration_Setting_Default,
-
         // Ports
         Machine_Ports,
         Machine_Port_Tag,
@@ -407,6 +389,21 @@ namespace SabreTools.Library.DatItems
         DatItem_ChipType,
         DatItem_Clock,
 
+        // Configuration
+        DatItem_Mask,
+
+        // Configuration.Locations
+        DatItem_Locations,
+        DatItem_Location_Name,
+        DatItem_Location_Number,
+        DatItem_Location_Inverted,
+
+        // Configuration.Settings
+        DatItem_Settings,
+        DatItem_Setting_Name,
+        DatItem_Setting_Value,
+        DatItem_Setting_Default,
+
         // Ram Option
         DatItem_Content,
 
@@ -457,6 +454,7 @@ namespace SabreTools.Library.DatItems
         Archive,
         BiosSet,
         Chip,
+        Configuration,
         DeviceReference,
         RamOption,
         Release,

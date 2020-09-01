@@ -2,30 +2,47 @@
 using System.Linq;
 
 using SabreTools.Library.Filtering;
-using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents which Adjuster(s) is associated with a set
+    /// Represents which Configuration(s) is associated with a set
     /// </summary>
-    [JsonObject("adjuster")]
-    public class Adjuster : DatItem
+    [JsonObject("configuration")]
+    public class Configuration : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Determine whether the value is default
+        /// Tag associated with the configuration
         /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Default { get; set; }
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Tag { get; set; }
 
         /// <summary>
-        /// Conditions associated with the adjustment
+        /// Mask associated with the configuration
+        /// </summary>
+        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Mask { get; set; }
+
+        /// <summary>
+        /// Conditions associated with the configuration
         /// </summary>
         [JsonProperty("conditions")]
         public List<ListXmlCondition> Conditions { get; set; }
+
+        /// <summary>
+        /// Locations associated with the configuration
+        /// </summary>
+        [JsonProperty("locations")]
+        public List<ListXmlConfLocation> Locations { get; set; }
+
+        /// <summary>
+        /// Settings associated with the configuration
+        /// </summary>
+        [JsonProperty("settings")]
+        public List<ListXmlConfSetting> Settings { get; set; }
 
         #endregion
 
@@ -40,11 +57,16 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Adjuster-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Default))
-                Default = mappings[Field.DatItem_Default].AsYesNo();
+            // Handle Configuration-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_Tag))
+                Tag = mappings[Field.DatItem_Tag];
+
+            if (mappings.Keys.Contains(Field.DatItem_Mask))
+                Mask = mappings[Field.DatItem_Mask];
 
             // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_Location*
+            // TODO: Handle DatItem_Setting*
         }
 
         #endregion
@@ -52,12 +74,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Adjuster object
+        /// Create a default, empty Configuration object
         /// </summary>
-        public Adjuster()
+        public Configuration()
         {
             Name = string.Empty;
-            ItemType = ItemType.Adjuster;
+            ItemType = ItemType.Configuration;
         }
 
         #endregion
@@ -66,7 +88,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Adjuster()
+            return new Configuration()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -94,8 +116,11 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                Default = this.Default,
+                Tag = this.Tag,
+                Mask = this.Mask,
                 Conditions = this.Conditions,
+                Locations = this.Locations,
+                Settings = this.Settings,
             };
         }
 
@@ -105,15 +130,19 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a Adjuster, return false
+            // If we don't have a Configuration, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a Adjuster
-            Adjuster newOther = other as Adjuster;
+            // Otherwise, treat it as a Configuration
+            Configuration newOther = other as Configuration;
 
             // If the Adjuster information matches
-            return (Name == newOther.Name && Default == newOther.Default); // TODO: Handle DatItem_Condition*
+            return (Name == newOther.Name && Tag == newOther.Tag && Mask == newOther.Mask);
+            
+            // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_Location*
+            // TODO: Handle DatItem_Setting*
         }
 
         #endregion
@@ -131,11 +160,21 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on default
-            if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
+            // Filter on tag
+            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
+                return false;
+            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+                return false;
+
+            // Filter on mask
+            if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
+                return false;
+            if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
                 return false;
 
             // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_Location*
+            // TODO: Handle DatItem_Setting*
 
             return true;
         }
@@ -150,13 +189,24 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Default))
-                Default = null;
+            if (fields.Contains(Field.DatItem_Tag))
+                Tag = null;
+
+            if (fields.Contains(Field.DatItem_Mask))
+                Mask = null;
 
             if (fields.Contains(Field.DatItem_Conditions))
                 Conditions = null;
 
+            if (fields.Contains(Field.DatItem_Locations))
+                Locations = null;
+
+            if (fields.Contains(Field.DatItem_Settings))
+                Settings = null;
+
             // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_Location*
+            // TODO: Handle DatItem_Setting*
         }
 
         #endregion
@@ -173,21 +223,32 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Adjuster to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Adjuster)
+            // If we don't have a Configuration to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Configuration)
                 return;
 
             // Cast for easier access
-            Adjuster newItem = item as Adjuster;
+            Configuration newItem = item as Configuration;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Default))
-                Default = newItem.Default;
+            if (fields.Contains(Field.DatItem_Tag))
+                Tag = newItem.Tag;
+
+            if (fields.Contains(Field.DatItem_Mask))
+                Mask = newItem.Mask;
 
             if (fields.Contains(Field.DatItem_Conditions))
                 Conditions = newItem.Conditions;
 
+            if (fields.Contains(Field.DatItem_Locations))
+                Locations = newItem.Locations;
+
+            if (fields.Contains(Field.DatItem_Settings))
+                Settings = newItem.Settings;
+
             // TODO: Handle DatItem_Condition*
+            // TODO: Handle DatItem_Location*
+            // TODO: Handle DatItem_Setting*
         }
 
         #endregion

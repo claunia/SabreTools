@@ -185,12 +185,6 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlDipSwitch> DipSwitches { get; set; } = null;
 
         /// <summary>
-        /// List of associated configurations
-        /// </summary>
-        [JsonProperty("configurations", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlConfiguration> Configurations { get; set; } = null;
-
-        /// <summary>
         /// List of associated ports
         /// </summary>
         [JsonProperty("ports", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -577,7 +571,6 @@ namespace SabreTools.Library.DatItems
                 Conditions = this.Conditions,
                 Inputs = this.Inputs,
                 DipSwitches = this.DipSwitches,
-                Configurations = this.Configurations,
                 Ports = this.Ports,
                 Drivers = this.Drivers,
                 Features = this.Features,

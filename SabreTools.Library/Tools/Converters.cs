@@ -612,42 +612,6 @@ namespace SabreTools.Library.Tools
                     case "dipswitch_value_default":
                         return Field.Machine_DipSwitch_Value_Default;
 
-                    case "configurations":
-                        return Field.Machine_Configurations;
-
-                    case "configuration_name":
-                        return Field.Machine_Configuration_Name;
-
-                    case "configuration_tag":
-                        return Field.Machine_Configuration_Tag;
-
-                    case "configuration_mask":
-                        return Field.Machine_Configuration_Mask;
-
-                    case "configuration_locations":
-                        return Field.Machine_Configuration_Locations;
-
-                    case "configuration_location_name":
-                        return Field.Machine_Configuration_Location_Name;
-
-                    case "configuration_location_number":
-                        return Field.Machine_Configuration_Location_Number;
-
-                    case "configuration_location_inverted":
-                        return Field.Machine_Configuration_Location_Inverted;
-
-                    case "configuration_settings":
-                        return Field.Machine_Configuration_Settings;
-
-                    case "configuration_setting_name":
-                        return Field.Machine_Configuration_Setting_Name;
-
-                    case "configuration_setting_value":
-                        return Field.Machine_Configuration_Setting_Value;
-
-                    case "configuration_setting_default":
-                        return Field.Machine_Configuration_Setting_Default;
-
                     case "ports":
                         return Field.Machine_Ports;
 
@@ -1069,6 +1033,34 @@ namespace SabreTools.Library.Tools
 
                     case "clock":
                         return Field.DatItem_Clock;
+
+                    // Configuration
+                    case "mask":
+                        return Field.DatItem_Mask;
+
+                    case "locations":
+                        return Field.DatItem_Locations;
+
+                    case "location_name":
+                        return Field.DatItem_Location_Name;
+
+                    case "location_number":
+                        return Field.DatItem_Location_Number;
+
+                    case "location_inverted":
+                        return Field.DatItem_Location_Inverted;
+
+                    case "settings":
+                        return Field.DatItem_Settings;
+
+                    case "setting_name":
+                        return Field.DatItem_Setting_Name;
+
+                    case "setting_value":
+                        return Field.DatItem_Setting_Value;
+
+                    case "setting_default":
+                        return Field.DatItem_Setting_Default;
 
                     // Ram Option
                     case "content":

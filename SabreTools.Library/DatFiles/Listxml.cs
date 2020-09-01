@@ -218,6 +218,26 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "configuration":
+                        var configuration = new Configuration
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Conditions = new List<ListXmlCondition>(),
+                            Locations = new List<ListXmlConfLocation>(),
+                            Settings = new List<ListXmlConfSetting>(),
+                        };
+
+                        // Now read the internal tags
+                        ReadConfiguration(reader.ReadSubtree(), configuration);
+
+                        datItems.Add(configuration);
+
+                        // Skip the configuration now that we've processed it
+                        reader.Skip();
+                        break;
+
                     case "device_ref":
                         datItems.Add(new DeviceReference
                         {
@@ -407,25 +427,6 @@ namespace SabreTools.Library.DatFiles
                         machine.DipSwitches.Add(dipSwitch);
 
                         // Skip the dipswitch now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "configuration":
-                        var configuration = new ListXmlConfiguration();
-                        configuration.Name = reader.GetAttribute("name");
-                        configuration.Tag = reader.GetAttribute("tag");
-                        configuration.Mask = reader.GetAttribute("mask");
-
-                        // Now read the internal tags
-                        ReadConfiguration(reader.ReadSubtree(), configuration);
-
-                        // Ensure the list exists
-                        if (machine.Configurations == null)
-                            machine.Configurations = new List<ListXmlConfiguration>();
-
-                        machine.Configurations.Add(configuration);
-
-                        // Skip the configuration now that we've processed it
                         reader.Skip();
                         break;
 
@@ -781,8 +782,8 @@ namespace SabreTools.Library.DatFiles
         /// Read Configuration information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="configuration">ListXmlConfiguration to populate</param>
-        private void ReadConfiguration(XmlReader reader, ListXmlConfiguration configuration)
+        /// <param name="configuration">Configuration to populate</param>
+        private void ReadConfiguration(XmlReader reader, Configuration configuration)
         {
             // If we have an empty configuration, skip it
             if (reader == null)
@@ -1362,64 +1363,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Configurations != null)
-                {
-                    foreach (var configuration in datItem.Machine.Configurations)
-                    {
-                        xtw.WriteStartElement("configuration");
-
-                        xtw.WriteOptionalAttributeString("name", configuration.Name);
-                        xtw.WriteOptionalAttributeString("tag", configuration.Tag);
-                        xtw.WriteOptionalAttributeString("mask", configuration.Mask);
-
-                        if (configuration.Conditions != null)
-                        {
-                            foreach (var condition in configuration.Conditions)
-                            {
-                                xtw.WriteStartElement("condition");
-
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
-
-                                // End condition
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        if (configuration.Locations != null)
-                        {
-                            foreach (var location in configuration.Locations)
-                            {
-                                xtw.WriteStartElement("conflocation");
-
-                                xtw.WriteOptionalAttributeString("name", location.Name);
-                                xtw.WriteOptionalAttributeString("number", location.Number);
-                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
-
-                                // End conflocation
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        if (configuration.Settings != null)
-                        {
-                            foreach (var setting in configuration.Settings)
-                            {
-                                xtw.WriteStartElement("confsetting");
-
-                                xtw.WriteOptionalAttributeString("name", setting.Name);
-                                xtw.WriteOptionalAttributeString("value", setting.Value);
-                                xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
-
-                                // End confsetting
-                                xtw.WriteEndElement();
-                            }
-                        }
-
-                        // End configuration
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Ports != null)
                 {
                     foreach (var port in datItem.Machine.Ports)
@@ -1630,6 +1573,50 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("tag", chip.Tag);
                         xtw.WriteOptionalAttributeString("type", chip.ChipType);
                         xtw.WriteOptionalAttributeString("clock", chip.Clock);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Configuration:
+                        var configuration = datItem as Configuration;
+                        xtw.WriteStartElement("configuration");
+                        xtw.WriteOptionalAttributeString("name", configuration.Name);
+                        xtw.WriteOptionalAttributeString("tag", configuration.Tag);
+                        xtw.WriteOptionalAttributeString("mask", configuration.Mask);
+
+                        if (configuration.Conditions != null)
+                        {
+                            foreach (var condition in configuration.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (configuration.Locations != null)
+                        {
+                            foreach (var location in configuration.Locations)
+                            {
+                                xtw.WriteStartElement("conflocation");
+                                xtw.WriteOptionalAttributeString("name", location.Name);
+                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (configuration.Settings != null)
+                        {
+                            foreach (var setting in configuration.Settings)
+                            {
+                                xtw.WriteStartElement("confsetting");
+                                xtw.WriteOptionalAttributeString("name", setting.Name);
+                                xtw.WriteOptionalAttributeString("value", setting.Value);
+                                xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 

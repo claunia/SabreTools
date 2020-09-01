@@ -42,32 +42,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML configuration
-    /// </summary>
-    /// TODO: Promote to DatItem level (contains lists)
-    [JsonObject("configuration")]
-    public class ListXmlConfiguration
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("tag")]
-        public string Tag { get; set; }
-
-        [JsonProperty("mask")]
-        public string Mask { get; set; }
-
-        [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
-
-        [JsonProperty("locations")]
-        public List<ListXmlConfLocation> Locations { get; set; }
-
-        [JsonProperty("settings")]
-        public List<ListXmlConfSetting> Settings { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML conflocation
     /// </summary>
     [JsonObject("conflocation")]

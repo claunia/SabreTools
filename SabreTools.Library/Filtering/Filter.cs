@@ -119,24 +119,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_DipSwitch_Value_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> Machine_DipSwitch_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
-        // Configurations
-        public FilterItem<bool?> Machine_Configurations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Configuration_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Configuration_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Configuration_Mask { get; private set; } = new FilterItem<string>();
-
-        // Configurations.Locations
-        public FilterItem<bool?> Machine_Configuration_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Configuration_Location_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Configuration_Location_Number { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_Configuration_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        // Configurations.Settings
-        public FilterItem<bool?> Machine_Configuration_Settings { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Configuration_Setting_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Configuration_Setting_Value { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_Configuration_Setting_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
         // Ports
         public FilterItem<bool?> Machine_Ports { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Port_Tag { get; private set; } = new FilterItem<string>();
@@ -328,6 +310,21 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Tag { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_ChipType { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
+
+        // Configuration
+        public FilterItem<string> DatItem_Mask { get; private set; } = new FilterItem<string>();
+
+        // Configuration.Locations
+        public FilterItem<bool?> DatItem_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Location_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Location_Number { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Configuration.Settings
+        public FilterItem<bool?> DatItem_Settings { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Setting_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Setting_Value { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Setting_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // Ram Option
         public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
@@ -936,93 +933,6 @@ namespace SabreTools.Library.Filtering
                         Machine_DipSwitch_Value_Default.Neutral = false;
                     else
                         Machine_DipSwitch_Value_Default.Neutral = true;
-                    break;
-
-                // Configurations
-                case Field.Machine_Configurations:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Configurations.Neutral = false;
-                    else
-                        Machine_Configurations.Neutral = true;
-                    break;
-
-                case Field.Machine_Configuration_Name:
-                    if (negate)
-                        Machine_Configuration_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Configuration_Tag:
-                    if (negate)
-                        Machine_Configuration_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Configuration_Mask:
-                    if (negate)
-                        Machine_Configuration_Mask.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Mask.PositiveSet.Add(value);
-                    break;
-
-                // Configurations.Locations
-                case Field.Machine_Configuration_Locations:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Configuration_Locations.Neutral = false;
-                    else
-                        Machine_Configuration_Locations.Neutral = true;
-                    break;
-
-                case Field.Machine_Configuration_Location_Name:
-                    if (negate)
-                        Machine_Configuration_Location_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Location_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Configuration_Location_Number:
-                    if (negate)
-                        Machine_Configuration_Location_Number.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Location_Number.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Configuration_Location_Inverted:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Configuration_Location_Inverted.Neutral = false;
-                    else
-                        Machine_Configuration_Location_Inverted.Neutral = true;
-                    break;
-
-                // Configurations.Settings
-                case Field.Machine_Configuration_Settings:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Configuration_Settings.Neutral = false;
-                    else
-                        Machine_Configuration_Settings.Neutral = true;
-                    break;
-
-                case Field.Machine_Configuration_Setting_Name:
-                    if (negate)
-                        Machine_Configuration_Setting_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Setting_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Configuration_Setting_Value:
-                    if (negate)
-                        Machine_Configuration_Setting_Value.NegativeSet.Add(value);
-                    else
-                        Machine_Configuration_Setting_Value.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Configuration_Setting_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Configuration_Setting_Default.Neutral = false;
-                    else
-                        Machine_Configuration_Setting_Default.Neutral = true;
                     break;
 
                 // Ports
@@ -1882,6 +1792,72 @@ namespace SabreTools.Library.Filtering
                         DatItem_Clock.NegativeSet.Add(value);
                     else
                         DatItem_Clock.PositiveSet.Add(value);
+                    break;
+
+                // Configuration
+                case Field.DatItem_Mask:
+                    if (negate)
+                        DatItem_Mask.NegativeSet.Add(value);
+                    else
+                        DatItem_Mask.PositiveSet.Add(value);
+                    break;
+
+                // Configurations.Locations
+                case Field.DatItem_Locations:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Locations.Neutral = false;
+                    else
+                        DatItem_Locations.Neutral = true;
+                    break;
+
+                case Field.DatItem_Location_Name:
+                    if (negate)
+                        DatItem_Location_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_Location_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Location_Number:
+                    if (negate)
+                        DatItem_Location_Number.NegativeSet.Add(value);
+                    else
+                        DatItem_Location_Number.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Location_Inverted:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Location_Inverted.Neutral = false;
+                    else
+                        DatItem_Location_Inverted.Neutral = true;
+                    break;
+
+                // Configurations.Settings
+                case Field.DatItem_Settings:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Settings.Neutral = false;
+                    else
+                        DatItem_Settings.Neutral = true;
+                    break;
+
+                case Field.DatItem_Setting_Name:
+                    if (negate)
+                        DatItem_Setting_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_Setting_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Setting_Value:
+                    if (negate)
+                        DatItem_Setting_Value.NegativeSet.Add(value);
+                    else
+                        DatItem_Setting_Value.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Setting_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Setting_Default.Neutral = false;
+                    else
+                        DatItem_Setting_Default.Neutral = true;
                     break;
 
                 // Ram Option
