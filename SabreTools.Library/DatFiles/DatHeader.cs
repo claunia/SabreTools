@@ -880,10 +880,12 @@ namespace SabreTools.Library.DatFiles
             if (DatFormat.HasFlag(DatFormat.Logiqx))
             {
                 outfileNames.Add(DatFormat.Logiqx, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
+                usedExtensions.Add(".xml");
             }
             if (DatFormat.HasFlag(DatFormat.LogiqxDeprecated))
             {
                 outfileNames.Add(DatFormat.LogiqxDeprecated, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
+                usedExtensions.Add(".xml");
             }
 
             // SabreDAT
