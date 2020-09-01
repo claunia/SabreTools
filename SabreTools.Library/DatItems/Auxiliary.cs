@@ -182,17 +182,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML deviceref
-    /// </summary>
-    /// TODO: Promote this to the same level as Sample
-    [JsonObject("deviceref")]
-    public class ListXmlDeviceReference
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML display
     /// </summary>
     [JsonObject("display")]
@@ -440,7 +429,7 @@ namespace SabreTools.Library.DatItems
         public string Name { get; set; }
 
         [JsonProperty("status")]
-        public string Status { get; set; } // TODO: (original|compatible)
+        public SoftwareListStatus Status { get; set; }
 
         [JsonProperty("filter")]
         public string Filter { get; set; }

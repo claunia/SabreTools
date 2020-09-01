@@ -153,12 +153,6 @@ namespace SabreTools.Library.DatItems
         public Runnable Runnable { get; set; } = Runnable.NULL;
 
         /// <summary>
-        /// List of associated device names
-        /// </summary>
-        [JsonProperty("devicereferences", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlDeviceReference> DeviceReferences { get; set; } = null;
-
-        /// <summary>
         /// List of associated displays
         /// </summary>
         [JsonProperty("displays", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -596,7 +590,6 @@ namespace SabreTools.Library.DatItems
 
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
-                DeviceReferences = this.DeviceReferences,
                 Displays = this.Displays,
                 Sounds = this.Sounds,
                 Conditions = this.Conditions,
@@ -806,34 +799,6 @@ namespace SabreTools.Library.DatItems
                 return false;
             if (filter.Machine_Runnable.MatchesNegative(Runnable.NULL, Runnable) == true)
                 return false;
-
-            #region DeviceReferences
-
-            // Machine_DeviceReferences
-            if (filter.Machine_DeviceReferences.MatchesNeutral(null, DeviceReferences?.Any() ?? null) == false)
-                return false;
-
-            // Machine_DeviceReference_Name
-            if (DeviceReferences?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var deviceReference in DeviceReferences)
-                {
-                    if (filter.Machine_DeviceReference_Name.MatchesPositiveSet(deviceReference?.Name) != false)
-                        anyPositive = true;
-                    if (filter.Machine_DeviceReference_Name.MatchesNegativeSet(deviceReference?.Name) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            #endregion
 
             #region Displays
 
@@ -1132,9 +1097,9 @@ namespace SabreTools.Library.DatItems
 
                 foreach (var sound in Sounds)
                 {
-                    if (filter.Machine_DeviceReference_Name.MatchesPositiveSet(sound?.Channels) != false)
+                    if (filter.Machine_Sound_Channels.MatchesPositiveSet(sound?.Channels) != false)
                         anyPositive = true;
-                    if (filter.Machine_DeviceReference_Name.MatchesNegativeSet(sound?.Channels) == true)
+                    if (filter.Machine_Sound_Channels.MatchesNegativeSet(sound?.Channels) == true)
                         anyNegative = true;
                 }
 
@@ -1538,9 +1503,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.Machine_Runnable))
                 Runnable = Runnable.NULL;
 
-            if (fields.Contains(Field.Machine_DeviceReferences))
-                DeviceReferences = null;
-
             if (fields.Contains(Field.Machine_Slots))
                 Slots = null;
 
@@ -1702,9 +1664,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_Runnable))
                 Runnable = machine.Runnable;
-
-            if (fields.Contains(Field.Machine_DeviceReferences))
-                DeviceReferences = machine.DeviceReferences;
 
             if (fields.Contains(Field.Machine_Slots))
                 Slots = machine.Slots;

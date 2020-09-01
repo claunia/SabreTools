@@ -641,6 +641,12 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteEndElement();
                         break;
 
+                    case ItemType.DeviceReference:
+                        cmpw.WriteStartElement("device_ref");
+                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
+                        cmpw.WriteEndElement();
+                        break;
+
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         cmpw.WriteStartElement("disk");

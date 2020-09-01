@@ -129,12 +129,8 @@ namespace SabreTools.Library.DatItems
         Machine_SourceFile,
         Machine_Runnable,
 
-        // DeviceReferences
-        Machine_DeviceReferences, // TODO: Double-check DeviceReferences usage
-        Machine_DeviceReference_Name,
-
         // Displays
-        Machine_Displays, // TODO: Implement Displays usage
+        Machine_Displays,
         Machine_Display_Tag,
         Machine_Display_Type,
         Machine_Display_Rotate,
@@ -151,18 +147,18 @@ namespace SabreTools.Library.DatItems
         Machine_Display_VBStart,
 
         // Sounds
-        Machine_Sounds, // TODO: Implement Sounds usage
+        Machine_Sounds,
         Machine_Sound_Channels,
 
         // Conditions
-        Machine_Conditions, // TODO: Implement Conditions usage
+        Machine_Conditions,
         Machine_Condition_Tag,
         Machine_Condition_Mask,
         Machine_Condition_Relation,
         Machine_Condition_Value,
 
         // Inputs
-        Machine_Inputs, // TODO: Implement Inputs usage
+        Machine_Inputs,
         Machine_Input_Service,
         Machine_Input_Tilt,
         Machine_Input_Players,
@@ -184,7 +180,7 @@ namespace SabreTools.Library.DatItems
         Machine_Input_Control_Ways3,
 
         // DipSwitches
-        Machine_DipSwitches, // TODO: Implement DipSwitches usage
+        Machine_DipSwitches,
         Machine_DipSwitch_Name,
         Machine_DipSwitch_Tag,
         Machine_DipSwitch_Mask,
@@ -202,7 +198,7 @@ namespace SabreTools.Library.DatItems
         Machine_DipSwitch_Value_Default,
 
         // Configurations
-        Machine_Configurations, // TODO: Implement Configurations usage
+        Machine_Configurations,
         Machine_Configuration_Name,
         Machine_Configuration_Tag,
         Machine_Configuration_Mask,
@@ -220,7 +216,7 @@ namespace SabreTools.Library.DatItems
         Machine_Configuration_Setting_Default,
 
         // Ports
-        Machine_Ports, // TODO: Implement Ports usage
+        Machine_Ports,
         Machine_Port_Tag,
 
         // Ports.Analogs
@@ -228,7 +224,7 @@ namespace SabreTools.Library.DatItems
         Machine_Port_Analog_Mask,
 
         // Adjusters
-        Machine_Adjusters, // TODO: Implement Adjusters usage
+        Machine_Adjusters,
         Machine_Adjuster_Name,
         Machine_Adjuster_Default,
 
@@ -240,20 +236,20 @@ namespace SabreTools.Library.DatItems
         Machine_Adjuster_Condition_Value,
 
         // Drivers
-        Machine_Drivers, // TODO: Implement Drivers usage
+        Machine_Drivers,
         Machine_Driver_Status,
         Machine_Driver_Emulation,
         Machine_Driver_Cocktail,
         Machine_Driver_SaveState,
 
         // Features
-        Machine_Features, // TODO: Implement Features usage
+        Machine_Features,
         Machine_Feature_Type,
         Machine_Feature_Status,
         Machine_Feature_Overall,
 
         // Devices
-        Machine_Devices, // TODO: Implement Devices usage
+        Machine_Devices,
         Machine_Device_Type,
         Machine_Device_Tag,
         Machine_Device_FixedImage,
@@ -270,7 +266,7 @@ namespace SabreTools.Library.DatItems
         Machine_Device_Extension_Name,
 
         // Slots
-        Machine_Slots, // TODO: Fix Slots usage
+        Machine_Slots,
         Machine_Slot_Name,
 
         // Slots.SlotOptions
@@ -280,13 +276,13 @@ namespace SabreTools.Library.DatItems
         Machine_Slot_SlotOption_Default,
 
         // SoftwareLists
-        Machine_SoftwareLists, // TODO: Implement SoftwareLists usage
+        Machine_SoftwareLists,
         Machine_SoftwareList_Name,
         Machine_SoftwareList_Status,
         Machine_SoftwareList_Filter,
 
         // RamOptions
-        Machine_RamOptions, // TODO: Implement RamOptions usage
+        Machine_RamOptions,
         Machine_RamOption_Default,
 
         #endregion
@@ -367,12 +363,12 @@ namespace SabreTools.Library.DatItems
         #region SoftwareList
 
         // Part
-        DatItem_Part, // TODO: Fully implement Part
+        DatItem_Part,
         DatItem_Part_Name,
         DatItem_Part_Interface,
 
         // Feature
-        DatItem_Features, // TODO: Fully implement Feature
+        DatItem_Features,
         DatItem_Feature_Name,
         DatItem_Feature_Value,
 
@@ -387,45 +383,51 @@ namespace SabreTools.Library.DatItems
 
         #region Item-Specific
 
+        #region Actionable
+
+        // Rom
+        DatItem_Bios,
+        DatItem_Size,
+        DatItem_CRC,
+        DatItem_MD5,
+#if NET_FRAMEWORK
+        DatItem_RIPEMD160,
+#endif
+        DatItem_SHA1,
+        DatItem_SHA256,
+        DatItem_SHA384,
+        DatItem_SHA512,
+        DatItem_Merge,
+        DatItem_Region,
+        DatItem_Offset,
+        DatItem_Date,
+        DatItem_Status,
+        DatItem_Optional,
+        DatItem_Inverted,
+
+        // Disk
+        DatItem_Index,
+        DatItem_Writable,
+
+        #endregion
+
+        #region Auxiliary
+
         // BiosSet
-        DatItem_Default,
         DatItem_Description,
+        DatItem_Default,
 
         // Chip
         DatItem_Tag,
         DatItem_ChipType,
         DatItem_Clock,
 
-        // Disk
-        DatItem_MD5,
-        DatItem_SHA1,
-        DatItem_Merge,
-        DatItem_Region,
-        DatItem_Index,
-        DatItem_Writable,
-        DatItem_Status,
-        DatItem_Optional,
-
-        // Media
-        DatItem_SHA256,
-
         // Release
         DatItem_Language,
-        DatItem_Date,
-
-        // Rom
-        DatItem_Bios,
-        DatItem_Size,
-        DatItem_CRC,
-#if NET_FRAMEWORK
-        DatItem_RIPEMD160,
-#endif
-        DatItem_SHA384,
-        DatItem_SHA512,
-        DatItem_Offset,
-        DatItem_Inverted,
 
         #endregion
+
+        #endregion // Item-Specific
 
         #endregion // DatItem
     }
@@ -454,16 +456,17 @@ namespace SabreTools.Library.DatItems
     public enum ItemType
     {
         // "Actionable" item types
-        Rom = 0,
-        Disk = 1,
-        Media = 2,
+        Rom,
+        Disk,
+        Media,
 
         // "Auxiliary" item types
-        Archive = 3,
-        BiosSet = 4,
-        Chip = 5,
-        Release = 6,
-        Sample = 7,
+        Archive,
+        BiosSet,
+        Chip,
+        DeviceReference,
+        Release,
+        Sample,
 
         Blank = 99, // This is not a real type, only used internally
     }
@@ -514,6 +517,21 @@ namespace SabreTools.Library.DatItems
         No = 1 << 0,
         Partial = 1 << 1,
         Yes = 1 << 2,
+    }
+
+    /// <summary>
+    /// Determine software list status
+    /// </summary>
+    [Flags]
+    public enum SoftwareListStatus
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Original = 1 << 0,
+        Compatible = 1 << 1,
     }
 
     /// <summary>

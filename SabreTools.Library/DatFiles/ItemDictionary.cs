@@ -96,6 +96,12 @@ namespace SabreTools.Library.DatFiles
         public long ChipCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Device Reference items
+        /// </summary>
+        [JsonIgnore]
+        public long DeviceReferenceCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Disk items
         /// </summary>
         [JsonIgnore]
@@ -461,6 +467,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Chip:
                     ChipCount++;
                     break;
+                case ItemType.DeviceReference:
+                    DeviceReferenceCount++;
+                    break;
                 case ItemType.Disk:
                     DiskCount++;
                     if ((item as Disk).ItemStatus != ItemStatus.Nodump)
@@ -589,6 +598,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Chip:
                     ChipCount--;
+                    break;
+                case ItemType.DeviceReference:
+                    DeviceReferenceCount--;
                     break;
                 case ItemType.Disk:
                     DiskCount--;

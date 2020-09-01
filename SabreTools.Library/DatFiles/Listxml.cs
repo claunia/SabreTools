@@ -238,14 +238,10 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "device_ref":
-                        var deviceReference = new ListXmlDeviceReference();
-                        deviceReference.Name = reader.GetAttribute("name");
-
-                        // Ensure the list exists
-                        if (machine.DeviceReferences == null)
-                            machine.DeviceReferences = new List<ListXmlDeviceReference>();
-
-                        machine.DeviceReferences.Add(deviceReference);
+                        datItems.Add(new DeviceReference
+                        {
+                            Name = reader.GetAttribute("name"),
+                        });
 
                         reader.Read();
                         break;
@@ -503,7 +499,7 @@ namespace SabreTools.Library.DatFiles
                     case "softwarelist":
                         var softwareList = new ListXmlSoftwareList();
                         softwareList.Name = reader.GetAttribute("name");
-                        softwareList.Status = reader.GetAttribute("status");
+                        softwareList.Status = reader.GetAttribute("status").AsSoftwareListStatus();
                         softwareList.Filter = reader.GetAttribute("filter");
 
                         // Ensure the list exists
@@ -1080,18 +1076,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
 
                 // TODO: These should go *after* the datitems
-                if (datItem.Machine.DeviceReferences != null)
-                {
-                    foreach (var deviceReference in datItem.Machine.DeviceReferences)
-                    {
-                        xtw.WriteStartElement("device_ref");
-
-                        xtw.WriteOptionalAttributeString("name", deviceReference.Name);
-
-                        // End device_ref
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Displays != null)
                 {
                     foreach (var display in datItem.Machine.Displays)
@@ -1428,7 +1412,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("softwarelist");
 
                         xtw.WriteOptionalAttributeString("name", softwarelist.Name);
-                        xtw.WriteOptionalAttributeString("status", softwarelist.Status);
+                        xtw.WriteOptionalAttributeString("status", softwarelist.Status.FromSoftwareListStatus());
                         xtw.WriteOptionalAttributeString("filter", softwarelist.Filter);
 
                         // End softwarelist
@@ -1515,6 +1499,12 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("tag", chip.Tag);
                         xtw.WriteOptionalAttributeString("type", chip.ChipType);
                         xtw.WriteOptionalAttributeString("clock", chip.Clock);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.DeviceReference:
+                        xtw.WriteStartElement("device_ref");
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
 

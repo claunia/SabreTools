@@ -50,10 +50,6 @@ namespace SabreTools.Library.Filtering
 
         public FilterItem<string> Machine_SourceFile { get; private set; } = new FilterItem<string>();
         public FilterItem<Runnable> Machine_Runnable { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
-
-        // DeviceReferences
-        public FilterItem<bool?> Machine_DeviceReferences { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_DeviceReference_Name { get; private set; } = new FilterItem<string>();
         
         // Displays
         public FilterItem<bool?> Machine_Displays { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -309,45 +305,51 @@ namespace SabreTools.Library.Filtering
 
         #region Item-Specific
 
+        #region Actionable
+
+        // Rom
+        public FilterItem<string> DatItem_Bios { get; private set; } = new FilterItem<string>();
+        public FilterItem<long> DatItem_Size { get; private set; } = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
+        public FilterItem<string> DatItem_CRC { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_MD5 { get; private set; } = new FilterItem<string>();
+#if NET_FRAMEWORK
+        public FilterItem<string> DatItem_RIPEMD160 { get; private set; } = new FilterItem<string>();
+#endif
+        public FilterItem<string> DatItem_SHA1 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SHA256 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SHA384 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SHA512 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Merge { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Region { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Offset { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Date { get; private set; } = new FilterItem<string>();
+        public FilterItem<ItemStatus> DatItem_Status { get; private set; } = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
+        public FilterItem<bool?> DatItem_Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> DatItem_Inverted { get; private set; } = new FilterItem<bool?>();
+
+        // Disk
+        public FilterItem<string> DatItem_Index { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Writable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        #endregion
+
+        #region Auxiliary
+
         // BiosSet
-        public FilterItem<bool?> DatItem_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> DatItem_Description { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // Chip
         public FilterItem<string> DatItem_Tag { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_ChipType { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
 
-        // Disk
-        public FilterItem<string> DatItem_MD5 { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_SHA1 { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Merge { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Region { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Index { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> DatItem_Writable { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<bool?> DatItem_Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<ItemStatus> DatItem_Status { get; private set; } = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
-
-        // Media
-        public FilterItem<string> DatItem_SHA256 { get; private set; } = new FilterItem<string>();
-
         // Release
         public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Date { get; private set; } = new FilterItem<string>();
-
-        // Rom
-        public FilterItem<string> DatItem_Bios { get; private set; } = new FilterItem<string>();
-        public FilterItem<long> DatItem_Size { get; private set; } = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
-        public FilterItem<string> DatItem_CRC { get; private set; } = new FilterItem<string>();
-#if NET_FRAMEWORK
-        public FilterItem<string> DatItem_RIPEMD160 { get; private set; } = new FilterItem<string>();
-#endif
-        public FilterItem<string> DatItem_SHA384 { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_SHA512 { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Offset { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> DatItem_Inverted { get; private set; } = new FilterItem<bool?>();
 
         #endregion
+
+        #endregion // Item-Specific
 
         #endregion // DatItem Filters
 
@@ -570,21 +572,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Runnable.Negative |= value.AsRunnable();
                     else
                         Machine_Runnable.Positive |= value.AsRunnable();
-                    break;
-
-                // DeviceReferences
-                case Field.Machine_DeviceReferences:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_DeviceReferences.Neutral = false;
-                    else
-                        Machine_DeviceReferences.Neutral = true;
-                    break;
-
-                case Field.Machine_DeviceReference_Name:
-                    if (negate)
-                        Machine_DeviceReference_Name.NegativeSet.Add(value);
-                    else
-                        Machine_DeviceReference_Name.PositiveSet.Add(value);
                     break;
 
                 // Displays
@@ -1753,122 +1740,7 @@ namespace SabreTools.Library.Filtering
 
                 #region Item-Specific
 
-                // BiosSet
-                case Field.DatItem_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Default.Neutral = false;
-                    else
-                        DatItem_Default.Neutral = true;
-                    break;
-
-                case Field.DatItem_Description:
-                    if (negate)
-                        DatItem_Description.NegativeSet.Add(value);
-                    else
-                        DatItem_Description.PositiveSet.Add(value);
-                    break;
-
-                // Chip
-                case Field.DatItem_Tag:
-                    if (negate)
-                        DatItem_Tag.NegativeSet.Add(value);
-                    else
-                        DatItem_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_ChipType:
-                    if (negate)
-                        DatItem_ChipType.NegativeSet.Add(value);
-                    else
-                        DatItem_ChipType.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Clock:
-                    if (negate)
-                        DatItem_Clock.NegativeSet.Add(value);
-                    else
-                        DatItem_Clock.PositiveSet.Add(value);
-                    break;
-
-                // Disk
-                case Field.DatItem_MD5:
-                    if (negate)
-                        DatItem_MD5.NegativeSet.Add(value);
-                    else
-                        DatItem_MD5.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_SHA1:
-                    if (negate)
-                        DatItem_SHA1.NegativeSet.Add(value);
-                    else
-                        DatItem_SHA1.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Merge:
-                    if (negate)
-                        DatItem_Merge.NegativeSet.Add(value);
-                    else
-                        DatItem_Merge.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Region:
-                    if (negate)
-                        DatItem_Region.NegativeSet.Add(value);
-                    else
-                        DatItem_Region.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Index:
-                    if (negate)
-                        DatItem_Index.NegativeSet.Add(value);
-                    else
-                        DatItem_Index.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Writable:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Writable.Neutral = false;
-                    else
-                        DatItem_Writable.Neutral = true;
-                    break;
-
-                case Field.DatItem_Optional:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Optional.Neutral = false;
-                    else
-                        DatItem_Optional.Neutral = true;
-                    break;
-
-                case Field.DatItem_Status:
-                    if (negate)
-                        DatItem_Status.Negative |= value.AsItemStatus();
-                    else
-                        DatItem_Status.Positive |= value.AsItemStatus();
-                    break;
-
-                // Media
-                case Field.DatItem_SHA256:
-                    if (negate)
-                        DatItem_SHA256.NegativeSet.Add(value);
-                    else
-                        DatItem_SHA256.PositiveSet.Add(value);
-                    break;
-
-                // Release
-                case Field.DatItem_Language:
-                    if (negate)
-                        DatItem_Language.NegativeSet.Add(value);
-                    else
-                        DatItem_Language.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Date:
-                    if (negate)
-                        DatItem_Date.NegativeSet.Add(value);
-                    else
-                        DatItem_Date.PositiveSet.Add(value);
-                    break;
+                #region Actionable
 
                 // Rom
                 case Field.DatItem_Bios:
@@ -1937,6 +1809,13 @@ namespace SabreTools.Library.Filtering
                         DatItem_CRC.PositiveSet.Add(value);
                     break;
 
+                case Field.DatItem_MD5:
+                    if (negate)
+                        DatItem_MD5.NegativeSet.Add(value);
+                    else
+                        DatItem_MD5.PositiveSet.Add(value);
+                    break;
+
 #if NET_FRAMEWORK
                 case Field.DatItem_RIPEMD160:
                     if (negate)
@@ -1945,6 +1824,20 @@ namespace SabreTools.Library.Filtering
                         DatItem_RIPEMD160.PositiveSet.Add(value);
                     break;
 #endif
+
+                case Field.DatItem_SHA1:
+                    if (negate)
+                        DatItem_SHA1.NegativeSet.Add(value);
+                    else
+                        DatItem_SHA1.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_SHA256:
+                    if (negate)
+                        DatItem_SHA256.NegativeSet.Add(value);
+                    else
+                        DatItem_SHA256.PositiveSet.Add(value);
+                    break;
 
                 case Field.DatItem_SHA384:
                     if (negate)
@@ -1960,11 +1853,46 @@ namespace SabreTools.Library.Filtering
                         DatItem_SHA512.PositiveSet.Add(value);
                     break;
 
+                case Field.DatItem_Merge:
+                    if (negate)
+                        DatItem_Merge.NegativeSet.Add(value);
+                    else
+                        DatItem_Merge.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Region:
+                    if (negate)
+                        DatItem_Region.NegativeSet.Add(value);
+                    else
+                        DatItem_Region.PositiveSet.Add(value);
+                    break;
+
                 case Field.DatItem_Offset:
                     if (negate)
                         DatItem_Offset.NegativeSet.Add(value);
                     else
                         DatItem_Offset.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Date:
+                    if (negate)
+                        DatItem_Date.NegativeSet.Add(value);
+                    else
+                        DatItem_Date.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Status:
+                    if (negate)
+                        DatItem_Status.Negative |= value.AsItemStatus();
+                    else
+                        DatItem_Status.Positive |= value.AsItemStatus();
+                    break;
+
+                case Field.DatItem_Optional:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Optional.Neutral = false;
+                    else
+                        DatItem_Optional.Neutral = true;
                     break;
 
                 case Field.DatItem_Inverted:
@@ -1974,7 +1902,73 @@ namespace SabreTools.Library.Filtering
                         DatItem_Inverted.Neutral = true;
                     break;
 
+                // Disk
+                case Field.DatItem_Index:
+                    if (negate)
+                        DatItem_Index.NegativeSet.Add(value);
+                    else
+                        DatItem_Index.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Writable:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Writable.Neutral = false;
+                    else
+                        DatItem_Writable.Neutral = true;
+                    break;
+
                 #endregion
+
+                #region Auxiliary
+
+                // BiosSet
+                case Field.DatItem_Description:
+                    if (negate)
+                        DatItem_Description.NegativeSet.Add(value);
+                    else
+                        DatItem_Description.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Default.Neutral = false;
+                    else
+                        DatItem_Default.Neutral = true;
+                    break;
+
+                // Chip
+                case Field.DatItem_Tag:
+                    if (negate)
+                        DatItem_Tag.NegativeSet.Add(value);
+                    else
+                        DatItem_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_ChipType:
+                    if (negate)
+                        DatItem_ChipType.NegativeSet.Add(value);
+                    else
+                        DatItem_ChipType.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Clock:
+                    if (negate)
+                        DatItem_Clock.NegativeSet.Add(value);
+                    else
+                        DatItem_Clock.PositiveSet.Add(value);
+                    break;
+
+                // Release
+                case Field.DatItem_Language:
+                    if (negate)
+                        DatItem_Language.NegativeSet.Add(value);
+                    else
+                        DatItem_Language.PositiveSet.Add(value);
+                    break;
+
+                #endregion
+
+                #endregion // Item-Specific
 
                 #endregion // DatItem Filters
             }

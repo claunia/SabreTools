@@ -234,45 +234,51 @@ namespace SabreTools.Library.DatItems
 
             #region Item-Specific
 
+            #region Actionable
+
+            // Rom
+            Field.DatItem_Bios,
+            Field.DatItem_Size,
+            Field.DatItem_CRC,
+            Field.DatItem_MD5,
+#if NET_FRAMEWORK
+            Field.DatItem_RIPEMD160,
+#endif
+            Field.DatItem_SHA1,
+            Field.DatItem_SHA256,
+            Field.DatItem_SHA384,
+            Field.DatItem_SHA512,
+            Field.DatItem_Merge,
+            Field.DatItem_Region,
+            Field.DatItem_Offset,
+            Field.DatItem_Date,
+            Field.DatItem_Status,
+            Field.DatItem_Optional,
+            Field.DatItem_Inverted,
+
+            // Disk
+            Field.DatItem_Index,
+            Field.DatItem_Writable,
+
+            #endregion
+
+            #region Auxiliary
+
             // BiosSet
-            Field.DatItem_Default,
             Field.DatItem_Description,
+            Field.DatItem_Default,
 
             // Chip
             Field.DatItem_Tag,
             Field.DatItem_ChipType,
             Field.DatItem_Clock,
 
-            // Disk
-            Field.DatItem_MD5,
-            Field.DatItem_SHA1,
-            Field.DatItem_Merge,
-            Field.DatItem_Region,
-            Field.DatItem_Index,
-            Field.DatItem_Writable,
-            Field.DatItem_Status,
-            Field.DatItem_Optional,
-
-            // Media
-            Field.DatItem_SHA256,
-
             // Release
             Field.DatItem_Language,
-            Field.DatItem_Date,
-
-            // Rom
-            Field.DatItem_Bios,
-            Field.DatItem_Size,
-            Field.DatItem_CRC,
-#if NET_FRAMEWORK
-            Field.DatItem_RIPEMD160,
-#endif
-            Field.DatItem_SHA384,
-            Field.DatItem_SHA512,
-            Field.DatItem_Offset,
-            Field.DatItem_Inverted,
 
             #endregion
+
+            #endregion // Item-Specific
         };
 
         /// <summary>
@@ -305,7 +311,6 @@ namespace SabreTools.Library.DatItems
             // ListXML
             Field.Machine_SourceFile,
             Field.Machine_Runnable,
-            Field.Machine_DeviceReference_Name,
             Field.Machine_Slots,
             Field.Machine_Infos,
 
@@ -446,6 +451,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Chip:
                     return new Chip();
+
+                case ItemType.DeviceReference:
+                    return new DeviceReference();
 
                 case ItemType.Disk:
                     return new Disk();

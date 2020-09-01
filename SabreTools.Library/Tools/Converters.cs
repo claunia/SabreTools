@@ -151,7 +151,6 @@ namespace SabreTools.Library.Tools
         /// </summary>
         /// <param name="input">String to get value from</param>
         /// <returns>Field value corresponding to the string</returns>
-        /// TODO: Needs to be SEVERELY overhauled. Start using dot notation for fields... (where possible)
         public static Field AsField(this string input)
         {
             // If the input is null, we return null
@@ -456,14 +455,6 @@ namespace SabreTools.Library.Tools
 
                     case "runnable":
                         return Field.Machine_Runnable;
-
-                    case "devreferences":
-                    case "devicereferences":
-                        return Field.Machine_DeviceReferences;
-
-                    case "devreference_name":
-                    case "devicereference_name":
-                        return Field.Machine_DeviceReference_Name;
 
                     case "displays":
                         return Field.Machine_Displays;
@@ -996,27 +987,19 @@ namespace SabreTools.Library.Tools
 
                     #region Item-Specific
 
-                    // BiosSet
-                    case "default":
-                        return Field.DatItem_Default;
+                    #region Actionable
 
-                    case "description":
-                    case "biosdescription":
-                    case "bios_description":
-                        return Field.DatItem_Description;
+                    // Rom
+                    case "bios":
+                        return Field.DatItem_Bios;
 
-                    // Chip
-                    case "tag":
-                        return Field.DatItem_Tag;
+                    case "size":
+                        return Field.DatItem_Size;
 
-                    case "chiptype":
-                    case "chip_type":
-                        return Field.DatItem_ChipType;
+                    case "crc":
+                    case "crc32":
+                        return Field.DatItem_CRC;
 
-                    case "clock":
-                        return Field.DatItem_Clock;
-
-                    // Disk
                     case "md5":
                     case "md5_hash":
                         return Field.DatItem_MD5;
@@ -1067,11 +1050,11 @@ namespace SabreTools.Library.Tools
                     case "region":
                         return Field.DatItem_Region;
 
-                    case "index":
-                        return Field.DatItem_Index;
+                    case "offset":
+                        return Field.DatItem_Offset;
 
-                    case "writable":
-                        return Field.DatItem_Writable;
+                    case "date":
+                        return Field.DatItem_Date;
 
                     case "status":
                         return Field.DatItem_Status;
@@ -1079,36 +1062,53 @@ namespace SabreTools.Library.Tools
                     case "optional":
                         return Field.DatItem_Optional;
 
+                    case "inverted":
+                        return Field.DatItem_Inverted;
+
+                    // Disk
+                    case "index":
+                        return Field.DatItem_Index;
+
+                    case "writable":
+                        return Field.DatItem_Writable;
+
+                    #endregion
+
+                    #region Auxiliary
+
+                    // BiosSet
+                    case "description":
+                    case "biosdescription":
+                    case "bios_description":
+                        return Field.DatItem_Description;
+
+                    case "default":
+                        return Field.DatItem_Default;
+
+                    // Chip
+                    case "tag":
+                        return Field.DatItem_Tag;
+
+                    case "chiptype":
+                    case "chip_type":
+                        return Field.DatItem_ChipType;
+
+                    case "clock":
+                        return Field.DatItem_Clock;
+
                     // Release
                     case "language":
                         return Field.DatItem_Language;
 
-                    case "date":
-                        return Field.DatItem_Date;
-
-                    // Rom
-                    case "bios":
-                        return Field.DatItem_Bios;
-
-                    case "size":
-                        return Field.DatItem_Size;
-
-                    case "crc":
-                        return Field.DatItem_CRC;
-
-                    case "offset":
-                        return Field.DatItem_Offset;
-
-                    case "inverted":
-                        return Field.DatItem_Inverted;
-
                     #endregion
+
+                    #endregion // Item-Specific
                 }
             }
 
             // Else, we fall back on the old matching
             // TODO: Remove this entirely
-            switch (input)
+            switch (input.Replace(' ', '_').Replace('-', '_').Replace('.', '_'))
             {
                 #region Machine
 
@@ -1217,9 +1217,6 @@ namespace SabreTools.Library.Tools
 
                 case "runnable":
                     return Field.Machine_Runnable;
-
-                case "devices":
-                    return Field.Machine_DeviceReference_Name;
 
                 case "slotoptions":
                 case "slot options":
@@ -1415,8 +1412,103 @@ namespace SabreTools.Library.Tools
 
                 #endregion
 
+                #region Item-Specific
+
+                #region Actionable
+
+                // Rom
                 case "bios":
                     return Field.DatItem_Bios;
+
+                case "equal":
+                case "greater":
+                case "less":
+                case "size":
+                    return Field.DatItem_Size;
+
+                case "crc":
+                case "crc32":
+                    return Field.DatItem_CRC;
+
+                case "md5":
+                case "md5_hash":
+                    return Field.DatItem_MD5;
+
+#if NET_FRAMEWORK
+                case "ripemd160":
+                case "ripemd160_hash":
+                    return Field.DatItem_RIPEMD160;
+#endif
+
+                case "sha1":
+                case "sha_1":
+                case "sha1hash":
+                case "sha1_hash":
+                case "sha_1hash":
+                case "sha_1_hash":
+                    return Field.DatItem_SHA1;
+
+                case "sha256":
+                case "sha_256":
+                case "sha256hash":
+                case "sha256_hash":
+                case "sha_256hash":
+                case "sha_256_hash":
+                    return Field.DatItem_SHA256;
+
+                case "sha384":
+                case "sha_384":
+                case "sha384hash":
+                case "sha384_hash":
+                case "sha_384hash":
+                case "sha_384_hash":
+                    return Field.DatItem_SHA384;
+
+                case "sha512":
+                case "sha_512":
+                case "sha512hash":
+                case "sha512_hash":
+                case "sha_512hash":
+                case "sha_512_hash":
+                    return Field.DatItem_SHA512;
+
+                case "merge":
+                case "mergetag":
+                case "merge_tag":
+                    return Field.DatItem_Merge;
+
+                case "region":
+                    return Field.DatItem_Region;
+
+                case "offset":
+                    return Field.DatItem_Offset;
+
+                case "date":
+                    return Field.DatItem_Date;
+
+                case "itemtatus":
+                case "item-status":
+                case "status":
+                    return Field.DatItem_Status;
+
+                case "optional":
+                    return Field.DatItem_Optional;
+
+                case "inverted":
+                    return Field.DatItem_Inverted;
+
+                // Disk
+                case "index":
+                    return Field.DatItem_Index;
+
+                case "writable":
+                    return Field.DatItem_Writable;
+
+                #endregion
+
+                #region Auxiliary
+
+                // BiosSet
                 case "biosdescription":
                 case "bios-description":
                 case "biossetdescription":
@@ -1424,6 +1516,10 @@ namespace SabreTools.Library.Tools
                 case "bios-set-description":
                     return Field.DatItem_Description;
 
+                case "default":
+                    return Field.DatItem_Default;
+
+                // Chip
                 case "tag":
                     return Field.DatItem_Tag;
 
@@ -1433,59 +1529,14 @@ namespace SabreTools.Library.Tools
 
                 case "clock":
                     return Field.DatItem_Clock;
-                
-                case "crc":
-                case "crc32":
-                    return Field.DatItem_CRC;
-                case "default":
-                    return Field.DatItem_Default;
-                case "date":
-                    return Field.DatItem_Date;
-                case "equal":
-                case "greater":
-                case "less":
-                case "size":
-                    return Field.DatItem_Size;
-                case "index":
-                    return Field.DatItem_Index;
-                case "inverted":
-                    return Field.DatItem_Inverted;
-                case "itemtatus":
-                case "item-status":
-                case "status":
-                    return Field.DatItem_Status;
+
+                // Release
                 case "language":
                     return Field.DatItem_Language;
-                case "md5":
-                    return Field.DatItem_MD5;
-                case "merge":
-                case "mergetag":
-                case "merge-tag":
-                    return Field.DatItem_Merge;
-                case "offset":
-                    return Field.DatItem_Offset;
-                case "optional":
-                    return Field.DatItem_Optional;
-                case "region":
-                    return Field.DatItem_Region;
-#if NET_FRAMEWORK
-                case "ripemd160":
-                    return Field.DatItem_RIPEMD160;
-#endif
-                case "sha1":
-                case "sha-1":
-                    return Field.DatItem_SHA1;
-                case "sha256":
-                case "sha-256":
-                    return Field.DatItem_SHA256;
-                case "sha384":
-                case "sha-384":
-                    return Field.DatItem_SHA384;
-                case "sha512":
-                case "sha-512":
-                    return Field.DatItem_SHA512;
-                case "writable":
-                    return Field.DatItem_Writable;
+
+                #endregion
+
+                #endregion // Item-Specific
 
                 #endregion
 
@@ -1551,6 +1602,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Blank;
                 case "chip":
                     return ItemType.Chip;
+                case "device_ref":
+                    return ItemType.DeviceReference;
                 case "disk":
                     return ItemType.Disk;
                 case "media":
@@ -1571,6 +1624,7 @@ namespace SabreTools.Library.Tools
                 "biosset" => ItemType.BiosSet,
                 "blank" => ItemType.Blank,
                 "chip" => ItemType.Chip,
+                "device_ref" => ItemType.DeviceReference,
                 "disk" => ItemType.Disk,
                 "media" => ItemType.Media,
                 "release" => ItemType.Release,
@@ -1788,6 +1842,35 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get SoftwareListStatus value from input string
+        /// </summary>
+        /// <param name="status">String to get value from</param>
+        /// <returns>SoftwareListStatus value corresponding to the string</returns>
+        public static SoftwareListStatus AsSoftwareListStatus(this string status)
+        {
+#if NET_FRAMEWORK
+            switch (status?.ToLowerInvariant())
+            {
+                case "original":
+                    return SoftwareListStatus.Original;
+                case "compatible":
+                    return SoftwareListStatus.Compatible;
+                case "none":
+                default:
+                    return SoftwareListStatus.NULL;
+            }
+#else
+            return status?.ToLowerInvariant() switch
+            {
+                "original" => SoftwareListStatus.Original,
+                "compatible" => SoftwareListStatus.Compatible,
+                "none" => SoftwareListStatus.NULL,
+                _ => SoftwareListStatus.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get StatReportFormat value from input string
         /// </summary>
         /// <param name="input">String to get value from</param>
@@ -1946,6 +2029,8 @@ namespace SabreTools.Library.Tools
                     return "blank";
                 case ItemType.Chip:
                     return "chip";
+                case ItemType.DeviceReference:
+                    return "device_ref";
                 case ItemType.Disk:
                     return "disk";
                 case ItemType.Media:
@@ -1966,6 +2051,7 @@ namespace SabreTools.Library.Tools
                 ItemType.BiosSet => "biosset",
                 ItemType.Blank => "blank",
                 ItemType.Chip => "chip",
+                ItemType.DeviceReference => "device_ref",
                 ItemType.Disk => "disk",
                 ItemType.Media => "media",
                 ItemType.Release => "release",
@@ -2214,6 +2300,33 @@ namespace SabreTools.Library.Tools
                 Runnable.No => "no",
                 Runnable.Partial => "partial",
                 Runnable.Yes => "yes",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input SoftwareListStatus
+        /// </summary>
+        /// <param name="status">SoftwareListStatus to get value from</param>
+        /// <returns>String value corresponding to the SoftwareListStatus</returns>
+        public static string FromSoftwareListStatus(this SoftwareListStatus status)
+        {
+#if NET_FRAMEWORK
+            switch (status)
+            {
+                case SoftwareListStatus.Original:
+                    return "original";
+                case SoftwareListStatus.Compatible:
+                    return "compatible";
+                default:
+                    return null;
+            }
+#else
+            return status switch
+            {
+                SoftwareListStatus.Original => "original",
+                SoftwareListStatus.Compatible => "compatible",
                 _ => null,
             };
 #endif

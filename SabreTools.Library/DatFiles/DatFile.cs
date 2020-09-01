@@ -1389,8 +1389,7 @@ namespace SabreTools.Library.DatFiles
 
                 // If the game has no devices, mark it
                 bool devices = true;
-                if (Items[game][0].Machine.DeviceReferences == null
-                    || Items[game][0].Machine.DeviceReferences.Count == 0)
+                if (Items[game].Count(i => i.ItemType == ItemType.DeviceReference) == 0)
                 {
                     devices = false;
                 }
@@ -1399,7 +1398,10 @@ namespace SabreTools.Library.DatFiles
                 if (devices)
                 {
                     // Determine if the game has any devices or not
-                    List<string> deviceReferences = Items[game][0].Machine.DeviceReferences.Select(d => d.Name).ToList();
+                    List<string> deviceReferences = Items[game]
+                        .Where(i => i.ItemType == ItemType.DeviceReference)
+                        .Select(i => i.Name)
+                        .ToList();
                     List<string> newdevs = new List<string>();
                     foreach (string deviceReference in deviceReferences)
                     {
@@ -1410,10 +1412,13 @@ namespace SabreTools.Library.DatFiles
                         // Otherwise, copy the items from the device to the current game
                         DatItem copyFrom = Items[game][0];
                         List<DatItem> devItems = Items[deviceReference];
+                        newdevs.AddRange((Items[deviceReference] ?? new List<DatItem>())
+                            .Where(i => i.ItemType == ItemType.DeviceReference)
+                            .Select(i => i.Name));
+
                         foreach (DatItem item in devItems)
                         {
                             DatItem datItem = (DatItem)item.Clone();
-                            newdevs.AddRange((datItem.Machine.DeviceReferences ?? new List<ListXmlDeviceReference>()).Select(d => d.Name).ToList());
                             datItem.CopyMachineInformation(copyFrom);
                             if (Items[game].Where(i => i.ItemType == datItem.ItemType && i.Name == datItem.Name).Count() == 0)
                             {
@@ -1427,7 +1432,7 @@ namespace SabreTools.Library.DatFiles
                     foreach (string device in newdevs)
                     {
                         if (!deviceReferences.Contains(device))
-                            Items[game][0].Machine.DeviceReferences.Add(new ListXmlDeviceReference() { Name = device });
+                            Items[game].Add(new DeviceReference() { Name = device });
                     }
                 }
                 

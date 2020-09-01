@@ -281,7 +281,7 @@ namespace SabreTools.Library.FileTypes
             }
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz")) // TODO: When updating to SHA-256, this needs to update to Constants.SHA256Length
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
                 Globals.Logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
                 return false;
@@ -342,7 +342,7 @@ namespace SabreTools.Library.FileTypes
             }
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz")) // TODO: When updating to SHA-256, this needs to update to Constants.SHA256Length
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
                 Globals.Logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
                 return null;
@@ -392,7 +392,7 @@ namespace SabreTools.Library.FileTypes
                 Size = extractedsize,
                 CRC = headercrc,
                 MD5 = headermd5,
-                SHA1 = Utilities.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)), // TODO: When updating to SHA-256, this needs to update to SHA256
+                SHA1 = Utilities.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
             };
@@ -457,7 +457,7 @@ namespace SabreTools.Library.FileTypes
             rom = new Rom(inputStream.GetInfo(keepReadOpen: true));
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(rom.SHA1, depth)); // TODO: When updating to SHA-256, this needs to update to SHA256
+            string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(rom.SHA1, depth));
 
             // Check to see if the folder needs to be created
             if (!Directory.Exists(Path.GetDirectoryName(outfile)))

@@ -867,6 +867,13 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.DeviceReference:
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "device_ref");
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Disk:
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("file");

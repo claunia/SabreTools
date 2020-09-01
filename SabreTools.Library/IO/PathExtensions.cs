@@ -42,7 +42,7 @@ namespace SabreTools.Library.IO
         public static string GetDepotPath(string hash, int depth)
         {
             // If the hash isn't the right size, then we return null
-            if (hash.Length != Constants.SHA1Length) // TODO: When updating to SHA-256, this needs to update to Constants.SHA256Length
+            if (hash.Length != Constants.SHA1Length)
                 return null;
 
             // Cap the depth between 0 and 20, for now
