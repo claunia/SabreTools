@@ -470,6 +470,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Sample:
                     return new Sample();
 
+                case ItemType.SoftwareList:
+                    return new SoftwareList();
+
                 default:
                     return new Rom();
             }

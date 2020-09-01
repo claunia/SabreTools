@@ -956,6 +956,16 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteEndElement();
                         break;
+
+                    case ItemType.SoftwareList:
+                        var softwareList = datItem as DatItems.SoftwareList;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "softwarelist");
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
+                        xtw.WriteOptionalAttributeString("sha512", softwareList.Filter);
+                        xtw.WriteEndElement();
+                        break;
                 }
 
                 xtw.Flush();

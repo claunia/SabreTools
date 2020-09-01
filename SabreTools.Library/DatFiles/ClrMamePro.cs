@@ -378,21 +378,6 @@ namespace SabreTools.Library.DatFiles
                                     (item as Release).Language = attrVal;
 
                                 break;
-                            case "tag":
-                                if (item.ItemType == ItemType.Chip)
-                                    (item as Chip).Tag = attrVal;
-
-                                break;
-                            case "type":
-                                if (item.ItemType == ItemType.Chip)
-                                    (item as Chip).ChipType = attrVal;
-
-                                break;
-                            case "clock":
-                                if (item.ItemType == ItemType.Chip)
-                                    (item as Chip).Clock = attrVal;
-
-                                break;
                         }
                     }
 
@@ -628,16 +613,6 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteRequiredAttributeString("name", biosSet.Name);
                         cmpw.WriteOptionalAttributeString("description", biosSet.Description);
                         cmpw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
-                        cmpw.WriteEndElement();
-                        break;
-
-                    case ItemType.Chip:
-                        var chip = datItem as Chip;
-                        cmpw.WriteStartElement("chip");
-                        cmpw.WriteRequiredAttributeString("name", chip.Name);
-                        cmpw.WriteOptionalAttributeString("tag", chip.Tag);
-                        cmpw.WriteOptionalAttributeString("type", chip.ChipType);
-                        cmpw.WriteOptionalAttributeString("clock", chip.Clock);
                         cmpw.WriteEndElement();
                         break;
 

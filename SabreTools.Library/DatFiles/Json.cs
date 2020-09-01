@@ -238,6 +238,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Sample:
                         datItem = datItemObj.ToObject<Sample>();
                         break;
+                    case ItemType.SoftwareList:
+                        datItem = datItemObj.ToObject<DatItems.SoftwareList>();
+                        break;
                 }
             }
 

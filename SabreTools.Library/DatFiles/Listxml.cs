@@ -497,18 +497,21 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "softwarelist":
-                        var softwareList = new ListXmlSoftwareList();
-                        softwareList.Name = reader.GetAttribute("name");
-                        softwareList.Status = reader.GetAttribute("status").AsSoftwareListStatus();
-                        softwareList.Filter = reader.GetAttribute("filter");
+                        datItems.Add(new DatItems.SoftwareList
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Status = reader.GetAttribute("status").AsSoftwareListStatus(),
+                            Filter = reader.GetAttribute("filter"),
 
-                        // Ensure the list exists
-                        if (machine.SoftwareLists == null)
-                            machine.SoftwareLists = new List<ListXmlSoftwareList>();
-
-                        machine.SoftwareLists.Add(softwareList);
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
 
                         reader.Read();
+
                         break;
 
                     case "ramoption":
@@ -1405,20 +1408,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.SoftwareLists != null)
-                {
-                    foreach (var softwarelist in datItem.Machine.SoftwareLists)
-                    {
-                        xtw.WriteStartElement("softwarelist");
-
-                        xtw.WriteOptionalAttributeString("name", softwarelist.Name);
-                        xtw.WriteOptionalAttributeString("status", softwarelist.Status.FromSoftwareListStatus());
-                        xtw.WriteOptionalAttributeString("filter", softwarelist.Filter);
-
-                        // End softwarelist
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.RamOptions != null)
                 {
                     foreach (var ramOption in datItem.Machine.RamOptions)
@@ -1549,6 +1538,15 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Sample:
                         xtw.WriteStartElement("sample");
                         xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.SoftwareList:
+                        var softwareList = datItem as DatItems.SoftwareList;
+                        xtw.WriteStartElement("softwarelist");
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
+                        xtw.WriteOptionalAttributeString("sha512", softwareList.Filter);
                         xtw.WriteEndElement();
                         break;
                 }

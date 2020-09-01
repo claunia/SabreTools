@@ -227,12 +227,6 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlSlot> Slots { get; set; } = null;
 
         /// <summary>
-        /// List of software lists
-        /// </summary>
-        [JsonProperty("softwarelists", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlSoftwareList> SoftwareLists { get; set; } = null;
-
-        /// <summary>
         /// List of ramoptions
         /// </summary>
         [JsonProperty("ramoptions", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -602,7 +596,6 @@ namespace SabreTools.Library.DatItems
                 Features = this.Features,
                 Devices = this.Devices,
                 Slots = this.Slots,
-                SoftwareLists = this.SoftwareLists,
                 RamOptions = this.RamOptions,
 
                 #endregion

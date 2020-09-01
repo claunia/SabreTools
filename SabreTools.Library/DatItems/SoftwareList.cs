@@ -8,24 +8,18 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents which BIOS(es) is associated with a set
+    /// Represents which SoftwareList(s) is associated with a set
     /// </summary>
-    [JsonObject("biosset")]
-    public class BiosSet : DatItem
+    [JsonObject("softwarelist")]
+    public class SoftwareList : DatItem
     {
         #region Fields
 
-        /// <summary>
-        /// Description of the BIOS
-        /// </summary>
-        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Description { get; set; }
+        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public SoftwareListStatus Status { get; set; }
 
-        /// <summary>
-        /// Determine whether the BIOS is default
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Default { get; set; }
+        [JsonProperty("filter", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Filter { get; set; }
 
         #endregion
 
@@ -40,12 +34,12 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle BiosSet-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Default))
-                Default = mappings[Field.DatItem_Default].AsYesNo();
+            // Handle SoftwareList-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_SoftwareListStatus))
+                Status = mappings[Field.DatItem_Default].AsSoftwareListStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_Description))
-                Description = mappings[Field.DatItem_Description];
+            if (mappings.Keys.Contains(Field.DatItem_Filter))
+                Filter = mappings[Field.DatItem_Filter];
         }
 
         #endregion
@@ -53,12 +47,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty BiosSet object
+        /// Create a default, empty SoftwareList object
         /// </summary>
-        public BiosSet()
+        public SoftwareList()
         {
             Name = string.Empty;
-            ItemType = ItemType.BiosSet;
+            ItemType = ItemType.SoftwareList;
         }
 
         #endregion
@@ -67,7 +61,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new BiosSet()
+            return new SoftwareList()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -95,8 +89,8 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                Description = this.Description,
-                Default = this.Default,
+                Status = this.Status,
+                Filter = this.Filter,
             };
         }
 
@@ -106,15 +100,17 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a BiosSet, return false
+            // If we don't have a sample, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a BiosSet
-            BiosSet newOther = other as BiosSet;
+            // Otherwise, treat it as a SoftwareList
+            SoftwareList newOther = other as SoftwareList;
 
-            // If the BiosSet information matches
-            return (Name == newOther.Name && Description == newOther.Description && Default == newOther.Default);
+            // If the SoftwareList information matches
+            return (Name == newOther.Name
+                && Status == newOther.Status
+                && Filter == newOther.Filter);
         }
 
         #endregion
@@ -132,14 +128,16 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on description
-            if (filter.DatItem_Description.MatchesPositiveSet(Description) == false)
+            // Filter on status
+            if (filter.DatItem_SoftwareListStatus.MatchesPositive(SoftwareListStatus.NULL, Status) == false)
                 return false;
-            if (filter.DatItem_Description.MatchesNegativeSet(Description) == true)
+            if (filter.DatItem_SoftwareListStatus.MatchesNegative(SoftwareListStatus.NULL, Status) == true)
                 return false;
 
-            // Filter on default
-            if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
+            // Filter on filter
+            if (filter.DatItem_Filter.MatchesPositiveSet(Filter) == false)
+                return false;
+            if (filter.DatItem_Filter.MatchesNegativeSet(Filter) == true)
                 return false;
 
             return true;
@@ -155,11 +153,11 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Description))
-                Description = null;
+            if (fields.Contains(Field.DatItem_SoftwareListStatus))
+                Status = SoftwareListStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_Default))
-                Default = null;
+            if (fields.Contains(Field.DatItem_Filter))
+                Filter = null;
         }
 
         #endregion
@@ -176,19 +174,19 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a BiosSet to replace from, ignore specific fields
-            if (item.ItemType != ItemType.BiosSet)
+            // If we don't have a SoftwareList to replace from, ignore specific fields
+            if (item.ItemType != ItemType.SoftwareList)
                 return;
 
             // Cast for easier access
-            BiosSet newItem = item as BiosSet;
+            SoftwareList newItem = item as SoftwareList;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Description))
-                Description = newItem.Description;
+            if (fields.Contains(Field.DatItem_SoftwareListStatus))
+                Status = newItem.Status;
 
-            if (fields.Contains(Field.DatItem_Default))
-                Default = newItem.Default;
+            if (fields.Contains(Field.DatItem_Filter))
+                Filter = newItem.Filter;
         }
 
         #endregion

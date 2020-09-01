@@ -197,12 +197,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Slot_SlotOption_DeviceName { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> Machine_Slot_SlotOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
-        // SoftwareLists
-        public FilterItem<bool?> Machine_SoftwareLists { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_SoftwareList_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_SoftwareList_Status { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_SoftwareList_Filter { get; private set; } = new FilterItem<string>();
-
         // RamOptions
         public FilterItem<bool?> Machine_RamOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> Machine_RamOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -346,6 +340,10 @@ namespace SabreTools.Library.Filtering
 
         // Release
         public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
+
+        // Software List
+        public FilterItem<SoftwareListStatus> DatItem_SoftwareListStatus { get; private set; } = new FilterItem<SoftwareListStatus>() { Positive = SoftwareListStatus.NULL, Negative = SoftwareListStatus.NULL };
+        public FilterItem<string> DatItem_Filter { get; private set; } = new FilterItem<string>();
 
         #endregion
 
@@ -1310,35 +1308,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Slot_SlotOption_Default.Neutral = true;
                     break;
 
-                // SoftwareLists
-                case Field.Machine_SoftwareLists:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_SoftwareLists.Neutral = false;
-                    else
-                        Machine_SoftwareLists.Neutral = true;
-                    break;
-
-                case Field.Machine_SoftwareList_Name:
-                    if (negate)
-                        Machine_SoftwareList_Name.NegativeSet.Add(value);
-                    else
-                        Machine_SoftwareList_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_SoftwareList_Status:
-                    if (negate)
-                        Machine_SoftwareList_Status.NegativeSet.Add(value);
-                    else
-                        Machine_SoftwareList_Status.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_SoftwareList_Filter:
-                    if (negate)
-                        Machine_SoftwareList_Filter.NegativeSet.Add(value);
-                    else
-                        Machine_SoftwareList_Filter.PositiveSet.Add(value);
-                    break;
-
                 // RamOptions
                 case Field.Machine_RamOptions:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
@@ -1966,11 +1935,26 @@ namespace SabreTools.Library.Filtering
                         DatItem_Language.PositiveSet.Add(value);
                     break;
 
-                #endregion
+                // Software List
+                case Field.DatItem_SoftwareListStatus:
+                    if (negate)
+                        DatItem_SoftwareListStatus.Negative |= value.AsSoftwareListStatus();
+                    else
+                        DatItem_SoftwareListStatus.Positive |= value.AsSoftwareListStatus();
+                    break;
 
-                #endregion // Item-Specific
+                case Field.DatItem_Filter:
+                    if (negate)
+                        DatItem_Filter.NegativeSet.Add(value);
+                    else
+                        DatItem_Filter.PositiveSet.Add(value);
+                    break;
 
-                #endregion // DatItem Filters
+                    #endregion
+
+                    #endregion // Item-Specific
+
+                    #endregion // DatItem Filters
             }
         }
 

@@ -419,23 +419,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML softwarelist
-    /// </summary>
-    /// TODO: Promote this to the same level as Sample?
-    [JsonObject("softwarelist")]
-    public class ListXmlSoftwareList
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("status")]
-        public SoftwareListStatus Status { get; set; }
-
-        [JsonProperty("filter")]
-        public string Filter { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML sound
     /// </summary>
     [JsonObject("sound")]

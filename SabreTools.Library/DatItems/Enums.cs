@@ -275,12 +275,6 @@ namespace SabreTools.Library.DatItems
         Machine_Slot_SlotOption_DeviceName,
         Machine_Slot_SlotOption_Default,
 
-        // SoftwareLists
-        Machine_SoftwareLists,
-        Machine_SoftwareList_Name,
-        Machine_SoftwareList_Status,
-        Machine_SoftwareList_Filter,
-
         // RamOptions
         Machine_RamOptions,
         Machine_RamOption_Default,
@@ -425,6 +419,10 @@ namespace SabreTools.Library.DatItems
         // Release
         DatItem_Language,
 
+        // Software List
+        DatItem_SoftwareListStatus,
+        DatItem_Filter,
+
         #endregion
 
         #endregion // Item-Specific
@@ -467,6 +465,7 @@ namespace SabreTools.Library.DatItems
         DeviceReference,
         Release,
         Sample,
+        SoftwareList,
 
         Blank = 99, // This is not a real type, only used internally
     }

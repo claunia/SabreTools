@@ -412,31 +412,6 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
-                    case "chip":
-                        containsItems = true;
-
-                        DatItem chip = new Chip
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Tag = reader.GetAttribute("tag"),
-                            ChipType = reader.GetAttribute("type"),
-                            Clock = reader.GetAttribute("clock"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        chip.CopyMachineInformation(machine);
-
-                        // Now process and add the chip
-                        key = ParseAddHelper(chip);
-
-                        reader.Read();
-                        break;
-
                     case "disk":
                         containsItems = true;
 
@@ -975,16 +950,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", biosSet.Name);
                         xtw.WriteOptionalAttributeString("description", biosSet.Description);
                         xtw.WriteOptionalAttributeString("default", biosSet.Default.FromYesNo());
-                        xtw.WriteEndElement();
-                        break;
-
-                    case ItemType.Chip:
-                        var chip = datItem as Chip;
-                        xtw.WriteStartElement("chip");
-                        xtw.WriteRequiredAttributeString("name", chip.Name);
-                        xtw.WriteOptionalAttributeString("tag", chip.Tag);
-                        xtw.WriteOptionalAttributeString("type", chip.ChipType);
-                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
                         xtw.WriteEndElement();
                         break;
 

@@ -132,6 +132,12 @@ namespace SabreTools.Library.DatFiles
         public long SampleCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of SoftwareList items
+        /// </summary>
+        [JsonIgnore]
+        public long SoftwareListCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of machines
         /// </summary>
         /// <remarks>Special count only used by statistics output</remarks>
@@ -516,6 +522,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Sample:
                     SampleCount++;
                     break;
+                case ItemType.SoftwareList:
+                    SoftwareListCount++;
+                    break;
             }
         }
 
@@ -647,6 +656,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Sample:
                     SampleCount--;
+                    break;
+                case ItemType.SoftwareList:
+                    SoftwareListCount--;
                     break;
             }
         }

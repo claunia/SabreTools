@@ -762,18 +762,6 @@ namespace SabreTools.Library.Tools
                     case "slot_slotoption_default":
                         return Field.Machine_Slot_SlotOption_Default;
 
-                    case "softwarelists":
-                        return Field.Machine_SoftwareLists;
-
-                    case "softwarelist_name":
-                        return Field.Machine_SoftwareList_Name;
-
-                    case "softwarelist_status":
-                        return Field.Machine_SoftwareList_Status;
-
-                    case "softwarelist_filter":
-                        return Field.Machine_SoftwareList_Filter;
-
                     case "ramoptions":
                         return Field.Machine_RamOptions;
 
@@ -1099,6 +1087,14 @@ namespace SabreTools.Library.Tools
                     // Release
                     case "language":
                         return Field.DatItem_Language;
+
+                    // Software List
+                    case "softwareliststatus":
+                    case "softwarelist_status":
+                        return Field.DatItem_SoftwareListStatus;
+
+                    case "filter":
+                        return Field.DatItem_Filter;
 
                     #endregion
 
@@ -1614,6 +1610,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Rom;
                 case "sample":
                     return ItemType.Sample;
+                case "softwarelist":
+                    return ItemType.SoftwareList;
                 default:
                     return null;
             }
@@ -1630,6 +1628,7 @@ namespace SabreTools.Library.Tools
                 "release" => ItemType.Release,
                 "rom" => ItemType.Rom,
                 "sample" => ItemType.Sample,
+                "softwarelist" => ItemType.SoftwareList,
                 _ => null,
             };
 #endif
@@ -2041,6 +2040,8 @@ namespace SabreTools.Library.Tools
                     return "rom";
                 case ItemType.Sample:
                     return "sample";
+                case ItemType.SoftwareList:
+                    return "softwarelist";
                 default:
                     return null;
             }
@@ -2057,6 +2058,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Release => "release",
                 ItemType.Rom => "rom",
                 ItemType.Sample => "sample",
+                ItemType.SoftwareList => "softwarelist",
                 _ => null,
             };
 #endif
