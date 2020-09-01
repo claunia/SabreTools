@@ -102,6 +102,12 @@ namespace SabreTools.Library.DatFiles
         public long ChipCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Configuration items
+        /// </summary>
+        [JsonIgnore]
+        public long ConfigurationCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Device Reference items
         /// </summary>
         [JsonIgnore]
@@ -488,6 +494,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Chip:
                     ChipCount++;
                     break;
+                case ItemType.Configuration:
+                    ConfigurationCount++;
+                    break;
                 case ItemType.DeviceReference:
                     DeviceReferenceCount++;
                     break;
@@ -628,6 +637,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Chip:
                     ChipCount--;
+                    break;
+                case ItemType.Configuration:
+                    ConfigurationCount--;
                     break;
                 case ItemType.DeviceReference:
                     DeviceReferenceCount--;

@@ -888,6 +888,51 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Configuration:
+                        var configuration = datItem as Configuration;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "configuration");
+                        xtw.WriteOptionalAttributeString("name", configuration.Name);
+                        xtw.WriteOptionalAttributeString("tag", configuration.Tag);
+                        xtw.WriteOptionalAttributeString("mask", configuration.Mask);
+
+                        if (configuration.Conditions != null)
+                        {
+                            foreach (var condition in configuration.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (configuration.Locations != null)
+                        {
+                            foreach (var location in configuration.Locations)
+                            {
+                                xtw.WriteStartElement("conflocation");
+                                xtw.WriteOptionalAttributeString("name", location.Name);
+                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (configuration.Settings != null)
+                        {
+                            foreach (var setting in configuration.Settings)
+                            {
+                                xtw.WriteStartElement("confsetting");
+                                xtw.WriteOptionalAttributeString("name", setting.Name);
+                                xtw.WriteOptionalAttributeString("value", setting.Value);
+                                xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.DeviceReference:
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "device_ref");

@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
@@ -1602,6 +1601,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Blank;
                 case "chip":
                     return ItemType.Chip;
+                case "configuration":
+                    return ItemType.Configuration;
                 case "device_ref":
                     return ItemType.DeviceReference;
                 case "disk":
@@ -1629,6 +1630,7 @@ namespace SabreTools.Library.Tools
                 "biosset" => ItemType.BiosSet,
                 "blank" => ItemType.Blank,
                 "chip" => ItemType.Chip,
+                "configuration" => ItemType.Configuration,
                 "device_ref" => ItemType.DeviceReference,
                 "disk" => ItemType.Disk,
                 "media" => ItemType.Media,
@@ -2038,6 +2040,8 @@ namespace SabreTools.Library.Tools
                     return "blank";
                 case ItemType.Chip:
                     return "chip";
+                case ItemType.Configuration:
+                    return "configuration";
                 case ItemType.DeviceReference:
                     return "device_ref";
                 case ItemType.Disk:
@@ -2065,6 +2069,7 @@ namespace SabreTools.Library.Tools
                 ItemType.BiosSet => "biosset",
                 ItemType.Blank => "blank",
                 ItemType.Chip => "chip",
+                ItemType.Configuration => "configuration",
                 ItemType.DeviceReference => "device_ref",
                 ItemType.Disk => "disk",
                 ItemType.Media => "media",

@@ -223,6 +223,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Chip:
                         datItem = datItemObj.ToObject<Chip>();
                         break;
+                    case ItemType.Configuration:
+                        datItem = datItemObj.ToObject<Configuration>();
+                        break;
                     case ItemType.DeviceReference:
                         datItem = datItemObj.ToObject<DeviceReference>();
                         break;

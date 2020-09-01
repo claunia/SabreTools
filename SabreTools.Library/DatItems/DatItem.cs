@@ -465,6 +465,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Chip:
                     return new Chip();
 
+                case ItemType.Configuration:
+                    return new Configuration();
+
                 case ItemType.DeviceReference:
                     return new DeviceReference();
 
