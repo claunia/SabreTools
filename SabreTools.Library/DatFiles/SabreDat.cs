@@ -839,6 +839,27 @@ namespace SabreTools.Library.DatFiles
                 // Build the state
                 switch (datItem.ItemType)
                 {
+                    case ItemType.Adjuster:
+                        var adjuster = datItem as Adjuster;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "adjuster");
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
+                        if (adjuster.Conditions != null)
+                        {
+                            foreach (var condition in adjuster.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Archive:
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "archive");
@@ -905,6 +926,16 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
                         xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.RamOption:
+                        var ramOption = datItem as RamOption;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "ramoption");
+                        xtw.WriteRequiredAttributeString("name", ramOption.Name);
+                        xtw.WriteOptionalAttributeString("default", ramOption.Default.FromYesNo());
+                        xtw.WriteRaw(ramOption.Content ?? string.Empty);
+                        xtw.WriteFullEndElement();
                         break;
 
                     case ItemType.Release:

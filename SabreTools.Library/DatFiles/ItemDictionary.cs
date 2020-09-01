@@ -78,6 +78,12 @@ namespace SabreTools.Library.DatFiles
         public long TotalCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Adjuster items
+        /// </summary>
+        [JsonIgnore]
+        public long AdjusterCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Archive items
         /// </summary>
         [JsonIgnore]
@@ -112,6 +118,12 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public long MediaCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of RamOption items
+        /// </summary>
+        [JsonIgnore]
+        public long RamOptionCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Release items
@@ -464,6 +476,9 @@ namespace SabreTools.Library.DatFiles
             // Now we do different things for each item type
             switch (item.ItemType)
             {
+                case ItemType.Adjuster:
+                    AdjusterCount++;
+                    break;
                 case ItemType.Archive:
                     ArchiveCount++;
                     break;
@@ -494,6 +509,9 @@ namespace SabreTools.Library.DatFiles
                     MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                    break;
+                case ItemType.RamOption:
+                    RamOptionCount++;
                     break;
                 case ItemType.Release:
                     ReleaseCount++;
@@ -599,6 +617,9 @@ namespace SabreTools.Library.DatFiles
             // Now we do different things for each item type
             switch (item.ItemType)
             {
+                case ItemType.Adjuster:
+                    AdjusterCount--;
+                    break;
                 case ItemType.Archive:
                     ArchiveCount--;
                     break;
@@ -629,6 +650,9 @@ namespace SabreTools.Library.DatFiles
                     MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                    break;
+                case ItemType.RamOption:
+                    RamOptionCount--;
                     break;
                 case ItemType.Release:
                     ReleaseCount--;

@@ -208,6 +208,9 @@ namespace SabreTools.Library.DatFiles
                 JToken datItemObj = itemObj["datitem"];
                 switch (datItemObj.Value<string>("type").AsItemType())
                 {
+                    case ItemType.Adjuster:
+                        datItem = datItemObj.ToObject<Adjuster>();
+                        break;
                     case ItemType.Archive:
                         datItem = datItemObj.ToObject<Archive>();
                         break;
@@ -228,6 +231,9 @@ namespace SabreTools.Library.DatFiles
                         break;
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
+                        break;
+                    case ItemType.RamOption:
+                        datItem = datItemObj.ToObject<RamOption>();
                         break;
                     case ItemType.Release:
                         datItem = datItemObj.ToObject<Release>();

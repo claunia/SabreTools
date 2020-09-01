@@ -223,18 +223,6 @@ namespace SabreTools.Library.DatItems
         Machine_Port_Analogs,
         Machine_Port_Analog_Mask,
 
-        // Adjusters
-        Machine_Adjusters,
-        Machine_Adjuster_Name,
-        Machine_Adjuster_Default,
-
-        // Adjusters.Conditions
-        Machine_Adjuster_Conditions,
-        Machine_Adjuster_Condition_Tag,
-        Machine_Adjuster_Condition_Mask,
-        Machine_Adjuster_Condition_Relation,
-        Machine_Adjuster_Condition_Value,
-
         // Drivers
         Machine_Drivers,
         Machine_Driver_Status,
@@ -274,10 +262,6 @@ namespace SabreTools.Library.DatItems
         Machine_Slot_SlotOption_Name,
         Machine_Slot_SlotOption_DeviceName,
         Machine_Slot_SlotOption_Default,
-
-        // RamOptions
-        Machine_RamOptions,
-        Machine_RamOption_Default,
 
         #endregion
 
@@ -407,14 +391,24 @@ namespace SabreTools.Library.DatItems
 
         #region Auxiliary
 
+        // Adjuster
+        DatItem_Default,
+        DatItem_Conditions,
+        DatItem_Condition_Tag,
+        DatItem_Condition_Mask,
+        DatItem_Condition_Relation,
+        DatItem_Condition_Value,
+
         // BiosSet
         DatItem_Description,
-        DatItem_Default,
 
         // Chip
         DatItem_Tag,
         DatItem_ChipType,
         DatItem_Clock,
+
+        // Ram Option
+        DatItem_Content,
 
         // Release
         DatItem_Language,
@@ -459,10 +453,12 @@ namespace SabreTools.Library.DatItems
         Media,
 
         // "Auxiliary" item types
+        Adjuster,
         Archive,
         BiosSet,
         Chip,
         DeviceReference,
+        RamOption,
         Release,
         Sample,
         SoftwareList,

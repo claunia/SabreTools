@@ -197,12 +197,6 @@ namespace SabreTools.Library.DatItems
         public List<ListXmlPort> Ports { get; set; } = null;
 
         /// <summary>
-        /// List of associated adjusters
-        /// </summary>
-        [JsonProperty("adjusters", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlAdjuster> Adjusters { get; set; } = null;
-
-        /// <summary>
         /// List of associated drivers
         /// </summary>
         [JsonProperty("drivers", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -225,12 +219,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("slots", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ListXmlSlot> Slots { get; set; } = null;
-
-        /// <summary>
-        /// List of ramoptions
-        /// </summary>
-        [JsonProperty("ramoptions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ListXmlRamOption> RamOptions { get; set; } = null;
 
         #endregion
 
@@ -591,12 +579,10 @@ namespace SabreTools.Library.DatItems
                 DipSwitches = this.DipSwitches,
                 Configurations = this.Configurations,
                 Ports = this.Ports,
-                Adjusters = this.Adjusters,
                 Drivers = this.Drivers,
                 Features = this.Features,
                 Devices = this.Devices,
                 Slots = this.Slots,
-                RamOptions = this.RamOptions,
 
                 #endregion
 

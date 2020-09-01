@@ -166,90 +166,29 @@ namespace SabreTools.Library.DatFiles
                         machine.Manufacturer = reader.ReadElementContentAsString();
                         break;
 
+                    case "adjuster":
+                        var adjuster = new Adjuster
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Default = reader.GetAttribute("default").AsYesNo(),
+                            Conditions = new List<ListXmlCondition>(),
+                        };
+
+                        // Now read the internal tags
+                        ReadAdjuster(reader.ReadSubtree(), adjuster);
+
+                        datItems.Add(adjuster);
+
+                        // Skip the adjuster now that we've processed it
+                        reader.Skip();
+                        break;
+
                     case "biosset":
                         datItems.Add(new BiosSet
                         {
                             Name = reader.GetAttribute("name"),
                             Description = reader.GetAttribute("description"),
                             Default = reader.GetAttribute("default").AsYesNo(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        });
-
-                        reader.Read();
-                        break;
-
-                    case "rom":
-                        datItems.Add(new Rom
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Bios = reader.GetAttribute("bios"),
-                            Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
-                            CRC = reader.GetAttribute("crc"),
-                            MD5 = reader.GetAttribute("md5"),
-#if NET_FRAMEWORK
-                            RIPEMD160 = reader.GetAttribute("ripemd160"),
-#endif
-                            SHA1 = reader.GetAttribute("sha1"),
-                            SHA256 = reader.GetAttribute("sha256"),
-                            SHA384 = reader.GetAttribute("sha384"),
-                            SHA512 = reader.GetAttribute("sha512"),
-                            MergeTag = reader.GetAttribute("merge"),
-                            Region = reader.GetAttribute("region"),
-                            Offset = reader.GetAttribute("offset"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            Optional = reader.GetAttribute("optional").AsYesNo(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        });
-
-                        reader.Read();
-                        break;
-
-                    case "disk":
-                        datItems.Add(new Disk
-                        {
-                            Name = reader.GetAttribute("name"),
-                            MD5 = reader.GetAttribute("md5"),
-                            SHA1 = reader.GetAttribute("sha1"),
-                            MergeTag = reader.GetAttribute("merge"),
-                            Region = reader.GetAttribute("region"),
-                            Index = reader.GetAttribute("index"),
-                            Writable = reader.GetAttribute("writable").AsYesNo(),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            Optional = reader.GetAttribute("optional").AsYesNo(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        });
-
-                        reader.Read();
-                        break;
-
-                    case "device_ref":
-                        datItems.Add(new DeviceReference
-                        {
-                            Name = reader.GetAttribute("name"),
-                        });
-
-                        reader.Read();
-                        break;
-
-                    case "sample":
-                        datItems.Add(new Sample
-                        {
-                            Name = reader.GetAttribute("name"),
 
                             Source = new Source
                             {
@@ -277,6 +216,104 @@ namespace SabreTools.Library.DatFiles
                         });
 
                         reader.Read();
+                        break;
+
+                    case "device_ref":
+                        datItems.Add(new DeviceReference
+                        {
+                            Name = reader.GetAttribute("name"),
+                        });
+
+                        reader.Read();
+                        break;
+
+                    case "disk":
+                        datItems.Add(new Disk
+                        {
+                            Name = reader.GetAttribute("name"),
+                            SHA1 = reader.GetAttribute("sha1"),
+                            MergeTag = reader.GetAttribute("merge"),
+                            Region = reader.GetAttribute("region"),
+                            Index = reader.GetAttribute("index"),
+                            Writable = reader.GetAttribute("writable").AsYesNo(),
+                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
+                            Optional = reader.GetAttribute("optional").AsYesNo(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
+                        break;
+
+                    case "rom":
+                        datItems.Add(new Rom
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Bios = reader.GetAttribute("bios"),
+                            Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
+                            CRC = reader.GetAttribute("crc"),
+                            SHA1 = reader.GetAttribute("sha1"),
+                            MergeTag = reader.GetAttribute("merge"),
+                            Region = reader.GetAttribute("region"),
+                            Offset = reader.GetAttribute("offset"),
+                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
+                            Optional = reader.GetAttribute("optional").AsYesNo(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
+                        break;
+
+                    case "ramoption":
+                        datItems.Add(new RamOption
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Default = reader.GetAttribute("default").AsYesNo(),
+                            Content = reader.ReadElementContentAsString(),
+                        });
+
+                        break;
+
+                    case "sample":
+                        datItems.Add(new Sample
+                        {
+                            Name = reader.GetAttribute("name"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
+                        break;
+
+                    case "softwarelist":
+                        datItems.Add(new DatItems.SoftwareList
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Status = reader.GetAttribute("status").AsSoftwareListStatus(),
+                            Filter = reader.GetAttribute("filter"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
+
                         break;
 
                     case "display":
@@ -409,24 +446,6 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
-                    case "adjuster":
-                        var adjuster = new ListXmlAdjuster();
-                        adjuster.Name = reader.GetAttribute("name");
-                        adjuster.Default = reader.GetAttribute("default").AsYesNo();
-
-                        // Now read the internal tags
-                        ReadAdjuster(reader.ReadSubtree(), adjuster);
-
-                        // Ensure the list exists
-                        if (machine.Adjusters == null)
-                            machine.Adjusters = new List<ListXmlAdjuster>();
-
-                        machine.Adjusters.Add(adjuster);
-
-                        // Skip the adjuster now that we've processed it
-                        reader.Skip();
-                        break;
-
                     case "driver":
                         var driver = new ListXmlDriver();
                         driver.Status = reader.GetAttribute("status");
@@ -494,37 +513,6 @@ namespace SabreTools.Library.DatFiles
 
                         // Skip the slot now that we've processed it
                         reader.Skip();
-                        break;
-
-                    case "softwarelist":
-                        datItems.Add(new DatItems.SoftwareList
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Status = reader.GetAttribute("status").AsSoftwareListStatus(),
-                            Filter = reader.GetAttribute("filter"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        });
-
-                        reader.Read();
-
-                        break;
-
-                    case "ramoption":
-                        var ramOption = new ListXmlRamOption();
-                        ramOption.Default = reader.GetAttribute("default").AsYesNo();
-
-                        // Ensure the list exists
-                        if (machine.RamOptions == null)
-                            machine.RamOptions = new List<ListXmlRamOption>();
-
-                        machine.RamOptions.Add(ramOption);
-
-                        reader.Read();
                         break;
 
                     default:
@@ -677,6 +665,7 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get lists ready
+            dipSwitch.Conditions = new List<ListXmlCondition>();
             dipSwitch.Locations = new List<ListXmlDipLocation>();
             dipSwitch.Values = new List<ListXmlDipValue>();
 
@@ -695,6 +684,18 @@ namespace SabreTools.Library.DatFiles
                 // Get the information from the dipswitch
                 switch (reader.Name)
                 {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        dipSwitch.Conditions.Add(condition);
+
+                        reader.Read();
+                        break;
+
                     case "diplocation":
                         var dipLocation = new ListXmlDipLocation();
                         dipLocation.Name = reader.GetAttribute("name");
@@ -712,7 +713,59 @@ namespace SabreTools.Library.DatFiles
                         dipValue.Value = reader.GetAttribute("value");
                         dipValue.Default = reader.GetAttribute("default").AsYesNo();
 
+                        // Now read the internal tags
+                        ReadDipValue(reader, dipValue);
+
                         dipSwitch.Values.Add(dipValue);
+
+                        // Skip the dipvalue now that we've processed it
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read DipValue information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="dipValue">ListXmlDipValue to populate</param>
+        private void ReadDipValue(XmlReader reader, ListXmlDipValue dipValue)
+        {
+            // If we have an empty dipvalue, skip it
+            if (reader == null)
+                return;
+
+            // Get list ready
+            dipValue.Conditions = new List<ListXmlCondition>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the dipvalue
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        dipValue.Conditions.Add(condition);
 
                         reader.Read();
                         break;
@@ -736,6 +789,7 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Get lists ready
+            configuration.Conditions = new List<ListXmlCondition>();
             configuration.Locations = new List<ListXmlConfLocation>();
             configuration.Settings = new List<ListXmlConfSetting>();
 
@@ -754,6 +808,18 @@ namespace SabreTools.Library.DatFiles
                 // Get the information from the dipswitch
                 switch (reader.Name)
                 {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        configuration.Conditions.Add(condition);
+
+                        reader.Read();
+                        break;
+
                     case "conflocation":
                         var confLocation = new ListXmlConfLocation();
                         confLocation.Name = reader.GetAttribute("name");
@@ -771,7 +837,59 @@ namespace SabreTools.Library.DatFiles
                         confSetting.Value = reader.GetAttribute("value");
                         confSetting.Default = reader.GetAttribute("default").AsYesNo();
 
+                        // Now read the internal tags
+                        ReadConfSetting(reader, confSetting);
+
                         configuration.Settings.Add(confSetting);
+
+                        // Skip the dipvalue now that we've processed it
+                        reader.Read();
+                        break;
+
+                    default:
+                        reader.Read();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read ConfSetting information
+        /// </summary>
+        /// <param name="reader">XmlReader representing a diskarea block</param>
+        /// <param name="confSetting">ListXmlConfSetting to populate</param>
+        private void ReadConfSetting(XmlReader reader, ListXmlConfSetting confSetting)
+        {
+            // If we have an empty confsetting, skip it
+            if (reader == null)
+                return;
+
+            // Get list ready
+            confSetting.Conditions = new List<ListXmlCondition>();
+
+            // Otherwise, add what is possible
+            reader.MoveToContent();
+
+            while (!reader.EOF)
+            {
+                // We only want elements
+                if (reader.NodeType != XmlNodeType.Element)
+                {
+                    reader.Read();
+                    continue;
+                }
+
+                // Get the information from the confsetting
+                switch (reader.Name)
+                {
+                    case "condition":
+                        var condition = new ListXmlCondition();
+                        condition.Tag = reader.GetAttribute("tag");
+                        condition.Mask = reader.GetAttribute("mask");
+                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Value = reader.GetAttribute("value");
+
+                        confSetting.Conditions.Add(condition);
 
                         reader.Read();
                         break;
@@ -832,8 +950,8 @@ namespace SabreTools.Library.DatFiles
         /// Read Adjuster information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="adjuster">ListXmlAdjuster to populate</param>
-        private void ReadAdjuster(XmlReader reader, ListXmlAdjuster adjuster)
+        /// <param name="adjuster">Adjuster to populate</param>
+        private void ReadAdjuster(XmlReader reader, Adjuster adjuster)
         {
             // If we have an empty port, skip it
             if (reader == null)
@@ -979,7 +1097,7 @@ namespace SabreTools.Library.DatFiles
 
                         // If we have a different game and we're not at the start of the list, output the end of last item
                         if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
-                            WriteEndGame(xtw, datItem);
+                            WriteEndGame(xtw);
 
                         // If we have a new game, output the beginning of the new item
                         if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
@@ -1180,6 +1298,21 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
                         xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
 
+                        if (dipSwitch.Conditions != null)
+                        {
+                            foreach (var condition in dipSwitch.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+
+                                // End condition
+                                xtw.WriteEndElement();
+                            }
+                        }
                         if (dipSwitch.Locations != null)
                         {
                             foreach (var location in dipSwitch.Locations)
@@ -1204,6 +1337,22 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteOptionalAttributeString("value", value.Value);
                                 xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
 
+                                if (value.Conditions != null)
+                                {
+                                    foreach (var condition in value.Conditions)
+                                    {
+                                        xtw.WriteStartElement("condition");
+
+                                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                        xtw.WriteOptionalAttributeString("value", condition.Value);
+
+                                        // End condition
+                                        xtw.WriteEndElement();
+                                    }
+                                }
+
                                 // End dipvalue
                                 xtw.WriteEndElement();
                             }
@@ -1223,6 +1372,21 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("tag", configuration.Tag);
                         xtw.WriteOptionalAttributeString("mask", configuration.Mask);
 
+                        if (configuration.Conditions != null)
+                        {
+                            foreach (var condition in configuration.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+
+                                // End condition
+                                xtw.WriteEndElement();
+                            }
+                        }
                         if (configuration.Locations != null)
                         {
                             foreach (var location in configuration.Locations)
@@ -1278,35 +1442,6 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         // End port
-                        xtw.WriteEndElement();
-                    }
-                }
-                if (datItem.Machine.Adjusters != null)
-                {
-                    foreach (var adjuster in datItem.Machine.Adjusters)
-                    {
-                        xtw.WriteStartElement("adjuster");
-
-                        xtw.WriteOptionalAttributeString("name", adjuster.Name);
-                        xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
-
-                        if (adjuster.Conditions != null)
-                        {
-                            foreach (var condition in adjuster.Conditions)
-                            {
-                                xtw.WriteStartElement("condition");
-
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
-
-                                // End condition
-                                xtw.WriteEndElement();
-                            }
-                        }
-
-                        // End adjuster
                         xtw.WriteEndElement();
                     }
                 }
@@ -1408,18 +1543,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.RamOptions != null)
-                {
-                    foreach (var ramOption in datItem.Machine.RamOptions)
-                    {
-                        xtw.WriteStartElement("ramoption");
-
-                        xtw.WriteOptionalAttributeString("default", ramOption.Default.FromYesNo());
-
-                        // End softwarelist
-                        xtw.WriteEndElement();
-                    }
-                }
 
                 xtw.Flush();
             }
@@ -1436,9 +1559,8 @@ namespace SabreTools.Library.DatFiles
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(XmlTextWriter xtw, DatItem datItem)
+        private bool WriteEndGame(XmlTextWriter xtw)
         {
             try
             {
@@ -1472,6 +1594,26 @@ namespace SabreTools.Library.DatFiles
                 // Build the state
                 switch (datItem.ItemType)
                 {
+                    case ItemType.Adjuster:
+                        var adjuster = datItem as Adjuster;
+                        xtw.WriteStartElement("adjuster");
+                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
+                        if (adjuster.Conditions != null)
+                        {
+                            foreach (var condition in adjuster.Conditions)
+                            {
+                                xtw.WriteStartElement("condition");
+                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.BiosSet:
                         var biosSet = datItem as BiosSet;
                         xtw.WriteStartElement("biosset");
@@ -1501,7 +1643,6 @@ namespace SabreTools.Library.DatFiles
                         var disk = datItem as Disk;
                         xtw.WriteStartElement("disk");
                         xtw.WriteRequiredAttributeString("name", disk.Name);
-                        xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("merge", disk.MergeTag);
                         xtw.WriteOptionalAttributeString("region", disk.Region);
@@ -1512,20 +1653,22 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.RamOption:
+                        var ramOption = datItem as RamOption;
+                        xtw.WriteStartElement("ramoption");
+                        xtw.WriteRequiredAttributeString("name", ramOption.Name);
+                        xtw.WriteOptionalAttributeString("default", ramOption.Default.FromYesNo());
+                        xtw.WriteRaw(ramOption.Content ?? string.Empty);
+                        xtw.WriteFullEndElement();
+                        break;
+
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);
                         if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
-#if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", rom?.RIPEMD160?.ToLowerInvariant());
-#endif
                         xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("bios", rom.Bios);
                         xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
                         xtw.WriteOptionalAttributeString("region", rom.Region);
@@ -1546,7 +1689,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("softwarelist");
                         xtw.WriteRequiredAttributeString("name", datItem.Name);
                         xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
-                        xtw.WriteOptionalAttributeString("sha512", softwareList.Filter);
+                        xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
                         xtw.WriteEndElement();
                         break;
                 }

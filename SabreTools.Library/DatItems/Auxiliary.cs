@@ -12,23 +12,6 @@ namespace SabreTools.Library.DatItems
     #region ListXML
 
     /// <summary>
-    /// Represents one ListXML adjuster
-    /// </summary>
-    /// TODO: Promote to DatItem level
-    [JsonObject("adjuster")]
-    public class ListXmlAdjuster
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("default")]
-        public bool? Default { get; set; }
-
-        [JsonProperty("conditions")]
-        public List<ListXmlCondition> Conditions { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML analog
     /// </summary>
     [JsonObject("analog")]
@@ -41,6 +24,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML condition
     /// </summary>
+    /// TODO: Promote to DatItem level? (Both used at ListXML level AND under a lot of stuff)
     [JsonObject("condition")]
     public class ListXmlCondition
     {
@@ -60,7 +44,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML configuration
     /// </summary>
-    /// TODO: Promote to DatItem level
+    /// TODO: Promote to DatItem level (contains lists)
     [JsonObject("configuration")]
     public class ListXmlConfiguration
     {
@@ -72,6 +56,9 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("mask")]
         public string Mask { get; set; }
+
+        [JsonProperty("conditions")]
+        public List<ListXmlCondition> Conditions { get; set; }
 
         [JsonProperty("locations")]
         public List<ListXmlConfLocation> Locations { get; set; }
@@ -110,6 +97,9 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("default")]
         public bool? Default { get; set; }
+
+        [JsonProperty("conditions")]
+        public List<ListXmlCondition> Conditions { get; set; }
     }
 
     /// <summary>
@@ -158,7 +148,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML device
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
     [JsonObject("device")]
     public class ListXmlDevice
     {
@@ -238,7 +228,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one ListXML dipswitch
     /// </summary>
     /// <remarks>Also used by SoftwareList</remarks>
-    /// TODO: Promote to DatItem level
+    /// TODO: Promote to DatItem level (contains list)
     [JsonObject("dipswitch")]
     public class ListXmlDipSwitch
     {
@@ -250,6 +240,9 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("mask")]
         public string Mask { get; set; }
+
+        [JsonProperty("conditions")]
+        public List<ListXmlCondition> Conditions { get; set; }
 
         [JsonProperty("locations")]
         public List<ListXmlDipLocation> Locations { get; set; }
@@ -289,6 +282,9 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("default")]
         public bool? Default { get; set; }
+
+        [JsonProperty("conditions")]
+        public List<ListXmlCondition> Conditions { get; set; }
     }
 
     /// <summary>
@@ -341,7 +337,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML input
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
     [JsonObject("input")]
     public class ListXmlInput
     {
@@ -377,7 +373,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML port
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
     [JsonObject("port")]
     public class ListXmlPort
     {
@@ -389,20 +385,9 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML ramoption
-    /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
-    [JsonObject("ramoption")]
-    public class ListXmlRamOption
-    {
-        [JsonProperty("default")]
-        public bool? Default { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML slot
     /// </summary>
-    /// TODO: Promote to DatItem level
+    /// TODO: Promote to DatItem level (contains list)
     [JsonObject("slot")]
     public class ListXmlSlot
     {

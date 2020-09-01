@@ -145,18 +145,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> Machine_Port_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Port_Analog_Mask { get; private set; } = new FilterItem<string>();
 
-        // Adjusters
-        public FilterItem<bool?> Machine_Adjusters { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Adjuster_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_Adjuster_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        // Adjusters.Conditions
-        public FilterItem<bool?> Machine_Adjuster_Conditions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Adjuster_Condition_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Adjuster_Condition_Mask { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Adjuster_Condition_Relation { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Adjuster_Condition_Value { get; private set; } = new FilterItem<string>();
-
         // Drivers
         public FilterItem<bool?> Machine_Drivers { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Driver_Status { get; private set; } = new FilterItem<string>();
@@ -196,10 +184,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Slot_SlotOption_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_Slot_SlotOption_DeviceName { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> Machine_Slot_SlotOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-
-        // RamOptions
-        public FilterItem<bool?> Machine_RamOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<bool?> Machine_RamOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         #endregion
 
@@ -329,6 +313,13 @@ namespace SabreTools.Library.Filtering
 
         #region Auxiliary
 
+        // Adjuster
+        public FilterItem<bool?> DatItem_Conditions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Condition_Tag { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Condition_Mask { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Condition_Relation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Condition_Value { get; private set; } = new FilterItem<string>();
+
         // BiosSet
         public FilterItem<string> DatItem_Description { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -337,6 +328,9 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Tag { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_ChipType { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
+
+        // Ram Option
+        public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
 
         // Release
         public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
@@ -1061,64 +1055,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Port_Analog_Mask.PositiveSet.Add(value);
                     break;
 
-                // Adjusters
-                case Field.Machine_Adjusters:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Adjusters.Neutral = false;
-                    else
-                        Machine_Adjusters.Neutral = true;
-                    break;
-
-                case Field.Machine_Adjuster_Name:
-                    if (negate)
-                        Machine_Adjuster_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Adjuster_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Adjuster_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Adjuster_Default.Neutral = false;
-                    else
-                        Machine_Adjuster_Default.Neutral = true;
-                    break;
-
-                // Adjusters.Conditions
-                case Field.Machine_Adjuster_Conditions:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Adjuster_Conditions.Neutral = false;
-                    else
-                        Machine_Adjuster_Conditions.Neutral = true;
-                    break;
-
-                case Field.Machine_Adjuster_Condition_Tag:
-                    if (negate)
-                        Machine_Adjuster_Condition_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Adjuster_Condition_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Adjuster_Condition_Mask:
-                    if (negate)
-                        Machine_Adjuster_Condition_Mask.NegativeSet.Add(value);
-                    else
-                        Machine_Adjuster_Condition_Mask.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Adjuster_Condition_Relation:
-                    if (negate)
-                        Machine_Adjuster_Condition_Relation.NegativeSet.Add(value);
-                    else
-                        Machine_Adjuster_Condition_Relation.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Adjuster_Condition_Value:
-                    if (negate)
-                        Machine_Adjuster_Condition_Value.NegativeSet.Add(value);
-                    else
-                        Machine_Adjuster_Condition_Value.PositiveSet.Add(value);
-                    break;
-
                 // Drivers
                 case Field.Machine_Drivers:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
@@ -1306,21 +1242,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Slot_SlotOption_Default.Neutral = false;
                     else
                         Machine_Slot_SlotOption_Default.Neutral = true;
-                    break;
-
-                // RamOptions
-                case Field.Machine_RamOptions:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_RamOptions.Neutral = false;
-                    else
-                        Machine_RamOptions.Neutral = true;
-                    break;
-
-                case Field.Machine_RamOption_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_RamOption_Default.Neutral = false;
-                    else
-                        Machine_RamOption_Default.Neutral = true;
                     break;
 
                 #endregion
@@ -1890,19 +1811,55 @@ namespace SabreTools.Library.Filtering
 
                 #region Auxiliary
 
+                // Adjuster
+                case Field.DatItem_Default:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Default.Neutral = false;
+                    else
+                        DatItem_Default.Neutral = true;
+                    break;
+
+                case Field.DatItem_Conditions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Conditions.Neutral = false;
+                    else
+                        DatItem_Conditions.Neutral = true;
+                    break;
+
+                case Field.DatItem_Condition_Tag:
+                    if (negate)
+                        DatItem_Condition_Tag.NegativeSet.Add(value);
+                    else
+                        DatItem_Condition_Tag.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Condition_Mask:
+                    if (negate)
+                        DatItem_Condition_Mask.NegativeSet.Add(value);
+                    else
+                        DatItem_Condition_Mask.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Condition_Relation:
+                    if (negate)
+                        DatItem_Condition_Relation.NegativeSet.Add(value);
+                    else
+                        DatItem_Condition_Relation.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Condition_Value:
+                    if (negate)
+                        DatItem_Condition_Value.NegativeSet.Add(value);
+                    else
+                        DatItem_Condition_Value.PositiveSet.Add(value);
+                    break;
+
                 // BiosSet
                 case Field.DatItem_Description:
                     if (negate)
                         DatItem_Description.NegativeSet.Add(value);
                     else
                         DatItem_Description.PositiveSet.Add(value);
-                    break;
-
-                case Field.DatItem_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Default.Neutral = false;
-                    else
-                        DatItem_Default.Neutral = true;
                     break;
 
                 // Chip
@@ -1925,6 +1882,14 @@ namespace SabreTools.Library.Filtering
                         DatItem_Clock.NegativeSet.Add(value);
                     else
                         DatItem_Clock.PositiveSet.Add(value);
+                    break;
+
+                // Ram Option
+                case Field.DatItem_Content:
+                    if (negate)
+                        DatItem_Content.NegativeSet.Add(value);
+                    else
+                        DatItem_Content.PositiveSet.Add(value);
                     break;
 
                 // Release
@@ -1950,11 +1915,11 @@ namespace SabreTools.Library.Filtering
                         DatItem_Filter.PositiveSet.Add(value);
                     break;
 
-                    #endregion
+                #endregion
 
-                    #endregion // Item-Specific
+                #endregion // Item-Specifics
 
-                    #endregion // DatItem Filters
+                #endregion // DatItem Filters
             }
         }
 

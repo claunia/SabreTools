@@ -660,30 +660,6 @@ namespace SabreTools.Library.Tools
                     case "port_analog_mask":
                         return Field.Machine_Port_Analog_Mask;
 
-                    case "adjusters":
-                        return Field.Machine_Adjusters;
-
-                    case "adjuster_name":
-                        return Field.Machine_Adjuster_Name;
-
-                    case "adjuster_default":
-                        return Field.Machine_Adjuster_Default;
-
-                    case "adjuster_conditions":
-                        return Field.Machine_Adjuster_Conditions;
-
-                    case "adjuster_condition_tag":
-                        return Field.Machine_Adjuster_Condition_Tag;
-
-                    case "adjuster_condition_mask":
-                        return Field.Machine_Adjuster_Condition_Mask;
-
-                    case "adjuster_condition_relation":
-                        return Field.Machine_Adjuster_Condition_Relation;
-
-                    case "adjuster_condition_value":
-                        return Field.Machine_Adjuster_Condition_Value;
-
                     case "drivers":
                         return Field.Machine_Drivers;
 
@@ -761,12 +737,6 @@ namespace SabreTools.Library.Tools
 
                     case "slot_slotoption_default":
                         return Field.Machine_Slot_SlotOption_Default;
-
-                    case "ramoptions":
-                        return Field.Machine_RamOptions;
-
-                    case "ramoption_default":
-                        return Field.Machine_RamOption_Default;
 
                     #endregion
 
@@ -1064,14 +1034,30 @@ namespace SabreTools.Library.Tools
 
                     #region Auxiliary
 
+                    // Adjuster
+                    case "default":
+                        return Field.DatItem_Default;
+
+                    case "conditions":
+                        return Field.DatItem_Conditions;
+
+                    case "condition_tag":
+                        return Field.DatItem_Condition_Tag;
+
+                    case "condition_mask":
+                        return Field.DatItem_Condition_Mask;
+
+                    case "condition_relation":
+                        return Field.DatItem_Condition_Relation;
+
+                    case "condition_value":
+                        return Field.DatItem_Condition_Value;
+
                     // BiosSet
                     case "description":
                     case "biosdescription":
                     case "bios_description":
                         return Field.DatItem_Description;
-
-                    case "default":
-                        return Field.DatItem_Default;
 
                     // Chip
                     case "tag":
@@ -1083,6 +1069,10 @@ namespace SabreTools.Library.Tools
 
                     case "clock":
                         return Field.DatItem_Clock;
+
+                    // Ram Option
+                    case "content":
+                        return Field.DatItem_Content;
 
                     // Release
                     case "language":
@@ -1504,6 +1494,25 @@ namespace SabreTools.Library.Tools
 
                 #region Auxiliary
 
+                // Adjuster
+                case "default":
+                    return Field.DatItem_Default;
+
+                case "conditions":
+                    return Field.DatItem_Conditions;
+
+                case "condition_tag":
+                    return Field.DatItem_Condition_Tag;
+
+                case "condition_mask":
+                    return Field.DatItem_Condition_Mask;
+
+                case "condition_relation":
+                    return Field.DatItem_Condition_Relation;
+
+                case "condition_value":
+                    return Field.DatItem_Condition_Value;
+
                 // BiosSet
                 case "biosdescription":
                 case "bios-description":
@@ -1511,9 +1520,6 @@ namespace SabreTools.Library.Tools
                 case "biosset-description":
                 case "bios-set-description":
                     return Field.DatItem_Description;
-
-                case "default":
-                    return Field.DatItem_Default;
 
                 // Chip
                 case "tag":
@@ -1525,6 +1531,10 @@ namespace SabreTools.Library.Tools
 
                 case "clock":
                     return Field.DatItem_Clock;
+                    
+                // Ram Option
+                case "content":
+                    return Field.DatItem_Content;
 
                 // Release
                 case "language":
@@ -1590,6 +1600,8 @@ namespace SabreTools.Library.Tools
 #if NET_FRAMEWORK
             switch (itemType?.ToLowerInvariant())
             {
+                case "adjuster":
+                    return ItemType.Adjuster;
                 case "archive":
                     return ItemType.Archive;
                 case "biosset":
@@ -1604,6 +1616,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Disk;
                 case "media":
                     return ItemType.Media;
+                case "ramoption":
+                    return ItemType.RamOption;
                 case "release":
                     return ItemType.Release;
                 case "rom":
@@ -1618,6 +1632,7 @@ namespace SabreTools.Library.Tools
 #else
             return itemType?.ToLowerInvariant() switch
             {
+                "adjuster" => ItemType.Adjuster,
                 "archive" => ItemType.Archive,
                 "biosset" => ItemType.BiosSet,
                 "blank" => ItemType.Blank,
@@ -1625,6 +1640,7 @@ namespace SabreTools.Library.Tools
                 "device_ref" => ItemType.DeviceReference,
                 "disk" => ItemType.Disk,
                 "media" => ItemType.Media,
+                "ramoption" => ItemType.RamOption,
                 "release" => ItemType.Release,
                 "rom" => ItemType.Rom,
                 "sample" => ItemType.Sample,
@@ -2020,6 +2036,8 @@ namespace SabreTools.Library.Tools
 #if NET_FRAMEWORK
             switch (itemType)
             {
+                case ItemType.Adjuster:
+                    return "adjuster";
                 case ItemType.Archive:
                     return "archive";
                 case ItemType.BiosSet:
@@ -2034,6 +2052,8 @@ namespace SabreTools.Library.Tools
                     return "disk";
                 case ItemType.Media:
                     return "media";
+                case ItemType.RamOption:
+                    return "ramoption";
                 case ItemType.Release:
                     return "release";
                 case ItemType.Rom:
@@ -2048,6 +2068,7 @@ namespace SabreTools.Library.Tools
 #else
             return itemType switch
             {
+                ItemType.Adjuster => "adjuster",
                 ItemType.Archive => "archive",
                 ItemType.BiosSet => "biosset",
                 ItemType.Blank => "blank",
@@ -2055,6 +2076,7 @@ namespace SabreTools.Library.Tools
                 ItemType.DeviceReference => "device_ref",
                 ItemType.Disk => "disk",
                 ItemType.Media => "media",
+                ItemType.RamOption => "ramoption",
                 ItemType.Release => "release",
                 ItemType.Rom => "rom",
                 ItemType.Sample => "sample",

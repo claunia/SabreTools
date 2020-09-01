@@ -264,14 +264,24 @@ namespace SabreTools.Library.DatItems
 
             #region Auxiliary
 
+            // Adjuster
+            Field.DatItem_Default,
+            Field.DatItem_Conditions,
+            Field.DatItem_Condition_Tag,
+            Field.DatItem_Condition_Mask,
+            Field.DatItem_Condition_Relation,
+            Field.DatItem_Condition_Value,
+
             // BiosSet
             Field.DatItem_Description,
-            Field.DatItem_Default,
 
             // Chip
             Field.DatItem_Tag,
             Field.DatItem_ChipType,
             Field.DatItem_Clock,
+
+            // Ram Option
+            Field.DatItem_Content,
 
             // Release
             Field.DatItem_Language,
@@ -440,6 +450,9 @@ namespace SabreTools.Library.DatItems
 #if NET_FRAMEWORK
             switch (itemType)
             {
+                case ItemType.Adjuster:
+                    return new Adjuster();
+
                 case ItemType.Archive:
                     return new Archive();
 
@@ -460,6 +473,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Media:
                     return new Media();
+
+                case ItemType.RamOption:
+                    return new RamOption();
 
                 case ItemType.Release:
                     return new Release();
