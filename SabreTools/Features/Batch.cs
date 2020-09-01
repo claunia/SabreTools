@@ -107,6 +107,13 @@ Reset the internal state:           reset();";
                                 Field field = command.Arguments[0].AsField();
                                 string value = command.Arguments[1];
 
+                                // If we had an invalid input, log and continue
+                                if (field == Field.NULL)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
+                                    continue;
+                                }
+
                                 // Set the header field
                                 datFile.Header.SetFields(new Dictionary<Field, string> { [field] = value });
 
@@ -164,11 +171,25 @@ Reset the internal state:           reset();";
                                 // Read in the individual arguments
                                 Field filterField = command.Arguments[0].AsField();
                                 string filterValue = command.Arguments[1];
-                                bool filterNegate = (command.Arguments.Count == 3 && (command.Arguments[2].AsYesNo() ?? false));
+                                bool? filterNegate = false;
+                                if (command.Arguments.Count == 3)
+                                    filterNegate = command.Arguments[2].AsYesNo();
+
+                                // If we had an invalid input, log and continue
+                                if (filterField == Field.NULL)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
+                                    continue;
+                                }
+                                if (filterNegate == null)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[2]} was an invalid true/false value");
+                                    continue;
+                                }
 
                                 // Create a filter with this new set of fields
                                 Filter filter = new Filter();
-                                filter.SetFilter(filterField, filterValue, filterNegate);
+                                filter.SetFilter(filterField, filterValue, filterNegate.Value);
 
                                 // Apply the filter blindly
                                 datFile.ApplyFilter(filter);
@@ -188,6 +209,18 @@ Reset the internal state:           reset();";
                                 // Read in the individual arguments
                                 Field extraField = command.Arguments[0].AsField();
                                 string extraFile = command.Arguments[1];
+
+                                // If we had an invalid input, log and continue
+                                if (extraField == Field.NULL)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
+                                    continue;
+                                }
+                                if (!File.Exists(command.Arguments[1]))
+                                {
+                                    Globals.Logger.User($"{command.Arguments[1]} was an invalid file name");
+                                    continue;
+                                }
 
                                 // Create the extra INI
                                 ExtraIni extraIni = new ExtraIni();
@@ -212,6 +245,13 @@ Reset the internal state:           reset();";
 
                                 // Read in the individual arguments
                                 MergingFlag mergingFlag = command.Arguments[0].AsMergingFlag();
+
+                                // If we had an invalid input, log and continue
+                                if (mergingFlag == MergingFlag.None)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid merging flag");
+                                    continue;
+                                }
 
                                 // Apply the merging flag
                                 datFile.ApplySplitting(mergingFlag, false);
@@ -304,6 +344,13 @@ Reset the internal state:           reset();";
                                     datFile.Header.DatFormat |= format.AsDatFormat();
                                 }
 
+                                // If we had an invalid input, log and continue
+                                if (datFile.Header.DatFormat == 0x00)
+                                {
+                                    Globals.Logger.User($"No valid output format found");
+                                    continue;
+                                }
+
                                 break;
 
                             // Set output directory
@@ -329,10 +376,19 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Get overwrite value, if possible
-                                bool overwrite = command.Arguments.Count != 1 || (command.Arguments[0].AsYesNo() ?? true);
+                                bool? overwrite = true;
+                                if (command.Arguments.Count == 1)
+                                    overwrite = command.Arguments[0].AsYesNo();
+
+                                // If we had an invalid input, log and continue
+                                if (overwrite == null)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid true/false value");
+                                    continue;
+                                }
 
                                 // Write out the dat with the current state
-                                datFile.Write(outputDirectory, overwrite: overwrite);
+                                datFile.Write(outputDirectory, overwrite: overwrite.Value);
                                 break;
 
                             // Reset the internal state
