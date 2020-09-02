@@ -868,7 +868,7 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("game");
                 xtw.WriteElementString("imageNumber", "1");
                 xtw.WriteElementString("releaseNumber", "1");
-                xtw.WriteRequiredElementString("title", datItem.Name);
+                xtw.WriteRequiredElementString("title", datItem.GetName() ?? string.Empty);
                 xtw.WriteElementString("saveType", "None");
 
                 if (datItem.ItemType == ItemType.Rom)

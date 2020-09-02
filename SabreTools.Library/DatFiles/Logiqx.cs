@@ -939,8 +939,9 @@ namespace SabreTools.Library.DatFiles
                 switch (datItem.ItemType)
                 {
                     case ItemType.Archive:
+                        var archive = datItem as Archive;
                         xtw.WriteStartElement("archive");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", archive.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -1005,8 +1006,9 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.Sample:
+                        var sample = datItem as Sample;
                         xtw.WriteStartElement("sample");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", sample.Name);
                         xtw.WriteEndElement();
                         break;
                 }

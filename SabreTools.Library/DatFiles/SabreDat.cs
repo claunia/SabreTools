@@ -1212,7 +1212,7 @@ namespace SabreTools.Library.DatFiles
                         var adjuster = datItem as Adjuster;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "adjuster");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", adjuster.Name);
                         xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
                         if (adjuster.Conditions != null)
                         {
@@ -1230,9 +1230,10 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.Archive:
+                        var archive = datItem as Archive;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "archive");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", archive.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -1303,9 +1304,10 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.DeviceReference:
+                        var deviceRef = datItem as DeviceReference;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "device_ref");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", deviceRef.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -1452,9 +1454,10 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.Sample:
+                        var sample = datItem as Sample;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "sample");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", sample.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -1481,7 +1484,7 @@ namespace SabreTools.Library.DatFiles
                         var softwareList = datItem as DatItems.SoftwareList;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "softwarelist");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", softwareList.Name);
                         xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
                         xtw.WriteOptionalAttributeString("sha512", softwareList.Filter);
                         xtw.WriteEndElement();

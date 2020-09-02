@@ -281,7 +281,7 @@ namespace SabreTools.Library.DatFiles
 
                             // Regular attributes
                             case "name":
-                                item.Name = attrVal;
+                                item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = attrVal } );
                                 break;
 
                             case "size":
@@ -602,8 +602,9 @@ namespace SabreTools.Library.DatFiles
                 switch (datItem.ItemType)
                 {
                     case ItemType.Archive:
+                        var archive = datItem as Archive;
                         cmpw.WriteStartElement("archive");
-                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
+                        cmpw.WriteRequiredAttributeString("name", archive.Name);
                         cmpw.WriteEndElement();
                         break;
 
@@ -667,8 +668,9 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.Sample:
+                        var sample = datItem as Sample;
                         cmpw.WriteStartElement("sample");
-                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
+                        cmpw.WriteRequiredAttributeString("name", sample.Name);
                         cmpw.WriteEndElement();
                         break;
                 }

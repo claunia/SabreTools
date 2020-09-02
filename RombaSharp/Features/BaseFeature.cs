@@ -627,7 +627,7 @@ namespace RombaSharp.Features
             {
                 foreach (DatItem datItem in tempdat.Items[romkey])
                 {
-                    Globals.Logger.Verbose($"Checking and adding file '{datItem.Name}'");
+                    Globals.Logger.Verbose($"Checking and adding file '{datItem.GetName() ?? string.Empty}'");
 
                     if (datItem.ItemType == ItemType.Disk)
                     {

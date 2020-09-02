@@ -1439,7 +1439,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Adjuster:
                         var adjuster = datItem as Adjuster;
                         xtw.WriteStartElement("adjuster");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", adjuster.Name);
                         xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
                         if (adjuster.Conditions != null)
                         {
@@ -1520,8 +1520,9 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.DeviceReference:
+                        var deviceRef = datItem as DeviceReference;
                         xtw.WriteStartElement("device_ref");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", deviceRef.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -1620,8 +1621,9 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case ItemType.Sample:
+                        var sample = datItem as Sample;
                         xtw.WriteStartElement("sample");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", sample.Name);
                         xtw.WriteEndElement();
                         break;
 
@@ -1646,7 +1648,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.SoftwareList:
                         var softwareList = datItem as DatItems.SoftwareList;
                         xtw.WriteStartElement("softwarelist");
-                        xtw.WriteRequiredAttributeString("name", datItem.Name);
+                        xtw.WriteRequiredAttributeString("name", softwareList.Name);
                         xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
                         xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
                         xtw.WriteEndElement();

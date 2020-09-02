@@ -115,7 +115,7 @@ namespace SabreTools.Library.DatFiles
                 // Romba mode automatically uses item name
                 if (Header.OutputDepot?.IsActive == true || Header.UseRomName)
                 {
-                    sw.Write($"{datItem.Name}\n");
+                    sw.Write($"{datItem.GetName() ?? string.Empty}\n");
                 }
                 else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
                 {

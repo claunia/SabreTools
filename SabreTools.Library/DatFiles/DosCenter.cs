@@ -434,7 +434,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Rom:
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("file");
-                        cmpw.WriteRequiredAttributeString("name", datItem.Name);
+                        cmpw.WriteRequiredAttributeString("name", rom.Name);
                         if (rom.Size != -1) cmpw.WriteAttributeString("size", rom.Size.ToString());
                         cmpw.WriteOptionalAttributeString("date", rom.Date);
                         cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
