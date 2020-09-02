@@ -31,7 +31,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Conditions associated with the adjustment
         /// </summary>
-        [JsonProperty("conditions")]
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Condition> Conditions { get; set; }
 
         #endregion

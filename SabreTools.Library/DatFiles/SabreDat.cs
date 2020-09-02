@@ -399,7 +399,7 @@ namespace SabreTools.Library.DatFiles
                                 {
                                     Name = reader.GetAttribute("name"),
                                     Tag = reader.GetAttribute("tag"),
-                                    ChipType = reader.GetAttribute("chiptype"),
+                                    ChipType = reader.GetAttribute("chiptype").AsChipType(),
                                     Clock = reader.GetAttribute("clock"),
 
                                     Source = new Source
@@ -1253,7 +1253,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("type", "chip");
                         xtw.WriteRequiredAttributeString("name", chip.Name);
                         xtw.WriteOptionalAttributeString("tag", chip.Tag);
-                        xtw.WriteOptionalAttributeString("chiptype", chip.ChipType);
+                        xtw.WriteOptionalAttributeString("chiptype", chip.ChipType.FromChipType());
                         xtw.WriteOptionalAttributeString("clock", chip.Clock);
                         xtw.WriteEndElement();
                         break;
@@ -1394,8 +1394,8 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "feature");
                         xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
-                        xtw.WriteOptionalAttributeString("status", feature.Status);
-                        xtw.WriteOptionalAttributeString("overall", feature.Overall);
+                        xtw.WriteOptionalAttributeString("status", feature.Status.FromEmulationStatus());
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromEmulationStatus());
                         xtw.WriteEndElement();
                         break;
 

@@ -270,7 +270,7 @@ namespace SabreTools.Library.Filtering
 
         // Chip
         public FilterItem<string> DatItem_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_ChipType { get; private set; } = new FilterItem<string>();
+        public FilterItem<ChipType> DatItem_ChipType { get; private set; } = new FilterItem<ChipType>() { Positive = ChipType.NULL, Negative = ChipType.NULL };
         public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
 
         // Configuration
@@ -296,8 +296,8 @@ namespace SabreTools.Library.Filtering
 
         // Feature
         public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
-        public FilterItem<string> DatItem_FeatureStatus { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_FeatureOverall { get; private set; } = new FilterItem<string>();
+        public FilterItem<EmulationStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<EmulationStatus>() { Positive = EmulationStatus.NULL, Negative = EmulationStatus.NULL };
+        public FilterItem<EmulationStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<EmulationStatus>() { Positive = EmulationStatus.NULL, Negative = EmulationStatus.NULL };
 
 
         // Ram Option
@@ -1590,9 +1590,9 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_ChipType:
                     if (negate)
-                        DatItem_ChipType.NegativeSet.Add(value);
+                        DatItem_ChipType.Negative |= value.AsChipType();
                     else
-                        DatItem_ChipType.PositiveSet.Add(value);
+                        DatItem_ChipType.Positive |= value.AsChipType();
                     break;
 
                 case Field.DatItem_Clock:
@@ -1707,16 +1707,16 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_FeatureStatus:
                     if (negate)
-                        DatItem_FeatureStatus.NegativeSet.Add(value);
+                        DatItem_FeatureStatus.Negative |= value.AsEmulationStatus();
                     else
-                        DatItem_FeatureStatus.PositiveSet.Add(value);
+                        DatItem_FeatureStatus.Positive |= value.AsEmulationStatus();
                     break;
 
                 case Field.DatItem_FeatureOverall:
                     if (negate)
-                        DatItem_FeatureOverall.NegativeSet.Add(value);
+                        DatItem_FeatureOverall.Negative |= value.AsEmulationStatus();
                     else
-                        DatItem_FeatureOverall.PositiveSet.Add(value);
+                        DatItem_FeatureOverall.Positive |= value.AsEmulationStatus();
                     break;
 
                 // Ram Option

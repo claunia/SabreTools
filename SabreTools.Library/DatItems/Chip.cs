@@ -5,6 +5,7 @@ using System.Linq;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -25,19 +26,20 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Internal tag
         /// </summary>
-        [JsonProperty("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tag { get; set; }
 
         /// <summary>
         /// Type of the chip
         /// </summary>
-        [JsonProperty("chiptype")]
-        public string ChipType { get; set; } // TODO: (cpu|audio)
+        [JsonProperty("chiptype", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ChipType ChipType { get; set; }
 
         /// <summary>
         /// Clock speed
         /// </summary>
-        [JsonProperty("clock")]
+        [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Clock { get; set; }
 
         #endregion
@@ -70,7 +72,7 @@ namespace SabreTools.Library.DatItems
                 Tag = mappings[Field.DatItem_Tag];
 
             if (mappings.Keys.Contains(Field.DatItem_ChipType))
-                ChipType = mappings[Field.DatItem_ChipType];
+                ChipType = mappings[Field.DatItem_ChipType].AsChipType();
 
             if (mappings.Keys.Contains(Field.DatItem_Clock))
                 Clock = mappings[Field.DatItem_Clock];
@@ -204,9 +206,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // DatItem_ChipType
-            if (filter.DatItem_ChipType.MatchesPositiveSet(ChipType) == false)
+            if (filter.DatItem_ChipType.MatchesPositive(ChipType.NULL, ChipType) == false)
                 return false;
-            if (filter.DatItem_ChipType.MatchesNegativeSet(ChipType) == true)
+            if (filter.DatItem_ChipType.MatchesNegative(ChipType.NULL, ChipType) == true)
                 return false;
 
             // DatItem_Clock
@@ -235,7 +237,7 @@ namespace SabreTools.Library.DatItems
                 Tag = null;
 
             if (fields.Contains(Field.DatItem_ChipType))
-                ChipType = null;
+                ChipType = ChipType.NULL;
 
             if (fields.Contains(Field.DatItem_Clock))
                 Clock = null;

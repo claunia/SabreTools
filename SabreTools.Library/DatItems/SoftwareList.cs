@@ -5,6 +5,7 @@ using System.Linq;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -26,6 +27,7 @@ namespace SabreTools.Library.DatItems
         /// Status of the softare list according to the machine
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
         public SoftwareListStatus Status { get; set; }
 
         /// <summary>

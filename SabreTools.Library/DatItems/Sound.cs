@@ -17,7 +17,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Number of channels
         /// </summary>
-        [JsonProperty("channels")]
+        [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Channels { get; set; } // TODO: Int32?
 
         #endregion

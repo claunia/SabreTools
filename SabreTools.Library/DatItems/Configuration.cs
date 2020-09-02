@@ -37,19 +37,19 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Conditions associated with the configuration
         /// </summary>
-        [JsonProperty("conditions")]
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Condition> Conditions { get; set; }
 
         /// <summary>
         /// Locations associated with the configuration
         /// </summary>
-        [JsonProperty("locations")]
+        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Location> Locations { get; set; }
 
         /// <summary>
         /// Settings associated with the configuration
         /// </summary>
-        [JsonProperty("settings")]
+        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Setting> Settings { get; set; }
 
         #endregion

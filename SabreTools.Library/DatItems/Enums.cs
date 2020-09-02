@@ -3,6 +3,22 @@
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
+    /// Determine the chip type
+    /// </summary>
+    [Flags]
+    public enum ChipType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        // TODO: (cpu|audio)
+        CPU = 1 << 0,
+        Audio = 1 << 1,
+    }
+
+    /// <summary>
     /// Determines which type of duplicate a file is
     /// </summary>
     [Flags]
@@ -15,6 +31,21 @@ namespace SabreTools.Library.DatItems
         // Location of match
         Internal = 1 << 2,
         External = 1 << 3,
+    }
+
+    /// <summary>
+    /// Determine the emulation status
+    /// </summary>
+    [Flags]
+    public enum EmulationStatus
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Unemulated = 1 << 0,
+        Imperfect = 1 << 1,
     }
 
     /// <summary>

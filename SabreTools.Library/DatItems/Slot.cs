@@ -25,7 +25,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Slot options associated with the slot
         /// </summary>
-        [JsonProperty("slotoptions")]
+        [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<SlotOption> SlotOptions { get; set; }
 
         #endregion

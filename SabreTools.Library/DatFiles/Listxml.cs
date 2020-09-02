@@ -205,7 +205,7 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = reader.GetAttribute("name"),
                             Tag = reader.GetAttribute("tag"),
-                            ChipType = reader.GetAttribute("type"),
+                            ChipType = reader.GetAttribute("type").AsChipType(),
                             Clock = reader.GetAttribute("clock"),
 
                             Source = new Source
@@ -293,8 +293,8 @@ namespace SabreTools.Library.DatFiles
                         datItems.Add(new Feature
                         {
                             Type = reader.GetAttribute("type").AsFeatureType(),
-                            Status = reader.GetAttribute("status"),
-                            Overall = reader.GetAttribute("overall"),
+                            Status = reader.GetAttribute("status").AsEmulationStatus(),
+                            Overall = reader.GetAttribute("overall").AsEmulationStatus(),
                         });
 
                         reader.Read();
@@ -1441,7 +1441,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("chip");
                         xtw.WriteRequiredAttributeString("name", chip.Name);
                         xtw.WriteOptionalAttributeString("tag", chip.Tag);
-                        xtw.WriteOptionalAttributeString("type", chip.ChipType);
+                        xtw.WriteOptionalAttributeString("type", chip.ChipType.FromChipType());
                         xtw.WriteOptionalAttributeString("clock", chip.Clock);
                         xtw.WriteEndElement();
                         break;
@@ -1570,8 +1570,8 @@ namespace SabreTools.Library.DatFiles
                         var feature = datItem as Feature;
                         xtw.WriteStartElement("feature");
                         xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
-                        xtw.WriteOptionalAttributeString("status", feature.Status);
-                        xtw.WriteOptionalAttributeString("overall", feature.Overall);
+                        xtw.WriteOptionalAttributeString("status", feature.Status.FromEmulationStatus());
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromEmulationStatus());
                         xtw.WriteEndElement();
                         break;
 

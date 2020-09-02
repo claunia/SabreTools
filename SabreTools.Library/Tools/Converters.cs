@@ -67,6 +67,33 @@ namespace SabreTools.Library.Tools
         #region String to Enum
 
         /// <summary>
+        /// Get ChipType value from input string
+        /// </summary>
+        /// <param name="chipType">String to get value from</param>
+        /// <returns>ChipType value corresponding to the string</returns>
+        public static ChipType AsChipType(this string chipType)
+        {
+#if NET_FRAMEWORK
+            switch (chipType?.ToLowerInvariant())
+            {
+                case "cpu":
+                    return ChipType.CPU;
+                case "audio":
+                    return ChipType.Audio;
+                default:
+                    return ChipType.NULL;
+            }
+#else
+            return chipType?.ToLowerInvariant() switch
+            {
+                "cpu" => ChipType.CPU,
+                "audio" => ChipType.Audio,
+                _ => ChipType.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get DatFormat value from input string
         /// </summary>
         /// <param name="input">String to get value from</param>
@@ -146,9 +173,36 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get EmulationStatus value from input string
+        /// </summary>
+        /// <param name="emulationStatus">String to get value from</param>
+        /// <returns>EmulationStatus value corresponding to the string</returns>
+        public static EmulationStatus AsEmulationStatus(this string emulationStatus)
+        {
+#if NET_FRAMEWORK
+            switch (emulationStatus?.ToLowerInvariant())
+            {
+                case "unemulated":
+                    return EmulationStatus.Unemulated;
+                case "imperfect":
+                    return EmulationStatus.Imperfect;
+                default:
+                    return EmulationStatus.NULL;
+            }
+#else
+            return emulationStatus?.ToLowerInvariant() switch
+            {
+                "unemulated" => EmulationStatus.Unemulated,
+                "imperfect" => EmulationStatus.Imperfect,
+                _ => EmulationStatus.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get FeatureType value from input string
         /// </summary>
-        /// <param name="featureType">String to get value from</param>
+        /// <param name="emulationStatus">String to get value from</param>
         /// <returns>FeatureType value corresponding to the string</returns>
         public static FeatureType AsFeatureType(this string featureType)
         {
@@ -2017,6 +2071,60 @@ namespace SabreTools.Library.Tools
 
         // TODO: DatFormat -> string
         // TODO: Field -> string
+
+        /// <summary>
+        /// Get string value from input ChipType
+        /// </summary>
+        /// <param name="chipType">ChipType to get value from</param>
+        /// <returns>String value corresponding to the ChipType</returns>
+        public static string FromChipType(this ChipType chipType)
+        {
+#if NET_FRAMEWORK
+            switch (chipType)
+            {
+                case ChipType.CPU:
+                    return "cpu";
+                case ChipType.Audio:
+                    return "audio";
+                default:
+                    return null;
+            }
+#else
+            return chipType switch
+            {
+                ChipType.CPU => "cpu",
+                ChipType.Audio => "audio",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input EmulationStatus
+        /// </summary>
+        /// <param name="emulationStatus">EmulationStatus to get value from</param>
+        /// <returns>String value corresponding to the EmulationStatus</returns>
+        public static string FromEmulationStatus(this EmulationStatus emulationStatus)
+        {
+#if NET_FRAMEWORK
+            switch (emulationStatus)
+            {
+                case EmulationStatus.Unemulated:
+                    return "unemulated";
+                case EmulationStatus.Imperfect:
+                    return "imperfect";
+                default:
+                    return null;
+            }
+#else
+            return emulationStatus switch
+            {
+                EmulationStatus.Unemulated => "unemulated",
+                EmulationStatus.Imperfect => "imperfect",
+                _ => null,
+            };
+#endif
+        }
 
         /// <summary>
         /// Get string value from input FeatureType
