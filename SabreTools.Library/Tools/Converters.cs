@@ -617,21 +617,6 @@ namespace SabreTools.Library.Tools
                     case "display_vbstart":
                         return Field.Machine_Display_VBStart;
 
-                    case "conditions":
-                        return Field.Machine_Conditions;
-
-                    case "condition_tag":
-                        return Field.Machine_Condition_Tag;
-
-                    case "condition_mask":
-                        return Field.Machine_Condition_Mask;
-
-                    case "condition_relation":
-                        return Field.Machine_Condition_Relation;
-
-                    case "condition_value":
-                        return Field.Machine_Condition_Value;
-
                     case "inputs":
                         return Field.Machine_Inputs;
 
@@ -1046,6 +1031,10 @@ namespace SabreTools.Library.Tools
                     case "condition_value":
                         return Field.DatItem_Condition_Value;
 
+                    // Analog
+                    case "mask":
+                        return Field.DatItem_Mask;
+
                     // BiosSet
                     case "description":
                     case "biosdescription":
@@ -1063,10 +1052,14 @@ namespace SabreTools.Library.Tools
                     case "clock":
                         return Field.DatItem_Clock;
 
-                    // Configuration
-                    case "mask":
-                        return Field.DatItem_Mask;
+                    // Condition
+                    case "relation":
+                        return Field.DatItem_Relation;
 
+                    case "conditionvalue":
+                        return Field.DatItem_ConditionValue;
+
+                    // Configuration
                     case "locations":
                         return Field.DatItem_Locations;
 
@@ -1665,6 +1658,8 @@ namespace SabreTools.Library.Tools
             {
                 case "adjuster":
                     return ItemType.Adjuster;
+                case "analog":
+                    return ItemType.Analog;
                 case "archive":
                     return ItemType.Archive;
                 case "biosset":
@@ -1673,6 +1668,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Blank;
                 case "chip":
                     return ItemType.Chip;
+                case "condition":
+                    return ItemType.Condition;
                 case "configuration":
                     return ItemType.Configuration;
                 case "device_ref":
@@ -1708,10 +1705,12 @@ namespace SabreTools.Library.Tools
             return itemType?.ToLowerInvariant() switch
             {
                 "adjuster" => ItemType.Adjuster,
+                "analog" => ItemType.Analog,
                 "archive" => ItemType.Archive,
                 "biosset" => ItemType.BiosSet,
                 "blank" => ItemType.Blank,
                 "chip" => ItemType.Chip,
+                "condition" => ItemType.Condition,
                 "configuration" => ItemType.Configuration,
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
@@ -2270,6 +2269,8 @@ namespace SabreTools.Library.Tools
             {
                 case ItemType.Adjuster:
                     return "adjuster";
+                case ItemType.Analog:
+                    return "analog";
                 case ItemType.Archive:
                     return "archive";
                 case ItemType.BiosSet:
@@ -2278,6 +2279,8 @@ namespace SabreTools.Library.Tools
                     return "blank";
                 case ItemType.Chip:
                     return "chip";
+                case ItemType.Condition:
+                    return "condition";
                 case ItemType.Configuration:
                     return "configuration";
                 case ItemType.DeviceReference:
@@ -2313,10 +2316,12 @@ namespace SabreTools.Library.Tools
             return itemType switch
             {
                 ItemType.Adjuster => "adjuster",
+                ItemType.Analog => "analog",
                 ItemType.Archive => "archive",
                 ItemType.BiosSet => "biosset",
                 ItemType.Blank => "blank",
                 ItemType.Chip => "chip",
+                ItemType.Condition => "condition",
                 ItemType.Configuration => "configuration",
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",

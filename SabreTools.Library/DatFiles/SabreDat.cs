@@ -1216,16 +1216,24 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
                         if (adjuster.Conditions != null)
                         {
-                            foreach (var condition in adjuster.Conditions)
+                            foreach (var adjusterCondition in adjuster.Conditions)
                             {
                                 xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteOptionalAttributeString("tag", adjusterCondition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", adjusterCondition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation);
+                                xtw.WriteOptionalAttributeString("value", adjusterCondition.Value);
                                 xtw.WriteEndElement();
                             }
                         }
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Analog:
+                        var analog = datItem as Analog;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "analog");
+                        xtw.WriteOptionalAttributeString("mask", analog.Mask);
                         xtw.WriteEndElement();
                         break;
 
@@ -1258,6 +1266,17 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Condition:
+                        var condition = datItem as Condition;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "condition");
+                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                        xtw.WriteOptionalAttributeString("value", condition.Value);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Configuration:
                         var configuration = datItem as Configuration;
                         xtw.WriteStartElement("file");
@@ -1268,13 +1287,13 @@ namespace SabreTools.Library.DatFiles
 
                         if (configuration.Conditions != null)
                         {
-                            foreach (var condition in configuration.Conditions)
+                            foreach (var configurationCondition in configuration.Conditions)
                             {
                                 xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteOptionalAttributeString("tag", configurationCondition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", configurationCondition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation);
+                                xtw.WriteOptionalAttributeString("value", configurationCondition.Value);
                                 xtw.WriteEndElement();
                             }
                         }
@@ -1320,13 +1339,13 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
                         if (dipSwitch.Conditions != null)
                         {
-                            foreach (var condition in dipSwitch.Conditions)
+                            foreach (var dipSwitchCondition in dipSwitch.Conditions)
                             {
                                 xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteOptionalAttributeString("tag", dipSwitchCondition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", dipSwitchCondition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation);
+                                xtw.WriteOptionalAttributeString("value", dipSwitchCondition.Value);
                                 xtw.WriteEndElement();
                             }
                         }
@@ -1351,13 +1370,13 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
                                 if (value.Conditions != null)
                                 {
-                                    foreach (var condition in value.Conditions)
+                                    foreach (var dipValueCondition in value.Conditions)
                                     {
                                         xtw.WriteStartElement("condition");
-                                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                        xtw.WriteOptionalAttributeString("value", condition.Value);
+                                        xtw.WriteOptionalAttributeString("tag", dipValueCondition.Tag);
+                                        xtw.WriteOptionalAttributeString("mask", dipValueCondition.Mask);
+                                        xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation);
+                                        xtw.WriteOptionalAttributeString("value", dipValueCondition.Value);
                                         xtw.WriteEndElement();
                                     }
                                 }

@@ -84,6 +84,12 @@ namespace SabreTools.Library.DatFiles
         public long AdjusterCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Analog items
+        /// </summary>
+        [JsonIgnore]
+        public long AnalogCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Archive items
         /// </summary>
         [JsonIgnore]
@@ -100,6 +106,12 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public long ChipCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of top-level Condition items
+        /// </summary>
+        [JsonIgnore]
+        public long ConditionCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Configuration items
@@ -514,6 +526,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Adjuster:
                     AdjusterCount++;
                     break;
+                case ItemType.Analog:
+                    AnalogCount++;
+                    break;
                 case ItemType.Archive:
                     ArchiveCount++;
                     break;
@@ -522,6 +537,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Chip:
                     ChipCount++;
+                    break;
+                case ItemType.Condition:
+                    ConditionCount++;
                     break;
                 case ItemType.Configuration:
                     ConfigurationCount++;
@@ -673,6 +691,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Adjuster:
                     AdjusterCount--;
                     break;
+                case ItemType.Analog:
+                    AnalogCount--;
+                    break;
                 case ItemType.Archive:
                     ArchiveCount--;
                     break;
@@ -681,6 +702,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Chip:
                     ChipCount--;
+                    break;
+                case ItemType.Condition:
+                    ConditionCount--;
                     break;
                 case ItemType.Configuration:
                     ConfigurationCount--;

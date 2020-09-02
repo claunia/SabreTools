@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
+using SabreTools.Library.DatItems;
+using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -13,76 +16,86 @@ namespace SabreTools.Library.DatItems
     #region ListXML
 
     /// <summary>
-    /// Represents one ListXML analog
-    /// </summary>
-    [JsonObject("analog")]
-    public class Analog
-    {
-        [JsonProperty("mask")]
-        public string Mask { get; set; }
-    }
-
-    /// <summary>
-    /// Represents one ListXML condition
-    /// </summary>
-    /// TODO: Promote to DatItem level (Both used at ListXML level AND under a lot of stuff)
-    [JsonObject("condition")]
-    public class Condition
-    {
-        [JsonProperty("tag")]
-        public string Tag { get; set; }
-
-        [JsonProperty("mask")]
-        public string Mask { get; set; }
-
-        [JsonProperty("relation")]
-        public string Relation { get; set; } // TODO: (eq|ne|gt|le|lt|ge)
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
-    }
-
-    /// <summary>
     /// Represents one ListXML control
     /// </summary>
     [JsonObject("control")]
     public class Control
     {
-        [JsonProperty("type")]
+        #region Fields
+
+        /// <summary>
+        /// Control type
+        /// </summary>
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Type { get; set; }
 
-        [JsonProperty("player")]
+        /// <summary>
+        /// Player ID
+        /// </summary>
+        [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Player { get; set; } // TODO: Int32?
 
-        [JsonProperty("buttons")]
+        /// <summary>
+        /// Button count
+        /// </summary>
+        [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Buttons { get; set; } // TODO: Int32?
 
-        [JsonProperty("regbuttons")]
+        /// <summary>
+        /// Regular button count
+        /// </summary>
+        [JsonProperty("regbuttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RegButtons { get; set; } // TODO: Int32?
 
-        [JsonProperty("minimum")]
+        /// <summary>
+        /// Minimum value
+        /// </summary>
+        [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Minimum { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("maximum")]
+        /// <summary>
+        /// Maximum value
+        /// </summary>
+        [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Maximum { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("sensitivity")]
+        /// <summary>
+        /// Sensitivity value
+        /// </summary>
+        [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Sensitivity { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("keydelta")]
+        /// <summary>
+        /// Keypress delta
+        /// </summary>
+        [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string KeyDelta { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("reverse")]
+        /// <summary>
+        /// Determines if the control is reversed
+        /// </summary>
+        [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Reverse { get; set; }
 
-        [JsonProperty("ways")]
+        /// <summary>
+        /// First set of ways
+        /// </summary>
+        [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Ways { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("ways2")]
+        /// <summary>
+        /// Second set of ways
+        /// </summary>
+        [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Ways2 { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("ways3")]
+        /// <summary>
+        /// Third set of ways
+        /// </summary>
+        [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Ways3 { get; set; } // TODO: Int32? Float?
+
+        #endregion
     }
 
     /// <summary>
@@ -92,26 +105,51 @@ namespace SabreTools.Library.DatItems
     [JsonObject("device")]
     public class Device
     {
-        [JsonProperty("type")]
+        #region Fields
+
+        /// <summary>
+        /// Device type
+        /// </summary>
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Type { get; set; }
 
-        [JsonProperty("tag")]
+        /// <summary>
+        /// Device tag
+        /// </summary>
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tag { get; set; }
 
-        [JsonProperty("fixed_image")]
+        /// <summary>
+        /// Fixed image format
+        /// </summary>
+        [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FixedImage { get; set; }
 
-        [JsonProperty("mandatory")]
+        /// <summary>
+        /// Determines if the devices is mandatory
+        /// </summary>
+        [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Mandatory { get; set; } // TODO: bool?
 
-        [JsonProperty("interface")]
+        /// <summary>
+        /// Device interface
+        /// </summary>
+        [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Interface { get; set; }
 
-        [JsonProperty("instances")]
+        /// <summary>
+        /// Device instances
+        /// </summary>
+        [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Instance> Instances { get; set; }
 
-        [JsonProperty("extensions")]
+        /// <summary>
+        /// Device extensions
+        /// </summary>
+        [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Extension> Extensions { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -121,47 +159,93 @@ namespace SabreTools.Library.DatItems
     [JsonObject("display")]
     public class Display
     {
-        [JsonProperty("tag")]
+        #region Fields
+
+        /// <summary>
+        /// Display tag
+        /// </summary>
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tag { get; set; }
 
-        [JsonProperty("type")]
+        /// <summary>
+        /// Display type
+        /// </summary>
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Type { get; set; } // TODO: (raster|vector|lcd|svg|unknown)
 
-        [JsonProperty("rotate")]
+        /// <summary>
+        /// Display rotation
+        /// </summary>
+        [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Rotate { get; set; } // TODO: (0|90|180|270) Int32?
 
-        [JsonProperty("flipx")]
+        /// <summary>
+        /// Determines if display is flipped in the X-coordinates
+        /// </summary>
+        [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? FlipX { get; set; }
 
-        [JsonProperty("width")]
+        /// <summary>
+        /// Display width
+        /// </summary>
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Width { get; set; } // TODO: Int32?
 
-        [JsonProperty("height")]
+        /// <summary>
+        /// Display height
+        /// </summary>
+        [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Height { get; set; } // TODO: Int32?
 
-        [JsonProperty("refresh")]
+        /// <summary>
+        /// Refresh rate
+        /// </summary>
+        [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Refresh { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("pixclock")]
+        /// <summary>
+        /// Pixel clock timer
+        /// </summary>
+        [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string PixClock { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("htotal")]
+        /// <summary>
+        /// Total horizontal lines
+        /// </summary>
+        [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string HTotal { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("hbend")]
+        /// <summary>
+        /// Horizontal blank end
+        /// </summary>
+        [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string HBEnd { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("hbstart")]
+        /// <summary>
+        /// Horizontal blank start
+        /// </summary>
+        [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string HBStart { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("vtotal")]
+        /// <summary>
+        /// Total vertical lines
+        /// </summary>
+        [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string VTotal { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("vbend")]
+        /// <summary>
+        /// Vertical blank end
+        /// </summary>
+        [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string VBEnd { get; set; } // TODO: Int32? Float?
 
-        [JsonProperty("vbstart")]
+        /// <summary>
+        /// Vertical blank start
+        /// </summary>
+        [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string VBStart { get; set; } // TODO: Int32? Float?
+
+        #endregion
     }
 
     /// <summary>
@@ -170,8 +254,15 @@ namespace SabreTools.Library.DatItems
     [JsonObject("extension")]
     public class Extension
     {
-        [JsonProperty("name")]
+        #region Fields
+
+        /// <summary>
+        /// Extension name
+        /// </summary>
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -181,20 +272,39 @@ namespace SabreTools.Library.DatItems
     [JsonObject("input")]
     public class Input
     {
-        [JsonProperty("service")]
+        #region Fields
+
+        /// <summary>
+        /// Input service ID
+        /// </summary>
+        [JsonProperty("service", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Service { get; set; }
 
-        [JsonProperty("tilt")]
+        /// <summary>
+        /// Determins if this has a tilt sensor
+        /// </summary>
+        [JsonProperty("tilt", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Tilt { get; set; }
 
-        [JsonProperty("players")]
+        /// <summary>
+        /// Number of players on the input
+        /// </summary>
+        [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Players { get; set; } // TODO: Int32?
 
-        [JsonProperty("coins")]
+        /// <summary>
+        /// Number of coins required
+        /// </summary>
+        [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Coins { get; set; } // TODO: Int32?
 
-        [JsonProperty("controls")]
+        /// <summary>
+        /// Set of controls for the input
+        /// </summary>
+        [JsonProperty("controls", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Control> Controls { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -203,11 +313,21 @@ namespace SabreTools.Library.DatItems
     [JsonObject("instance")]
     public class Instance
     {
+        #region Fields
+
+        /// <summary>
+        /// Name of the instance
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("briefname")]
+        /// <summary>
+        /// Short name for the instance
+        /// </summary>
+        [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string BriefName { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -216,14 +336,27 @@ namespace SabreTools.Library.DatItems
     [JsonObject("location")]
     public class Location
     {
+        #region Fields
+
+        /// <summary>
+        /// Location name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("number")]
+        /// <summary>
+        /// Location ID
+        /// </summary>
+        [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Number { get; set; }
 
-        [JsonProperty("inverted")]
+        /// <summary>
+        /// Determines if location is inverted or not
+        /// </summary>
+        [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Inverted { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -233,11 +366,21 @@ namespace SabreTools.Library.DatItems
     [JsonObject("port")]
     public class Port
     {
-        [JsonProperty("tag")]
+        #region Fields
+
+        /// <summary>
+        /// Tag for the port
+        /// </summary>
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Tag { get; set; }
 
-        [JsonProperty("analogs")]
+        /// <summary>
+        /// List of analogs on the port
+        /// </summary>
+        [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Analog> Analogs { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -246,17 +389,33 @@ namespace SabreTools.Library.DatItems
     [JsonObject("setting")]
     public class Setting
     {
+        #region Fields
+
+        /// <summary>
+        /// Setting name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("value")]
+        /// <summary>
+        /// Setting value
+        /// </summary>
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Value { get; set; }
 
-        [JsonProperty("default")]
+        /// <summary>
+        /// Determines if the setting is default or not
+        /// </summary>
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Default { get; set; }
 
-        [JsonProperty("conditions")]
+        /// <summary>
+        /// List of conditions on the setting
+        /// </summary>
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Condition> Conditions { get; set; }
+
+        #endregion
     }
 
     /// <summary>
@@ -265,14 +424,27 @@ namespace SabreTools.Library.DatItems
     [JsonObject("slotoption")]
     public class SlotOption
     {
+        #region Fields
+
+        /// <summary>
+        /// Slot option name
+        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Referenced device name
+        /// </summary>
         [JsonProperty("devname")]
         public string DeviceName { get; set; }
 
-        [JsonProperty("default")]
+        /// <summary>
+        /// Determines if this slot option is default or not
+        /// </summary>
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? Default { get; set; }
+
+        #endregion
     }
 
     #endregion

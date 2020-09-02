@@ -68,13 +68,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Display_VBEnd { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_Display_VBStart { get; private set; } = new FilterItem<string>();
 
-        // Conditions
-        public FilterItem<bool?> Machine_Conditions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Condition_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Condition_Mask { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Condition_Relation { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Condition_Value { get; private set; } = new FilterItem<string>();
-
         // Inputs
         public FilterItem<bool?> Machine_Inputs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> Machine_Input_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -257,6 +250,9 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Condition_Relation { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Condition_Value { get; private set; } = new FilterItem<string>();
 
+        // Analog
+        public FilterItem<string> DatItem_Mask { get; private set; } = new FilterItem<string>();
+
         // BiosSet
         public FilterItem<string> DatItem_Description { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -266,8 +262,9 @@ namespace SabreTools.Library.Filtering
         public FilterItem<ChipType> DatItem_ChipType { get; private set; } = new FilterItem<ChipType>() { Positive = ChipType.NULL, Negative = ChipType.NULL };
         public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
 
-        // Configuration
-        public FilterItem<string> DatItem_Mask { get; private set; } = new FilterItem<string>();
+        // Condition
+        public FilterItem<string> DatItem_Relation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_ConditionValue { get; private set; } = new FilterItem<string>();
 
         // Configuration.Locations
         public FilterItem<bool?> DatItem_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -648,42 +645,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Display_VBStart.NegativeSet.Add(value);
                     else
                         Machine_Display_VBStart.PositiveSet.Add(value);
-                    break;
-
-                // Conditions
-                case Field.Machine_Conditions:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Conditions.Neutral = false;
-                    else
-                        Machine_Conditions.Neutral = true;
-                    break;
-
-                case Field.Machine_Condition_Tag:
-                    if (negate)
-                        Machine_Condition_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Condition_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Condition_Mask:
-                    if (negate)
-                        Machine_Condition_Mask.NegativeSet.Add(value);
-                    else
-                        Machine_Condition_Mask.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Condition_Relation:
-                    if (negate)
-                        Machine_Condition_Relation.NegativeSet.Add(value);
-                    else
-                        Machine_Condition_Relation.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Condition_Value:
-                    if (negate)
-                        Machine_Condition_Value.NegativeSet.Add(value);
-                    else
-                        Machine_Condition_Value.PositiveSet.Add(value);
                     break;
 
                 // Inputs
@@ -1534,6 +1495,14 @@ namespace SabreTools.Library.Filtering
                         DatItem_Condition_Value.PositiveSet.Add(value);
                     break;
 
+                // Analog
+                case Field.DatItem_Mask:
+                    if (negate)
+                        DatItem_Mask.NegativeSet.Add(value);
+                    else
+                        DatItem_Mask.PositiveSet.Add(value);
+                    break;
+
                 // BiosSet
                 case Field.DatItem_Description:
                     if (negate)
@@ -1564,12 +1533,19 @@ namespace SabreTools.Library.Filtering
                         DatItem_Clock.PositiveSet.Add(value);
                     break;
 
-                // Configuration
-                case Field.DatItem_Mask:
+                // Condition
+                case Field.DatItem_Relation:
                     if (negate)
-                        DatItem_Mask.NegativeSet.Add(value);
+                        DatItem_Relation.NegativeSet.Add(value);
                     else
-                        DatItem_Mask.PositiveSet.Add(value);
+                        DatItem_Relation.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_ConditionValue:
+                    if (negate)
+                        DatItem_ConditionValue.NegativeSet.Add(value);
+                    else
+                        DatItem_ConditionValue.PositiveSet.Add(value);
                     break;
 
                 // Configurations.Locations

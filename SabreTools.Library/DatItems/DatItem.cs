@@ -458,6 +458,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Adjuster:
                     return new Adjuster();
 
+                case ItemType.Analog:
+                    return new Analog();
+
                 case ItemType.Archive:
                     return new Archive();
 
@@ -469,6 +472,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Chip:
                     return new Chip();
+
+                case ItemType.Condition:
+                    return new Condition();
 
                 case ItemType.Configuration:
                     return new Configuration();
@@ -519,10 +525,12 @@ namespace SabreTools.Library.DatItems
             return itemType switch
             {
                 ItemType.Adjuster => new Adjuster(),
+                ItemType.Analog => new Analog(),
                 ItemType.Archive => new Archive(),
                 ItemType.BiosSet => new BiosSet(),
                 ItemType.Blank => new Blank(),
                 ItemType.Chip => new Chip(),
+                ItemType.Condition => new Condition(),
                 ItemType.Configuration => new Configuration(),
                 ItemType.DeviceReference => new DeviceReference(),
                 ItemType.DipSwitch => new DipSwitch(),

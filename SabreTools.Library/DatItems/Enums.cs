@@ -203,13 +203,6 @@ namespace SabreTools.Library.DatItems
         Machine_Display_VBEnd,
         Machine_Display_VBStart,
 
-        // Conditions
-        Machine_Conditions,
-        Machine_Condition_Tag,
-        Machine_Condition_Mask,
-        Machine_Condition_Relation,
-        Machine_Condition_Value,
-
         // Inputs
         Machine_Inputs,
         Machine_Input_Service,
@@ -393,6 +386,9 @@ namespace SabreTools.Library.DatItems
         DatItem_Condition_Relation,
         DatItem_Condition_Value,
 
+        // Analog
+        DatItem_Mask,
+
         // BiosSet
         DatItem_Description,
 
@@ -401,8 +397,9 @@ namespace SabreTools.Library.DatItems
         DatItem_ChipType,
         DatItem_Clock,
 
-        // Configuration
-        DatItem_Mask,
+        // Condition
+        DatItem_ConditionValue,
+        DatItem_Relation,
 
         // Configuration.Locations
         DatItem_Locations,
@@ -489,9 +486,11 @@ namespace SabreTools.Library.DatItems
 
         // "Auxiliary" item types
         Adjuster,
+        Analog,
         Archive,
         BiosSet,
         Chip,
+        Condition,
         Configuration,
         DeviceReference,
         DipSwitch,

@@ -172,6 +172,12 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Default = reader.GetAttribute("default").AsYesNo(),
                             Conditions = new List<Condition>(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         // Now read the internal tags
@@ -218,6 +224,24 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "condition":
+                        datItems.Add(new Condition
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Relation = reader.GetAttribute("relation"),
+                            ConditionValue = reader.GetAttribute("value"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
+                        break;
+
                     case "configuration":
                         var configuration = new Configuration
                         {
@@ -227,6 +251,12 @@ namespace SabreTools.Library.DatFiles
                             Conditions = new List<Condition>(),
                             Locations = new List<Location>(),
                             Settings = new List<Setting>(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         // Now read the internal tags
@@ -242,6 +272,12 @@ namespace SabreTools.Library.DatFiles
                         datItems.Add(new DeviceReference
                         {
                             Name = reader.GetAttribute("name"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         });
 
                         reader.Read();
@@ -256,6 +292,12 @@ namespace SabreTools.Library.DatFiles
                             Conditions = new List<Condition>(),
                             Locations = new List<Location>(),
                             Values = new List<Setting>(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         // Now read the internal tags
@@ -296,6 +338,12 @@ namespace SabreTools.Library.DatFiles
                             Emulation = reader.GetAttribute("emulation").AsSupportStatus(),
                             Cocktail = reader.GetAttribute("cocktail").AsSupportStatus(),
                             SaveState = reader.GetAttribute("savestate").AsSupported(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         });
 
                         reader.Read();
@@ -307,6 +355,12 @@ namespace SabreTools.Library.DatFiles
                             Type = reader.GetAttribute("type").AsFeatureType(),
                             Status = reader.GetAttribute("status").AsFeatureStatus(),
                             Overall = reader.GetAttribute("overall").AsFeatureStatus(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         });
 
                         reader.Read();
@@ -342,6 +396,12 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Default = reader.GetAttribute("default").AsYesNo(),
                             Content = reader.ReadElementContentAsString(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         });
 
                         break;
@@ -366,6 +426,12 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = reader.GetAttribute("name"),
                             SlotOptions = new List<SlotOption>(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
                         };
 
                         // Now read the internal tags
@@ -431,22 +497,6 @@ namespace SabreTools.Library.DatFiles
                             machine.Displays = new List<Display>();
 
                         machine.Displays.Add(display);
-
-                        reader.Read();
-                        break;
-
-                    case "condition":
-                        var condition = new Condition();
-                        condition.Tag = reader.GetAttribute("tag");
-                        condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation");
-                        condition.Value = reader.GetAttribute("value");
-
-                        // Ensure the list exists
-                        if (machine.Conditions == null)
-                            machine.Conditions = new List<Condition>();
-
-                        machine.Conditions.Add(condition);
 
                         reader.Read();
                         break;
@@ -1190,13 +1240,12 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalElementString("year", datItem.Machine.Year);
                 xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
 
-                // TODO: These should go *after* the datitems
+                // TODO: These are all going away due to promotions
                 if (datItem.Machine.Displays != null)
                 {
                     foreach (var display in datItem.Machine.Displays)
                     {
                         xtw.WriteStartElement("display");
-
                         xtw.WriteOptionalAttributeString("tag", display.Tag);
                         xtw.WriteOptionalAttributeString("type", display.Type);
                         xtw.WriteOptionalAttributeString("rotate", display.Rotate);
@@ -1211,23 +1260,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
                         xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
                         xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
-
-                        // End display
-                        xtw.WriteEndElement();
-                    }
-                }
-                if (datItem.Machine.Conditions != null)
-                {
-                    foreach (var condition in datItem.Machine.Conditions)
-                    {
-                        xtw.WriteStartElement("condition");
-
-                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                        xtw.WriteOptionalAttributeString("value", condition.Value);
-
-                        // End condition
                         xtw.WriteEndElement();
                     }
                 }
@@ -1236,18 +1268,15 @@ namespace SabreTools.Library.DatFiles
                     foreach (var input in datItem.Machine.Inputs)
                     {
                         xtw.WriteStartElement("input");
-
                         xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
                         xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
                         xtw.WriteOptionalAttributeString("players", input.Players);
                         xtw.WriteOptionalAttributeString("coins", input.Coins);
-
                         if (input.Controls != null)
                         {
                             foreach (var control in input.Controls)
                             {
                                 xtw.WriteStartElement("control");
-
                                 xtw.WriteOptionalAttributeString("type", control.Type);
                                 xtw.WriteOptionalAttributeString("player", control.Player);
                                 xtw.WriteOptionalAttributeString("buttons", control.Buttons);
@@ -1260,13 +1289,9 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteOptionalAttributeString("ways", control.Ways);
                                 xtw.WriteOptionalAttributeString("ways2", control.Ways2);
                                 xtw.WriteOptionalAttributeString("ways3", control.Ways3);
-
-                                // End control
                                 xtw.WriteEndElement();
                             }
                         }
-
-                        // End input
                         xtw.WriteEndElement();
                     }
                 }
@@ -1275,23 +1300,16 @@ namespace SabreTools.Library.DatFiles
                     foreach (var port in datItem.Machine.Ports)
                     {
                         xtw.WriteStartElement("port");
-
                         xtw.WriteOptionalAttributeString("tag", port.Tag);
-
                         if (port.Analogs != null)
                         {
                             foreach (var analog in port.Analogs)
                             {
                                 xtw.WriteStartElement("analog");
-
                                 xtw.WriteOptionalAttributeString("mask", analog.Mask);
-
-                                // End analog
                                 xtw.WriteEndElement();
                             }
                         }
-
-                        // End port
                         xtw.WriteEndElement();
                     }
                 }
@@ -1300,23 +1318,18 @@ namespace SabreTools.Library.DatFiles
                     foreach (var device in datItem.Machine.Devices)
                     {
                         xtw.WriteStartElement("device");
-
                         xtw.WriteOptionalAttributeString("type", device.Type);
                         xtw.WriteOptionalAttributeString("tag", device.Tag);
                         xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
                         xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
                         xtw.WriteOptionalAttributeString("interface", device.Interface);
-
                         if (device.Instances != null)
                         {
                             foreach (var instance in device.Instances)
                             {
                                 xtw.WriteStartElement("instance");
-
                                 xtw.WriteOptionalAttributeString("name", instance.Name);
                                 xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
-
-                                // End instance
                                 xtw.WriteEndElement();
                             }
                         }
@@ -1325,15 +1338,10 @@ namespace SabreTools.Library.DatFiles
                             foreach (var extension in device.Extensions)
                             {
                                 xtw.WriteStartElement("extension");
-
                                 xtw.WriteOptionalAttributeString("name", extension.Name);
-
-                                // End extension
                                 xtw.WriteEndElement();
                             }
                         }
-
-                        // End device
                         xtw.WriteEndElement();
                     }
                 }
@@ -1395,13 +1403,13 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
                         if (adjuster.Conditions != null)
                         {
-                            foreach (var condition in adjuster.Conditions)
+                            foreach (var adjusterCondition in adjuster.Conditions)
                             {
                                 xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteOptionalAttributeString("tag", adjusterCondition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", adjusterCondition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation);
+                                xtw.WriteOptionalAttributeString("value", adjusterCondition.Value);
                                 xtw.WriteEndElement();
                             }
                         }
@@ -1427,6 +1435,16 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Condition:
+                        var condition = datItem as Condition;
+                        xtw.WriteStartElement("condition");
+                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                        xtw.WriteOptionalAttributeString("value", condition.Value);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Configuration:
                         var configuration = datItem as Configuration;
                         xtw.WriteStartElement("configuration");
@@ -1436,13 +1454,13 @@ namespace SabreTools.Library.DatFiles
 
                         if (configuration.Conditions != null)
                         {
-                            foreach (var condition in configuration.Conditions)
+                            foreach (var configurationCondition in configuration.Conditions)
                             {
                                 xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteOptionalAttributeString("tag", configurationCondition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", configurationCondition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation);
+                                xtw.WriteOptionalAttributeString("value", configurationCondition.Value);
                                 xtw.WriteEndElement();
                             }
                         }
@@ -1486,13 +1504,13 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
                         if (dipSwitch.Conditions != null)
                         {
-                            foreach (var condition in dipSwitch.Conditions)
+                            foreach (var dipSwitchCondition in dipSwitch.Conditions)
                             {
                                 xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                xtw.WriteOptionalAttributeString("value", condition.Value);
+                                xtw.WriteOptionalAttributeString("tag", dipSwitchCondition.Tag);
+                                xtw.WriteOptionalAttributeString("mask", dipSwitchCondition.Mask);
+                                xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation);
+                                xtw.WriteOptionalAttributeString("value", dipSwitchCondition.Value);
                                 xtw.WriteEndElement();
                             }
                         }
@@ -1517,13 +1535,13 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
                                 if (value.Conditions != null)
                                 {
-                                    foreach (var condition in value.Conditions)
+                                    foreach (var dipValueCondition in value.Conditions)
                                     {
                                         xtw.WriteStartElement("condition");
-                                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
-                                        xtw.WriteOptionalAttributeString("value", condition.Value);
+                                        xtw.WriteOptionalAttributeString("tag", dipValueCondition.Tag);
+                                        xtw.WriteOptionalAttributeString("mask", dipValueCondition.Mask);
+                                        xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation);
+                                        xtw.WriteOptionalAttributeString("value", dipValueCondition.Value);
                                         xtw.WriteEndElement();
                                     }
                                 }

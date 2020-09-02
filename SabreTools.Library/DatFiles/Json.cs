@@ -211,6 +211,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Adjuster:
                         datItem = datItemObj.ToObject<Adjuster>();
                         break;
+                    case ItemType.Analog:
+                        datItem = datItemObj.ToObject<Analog>();
+                        break;
                     case ItemType.Archive:
                         datItem = datItemObj.ToObject<Archive>();
                         break;
@@ -222,6 +225,9 @@ namespace SabreTools.Library.DatFiles
                         break;
                     case ItemType.Chip:
                         datItem = datItemObj.ToObject<Chip>();
+                        break;
+                    case ItemType.Condition:
+                        datItem = datItemObj.ToObject<Condition>();
                         break;
                     case ItemType.Configuration:
                         datItem = datItemObj.ToObject<Configuration>();

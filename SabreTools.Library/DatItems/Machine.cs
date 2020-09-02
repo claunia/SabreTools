@@ -159,12 +159,6 @@ namespace SabreTools.Library.DatItems
         public List<Display> Displays { get; set; } = null;
 
         /// <summary>
-        /// List of associated conditions
-        /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Condition> Conditions { get; set; } = null;
-
-        /// <summary>
         /// List of associated inputs
         /// </summary>
         [JsonProperty("inputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -535,7 +529,6 @@ namespace SabreTools.Library.DatItems
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
                 Displays = this.Displays,
-                Conditions = this.Conditions,
                 Inputs = this.Inputs,
                 Ports = this.Ports,
                 Devices = this.Devices,
@@ -1018,105 +1011,13 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
-            #region Conditions
-
-            // Machine_Conditions
-            if (filter.Machine_Conditions.MatchesNeutral(null, Conditions?.Any() ?? null) == false)
-                return false;
-
-            // Machine_Condition_Tag
-            if (Conditions?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var condition in Conditions)
-                {
-                    if (filter.Machine_Condition_Tag.MatchesPositiveSet(condition?.Tag) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Condition_Tag.MatchesNegativeSet(condition?.Tag) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Condition_Mask
-            if (Conditions?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var condition in Conditions)
-                {
-                    if (filter.Machine_Condition_Mask.MatchesPositiveSet(condition?.Mask) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Condition_Mask.MatchesNegativeSet(condition?.Mask) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Condition_Relation
-            if (Conditions?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var condition in Conditions)
-                {
-                    if (filter.Machine_Condition_Relation.MatchesPositiveSet(condition?.Relation) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Condition_Relation.MatchesNegativeSet(condition?.Relation) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Condition_Value
-            if (Conditions?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var condition in Conditions)
-                {
-                    if (filter.Machine_Condition_Value.MatchesPositiveSet(condition?.Value) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Condition_Value.MatchesNegativeSet(condition?.Value) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            #endregion
-
             // TODO: Inputs
             // TODO: Inputs.Controls
             // TODO: Ports
             // TODO: Ports.Analogs
-            // TODO: Drivers
-            // TODO: Features
             // TODO: Devices
             // TODO: Devices.Instances
             // TODO: Devices.Extensions
-            // TODO: Slots
-            // TODO: Slots.SlotOptions
 
             #endregion // ListXML
 
