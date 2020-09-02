@@ -1489,6 +1489,14 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("sha512", softwareList.Filter);
                         xtw.WriteEndElement();
                         break;
+
+                    case ItemType.Sound:
+                        var sound = datItem as Sound;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "sound");
+                        xtw.WriteOptionalAttributeString("channels", sound.Channels);
+                        xtw.WriteEndElement();
+                        break;
                 }
 
                 xtw.Flush();

@@ -500,12 +500,6 @@ namespace SabreTools.Library.Tools
                     case "display_vbstart":
                         return Field.Machine_Display_VBStart;
 
-                    case "sounds":
-                        return Field.Machine_Sounds;
-
-                    case "sound_channels":
-                        return Field.Machine_Sound_Channels;
-
                     case "conditions":
                         return Field.Machine_Conditions;
 
@@ -1049,9 +1043,13 @@ namespace SabreTools.Library.Tools
                     case "filter":
                         return Field.DatItem_Filter;
 
-                    #endregion
+                    // Sound
+                    case "channels":
+                        return Field.DatItem_Channels;
 
-                    #endregion // Item-Specific
+                        #endregion
+
+                        #endregion // Item-Specific
                 }
             }
 
@@ -1584,6 +1582,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Slot;
                 case "softwarelist":
                     return ItemType.SoftwareList;
+                case "sound":
+                    return ItemType.Sound;
                 default:
                     return null;
             }
@@ -1606,6 +1606,7 @@ namespace SabreTools.Library.Tools
                 "sample" => ItemType.Sample,
                 "slot" => ItemType.Slot,
                 "softwarelist" => ItemType.SoftwareList,
+                "sound" => ItemType.Sound,
                 _ => null,
             };
 #endif
@@ -2029,6 +2030,8 @@ namespace SabreTools.Library.Tools
                     return "slot";
                 case ItemType.SoftwareList:
                     return "softwarelist";
+                case ItemType.Sound:
+                    return "sound";
                 default:
                     return null;
             }
@@ -2051,6 +2054,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Sample => "sample",
                 ItemType.Slot => "slot",
                 ItemType.SoftwareList => "softwarelist",
+                ItemType.Sound => "sound",
                 _ => null,
             };
 #endif

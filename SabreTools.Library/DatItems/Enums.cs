@@ -146,10 +146,6 @@ namespace SabreTools.Library.DatItems
         Machine_Display_VBEnd,
         Machine_Display_VBStart,
 
-        // Sounds
-        Machine_Sounds,
-        Machine_Sound_Channels,
-
         // Conditions
         Machine_Conditions,
         Machine_Condition_Tag,
@@ -398,6 +394,9 @@ namespace SabreTools.Library.DatItems
         DatItem_SoftwareListStatus,
         DatItem_Filter,
 
+        // Sounds
+        DatItem_Channels,
+
         #endregion
 
         #endregion // Item-Specific
@@ -446,6 +445,7 @@ namespace SabreTools.Library.DatItems
         Sample,
         Slot,
         SoftwareList,
+        Sound,
 
         Blank = 99, // This is not a real type, only used internally
     }

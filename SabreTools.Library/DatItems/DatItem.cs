@@ -503,6 +503,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.SoftwareList:
                     return new SoftwareList();
 
+                case ItemType.Sound:
+                    return new Sound();
+
                 default:
                     return new Rom();
             }
@@ -525,6 +528,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Sample => new Sample(),
                 ItemType.Slot => new Slot(),
                 ItemType.SoftwareList => new SoftwareList(),
+                ItemType.Sound => new Sound(),
                 _ => new Rom(),
             };
 #endif

@@ -68,10 +68,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Display_VBEnd { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_Display_VBStart { get; private set; } = new FilterItem<string>();
 
-        // Sounds
-        public FilterItem<bool?> Machine_Sounds { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Sound_Channels { get; private set; } = new FilterItem<string>();
-
         // Conditions
         public FilterItem<bool?> Machine_Conditions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Condition_Tag { get; private set; } = new FilterItem<string>();
@@ -319,6 +315,9 @@ namespace SabreTools.Library.Filtering
         // Software List
         public FilterItem<SoftwareListStatus> DatItem_SoftwareListStatus { get; private set; } = new FilterItem<SoftwareListStatus>() { Positive = SoftwareListStatus.NULL, Negative = SoftwareListStatus.NULL };
         public FilterItem<string> DatItem_Filter { get; private set; } = new FilterItem<string>();
+
+        // Sound
+        public FilterItem<string> DatItem_Channels { get; private set; } = new FilterItem<string>();
 
         #endregion
 
@@ -651,21 +650,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Display_VBStart.NegativeSet.Add(value);
                     else
                         Machine_Display_VBStart.PositiveSet.Add(value);
-                    break;
-
-                // Sounds
-                case Field.Machine_Sounds:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Sounds.Neutral = false;
-                    else
-                        Machine_Sounds.Neutral = true;
-                    break;
-
-                case Field.Machine_Sound_Channels:
-                    if (negate)
-                        Machine_Sound_Channels.NegativeSet.Add(value);
-                    else
-                        Machine_Sound_Channels.PositiveSet.Add(value);
                     break;
 
                 // Conditions
@@ -1802,11 +1786,19 @@ namespace SabreTools.Library.Filtering
                         DatItem_Filter.PositiveSet.Add(value);
                     break;
 
-                #endregion
+                // Sound
+                case Field.DatItem_Channels:
+                    if (negate)
+                        DatItem_Channels.NegativeSet.Add(value);
+                    else
+                        DatItem_Channels.PositiveSet.Add(value);
+                    break;
 
-                #endregion // Item-Specifics
+                    #endregion
 
-                #endregion // DatItem Filters
+                    #endregion // Item-Specifics
+
+                    #endregion // DatItem Filters
             }
         }
 

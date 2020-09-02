@@ -159,12 +159,6 @@ namespace SabreTools.Library.DatItems
         public List<Display> Displays { get; set; } = null;
 
         /// <summary>
-        /// List of associated sounds
-        /// </summary>
-        [JsonProperty("sounds", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Sound> Sounds { get; set; } = null;
-
-        /// <summary>
         /// List of associated conditions
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -553,7 +547,6 @@ namespace SabreTools.Library.DatItems
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
                 Displays = this.Displays,
-                Sounds = this.Sounds,
                 Conditions = this.Conditions,
                 Inputs = this.Inputs,
                 Ports = this.Ports,
@@ -1028,34 +1021,6 @@ namespace SabreTools.Library.DatItems
                     if (filter.Machine_Display_VBStart.MatchesPositiveSet(display?.VBStart) != false)
                         anyPositive = true;
                     if (filter.Machine_Display_VBStart.MatchesNegativeSet(display?.VBStart) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            #endregion
-
-            #region Sounds
-
-            // Machine_Sounds
-            if (filter.Machine_Sounds.MatchesNeutral(null, Sounds?.Any() ?? null) == false)
-                return false;
-
-            // Machine_Sound_Channels
-            if (Sounds?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var sound in Sounds)
-                {
-                    if (filter.Machine_Sound_Channels.MatchesPositiveSet(sound?.Channels) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Sound_Channels.MatchesNegativeSet(sound?.Channels) == true)
                         anyNegative = true;
                 }
 

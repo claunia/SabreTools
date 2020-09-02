@@ -369,7 +369,21 @@ namespace SabreTools.Library.DatFiles
                         });
 
                         reader.Read();
+                        break;
 
+                    case "sound":
+                        datItems.Add(new Sound
+                        {
+                            Channels = reader.GetAttribute("channels"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
                         break;
 
                     case "display":
@@ -394,19 +408,6 @@ namespace SabreTools.Library.DatFiles
                             machine.Displays = new List<Display>();
 
                         machine.Displays.Add(display);
-
-                        reader.Read();
-                        break;
-
-                    case "sound":
-                        var sound = new Sound();
-                        sound.Channels = reader.GetAttribute("channels");
-
-                        // Ensure the list exists
-                        if (machine.Sounds == null)
-                            machine.Sounds = new List<Sound>();
-
-                        machine.Sounds.Add(sound);
 
                         reader.Read();
                         break;
@@ -1223,18 +1224,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Sounds != null)
-                {
-                    foreach (var sound in datItem.Machine.Sounds)
-                    {
-                        xtw.WriteStartElement("sound");
-
-                        xtw.WriteOptionalAttributeString("channels", sound.Channels);
-
-                        // End sound
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Conditions != null)
                 {
                     foreach (var condition in datItem.Machine.Conditions)
@@ -1651,6 +1640,13 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", softwareList.Name);
                         xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
                         xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Sound:
+                        var sound = datItem as Sound;
+                        xtw.WriteStartElement("sound");
+                        xtw.WriteOptionalAttributeString("channels", sound.Channels);
                         xtw.WriteEndElement();
                         break;
                 }

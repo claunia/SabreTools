@@ -311,17 +311,6 @@ namespace SabreTools.Library.DatItems
         public bool? Default { get; set; }
     }
 
-    /// <summary>
-    /// Represents one ListXML sound
-    /// </summary>
-    /// TODO: Promote to DatItem level
-    [JsonObject("sound")]
-    public class Sound
-    {
-        [JsonProperty("channels")]
-        public string Channels { get; set; } // TODO: Int32?
-    }
-
     #endregion
 
     #region OpenMSX

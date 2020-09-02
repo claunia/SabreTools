@@ -168,6 +168,12 @@ namespace SabreTools.Library.DatFiles
         public long SoftwareListCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Sound items
+        /// </summary>
+        [JsonIgnore]
+        public long SoundCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of machines
         /// </summary>
         /// <remarks>Special count only used by statistics output</remarks>
@@ -569,6 +575,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.SoftwareList:
                     SoftwareListCount++;
                     break;
+                case ItemType.Sound:
+                    SoundCount++;
+                    break;
             }
         }
 
@@ -718,6 +727,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.SoftwareList:
                     SoftwareListCount--;
+                    break;
+                case ItemType.Sound:
+                    SoundCount--;
                     break;
             }
         }
