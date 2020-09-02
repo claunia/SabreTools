@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
@@ -21,7 +20,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-ud", "--update" };
             Description = "Update and manipulate DAT(s)";
-            _featureType = FeatureType.Flag;
+            _featureType = SabreTools.Library.Help.FeatureType.Flag;
             LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
             Features = new Dictionary<string, Library.Help.Feature>();
 

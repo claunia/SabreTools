@@ -75,7 +75,7 @@ namespace SabreTools.Features
                     AaruFormatsAsFilesValue,
                     new List<string>() { "-caf", "--aaruformats-as-files" },
                     "Treat AaruFormats as files",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Normally, AaruFormats would be processed using their internal hash to compare against the input DATs. This flag forces all AaruFormats to be treated like regular files.");
             }
         }
@@ -89,7 +89,7 @@ namespace SabreTools.Features
                     AddBlankFilesValue,
                     new List<string>() { "-ab", "--add-blank-files" },
                     "Output blank files for folders",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "If this flag is set, then blank entries will be created for each of the empty directories in the source. This is useful for tools that require all folders be accounted for in the output DAT.");
             }
         }
@@ -103,7 +103,7 @@ namespace SabreTools.Features
                     AddDateValue,
                     new List<string>() { "-ad", "--add-date" },
                     "Add dates to items, where posible",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "If this flag is set, then the Date will be appended to each file information in the output DAT. The output format is standardized as \"yyyy/MM/dd HH:mm:ss\".");
             }
         }
@@ -117,7 +117,7 @@ namespace SabreTools.Features
                     ArchivesAsFilesValue,
                     new List<string>() { "-aaf", "--archives-as-files" },
                     "Treat archives as files",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of trying to enumerate the files within archives, treat the archives as files themselves. This is good for uncompressed sets that include archives that should be read as-is.");
             }
         }
@@ -131,7 +131,7 @@ namespace SabreTools.Features
                     BaddumpColumnValue,
                     new List<string>() { "-bc", "--baddump-column" },
                     "Add baddump stats to output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Add a new column or field for counting the number of baddumps in the DAT.");
             }
         }
@@ -145,7 +145,7 @@ namespace SabreTools.Features
                     BaseValue,
                     new List<string>() { "-ba", "--base" },
                     "Use source DAT as base name for outputs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "If splitting an entire folder of DATs, some output files may be normally overwritten since the names would be the same. With this flag, the original DAT name is used in the output name, in the format of \"Original Name(Dir - Name)\". This can be used in conjunction with --short to output in the format of \"Original Name (Name)\" instead.");
             }
         }
@@ -159,7 +159,7 @@ namespace SabreTools.Features
                     BaseReplaceValue,
                     new List<string>() { "-br", "--base-replace" },
                     "Replace from base DATs in order",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, no item names are changed except when there is a merge occurring. This flag enables users to define a DAT or set of base DATs to use as \"replacements\" for all input DATs. Note that the first found instance of an item in the base DAT(s) will be used and all others will be discarded. If no additional flag is given, it will default to updating names.");
             }
         }
@@ -173,7 +173,7 @@ namespace SabreTools.Features
                     ByGameValue,
                     new List<string>() { "-bg", "--by-game" },
                     "Diff against by game instead of hashes",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, diffing against uses hashes to determine similar files. This flag enables using using each game as a comparision point instead.");
             }
         }
@@ -187,7 +187,7 @@ namespace SabreTools.Features
                     ChdsAsFilesValue,
                     new List<string>() { "-ic", "--chds-as-files" },
                     "Treat CHDs as regular files",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Normally, CHDs would be processed using their internal hash to compare against the input DATs. This flag forces all CHDs to be treated like regular files.");
             }
         }
@@ -201,7 +201,7 @@ namespace SabreTools.Features
                     CleanValue,
                     new List<string>() { "-clean", "--clean" },
                     "Clean game names according to WoD standards",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Game names will be sanitized to remove what the original WoD standards deemed as unneeded information, such as parenthesized or bracketed strings.");
             }
         }
@@ -215,7 +215,7 @@ namespace SabreTools.Features
                     CopyFilesValue,
                     new List<string>() { "-cf", "--copy-files" },
                     "Copy files to the temp directory before parsing",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "If this flag is set, then all files that are going to be parsed are moved to the temporary directory before being hashed. This can be helpful in cases where the temp folder is located on an SSD and the user wants to take advantage of this.");
             }
         }
@@ -229,7 +229,7 @@ namespace SabreTools.Features
                     DatDeviceNonMergedValue,
                     new List<string>() { "-dnd", "--dat-device-non-merged" },
                     "Create device non-merged sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Preprocess the DAT to have child sets contain all items from the device references. This is incompatible with the other --dat-X flags.");
             }
         }
@@ -243,7 +243,7 @@ namespace SabreTools.Features
                     DatFullNonMergedValue,
                     new List<string>() { "-df", "--dat-full-non-merged" },
                     "Create fully non-merged sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Preprocess the DAT to have child sets contain all items from the parent sets based on the cloneof and romof tags as well as device references. This is incompatible with the other --dat-X flags.");
             }
         }
@@ -257,7 +257,7 @@ namespace SabreTools.Features
                     DatMergedValue,
                     new List<string>() { "-dm", "--dat-merged" },
                     "Force creating merged sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Preprocess the DAT to have parent sets contain all items from the children based on the cloneof tag. This is incompatible with the other --dat-X flags.");
             }
         }
@@ -271,7 +271,7 @@ namespace SabreTools.Features
                     DatNonMergedValue,
                     new List<string>() { "-dnm", "--dat-non-merged" },
                     "Force creating non-merged sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Preprocess the DAT to have child sets contain all items from the parent set based on the romof and cloneof tags. This is incompatible with the other --dat-X flags.");
             }
         }
@@ -285,7 +285,7 @@ namespace SabreTools.Features
                     DatSplitValue,
                     new List<string>() { "-ds", "--dat-split" },
                     "Force creating split sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Preprocess the DAT to remove redundant files between parents and children based on the romof and cloneof tags. This is incompatible with the other --dat-X flags.");
             }
         }
@@ -299,7 +299,7 @@ namespace SabreTools.Features
                     DedupValue,
                     new List<string>() { "-dd", "--dedup" },
                     "Enable deduping in the created DAT",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For all outputted DATs, allow for hash deduping. This makes sure that there are effectively no duplicates in the output files. Cannot be used with game dedup.");
             }
         }
@@ -313,7 +313,7 @@ namespace SabreTools.Features
                     DeleteValue,
                     new List<string>() { "-del", "--delete" },
                     "Delete fully rebuilt input files",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Optionally, the input files, once processed and fully matched, can be deleted. This can be useful when the original file structure is no longer needed or if there is limited space on the source drive.");
             }
         }
@@ -327,7 +327,7 @@ namespace SabreTools.Features
                     DepotValue,
                     new List<string>() { "-dep", "--depot" },
                     "Assume directories are Romba depots",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Normally, input directories will be treated with no special format. If this flag is used, all input directories will be assumed to be Romba-style depots.");
             }
         }
@@ -341,7 +341,7 @@ namespace SabreTools.Features
                     DeprecatedValue,
                     new List<string>() { "-dpc", "--deprecated" },
                     "Output 'game' instead of 'machine'",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, Logiqx XML DATs output with the more modern \"machine\" tag for each set. This flag allows users to output the older \"game\" tag instead, for compatibility reasons. [Logiqx only]");
             }
         }
@@ -355,7 +355,7 @@ namespace SabreTools.Features
                     DescriptionAsNameValue,
                     new List<string>() { "-dan", "--description-as-name" },
                     "Use description instead of machine name",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, all DATs are converted exactly as they are input. Enabling this flag allows for the machine names in the DAT to be replaced by the machine description instead. In most cases, this will result in no change in the output DAT, but a notable example would be a software list DAT where the machine names are generally DOS-friendly while the description is more complete.");
             }
         }
@@ -369,7 +369,7 @@ namespace SabreTools.Features
                     DiffAgainstValue,
                     new List<string>() { "-dag", "--diff-against" },
                     "Diff all inputs against a set of base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     "This flag will enable a special type of diffing in which a set of base DATs are used as a comparison point for each of the input DATs. This allows users to get a slightly different output to cascaded diffing, which may be more useful in some cases. This is heavily influenced by the diffing model used by Romba.");
             }
         }
@@ -383,7 +383,7 @@ namespace SabreTools.Features
                     DiffAllValue,
                     new List<string>() { "-di", "--diff-all" },
                     "Create diffdats from inputs (all standard outputs)",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, all DATs are processed individually with the user-specified flags. With this flag enabled, input DATs are diffed against each other to find duplicates, no duplicates, and only in individuals.");
             }
         }
@@ -397,7 +397,7 @@ namespace SabreTools.Features
                     DiffCascadeValue,
                     new List<string>() { "-dc", "--diff-cascade" },
                     "Enable cascaded diffing",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag allows for a special type of diffing in which the first DAT is considered a base, and for each additional input DAT, it only leaves the files that are not in one of the previous DATs. This can allow for the creation of rollback sets or even just reduce the amount of duplicates across multiple sets.");
             }
         }
@@ -411,7 +411,7 @@ namespace SabreTools.Features
                     DiffDuplicatesValue,
                     new List<string>() { "-did", "--diff-duplicates" },
                     "Create diffdat containing just duplicates",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "All files that have duplicates outside of the original DAT are included.");
             }
         }
@@ -425,7 +425,7 @@ namespace SabreTools.Features
                     DiffIndividualsValue,
                     new List<string>() { "-dii", "--diff-individuals" },
                     "Create diffdats for individual DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "All files that have no duplicates outside of the original DATs are put into DATs that are named after the source DAT.");
             }
         }
@@ -439,7 +439,7 @@ namespace SabreTools.Features
                     DiffNoDuplicatesValue,
                     new List<string>() { "-din", "--diff-no-duplicates" },
                     "Create diffdat containing no duplicates",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "All files that have no duplicates outside of the original DATs are included.");
             }
         }
@@ -453,7 +453,7 @@ namespace SabreTools.Features
                     DiffReverseCascadeValue,
                     new List<string>() { "-drc", "--diff-reverse-cascade" },
                     "Enable reverse cascaded diffing",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag allows for a special type of diffing in which the last DAT is considered a base, and for each additional input DAT, it only leaves the files that are not in one of the previous DATs. This can allow for the creation of rollback sets or even just reduce the amount of duplicates across multiple sets.");
             }
         }
@@ -467,7 +467,7 @@ namespace SabreTools.Features
                     ExtensionValue,
                     new List<string>() { "-es", "--extension" },
                     "Split DAT(s) by two file extensions",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For a DAT, or set of DATs, allow for splitting based on a list of input extensions. This can allow for combined DAT files, such as those combining two separate systems, to be split. Files with any extensions not listed in the input lists will be included in both outputted DAT files.");
             }
         }
@@ -481,7 +481,7 @@ namespace SabreTools.Features
                     GameDedupValue,
                     new List<string>() { "-gdd", "--game-dedup" },
                     "Enable deduping within games in the created DAT",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For all outputted DATs, allow for hash deduping but only within the games, and not across the entire DAT. This makes sure that there are effectively no duplicates within each of the output sets. Cannot be used with standard dedup.");
             }
         }
@@ -495,7 +495,7 @@ namespace SabreTools.Features
                     GamePrefixValue,
                     new List<string>() { "-gp", "--game-prefix" },
                     "Add game name as a prefix",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag allows for the name of the game to be used as a prefix to each file.");
             }
         }
@@ -509,7 +509,7 @@ namespace SabreTools.Features
                     HashValue,
                     new List<string>() { "-hs", "--hash" },
                     "Split DAT(s) or folder by best-available hashes",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For a DAT, or set of DATs, allow for splitting based on the best available hash for each file within. The order of preference for the outputted DATs is as follows: Nodump, SHA-512, SHA-384, SHA-256, SHA-1, MD5, CRC (or worse).");
             }
         }
@@ -523,7 +523,7 @@ namespace SabreTools.Features
                     HashOnlyValue,
                     new List<string>() { "-ho", "--hash-only" },
                     "Check files by hash only",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This sets a mode where files are not checked based on name but rather hash alone. This allows verification of (possibly) incorrectly named folders and sets to be verified without worrying about the proper set structure to be there.");
             }
         }
@@ -537,7 +537,7 @@ namespace SabreTools.Features
                     IndividualValue,
                     new List<string>() { "-ind", "--individual" },
                     "Process input DATs individually",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "In cases where DATs would be processed in bulk, this flag allows them to be processed on their own instead.");
             }
         }
@@ -551,7 +551,7 @@ namespace SabreTools.Features
                     InplaceValue,
                     new List<string>() { "-ip", "--inplace" },
                     "Write to the input directories, where possible",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, files are written to the runtime directory (or the output directory, if set). This flag enables users to write out to the directory that the DATs originated from.");
             }
         }
@@ -565,7 +565,7 @@ namespace SabreTools.Features
                     InverseValue,
                     new List<string>() { "-in", "--inverse" },
                     "Rebuild only files not in DAT",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of the normal behavior of rebuilding using a DAT, this flag allows the user to use the DAT as a filter instead. All files that are found in the DAT will be skipped and everything else will be output in the selected format.");
             }
         }
@@ -579,7 +579,7 @@ namespace SabreTools.Features
                     KeepEmptyGamesValue,
                     new List<string>() { "-keg", "--keep-empty-games" },
                     "Keep originally empty sets from the input(s)",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Normally, any sets that are considered empty will not be included in the output, this flag allows these empty sets to be added to the output.");
             }
         }
@@ -593,7 +593,7 @@ namespace SabreTools.Features
                     LevelValue,
                     new List<string>() { "-ls", "--level" },
                     "Split a SuperDAT or folder by lowest available level",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For a DAT, or set of DATs, allow for splitting based on the lowest available level of game name. That is, if a game name is top/mid/last, then it will create an output DAT for the parent directory \"mid\" in a folder called \"top\" with a game called \"last\".");
             }
         }
@@ -607,7 +607,7 @@ namespace SabreTools.Features
                     MatchOfTagsValue,
                     new List<string>() { "-ofg", "--match-of-tags" },
                     "Allow cloneof and romof tags to match game name filters",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "If filter or exclude by game name is used, this flag will allow those filters to be checked against the romof and cloneof tags as well. This can allow for more advanced set-building, especially in arcade-based sets.");
             }
         }
@@ -621,7 +621,7 @@ namespace SabreTools.Features
                     MergeValue,
                     new List<string>() { "-m", "--merge" },
                     "Merge the input DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, all DATs are processed individually with the user-specified flags. With this flag enabled, all of the input DATs are merged into a single output. This is best used with the dedup flag.");
             }
         }
@@ -635,7 +635,7 @@ namespace SabreTools.Features
                     NoAutomaticDateValue,
                     new List<string>() { "-b", "--no-automatic-date" },
                     "Don't include date in file name",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Normally, the DAT will be created with the date in the file name in brackets. This flag removes that instead of the default.");
             }
         }
@@ -649,7 +649,7 @@ namespace SabreTools.Features
                     NodumpColumnValue,
                     new List<string>() { "-nc", "--nodump-column" },
                     "Add statistics for nodumps to output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Add a new column or field for counting the number of nodumps in the DAT.");
             }
         }
@@ -663,7 +663,7 @@ namespace SabreTools.Features
                     NoStoreHeaderValue,
                     new List<string>() { "-nsh", "--no-store-header" },
                     "Don't store the extracted header",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, all headers that are removed from files are backed up in the database. This flag allows users to skip that step entirely, avoiding caching the headers at all.");
             }
         }
@@ -677,7 +677,7 @@ namespace SabreTools.Features
                     NotRunnableValue,
                     new List<string>() { "-nrun", "--not-runnable" },
                     "Include only items that are not marked runnable",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows users to include only unrunnable games.");
             }
         }
@@ -691,7 +691,7 @@ namespace SabreTools.Features
                     OneGamePerRegionValue,
                     new List<string>() { "-1g1r", "--one-game-per-region" },
                     "Try to ensure one game per user-defined region",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows users to input a list of regions to use to filter on in order so only one game from each set of parent and clones will be included. This requires either cloneof or romof tags to function properly.");
             }
         }
@@ -705,7 +705,7 @@ namespace SabreTools.Features
                     OneRomPerGameValue,
                     new List<string>() { "-orpg", "--one-rom-per-game" },
                     "Try to ensure each rom has its own game",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "In some cases, it is beneficial to have every rom put into its own output set as a subfolder of the original parent. This flag enables outputting each rom to its own game for this purpose.");
             }
         }
@@ -719,7 +719,7 @@ namespace SabreTools.Features
                     OnlySameValue,
                     new List<string>() { "-ons", "--only-same" },
                     "Only update description if machine name matches description",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Normally, updating the description will always overwrite if the machine names are the same. With this flag, descriptions will only be overwritten if they are the same as the machine names.");
             }
         }
@@ -733,7 +733,7 @@ namespace SabreTools.Features
                     QuickValue,
                     new List<string>() { "-qs", "--quick" },
                     "Enable quick scanning of archives",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For all archives, if this flag is enabled, it will only use the header information to get the archive entries' file information. The upside to this is that it is the fastest option. On the downside, it can only get the CRC and size from most archive formats, leading to possible issues.");
             }
         }
@@ -747,7 +747,7 @@ namespace SabreTools.Features
                     QuotesValue,
                     new List<string>() { "-q", "--quotes" },
                     "Double-quote each item",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag surrounds the item by double-quotes, not including the prefix or postfix.");
             }
         }
@@ -761,7 +761,7 @@ namespace SabreTools.Features
                     RemoveExtensionsValue,
                     new List<string>() { "-rme", "--remove-extensions" },
                     "Remove all extensions from all items",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For each item, remove the extension.");
             }
         }
@@ -775,7 +775,7 @@ namespace SabreTools.Features
                     RemoveUnicodeValue,
                     new List<string>() { "-ru", "--remove-unicode" },
                     "Remove unicode characters from names",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, the character set from the original file(s) will be used for item naming. This flag removes all Unicode characters from the item names, machine names, and machine descriptions.");
             }
         }
@@ -789,7 +789,7 @@ namespace SabreTools.Features
                     ReverseBaseReplaceValue,
                     new List<string>() { "-rbr", "--reverse-base-replace" },
                     "Replace item names from base DATs in reverse",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, no item names are changed except when there is a merge occurring. This flag enables users to define a DAT or set of base DATs to use as \"replacements\" for all input DATs. Note that the first found instance of an item in the last base DAT(s) will be used and all others will be discarded. If no additional flag is given, it will default to updating names.");
             }
         }
@@ -803,7 +803,7 @@ namespace SabreTools.Features
                     RombaValue,
                     new List<string>() { "-ro", "--romba" },
                     "Treat like a Romba depot (requires SHA-1)",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag allows reading and writing of DATs and output files to and from a Romba-style depot. This also implies TorrentGZ input and output for physical files. Where appropriate, Romba depot files will be created as well.");
             }
         }
@@ -817,7 +817,7 @@ namespace SabreTools.Features
                     RomsValue,
                     new List<string>() { "-r", "--roms" },
                     "Output roms to miss instead of sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "By default, the outputted file will include the name of the game so this flag allows for the name of the rom to be output instead. [Missfile only]");
             }
         }
@@ -831,7 +831,7 @@ namespace SabreTools.Features
                     RunnableValue,
                     new List<string>() { "-run", "--runnable" },
                     "Include only items that are marked runnable",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows users to include only verified runnable games.");
             }
         }
@@ -845,7 +845,7 @@ namespace SabreTools.Features
                     SceneDateStripValue,
                     new List<string>() { "-sds", "--scene-date-strip" },
                     "Remove date from scene-named sets",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "If this flag is enabled, sets with \"scene\" names will have the date removed from the beginning. For example \"01.01.01-Game_Name-GROUP\" would become \"Game_Name-Group\".");
             }
         }
@@ -859,7 +859,7 @@ namespace SabreTools.Features
                     ShortValue,
                     new List<string>() { "-s", "--short" },
                     "Use short output names",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of using ClrMamePro-style long names for DATs, use just the name of the folder as the name of the DAT. This can be used in conjunction with --base to output in the format of \"Original Name (Name)\" instead.");
             }
         }
@@ -873,7 +873,7 @@ namespace SabreTools.Features
                     SingleSetValue,
                     new List<string>() { "-si", "--single-set" },
                     "All game names replaced by '!'",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This is useful for keeping all roms in a DAT in the same archive or folder.");
             }
         }
@@ -887,7 +887,7 @@ namespace SabreTools.Features
                     SizeValue,
                     new List<string>() { "-szs", "--size" },
                     "Split DAT(s) or folder by file sizes",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For a DAT, or set of DATs, allow for splitting based on the sizes of the files, specifically if the type is a Rom (most item types don't have sizes).");
             }
         }
@@ -901,7 +901,7 @@ namespace SabreTools.Features
                     SkipArchivesValue,
                     new List<string>() { "-ska", "--skip-archives" },
                     "Skip all archives",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Skip any files that are treated like archives");
             }
         }
@@ -915,7 +915,7 @@ namespace SabreTools.Features
                     SkipFilesValue,
                     new List<string>() { "-skf", "--skip-files" },
                     "Skip all non-archives",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Skip any files that are not treated like archives");
             }
         }
@@ -929,7 +929,7 @@ namespace SabreTools.Features
                     SkipFirstOutputValue,
                     new List<string>() { "-sf", "--skip-first-output" },
                     "Skip output of first DAT",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "In times where the first DAT does not need to be written out a second time, this will skip writing it. This can often speed up the output process.");
             }
         }
@@ -943,7 +943,7 @@ namespace SabreTools.Features
                     SkipMd5Value,
                     new List<string>() { "-nm", "--skip-md5" },
                     "Don't include MD5 in output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows the user to skip calculating the MD5 for each of the files which will speed up the creation of the DAT.");
             }
         }
@@ -958,7 +958,7 @@ namespace SabreTools.Features
                     SkipRipeMd160Value,
                     new List<string>() { "-nr160", "--skip-ripemd160" },
                     "Include RIPEMD160 in output", // TODO: This needs to be inverted later
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows the user to skip calculating the RIPEMD160 for each of the files which will speed up the creation of the DAT.");
             }
         }
@@ -973,7 +973,7 @@ namespace SabreTools.Features
                     SkipSha1Value,
                     new List<string>() { "-ns", "--skip-sha1" },
                     "Don't include SHA-1 in output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows the user to skip calculating the SHA-1 for each of the files which will speed up the creation of the DAT.");
             }
         }
@@ -987,7 +987,7 @@ namespace SabreTools.Features
                     SkipSha256Value,
                     new List<string>() { "-ns256", "--skip-sha256" },
                     "Include SHA-256 in output", // TODO: This needs to be inverted later
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows the user to skip calculating the SHA-256 for each of the files which will speed up the creation of the DAT.");
             }
         }
@@ -1001,7 +1001,7 @@ namespace SabreTools.Features
                     SkipSha384Value,
                     new List<string>() { "-ns384", "--skip-sha384" },
                     "Include SHA-384 in output", // TODO: This needs to be inverted later
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows the user to skip calculating the SHA-384 for each of the files which will speed up the creation of the DAT.");
             }
         }
@@ -1015,7 +1015,7 @@ namespace SabreTools.Features
                     SkipSha512Value,
                     new List<string>() { "-ns512", "--skip-sha512" },
                     "Include SHA-512 in output", // TODO: This needs to be inverted later
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This allows the user to skip calculating the SHA-512 for each of the files which will speed up the creation of the DAT.");
             }
         }
@@ -1029,7 +1029,7 @@ namespace SabreTools.Features
                     SuperdatValue,
                     new List<string>() { "-sd", "--superdat" },
                     "Enable SuperDAT creation",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Set the type flag to \"SuperDAT\" for the output DAT as well as preserving the directory structure of the inputted folder, if applicable.");
             }
         }
@@ -1043,7 +1043,7 @@ namespace SabreTools.Features
                     TarValue,
                     new List<string>() { "-tar", "--tar" },
                     "Enable Tape ARchive output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of outputting the files to folder, files will be rebuilt to Tape ARchive (TAR) files. This format is a standardized storage archive without any compression, usually used with other compression formats around it. It is widely used in backup applications and source code archives.");
             }
         }
@@ -1057,7 +1057,7 @@ namespace SabreTools.Features
                     Torrent7zipValue,
                     new List<string>() { "-t7z", "--torrent-7zip" },
                     "Enable Torrent7Zip output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of outputting the files to folder, files will be rebuilt to Torrent7Zip (T7Z) files. This format is based on the LZMA container format 7Zip, but with custom header information. This is currently unused by any major application. Currently does not produce proper Torrent-compatible outputs.");
             }
         }
@@ -1071,7 +1071,7 @@ namespace SabreTools.Features
                     TorrentGzipValue,
                     new List<string>() { "-tgz", "--torrent-gzip" },
                     "Enable Torrent GZip output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of outputting the files to folder, files will be rebuilt to TorrentGZ (TGZ) files. This format is based on the GZip archive format, but with custom header information and a file name replaced by the SHA-1 of the file inside. This is primarily used by external tool Romba (https://github.com/uwedeportivo/romba), but may be used more widely in the future.");
             }
         }
@@ -1085,7 +1085,7 @@ namespace SabreTools.Features
                     TorrentZipValue,
                     new List<string>() { "-tzip", "--torrent-zip" },
                     "Enable Torrent Zip output",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Instead of outputting files to folder, files will be rebuilt to TorrentZip (TZip) files. This format is based on the ZIP archive format, but with custom header information. This is primarily used by external tool RomVault (http://www.romvault.com/) and is already widely used.");
             }
         }
@@ -1099,7 +1099,7 @@ namespace SabreTools.Features
                     TrimValue,
                     new List<string>() { "-trim", "--trim" },
                     "Trim file names to fit NTFS length",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "In the cases where files will have too long a name, this allows for trimming the name of the files to the NTFS maximum length at most.");
             }
         }
@@ -1113,7 +1113,7 @@ namespace SabreTools.Features
                     TypeValue,
                     new List<string>() { "-ts", "--type" },
                     "Split DAT(s) or folder by file types (rom/disk)",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "For a DAT, or set of DATs, allow for splitting based on the types of the files, specifically if the type is a rom or a disk.");
             }
         }
@@ -1127,7 +1127,7 @@ namespace SabreTools.Features
                     UpdateDatValue,
                     new List<string>() { "-ud", "--update-dat" },
                     "Output updated DAT to output directory",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "Once the files that were able to rebuilt are taken care of, a DAT of the files that could not be matched will be output to the output directory.");
             }
         }
@@ -1141,7 +1141,7 @@ namespace SabreTools.Features
                     UpdateDescriptionValue,
                     new List<string>() { "-udd", "--update-description" },
                     "Update machine descriptions from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of machine descriptions from base DATs.");
             }
         }
@@ -1155,7 +1155,7 @@ namespace SabreTools.Features
                     UpdateGameTypeValue,
                     new List<string>() { "-ugt", "--update-game-type" },
                     "Update machine type from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of machine type from base DATs.");
             }
         }
@@ -1169,7 +1169,7 @@ namespace SabreTools.Features
                     UpdateHashesValue,
                     new List<string>() { "-uh", "--update-hashes" },
                     "Update hashes from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of hashes from base DATs.");
             }
         }
@@ -1183,7 +1183,7 @@ namespace SabreTools.Features
                     UpdateManufacturerValue,
                     new List<string>() { "-um", "--update-manufacturer" },
                     "Update machine manufacturers from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of machine manufacturers from base DATs.");
             }
         }
@@ -1197,7 +1197,7 @@ namespace SabreTools.Features
                     UpdateNamesValue,
                     new List<string>() { "-un", "--update-names" },
                     "Update item names from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of item names from base DATs.");
             }
         }
@@ -1211,7 +1211,7 @@ namespace SabreTools.Features
                     UpdateParentsValue,
                     new List<string>() { "-up", "--update-parents" },
                     "Update machine parents from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of machine parents (romof, cloneof, sampleof) from base DATs.");
             }
         }
@@ -1225,7 +1225,7 @@ namespace SabreTools.Features
                     UpdateYearValue,
                     new List<string>() { "-uy", "--update-year" },
                     "Update machine years from base DATs",
-                    FeatureType.Flag,
+                    Library.Help.FeatureType.Flag,
                     longDescription: "This flag enables updating of machine years from base DATs.");
             }
         }
@@ -1243,7 +1243,7 @@ namespace SabreTools.Features
                     DepotDepthInt32Value,
                     new List<string>() { "-depd", "--depot-depth" },
                     "Set depth of depot for inputs",
-                    FeatureType.Int32,
+                    Library.Help.FeatureType.Int32,
                     longDescription: "Optionally, set the depth of input depots. Defaults to 4 deep otherwise.");
             }
         }
@@ -1257,7 +1257,7 @@ namespace SabreTools.Features
                     RombaDepthInt32Value,
                     new List<string>() { "-depr", "--romba-depth" },
                     "Set depth of depot for outputs",
-                    FeatureType.Int32,
+                    Library.Help.FeatureType.Int32,
                     longDescription: "Optionally, set the depth of output depots. Defaults to 4 deep otherwise.");
             }
         }
@@ -1271,7 +1271,7 @@ namespace SabreTools.Features
                     ThreadsInt32Value,
                     new List<string>() { "-mt", "--threads" },
                     "Amount of threads to use (default = # cores)",
-                    FeatureType.Int32,
+                    Library.Help.FeatureType.Int32,
                     longDescription: "Optionally, set the number of threads to use for the multithreaded operations. The default is the number of available machine threads; -1 means unlimited threads created.");
             }
         }
@@ -1289,7 +1289,7 @@ namespace SabreTools.Features
                     RadixInt64Value,
                     new List<string>() { "-rad", "--radix" },
                     "Set the midpoint to split at",
-                    FeatureType.Int64,
+                    Library.Help.FeatureType.Int64,
                     longDescription: "Set the size at which all roms less than the size are put in the first DAT, and everything greater than or equal goes in the second.");
             }
         }
@@ -1307,7 +1307,7 @@ namespace SabreTools.Features
                     BaseDatListValue,
                     new List<string>() { "-bd", "--base-dat" },
                     "Add a base DAT for processing",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Add a DAT or folder of DATs to the base set to be used for all operations. Multiple instances of this flag are allowed.");
             }
         }
@@ -1321,7 +1321,7 @@ namespace SabreTools.Features
                     CategoryListValue,
                     new List<string>() { "-cat", "--category-filter" },
                     "Filter by Category",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this Category in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1335,7 +1335,7 @@ namespace SabreTools.Features
                     CrcListValue,
                     new List<string>() { "-crc", "--crc" },
                     "Filter by CRC hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this CRC hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1349,7 +1349,7 @@ namespace SabreTools.Features
                     DatListValue,
                     new List<string>() { "-dat", "--dat" },
                     "Input DAT to be used",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "User-supplied DAT for use in all operations. Multiple instances of this flag are allowed.");
             }
         }
@@ -1363,7 +1363,7 @@ namespace SabreTools.Features
                     ExcludeFieldListValue,
                     new List<string>() { "-ef", "--exclude-field" },
                     "Exclude a game/rom field from outputs",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Exclude any valid item or machine field from outputs. Examples include: romof, publisher, and offset.");
             }
         }
@@ -1377,7 +1377,7 @@ namespace SabreTools.Features
                     ExtAListValue,
                     new List<string>() { "-exta", "--exta" },
                     "Set extension to be included in first DAT",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Set the extension to be used to populate the first DAT. Multiple instances of this flag are allowed.");
             }
         }
@@ -1391,7 +1391,7 @@ namespace SabreTools.Features
                     ExtBListValue,
                     new List<string>() { "-extb", "--extb" },
                     "Set extension to be included in second DAT",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Set the extension to be used to populate the second DAT. Multiple instances of this flag are allowed.");
             }
         }
@@ -1405,7 +1405,7 @@ namespace SabreTools.Features
                     ExtraIniListValue,
                     new List<string>() { "-ini", "--extra-ini" },
                     "Apply a MAME INI for given field(s)",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Apply any valid MAME INI for any valid field in the DatFile. Inputs are of the form 'Field:path\\to\\ini'. Multiple instances of this flag are allowed.");
             }
         }
@@ -1419,7 +1419,7 @@ namespace SabreTools.Features
                     FilterListValue,
                     new List<string>() { "-fi", "--filter" },
                     "Filter a game/rom field with the given value(s)",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'key:value' or '!key:value', where the '!' signifies 'not' matching. Numeric values may also prefix the 'value' with '>', '<', or '=' accordingly. Key examples include: romof, category, and game. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1433,7 +1433,7 @@ namespace SabreTools.Features
                     GameDescriptionListValue,
                     new List<string>() { "-gd", "--game-description" },
                     "Filter by game description",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this game description in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1447,7 +1447,7 @@ namespace SabreTools.Features
                     GameNameListValue,
                     new List<string>() { "-gn", "--game-name" },
                     "Filter by game name",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this game name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1461,7 +1461,7 @@ namespace SabreTools.Features
                     GameTypeListValue,
                     new List<string>() { "-gt", "--game-type" },
                     "Include only games with a given type",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: @"Include only items with this game type in the output. Multiple instances of this flag are allowed.
 Possible values are: None, Bios, Device, Mechanical");
             }
@@ -1476,7 +1476,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     ItemNameListValue,
                     new List<string>() { "-rn", "--item-name" },
                     "Filter by item name",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this item name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1490,7 +1490,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     ItemTypeListValue,
                     new List<string>() { "-rt", "--item-type" },
                     "Filter by item type",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this item type in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1504,7 +1504,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     Md5ListValue,
                     new List<string>() { "-md5", "--md5" },
                     "Filter by MD5 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this MD5 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1518,7 +1518,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotCategoryListValue,
                     new List<string>() { "-ncat", "--not-category" },
                     "Filter by not Category",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this Category in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1532,7 +1532,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotCrcListValue,
                     new List<string>() { "-ncrc", "--not-crc" },
                     "Filter by not CRC hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this CRC hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1546,7 +1546,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotGameDescriptionListValue,
                     new List<string>() { "-ngd", "--not-game-description" },
                     "Filter by not game description",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this game description in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1560,7 +1560,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotGameNameListValue,
                     new List<string>() { "-ngn", "--not-game-name" },
                     "Filter by not game name",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this game name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1574,7 +1574,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotGameTypeListValue,
                     new List<string>() { "-ngt", "--not-game-type" },
                     "Exclude only games with a given type",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: @"Include only items without this game type in the output. Multiple instances of this flag are allowed.
 Possible values are: None, Bios, Device, Mechanical");
             }
@@ -1589,7 +1589,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotItemNameListValue,
                     new List<string>() { "-nrn", "--not-item-name" },
                     "Filter by not item name",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this item name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1603,7 +1603,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotItemTypeListValue,
                     new List<string>() { "-nrt", "--not-item-type" },
                     "Filter by not item type",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this item type in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1617,7 +1617,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotMd5ListValue,
                     new List<string>() { "-nmd5", "--not-md5" },
                     "Filter by not MD5 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this MD5 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1632,7 +1632,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotRipeMd160ListValue,
                     new List<string>() { "-nripemd160", "--not-ripemd160" },
                     "Filter by not RIPEMD160 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this RIPEMD160 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1647,7 +1647,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotSha1ListValue,
                     new List<string>() { "-nsha1", "--not-sha1" },
                     "Filter by not SHA-1 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this SHA-1 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1661,7 +1661,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotSha256ListValue,
                     new List<string>() { "-nsha256", "--not-sha256" },
                     "Filter by not SHA-256 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this SHA-256 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1675,7 +1675,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotSha384ListValue,
                     new List<string>() { "-nsha384", "--not-sha384" },
                     "Filter by not SHA-384 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this SHA-384 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1689,7 +1689,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotSha512ListValue,
                     new List<string>() { "-nsha512", "--not-sha512" },
                     "Filter by not SHA-512 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items without this SHA-512 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1703,7 +1703,7 @@ Possible values are: None, Bios, Device, Mechanical");
                     NotStatusListValue,
                     new List<string>() { "-nis", "--not-status" },
                     "Exclude only items with a given status",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: @"Include only items without this item status in the output. Multiple instances of this flag are allowed.
 Possible values are: None, Good, BadDump, Nodump, Verified");
             }
@@ -1718,7 +1718,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     OutputTypeListValue,
                     new List<string>() { "-ot", "--output-type" },
                     "Output DATs to a specified format",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: @"Add outputting the created DAT to known format. Multiple instances of this flag are allowed.
 
 Possible values are:
@@ -1763,7 +1763,7 @@ Possible values are:
                     RegionListValue,
                     new List<string>() { "-reg", "--region" },
                     "Add a region for 1G1R",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Add a region (in order) for use with 1G1R filtering. If this is not supplied, then by default, only parent sets will be included in the output. Multiple instances of this flag are allowed.");
             }
         }
@@ -1777,7 +1777,7 @@ Possible values are:
                     ReportTypeListValue,
                     new List<string>() { "-srt", "--report-type" },
                     "Output statistics to a specified format",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: @"Add outputting the created DAT to known format. Multiple instances of this flag are allowed.
 
 Possible values are:
@@ -1800,7 +1800,7 @@ Possible values are:
                     RipeMd160ListValue,
                     new List<string>() { "-ripemd160", "--ripemd160" },
                     "Filter by RIPEMD160 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this RIPEMD160 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1815,7 +1815,7 @@ Possible values are:
                     Sha1ListValue,
                     new List<string>() { "-sha1", "--sha1" },
                     "Filter by SHA-1 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this SHA-1 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1829,7 +1829,7 @@ Possible values are:
                     Sha256ListValue,
                     new List<string>() { "-sha256", "--sha256" },
                     "Filter by SHA-256 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this SHA-256 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1843,7 +1843,7 @@ Possible values are:
                     Sha384ListValue,
                     new List<string>() { "-sha384", "--sha384" },
                     "Filter by SHA-384 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this SHA-384 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1857,7 +1857,7 @@ Possible values are:
                     Sha512ListValue,
                     new List<string>() { "-sha512", "--sha512" },
                     "Filter by SHA-512 hash",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Include only items with this SHA-512 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
@@ -1871,7 +1871,7 @@ Possible values are:
                     StatusListValue,
                     new List<string>() { "-is", "--status" },
                     "Include only items with a given status",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: @"Include only items with this item status in the output. Multiple instances of this flag are allowed.
 Possible values are: None, Good, BadDump, Nodump, Verified");
             }
@@ -1886,7 +1886,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     UpdateFieldListValue,
                     new List<string>() { "-uf", "--update-field" },
                     "Update a game/rom field from base DATs",
-                    FeatureType.List,
+                    Library.Help.FeatureType.List,
                     longDescription: "Update any valid item or machine field from base DAT(s). Examples include: romof, publisher, and offset.");
             }
         }
@@ -1904,7 +1904,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     AddExtensionStringValue,
                     new List<string>() { "-ae", "--add-extension" },
                     "Add an extension to each item",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Add a postfix extension to each full item name.");
             }
         }
@@ -1918,7 +1918,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     AuthorStringValue,
                     new List<string>() { "-au", "--author" },
                     "Set the author of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the author header field for the output DAT(s)");
             }
         }
@@ -1932,7 +1932,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     CategoryStringValue,
                     new List<string>() { "-c", "--category" },
                     "Set the category of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the category header field for the output DAT(s)");
             }
         }
@@ -1946,7 +1946,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     CommentStringValue,
                     new List<string>() { "-co", "--comment" },
                     "Set a new comment of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the comment header field for the output DAT(s)");
             }
         }
@@ -1960,7 +1960,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     DateStringValue,
                     new List<string>() { "-da", "--date" },
                     "Set a new date",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the date header field for the output DAT(s)");
             }
         }
@@ -1974,7 +1974,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     DescriptionStringValue,
                     new List<string>() { "-de", "--description" },
                     "Set the description of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the description header field for the output DAT(s)");
             }
         }
@@ -1988,7 +1988,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     EmailStringValue,
                     new List<string>() { "-em", "--email" },
                     "Set a new email of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the email header field for the output DAT(s)");
             }
         }
@@ -2002,7 +2002,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     EqualStringValue,
                     new List<string>() { "-seq", "--equal" },
                     "Filter by size ==",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Only include items of this exact size in the output DAT. Users can specify either a regular integer number or a number with a standard postfix. e.g. 8kb => 8000 or 8kib => 8192");
             }
         }
@@ -2016,7 +2016,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     FilenameStringValue,
                     new List<string>() { "-f", "--filename" },
                     "Set the external name of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the external filename for the output DAT(s)");
             }
         }
@@ -2030,7 +2030,7 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
                     ForceMergingStringValue,
                     new List<string>() { "-fm", "--forcemerging" },
                     "Set force merging",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: @"Set the forcemerging tag to the given value.
 Possible values are: None, Split, Device, Merged, Nonmerged, Full");
             }
@@ -2045,7 +2045,7 @@ Possible values are: None, Split, Device, Merged, Nonmerged, Full");
                     ForceNodumpStringValue,
                     new List<string>() { "-fn", "--forcenodump" },
                     "Set force nodump",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: @"Set the forcenodump tag to the given value.
 Possible values are: None, Obsolete, Required, Ignore");
             }
@@ -2060,7 +2060,7 @@ Possible values are: None, Obsolete, Required, Ignore");
                     ForcePackingStringValue,
                     new List<string>() { "-fp", "--forcepacking" },
                     "Set force packing",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: @"Set the forcepacking tag to the given value.
 Possible values are: None, Zip, Unzip, Partial, Flat");
             }
@@ -2075,7 +2075,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     GreaterStringValue,
                     new List<string>() { "-sgt", "--greater" },
                     "Filter by size >=",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Only include items whose size is greater than or equal to this value in the output DAT. Users can specify either a regular integer number or a number with a standard postfix. e.g. 8kb => 8000 or 8kib => 8192");
             }
         }
@@ -2089,7 +2089,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     HeaderStringValue,
                     new List<string>() { "-h", "--header" },
                     "Set a header skipper to use, blank means all",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the header special field for the output DAT(s). In file rebuilding, this flag allows for either all copier headers (using \"\") or specific copier headers by name (such as \"fds.xml\") to determine if a file matches or not.");
 
             }
@@ -2104,7 +2104,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     HomepageStringValue,
                     new List<string>() { "-hp", "--homepage" },
                     "Set a new homepage of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the homepage header field for the output DAT(s)");
             }
         }
@@ -2118,7 +2118,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     LessStringValue,
                     new List<string>() { "-slt", "--less" },
                     "Filter by size =<",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Only include items whose size is less than or equal to this value in the output DAT. Users can specify either a regular integer number or a number with a standard postfix. e.g. 8kb => 8000 or 8kib => 8192");
             }
         }
@@ -2132,7 +2132,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     NameStringValue,
                     new List<string>() { "-n", "--name" },
                     "Set the internal name of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the name header field for the output DAT(s)");
             }
         }
@@ -2146,7 +2146,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     OutputDirStringValue,
                     new List<string>() { "-out", "--output-dir" },
                     "Output directory",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "This sets an output folder to be used when the files are created. If a path is not defined, the runtime directory is used instead.");
             }
         }
@@ -2160,7 +2160,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     PostfixStringValue,
                     new List<string>() { "-post", "--postfix" },
                     "Set postfix for all lines",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: @"Set a generic postfix to be appended to all outputted lines.
 
 Some special strings that can be used:
@@ -2193,7 +2193,7 @@ Some special strings that can be used:
                     PrefixStringValue,
                     new List<string>() { "-pre", "--prefix" },
                     "Set prefix for all lines",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: @"Set a generic prefix to be prepended to all outputted lines.
 
 Some special strings that can be used:
@@ -2221,7 +2221,7 @@ Some special strings that can be used:
                     ReplaceExtensionStringValue,
                     new List<string>() { "-rep", "--replace-extension" },
                     "Replace all extensions with specified",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "When an extension exists, replace it with the provided instead.");
             }
         }
@@ -2235,7 +2235,7 @@ Some special strings that can be used:
                     RootStringValue,
                     new List<string>() { "-r", "--root" },
                     "Set a new rootdir",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the rootdir (as used by SuperDAT mode) for the output DAT(s).");
             }
         }
@@ -2249,7 +2249,7 @@ Some special strings that can be used:
                     RootDirStringValue,
                     new List<string>() { "-rd", "--root-dir" },
                     "Set the root directory for calc",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "In the case that the files will not be stored from the root directory, a new root can be set for path length calculations.");
             }
         }
@@ -2263,7 +2263,7 @@ Some special strings that can be used:
                     TempStringValue,
                     new List<string>() { "-t", "--temp" },
                     "Set the temporary directory to use",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Optionally, a temp folder can be supplied in the case the default temp directory is not preferred.");
             }
         }
@@ -2277,7 +2277,7 @@ Some special strings that can be used:
                     UrlStringValue,
                     new List<string>() { "-u", "--url" },
                     "Set a new URL of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the URL header field for the output DAT(s)");
             }
         }
@@ -2291,7 +2291,7 @@ Some special strings that can be used:
                     VersionStringValue,
                     new List<string>() { "-v", "--version" },
                     "Set the version of the DAT",
-                    FeatureType.String,
+                    Library.Help.FeatureType.String,
                     longDescription: "Set the version header field for the output DAT(s)");
             }
         }

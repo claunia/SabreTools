@@ -292,7 +292,7 @@ namespace SabreTools.Library.DatFiles
                     case "feature":
                         datItems.Add(new Feature
                         {
-                            Type = reader.GetAttribute("type"),
+                            Type = reader.GetAttribute("type").AsFeatureType(),
                             Status = reader.GetAttribute("status"),
                             Overall = reader.GetAttribute("overall"),
                         });
@@ -1569,7 +1569,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Feature:
                         var feature = datItem as Feature;
                         xtw.WriteStartElement("feature");
-                        xtw.WriteOptionalAttributeString("type", feature.Type);
+                        xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
                         xtw.WriteOptionalAttributeString("status", feature.Status);
                         xtw.WriteOptionalAttributeString("overall", feature.Overall);
                         xtw.WriteEndElement();

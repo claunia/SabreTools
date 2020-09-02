@@ -4,7 +4,6 @@ using System.IO;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Help;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -19,7 +18,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "depot-rescan" };
             Description = "Rescan a specific depot to get new information";
-            _featureType = FeatureType.Flag;
+            _featureType = SabreTools.Library.Help.FeatureType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
             Features = new Dictionary<string, SabreTools.Library.Help.Feature>();
         }

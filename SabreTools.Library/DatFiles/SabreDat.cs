@@ -1393,7 +1393,7 @@ namespace SabreTools.Library.DatFiles
                         var feature = datItem as Feature;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "feature");
-                        xtw.WriteOptionalAttributeString("type", feature.Type);
+                        xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
                         xtw.WriteOptionalAttributeString("status", feature.Status);
                         xtw.WriteOptionalAttributeString("overall", feature.Overall);
                         xtw.WriteEndElement();

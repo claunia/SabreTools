@@ -4,7 +4,6 @@ using System.IO;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Help;
 using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;
 
@@ -19,7 +18,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "refresh-dats" };
             Description = "Refreshes the DAT index from the files in the DAT master directory tree.";
-            _featureType = FeatureType.Flag;
+            _featureType = SabreTools.Library.Help.FeatureType.Flag;
             LongDescription = @"Refreshes the DAT index from the files in the DAT master directory tree.
 Detects any changes in the DAT master directory tree and updates the DAT index
 accordingly, marking deleted or overwritten dats as orphaned and updating

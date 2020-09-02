@@ -5,7 +5,6 @@ using System.Linq;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Help;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -19,7 +18,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "archive" };
             Description = "Adds ROM files from the specified directories to the ROM archive.";
-            _featureType = FeatureType.Flag;
+            _featureType = SabreTools.Library.Help.FeatureType.Flag;
             LongDescription = @"Adds ROM files from the specified directories to the ROM archive.
 Traverses the specified directory trees looking for zip files and normal files.
 Unpacked files will be stored as individual entries. Prior to unpacking a zip

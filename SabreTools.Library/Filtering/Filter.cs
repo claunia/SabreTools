@@ -295,7 +295,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> DatItem_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // Feature
-        public FilterItem<string> DatItem_FeatureType { get; private set; } = new FilterItem<string>();
+        public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
         public FilterItem<string> DatItem_FeatureStatus { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_FeatureOverall { get; private set; } = new FilterItem<string>();
 
@@ -1700,9 +1700,9 @@ namespace SabreTools.Library.Filtering
                 // Feature
                 case Field.DatItem_FeatureType:
                     if (negate)
-                        DatItem_FeatureType.NegativeSet.Add(value);
+                        DatItem_FeatureType.Negative |= value.AsFeatureType();
                     else
-                        DatItem_FeatureType.PositiveSet.Add(value);
+                        DatItem_FeatureType.Positive |= value.AsFeatureType();
                     break;
 
                 case Field.DatItem_FeatureStatus:

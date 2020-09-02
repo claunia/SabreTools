@@ -18,6 +18,33 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine the feature type
+    /// </summary>
+    [Flags]
+    public enum FeatureType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Protection = 1 << 0,
+        Palette = 1 << 1,
+        Graphics = 1 << 2,
+        Sound = 1 << 3,
+        Controls = 1 << 4,
+        Keyboard = 1 << 5,
+        Mouse = 1 << 6,
+        Microphone = 1 << 7,
+        Camera = 1 << 8,
+        Disk = 1 << 9,
+        Printer = 1 << 10,
+        Lan = 1 << 11,
+        Wan = 1 << 12,
+        Timing = 1 << 13,
+    }
+
+    /// <summary>
     /// List of valid field types within a DatItem/Machine
     /// </summary>
     /// TODO: Move this to a more common location

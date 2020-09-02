@@ -146,6 +146,69 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get FeatureType value from input string
+        /// </summary>
+        /// <param name="featureType">String to get value from</param>
+        /// <returns>FeatureType value corresponding to the string</returns>
+        public static FeatureType AsFeatureType(this string featureType)
+        {
+#if NET_FRAMEWORK
+            switch (featureType?.ToLowerInvariant())
+            {
+                case "protection":
+                    return FeatureType.Protection;
+                case "palette":
+                    return FeatureType.Palette;
+                case "graphics":
+                    return FeatureType.Graphics;
+                case "sound":
+                    return FeatureType.Sound;
+                case "controls":
+                    return FeatureType.Controls;
+                case "keyboard":
+                    return FeatureType.Keyboard;
+                case "mouse":
+                    return FeatureType.Mouse;
+                case "microphone":
+                    return FeatureType.Microphone;
+                case "camera":
+                    return FeatureType.Camera;
+                case "disk":
+                    return FeatureType.Disk;
+                case "printer":
+                    return FeatureType.Printer;
+                case "lan":
+                    return FeatureType.Lan;
+                case "wan":
+                    return FeatureType.Wan;
+                case "timing":
+                    return FeatureType.Timing;
+                default:
+                    return FeatureType.NULL;
+            }
+#else
+            return featureType?.ToLowerInvariant() switch
+            {
+                "protection" => FeatureType.Protection,
+                "palette" => FeatureType.Palette,
+                "graphics" => FeatureType.Graphics,
+                "sound" => FeatureType.Sound,
+                "controls" => FeatureType.Controls,
+                "keyboard" => FeatureType.Keyboard,
+                "mouse" => FeatureType.Mouse,
+                "microphone" => FeatureType.Microphone,
+                "camera" => FeatureType.Camera,
+                "disk" => FeatureType.Disk,
+                "printer" => FeatureType.Printer,
+                "lan" => FeatureType.Lan,
+                "wan" => FeatureType.Wan,
+                "timing" => FeatureType.Timing,
+                _ => FeatureType.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get Field value from input string
         /// </summary>
         /// <param name="input">String to get value from</param>
@@ -1954,6 +2017,69 @@ namespace SabreTools.Library.Tools
 
         // TODO: DatFormat -> string
         // TODO: Field -> string
+
+        /// <summary>
+        /// Get string value from input FeatureType
+        /// </summary>
+        /// <param name="featureType">FeatureType to get value from</param>
+        /// <returns>String value corresponding to the FeatureType</returns>
+        public static string FromFeatureType(this FeatureType featureType)
+        {
+#if NET_FRAMEWORK
+            switch (featureType)
+            {
+                case FeatureType.Protection:
+                    return "protection";
+                case FeatureType.Palette:
+                    return "palette";
+                case FeatureType.Graphics:
+                    return "graphics";
+                case FeatureType.Sound:
+                    return "sound";
+                case FeatureType.Controls:
+                    return "controls";
+                case FeatureType.Keyboard:
+                    return "keyboard";
+                case FeatureType.Mouse:
+                    return "mouse";
+                case FeatureType.Microphone:
+                    return "microphone";
+                case FeatureType.Camera:
+                    return "camera";
+                case FeatureType.Disk:
+                    return "disk";
+                case FeatureType.Printer:
+                    return "printer";
+                case FeatureType.Lan:
+                    return "lan";
+                case FeatureType.Wan:
+                    return "wan";
+                case FeatureType.Timing:
+                    return "timing";
+                default:
+                    return null;
+            }
+#else
+            return featureType switch
+            {
+                FeatureType.Protection => "protection",
+                FeatureType.Palette => "palette",
+                FeatureType.Graphics => "graphics",
+                FeatureType.Sound => "sound",
+                FeatureType.Controls => "controls",
+                FeatureType.Keyboard => "keyboard",
+                FeatureType.Mouse => "mouse",
+                FeatureType.Microphone => "microphone",
+                FeatureType.Camera => "camera",
+                FeatureType.Disk => "disk",
+                FeatureType.Printer => "printer",
+                FeatureType.Lan => "lan",
+                FeatureType.Wan => "wan",
+                FeatureType.Timing => "timing",
+                _ => null,
+            };
+#endif
+        }
 
         /// <summary>
         /// Get string value from input ItemStatus

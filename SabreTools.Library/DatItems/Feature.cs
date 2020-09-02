@@ -3,6 +3,7 @@ using System.Linq;
 
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatItems
 {
@@ -18,7 +19,7 @@ namespace SabreTools.Library.DatItems
         /// Type of feature
         /// </summary>
         [JsonProperty("type")]
-        public string Type { get; set; } // TODO: (protection|palette|graphics|sound|controls|keyboard|mouse|microphone|camera|disk|printer|lan|wan|timing)
+        public FeatureType Type { get; set; }
 
         /// <summary>
         /// Emulation status
@@ -47,7 +48,7 @@ namespace SabreTools.Library.DatItems
 
             // Handle Feature-specific fields
             if (mappings.Keys.Contains(Field.DatItem_FeatureType))
-                Type = mappings[Field.DatItem_FeatureType];
+                Type = mappings[Field.DatItem_FeatureType].AsFeatureType();
 
             if (mappings.Keys.Contains(Field.DatItem_FeatureStatus))
                 Status = mappings[Field.DatItem_FeatureStatus];
@@ -140,9 +141,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on type
-            if (filter.DatItem_FeatureType.MatchesPositiveSet(Type) == false)
+            if (filter.DatItem_FeatureType.MatchesPositive(FeatureType.NULL, Type) == false)
                 return false;
-            if (filter.DatItem_FeatureType.MatchesNegativeSet(Type) == true)
+            if (filter.DatItem_FeatureType.MatchesNegative(FeatureType.NULL, Type) == true)
                 return false;
 
             // Filter on status
@@ -171,7 +172,7 @@ namespace SabreTools.Library.DatItems
 
             // Remove the fields
             if (fields.Contains(Field.DatItem_FeatureType))
-                Type = null;
+                Type = FeatureType.NULL;
 
             if (fields.Contains(Field.DatItem_FeatureStatus))
                 Status = null;

@@ -27,7 +27,7 @@ namespace RombaSharp.Features
                     CopyValue,
                     "-copy",
                     "Copy files to output instead of rebuilding",
-                    FeatureType.Flag);
+                    SabreTools.Library.Help.FeatureType.Flag);
             }
         } // Unique to RombaSharp
 
@@ -40,7 +40,7 @@ namespace RombaSharp.Features
                     FixdatOnlyValue,
                     "-fixdatOnly",
                     "only fix dats and don't generate torrentzips",
-                    FeatureType.Flag);
+                    SabreTools.Library.Help.FeatureType.Flag);
             }
         }
 
@@ -53,7 +53,7 @@ namespace RombaSharp.Features
                 LogOnlyValue,
                 "-log-only",
                 "Only write out actions to log",
-                FeatureType.Flag);
+                SabreTools.Library.Help.FeatureType.Flag);
             }
         }
 
@@ -66,7 +66,7 @@ namespace RombaSharp.Features
                     NoDbValue,
                     "-no-db",
                     "archive into depot but do not touch DB index and ignore only-needed flag",
-                    FeatureType.Flag);
+                    SabreTools.Library.Help.FeatureType.Flag);
             }
         }
 
@@ -79,7 +79,7 @@ namespace RombaSharp.Features
                     OnlyNeededValue,
                     "-only-needed",
                     "only archive ROM files actually referenced by DAT files from the DAT index",
-                    FeatureType.Flag);
+                    SabreTools.Library.Help.FeatureType.Flag);
             }
         }
 
@@ -92,7 +92,7 @@ namespace RombaSharp.Features
                     SkipInitialScanValue,
                     "-skip-initial-scan",
                     "skip the initial scan of the files to determine amount of work",
-                    FeatureType.Flag);
+                    SabreTools.Library.Help.FeatureType.Flag);
             }
         }
 
@@ -105,7 +105,7 @@ namespace RombaSharp.Features
                     UseGolangZipValue,
                     "-use-golang-zip",
                     "use go zip implementation instead of zlib",
-                    FeatureType.Flag);
+                    SabreTools.Library.Help.FeatureType.Flag);
             }
         }
 
@@ -122,7 +122,7 @@ namespace RombaSharp.Features
                     Include7ZipsInt32Value,
                     "-include-7zips",
                     "flag value == 0 means: add 7zip files themselves into the depot in addition to their contents, flag value == 2 means add 7zip files themselves but don't add content",
-                    FeatureType.Int32);
+                    SabreTools.Library.Help.FeatureType.Int32);
             }
         }
 
@@ -135,7 +135,7 @@ namespace RombaSharp.Features
                     IncludeGZipsInt32Value,
                     "-include-gzips",
                     "flag value == 0 means: add gzip files themselves into the depot in addition to their contents, flag value == 2 means add gzip files themselves but don't add content",
-                    FeatureType.Int32);
+                    SabreTools.Library.Help.FeatureType.Int32);
             }
         }
 
@@ -148,7 +148,7 @@ namespace RombaSharp.Features
                     IncludeZipsInt32Value,
                     "-include-zips",
                     "flag value == 0 means: add zip files themselves into the depot in addition to their contents, flag value == 2 means add zip files themselves but don't add content",
-                    FeatureType.Int32);
+                    SabreTools.Library.Help.FeatureType.Int32);
             }
         }
 
@@ -161,7 +161,7 @@ namespace RombaSharp.Features
                     SubworkersInt32Value,
                     "-subworkers",
                     "how many subworkers to launch for each worker",
-                    FeatureType.Int32);
+                    SabreTools.Library.Help.FeatureType.Int32);
             }
         } // Defaults to Workers count in config
 
@@ -174,7 +174,7 @@ namespace RombaSharp.Features
                     WorkersInt32Value,
                     "-workers",
                     "how many workers to launch for the job",
-                    FeatureType.Int32);
+                    SabreTools.Library.Help.FeatureType.Int32);
             }
         } // Defaults to Workers count in config
 
@@ -191,7 +191,7 @@ namespace RombaSharp.Features
                     SizeInt64Value,
                     "-size",
                     "size of the rom to lookup",
-                    FeatureType.Int64);
+                    SabreTools.Library.Help.FeatureType.Int64);
             }
         }
 
@@ -208,7 +208,7 @@ namespace RombaSharp.Features
                     DatsListStringValue,
                     "-dats",
                     "purge only roms declared in these dats",
-                    FeatureType.List);
+                    SabreTools.Library.Help.FeatureType.List);
             }
         }
 
@@ -221,7 +221,7 @@ namespace RombaSharp.Features
                     DepotListStringValue,
                     "-depot",
                     "work only on specified depot path",
-                    FeatureType.List);
+                    SabreTools.Library.Help.FeatureType.List);
             }
         }
 
@@ -238,7 +238,7 @@ namespace RombaSharp.Features
                     BackupStringValue,
                     "-backup",
                     "backup directory where backup files are moved to",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -251,7 +251,7 @@ namespace RombaSharp.Features
                     DescriptionStringValue,
                     "-description",
                     "description value in DAT header",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -264,7 +264,7 @@ namespace RombaSharp.Features
                     MissingSha1sStringValue,
                     "-missingSha1s",
                     "write paths of dats with missing sha1s into this file",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -277,7 +277,7 @@ namespace RombaSharp.Features
                     NameStringValue,
                     "-name",
                     "name value in DAT header",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -290,7 +290,7 @@ namespace RombaSharp.Features
                     NewStringValue,
                     "-new",
                     "new DAT file",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -303,7 +303,7 @@ namespace RombaSharp.Features
                     OldStringValue,
                     "-old",
                     "old DAT file",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -316,7 +316,7 @@ namespace RombaSharp.Features
                     OutStringValue,
                     "-out",
                     "output file",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -329,7 +329,7 @@ namespace RombaSharp.Features
                     ResumeStringValue,
                     "-resume",
                     "resume a previously interrupted operation from the specified path",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 
@@ -342,7 +342,7 @@ namespace RombaSharp.Features
                     SourceStringValue,
                     "-source",
                     "source directory",
-                    FeatureType.String);
+                    SabreTools.Library.Help.FeatureType.String);
             }
         }
 

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
@@ -19,7 +18,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-sp", "--split" };
             Description = "Split input DATs by a given criteria";
-            _featureType = FeatureType.Flag;
+            _featureType = SabreTools.Library.Help.FeatureType.Flag;
             LongDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
             Features = new Dictionary<string, Library.Help.Feature>();
 
