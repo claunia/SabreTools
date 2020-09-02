@@ -608,7 +608,10 @@ namespace SabreTools.Library.DatItems
         {
             try
             {
-                return ItemType - other.ItemType;
+                if (GetName() == other.GetName())
+                    return Equals(other) ? 0 : 1;
+
+                return string.Compare(GetName(), other.GetName());
             }
             catch
             {
@@ -639,7 +642,7 @@ namespace SabreTools.Library.DatItems
             // If the duplicate is external already or should be, set it
             if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem.Source.Index != Source.Index)
             {
-                if (lastItem.Machine.Name == Machine.Name)
+                if (lastItem.Machine.Name == Machine.Name && lastItem.GetName() == GetName())
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -648,7 +651,7 @@ namespace SabreTools.Library.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem.Machine.Name == Machine.Name)
+                if (lastItem.Machine.Name == Machine.Name && lastItem.GetName() == GetName())
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
