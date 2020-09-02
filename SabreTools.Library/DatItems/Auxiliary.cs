@@ -24,7 +24,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML condition
     /// </summary>
-    /// TODO: Promote to DatItem level? (doesn't have "name" field?) (Both used at ListXML level AND under a lot of stuff)
+    /// TODO: Promote to DatItem level (Both used at ListXML level AND under a lot of stuff)
     [JsonObject("condition")]
     public class Condition
     {
@@ -87,7 +87,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML device
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
+    /// TODO: Promote to DatItem level (contains list)
     [JsonObject("device")]
     public class Device
     {
@@ -116,7 +116,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML display
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level
     [JsonObject("display")]
     public class Display
     {
@@ -166,7 +166,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML driver
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level
     [JsonObject("driver")]
     public class Driver
     {
@@ -196,7 +196,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML feature
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level
     [JsonObject("feature")]
     public class Feature
     {
@@ -213,7 +213,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML input
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
+    /// TODO: Promote to DatItem level (contains list)
     [JsonObject("input")]
     public class Input
     {
@@ -265,7 +265,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML port
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?) (contains list)
+    /// TODO: Promote to DatItem level (contains list)
     [JsonObject("port")]
     public class Port
     {
@@ -314,7 +314,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML sound
     /// </summary>
-    /// TODO: Promote to DatItem level (doesn't have "name" field?)
+    /// TODO: Promote to DatItem level
     [JsonObject("sound")]
     public class Sound
     {
