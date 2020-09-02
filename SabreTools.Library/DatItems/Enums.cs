@@ -497,6 +497,7 @@ namespace SabreTools.Library.DatItems
         Driver,
         Extension,
         Feature,
+        Instance,
         RamOption,
         Release,
         Sample,

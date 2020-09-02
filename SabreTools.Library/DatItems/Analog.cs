@@ -34,8 +34,8 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Analog-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Mask))
-                Mask = mappings[Field.DatItem_Mask];
+            if (mappings.Keys.Contains(Field.Machine_Port_Analog_Mask))
+                Mask = mappings[Field.Machine_Port_Analog_Mask];
         }
 
         #endregion
@@ -138,7 +138,7 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Mask))
+            if (fields.Contains(Field.Machine_Port_Analog_Mask))
                 Mask = null;
         }
 
@@ -164,7 +164,7 @@ namespace SabreTools.Library.DatItems
             Analog newItem = item as Analog;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Mask))
+            if (fields.Contains(Field.Machine_Port_Analog_Mask))
                 Mask = newItem.Mask;
         }
 

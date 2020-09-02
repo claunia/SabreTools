@@ -1684,6 +1684,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Extension;
                 case "feature":
                     return ItemType.Feature;
+                case "instance":
+                    return ItemType.Instance;
                 case "media":
                     return ItemType.Media;
                 case "ramoption":
@@ -1720,6 +1722,7 @@ namespace SabreTools.Library.Tools
                 "driver" => ItemType.Driver,
                 "extension" => ItemType.Extension,
                 "feature" => ItemType.Feature,
+                "instance" => ItemType.Instance,
                 "media" => ItemType.Media,
                 "ramoption" => ItemType.RamOption,
                 "release" => ItemType.Release,
@@ -2298,6 +2301,8 @@ namespace SabreTools.Library.Tools
                     return "extension";
                 case ItemType.Feature:
                     return "feature";
+                case ItemType.Instance:
+                    return "instance";
                 case ItemType.Media:
                     return "media";
                 case ItemType.RamOption:
@@ -2334,6 +2339,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Driver => "driver",
                 ItemType.Extension => "extension",
                 ItemType.Feature => "feature",
+                ItemType.Instance => "instance",
                 ItemType.Media => "media",
                 ItemType.RamOption => "ramoption",
                 ItemType.Release => "release",

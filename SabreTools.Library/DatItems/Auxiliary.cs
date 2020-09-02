@@ -291,29 +291,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML instance
-    /// </summary>
-    [JsonObject("instance")]
-    public class Instance
-    {
-        #region Fields
-
-        /// <summary>
-        /// Name of the instance
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Short name for the instance
-        /// </summary>
-        [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string BriefName { get; set; }
-
-        #endregion
-    }
-
-    /// <summary>
     /// Represents one ListXML conflocation or diplocation
     /// </summary>
     [JsonObject("location")]

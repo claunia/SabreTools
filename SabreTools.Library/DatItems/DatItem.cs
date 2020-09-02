@@ -497,6 +497,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Feature:
                     return new Feature();
 
+                case ItemType.Instance:
+                    return new Instance();
+
                 case ItemType.Media:
                     return new Media();
 
@@ -541,6 +544,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Driver => new Driver(),
                 ItemType.Extension => new Extension(),
                 ItemType.Feature => new Feature(),
+                ItemType.Instance => new Instance(),
                 ItemType.Media => new Media(),
                 ItemType.RamOption => new RamOption(),
                 ItemType.Release => new Release(),

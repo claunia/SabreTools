@@ -250,6 +250,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Feature:
                         datItem = datItemObj.ToObject<Feature>();
                         break;
+                    case ItemType.Instance:
+                        datItem = datItemObj.ToObject<Instance>();
+                        break;
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
                         break;

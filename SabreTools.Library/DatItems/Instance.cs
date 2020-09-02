@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents a matchable extension
+    /// Represents a single instance of another item
     /// </summary>
-    [JsonObject("extension")]
-    public class Extension : DatItem
+    [JsonObject("instance")]
+    public class Instance : DatItem
     {
         #region Fields
 
@@ -21,6 +21,12 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
+
+        /// <summary>
+        /// Short name for the instance
+        /// </summary>
+        [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string BriefName { get; set; }
 
         #endregion
 
@@ -44,9 +50,12 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Sample-specific fields
-            if (mappings.Keys.Contains(Field.Machine_Device_Extension_Name))
-                Name = mappings[Field.Machine_Device_Extension_Name];
+            // Handle Instance-specific fields
+            if (mappings.Keys.Contains(Field.Machine_Device_Instance_Name))
+                Name = mappings[Field.Machine_Device_Instance_Name];
+
+            if (mappings.Keys.Contains(Field.Machine_Device_Instance_BriefName))
+                BriefName = mappings[Field.Machine_Device_Instance_BriefName];
         }
 
         #endregion
@@ -54,12 +63,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Extension object
+        /// Create a default, empty Instance object
         /// </summary>
-        public Extension()
+        public Instance()
         {
             Name = string.Empty;
-            ItemType = ItemType.Extension;
+            ItemType = ItemType.Instance;
         }
 
         #endregion
@@ -68,7 +77,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Extension()
+            return new Instance()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -95,6 +104,8 @@ namespace SabreTools.Library.DatItems
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
+
+                BriefName = this.BriefName,
             };
         }
 
@@ -104,15 +115,15 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a Extension, return false
+            // If we don't have a Instance, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a Extension
-            Extension newOther = other as Extension;
+            // Otherwise, treat it as a Instance
+            Instance newOther = other as Instance;
 
-            // If the Extension information matches
-            return (Name == newOther.Name);
+            // If the Instance information matches
+            return (Name == newOther.Name && BriefName == newOther.BriefName);
         }
 
         #endregion
@@ -158,9 +169,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.Machine_Device_Extension_Name.MatchesPositiveSet(Name) == false)
+            if (filter.Machine_Device_Instance_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.Machine_Device_Extension_Name.MatchesNegativeSet(Name) == true)
+            if (filter.Machine_Device_Instance_Name.MatchesNegativeSet(Name) == true)
+                return false;
+
+            // Filter on brief name
+            if (filter.Machine_Device_Instance_BriefName.MatchesPositiveSet(Name) == false)
+                return false;
+            if (filter.Machine_Device_Instance_BriefName.MatchesNegativeSet(Name) == true)
                 return false;
 
             return true;
@@ -176,8 +193,11 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.Machine_Device_Extension_Name))
+            if (fields.Contains(Field.Machine_Device_Instance_Name))
                 Name = null;
+
+            if (fields.Contains(Field.Machine_Device_Instance_BriefName))
+                BriefName = null;
         }
 
         /// <summary>
@@ -204,16 +224,19 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Extension to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Extension)
+            // If we don't have a Instance to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Instance)
                 return;
 
             // Cast for easier access
-            Extension newItem = item as Extension;
+            Instance newItem = item as Instance;
 
             // Replace the fields
-            if (fields.Contains(Field.Machine_Device_Extension_Name))
+            if (fields.Contains(Field.Machine_Device_Instance_Name))
                 Name = newItem.Name;
+
+            if (fields.Contains(Field.Machine_Device_Instance_BriefName))
+                BriefName = newItem.BriefName;
         }
 
         #endregion
