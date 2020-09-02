@@ -160,9 +160,9 @@ namespace SabreTools.Library.Tools
             input = input.ToLowerInvariant();
 
             // Create regex strings
-            string headerRegex = @"^(dat|header|datheader)[.-_\s]";
-            string machineRegex = @"^(game|machine)[.-_\s]";
-            string datItemRegex = @"^(item|datitem|archive|biosset|blank|disk|release|rom|sample)[.-_\s]";
+            string headerRegex = @"^(dat|header|datheader)[.\-_\s]";
+            string machineRegex = @"^(game|machine)[.\-_\s]";
+            string datItemRegex = @"^(item|datitem)[.\-_\s]";
 
             // If we have a header field
             if (Regex.IsMatch(input, headerRegex))
@@ -1057,7 +1057,8 @@ namespace SabreTools.Library.Tools
 
             // Else, we fall back on the old matching
             // TODO: Remove this entirely
-            switch (input.Replace(' ', '_').Replace('-', '_').Replace('.', '_'))
+            // TODO: Normalize space replacement
+            switch (input)
             {
                 #region Machine
 

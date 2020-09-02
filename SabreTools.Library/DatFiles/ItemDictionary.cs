@@ -767,7 +767,7 @@ namespace SabreTools.Library.DatFiles
 
                 // First do the initial sort of all of the roms inplace
                 List<string> oldkeys = Keys.ToList();
-                for (int k = 0; k < oldkeys.Count; k++)
+                Parallel.For(0, oldkeys.Count, Globals.ParallelOptions, k =>
                 {
                     string key = oldkeys[k];
 
@@ -793,7 +793,7 @@ namespace SabreTools.Library.DatFiles
                     // If the key is now empty, remove it
                     if (this[key].Count == 0)
                         Remove(key);
-                }
+                });
             }
 
             // If the merge type isn't the same, we want to merge the dictionary accordingly

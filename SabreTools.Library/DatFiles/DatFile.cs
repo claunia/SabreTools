@@ -1952,7 +1952,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Get the key and add the file
-            key = item.GetKey(Field.DatItem_CRC);
+            key = item.GetKey(Field.Machine_Name);
             Items.Add(key, item);
 
             return key;
