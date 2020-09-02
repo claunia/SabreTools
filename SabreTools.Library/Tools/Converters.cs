@@ -698,21 +698,6 @@ namespace SabreTools.Library.Tools
                     case "port_analog_mask":
                         return Field.Machine_Port_Analog_Mask;
 
-                    case "drivers":
-                        return Field.Machine_Drivers;
-
-                    case "driver_status":
-                        return Field.Machine_Driver_Status;
-
-                    case "driver_emulation":
-                        return Field.Machine_Driver_Emulation;
-
-                    case "driver_cocktail":
-                        return Field.Machine_Driver_Cocktail;
-
-                    case "driver_savestate":
-                        return Field.Machine_Driver_SaveState;
-
                     case "devices":
                         return Field.Machine_Devices;
 
@@ -1118,6 +1103,19 @@ namespace SabreTools.Library.Tools
 
                     case "value_default":
                         return Field.DatItem_Value_Default;
+
+                    // Driver
+                    case "supportstatus":
+                        return Field.DatItem_SupportStatus;
+
+                    case "emulationstatus":
+                        return Field.DatItem_EmulationStatus;
+
+                    case "cocktailstatus":
+                        return Field.DatItem_CocktailStatus;
+
+                    case "savestatestatus":
+                        return Field.DatItem_SaveStateStatus;
 
                     // Feature
                     case "featuretype":
@@ -1683,6 +1681,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.DipSwitch;
                 case "disk":
                     return ItemType.Disk;
+                case "driver":
+                    return ItemType.Driver;
                 case "feature":
                     return ItemType.Feature;
                 case "media":
@@ -1716,6 +1716,7 @@ namespace SabreTools.Library.Tools
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
+                "driver" => ItemType.Driver,
                 "feature" => ItemType.Feature,
                 "media" => ItemType.Media,
                 "ramoption" => ItemType.RamOption,
@@ -2015,10 +2016,12 @@ namespace SabreTools.Library.Tools
             switch (supported?.ToLowerInvariant())
             {
                 case "no":
+                case "unsupported":
                     return Supported.No;
                 case "partial":
                     return Supported.Partial;
                 case "yes":
+                case "supported":
                     return Supported.Yes;
                 default:
                     return Supported.NULL;
@@ -2027,9 +2030,41 @@ namespace SabreTools.Library.Tools
             return supported?.ToLowerInvariant() switch
             {
                 "no" => Supported.No,
+                "unsupported" => Supported.No,
                 "partial" => Supported.Partial,
                 "yes" => Supported.Yes,
+                "supported" => Supported.Yes,
                 _ => Supported.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get SupportStatus value from input string
+        /// </summary>
+        /// <param name="supported">String to get value from</param>
+        /// <returns>SupportStatus value corresponding to the string</returns>
+        public static SupportStatus AsSupportStatus(this string supportStatus)
+        {
+#if NET_FRAMEWORK
+            switch (supportStatus?.ToLowerInvariant())
+            {
+                case "good":
+                    return SupportStatus.Good;
+                case "imperfect":
+                    return SupportStatus.Imperfect;
+                case "preliminary":
+                    return SupportStatus.Preliminary;
+                default:
+                    return SupportStatus.NULL;
+            }
+#else
+            return supportStatus?.ToLowerInvariant() switch
+            {
+                "good" => SupportStatus.Good,
+                "imperfect" => SupportStatus.Imperfect,
+                "preliminary" => SupportStatus.Preliminary,
+                _ => SupportStatus.NULL,
             };
 #endif
         }
@@ -2251,6 +2286,8 @@ namespace SabreTools.Library.Tools
                     return "dipswitch";
                 case ItemType.Disk:
                     return "disk";
+                case ItemType.Driver:
+                    return "driver";
                 case ItemType.Feature:
                     return "feature";
                 case ItemType.Media:
@@ -2284,6 +2321,7 @@ namespace SabreTools.Library.Tools
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",
+                ItemType.Driver => "driver",
                 ItemType.Feature => "feature",
                 ItemType.Media => "media",
                 ItemType.RamOption => "ramoption",
@@ -2611,18 +2649,19 @@ namespace SabreTools.Library.Tools
         /// Get string value from input Supported
         /// </summary>
         /// <param name="supported">Supported to get value from</param>
+        /// <param name="verbose">True to use verbose output, false otherwise</param>
         /// <returns>String value corresponding to the Supported</returns>
-        public static string FromSupported(this Supported supported)
+        public static string FromSupported(this Supported supported, bool verbose)
         {
 #if NET_FRAMEWORK
             switch (supported)
             {
                 case Supported.No:
-                    return "no";
+                    return verbose ? "unsupported" : "no";
                 case Supported.Partial:
                     return "partial";
                 case Supported.Yes:
-                    return "yes";
+                    return verbose ? "supported" : "yes";
                 default:
                     return null;
             }
@@ -2632,6 +2671,36 @@ namespace SabreTools.Library.Tools
                 Supported.No => "no",
                 Supported.Partial => "partial",
                 Supported.Yes => "yes",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input SupportStatus
+        /// </summary>
+        /// <param name="supportStatus">SupportStatus to get value from</param>
+        /// <returns>String value corresponding to the SupportStatus</returns>
+        public static string FromSupportStatus(this SupportStatus supportStatus)
+        {
+#if NET_FRAMEWORK
+            switch (supportStatus)
+            {
+                case SupportStatus.Good:
+                    return "good";
+                case SupportStatus.Imperfect:
+                    return "imperfect";
+                case SupportStatus.Preliminary:
+                    return "preliminary";
+                default:
+                    return null;
+            }
+#else
+            return supportStatus switch
+            {
+                SupportStatus.Good => "good",
+                SupportStatus.Imperfect => "imperfect",
+                SupportStatus.Preliminary => "preliminary",
                 _ => null,
             };
 #endif

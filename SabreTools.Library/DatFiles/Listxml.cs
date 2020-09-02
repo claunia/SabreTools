@@ -289,6 +289,18 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "driver":
+                        datItems.Add(new Driver
+                        {
+                            Status = reader.GetAttribute("status").AsSupportStatus(),
+                            Emulation = reader.GetAttribute("emulation").AsSupportStatus(),
+                            Cocktail = reader.GetAttribute("cocktail").AsSupportStatus(),
+                            SaveState = reader.GetAttribute("savestate").AsSupported(),
+                        });
+
+                        reader.Read();
+                        break;
+
                     case "feature":
                         datItems.Add(new Feature
                         {
@@ -474,22 +486,6 @@ namespace SabreTools.Library.DatFiles
 
                         // Skip the port now that we've processed it
                         reader.Skip();
-                        break;
-
-                    case "driver":
-                        var driver = new Driver();
-                        driver.Status = reader.GetAttribute("status");
-                        driver.Emulation = reader.GetAttribute("emulation");
-                        driver.Cocktail = reader.GetAttribute("cocktail");
-                        driver.SaveState = reader.GetAttribute("savestate");
-
-                        // Ensure the list exists
-                        if (machine.Drivers == null)
-                            machine.Drivers = new List<Driver>();
-
-                        machine.Drivers.Add(driver);
-
-                        reader.Read();
                         break;
 
                     case "device":
@@ -1299,21 +1295,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Drivers != null)
-                {
-                    foreach (var driver in datItem.Machine.Drivers)
-                    {
-                        xtw.WriteStartElement("driver");
-
-                        xtw.WriteOptionalAttributeString("status", driver.Status);
-                        xtw.WriteOptionalAttributeString("emulation", driver.Emulation);
-                        xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail);
-                        xtw.WriteOptionalAttributeString("savestate", driver.SaveState);
-
-                        // End driver
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Devices != null)
                 {
                     foreach (var device in datItem.Machine.Devices)
@@ -1563,6 +1544,16 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
                         xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Driver:
+                        var driver = datItem as Driver;
+                        xtw.WriteStartElement("driver");
+                        xtw.WriteOptionalAttributeString("status", driver.Status.FromSupportStatus());
+                        xtw.WriteOptionalAttributeString("emulation", driver.Emulation.FromSupportStatus());
+                        xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail.FromSupportStatus());
+                        xtw.WriteOptionalAttributeString("savestate", driver.SaveState.FromSupported(true));
                         xtw.WriteEndElement();
                         break;
 

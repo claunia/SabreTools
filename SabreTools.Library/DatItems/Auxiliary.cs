@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 /// <summary>
 /// This holds all of the auxiliary types needed for proper parsing
@@ -161,26 +162,6 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("vbstart")]
         public string VBStart { get; set; } // TODO: Int32? Float?
-    }
-
-    /// <summary>
-    /// Represents one ListXML driver
-    /// </summary>
-    /// TODO: Promote to DatItem level
-    [JsonObject("driver")]
-    public class Driver
-    {
-        [JsonProperty("status")]
-        public string Status { get; set; } // TODO: (good|imperfect|preliminary)
-
-        [JsonProperty("emulation")]
-        public string Emulation { get; set; } // TODO: (good|imperfect|preliminary)
-
-        [JsonProperty("cocktail")]
-        public string Cocktail { get; set; } // TODO: bool? (good|imperfect|preliminary)?
-
-        [JsonProperty("savestate")]
-        public string SaveState { get; set; } // TODO: (supported|unsupported)
     }
 
     /// <summary>

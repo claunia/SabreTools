@@ -105,13 +105,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> Machine_Port_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Port_Analog_Mask { get; private set; } = new FilterItem<string>();
 
-        // Drivers
-        public FilterItem<bool?> Machine_Drivers { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Driver_Status { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Driver_Emulation { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Driver_Cocktail { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Driver_SaveState { get; private set; } = new FilterItem<string>();
-
         // Devices
         public FilterItem<bool?> Machine_Devices { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Device_Type { get; private set; } = new FilterItem<string>();
@@ -294,11 +287,16 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Value_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
+        // Driver
+        public FilterItem<SupportStatus> DatItem_SupportStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = SupportStatus.NULL, Negative = SupportStatus.NULL };
+        public FilterItem<SupportStatus> DatItem_EmulationStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = SupportStatus.NULL, Negative = SupportStatus.NULL };
+        public FilterItem<SupportStatus> DatItem_CocktailStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = SupportStatus.NULL, Negative = SupportStatus.NULL };
+        public FilterItem<Supported> DatItem_SaveStateStatus { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
+
         // Feature
         public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
-
 
         // Ram Option
         public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
@@ -844,43 +842,7 @@ namespace SabreTools.Library.Filtering
                         Machine_Port_Analog_Mask.NegativeSet.Add(value);
                     else
                         Machine_Port_Analog_Mask.PositiveSet.Add(value);
-                    break;
-
-                // Drivers
-                case Field.Machine_Drivers:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Drivers.Neutral = false;
-                    else
-                        Machine_Drivers.Neutral = true;
-                    break;
-
-                case Field.Machine_Driver_Status:
-                    if (negate)
-                        Machine_Driver_Status.NegativeSet.Add(value);
-                    else
-                        Machine_Driver_Status.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Driver_Emulation:
-                    if (negate)
-                        Machine_Driver_Emulation.NegativeSet.Add(value);
-                    else
-                        Machine_Driver_Emulation.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Driver_Cocktail:
-                    if (negate)
-                        Machine_Driver_Cocktail.NegativeSet.Add(value);
-                    else
-                        Machine_Driver_Cocktail.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Driver_SaveState:
-                    if (negate)
-                        Machine_Driver_SaveState.NegativeSet.Add(value);
-                    else
-                        Machine_Driver_SaveState.PositiveSet.Add(value);
-                    break;
+                    break;                
 
                 // Devices
                 case Field.Machine_Devices:
@@ -1697,6 +1659,35 @@ namespace SabreTools.Library.Filtering
                         DatItem_Value_Default.Neutral = true;
                     break;
 
+                // Driver
+                case Field.DatItem_SupportStatus:
+                    if (negate)
+                        DatItem_SupportStatus.Negative |= value.AsSupportStatus();
+                    else
+                        DatItem_SupportStatus.Positive |= value.AsSupportStatus();
+                    break;
+
+                case Field.DatItem_EmulationStatus:
+                    if (negate)
+                        DatItem_EmulationStatus.Negative |= value.AsSupportStatus();
+                    else
+                        DatItem_EmulationStatus.Positive |= value.AsSupportStatus();
+                    break;
+
+                case Field.DatItem_CocktailStatus:
+                    if (negate)
+                        DatItem_CocktailStatus.Negative |= value.AsSupportStatus();
+                    else
+                        DatItem_CocktailStatus.Positive |= value.AsSupportStatus();
+                    break;
+
+                case Field.DatItem_SaveStateStatus:
+                    if (negate)
+                        DatItem_SaveStateStatus.Negative |= value.AsSupported();
+                    else
+                        DatItem_SaveStateStatus.Positive |= value.AsSupported();
+                    break;
+
                 // Feature
                 case Field.DatItem_FeatureType:
                     if (negate)
@@ -1789,9 +1780,9 @@ namespace SabreTools.Library.Filtering
 
                     #endregion
 
-                    #endregion // Item-Specifics
+                #endregion // Item-Specifics
 
-                    #endregion // DatItem Filters
+                #endregion // DatItem Filters
             }
         }
 

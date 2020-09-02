@@ -1389,6 +1389,17 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Driver:
+                        var driver = datItem as Driver;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "driver");
+                        xtw.WriteOptionalAttributeString("status", driver.Status.FromSupportStatus());
+                        xtw.WriteOptionalAttributeString("emulation", driver.Emulation.FromSupportStatus());
+                        xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail.FromSupportStatus());
+                        xtw.WriteOptionalAttributeString("savestate", driver.SaveState.FromSupported(true));
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Feature:
                         var feature = datItem as Feature;
                         xtw.WriteStartElement("file");

@@ -240,13 +240,6 @@ namespace SabreTools.Library.DatItems
         Machine_Port_Analogs,
         Machine_Port_Analog_Mask,
 
-        // Drivers
-        Machine_Drivers,
-        Machine_Driver_Status,
-        Machine_Driver_Emulation,
-        Machine_Driver_Cocktail,
-        Machine_Driver_SaveState,
-
         // Devices
         Machine_Devices,
         Machine_Device_Type,
@@ -423,11 +416,17 @@ namespace SabreTools.Library.DatItems
         DatItem_Setting_Value,
         DatItem_Setting_Default,
 
-        // DIP Switch.Values
+        // DipSwitch.Values
         DatItem_Values,
         DatItem_Value_Name,
         DatItem_Value_Value,
         DatItem_Value_Default,
+
+        // Driver
+        DatItem_SupportStatus,
+        DatItem_EmulationStatus,
+        DatItem_CocktailStatus,
+        DatItem_SaveStateStatus,
 
         // Feature
         DatItem_FeatureType,
@@ -496,6 +495,7 @@ namespace SabreTools.Library.DatItems
         Configuration,
         DeviceReference,
         DipSwitch,
+        Driver,
         Feature,
         RamOption,
         Release,
@@ -584,5 +584,21 @@ namespace SabreTools.Library.DatItems
         No = 1 << 0,
         Partial = 1 << 1,
         Yes = 1 << 2,
+    }
+
+    /// <summary>
+    /// Determine driver support statuses
+    /// </summary>
+    [Flags]
+    public enum SupportStatus
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Good = 1 << 0,
+        Imperfect = 1 << 1,
+        Preliminary = 1 << 2,
     }
 }

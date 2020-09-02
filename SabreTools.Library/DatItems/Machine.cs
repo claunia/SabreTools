@@ -177,12 +177,6 @@ namespace SabreTools.Library.DatItems
         public List<Port> Ports { get; set; } = null;
 
         /// <summary>
-        /// List of associated drivers
-        /// </summary>
-        [JsonProperty("drivers", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Driver> Drivers { get; set; } = null;
-
-        /// <summary>
         /// List of associated devices
         /// </summary>
         [JsonProperty("devices", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -544,7 +538,6 @@ namespace SabreTools.Library.DatItems
                 Conditions = this.Conditions,
                 Inputs = this.Inputs,
                 Ports = this.Ports,
-                Drivers = this.Drivers,
                 Devices = this.Devices,
 
                 #endregion

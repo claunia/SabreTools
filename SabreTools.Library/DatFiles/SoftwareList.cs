@@ -692,7 +692,7 @@ namespace SabreTools.Library.DatFiles
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
 
-                xtw.WriteOptionalAttributeString("supported", datItem.Machine.Supported.FromSupported());
+                xtw.WriteOptionalAttributeString("supported", datItem.Machine.Supported.FromSupported(false));
 
                 xtw.WriteOptionalElementString("description", datItem.Machine.Description);
                 xtw.WriteOptionalElementString("year", datItem.Machine.Year);

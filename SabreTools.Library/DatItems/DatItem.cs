@@ -482,6 +482,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Disk:
                     return new Disk();
 
+                case ItemType.Driver:
+                    return new Driver();
+
                 case ItemType.Feature:
                     return new Feature();
 
@@ -524,6 +527,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.DeviceReference => new DeviceReference(),
                 ItemType.DipSwitch => new DipSwitch(),
                 ItemType.Disk => new Disk(),
+                ItemType.Driver => new Driver(),
                 ItemType.Feature => new Feature(),
                 ItemType.Media => new Media(),
                 ItemType.RamOption => new RamOption(),
