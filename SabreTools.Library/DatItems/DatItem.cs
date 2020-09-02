@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
@@ -25,12 +24,6 @@ namespace SabreTools.Library.DatItems
         #region Fields
 
         #region Common Fields
-
-        /// <summary>
-        /// Name of the item
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
 
         /// <summary>
         /// Item type for outputting
@@ -369,6 +362,15 @@ namespace SabreTools.Library.DatItems
         #region Accessors
 
         /// <summary>
+        /// Gets the name to use for a DatItem
+        /// </summary>
+        /// <returns>Name if available, null otherwise</returns>
+        public virtual string GetName()
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Set fields with given values
         /// </summary>
         /// <param name="mappings">Mappings dictionary</param>
@@ -379,13 +381,6 @@ namespace SabreTools.Library.DatItems
                 Machine = new Machine();
 
             Machine.SetFields(mappings);
-
-            #region Common
-
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
-
-            #endregion
 
             #region AttractMode
 
@@ -514,13 +509,22 @@ namespace SabreTools.Library.DatItems
 #else
             return itemType switch
             {
+                ItemType.Adjuster => new Adjuster(),
                 ItemType.Archive => new Archive(),
                 ItemType.BiosSet => new BiosSet(),
                 ItemType.Blank => new Blank(),
+                ItemType.Chip => new Chip(),
+                ItemType.Configuration => new Configuration(),
+                ItemType.DeviceReference => new DeviceReference(),
+                ItemType.DipSwitch => new DipSwitch(),
                 ItemType.Disk => new Disk(),
+                ItemType.Media => new Media(),
+                ItemType.RamOption => new RamOption(),
                 ItemType.Release => new Release(),
                 ItemType.Rom => new Rom(),
                 ItemType.Sample => new Sample(),
+                ItemType.Slot => new Slot(),
+                ItemType.SoftwareList => new SoftwareList(),
                 _ => new Rom(),
             };
 #endif
@@ -596,10 +600,7 @@ namespace SabreTools.Library.DatItems
         {
             try
             {
-                if (Name == other.Name)
-                    return Equals(other) ? 0 : 1;
-
-                return string.Compare(Name, other.Name);
+                return ItemType - other.ItemType;
             }
             catch
             {
@@ -630,7 +631,7 @@ namespace SabreTools.Library.DatItems
             // If the duplicate is external already or should be, set it
             if (lastItem.DupeType.HasFlag(DupeType.External) || lastItem.Source.Index != Source.Index)
             {
-                if (lastItem.Machine.Name == Machine.Name && lastItem.Name == Name)
+                if (lastItem.Machine.Name == Machine.Name)
                     output = DupeType.External | DupeType.All;
                 else
                     output = DupeType.External | DupeType.Hash;
@@ -639,7 +640,7 @@ namespace SabreTools.Library.DatItems
             // Otherwise, it's considered an internal dupe
             else
             {
-                if (lastItem.Machine.Name == Machine.Name && lastItem.Name == Name)
+                if (lastItem.Machine.Name == Machine.Name)
                     output = DupeType.Internal | DupeType.All;
                 else
                     output = DupeType.Internal | DupeType.Hash;
@@ -653,6 +654,31 @@ namespace SabreTools.Library.DatItems
         #region Filtering
 
         /// <summary>
+        /// Clean a DatItem according to the cleaner
+        /// </summary>
+        /// <param name="cleaner">Cleaner to implement</param>
+        public virtual void Clean(Cleaner cleaner)
+        {
+            // If we're stripping unicode characters, strip machine name and description
+            if (cleaner?.RemoveUnicode == true)
+            {
+                Machine.Name = Sanitizer.RemoveUnicodeCharacters(Machine.Name);
+                Machine.Description = Sanitizer.RemoveUnicodeCharacters(Machine.Description);
+            }
+
+            // If we're in cleaning mode, sanitize machine name and description
+            if (cleaner?.Clean == true)
+            {
+                Machine.Name = Sanitizer.CleanGameName(Machine.Name);
+                Machine.Description = Sanitizer.CleanGameName(Machine.Description);
+            }
+
+            // If we are in single game mode, rename the machine
+            if (cleaner?.Single == true)
+                Machine.Name = "!";
+        }
+
+        /// <summary>
         /// Check to see if a DatItem passes the filter
         /// </summary>
         /// <param name="filter">Filter to check against</param>
@@ -664,12 +690,6 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             #region Common
-
-            // Filter on item name
-            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
-                return false;
 
             // Filter on item type
             if (filter.DatItem_Type.MatchesPositiveSet(ItemType.ToString()) == false)
@@ -795,13 +815,6 @@ namespace SabreTools.Library.DatItems
             // Remove machine fields
             Machine.RemoveFields(fields);
 
-            #region Common
-
-            if (fields.Contains(Field.DatItem_Name))
-                Name = null;
-
-            #endregion
-
             #region AttractMode
 
             if (fields.Contains(Field.DatItem_AltName))
@@ -861,6 +874,13 @@ namespace SabreTools.Library.DatItems
                 LoadFlag = null;
 
             #endregion
+        }
+
+        /// <summary>
+        /// Set internal names to match One Rom Per Game (ORPG) logic
+        /// </summary>
+        public virtual void SetOneRomPerGame()
+        {
         }
 
         #endregion
@@ -943,13 +963,6 @@ namespace SabreTools.Library.DatItems
         /// <param name="fields">List of Fields representing what should be updated</param>
         public virtual void ReplaceFields(DatItem item, List<Field> fields)
         {
-            #region Common
-
-            if (fields.Contains(Field.DatItem_Name))
-                Name = item.Name;
-
-            #endregion
-
             #region AttractMode
 
             if (fields.Contains(Field.DatItem_AltName))
@@ -1125,14 +1138,14 @@ namespace SabreTools.Library.DatItems
                         {
                             saveditem.Source = file.Source.Clone() as Source;
                             saveditem.CopyMachineInformation(file);
-                            saveditem.Name = file.Name;
+                            saveditem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = file.GetName() });
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
                         if (saveditem.Machine.CloneOf == file.Machine.Name || saveditem.Machine.RomOf == file.Machine.Name)
                         {
                             saveditem.CopyMachineInformation(file);
-                            saveditem.Name = file.Name;
+                            saveditem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = file.GetName() });
                         }
 
                         break;
@@ -1185,33 +1198,39 @@ namespace SabreTools.Library.DatItems
                     continue;
                 }
 
+                // Get the last item name, if applicable
+                string lastItemName = lastItem.GetName() ?? lastItem.ItemType.ToString();
+
+                // Get the current item name, if applicable
+                string datItemName = datItem.GetName() ?? datItem.ItemType.ToString();
+
                 // If the current item exactly matches the last item, then we don't add it
                 if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
                 {
-                    Globals.Logger.Verbose($"Exact duplicate found for '{datItem.Name}'");
+                    Globals.Logger.Verbose($"Exact duplicate found for '{datItemName}'");
                     continue;
                 }
 
                 // If the current name matches the previous name, rename the current item
-                else if (datItem.Name == lastItem.Name)
+                else if (datItemName == lastItemName)
                 {
-                    Globals.Logger.Verbose($"Name duplicate found for '{datItem.Name}'");
+                    Globals.Logger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
                     {
-                        datItem.Name += GetDuplicateSuffix(datItem);
+                        datItemName += GetDuplicateSuffix(datItem);
 #if NET_FRAMEWORK
-                        lastrenamed = lastrenamed ?? datItem.Name;
+                        lastrenamed = lastrenamed ?? datItemName;
 #else
-                        lastrenamed ??= datItem.Name;
+                        lastrenamed ??= datItemName;
 #endif
                     }
 
                     // If we have a conflict with the last renamed item, do the right thing
-                    if (datItem.Name == lastrenamed)
+                    if (datItemName == lastrenamed)
                     {
-                        lastrenamed = datItem.Name;
-                        datItem.Name += (lastid == 0 ? string.Empty : "_" + lastid);
+                        lastrenamed = datItemName;
+                        datItemName += (lastid == 0 ? string.Empty : "_" + lastid);
                         lastid++;
                     }
                     // If we have no conflict, then we want to reset the lastrenamed and id
@@ -1220,6 +1239,9 @@ namespace SabreTools.Library.DatItems
                         lastrenamed = null;
                         lastid = 0;
                     }
+
+                    // Set the item name back to the datItem
+                    datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = datItemName });
 
                     output.Add(datItem);
                 }
@@ -1274,10 +1296,10 @@ namespace SabreTools.Library.DatItems
                         {
                             if (x.ItemType == y.ItemType)
                             {
-                                if (Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)) == Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)))
-                                    return nc.Compare(Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
+                                if (Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)) == Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)))
+                                    return nc.Compare(Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
 
-                                return nc.Compare(Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.Name)), Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.Name)));
+                                return nc.Compare(Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
                             }
 
                             return x.ItemType - y.ItemType;

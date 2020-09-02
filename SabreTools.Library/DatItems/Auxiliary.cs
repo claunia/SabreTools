@@ -24,7 +24,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML condition
     /// </summary>
-    /// TODO: Promote to DatItem level? (Both used at ListXML level AND under a lot of stuff)
+    /// TODO: Promote to DatItem level? (doesn't have "name" field?) (Both used at ListXML level AND under a lot of stuff)
     [JsonObject("condition")]
     public class Condition
     {

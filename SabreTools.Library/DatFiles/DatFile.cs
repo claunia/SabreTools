@@ -953,37 +953,8 @@ namespace SabreTools.Library.DatFiles
                     if (item == null)
                         continue;
 
-                    // If we're stripping unicode characters, do so from all relevant things
-                    if (cleaner?.RemoveUnicode == true)
-                    {
-                        item.Name = Sanitizer.RemoveUnicodeCharacters(item.Name);
-                        item.Machine.Name = Sanitizer.RemoveUnicodeCharacters(item.Machine.Name);
-                        item.Machine.Description = Sanitizer.RemoveUnicodeCharacters(item.Machine.Description);
-                    }
-
-                    // If we're in cleaning mode, do so from all relevant things
-                    if (cleaner?.Clean == true)
-                    {
-                        item.Machine.Name = Sanitizer.CleanGameName(item.Machine.Name);
-                        item.Machine.Description = Sanitizer.CleanGameName(item.Machine.Description);
-                    }
-
-                    // If we are in single game mode, rename all games
-                    if (cleaner?.Single == true)
-                        item.Machine.Name = "!";
-
-                    // If we are in NTFS trim mode, trim the game name
-                    if (cleaner?.Trim == true)
-                    {
-                        // Windows max name length is 260
-                        int usableLength = 260 - item.Machine.Name.Length - (cleaner.Root?.Length ?? 0);
-                        if (item.Name.Length > usableLength)
-                        {
-                            string ext = Path.GetExtension(item.Name);
-                            item.Name = item.Name.Substring(0, usableLength - ext.Length);
-                            item.Name += ext;
-                        }
-                    }
+                    // Run cleaning per item
+                    item.Clean(cleaner);
                 }
 
                 // Assign back for caution
@@ -1146,9 +1117,7 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> items = Items[key];
                 for (int i = 0; i < items.Count; i++)
                 {
-                    string[] splitname = items[i].Name.Split('.');
-                    items[i].Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
-                    items[i].Name = Path.GetFileName(items[i].Name);
+                    items[i].SetOneRomPerGame();
                 }
             });
         }
@@ -1362,7 +1331,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (Items[game].Where(i => i.Name == datItem.Name).Count() == 0 && !Items[game].Contains(datItem))
+                    if (Items[game].Where(i => i.GetName() == datItem.GetName()).Count() == 0 && !Items[game].Contains(datItem))
                         Items.Add(game, datItem);
                 }
             }
@@ -1400,7 +1369,7 @@ namespace SabreTools.Library.DatFiles
                     // Determine if the game has any devices or not
                     List<string> deviceReferences = Items[game]
                         .Where(i => i.ItemType == ItemType.DeviceReference)
-                        .Select(i => i.Name)
+                        .Select(i => (i as DeviceReference).Name)
                         .ToList();
                     List<string> newdevs = new List<string>();
                     foreach (string deviceReference in deviceReferences)
@@ -1414,13 +1383,13 @@ namespace SabreTools.Library.DatFiles
                         List<DatItem> devItems = Items[deviceReference];
                         newdevs.AddRange((Items[deviceReference] ?? new List<DatItem>())
                             .Where(i => i.ItemType == ItemType.DeviceReference)
-                            .Select(i => i.Name));
+                            .Select(i => (i as DeviceReference).Name));
 
                         foreach (DatItem item in devItems)
                         {
                             DatItem datItem = (DatItem)item.Clone();
                             datItem.CopyMachineInformation(copyFrom);
-                            if (Items[game].Where(i => i.ItemType == datItem.ItemType && i.Name == datItem.Name).Count() == 0)
+                            if (Items[game].Where(i => i.ItemType == ItemType.DeviceReference && (i as DeviceReference).Name == (datItem as DeviceReference).Name).Count() == 0)
                             {
                                 foundnew = true;
                                 Items.Add(game, datItem);
@@ -1476,7 +1445,7 @@ namespace SabreTools.Library.DatFiles
                         {
                             DatItem datItem = (DatItem)item.Clone();
                             datItem.CopyMachineInformation(copyFrom);
-                            if (Items[game].Where(i => i.ItemType == datItem.ItemType && i.Name == datItem.Name).Count() == 0)
+                            if (Items[game].Where(i => i.ItemType == ItemType.Slot && (i as Slot).Name == (datItem as Slot).Name).Count() == 0)
                             {
                                 foundnew = true;
                                 Items.Add(game, datItem);
@@ -1531,7 +1500,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (Items[game].Where(i => i.Name.ToLowerInvariant() == datItem.Name.ToLowerInvariant()).Count() == 0
+                    if (Items[game].Where(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Count() == 0
                         && !Items[game].Contains(datItem))
                     {
                         Items.Add(game, datItem);
@@ -1592,23 +1561,23 @@ namespace SabreTools.Library.DatFiles
                         Disk disk = item as Disk;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (disk.MergeTag != null && Items[parent].Select(i => i.Name).Contains(disk.MergeTag))
+                        if (disk.MergeTag != null && Items[parent].Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk).Name).Contains(disk.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to parent
-                        else if (disk.MergeTag != null && !Items[parent].Select(i => i.Name).Contains(disk.MergeTag))
+                        else if (disk.MergeTag != null && !Items[parent].Where(i => i.ItemType == ItemType.Disk).Select(i => (i as Disk).Name).Contains(disk.MergeTag))
                         {
-                            item.CopyMachineInformation(copyFrom);
-                            Items.Add(parent, item);
+                            disk.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, disk);
                         }
 
                         // If there is no merge tag, add to parent
                         else if (disk.MergeTag == null)
                         {
-                            item.CopyMachineInformation(copyFrom);
-                            Items.Add(parent, item);
+                            disk.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, disk);
                         }
                     }
 
@@ -1618,29 +1587,29 @@ namespace SabreTools.Library.DatFiles
                         Rom rom = item as Rom;
 
                         // If the merge tag exists and the parent already contains it, skip
-                        if (rom.MergeTag != null && Items[parent].Select(i => i.Name).Contains(rom.MergeTag))
+                        if (rom.MergeTag != null && Items[parent].Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom).Name).Contains(rom.MergeTag))
                         {
                             continue;
                         }
 
                         // If the merge tag exists but the parent doesn't contain it, add to subfolder of parent
-                        else if (rom.MergeTag != null && !Items[parent].Select(i => i.Name).Contains(rom.MergeTag))
+                        else if (rom.MergeTag != null && !Items[parent].Where(i => i.ItemType == ItemType.Rom).Select(i => (i as Rom).Name).Contains(rom.MergeTag))
                         {
                             if (subfolder)
-                                item.Name = $"{item.Machine.Name}\\{item.Name}";
+                                rom.Name = $"{rom.Machine.Name}\\{rom.Name}";
 
-                            item.CopyMachineInformation(copyFrom);
-                            Items.Add(parent, item);
+                            rom.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, rom);
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
                         else if (!Items[parent].Contains(item))
                         {
                             if (subfolder)
-                                item.Name = $"{item.Machine.Name}\\{item.Name}";
+                                rom.Name = $"{item.Machine.Name}\\{rom.Name}";
 
-                            item.CopyMachineInformation(copyFrom);
-                            Items.Add(parent, item);
+                            rom.CopyMachineInformation(copyFrom);
+                            Items.Add(parent, rom);
                         }
                     }
 
@@ -1648,7 +1617,7 @@ namespace SabreTools.Library.DatFiles
                     else if (!Items[parent].Contains(item))
                     {
                         if (subfolder)
-                            item.Name = $"{item.Machine.Name}\\{item.Name}";
+                            item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{item.Machine.Name}\\{item.GetName()}" });
 
                         item.CopyMachineInformation(copyFrom);
                         Items.Add(parent, item);
@@ -1855,13 +1824,6 @@ namespace SabreTools.Library.DatFiles
         protected string ParseAddHelper(DatItem item)
         {
             string key = string.Empty;
-
-            // If there's no name in the rom, we log and skip it
-            if (item.Name == null)
-            {
-                Globals.Logger.Warning($"{Header.FileName}: Rom with no name found! Skipping...");
-                return key;
-            }
 
             // If we have a Disk, Media, or Rom, clean the hash data
             if (item.ItemType == ItemType.Disk)
@@ -2258,7 +2220,7 @@ namespace SabreTools.Library.DatFiles
                 string key = datItem.GetKey(Field.DatItem_CRC);
                 Items.Add(key, datItem);
 
-                Globals.Logger.User($"File added: {datItem.Name}{Environment.NewLine}");
+                Globals.Logger.User($"File added: {datItem.GetName() ?? string.Empty}{Environment.NewLine}");
             }
             catch (IOException ex)
             {
@@ -2304,14 +2266,14 @@ namespace SabreTools.Library.DatFiles
                 if (Header.Type == "SuperDAT")
                 {
                     machineName = parent;
-                    itemName = datItem.Name;
+                    itemName = datItem.GetName();
                 }
 
                 // Otherwise, we want the archive name as the game, and the file as everything else
                 else
                 {
                     machineName = parent;
-                    itemName = datItem.Name;
+                    itemName = datItem.GetName();
                 }
             }
 
@@ -2330,31 +2292,28 @@ namespace SabreTools.Library.DatFiles
             datItem.Machine.Description = machineName;
 
             // If we have a Disk, then the ".chd" extension needs to be removed
-            if (datItem.ItemType == ItemType.Disk && datItem.Name.EndsWith(".chd"))
+            if (datItem.ItemType == ItemType.Disk && itemName.EndsWith(".chd"))
             {
-                datItem.Name = itemName.Substring(0, itemName.Length - 4);
+                itemName = itemName.Substring(0, itemName.Length - 4);
             }
 
             // If we have a Media, then the extension needs to be removed
             else if (datItem.ItemType == ItemType.Media)
             {
-                if (datItem.Name.EndsWith(".dicf"))
-                    datItem.Name = itemName.Substring(0, itemName.Length - 5);
-                else if (datItem.Name.EndsWith(".aaru"))
-                    datItem.Name = itemName.Substring(0, itemName.Length - 5);
-                else if (datItem.Name.EndsWith(".aaruformat"))
-                    datItem.Name = itemName.Substring(0, itemName.Length - 11);
-                else if (datItem.Name.EndsWith(".aaruf"))
-                    datItem.Name = itemName.Substring(0, itemName.Length - 6);
-                else if (datItem.Name.EndsWith(".aif"))
-                    datItem.Name = itemName.Substring(0, itemName.Length - 3);
+                if (itemName.EndsWith(".dicf"))
+                    itemName = itemName.Substring(0, itemName.Length - 5);
+                else if (itemName.EndsWith(".aaru"))
+                    itemName = itemName.Substring(0, itemName.Length - 5);
+                else if (itemName.EndsWith(".aaruformat"))
+                    itemName = itemName.Substring(0, itemName.Length - 11);
+                else if (itemName.EndsWith(".aaruf"))
+                    itemName = itemName.Substring(0, itemName.Length - 6);
+                else if (itemName.EndsWith(".aif"))
+                    itemName = itemName.Substring(0, itemName.Length - 3);
             }
 
-            // All others leave the extension alone
-            else
-            {
-                datItem.Name = itemName;
-            }
+            // Set the item name back
+            datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = itemName });
         }
 
         #endregion
@@ -2710,7 +2669,7 @@ namespace SabreTools.Library.DatFiles
                 BaseFile tgzRom = tgz.GetTorrentGZFileInfo();
                 if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
                 {
-                    Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.Name)}', rebuilding accordingly...");
+                    Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                     // Get the proper output path
                     if (outputFormat == OutputFormat.TorrentGzipRomba)
@@ -2738,7 +2697,7 @@ namespace SabreTools.Library.DatFiles
                 BaseFile txzRom = txz.GetTorrentXZFileInfo();
                 if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
                 {
-                    Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.Name)}', rebuilding accordingly...");
+                    Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
 
                     // Get the proper output path
                     if (outputFormat == OutputFormat.TorrentXZRomba)
@@ -2769,7 +2728,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     BaseArchive archive = BaseArchive.Create(file);
                     if (archive != null)
-                        (fileStream, _) = archive.CopyToStream(datItem.Name);
+                        (fileStream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
                 }
                 // Otherwise, just open the filestream
                 else
@@ -2805,7 +2764,7 @@ namespace SabreTools.Library.DatFiles
                     dupes.Add(item);
                 }
 
-                Globals.Logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.Name)}', rebuilding accordingly...");
+                Globals.Logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
@@ -2847,7 +2806,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     BaseArchive archive = BaseArchive.Create(file);
                     if (archive != null)
-                        (fileStream, _) = archive.CopyToStream(datItem.Name);
+                        (fileStream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
                 }
                 // Otherwise, just open the filestream
                 else
@@ -2879,7 +2838,7 @@ namespace SabreTools.Library.DatFiles
                         // If it has duplicates and we're not filtering, rebuild it
                         if (hasDuplicates && !inverse)
                         {
-                            Globals.Logger.User($"Headerless matches found for '{Path.GetFileName(datItem.Name)}', rebuilding accordingly...");
+                            Globals.Logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
                             rebuilt = true;
 
                             // Now loop through the list and rebuild accordingly
@@ -2887,7 +2846,7 @@ namespace SabreTools.Library.DatFiles
                             {
                                 // Create a headered item to use as well
                                 datItem.CopyMachineInformation(item);
-                                datItem.Name += $"_{crc}";
+                                datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{datItem.GetName()}_{crc}" } );
 
                                 // If either copy succeeds, then we want to set rebuilt to true
                                 bool eitherSuccess = false;
@@ -3091,11 +3050,11 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> items = Items[key];
                 foreach (DatItem item in items)
                 {
-                    if (newExtA.Contains(PathExtensions.GetNormalizedExtension(item.Name)))
+                    if (newExtA.Contains(PathExtensions.GetNormalizedExtension(item.GetName() ?? string.Empty)))
                     {
                         extADat.Items.Add(key, item);
                     }
-                    else if (newExtB.Contains(PathExtensions.GetNormalizedExtension(item.Name)))
+                    else if (newExtB.Contains(PathExtensions.GetNormalizedExtension(item.GetName() ?? string.Empty)))
                     {
                         extBDat.Items.Add(key, item);
                     }
@@ -3525,7 +3484,7 @@ namespace SabreTools.Library.DatFiles
             // Initialize strings
             string fix = string.Empty,
                 game = item.Machine.Name,
-                name = item.Name,
+                name = item.GetName() ?? item.ItemType.ToString(),
                 crc = string.Empty,
                 md5 = string.Empty,
                 ripemd160 = string.Empty,
@@ -3599,7 +3558,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
         protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
         {
-            string name = item.Name;
+            string name = item.GetName() ?? string.Empty;
 
             // Backup relevant values and set new ones accordingly
             bool quotesBackup = Header.Quotes;
@@ -3625,7 +3584,7 @@ namespace SabreTools.Library.DatFiles
                     if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
                         name = PathExtensions.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
-                        item.Name = pre + name + post;
+                        item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" } );
                     }
                 }
                 else if (item.ItemType == ItemType.Media)
@@ -3636,7 +3595,7 @@ namespace SabreTools.Library.DatFiles
                     if (!string.IsNullOrWhiteSpace(media.SHA1))
                     {
                         name = PathExtensions.GetDepotPath(media.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
-                        item.Name = pre + name + post;
+                        item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" });
                     }
                 }
                 else if (item.ItemType == ItemType.Rom)
@@ -3647,7 +3606,7 @@ namespace SabreTools.Library.DatFiles
                     if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
                         name = PathExtensions.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
-                        item.Name = $"{pre}{name}{post}";
+                        item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" });
                     }
                 }
 
@@ -3671,7 +3630,7 @@ namespace SabreTools.Library.DatFiles
                 name = Path.Combine(item.Machine.Name, name);
 
             // Now assign back the item name
-            item.Name = pre + name + post;
+            item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = pre + name + post });
 
             // Restore all relevant values
             if (forceRemoveQuotes)
@@ -3700,7 +3659,7 @@ namespace SabreTools.Library.DatFiles
             {
                 Globals.Logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
 
-                datItem.Name = (datItem.Name == "null" ? "-" : datItem.Name);
+                rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                 rom.Size = Constants.SizeZero;
                 rom.CRC = rom.CRC == "null" ? Constants.CRCZero : null;
                 rom.MD5 = rom.MD5 == "null" ? Constants.MD5Zero : null;

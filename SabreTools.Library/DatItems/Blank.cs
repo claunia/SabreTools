@@ -15,7 +15,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         public Blank()
         {
-            Name = string.Empty;
             ItemType = ItemType.Blank;
         }
 
@@ -27,7 +26,6 @@ namespace SabreTools.Library.DatItems
         {
             return new Blank()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 

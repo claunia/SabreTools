@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Data;
@@ -32,6 +33,12 @@ namespace SabreTools.Library.DatItems
         #endregion
 
         #region Fields
+
+        /// <summary>
+        /// Name of the item
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// What BIOS is required for this rom
@@ -165,6 +172,15 @@ namespace SabreTools.Library.DatItems
         #region Accessors
 
         /// <summary>
+        /// Gets the name to use for a DatItem
+        /// </summary>
+        /// <returns>Name if available, null otherwise</returns>
+        public override string GetName()
+        {
+            return Name;
+        }
+
+        /// <summary>
         /// Set fields with given values
         /// </summary>
         /// <param name="mappings">Mappings dictionary</param>
@@ -174,6 +190,9 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Rom-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_Name))
+                Name = mappings[Field.DatItem_Name];
+
             if (mappings.Keys.Contains(Field.DatItem_Bios))
                 Bios = mappings[Field.DatItem_Bios];
 
@@ -502,6 +521,33 @@ namespace SabreTools.Library.DatItems
         #region Filtering
 
         /// <summary>
+        /// Clean a DatItem according to the cleaner
+        /// </summary>
+        /// <param name="cleaner">Cleaner to implement</param>
+        public override void Clean(Cleaner cleaner)
+        {
+            // Clean common items first
+            base.Clean(cleaner);
+
+            // If we're stripping unicode characters, strip item name
+            if (cleaner?.RemoveUnicode == true)
+                Name = Sanitizer.RemoveUnicodeCharacters(Name);
+
+            // If we are in NTFS trim mode, trim the game name
+            if (cleaner?.Trim == true)
+            {
+                // Windows max name length is 260
+                int usableLength = 260 - Machine.Name.Length - (cleaner.Root?.Length ?? 0);
+                if (Name.Length > usableLength)
+                {
+                    string ext = Path.GetExtension(Name);
+                    Name = Name.Substring(0, usableLength - ext.Length);
+                    Name += ext;
+                }
+            }
+        }
+
+        /// <summary>
         /// Check to see if a DatItem passes the filter
         /// </summary>
         /// <param name="filter">Filter to check against</param>
@@ -510,6 +556,12 @@ namespace SabreTools.Library.DatItems
         {
             // Check common fields first
             if (!base.PassesFilter(filter))
+                return false;
+
+            // Filter on item name
+            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
+                return false;
+            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
             // Filter on bios
@@ -621,6 +673,9 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
+            if (fields.Contains(Field.DatItem_Name))
+                Name = null;
+
             if (fields.Contains(Field.DatItem_Bios))
                 Bios = null;
 
@@ -670,6 +725,16 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = null;
+        }
+
+        /// <summary>
+        /// Set internal names to match One Rom Per Game (ORPG) logic
+        /// </summary>
+        public override void SetOneRomPerGame()
+        {
+            string[] splitname = Name.Split('.');
+            Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+            Name = Path.GetFileName(Name);
         }
 
         #endregion
@@ -751,6 +816,9 @@ namespace SabreTools.Library.DatItems
             Rom newItem = item as Rom;
 
             // Replace the fields
+            if (fields.Contains(Field.DatItem_Name))
+                Name = newItem.Name;
+
             if (fields.Contains(Field.DatItem_Bios))
                 Bios = newItem.Bios;
 

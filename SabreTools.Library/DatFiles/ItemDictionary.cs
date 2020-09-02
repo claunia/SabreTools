@@ -402,7 +402,6 @@ namespace SabreTools.Library.DatFiles
                 // Filter the list
                 fi = fi.Where(i => i != null)
                     .Where(i => !i.Remove)
-                    .Where(i => i.Name != null)
                     .Where(i => i.Machine?.Name != null)
                     .ToList();
 
