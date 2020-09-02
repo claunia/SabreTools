@@ -126,6 +126,12 @@ namespace SabreTools.Library.DatFiles
         public long DiskCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Feature items
+        /// </summary>
+        [JsonIgnore]
+        public long FeatureCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Media items
         /// </summary>
         [JsonIgnore]
@@ -533,6 +539,9 @@ namespace SabreTools.Library.DatFiles
                     NodumpCount += ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
                     VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
+                case ItemType.Feature:
+                    FeatureCount++;
+                    break;
                 case ItemType.Media:
                     MediaCount++;
                     MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
@@ -685,6 +694,9 @@ namespace SabreTools.Library.DatFiles
                     GoodCount -= ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
                     NodumpCount -= ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
                     VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                    break;
+                case ItemType.Feature:
+                    FeatureCount--;
                     break;
                 case ItemType.Media:
                     MediaCount--;

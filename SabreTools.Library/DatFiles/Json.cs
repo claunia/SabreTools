@@ -235,6 +235,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Disk:
                         datItem = datItemObj.ToObject<Disk>();
                         break;
+                    case ItemType.Feature:
+                        datItem = datItemObj.ToObject<Feature>();
+                        break;
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
                         break;
@@ -257,7 +260,7 @@ namespace SabreTools.Library.DatFiles
                         datItem = datItemObj.ToObject<DatItems.SoftwareList>();
                         break;
                     case ItemType.Sound:
-                        datItem = datItemObj.ToObject<DatItems.Sound>();
+                        datItem = datItemObj.ToObject<Sound>();
                         break;
                 }
             }

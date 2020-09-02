@@ -596,18 +596,6 @@ namespace SabreTools.Library.Tools
                     case "driver_savestate":
                         return Field.Machine_Driver_SaveState;
 
-                    case "features":
-                        return Field.Machine_Features;
-
-                    case "feature_type":
-                        return Field.Machine_Feature_Type;
-
-                    case "feature_status":
-                        return Field.Machine_Feature_Status;
-
-                    case "feature_overall":
-                        return Field.Machine_Feature_Overall;
-
                     case "devices":
                         return Field.Machine_Devices;
 
@@ -1013,6 +1001,16 @@ namespace SabreTools.Library.Tools
 
                     case "value_default":
                         return Field.DatItem_Value_Default;
+
+                    // Feature
+                    case "featuretype":
+                        return Field.DatItem_FeatureType;
+
+                    case "featurestatus":
+                        return Field.DatItem_FeatureStatus;
+
+                    case "featureoverall":
+                        return Field.DatItem_FeatureOverall;
 
                     // Ram Option
                     case "content":
@@ -1568,6 +1566,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.DipSwitch;
                 case "disk":
                     return ItemType.Disk;
+                case "feature":
+                    return ItemType.Feature;
                 case "media":
                     return ItemType.Media;
                 case "ramoption":
@@ -1599,6 +1599,7 @@ namespace SabreTools.Library.Tools
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
+                "feature" => ItemType.Feature,
                 "media" => ItemType.Media,
                 "ramoption" => ItemType.RamOption,
                 "release" => ItemType.Release,
@@ -2016,6 +2017,8 @@ namespace SabreTools.Library.Tools
                     return "dipswitch";
                 case ItemType.Disk:
                     return "disk";
+                case ItemType.Feature:
+                    return "feature";
                 case ItemType.Media:
                     return "media";
                 case ItemType.RamOption:
@@ -2047,6 +2050,7 @@ namespace SabreTools.Library.Tools
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",
+                ItemType.Feature => "feature",
                 ItemType.Media => "media",
                 ItemType.RamOption => "ramoption",
                 ItemType.Release => "release",

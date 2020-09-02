@@ -112,12 +112,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Driver_Cocktail { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_Driver_SaveState { get; private set; } = new FilterItem<string>();
 
-        // Features
-        public FilterItem<bool?> Machine_Features { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Feature_Type { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Feature_Status { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Feature_Overall { get; private set; } = new FilterItem<string>();
-
         // Devices
         public FilterItem<bool?> Machine_Devices { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Device_Type { get; private set; } = new FilterItem<string>();
@@ -299,6 +293,12 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Value_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Value_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Feature
+        public FilterItem<string> DatItem_FeatureType { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_FeatureStatus { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_FeatureOverall { get; private set; } = new FilterItem<string>();
+
 
         // Ram Option
         public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
@@ -880,35 +880,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Driver_SaveState.NegativeSet.Add(value);
                     else
                         Machine_Driver_SaveState.PositiveSet.Add(value);
-                    break;
-
-                // Features
-                case Field.Machine_Features:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Features.Neutral = false;
-                    else
-                        Machine_Features.Neutral = true;
-                    break;
-
-                case Field.Machine_Feature_Type:
-                    if (negate)
-                        Machine_Feature_Type.NegativeSet.Add(value);
-                    else
-                        Machine_Feature_Type.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Feature_Status:
-                    if (negate)
-                        Machine_Feature_Status.NegativeSet.Add(value);
-                    else
-                        Machine_Feature_Status.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Feature_Overall:
-                    if (negate)
-                        Machine_Feature_Overall.NegativeSet.Add(value);
-                    else
-                        Machine_Feature_Overall.PositiveSet.Add(value);
                     break;
 
                 // Devices
@@ -1724,6 +1695,28 @@ namespace SabreTools.Library.Filtering
                         DatItem_Value_Default.Neutral = false;
                     else
                         DatItem_Value_Default.Neutral = true;
+                    break;
+
+                // Feature
+                case Field.DatItem_FeatureType:
+                    if (negate)
+                        DatItem_FeatureType.NegativeSet.Add(value);
+                    else
+                        DatItem_FeatureType.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_FeatureStatus:
+                    if (negate)
+                        DatItem_FeatureStatus.NegativeSet.Add(value);
+                    else
+                        DatItem_FeatureStatus.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_FeatureOverall:
+                    if (negate)
+                        DatItem_FeatureOverall.NegativeSet.Add(value);
+                    else
+                        DatItem_FeatureOverall.PositiveSet.Add(value);
                     break;
 
                 // Ram Option

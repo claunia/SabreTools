@@ -482,6 +482,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Disk:
                     return new Disk();
 
+                case ItemType.Feature:
+                    return new Feature();
+
                 case ItemType.Media:
                     return new Media();
 
@@ -521,6 +524,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.DeviceReference => new DeviceReference(),
                 ItemType.DipSwitch => new DipSwitch(),
                 ItemType.Disk => new Disk(),
+                ItemType.Feature => new Feature(),
                 ItemType.Media => new Media(),
                 ItemType.RamOption => new RamOption(),
                 ItemType.Release => new Release(),

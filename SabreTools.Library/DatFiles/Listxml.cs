@@ -289,6 +289,17 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "feature":
+                        datItems.Add(new Feature
+                        {
+                            Type = reader.GetAttribute("type"),
+                            Status = reader.GetAttribute("status"),
+                            Overall = reader.GetAttribute("overall"),
+                        });
+
+                        reader.Read();
+                        break;
+
                     case "rom":
                         datItems.Add(new Rom
                         {
@@ -477,21 +488,6 @@ namespace SabreTools.Library.DatFiles
                             machine.Drivers = new List<Driver>();
 
                         machine.Drivers.Add(driver);
-
-                        reader.Read();
-                        break;
-
-                    case "feature":
-                        var feature = new Feature();
-                        feature.Type = reader.GetAttribute("type");
-                        feature.Status = reader.GetAttribute("status");
-                        feature.Overall = reader.GetAttribute("overall");
-
-                        // Ensure the list exists
-                        if (machine.Features == null)
-                            machine.Features = new List<Feature>();
-
-                        machine.Features.Add(feature);
 
                         reader.Read();
                         break;
@@ -1318,20 +1314,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Features != null)
-                {
-                    foreach (var feature in datItem.Machine.Features)
-                    {
-                        xtw.WriteStartElement("feature");
-
-                        xtw.WriteOptionalAttributeString("type", feature.Type);
-                        xtw.WriteOptionalAttributeString("status", feature.Status);
-                        xtw.WriteOptionalAttributeString("overall", feature.Overall);
-
-                        // End feature
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Devices != null)
                 {
                     foreach (var device in datItem.Machine.Devices)
@@ -1581,6 +1563,15 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
                         xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Feature:
+                        var feature = datItem as Feature;
+                        xtw.WriteStartElement("feature");
+                        xtw.WriteOptionalAttributeString("type", feature.Type);
+                        xtw.WriteOptionalAttributeString("status", feature.Status);
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall);
                         xtw.WriteEndElement();
                         break;
 

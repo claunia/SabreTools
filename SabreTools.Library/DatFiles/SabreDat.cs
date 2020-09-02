@@ -1389,6 +1389,16 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Feature:
+                        var feature = datItem as Feature;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "feature");
+                        xtw.WriteOptionalAttributeString("type", feature.Type);
+                        xtw.WriteOptionalAttributeString("status", feature.Status);
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Media:
                         var media = datItem as Media;
                         xtw.WriteStartElement("file");

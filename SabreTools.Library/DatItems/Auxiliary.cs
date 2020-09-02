@@ -194,23 +194,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML feature
-    /// </summary>
-    /// TODO: Promote to DatItem level
-    [JsonObject("feature")]
-    public class Feature
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; } // TODO: (protection|palette|graphics|sound|controls|keyboard|mouse|microphone|camera|disk|printer|lan|wan|timing)
-
-        [JsonProperty("status")]
-        public string Status { get; set; } // TODO: (unemulated|imperfect)
-
-        [JsonProperty("overall")]
-        public string Overall { get; set; } // TODO: (unemulated|imperfect)
-    }
-
-    /// <summary>
     /// Represents one ListXML input
     /// </summary>
     /// TODO: Promote to DatItem level (contains list)

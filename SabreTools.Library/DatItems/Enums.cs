@@ -190,12 +190,6 @@ namespace SabreTools.Library.DatItems
         Machine_Driver_Cocktail,
         Machine_Driver_SaveState,
 
-        // Features
-        Machine_Features,
-        Machine_Feature_Type,
-        Machine_Feature_Status,
-        Machine_Feature_Overall,
-
         // Devices
         Machine_Devices,
         Machine_Device_Type,
@@ -378,6 +372,11 @@ namespace SabreTools.Library.DatItems
         DatItem_Value_Value,
         DatItem_Value_Default,
 
+        // Feature
+        DatItem_FeatureType,
+        DatItem_FeatureStatus,
+        DatItem_FeatureOverall,
+
         // Ram Option
         DatItem_Content,
 
@@ -440,6 +439,7 @@ namespace SabreTools.Library.DatItems
         Configuration,
         DeviceReference,
         DipSwitch,
+        Feature,
         RamOption,
         Release,
         Sample,

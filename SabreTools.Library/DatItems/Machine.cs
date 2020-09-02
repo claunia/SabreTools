@@ -183,12 +183,6 @@ namespace SabreTools.Library.DatItems
         public List<Driver> Drivers { get; set; } = null;
 
         /// <summary>
-        /// List of associated features
-        /// </summary>
-        [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Feature> Features { get; set; } = null;
-
-        /// <summary>
         /// List of associated devices
         /// </summary>
         [JsonProperty("devices", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -551,7 +545,6 @@ namespace SabreTools.Library.DatItems
                 Inputs = this.Inputs,
                 Ports = this.Ports,
                 Drivers = this.Drivers,
-                Features = this.Features,
                 Devices = this.Devices,
 
                 #endregion
