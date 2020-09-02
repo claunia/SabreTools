@@ -249,23 +249,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML extension
-    /// </summary>
-    [JsonObject("extension")]
-    public class Extension
-    {
-        #region Fields
-
-        /// <summary>
-        /// Extension name
-        /// </summary>
-        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        #endregion
-    }
-
-    /// <summary>
     /// Represents one ListXML input
     /// </summary>
     /// TODO: Promote to DatItem level (contains list)

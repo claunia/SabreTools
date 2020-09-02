@@ -244,6 +244,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Driver:
                         datItem = datItemObj.ToObject<Driver>();
                         break;
+                    case ItemType.Extension:
+                        datItem = datItemObj.ToObject<Extension>();
+                        break;
                     case ItemType.Feature:
                         datItem = datItemObj.ToObject<Feature>();
                         break;

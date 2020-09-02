@@ -1680,6 +1680,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Disk;
                 case "driver":
                     return ItemType.Driver;
+                case "extension":
+                    return ItemType.Extension;
                 case "feature":
                     return ItemType.Feature;
                 case "media":
@@ -1716,6 +1718,7 @@ namespace SabreTools.Library.Tools
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
                 "driver" => ItemType.Driver,
+                "extension" => ItemType.Extension,
                 "feature" => ItemType.Feature,
                 "media" => ItemType.Media,
                 "ramoption" => ItemType.RamOption,
@@ -2291,6 +2294,8 @@ namespace SabreTools.Library.Tools
                     return "disk";
                 case ItemType.Driver:
                     return "driver";
+                case ItemType.Extension:
+                    return "extension";
                 case ItemType.Feature:
                     return "feature";
                 case ItemType.Media:
@@ -2327,6 +2332,7 @@ namespace SabreTools.Library.Tools
                 ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",
                 ItemType.Driver => "driver",
+                ItemType.Extension => "extension",
                 ItemType.Feature => "feature",
                 ItemType.Media => "media",
                 ItemType.RamOption => "ramoption",

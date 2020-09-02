@@ -495,6 +495,7 @@ namespace SabreTools.Library.DatItems
         DeviceReference,
         DipSwitch,
         Driver,
+        Extension,
         Feature,
         RamOption,
         Release,

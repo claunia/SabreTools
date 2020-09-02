@@ -1069,9 +1069,11 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "instance":
-                        var instance = new Instance();
-                        instance.Name = reader.GetAttribute("name");
-                        instance.BriefName = reader.GetAttribute("briefname");
+                        var instance = new Instance
+                        {
+                            Name = reader.GetAttribute("name"),
+                            BriefName = reader.GetAttribute("briefname"),
+                        };
 
                         device.Instances.Add(instance);
 
@@ -1079,8 +1081,10 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "extension":
-                        var extension = new Extension();
-                        extension.Name = reader.GetAttribute("name");
+                        var extension = new Extension
+                        {
+                            Name = reader.GetAttribute("name"),
+                        };
 
                         device.Extensions.Add(extension);
 
