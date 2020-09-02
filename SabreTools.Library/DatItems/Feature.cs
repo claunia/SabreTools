@@ -28,14 +28,14 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EmulationStatus Status { get; set; }
+        public FeatureStatus Status { get; set; }
 
         /// <summary>
         /// Overall status
         /// </summary>
         [JsonProperty("overall", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
-        public EmulationStatus Overall { get; set; }
+        public FeatureStatus Overall { get; set; }
 
         #endregion
 
@@ -55,10 +55,10 @@ namespace SabreTools.Library.DatItems
                 Type = mappings[Field.DatItem_FeatureType].AsFeatureType();
 
             if (mappings.Keys.Contains(Field.DatItem_FeatureStatus))
-                Status = mappings[Field.DatItem_FeatureStatus].AsEmulationStatus();
+                Status = mappings[Field.DatItem_FeatureStatus].AsFeatureStatus();
 
             if (mappings.Keys.Contains(Field.DatItem_FeatureOverall))
-                Overall = mappings[Field.DatItem_FeatureOverall].AsEmulationStatus();
+                Overall = mappings[Field.DatItem_FeatureOverall].AsFeatureStatus();
         }
 
         #endregion
@@ -151,15 +151,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on status
-            if (filter.DatItem_FeatureStatus.MatchesPositive(EmulationStatus.NULL, Status) == false)
+            if (filter.DatItem_FeatureStatus.MatchesPositive(FeatureStatus.NULL, Status) == false)
                 return false;
-            if (filter.DatItem_FeatureStatus.MatchesNegative(EmulationStatus.NULL, Status) == true)
+            if (filter.DatItem_FeatureStatus.MatchesNegative(FeatureStatus.NULL, Status) == true)
                 return false;
 
             // Filter on overall
-            if (filter.DatItem_FeatureOverall.MatchesPositive(EmulationStatus.NULL, Overall) == false)
+            if (filter.DatItem_FeatureOverall.MatchesPositive(FeatureStatus.NULL, Overall) == false)
                 return false;
-            if (filter.DatItem_FeatureOverall.MatchesNegative(EmulationStatus.NULL, Overall) == true)
+            if (filter.DatItem_FeatureOverall.MatchesNegative(FeatureStatus.NULL, Overall) == true)
                 return false;
 
             return true;
@@ -179,10 +179,10 @@ namespace SabreTools.Library.DatItems
                 Type = FeatureType.NULL;
 
             if (fields.Contains(Field.DatItem_FeatureStatus))
-                Status = EmulationStatus.NULL;
+                Status = FeatureStatus.NULL;
 
             if (fields.Contains(Field.DatItem_FeatureOverall))
-                Overall = EmulationStatus.NULL;
+                Overall = FeatureStatus.NULL;
         }
 
         #endregion

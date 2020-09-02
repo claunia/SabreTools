@@ -296,8 +296,8 @@ namespace SabreTools.Library.Filtering
 
         // Feature
         public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
-        public FilterItem<EmulationStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<EmulationStatus>() { Positive = EmulationStatus.NULL, Negative = EmulationStatus.NULL };
-        public FilterItem<EmulationStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<EmulationStatus>() { Positive = EmulationStatus.NULL, Negative = EmulationStatus.NULL };
+        public FilterItem<FeatureStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
+        public FilterItem<FeatureStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
 
 
         // Ram Option
@@ -1707,16 +1707,16 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_FeatureStatus:
                     if (negate)
-                        DatItem_FeatureStatus.Negative |= value.AsEmulationStatus();
+                        DatItem_FeatureStatus.Negative |= value.AsFeatureStatus();
                     else
-                        DatItem_FeatureStatus.Positive |= value.AsEmulationStatus();
+                        DatItem_FeatureStatus.Positive |= value.AsFeatureStatus();
                     break;
 
                 case Field.DatItem_FeatureOverall:
                     if (negate)
-                        DatItem_FeatureOverall.Negative |= value.AsEmulationStatus();
+                        DatItem_FeatureOverall.Negative |= value.AsFeatureStatus();
                     else
-                        DatItem_FeatureOverall.Positive |= value.AsEmulationStatus();
+                        DatItem_FeatureOverall.Positive |= value.AsFeatureStatus();
                     break;
 
                 // Ram Option

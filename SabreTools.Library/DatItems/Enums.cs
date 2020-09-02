@@ -13,7 +13,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         NULL = 0,
 
-        // TODO: (cpu|audio)
         CPU = 1 << 0,
         Audio = 1 << 1,
     }
@@ -37,7 +36,7 @@ namespace SabreTools.Library.DatItems
     /// Determine the emulation status
     /// </summary>
     [Flags]
-    public enum EmulationStatus
+    public enum FeatureStatus
     {
         /// <summary>
         /// This is a fake flag that is used for filter only

@@ -173,28 +173,28 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
-        /// Get EmulationStatus value from input string
+        /// Get FeatureStatus value from input string
         /// </summary>
-        /// <param name="emulationStatus">String to get value from</param>
-        /// <returns>EmulationStatus value corresponding to the string</returns>
-        public static EmulationStatus AsEmulationStatus(this string emulationStatus)
+        /// <param name="featureStatus">String to get value from</param>
+        /// <returns>FeatureStatus value corresponding to the string</returns>
+        public static FeatureStatus AsFeatureStatus(this string featureStatus)
         {
 #if NET_FRAMEWORK
-            switch (emulationStatus?.ToLowerInvariant())
+            switch (featureStatus?.ToLowerInvariant())
             {
                 case "unemulated":
-                    return EmulationStatus.Unemulated;
+                    return FeatureStatus.Unemulated;
                 case "imperfect":
-                    return EmulationStatus.Imperfect;
+                    return FeatureStatus.Imperfect;
                 default:
-                    return EmulationStatus.NULL;
+                    return FeatureStatus.NULL;
             }
 #else
-            return emulationStatus?.ToLowerInvariant() switch
+            return featureStatus?.ToLowerInvariant() switch
             {
-                "unemulated" => EmulationStatus.Unemulated,
-                "imperfect" => EmulationStatus.Imperfect,
-                _ => EmulationStatus.NULL,
+                "unemulated" => FeatureStatus.Unemulated,
+                "imperfect" => FeatureStatus.Imperfect,
+                _ => FeatureStatus.NULL,
             };
 #endif
         }
@@ -2100,27 +2100,27 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
-        /// Get string value from input EmulationStatus
+        /// Get string value from input FeatureStatus
         /// </summary>
-        /// <param name="emulationStatus">EmulationStatus to get value from</param>
-        /// <returns>String value corresponding to the EmulationStatus</returns>
-        public static string FromEmulationStatus(this EmulationStatus emulationStatus)
+        /// <param name="featureStatus">FeatureStatus to get value from</param>
+        /// <returns>String value corresponding to the FeatureStatus</returns>
+        public static string FromFeatureStatus(this FeatureStatus featureStatus)
         {
 #if NET_FRAMEWORK
-            switch (emulationStatus)
+            switch (featureStatus)
             {
-                case EmulationStatus.Unemulated:
+                case FeatureStatus.Unemulated:
                     return "unemulated";
-                case EmulationStatus.Imperfect:
+                case FeatureStatus.Imperfect:
                     return "imperfect";
                 default:
                     return null;
             }
 #else
-            return emulationStatus switch
+            return featureStatus switch
             {
-                EmulationStatus.Unemulated => "unemulated",
-                EmulationStatus.Imperfect => "imperfect",
+                FeatureStatus.Unemulated => "unemulated",
+                FeatureStatus.Imperfect => "imperfect",
                 _ => null,
             };
 #endif

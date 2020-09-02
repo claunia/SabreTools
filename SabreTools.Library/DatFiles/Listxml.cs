@@ -293,8 +293,8 @@ namespace SabreTools.Library.DatFiles
                         datItems.Add(new Feature
                         {
                             Type = reader.GetAttribute("type").AsFeatureType(),
-                            Status = reader.GetAttribute("status").AsEmulationStatus(),
-                            Overall = reader.GetAttribute("overall").AsEmulationStatus(),
+                            Status = reader.GetAttribute("status").AsFeatureStatus(),
+                            Overall = reader.GetAttribute("overall").AsFeatureStatus(),
                         });
 
                         reader.Read();
@@ -1570,8 +1570,8 @@ namespace SabreTools.Library.DatFiles
                         var feature = datItem as Feature;
                         xtw.WriteStartElement("feature");
                         xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
-                        xtw.WriteOptionalAttributeString("status", feature.Status.FromEmulationStatus());
-                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromEmulationStatus());
+                        xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
                         xtw.WriteEndElement();
                         break;
 

@@ -1394,8 +1394,8 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "feature");
                         xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
-                        xtw.WriteOptionalAttributeString("status", feature.Status.FromEmulationStatus());
-                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromEmulationStatus());
+                        xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
+                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
                         xtw.WriteEndElement();
                         break;
 
