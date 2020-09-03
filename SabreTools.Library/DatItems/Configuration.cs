@@ -84,16 +84,14 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Mask))
                 Mask = mappings[Field.DatItem_Mask];
 
-            // Field.DatItem_Conditions does not apply here
             if (Conditions != null)
             {
                 foreach (Condition condition in Conditions)
                 {
-                    condition.SetFields(mappings);
+                    condition.SetFields(mappings, true);
                 }
             }
 
-            // Field.DatItem_Locations does not apply here
             if (Locations != null)
             {
                 foreach (Location location in Locations)
@@ -102,7 +100,6 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            // Field.DatItem_Settings does not apply here
             if (Settings != null)
             {
                 foreach (Setting setting in Settings)
@@ -163,7 +160,9 @@ namespace SabreTools.Library.DatItems
             Configuration newOther = other as Configuration;
 
             // If the Configuration information matches
-            bool match = (Name == newOther.Name && Tag == newOther.Tag && Mask == newOther.Mask);
+            bool match = (Name == newOther.Name
+                && Tag == newOther.Tag
+                && Mask == newOther.Mask);
             if (!match)
                 return match;
 
@@ -262,7 +261,7 @@ namespace SabreTools.Library.DatItems
             {
                 foreach (Condition condition in Conditions)
                 {
-                    if (!condition.PassesFilter(filter))
+                    if (!condition.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -313,7 +312,7 @@ namespace SabreTools.Library.DatItems
             {
                 foreach (Condition condition in Conditions)
                 {
-                    condition.RemoveFields(fields);
+                    condition.RemoveFields(fields, true);
                 }
             }
 
@@ -375,9 +374,17 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = newItem.Mask;
 
-            // Field replacement doesn't make sense for DatItem_Condition*
-            // Field replacement doesn't make sense for DatItem_Location*
-            // Field replacement doesn't make sense for DatItem_Setting*
+            // DatItem_Condition_* doesn't make sense here
+            // since not every condition under the other item
+            // can replace every condition under this item
+
+            // DatItem_Location_* doesn't make sense here
+            // since not every location under the other item
+            // can replace every location under this item
+
+            // DatItem_Setting_* doesn't make sense here
+            // since not every setting under the other item
+            // can replace every setting under this item
         }
 
         #endregion

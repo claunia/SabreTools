@@ -72,12 +72,11 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Setting_Default))
                 Default = mappings[Field.DatItem_Setting_Default].AsYesNo();
 
-            // Field.DatItem_Conditions does not apply here
             if (Conditions != null)
             {
                 foreach (Condition condition in Conditions)
                 {
-                    condition.SetFields(mappings);
+                    condition.SetFields(mappings, true);
                 }
             }
         }
@@ -212,7 +211,7 @@ namespace SabreTools.Library.DatItems
             {
                 foreach (Condition condition in Conditions)
                 {
-                    if (!condition.PassesFilter(filter))
+                    if (!condition.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -243,7 +242,7 @@ namespace SabreTools.Library.DatItems
             {
                 foreach (Condition condition in Conditions)
                 {
-                    condition.RemoveFields(fields);
+                    condition.RemoveFields(fields, true);
                 }
             }
         }
@@ -289,7 +288,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Setting_Default))
                 Default = newItem.Default;
 
-            // Field replacement doesn't make sense for DatItem_Condition*
+            // DatItem_Condition_* doesn't make sense here
+            // since not every condition under the other item
+            // can replace every condition under this item
         }
 
         #endregion

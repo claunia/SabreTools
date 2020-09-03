@@ -71,7 +71,13 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Coins))
                 Coins = mappings[Field.DatItem_Coins];
 
-            // TODO: Handle DatItem_Control*
+            if (Controls != null)
+            {
+                foreach (Control control in Controls)
+                {
+                    control.SetFields(mappings);
+                }
+            }
         }
 
         #endregion
@@ -123,12 +129,23 @@ namespace SabreTools.Library.DatItems
             Input newOther = other as Input;
 
             // If the Input information matches
-            return (Service == newOther.Service
+            bool match = (Service == newOther.Service
                 && Tilt == newOther.Tilt
                 && Players == newOther.Players
                 && Coins == newOther.Coins);
+            if (!match)
+                return match;
 
-            // TODO: Handle DatItem_Control*
+            // If the controls match
+            if (Controls != null)
+            {
+                foreach (Control control in Controls)
+                {
+                    match &= newOther.Controls.Contains(control);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -166,7 +183,15 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Coins.MatchesNegativeSet(Coins) == true)
                 return false;
 
-            // TODO: Handle DatItem_Control*
+            // Filter on individual controls
+            if (Controls != null)
+            {
+                foreach (Control control in Controls)
+                {
+                    if (!control.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -193,7 +218,13 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Coins))
                 Coins = null;
 
-            // TODO: Handle DatItem_Control*
+            if (Controls != null)
+            {
+                foreach (Control control in Controls)
+                {
+                    control.RemoveFields(fields);
+                }
+            }
         }
 
         #endregion
@@ -230,7 +261,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Coins))
                 Coins = newItem.Coins;
 
-            // TODO: Handle DatItem_Control*
+            // DatItem_Control_* doesn't make sense here
+            // since not every control under the other item
+            // can replace every control under this item
         }
 
         #endregion

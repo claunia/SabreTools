@@ -85,8 +85,21 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Interface))
                 Interface = mappings[Field.DatItem_Interface];
 
-            // TODO: Handle DatItem_Instance*
-            // TODO: Handle DatItem_Extension*
+            if (Instances != null)
+            {
+                foreach (Instance instance in Instances)
+                {
+                    instance.SetFields(mappings);
+                }
+            }
+
+            if (Extensions != null)
+            {
+                foreach (Extension extension in Extensions)
+                {
+                    extension.SetFields(mappings);
+                }
+            }
         }
 
         #endregion
@@ -140,14 +153,33 @@ namespace SabreTools.Library.DatItems
             Device newOther = other as Device;
 
             // If the Device information matches
-            return (DeviceType == newOther.DeviceType
+            bool match = (DeviceType == newOther.DeviceType
                 && Tag == newOther.Tag
                 && FixedImage == newOther.FixedImage
                 && Mandatory == newOther.Mandatory
                 && Interface == newOther.Interface);
+            if (!match)
+                return match;
 
-            // TODO: Handle DatItem_Instance*
-            // TODO: Handle DatItem_Extension*
+            // If the instances match
+            if (Instances != null)
+            {
+                foreach (Instance instance in Instances)
+                {
+                    match &= newOther.Instances.Contains(instance);
+                }
+            }
+
+            // If the extensions match
+            if (Extensions != null)
+            {
+                foreach (Extension extension in Extensions)
+                {
+                    match &= newOther.Extensions.Contains(extension);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -195,8 +227,25 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Interface.MatchesNegativeSet(Interface) == true)
                 return false;
 
-            // TODO: Handle DatItem_Instance*
-            // TODO: Handle DatItem_Extension*
+            // Filter on individual instances
+            if (Instances != null)
+            {
+                foreach (Instance instance in Instances)
+                {
+                    if (!instance.PassesFilter(filter))
+                        return false;
+                }
+            }
+
+            // Filter on individual extensions
+            if (Extensions != null)
+            {
+                foreach (Extension extension in Extensions)
+                {
+                    if (!extension.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -226,8 +275,21 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Interface))
                 Interface = null;
 
-            // TODO: Handle DatItem_Instance*
-            // TODO: Handle DatItem_Extension*
+            if (Instances != null)
+            {
+                foreach (Instance instance in Instances)
+                {
+                    instance.RemoveFields(fields);
+                }
+            }
+
+            if (Extensions != null)
+            {
+                foreach (Extension extension in Extensions)
+                {
+                    extension.RemoveFields(fields);
+                }
+            }
         }
 
         #endregion
@@ -267,8 +329,13 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Interface))
                 Interface = newItem.Interface;
 
-            // TODO: Handle DatItem_Instance*
-            // TODO: Handle DatItem_Extension*
+            // DatItem_Instance_* doesn't make sense here
+            // since not every instance under the other item
+            // can replace every instance under this item
+
+            // DatItem_Extension_* doesn't make sense here
+            // since not every extension under the other item
+            // can replace every extension under this item
         }
 
         #endregion

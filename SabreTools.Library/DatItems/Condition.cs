@@ -48,29 +48,48 @@ namespace SabreTools.Library.DatItems
         /// <param name="mappings">Mappings dictionary</param>
         public override void SetFields(Dictionary<Field, string> mappings)
         {
+            SetFields(mappings, false);
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="mappings">Mappings dictionary</param>
+        /// <param name="sub">True if this is a subitem, false otherwise</param>
+        public void SetFields(Dictionary<Field, string> mappings, bool sub)
+        {
             // Set base fields
             base.SetFields(mappings);
 
             // Handle Condition-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Tag))
-                Tag = mappings[Field.DatItem_Tag];
-            else if (mappings.Keys.Contains(Field.DatItem_Condition_Tag))
-                Tag = mappings[Field.DatItem_Condition_Tag];
+            if (sub)
+            {
+                if (mappings.Keys.Contains(Field.DatItem_Condition_Tag))
+                    Tag = mappings[Field.DatItem_Condition_Tag];
 
-            if (mappings.Keys.Contains(Field.DatItem_Mask))
-                Mask = mappings[Field.DatItem_Mask];
-            else if (mappings.Keys.Contains(Field.DatItem_Condition_Mask))
-                Mask = mappings[Field.DatItem_Condition_Mask];
+                if (mappings.Keys.Contains(Field.DatItem_Condition_Mask))
+                    Mask = mappings[Field.DatItem_Condition_Mask];
 
-            if (mappings.Keys.Contains(Field.DatItem_Relation))
-                Relation = mappings[Field.DatItem_Relation];
-            else if (mappings.Keys.Contains(Field.DatItem_Condition_Relation))
-                Relation = mappings[Field.DatItem_Condition_Relation];
+                if (mappings.Keys.Contains(Field.DatItem_Condition_Relation))
+                    Relation = mappings[Field.DatItem_Condition_Relation];
 
-            if (mappings.Keys.Contains(Field.DatItem_Value))
-                Value = mappings[Field.DatItem_Value];
-            else if (mappings.Keys.Contains(Field.DatItem_Condition_Value))
-                Value = mappings[Field.DatItem_Condition_Value];
+                if (mappings.Keys.Contains(Field.DatItem_Condition_Value))
+                    Value = mappings[Field.DatItem_Condition_Value];
+            }
+            else
+            {
+                if (mappings.Keys.Contains(Field.DatItem_Tag))
+                    Tag = mappings[Field.DatItem_Tag];
+
+                if (mappings.Keys.Contains(Field.DatItem_Mask))
+                    Mask = mappings[Field.DatItem_Mask];
+
+                if (mappings.Keys.Contains(Field.DatItem_Relation))
+                    Relation = mappings[Field.DatItem_Relation];
+
+                if (mappings.Keys.Contains(Field.DatItem_Value))
+                    Value = mappings[Field.DatItem_Value];
+            }
         }
 
         #endregion
@@ -138,49 +157,73 @@ namespace SabreTools.Library.DatItems
         /// <returns>True if the item passed the filter, false otherwise</returns>
         public override bool PassesFilter(Filter filter)
         {
+            return PassesFilter(filter, false);
+        }
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filter
+        /// </summary>
+        /// <param name="filter">Filter to check against</param>
+        /// <param name="sub">True if this is a subitem, false otherwise</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        public bool PassesFilter(Filter filter, bool sub)
+        {
             // Check common fields first
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on tag
-            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
-                return false;
-            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
-                return false;
-            if (filter.DatItem_Condition_Tag.MatchesPositiveSet(Tag) == false)
-                return false;
-            if (filter.DatItem_Condition_Tag.MatchesNegativeSet(Tag) == true)
-                return false;
+            if (sub)
+            {
+                // Filter on tag
+                if (filter.DatItem_Condition_Tag.MatchesPositiveSet(Tag) == false)
+                    return false;
+                if (filter.DatItem_Condition_Tag.MatchesNegativeSet(Tag) == true)
+                    return false;
 
-            // Filter on mask
-            if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
-                return false;
-            if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
-                return false;
-            if (filter.DatItem_Condition_Mask.MatchesPositiveSet(Mask) == false)
-                return false;
-            if (filter.DatItem_Condition_Mask.MatchesNegativeSet(Mask) == true)
-                return false;
+                // Filter on mask
+                if (filter.DatItem_Condition_Mask.MatchesPositiveSet(Mask) == false)
+                    return false;
+                if (filter.DatItem_Condition_Mask.MatchesNegativeSet(Mask) == true)
+                    return false;
 
-            // Filter on mask
-            if (filter.DatItem_Relation.MatchesPositiveSet(Relation) == false)
-                return false;
-            if (filter.DatItem_Relation.MatchesNegativeSet(Relation) == true)
-                return false;
-            if (filter.DatItem_Condition_Relation.MatchesPositiveSet(Relation) == false)
-                return false;
-            if (filter.DatItem_Condition_Relation.MatchesNegativeSet(Relation) == true)
-                return false;
+                // Filter on relation
+                if (filter.DatItem_Condition_Relation.MatchesPositiveSet(Relation) == false)
+                    return false;
+                if (filter.DatItem_Condition_Relation.MatchesNegativeSet(Relation) == true)
+                    return false;
 
-            // Filter on value
-            if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
-                return false;
-            if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
-                return false;
-            if (filter.DatItem_Condition_Value.MatchesPositiveSet(Value) == false)
-                return false;
-            if (filter.DatItem_Condition_Value.MatchesNegativeSet(Value) == true)
-                return false;
+                // Filter on value
+                if (filter.DatItem_Condition_Value.MatchesPositiveSet(Value) == false)
+                    return false;
+                if (filter.DatItem_Condition_Value.MatchesNegativeSet(Value) == true)
+                    return false;
+            }
+            else
+            {
+                // Filter on tag
+                if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
+                    return false;
+                if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+                    return false;
+
+                // Filter on mask
+                if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
+                    return false;
+                if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
+                    return false;
+
+                // Filter on relation
+                if (filter.DatItem_Relation.MatchesPositiveSet(Relation) == false)
+                    return false;
+                if (filter.DatItem_Relation.MatchesNegativeSet(Relation) == true)
+                    return false;
+
+                // Filter on value
+                if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
+                    return false;
+                if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
+                    return false;
+            }
 
             return true;
         }
@@ -191,29 +234,48 @@ namespace SabreTools.Library.DatItems
         /// <param name="fields">List of Fields to remove</param>
         public override void RemoveFields(List<Field> fields)
         {
+            RemoveFields(fields, false);
+        }
+
+        /// <summary>
+        /// Remove fields from the DatItem
+        /// </summary>
+        /// <param name="fields">List of Fields to remove</param>
+        /// <param name="sub">True if this is a subitem, false otherwise</param>
+        public void RemoveFields(List<Field> fields, bool sub)
+        {
             // Remove common fields first
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Tag))
-                Tag = null;
-            else if (fields.Contains(Field.DatItem_Condition_Tag))
-                Tag = null;
+            if (sub)
+            {
+                if (fields.Contains(Field.DatItem_Condition_Tag))
+                    Tag = null;
 
-            if (fields.Contains(Field.DatItem_Mask))
-                Mask = null;
-            else if (fields.Contains(Field.DatItem_Condition_Mask))
-                Mask = null;
+                if (fields.Contains(Field.DatItem_Condition_Mask))
+                    Mask = null;
 
-            if (fields.Contains(Field.DatItem_Relation))
-                Relation = null;
-            else if (fields.Contains(Field.DatItem_Condition_Relation))
-                Relation = null;
+                if (fields.Contains(Field.DatItem_Condition_Relation))
+                    Relation = null;
 
-            if (fields.Contains(Field.DatItem_Value))
-                Value = null;
-            else if (fields.Contains(Field.DatItem_Condition_Value))
-                Value = null;
+                if (fields.Contains(Field.DatItem_Condition_Value))
+                    Value = null;
+            }
+            else
+            {
+                if (fields.Contains(Field.DatItem_Tag))
+                    Tag = null;
+
+                if (fields.Contains(Field.DatItem_Mask))
+                    Mask = null;
+
+                if (fields.Contains(Field.DatItem_Relation))
+                    Relation = null;
+
+                if (fields.Contains(Field.DatItem_Value))
+                    Value = null;
+            }
         }
 
         #endregion
@@ -238,6 +300,7 @@ namespace SabreTools.Library.DatItems
             Condition newItem = item as Condition;
 
             // Replace the fields
+            // TODO: Would this ever make sense to have these `else` statements?
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = newItem.Tag;
             else if (fields.Contains(Field.DatItem_Condition_Tag))

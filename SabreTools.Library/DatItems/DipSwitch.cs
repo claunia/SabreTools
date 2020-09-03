@@ -101,9 +101,29 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Mask))
                 Mask = mappings[Field.DatItem_Mask];
 
-            // TODO: Handle DatItem_Condition*
-            // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Value*
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    condition.SetFields(mappings, true);
+                }
+            }
+
+            if (Locations != null)
+            {
+                foreach (Location location in Locations)
+                {
+                    location.SetFields(mappings);
+                }
+            }
+
+            if (Values != null)
+            {
+                foreach (Setting value in Values)
+                {
+                    value.SetFields(mappings);
+                }
+            }
 
             #endregion
 
@@ -151,7 +171,6 @@ namespace SabreTools.Library.DatItems
         {
             return new DipSwitch()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
@@ -159,6 +178,7 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Name = this.Name,
                 Tag = this.Tag,
                 Mask = this.Mask,
                 Conditions = this.Conditions,
@@ -183,11 +203,42 @@ namespace SabreTools.Library.DatItems
             DipSwitch newOther = other as DipSwitch;
 
             // If the DipSwitch information matches
-            return (Name == newOther.Name && Tag == newOther.Tag && Mask == newOther.Mask);
-            
-            // TODO: Handle DatItem_Condition*
-            // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Value*
+            bool match = (Name == newOther.Name
+                && Tag == newOther.Tag
+                && Mask == newOther.Mask);
+            if (!match)
+                return match;
+
+            // TODO: Handle Part*
+
+            // If the conditions match
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    match &= newOther.Conditions.Contains(condition);
+                }
+            }
+
+            // If the locations match
+            if (Locations != null)
+            {
+                foreach (Location location in Locations)
+                {
+                    match &= newOther.Locations.Contains(location);
+                }
+            }
+
+            // If the values match
+            if (Values != null)
+            {
+                foreach (Setting value in Values)
+                {
+                    match &= newOther.Values.Contains(value);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -252,9 +303,35 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
                 return false;
 
-            // TODO: Handle DatItem_Condition*
-            // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Value*
+            // Filter on individual conditions
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    if (!condition.PassesFilter(filter, true))
+                        return false;
+                }
+            }
+
+            // Filter on individual locations
+            if (Locations != null)
+            {
+                foreach (Location location in Locations)
+                {
+                    if (!location.PassesFilter(filter))
+                        return false;
+                }
+            }
+
+            // Filter on individual conditions
+            if (Values != null)
+            {
+                foreach (Setting value in Values)
+                {
+                    if (!value.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             #endregion
 
@@ -301,9 +378,29 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = null;
 
-            // TODO: Handle DatItem_Condition*
-            // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Value*
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    condition.RemoveFields(fields, true);
+                }
+            }
+
+            if (Locations != null)
+            {
+                foreach (Location location in Locations)
+                {
+                    location.RemoveFields(fields);
+                }
+            }
+
+            if (Values != null)
+            {
+                foreach (Setting value in Values)
+                {
+                    value.RemoveFields(fields);
+                }
+            }
 
             #endregion
 
@@ -364,9 +461,17 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = newItem.Mask;
 
-            // TODO: Handle DatItem_Condition*
-            // TODO: Handle DatItem_Location*
-            // TODO: Handle DatItem_Value*
+            // DatItem_Condition_* doesn't make sense here
+            // since not every condition under the other item
+            // can replace every condition under this item
+
+            // DatItem_Location_* doesn't make sense here
+            // since not every location under the other item
+            // can replace every location under this item
+
+            // DatItem_Setting_* doesn't make sense here
+            // since not every value under the other item
+            // can replace every value under this item
 
             #endregion
 

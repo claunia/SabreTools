@@ -43,7 +43,13 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Tag))
                 Tag = mappings[Field.DatItem_Tag];
 
-            // TODO: Handle DatItem_Analog*
+            if (Analogs != null)
+            {
+                foreach (Analog analog in Analogs)
+                {
+                    analog.SetFields(mappings);
+                }
+            }
         }
 
         #endregion
@@ -92,7 +98,20 @@ namespace SabreTools.Library.DatItems
             Port newOther = other as Port;
 
             // If the Port information matches
-            return (Tag == newOther.Tag); // TODO: Handle DatItem_Analog*
+            bool match = (Tag == newOther.Tag);
+            if (!match)
+                return match;
+
+            // If the analogs match
+            if (Analogs != null)
+            {
+                foreach (Analog analog in Analogs)
+                {
+                    match &= newOther.Analogs.Contains(analog);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -116,7 +135,15 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
                 return false;
 
-            // TODO: Handle DatItem_Analog*
+            // Filter on individual analogs
+            if (Analogs != null)
+            {
+                foreach (Analog analog in Analogs)
+                {
+                    if (!analog.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -134,7 +161,13 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = null;
 
-            // TODO: Handle DatItem_Analog*
+            if (Analogs != null)
+            {
+                foreach (Analog analog in Analogs)
+                {
+                    analog.RemoveFields(fields);
+                }
+            }
         }
 
         #endregion
@@ -162,7 +195,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Tag = newItem.Tag;
 
-            // TODO: Handle DatItem_Analog*
+            // DatItem_Analog_* doesn't make sense here
+            // since not every analog under the other item
+            // can replace every analog under this item
         }
 
         #endregion

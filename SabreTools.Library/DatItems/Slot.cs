@@ -54,7 +54,13 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Name))
                 Name = mappings[Field.DatItem_Name];
 
-            // TODO: Handle DatItem_SlotOption*
+            if (SlotOptions != null)
+            {
+                foreach (SlotOption slotOption in SlotOptions)
+                {
+                    slotOption.SetFields(mappings);
+                }
+            }
         }
 
         #endregion
@@ -104,7 +110,20 @@ namespace SabreTools.Library.DatItems
             Slot newOther = other as Slot;
 
             // If the Slot information matches
-            return (Name == newOther.Name); // TODO: Handle DatItem_SlotOption*
+            bool match = (Name == newOther.Name);
+            if (!match)
+                return match;
+
+            // If the slot options match
+            if (SlotOptions != null)
+            {
+                foreach (SlotOption slotOption in SlotOptions)
+                {
+                    match &= newOther.SlotOptions.Contains(slotOption);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -155,7 +174,15 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
-            // TODO: Handle DatItem_SlotOption*
+            // Filter on individual slot options
+            if (SlotOptions != null)
+            {
+                foreach (SlotOption slotOption in SlotOptions)
+                {
+                    if (!slotOption.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -173,7 +200,13 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
-            // TODO: Handle DatItem_SlotOption*
+            if (SlotOptions != null)
+            {
+                foreach (SlotOption slotOption in SlotOptions)
+                {
+                    slotOption.RemoveFields(fields);
+                }
+            }
         }
 
         /// <summary>
@@ -211,7 +244,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
 
-            // TODO: Handle DatItem_SlotOption*
+            // DatItem_SlotOption_* doesn't make sense here
+            // since not every slot option under the other item
+            // can replace every slot option under this item
         }
 
         #endregion

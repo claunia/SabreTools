@@ -60,11 +60,11 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Name))
                 Name = mappings[Field.DatItem_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Default))
-                Default = mappings[Field.DatItem_Default].AsYesNo();
-
             if (mappings.Keys.Contains(Field.DatItem_Description))
                 Description = mappings[Field.DatItem_Description];
+
+            if (mappings.Keys.Contains(Field.DatItem_Default))
+                Default = mappings[Field.DatItem_Default].AsYesNo();
         }
 
         #endregion
@@ -115,7 +115,9 @@ namespace SabreTools.Library.DatItems
             BiosSet newOther = other as BiosSet;
 
             // If the BiosSet information matches
-            return (Name == newOther.Name && Description == newOther.Description && Default == newOther.Default);
+            return (Name == newOther.Name
+                && Description == newOther.Description
+                && Default == newOther.Default);
         }
 
         #endregion
