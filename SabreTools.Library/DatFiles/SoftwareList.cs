@@ -14,7 +14,7 @@ using SabreTools.Library.Tools;
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Represents parsing and writing of a SofwareList, M1, or MAME XML DAT
+    /// Represents parsing and writing of a SoftwareList
     /// </summary>
     internal class SoftwareList : DatFile
     {
