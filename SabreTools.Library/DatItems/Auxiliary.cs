@@ -35,6 +35,75 @@ namespace SabreTools.Library.DatItems
     #region SoftwareList
 
     /// <summary>
+    /// Represents one SoftwareList dataarea object
+    /// </summary>
+    /// <remarks>
+    /// One DataArea can contain multiple Rom items
+    /// </remarks>
+    [JsonObject("dataarea")]
+    public class DataArea
+    {
+        /// <summary>
+        /// Name of the item
+        /// </summary>
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Total size of the area
+        /// </summary>
+        [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public long? Size { get; set; }
+
+        /// <summary>
+        /// Byte width of the area
+        /// </summary>
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Width { get; set; } // TODO: (8|16|32|64) "8"
+
+        /// <summary>
+        /// Byte endianness of the area
+        /// </summary>
+        [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Endianness { get; set; } // TODO: (big|little) "little"
+    }
+
+    /// <summary>
+    /// Represents one SoftwareList diskarea object
+    /// </summary>
+    /// <remarks>
+    /// One DiskArea can contain multiple Disk items
+    /// </remarks>
+    [JsonObject("diskarea")]
+    public class DiskArea
+    {
+        /// <summary>
+        /// Name of the item
+        /// </summary>
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Name { get; set; }
+    }
+
+    /// <summary>
+    /// Represents one SoftwareList part object
+    /// </summary>
+    /// <remarks>
+    /// One Part can contain multiple PartFeature, DataArea, DiskArea, and DipSwitch items
+    /// </remarks>
+    [JsonObject("part")]
+    public class Part
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("interface")]
+        public string Interface { get; set; }
+    
+        [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<PartFeature> Features { get; set; }
+    }
+
+    /// <summary>
     /// Represents one SoftwareList feature object
     /// </summary>
     /// TODO: Promote this to DatItem
@@ -46,19 +115,6 @@ namespace SabreTools.Library.DatItems
 
         [JsonProperty("value")]
         public string Value { get; set; }
-    }
-
-    /// <summary>
-    /// Represents one SoftwareList part object
-    /// </summary>
-    [JsonObject("part")]
-    public class SoftwareListPart
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("interface")]
-        public string Interface { get; set; }
     }
 
     #endregion

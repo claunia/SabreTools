@@ -60,21 +60,13 @@ namespace SabreTools.Library.DatFiles
                         case "softwarelist":
                             Header.Name = (Header.Name == null ? xtr.GetAttribute("name") ?? string.Empty : Header.Name);
                             Header.Description = (Header.Description == null ? xtr.GetAttribute("description") ?? string.Empty : Header.Description);
-                            if (Header.ForceMerging == MergingFlag.None)
-                                Header.ForceMerging = xtr.GetAttribute("forcemerging").AsMergingFlag();
-
-                            if (Header.ForceNodump == NodumpFlag.None)
-                                Header.ForceNodump = xtr.GetAttribute("forcenodump").AsNodumpFlag();
-
-                            if (Header.ForcePacking == PackingFlag.None)
-                                Header.ForcePacking = xtr.GetAttribute("forcepacking").AsPackingFlag();
 
                             xtr.Read();
                             break;
 
                         // We want to process the entire subtree of the machine
                         case "software":
-                            ReadSoftware(xtr.ReadSubtree(), filename, indexId, keep);
+                            ReadSoftware(xtr.ReadSubtree(), filename, indexId);
 
                             // Skip the software now that we've processed it
                             xtr.Skip();
@@ -103,8 +95,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="reader">XmlReader representing a software block</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private void ReadSoftware(XmlReader reader, string filename, int indexId, bool keep)
+        private void ReadSoftware(XmlReader reader, string filename, int indexId)
         {
             // If we have an empty software, skip it
             if (reader == null)
@@ -116,24 +107,11 @@ namespace SabreTools.Library.DatFiles
             bool containsItems = false;
 
             // Create a new machine
-            MachineType machineType = 0x0;
-            if (reader.GetAttribute("isbios").AsYesNo() == true)
-                machineType |= MachineType.Bios;
-
-            if (reader.GetAttribute("isdevice").AsYesNo() == true)
-                machineType |= MachineType.Device;
-
-            if (reader.GetAttribute("ismechanical").AsYesNo() == true)
-                machineType |= MachineType.Mechanical;
-
             Machine machine = new Machine
             {
                 Name = reader.GetAttribute("name"),
-                Description = reader.GetAttribute("name"),
-                Supported = reader.GetAttribute("supported").AsSupported(),
-
                 CloneOf = reader.GetAttribute("cloneof"),
-                MachineType = (machineType == 0x0 ? MachineType.NULL : machineType),
+                Supported = reader.GetAttribute("supported").AsSupported(),
             };
 
             while (!reader.EOF)
@@ -158,10 +136,6 @@ namespace SabreTools.Library.DatFiles
 
                     case "publisher":
                         machine.Publisher = reader.ReadElementContentAsString();
-                        break;
-
-                    case "category":
-                        machine.Category = reader.ReadElementContentAsString();
                         break;
 
                     case "info":
@@ -197,7 +171,14 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "part": // Contains all rom and disk information
-                        containsItems = ReadPart(reader.ReadSubtree(), machine, filename, indexId, keep);
+                        var part = new Part()
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Interface = reader.GetAttribute("interface"),
+                        };
+
+                        // Now read the internal tags
+                        containsItems = ReadPart(reader.ReadSubtree(), machine, part, filename, indexId);
 
                         // Skip the part now that we've processed it
                         reader.Skip();
@@ -233,26 +214,17 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="reader">XmlReader representing a part block</param>
         /// <param name="machine">Machine information to pass to contained items</param>
+        /// <param name="part">Part information to pass to contained items</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private bool ReadPart(
-            XmlReader reader,
-            Machine machine,
-
-            // Standard Dat parsing
-            string filename,
-            int indexId,
-
-            // Miscellaneous
-            bool keep)
+        private bool ReadPart(XmlReader reader, Machine machine, Part part, string filename, int indexId)
         {
-            string areaname,
-                areaWidth,
-                areaEndinaness;
-            long? areasize = null;
-            SoftwareListPart part = null;
-            List<PartFeature> features = null;
+            // If we have an empty port, skip it
+            if (reader == null)
+                return false;
+
+            // Get lists ready
+            part.Features = new List<PartFeature>();
             List<DatItem> items = new List<DatItem>();
 
             while (!reader.EOF)
@@ -260,15 +232,6 @@ namespace SabreTools.Library.DatFiles
                 // We only want elements
                 if (reader.NodeType != XmlNodeType.Element)
                 {
-                    if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "part")
-                    {
-                        part = null;
-                        features = null;
-                    }
-
-                    if (reader.NodeType == XmlNodeType.EndElement && (reader.Name == "dataarea" || reader.Name == "diskarea"))
-                        areasize = null;
-
                     reader.Read();
                     continue;
                 }
@@ -276,45 +239,28 @@ namespace SabreTools.Library.DatFiles
                 // Get the elements from the software
                 switch (reader.Name)
                 {
-                    case "part":
-                        part = new SoftwareListPart();
-                        part.Name = reader.GetAttribute("name");
-                        part.Interface = reader.GetAttribute("interface");
-                        reader.Read();
-                        break;
-
                     case "feature":
-                        var feature = new PartFeature();
-                        feature.Name = reader.GetAttribute("name");
-                        feature.Value = reader.GetAttribute("value");
+                        var feature = new PartFeature()
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Value = reader.GetAttribute("value"),
+                        };
 
-                        // Ensure the list exists
-                        if (features == null)
-                            features = new List<PartFeature>();
-
-                        features.Add(feature);
+                        part.Features.Add(feature);
 
                         reader.Read();
                         break;
 
                     case "dataarea":
-                        areaname = reader.GetAttribute("name");
-                        if (reader.GetAttribute("size") != null)
+                        var dataArea = new DataArea
                         {
-                            if (Int64.TryParse(reader.GetAttribute("size"), out long tempas))
-                                areasize = tempas;
-                        }
+                            Name = reader.GetAttribute("name"),
+                            Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
+                            Width = reader.GetAttribute("width"),
+                            Endianness = reader.GetAttribute("endianness"),
+                        };
 
-                        areaWidth = reader.GetAttribute("width");
-                        areaEndinaness = reader.GetAttribute("endianness");
-
-                        List<DatItem> roms = ReadDataArea(
-                            reader.ReadSubtree(),
-                            areaname,
-                            areasize,
-                            areaWidth,
-                            areaEndinaness,
-                            keep);
+                        List<DatItem> roms = ReadDataArea(reader.ReadSubtree(), dataArea);
 
                         // If we got valid roms, add them to the list
                         if (roms != null)
@@ -325,12 +271,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "diskarea":
-                        areaname = reader.GetAttribute("name");
+                        var diskArea = new DiskArea
+                        {
+                            Name = reader.GetAttribute("name"),
+                        };
 
-                        List<DatItem> disks = ReadDiskArea(
-                            reader.ReadSubtree(),
-                            areaname,
-                            areasize);
+                        List<DatItem> disks = ReadDiskArea(reader.ReadSubtree(), diskArea);
 
                         // If we got valid disks, add them to the list
                         if (disks != null)
@@ -346,9 +292,6 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Tag = reader.GetAttribute("tag"),
                             Mask = reader.GetAttribute("mask"),
-                            Conditions = new List<Condition>(),
-                            Locations = new List<Location>(),
-                            Values = new List<Setting>(),
                         };
 
                         // Now read the internal tags
@@ -370,7 +313,6 @@ namespace SabreTools.Library.DatFiles
             foreach (DatItem item in items)
             {
                 // Add all missing information
-                item.Features = features;
                 item.Part = part;
                 item.Source = new Source(indexId, filename);
                 item.CopyMachineInformation(machine);
@@ -386,23 +328,10 @@ namespace SabreTools.Library.DatFiles
         /// Read dataarea information
         /// </summary>
         /// <param name="reader">XmlReader representing a dataarea block</param>
-        /// <param name="areaName">Name of the containing area</param>
-        /// <param name="areaSize">Size of the containing area</param>
-        /// <param name="areaWidth">Byte width of the containing area</param>
-        /// <param name="areaEndianness">Endianness of the containing area</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private List<DatItem> ReadDataArea(
-            XmlReader reader,
-            string areaName,
-            long? areaSize,
-            string areaWidth,
-            string areaEndianness,
-
-            // Miscellaneous
-            bool keep)
+        /// <param name="dataArea">DataArea representing the enclosing area</param>
+        private List<DatItem> ReadDataArea(XmlReader reader, DataArea dataArea)
         {
             string key = string.Empty;
-            string temptype = reader.Name;
             List<DatItem> items = new List<DatItem>();
 
             while (!reader.EOF)
@@ -439,23 +368,13 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
-                            MD5 = reader.GetAttribute("md5"),
-#if NET_FRAMEWORK
-                            RIPEMD160 = reader.GetAttribute("ripemd160"),
-#endif
                             SHA1 = reader.GetAttribute("sha1"),
-                            SHA256 = reader.GetAttribute("sha256"),
-                            SHA384 = reader.GetAttribute("sha384"),
-                            SHA512 = reader.GetAttribute("sha512"),
                             Offset = reader.GetAttribute("offset"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-
-                            AreaName = areaName,
-                            AreaSize = areaSize,
-                            AreaWidth = areaWidth,
-                            AreaEndianness = areaEndianness,
                             Value = reader.GetAttribute("value"),
+                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             LoadFlag = reader.GetAttribute("loadflag"),
+
+                            DataArea = dataArea,
                         };
 
                         items.Add(rom);
@@ -475,9 +394,8 @@ namespace SabreTools.Library.DatFiles
         /// Read diskarea information
         /// </summary>
         /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="areaname">Name of the containing area</param>
-        /// <param name="areasize">Size of the containing area</param>
-        private List<DatItem> ReadDiskArea(XmlReader reader, string areaname, long? areasize)
+        /// <param name="diskArea">DiskArea representing the enclosing area</param>
+        private List<DatItem> ReadDiskArea(XmlReader reader, DiskArea diskArea)
         {
             List<DatItem> items = new List<DatItem>();
 
@@ -497,13 +415,11 @@ namespace SabreTools.Library.DatFiles
                         DatItem disk = new Disk
                         {
                             Name = reader.GetAttribute("name"),
-                            MD5 = reader.GetAttribute("md5"),
                             SHA1 = reader.GetAttribute("sha1"),
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             Writable = reader.GetAttribute("writable").AsYesNo(),
 
-                            AreaName = areaname,
-                            AreaSize = areasize,
+                            DiskArea = diskArea,
                         };
 
                         items.Add(disk);
@@ -549,10 +465,12 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "dipvalue":
-                        var dipValue = new Setting();
-                        dipValue.Name = reader.GetAttribute("name");
-                        dipValue.Value = reader.GetAttribute("value");
-                        dipValue.Default = reader.GetAttribute("default").AsYesNo();
+                        var dipValue = new Setting
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Value = reader.GetAttribute("value"),
+                            Default = reader.GetAttribute("default").AsYesNo(),
+                        };
 
                         dipSwitch.Values.Add(dipValue);
 
@@ -746,7 +664,6 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, true);
 
                 // Build the state
-                string areaName = datItem.AreaName;
                 switch (datItem.ItemType)
                 {
                     case ItemType.DipSwitch:
@@ -771,16 +688,17 @@ namespace SabreTools.Library.DatFiles
 
                     case ItemType.Disk:
                         var disk = datItem as Disk;
-                        if (string.IsNullOrWhiteSpace(areaName))
-                            areaName = "cdrom";
+                        string diskAreaName = disk.DiskArea?.Name;
+                        if (string.IsNullOrWhiteSpace(diskAreaName))
+                            diskAreaName = "cdrom";
 
                         xtw.WriteStartElement("part");
                         xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
                         xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
 
-                        if (datItem.Features != null && datItem.Features.Count > 0)
+                        if (datItem.Part?.Features != null && datItem.Part?.Features.Count > 0)
                         {
-                            foreach (PartFeature partFeature in datItem.Features)
+                            foreach (PartFeature partFeature in datItem.Part.Features)
                             {
                                 xtw.WriteStartElement("feature");
                                 xtw.WriteRequiredAttributeString("name", partFeature.Name);
@@ -790,8 +708,7 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         xtw.WriteStartElement("diskarea");
-                        xtw.WriteRequiredAttributeString("name", areaName);
-                        xtw.WriteOptionalAttributeString("size", disk.AreaSize.ToString());
+                        xtw.WriteRequiredAttributeString("name", diskAreaName);
 
                         xtw.WriteStartElement("disk");
                         xtw.WriteRequiredAttributeString("name", disk.Name);
@@ -818,16 +735,17 @@ namespace SabreTools.Library.DatFiles
 
                     case ItemType.Rom:
                         var rom = datItem as Rom;
-                        if (string.IsNullOrWhiteSpace(areaName))
-                            areaName = "rom";
+                        string dataAreaName = rom.DataArea?.Name;
+                        if (string.IsNullOrWhiteSpace(dataAreaName))
+                            dataAreaName = "rom";
 
                         xtw.WriteStartElement("part");
                         xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
                         xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
 
-                        if (datItem.Features != null && datItem.Features.Count > 0)
+                        if (datItem.Part?.Features != null && datItem.Part?.Features.Count > 0)
                         {
-                            foreach (PartFeature kvp in datItem.Features)
+                            foreach (PartFeature kvp in datItem.Part.Features)
                             {
                                 xtw.WriteStartElement("feature");
                                 xtw.WriteRequiredAttributeString("name", kvp.Name);
@@ -837,10 +755,10 @@ namespace SabreTools.Library.DatFiles
                         }
 
                         xtw.WriteStartElement("dataarea");
-                        xtw.WriteRequiredAttributeString("name", areaName);
-                        xtw.WriteOptionalAttributeString("size", rom.AreaSize.ToString());
-                        xtw.WriteOptionalAttributeString("width", rom.AreaWidth);
-                        xtw.WriteOptionalAttributeString("endianness", rom.AreaEndianness);
+                        xtw.WriteRequiredAttributeString("name", dataAreaName);
+                        xtw.WriteOptionalAttributeString("size", rom.DataArea?.Size.ToString());
+                        xtw.WriteOptionalAttributeString("width", rom.DataArea?.Width);
+                        xtw.WriteOptionalAttributeString("endianness", rom.DataArea?.Endianness);
 
                         xtw.WriteStartElement("rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);

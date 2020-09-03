@@ -34,6 +34,8 @@ namespace SabreTools.Library.DatItems
 
         #region Fields
 
+        #region Common
+
         /// <summary>
         /// Name of the item
         /// </summary>
@@ -169,6 +171,18 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region SoftwareList
+
+        /// <summary>
+        /// Data area information
+        /// </summary>
+        [JsonProperty("dataarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DataArea DataArea { get; set; }
+
+        #endregion
+
+        #endregion // Fields
+
         #region Accessors
 
         /// <summary>
@@ -245,6 +259,39 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.DatItem_Inverted))
                 Inverted = mappings[Field.DatItem_Optional].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaName))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Name = mappings[Field.DatItem_AreaName];
+            }
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaSize))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                if (Int64.TryParse(mappings[Field.DatItem_AreaSize], out long areaSize))
+                    DataArea.Size = areaSize;
+            }
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Width = mappings[Field.DatItem_AreaWidth];
+            }
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Endianness = mappings[Field.DatItem_AreaEndianness];
+            }
         }
 
         #endregion
@@ -328,11 +375,6 @@ namespace SabreTools.Library.DatItems
                 Boot = this.Boot,
 
                 Part = this.Part,
-                Features = this.Features,
-                AreaName = this.AreaName,
-                AreaSize = this.AreaSize,
-                AreaWidth = this.AreaWidth,
-                AreaEndianness = this.AreaEndianness,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -358,6 +400,8 @@ namespace SabreTools.Library.DatItems
                 ItemStatus = this.ItemStatus,
                 Optional = this.Optional,
                 Inverted = this.Inverted,
+
+                DataArea = this.DataArea,
             };
         }
 
@@ -660,6 +704,32 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Inverted.MatchesNeutral(null, Inverted) == false)
                 return false;
 
+            // Filter on area name
+            if (filter.DatItem_AreaName.MatchesPositiveSet(DataArea?.Name) == false)
+                return false;
+            if (filter.DatItem_AreaName.MatchesNegativeSet(DataArea?.Name) == true)
+                return false;
+
+            // Filter on area size
+            if (filter.DatItem_AreaSize.MatchesNeutral(null, DataArea?.Size) == false)
+                return false;
+            else if (filter.DatItem_AreaSize.MatchesPositive(null, DataArea?.Size) == false)
+                return false;
+            else if (filter.DatItem_AreaSize.MatchesNegative(null, DataArea?.Size) == false)
+                return false;
+
+            // Filter on area byte width
+            if (filter.DatItem_AreaWidth.MatchesPositiveSet(DataArea?.Width) == false)
+                return false;
+            if (filter.DatItem_AreaWidth.MatchesNegativeSet(DataArea?.Width) == true)
+                return false;
+
+            // Filter on area endianness
+            if (filter.DatItem_AreaEndianness.MatchesPositiveSet(DataArea?.Endianness) == false)
+                return false;
+            if (filter.DatItem_AreaEndianness.MatchesNegativeSet(DataArea?.Endianness) == true)
+                return false;
+
             return true;
         }
 
@@ -725,6 +795,30 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = null;
+
+            if (fields.Contains(Field.DatItem_AreaName))
+            {
+                if (DataArea != null)
+                    DataArea.Name = null;
+            }
+
+            if (fields.Contains(Field.DatItem_AreaSize))
+            {
+                if (DataArea != null)
+                    DataArea.Size = null;
+            }
+
+            if (fields.Contains(Field.DatItem_AreaWidth))
+            {
+                if (DataArea != null)
+                    DataArea.Width = null;
+            }
+
+            if (fields.Contains(Field.DatItem_AreaEndianness))
+            {
+                if (DataArea != null)
+                    DataArea.Endianness = null;
+            }
         }
 
         /// <summary>
@@ -889,6 +983,38 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = newItem.Inverted;
+
+            if (fields.Contains(Field.DatItem_AreaName))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Name = newItem.DataArea?.Name;
+            }
+
+            if (fields.Contains(Field.DatItem_AreaSize))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Size = newItem.DataArea?.Size;
+            }
+
+            if (fields.Contains(Field.DatItem_AreaWidth))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Width = newItem.DataArea?.Width;
+            }
+
+            if (fields.Contains(Field.DatItem_AreaEndianness))
+            {
+                if (DataArea == null)
+                    DataArea = new DataArea();
+
+                DataArea.Endianness = newItem.DataArea?.Endianness;
+            }
         }
 
         #endregion

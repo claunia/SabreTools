@@ -25,6 +25,8 @@ namespace SabreTools.Library.DatItems
 
         #region Fields
 
+        #region Common
+
         /// <summary>
         /// Name of the item
         /// </summary>
@@ -90,6 +92,18 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region SoftwareList
+
+        /// <summary>
+        /// Disk area information
+        /// </summary>
+        [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DiskArea DiskArea { get; set; }
+
+        #endregion
+
+        #endregion // Fields
+
         #region Accessors
 
         /// <summary>
@@ -137,6 +151,14 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.DatItem_Optional))
                 Optional = mappings[Field.DatItem_Optional].AsYesNo();
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaName))
+            {
+                if (DiskArea == null)
+                    DiskArea = new DiskArea();
+
+                DiskArea.Name = mappings[Field.DatItem_AreaName];
+            }
         }
 
         #endregion
@@ -191,11 +213,6 @@ namespace SabreTools.Library.DatItems
                 Boot = this.Boot,
 
                 Part = this.Part,
-                Features = this.Features,
-                AreaName = this.AreaName,
-                AreaSize = this.AreaSize,
-                AreaWidth = this.AreaWidth,
-                AreaEndianness = this.AreaEndianness,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -211,6 +228,8 @@ namespace SabreTools.Library.DatItems
                 Writable = this.Writable,
                 ItemStatus = this.ItemStatus,
                 Optional = this.Optional,
+
+                DiskArea = this.DiskArea,
             };
         }
 
@@ -236,11 +255,6 @@ namespace SabreTools.Library.DatItems
                 Boot = this.Boot,
 
                 Part = this.Part,
-                Features = this.Features,
-                AreaName = this.AreaName,
-                AreaSize = this.AreaSize,
-                AreaWidth = this.AreaWidth,
-                AreaEndianness = this.AreaEndianness,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -255,6 +269,8 @@ namespace SabreTools.Library.DatItems
 
                 MD5 = this.MD5,
                 SHA1 = this.SHA1,
+
+                DataArea = new DataArea { Name = this.DiskArea.Name },
             };
 
             return rom;
@@ -452,6 +468,12 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Optional.MatchesNeutral(null, Optional) == false)
                 return false;
 
+            // Filter on area name
+            if (filter.DatItem_AreaName.MatchesPositiveSet(DiskArea?.Name) == false)
+                return false;
+            if (filter.DatItem_AreaName.MatchesNegativeSet(DiskArea?.Name) == true)
+                return false;
+
             return true;
         }
 
@@ -491,6 +513,12 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Optional))
                 Optional = null;
+
+            if (fields.Contains(Field.DatItem_AreaName))
+            {
+                if (DiskArea != null)
+                    DiskArea.Name = null;
+            }
         }
 
         /// <summary>
@@ -592,6 +620,14 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Optional))
                 Optional = newItem.Optional;
+
+            if (fields.Contains(Field.DatItem_AreaName))
+            {
+                if (DiskArea == null)
+                    DiskArea = new DiskArea();
+
+                DiskArea.Name = newItem.DiskArea?.Name;
+            }
         }
 
         #endregion

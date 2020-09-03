@@ -104,11 +104,6 @@ namespace SabreTools.Library.DatItems
                 Boot = this.Boot,
 
                 Part = this.Part,
-                Features = this.Features,
-                AreaName = this.AreaName,
-                AreaSize = this.AreaSize,
-                AreaWidth = this.AreaWidth,
-                AreaEndianness = this.AreaEndianness,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
