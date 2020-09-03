@@ -15,7 +15,6 @@ namespace SabreTools.Library.DatItems
     [JsonObject("condition")]
     public class Condition : DatItem
     {
-        // TODO: Handle obscure field mappings due to this being used *under* other items as well
         #region Fields
 
         /// <summary>
@@ -58,15 +57,23 @@ namespace SabreTools.Library.DatItems
             // Handle Condition-specific fields
             if (mappings.Keys.Contains(Field.DatItem_Tag))
                 Tag = mappings[Field.DatItem_Tag];
+            else if (mappings.Keys.Contains(Field.DatItem_Condition_Tag))
+                Tag = mappings[Field.DatItem_Condition_Tag];
 
             if (mappings.Keys.Contains(Field.DatItem_Mask))
                 Mask = mappings[Field.DatItem_Mask];
+            else if (mappings.Keys.Contains(Field.DatItem_Condition_Mask))
+                Mask = mappings[Field.DatItem_Condition_Mask];
 
             if (mappings.Keys.Contains(Field.DatItem_Relation))
                 Relation = mappings[Field.DatItem_Relation];
+            else if (mappings.Keys.Contains(Field.DatItem_Condition_Relation))
+                Relation = mappings[Field.DatItem_Condition_Relation];
 
             if (mappings.Keys.Contains(Field.DatItem_ConditionValue))
                 ConditionValue = mappings[Field.DatItem_ConditionValue];
+            else if (mappings.Keys.Contains(Field.DatItem_Condition_Value))
+                ConditionValue = mappings[Field.DatItem_Condition_Value];
         }
 
         #endregion
@@ -161,11 +168,19 @@ namespace SabreTools.Library.DatItems
                 return false;
             if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
                 return false;
+            if (filter.DatItem_Condition_Tag.MatchesPositiveSet(Tag) == false)
+                return false;
+            if (filter.DatItem_Condition_Tag.MatchesNegativeSet(Tag) == true)
+                return false;
 
             // Filter on mask
             if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
                 return false;
             if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
+                return false;
+            if (filter.DatItem_Condition_Mask.MatchesPositiveSet(Mask) == false)
+                return false;
+            if (filter.DatItem_Condition_Mask.MatchesNegativeSet(Mask) == true)
                 return false;
 
             // Filter on mask
@@ -173,11 +188,19 @@ namespace SabreTools.Library.DatItems
                 return false;
             if (filter.DatItem_Relation.MatchesNegativeSet(Relation) == true)
                 return false;
+            if (filter.DatItem_Condition_Relation.MatchesPositiveSet(Relation) == false)
+                return false;
+            if (filter.DatItem_Condition_Relation.MatchesNegativeSet(Relation) == true)
+                return false;
 
             // Filter on value
             if (filter.DatItem_ConditionValue.MatchesPositiveSet(ConditionValue) == false)
                 return false;
             if (filter.DatItem_ConditionValue.MatchesNegativeSet(ConditionValue) == true)
+                return false;
+            if (filter.DatItem_Condition_Value.MatchesPositiveSet(ConditionValue) == false)
+                return false;
+            if (filter.DatItem_Condition_Value.MatchesNegativeSet(ConditionValue) == true)
                 return false;
 
             return true;
@@ -195,14 +218,22 @@ namespace SabreTools.Library.DatItems
             // Remove the fields
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = null;
+            else if (fields.Contains(Field.DatItem_Condition_Tag))
+                Tag = null;
 
             if (fields.Contains(Field.DatItem_Mask))
+                Mask = null;
+            else if (fields.Contains(Field.DatItem_Condition_Mask))
                 Mask = null;
 
             if (fields.Contains(Field.DatItem_Relation))
                 Relation = null;
+            else if (fields.Contains(Field.DatItem_Condition_Relation))
+                Relation = null;
 
             if (fields.Contains(Field.DatItem_ConditionValue))
+                ConditionValue = null;
+            else if (fields.Contains(Field.DatItem_Condition_Value))
                 ConditionValue = null;
         }
 
@@ -230,14 +261,22 @@ namespace SabreTools.Library.DatItems
             // Replace the fields
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = newItem.Tag;
+            else if (fields.Contains(Field.DatItem_Condition_Tag))
+                Tag = newItem.Tag;
 
             if (fields.Contains(Field.DatItem_Mask))
+                Mask = newItem.Mask;
+            else if (fields.Contains(Field.DatItem_Condition_Mask))
                 Mask = newItem.Mask;
 
             if (fields.Contains(Field.DatItem_Relation))
                 Relation = newItem.Relation;
+            else if (fields.Contains(Field.DatItem_Condition_Relation))
+                Relation = newItem.Relation;
 
             if (fields.Contains(Field.DatItem_ConditionValue))
+                ConditionValue = newItem.ConditionValue;
+            else if (fields.Contains(Field.DatItem_Condition_Value))
                 ConditionValue = newItem.ConditionValue;
         }
 

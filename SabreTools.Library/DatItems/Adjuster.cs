@@ -63,7 +63,14 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Default))
                 Default = mappings[Field.DatItem_Default].AsYesNo();
 
-            // TODO: Handle DatItem_Condition*
+            // Field.DatItem_Conditions does not apply here
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    condition.SetFields(mappings);
+                }
+            }
         }
 
         #endregion
@@ -132,7 +139,20 @@ namespace SabreTools.Library.DatItems
             Adjuster newOther = other as Adjuster;
 
             // If the Adjuster information matches
-            return (Name == newOther.Name && Default == newOther.Default); // TODO: Handle DatItem_Condition*
+            bool match = (Name == newOther.Name && Default == newOther.Default);
+            if (!match)
+                return match;
+
+            // If the conditions match
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    match &= newOther.Conditions.Contains(condition);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -187,7 +207,19 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
                 return false;
 
-            // TODO: Handle DatItem_Condition*
+            // Filter on conditions
+            if (filter.DatItem_Conditions.MatchesNeutral(null, Conditions != null ? (bool?)(Conditions.Count > 0) : null) == false)
+                return false;
+
+            // Filter on individual conditions
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    if (!condition.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -211,7 +243,13 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Conditions))
                 Conditions = null;
 
-            // TODO: Handle DatItem_Condition*
+            if (Conditions != null)
+            {
+                foreach (Condition condition in Conditions)
+                {
+                    condition.RemoveFields(fields);
+                }
+            }
         }
 
         /// <summary>
@@ -255,7 +293,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Conditions))
                 Conditions = newItem.Conditions;
 
-            // TODO: Handle DatItem_Condition*
+            // Field replacement doesn't make sense for DatItem_Condition*
         }
 
         #endregion
