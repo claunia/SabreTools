@@ -536,6 +536,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Slot:
                     return new Slot();
 
+                case ItemType.SlotOption:
+                    return new SlotOption();
+
                 case ItemType.SoftwareList:
                     return new SoftwareList();
 
@@ -573,6 +576,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Rom => new Rom(),
                 ItemType.Sample => new Sample(),
                 ItemType.Slot => new Slot(),
+                ItemType.SlotOption => new SlotOption(),
                 ItemType.SoftwareList => new SoftwareList(),
                 ItemType.Sound => new Sound(),
                 _ => new Rom(),

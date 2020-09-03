@@ -100,35 +100,6 @@ namespace SabreTools.Library.DatItems
         #endregion
     }
 
-    /// <summary>
-    /// Represents one ListXML slotoption
-    /// </summary>
-    [JsonObject("slotoption")]
-    public class SlotOption
-    {
-        #region Fields
-
-        /// <summary>
-        /// Slot option name
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Referenced device name
-        /// </summary>
-        [JsonProperty("devname")]
-        public string DeviceName { get; set; }
-
-        /// <summary>
-        /// Determines if this slot option is default or not
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Default { get; set; }
-
-        #endregion
-    }
-
     #endregion
 
     #region OpenMSX

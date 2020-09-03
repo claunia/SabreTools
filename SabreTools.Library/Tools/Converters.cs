@@ -1693,6 +1693,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Setting;
                 case "slot":
                     return ItemType.Slot;
+                case "slotoption":
+                    return ItemType.SlotOption;
                 case "softwarelist":
                     return ItemType.SoftwareList;
                 case "sound":
@@ -1730,6 +1732,7 @@ namespace SabreTools.Library.Tools
                 "sample" => ItemType.Sample,
                 "setting" => ItemType.Setting,
                 "slot" => ItemType.Slot,
+                "slotoption" => ItemType.SlotOption,
                 "softwarelist" => ItemType.SoftwareList,
                 "sound" => ItemType.Sound,
                 _ => null,
@@ -2328,6 +2331,8 @@ namespace SabreTools.Library.Tools
                     return "setting";
                 case ItemType.Slot:
                     return "slot";
+                case ItemType.SlotOption:
+                    return "slotoption";
                 case ItemType.SoftwareList:
                     return "softwarelist";
                 case ItemType.Sound:
@@ -2365,6 +2370,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Sample => "sample",
                 ItemType.Setting => "setting",
                 ItemType.Slot => "slot",
+                ItemType.SlotOption => "slotoption",
                 ItemType.SoftwareList => "softwarelist",
                 ItemType.Sound => "sound",
                 _ => null,

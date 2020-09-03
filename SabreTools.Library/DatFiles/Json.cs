@@ -289,6 +289,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Slot:
                         datItem = datItemObj.ToObject<Slot>();
                         break;
+                    case ItemType.SlotOption:
+                        datItem = datItemObj.ToObject<SlotOption>();
+                        break;
                     case ItemType.SoftwareList:
                         datItem = datItemObj.ToObject<DatItems.SoftwareList>();
                         break;

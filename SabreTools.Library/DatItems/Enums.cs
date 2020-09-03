@@ -499,6 +499,7 @@ namespace SabreTools.Library.DatItems
         Sample,
         Setting,
         Slot,
+        SlotOption,
         SoftwareList,
         Sound,
 
