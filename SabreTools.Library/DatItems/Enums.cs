@@ -78,7 +78,7 @@ namespace SabreTools.Library.DatItems
     /// List of valid field types within a DatItem/Machine
     /// </summary>
     /// TODO: Move this to a more common location
-    /// TODO: Should this be split into separate enums?
+    /// TODO: Ensure the order of these after all shuffling
     public enum Field : int
     {
         NULL = 0,
@@ -241,16 +241,6 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region OpenMSX
-
-        DatItem_Original,
-        DatItem_OpenMSXSubType,
-        DatItem_OpenMSXType,
-        DatItem_Remark,
-        DatItem_Boot,
-
-        #endregion
-
         #region SoftwareList
 
         // Part
@@ -290,6 +280,13 @@ namespace SabreTools.Library.DatItems
         DatItem_Status,
         DatItem_Optional,
         DatItem_Inverted,
+
+        // Rom (OpenMSX)
+        DatItem_Original,
+        DatItem_OpenMSXSubType,
+        DatItem_OpenMSXType,
+        DatItem_Remark,
+        DatItem_Boot,
 
         // Rom (SoftwareList)
         DatItem_AreaName,

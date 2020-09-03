@@ -115,12 +115,6 @@ namespace SabreTools.Library.DatItems
                 AltName = this.AltName,
                 AltTitle = this.AltTitle,
 
-                Original = this.Original,
-                OpenMSXSubType = this.OpenMSXSubType,
-                OpenMSXType = this.OpenMSXType,
-                Remark = this.Remark,
-                Boot = this.Boot,
-
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,

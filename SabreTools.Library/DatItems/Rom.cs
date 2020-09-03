@@ -171,6 +171,42 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region OpenMSX
+
+        /// <summary>
+        /// OpenMSX sub item type
+        /// </summary>
+        [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Original Original { get; set; }
+
+        /// <summary>
+        /// OpenMSX sub item type
+        /// </summary>
+        [JsonProperty("openmsx_subtype", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public OpenMSXSubType OpenMSXSubType { get; set; }
+
+        /// <summary>
+        /// OpenMSX sub item type
+        /// </summary>
+        /// <remarks>Not related to the subtype above</remarks>
+        [JsonProperty("openmsx_type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string OpenMSXType { get; set; }
+
+        /// <summary>
+        /// Item remark (like a comment)
+        /// </summary>
+        [JsonProperty("remark", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Remark { get; set; }
+
+        /// <summary>
+        /// Boot state
+        /// </summary>
+        [JsonProperty("boot", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Boot { get; set; }
+
+        #endregion
+
         #region SoftwareList
 
         /// <summary>
@@ -281,6 +317,25 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.DatItem_Inverted))
                 Inverted = mappings[Field.DatItem_Optional].AsYesNo();
+
+            #endregion
+
+            #region OpenMSX
+
+            if (mappings.Keys.Contains(Field.DatItem_Original))
+                Original = new Original() { Content = mappings[Field.DatItem_Original] };
+
+            if (mappings.Keys.Contains(Field.DatItem_OpenMSXSubType))
+                OpenMSXSubType = mappings[Field.DatItem_OpenMSXSubType].AsOpenMSXSubType();
+
+            if (mappings.Keys.Contains(Field.DatItem_OpenMSXType))
+                OpenMSXType = mappings[Field.DatItem_OpenMSXType];
+
+            if (mappings.Keys.Contains(Field.DatItem_Remark))
+                Remark = mappings[Field.DatItem_Remark];
+
+            if (mappings.Keys.Contains(Field.DatItem_Boot))
+                Boot = mappings[Field.DatItem_Boot];
 
             #endregion
 
@@ -760,6 +815,40 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region OpenMSX
+
+            // Filter on original
+            if (filter.DatItem_Original.MatchesPositiveSet(Original?.Content) == false)
+                return false;
+            if (filter.DatItem_Original.MatchesNegativeSet(Original?.Content) == true)
+                return false;
+
+            // Filter on OpenMSX subtype
+            if (filter.DatItem_OpenMSXSubType.MatchesPositiveSet(OpenMSXSubType) == false)
+                return false;
+            if (filter.DatItem_OpenMSXSubType.MatchesNegativeSet(OpenMSXSubType) == true)
+                return false;
+
+            // Filter on OpenMSX type
+            if (filter.DatItem_OpenMSXType.MatchesPositiveSet(OpenMSXType) == false)
+                return false;
+            if (filter.DatItem_OpenMSXType.MatchesNegativeSet(OpenMSXType) == true)
+                return false;
+
+            // Filter on remark
+            if (filter.DatItem_Remark.MatchesPositiveSet(Remark) == false)
+                return false;
+            if (filter.DatItem_Remark.MatchesNegativeSet(Remark) == true)
+                return false;
+
+            // Filter on boot
+            if (filter.DatItem_Boot.MatchesPositiveSet(Boot) == false)
+                return false;
+            if (filter.DatItem_Boot.MatchesNegativeSet(Boot) == true)
+                return false;
+
+            #endregion
+
             #region SoftwareList
 
             // Filter on area name
@@ -884,6 +973,25 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = null;
+
+            #endregion
+
+            #region OpenMSX
+
+            if (fields.Contains(Field.DatItem_Original))
+                Original = null;
+
+            if (fields.Contains(Field.DatItem_OpenMSXSubType))
+                OpenMSXSubType = OpenMSXSubType.NULL;
+
+            if (fields.Contains(Field.DatItem_OpenMSXType))
+                OpenMSXType = null;
+
+            if (fields.Contains(Field.DatItem_Remark))
+                Remark = null;
+
+            if (fields.Contains(Field.DatItem_Boot))
+                Boot = null;
 
             #endregion
 
@@ -1098,6 +1206,25 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = newItem.Inverted;
+
+            #endregion
+
+            #region OpenMSX
+
+            if (fields.Contains(Field.DatItem_Original))
+                Original = newItem.Original;
+
+            if (fields.Contains(Field.DatItem_OpenMSXSubType))
+                OpenMSXSubType = newItem.OpenMSXSubType;
+
+            if (fields.Contains(Field.DatItem_OpenMSXType))
+                OpenMSXType = newItem.OpenMSXType;
+
+            if (fields.Contains(Field.DatItem_Remark))
+                Remark = newItem.Remark;
+
+            if (fields.Contains(Field.DatItem_Boot))
+                Boot = newItem.Boot;
 
             #endregion
 
