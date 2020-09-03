@@ -193,9 +193,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Coins))
                 Coins = null;
 
-            if (fields.Contains(Field.DatItem_Controls))
-                Controls = null;
-
             // TODO: Handle DatItem_Control*
         }
 
@@ -232,9 +229,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Coins))
                 Coins = newItem.Coins;
-
-            if (fields.Contains(Field.DatItem_Controls))
-                Controls = newItem.Controls;
 
             // TODO: Handle DatItem_Control*
         }

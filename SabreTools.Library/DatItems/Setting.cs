@@ -207,10 +207,6 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Setting_Default.MatchesNeutral(null, Default) == false)
                 return false;
 
-            // Filter on conditions
-            if (filter.DatItem_Conditions.MatchesNeutral(null, Conditions != null ? (bool?)(Conditions.Count > 0) : null) == false)
-                return false;
-
             // Filter on individual conditions
             if (Conditions != null)
             {
@@ -242,9 +238,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Setting_Default))
                 Default = null;
-
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = null;
 
             if (Conditions != null)
             {

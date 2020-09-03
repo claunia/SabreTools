@@ -661,82 +661,8 @@ namespace SabreTools.Library.Tools
                 {
                     #region Common
 
-                    case "name":
-                        return Field.DatItem_Name;
-
                     case "type":
                         return Field.DatItem_Type;
-
-                    #endregion
-
-                    #region AttractMode
-
-                    case "altname":
-                    case "alt name":
-                    case "alt-name":
-                    case "altromname":
-                    case "alt romname":
-                    case "alt-romname":
-                        return Field.DatItem_AltName;
-
-                    case "alttitle":
-                    case "alt title":
-                    case "alt-title":
-                    case "altromtitle":
-                    case "alt romtitle":
-                    case "alt-romtitle":
-                        return Field.DatItem_AltTitle;
-
-                    #endregion
-
-                    #region OpenMSX
-
-                    case "original":
-                        return Field.DatItem_Original;
-
-                    case "subtype":
-                    case "sub_type":
-                    case "openmsxsubtype":
-                    case "openmsx_subtype":
-                        return Field.DatItem_OpenMSXSubType;
-
-                    case "openmsxtype":
-                    case "openmsx_type":
-                        return Field.DatItem_OpenMSXType;
-
-                    case "remark":
-                        return Field.DatItem_Remark;
-
-                    case "boot":
-                        return Field.DatItem_Boot;
-
-                    #endregion
-
-                    #region SoftwareList
-
-                    case "part":
-                        return Field.DatItem_Part;
-
-                    case "partname":
-                    case "part_name":
-                        return Field.DatItem_Part_Name;
-
-                    case "partinterface":
-                    case "part_interface":
-                        return Field.DatItem_Part_Interface;
-
-                    case "features":
-                        return Field.DatItem_Features;
-
-                    case "feature_name":
-                        return Field.DatItem_Feature_Name;
-
-                    case "feature_value":
-                        return Field.DatItem_Feature_Value;
-
-                    case "loadflag":
-                    case "load_flag":
-                        return Field.DatItem_LoadFlag;
 
                     #endregion
 
@@ -745,6 +671,9 @@ namespace SabreTools.Library.Tools
                     #region Actionable
 
                     // Rom
+                    case "name":
+                        return Field.DatItem_Name;
+
                     case "bios":
                         return Field.DatItem_Bios;
 
@@ -820,6 +749,43 @@ namespace SabreTools.Library.Tools
                     case "inverted":
                         return Field.DatItem_Inverted;
 
+                    // Rom (AttractMode)
+                    case "altname":
+                    case "alt name":
+                    case "alt-name":
+                    case "altromname":
+                    case "alt romname":
+                    case "alt-romname":
+                        return Field.DatItem_AltName;
+
+                    case "alttitle":
+                    case "alt title":
+                    case "alt-title":
+                    case "altromtitle":
+                    case "alt romtitle":
+                    case "alt-romtitle":
+                        return Field.DatItem_AltTitle;
+
+                    // Rom (OpenMSX)
+                    case "original":
+                        return Field.DatItem_Original;
+
+                    case "subtype":
+                    case "sub_type":
+                    case "openmsxsubtype":
+                    case "openmsx_subtype":
+                        return Field.DatItem_OpenMSXSubType;
+
+                    case "openmsxtype":
+                    case "openmsx_type":
+                        return Field.DatItem_OpenMSXType;
+
+                    case "remark":
+                        return Field.DatItem_Remark;
+
+                    case "boot":
+                        return Field.DatItem_Boot;
+
                     // Rom (SoftwareList)
                     case "areaname":
                     case "area_name":
@@ -836,6 +802,24 @@ namespace SabreTools.Library.Tools
                     case "areaendinanness":
                     case "area_endianness":
                         return Field.DatItem_AreaEndianness;
+
+                    case "loadflag":
+                    case "load_flag":
+                        return Field.DatItem_LoadFlag;
+
+                    case "partname":
+                    case "part_name":
+                        return Field.DatItem_Part_Name;
+
+                    case "partinterface":
+                    case "part_interface":
+                        return Field.DatItem_Part_Interface;
+
+                    case "part_feature_name":
+                        return Field.DatItem_Part_Feature_Name;
+
+                    case "part_feature_value":
+                        return Field.DatItem_Part_Feature_Value;
 
                     case "value":
                         return Field.DatItem_Value;
@@ -855,24 +839,9 @@ namespace SabreTools.Library.Tools
                     case "default":
                         return Field.DatItem_Default;
 
-                    case "conditions":
-                        return Field.DatItem_Conditions;
-
-                    case "condition_tag":
-                        return Field.DatItem_Condition_Tag;
-
-                    case "condition_mask":
-                        return Field.DatItem_Condition_Mask;
-
-                    case "condition_relation":
-                        return Field.DatItem_Condition_Relation;
-
-                    case "condition_value":
-                        return Field.DatItem_Condition_Value;
-
                     // Analog
-                    case "mask":
-                        return Field.DatItem_Mask;
+                    case "analog_mask":
+                        return Field.DatItem_Analog_Mask;
 
                     // BiosSet
                     case "description":
@@ -892,46 +861,60 @@ namespace SabreTools.Library.Tools
                         return Field.DatItem_Clock;
 
                     // Condition
+                    case "mask":
+                        return Field.DatItem_Mask;
+
                     case "relation":
                         return Field.DatItem_Relation;
 
-                    // Configuration
-                    case "locations":
-                        return Field.DatItem_Locations;
+                    case "condition_tag":
+                        return Field.DatItem_Condition_Tag;
 
-                    case "location_name":
-                        return Field.DatItem_Location_Name;
+                    case "condition_mask":
+                        return Field.DatItem_Condition_Mask;
 
-                    case "location_number":
-                        return Field.DatItem_Location_Number;
+                    case "condition_relation":
+                        return Field.DatItem_Condition_Relation;
 
-                    case "location_inverted":
-                        return Field.DatItem_Location_Inverted;
+                    case "condition_value":
+                        return Field.DatItem_Condition_Value;
 
-                    case "settings":
-                        return Field.DatItem_Settings;
+                    // Control
+                    case "control_type":
+                        return Field.DatItem_Control_Type;
 
-                    case "setting_name":
-                        return Field.DatItem_Setting_Name;
+                    case "control_player":
+                        return Field.DatItem_Control_Player;
 
-                    case "setting_value":
-                        return Field.DatItem_Setting_Value;
+                    case "control_buttons":
+                        return Field.DatItem_Control_Buttons;
 
-                    case "setting_default":
-                        return Field.DatItem_Setting_Default;
+                    case "control_regbuttons":
+                        return Field.DatItem_Control_RegButtons;
 
-                    // DIP Switch
-                    case "values":
-                        return Field.DatItem_Values;
+                    case "control_minimum":
+                        return Field.DatItem_Control_Minimum;
 
-                    case "value_name":
-                        return Field.DatItem_Value_Name;
+                    case "control_maximum":
+                        return Field.DatItem_Control_Maximum;
 
-                    case "value_value":
-                        return Field.DatItem_Value_Value;
+                    case "control_sensitivity":
+                        return Field.DatItem_Control_Sensitivity;
 
-                    case "value_default":
-                        return Field.DatItem_Value_Default;
+                    case "control_keydelta":
+                        return Field.DatItem_Control_KeyDelta;
+
+                    case "control_reverse":
+                        return Field.DatItem_Control_Reverse;
+
+                    case "control_ways":
+                        return Field.DatItem_Control_Ways;
+
+                    case "control_ways2":
+                        return Field.DatItem_Control_Ways2;
+
+                    case "control_ways3":
+                        return Field.DatItem_Control_Ways3;
 
                     // Device
                     case "devicetype":
@@ -945,21 +928,6 @@ namespace SabreTools.Library.Tools
 
                     case "interface":
                         return Field.DatItem_Interface;
-
-                    case "instances":
-                        return Field.DatItem_Instances;
-
-                    case "instance_name":
-                        return Field.DatItem_Instance_Name;
-
-                    case "instance_briefname":
-                        return Field.DatItem_Instance_BriefName;
-
-                    case "extensions":
-                        return Field.DatItem_Extensions;
-
-                    case "extension_name":
-                        return Field.DatItem_Extension_Name;
 
                     // Display
                     case "displaytype":
@@ -1014,6 +982,10 @@ namespace SabreTools.Library.Tools
                     case "savestatestatus":
                         return Field.DatItem_SaveStateStatus;
 
+                    // Extension
+                    case "extension_name":
+                        return Field.DatItem_Extension_Name;
+
                     // Feature
                     case "featuretype":
                         return Field.DatItem_FeatureType;
@@ -1037,53 +1009,24 @@ namespace SabreTools.Library.Tools
                     case "coins":
                         return Field.DatItem_Coins;
 
-                    case "controls":
-                        return Field.DatItem_Controls;
+                    // Instance
+                    case "instance_name":
+                        return Field.DatItem_Instance_Name;
 
-                    case "control_type":
-                        return Field.DatItem_Control_Type;
+                    case "instance_briefname":
+                        return Field.DatItem_Instance_BriefName;
 
-                    case "control_player":
-                        return Field.DatItem_Control_Player;
+                    // Location
+                    case "location_name":
+                        return Field.DatItem_Location_Name;
 
-                    case "control_buttons":
-                        return Field.DatItem_Control_Buttons;
+                    case "location_number":
+                        return Field.DatItem_Location_Number;
 
-                    case "control_regbuttons":
-                        return Field.DatItem_Control_RegButtons;
+                    case "location_inverted":
+                        return Field.DatItem_Location_Inverted;
 
-                    case "control_minimum":
-                        return Field.DatItem_Control_Minimum;
-
-                    case "control_maximum":
-                        return Field.DatItem_Control_Maximum;
-
-                    case "control_sensitivity":
-                        return Field.DatItem_Control_Sensitivity;
-
-                    case "control_keydelta":
-                        return Field.DatItem_Control_KeyDelta;
-
-                    case "control_reverse":
-                        return Field.DatItem_Control_Reverse;
-
-                    case "control_ways":
-                        return Field.DatItem_Control_Ways;
-
-                    case "control_ways2":
-                        return Field.DatItem_Control_Ways2;
-
-                    case "control_ways3":
-                        return Field.DatItem_Control_Ways3;
-
-                    // Port
-                    case "analogs":
-                        return Field.DatItem_Analogs;
-
-                    case "analog_mask":
-                        return Field.DatItem_Analog_Mask;
-
-                    // Ram Option
+                    // RamOption
                     case "content":
                         return Field.DatItem_Content;
 
@@ -1091,10 +1034,20 @@ namespace SabreTools.Library.Tools
                     case "language":
                         return Field.DatItem_Language;
 
-                    // Slot
-                    case "slotoptions":
-                        return Field.DatItem_SlotOptions;
+                    // Setting
+                    case "setting_name":
+                    case "value_name":
+                        return Field.DatItem_Setting_Name;
 
+                    case "setting_value":
+                    case "value_value":
+                        return Field.DatItem_Setting_Value;
+
+                    case "setting_default":
+                    case "value_default":
+                        return Field.DatItem_Setting_Default;
+
+                    // SlotOption
                     case "slotoption_name":
                         return Field.DatItem_SlotOption_Name;
 
@@ -1104,7 +1057,7 @@ namespace SabreTools.Library.Tools
                     case "slotoption_default":
                         return Field.DatItem_SlotOption_Default;
 
-                    // Software List
+                    // SoftwareList
                     case "softwareliststatus":
                     case "softwarelist_status":
                         return Field.DatItem_SoftwareListStatus;
@@ -1377,8 +1330,6 @@ namespace SabreTools.Library.Tools
                 case "part interface":
                 case "part-interface":
                     return Field.DatItem_Part_Interface;
-                case "features":
-                    return Field.DatItem_Features;
                 case "areaname":
                 case "area name":
                 case "area-name":
@@ -1503,9 +1454,6 @@ namespace SabreTools.Library.Tools
                 // Adjuster
                 case "default":
                     return Field.DatItem_Default;
-
-                case "conditions":
-                    return Field.DatItem_Conditions;
 
                 case "condition_tag":
                     return Field.DatItem_Condition_Tag;

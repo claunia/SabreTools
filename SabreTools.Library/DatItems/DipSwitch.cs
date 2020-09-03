@@ -301,15 +301,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = null;
 
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = null;
-
-            if (fields.Contains(Field.DatItem_Locations))
-                Locations = null;
-
-            if (fields.Contains(Field.DatItem_Values))
-                Values = null;
-
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
             // TODO: Handle DatItem_Value*
@@ -323,9 +314,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
                 Part.Interface = null;
-
-            if (fields.Contains(Field.DatItem_Features) && Part != null)
-                Part.Features = null;
 
             // TODO: Handle DatItem_Feature*
 
@@ -376,15 +364,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = newItem.Mask;
 
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = newItem.Conditions;
-
-            if (fields.Contains(Field.DatItem_Locations))
-                Locations = newItem.Locations;
-
-            if (fields.Contains(Field.DatItem_Values))
-                Values = newItem.Values;
-
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
             // TODO: Handle DatItem_Value*
@@ -409,13 +388,7 @@ namespace SabreTools.Library.DatItems
                 Part.Interface = newItem.Part?.Interface;
             }
 
-            if (fields.Contains(Field.DatItem_Features))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Features = newItem.Part?.Features;
-            }
+            // TODO: Handle DatItem_Part_Feature*
 
             #endregion
         }

@@ -555,9 +555,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
                 Part.Interface = null;
 
-            if (fields.Contains(Field.DatItem_Features) && Part != null)
-                Part.Features = null;
-
             // TODO: Handle DatItem_Feature*
 
             #endregion
@@ -694,13 +691,7 @@ namespace SabreTools.Library.DatItems
                 Part.Interface = newItem.Part?.Interface;
             }
 
-            if (fields.Contains(Field.DatItem_Features))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Features = newItem.Part?.Features;
-            }
+            // TODO: Handle DatItem_Part_Feature*
 
             #endregion
         }

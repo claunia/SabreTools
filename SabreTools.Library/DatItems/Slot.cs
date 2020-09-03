@@ -173,9 +173,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_SlotOptions))
-                SlotOptions = null;
-
             // TODO: Handle DatItem_SlotOption*
         }
 
@@ -213,9 +210,6 @@ namespace SabreTools.Library.DatItems
             // Replace the fields
             if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
-
-            if (fields.Contains(Field.DatItem_SlotOptions))
-                SlotOptions = newItem.SlotOptions;
 
             // TODO: Handle DatItem_SlotOption*
         }

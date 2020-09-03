@@ -257,10 +257,6 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
                 return false;
 
-            // Filter on conditions
-            if (filter.DatItem_Conditions.MatchesNeutral(null, Conditions != null ? (bool?)(Conditions.Count > 0) : null) == false)
-                return false;
-
             // Filter on individual conditions
             if (Conditions != null)
             {
@@ -271,10 +267,6 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            // Filter on locations
-            if (filter.DatItem_Locations.MatchesNeutral(null, Locations != null ? (bool?)(Locations.Count > 0) : null) == false)
-                return false;
-
             // Filter on individual locations
             if (Locations != null)
             {
@@ -284,10 +276,6 @@ namespace SabreTools.Library.DatItems
                         return false;
                 }
             }
-
-            // Filter on settings
-            if (filter.DatItem_Settings.MatchesNeutral(null, Settings != null ? (bool?)(Settings.Count > 0) : null) == false)
-                return false;
 
             // Filter on individual conditions
             if (Settings != null)
@@ -321,9 +309,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = null;
 
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = null;
-
             if (Conditions != null)
             {
                 foreach (Condition condition in Conditions)
@@ -332,9 +317,6 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (fields.Contains(Field.DatItem_Locations))
-                Locations = null;
-
             if (Locations != null)
             {
                 foreach (Location location in Locations)
@@ -342,9 +324,6 @@ namespace SabreTools.Library.DatItems
                     location.RemoveFields(fields);
                 }
             }
-
-            if (fields.Contains(Field.DatItem_Settings))
-                Settings = null;
 
             if (Settings != null)
             {
@@ -396,19 +375,8 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = newItem.Mask;
 
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = newItem.Conditions;
-
             // Field replacement doesn't make sense for DatItem_Condition*
-
-            if (fields.Contains(Field.DatItem_Locations))
-                Locations = newItem.Locations;
-
             // Field replacement doesn't make sense for DatItem_Location*
-
-            if (fields.Contains(Field.DatItem_Settings))
-                Settings = newItem.Settings;
-
             // Field replacement doesn't make sense for DatItem_Setting*
         }
 

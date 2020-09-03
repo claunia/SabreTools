@@ -229,31 +229,7 @@ namespace SabreTools.Library.DatItems
 
         #region Common
 
-        DatItem_Name,
         DatItem_Type,
-
-        #endregion
-
-        #region AttractMode
-
-        DatItem_AltName,
-        DatItem_AltTitle,
-
-        #endregion
-
-        #region SoftwareList
-
-        // Part
-        DatItem_Part,
-        DatItem_Part_Name,
-        DatItem_Part_Interface,
-
-        // Feature
-        DatItem_Features,
-        DatItem_Feature_Name,
-        DatItem_Feature_Value,
-
-        DatItem_LoadFlag,
 
         #endregion
 
@@ -262,6 +238,7 @@ namespace SabreTools.Library.DatItems
         #region Actionable
 
         // Rom
+        DatItem_Name,
         DatItem_Bios,
         DatItem_Size,
         DatItem_CRC,
@@ -281,6 +258,10 @@ namespace SabreTools.Library.DatItems
         DatItem_Optional,
         DatItem_Inverted,
 
+        // Rom (AttractMode)
+        DatItem_AltName,
+        DatItem_AltTitle,
+
         // Rom (OpenMSX)
         DatItem_Original,
         DatItem_OpenMSXSubType,
@@ -289,10 +270,15 @@ namespace SabreTools.Library.DatItems
         DatItem_Boot,
 
         // Rom (SoftwareList)
-        DatItem_AreaName,
-        DatItem_AreaSize,
-        DatItem_AreaWidth,
-        DatItem_AreaEndianness,
+        DatItem_AreaName, // TODO: DataArea/DiskArea?
+        DatItem_AreaSize, // TODO: DataArea?
+        DatItem_AreaWidth, // TODO: DataArea?
+        DatItem_AreaEndianness, // TODO: DataArea?
+        DatItem_LoadFlag,
+        DatItem_Part_Name, // TODO: Part?
+        DatItem_Part_Interface, // TODO: Part?
+        DatItem_Part_Feature_Name, // TODO: PartFeature?
+        DatItem_Part_Feature_Value, // TODO: PartFeature?
         DatItem_Value,
 
         // Disk
@@ -305,14 +291,9 @@ namespace SabreTools.Library.DatItems
 
         // Adjuster
         DatItem_Default,
-        DatItem_Conditions,
-        DatItem_Condition_Tag,
-        DatItem_Condition_Mask,
-        DatItem_Condition_Relation,
-        DatItem_Condition_Value,
 
         // Analog
-        DatItem_Mask,
+        DatItem_Analog_Mask,
 
         // BiosSet
         DatItem_Description,
@@ -323,40 +304,32 @@ namespace SabreTools.Library.DatItems
         DatItem_Clock,
 
         // Condition
+        DatItem_Mask,
         DatItem_Relation,
+        DatItem_Condition_Tag,
+        DatItem_Condition_Mask,
+        DatItem_Condition_Relation,
+        DatItem_Condition_Value,
 
-        // Configuration.Locations
-        DatItem_Locations,
-        DatItem_Location_Name,
-        DatItem_Location_Number,
-        DatItem_Location_Inverted,
-
-        // Configuration.Settings
-        DatItem_Settings,
-        DatItem_Setting_Name,
-        DatItem_Setting_Value,
-        DatItem_Setting_Default,
+        // Control
+        DatItem_Control_Type,
+        DatItem_Control_Player,
+        DatItem_Control_Buttons,
+        DatItem_Control_RegButtons,
+        DatItem_Control_Minimum,
+        DatItem_Control_Maximum,
+        DatItem_Control_Sensitivity,
+        DatItem_Control_KeyDelta,
+        DatItem_Control_Reverse,
+        DatItem_Control_Ways,
+        DatItem_Control_Ways2,
+        DatItem_Control_Ways3,
 
         // Device
         DatItem_DeviceType,
         DatItem_FixedImage,
         DatItem_Mandatory,
         DatItem_Interface,
-
-        // Device.Instances
-        DatItem_Instances,
-        DatItem_Instance_Name,
-        DatItem_Instance_BriefName,
-
-        // Device.Extensions
-        DatItem_Extensions,
-        DatItem_Extension_Name,
-
-        // DipSwitch.Values
-        DatItem_Values,
-        DatItem_Value_Name,
-        DatItem_Value_Value,
-        DatItem_Value_Default,
 
         // Display
         DatItem_DisplayType,
@@ -379,53 +352,50 @@ namespace SabreTools.Library.DatItems
         DatItem_CocktailStatus,
         DatItem_SaveStateStatus,
 
+        // Extension
+        DatItem_Extension_Name,
+
         // Feature
         DatItem_FeatureType,
         DatItem_FeatureStatus,
         DatItem_FeatureOverall,
 
-        // Inputs
+        // Input
         DatItem_Service,
         DatItem_Tilt,
         DatItem_Players,
         DatItem_Coins,
 
-        // Inputs.Controls
-        DatItem_Controls,
-        DatItem_Control_Type,
-        DatItem_Control_Player,
-        DatItem_Control_Buttons,
-        DatItem_Control_RegButtons,
-        DatItem_Control_Minimum,
-        DatItem_Control_Maximum,
-        DatItem_Control_Sensitivity,
-        DatItem_Control_KeyDelta,
-        DatItem_Control_Reverse,
-        DatItem_Control_Ways,
-        DatItem_Control_Ways2,
-        DatItem_Control_Ways3,
+        // Instance
+        DatItem_Instance_Name,
+        DatItem_Instance_BriefName,
 
-        // Port.Analogs
-        DatItem_Analogs,
-        DatItem_Analog_Mask,
+        // Location
+        DatItem_Location_Name,
+        DatItem_Location_Number,
+        DatItem_Location_Inverted,
 
-        // Ram Option
+        // RamOption
         DatItem_Content,
 
         // Release
         DatItem_Language,
 
-        // Slot.SlotOptions
-        DatItem_SlotOptions,
+        // Setting
+        DatItem_Setting_Name,
+        DatItem_Setting_Value,
+        DatItem_Setting_Default,
+
+        // SlotOption
         DatItem_SlotOption_Name,
         DatItem_SlotOption_DeviceName,
         DatItem_SlotOption_Default,
 
-        // Software List
+        // SoftwareList
         DatItem_SoftwareListStatus,
         DatItem_Filter,
 
-        // Sounds
+        // Sound
         DatItem_Channels,
 
         #endregion

@@ -69,46 +69,11 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Fields unique to a DatItem
         /// </summary>
-        /// TODO: Update this once reshuffling is done
         public static readonly List<Field> DatItemFields = new List<Field>()
         {
             #region Common
 
-            Field.DatItem_Name,
             Field.DatItem_Type,
-
-            #endregion
-
-            #region AttractMode
-
-            Field.DatItem_AltName,
-            Field.DatItem_AltTitle,
-
-            #endregion
-
-            #region OpenMSX
-
-            Field.DatItem_Original,
-            Field.DatItem_OpenMSXSubType,
-            Field.DatItem_OpenMSXType,
-            Field.DatItem_Remark,
-            Field.DatItem_Boot,
-
-            #endregion
-
-            #region SoftwareList
-
-            // Part
-            Field.DatItem_Part,
-            Field.DatItem_Part_Name,
-            Field.DatItem_Part_Interface,
-
-            // Feature
-            Field.DatItem_Features,
-            Field.DatItem_Feature_Name,
-            Field.DatItem_Feature_Value,
-
-            Field.DatItem_LoadFlag,
 
             #endregion
 
@@ -117,6 +82,7 @@ namespace SabreTools.Library.DatItems
             #region Actionable
 
             // Rom
+            Field.DatItem_Name,
             Field.DatItem_Bios,
             Field.DatItem_Size,
             Field.DatItem_CRC,
@@ -136,11 +102,27 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Optional,
             Field.DatItem_Inverted,
 
+            // Rom (AttractMode)
+            Field.DatItem_AltName,
+            Field.DatItem_AltTitle,
+
+            // Rom (OpenMSX)
+            Field.DatItem_Original,
+            Field.DatItem_OpenMSXSubType,
+            Field.DatItem_OpenMSXType,
+            Field.DatItem_Remark,
+            Field.DatItem_Boot,
+
             // Rom (SoftwareList)
             Field.DatItem_AreaName,
             Field.DatItem_AreaSize,
             Field.DatItem_AreaWidth,
             Field.DatItem_AreaEndianness,
+            Field.DatItem_LoadFlag,
+            Field.DatItem_Part_Name,
+            Field.DatItem_Part_Interface,
+            Field.DatItem_Part_Feature_Name,
+            Field.DatItem_Part_Feature_Value,
             Field.DatItem_Value,
 
             // Disk
@@ -153,11 +135,9 @@ namespace SabreTools.Library.DatItems
 
             // Adjuster
             Field.DatItem_Default,
-            Field.DatItem_Conditions,
-            Field.DatItem_Condition_Tag,
-            Field.DatItem_Condition_Mask,
-            Field.DatItem_Condition_Relation,
-            Field.DatItem_Condition_Value,
+
+            // Analog
+            Field.DatItem_Analog_Mask,
 
             // BiosSet
             Field.DatItem_Description,
@@ -166,24 +146,101 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Tag,
             Field.DatItem_ChipType,
             Field.DatItem_Clock,
-            
-            // DIP Switch.Values
-            Field.DatItem_Values,
-            Field.DatItem_Value_Name,
-            Field.DatItem_Value_Value,
-            Field.DatItem_Value_Default,
 
-            // Ram Option
+            // Condition
+            Field.DatItem_Mask,
+            Field.DatItem_Relation,
+            Field.DatItem_Condition_Tag,
+            Field.DatItem_Condition_Mask,
+            Field.DatItem_Condition_Relation,
+            Field.DatItem_Condition_Value,
+
+            // Control
+            Field.DatItem_Control_Type,
+            Field.DatItem_Control_Player,
+            Field.DatItem_Control_Buttons,
+            Field.DatItem_Control_RegButtons,
+            Field.DatItem_Control_Minimum,
+            Field.DatItem_Control_Maximum,
+            Field.DatItem_Control_Sensitivity,
+            Field.DatItem_Control_KeyDelta,
+            Field.DatItem_Control_Reverse,
+            Field.DatItem_Control_Ways,
+            Field.DatItem_Control_Ways2,
+            Field.DatItem_Control_Ways3,
+
+            // Device
+            Field.DatItem_DeviceType,
+            Field.DatItem_FixedImage,
+            Field.DatItem_Mandatory,
+            Field.DatItem_Interface,
+
+            // Display
+            Field.DatItem_DisplayType,
+            Field.DatItem_Rotate,
+            Field.DatItem_FlipX,
+            Field.DatItem_Width,
+            Field.DatItem_Height,
+            Field.DatItem_Refresh,
+            Field.DatItem_PixClock,
+            Field.DatItem_HTotal,
+            Field.DatItem_HBEnd,
+            Field.DatItem_HBStart,
+            Field.DatItem_VTotal,
+            Field.DatItem_VBEnd,
+            Field.DatItem_VBStart,
+
+            // Driver
+            Field.DatItem_SupportStatus,
+            Field.DatItem_EmulationStatus,
+            Field.DatItem_CocktailStatus,
+            Field.DatItem_SaveStateStatus,
+
+            // Extension
+            Field.DatItem_Extension_Name,
+
+            // Feature
+            Field.DatItem_FeatureType,
+            Field.DatItem_FeatureStatus,
+            Field.DatItem_FeatureOverall,
+
+            // Input
+            Field.DatItem_Service,
+            Field.DatItem_Tilt,
+            Field.DatItem_Players,
+            Field.DatItem_Coins,
+
+            // Instance
+            Field.DatItem_Instance_Name,
+            Field.DatItem_Instance_BriefName,
+
+            // Location
+            Field.DatItem_Location_Name,
+            Field.DatItem_Location_Number,
+            Field.DatItem_Location_Inverted,
+
+            // RamOption
             Field.DatItem_Content,
 
-            // Slot.SlotOptions
-            Field.DatItem_SlotOptions,
+            // Release
+            Field.DatItem_Language,
+
+            // Setting
+            Field.DatItem_Setting_Name,
+            Field.DatItem_Setting_Value,
+            Field.DatItem_Setting_Default,
+
+            // SlotOption
             Field.DatItem_SlotOption_Name,
             Field.DatItem_SlotOption_DeviceName,
             Field.DatItem_SlotOption_Default,
 
-            // Release
-            Field.DatItem_Language,
+            // SoftwareList
+            Field.DatItem_SoftwareListStatus,
+            Field.DatItem_Filter,
+
+            // Sound
+            Field.DatItem_Channels,
 
             #endregion
 
@@ -193,22 +250,26 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Fields unique to a Machine
         /// </summary>
-        /// TODO: Update this once reshuffling is done
         public static readonly List<Field> MachineFields = new List<Field>()
         {
-            // Common
+            #region Common
+
             Field.Machine_Name,
             Field.Machine_Comment,
             Field.Machine_Description,
             Field.Machine_Year,
             Field.Machine_Manufacturer,
             Field.Machine_Publisher,
+            Field.Machine_Category,
             Field.Machine_RomOf,
             Field.Machine_CloneOf,
             Field.Machine_SampleOf,
             Field.Machine_Type,
 
-            // AttractMode
+            #endregion
+
+            #region AttractMode
+
             Field.Machine_Players,
             Field.Machine_Rotation,
             Field.Machine_Control,
@@ -217,15 +278,24 @@ namespace SabreTools.Library.DatItems
             Field.Machine_DisplayType,
             Field.Machine_Buttons,
 
-            // ListXML
+            #endregion
+
+            #region ListXML
+
             Field.Machine_SourceFile,
             Field.Machine_Runnable,
 
-            // Logiqx
+            #endregion
+
+            #region Logiqx
+
             Field.Machine_Board,
             Field.Machine_RebuildTo,
 
-            // Logiqx EmuArc
+            #endregion
+
+            #region Logiqx EmuArc
+
             Field.Machine_TitleID,
             Field.Machine_Developer,
             Field.Machine_Genre,
@@ -236,13 +306,21 @@ namespace SabreTools.Library.DatItems
             Field.Machine_CRC,
             Field.Machine_RelatedTo,
 
-            // OpenMSX
+            #endregion
+
+            #region OpenMSX
+
             Field.Machine_GenMSXID,
             Field.Machine_System,
             Field.Machine_Country,
 
-            // SoftwareList
+            #endregion
+
+            #region SoftwareList
+
             Field.Machine_Supported,
+
+            #endregion
         };
 
         #endregion

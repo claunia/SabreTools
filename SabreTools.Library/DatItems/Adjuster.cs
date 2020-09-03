@@ -189,10 +189,6 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
                 return false;
 
-            // Filter on conditions
-            if (filter.DatItem_Conditions.MatchesNeutral(null, Conditions != null ? (bool?)(Conditions.Count > 0) : null) == false)
-                return false;
-
             // Filter on individual conditions
             if (Conditions != null)
             {
@@ -221,9 +217,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Default))
                 Default = null;
-
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = null;
 
             if (Conditions != null)
             {
@@ -271,9 +264,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Default))
                 Default = newItem.Default;
-
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = newItem.Conditions;
 
             // Field replacement doesn't make sense for DatItem_Condition*
         }

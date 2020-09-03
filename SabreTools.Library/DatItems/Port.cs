@@ -134,9 +134,6 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = null;
 
-            if (fields.Contains(Field.DatItem_Analogs))
-                Analogs = null;
-
             // TODO: Handle DatItem_Analog*
         }
 
@@ -164,9 +161,6 @@ namespace SabreTools.Library.DatItems
             // Replace the fields
             if (fields.Contains(Field.DatItem_Name))
                 Tag = newItem.Tag;
-
-            if (fields.Contains(Field.DatItem_Analogs))
-                Analogs = newItem.Analogs;
 
             // TODO: Handle DatItem_Analog*
         }

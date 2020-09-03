@@ -33,7 +33,7 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Sample-specific fields
+            // Handle Sound-specific fields
             if (mappings.Keys.Contains(Field.DatItem_Channels))
                 Channels = mappings[Field.DatItem_Channels];
         }
