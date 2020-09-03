@@ -51,23 +51,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_SourceFile { get; private set; } = new FilterItem<string>();
         public FilterItem<Runnable> Machine_Runnable { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
         
-        // Displays
-        public FilterItem<bool?> Machine_Displays { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Display_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_Type { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_Rotate { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_Display_FlipX { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Display_Width { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_Height { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_Refresh { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_PixClock { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_HTotal { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_HBEnd { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_HBStart { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_VTotal { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_VBEnd { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Display_VBStart { get; private set; } = new FilterItem<string>();
-
         // Inputs
         public FilterItem<bool?> Machine_Inputs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> Machine_Input_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -273,6 +256,21 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Value_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Value_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Value_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Display
+        public FilterItem<string> DatItem_DisplayType { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Rotate { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_FlipX { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Width { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Height { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Refresh { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_PixClock { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_HTotal { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_HBEnd { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_HBStart { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_VTotal { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_VBEnd { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_VBStart { get; private set; } = new FilterItem<string>();
 
         // Driver
         public FilterItem<SupportStatus> DatItem_SupportStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = SupportStatus.NULL, Negative = SupportStatus.NULL };
@@ -533,112 +531,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Runnable.Negative |= value.AsRunnable();
                     else
                         Machine_Runnable.Positive |= value.AsRunnable();
-                    break;
-
-                // Displays
-                case Field.Machine_Displays:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Displays.Neutral = false;
-                    else
-                        Machine_Displays.Neutral = true;
-                    break;
-
-                case Field.Machine_Display_Tag:
-                    if (negate)
-                        Machine_Display_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Display_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_Type:
-                    if (negate)
-                        Machine_Display_Type.NegativeSet.Add(value);
-                    else
-                        Machine_Display_Type.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_Rotate:
-                    if (negate)
-                        Machine_Display_Rotate.NegativeSet.Add(value);
-                    else
-                        Machine_Display_Rotate.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_FlipX:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Display_FlipX.Neutral = false;
-                    else
-                        Machine_Display_FlipX.Neutral = true;
-                    break;
-
-                case Field.Machine_Display_Width:
-                    if (negate)
-                        Machine_Display_Width.NegativeSet.Add(value);
-                    else
-                        Machine_Display_Width.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_Height:
-                    if (negate)
-                        Machine_Display_Height.NegativeSet.Add(value);
-                    else
-                        Machine_Display_Height.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_Refresh:
-                    if (negate)
-                        Machine_Display_Refresh.NegativeSet.Add(value);
-                    else
-                        Machine_Display_Refresh.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_PixClock:
-                    if (negate)
-                        Machine_Display_PixClock.NegativeSet.Add(value);
-                    else
-                        Machine_Display_PixClock.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_HTotal:
-                    if (negate)
-                        Machine_Display_HTotal.NegativeSet.Add(value);
-                    else
-                        Machine_Display_HTotal.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_HBEnd:
-                    if (negate)
-                        Machine_Display_HBEnd.NegativeSet.Add(value);
-                    else
-                        Machine_Display_HBEnd.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_HBStart:
-                    if (negate)
-                        Machine_Display_HBStart.NegativeSet.Add(value);
-                    else
-                        Machine_Display_HBStart.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_VTotal:
-                    if (negate)
-                        Machine_Display_VTotal.NegativeSet.Add(value);
-                    else
-                        Machine_Display_VTotal.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_VBEnd:
-                    if (negate)
-                        Machine_Display_VBEnd.NegativeSet.Add(value);
-                    else
-                        Machine_Display_VBEnd.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Display_VBStart:
-                    if (negate)
-                        Machine_Display_VBStart.NegativeSet.Add(value);
-                    else
-                        Machine_Display_VBStart.PositiveSet.Add(value);
                     break;
 
                 // Inputs
@@ -1599,6 +1491,98 @@ namespace SabreTools.Library.Filtering
                         DatItem_Value_Default.Neutral = false;
                     else
                         DatItem_Value_Default.Neutral = true;
+                    break;
+
+                // Display
+                case Field.DatItem_DisplayType:
+                    if (negate)
+                        DatItem_DisplayType.NegativeSet.Add(value);
+                    else
+                        DatItem_DisplayType.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Rotate:
+                    if (negate)
+                        DatItem_Rotate.NegativeSet.Add(value);
+                    else
+                        DatItem_Rotate.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_FlipX:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_FlipX.Neutral = false;
+                    else
+                        DatItem_FlipX.Neutral = true;
+                    break;
+
+                case Field.DatItem_Width:
+                    if (negate)
+                        DatItem_Width.NegativeSet.Add(value);
+                    else
+                        DatItem_Width.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Height:
+                    if (negate)
+                        DatItem_Height.NegativeSet.Add(value);
+                    else
+                        DatItem_Height.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Refresh:
+                    if (negate)
+                        DatItem_Refresh.NegativeSet.Add(value);
+                    else
+                        DatItem_Refresh.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_PixClock:
+                    if (negate)
+                        DatItem_PixClock.NegativeSet.Add(value);
+                    else
+                        DatItem_PixClock.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_HTotal:
+                    if (negate)
+                        DatItem_HTotal.NegativeSet.Add(value);
+                    else
+                        DatItem_HTotal.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_HBEnd:
+                    if (negate)
+                        DatItem_HBEnd.NegativeSet.Add(value);
+                    else
+                        DatItem_HBEnd.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_HBStart:
+                    if (negate)
+                        DatItem_HBStart.NegativeSet.Add(value);
+                    else
+                        DatItem_HBStart.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_VTotal:
+                    if (negate)
+                        DatItem_VTotal.NegativeSet.Add(value);
+                    else
+                        DatItem_VTotal.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_VBEnd:
+                    if (negate)
+                        DatItem_VBEnd.NegativeSet.Add(value);
+                    else
+                        DatItem_VBEnd.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_VBStart:
+                    if (negate)
+                        DatItem_VBStart.NegativeSet.Add(value);
+                    else
+                        DatItem_VBStart.PositiveSet.Add(value);
                     break;
 
                 // Driver

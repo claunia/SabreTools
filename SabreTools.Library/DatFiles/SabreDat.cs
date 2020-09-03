@@ -1431,6 +1431,27 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Display:
+                        var display = datItem as Display;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "display");
+                        xtw.WriteOptionalAttributeString("tag", display.Tag);
+                        xtw.WriteOptionalAttributeString("type", display.DisplayType);
+                        xtw.WriteOptionalAttributeString("rotate", display.Rotate);
+                        xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
+                        xtw.WriteOptionalAttributeString("width", display.Width);
+                        xtw.WriteOptionalAttributeString("height", display.Height);
+                        xtw.WriteOptionalAttributeString("refresh", display.Refresh);
+                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock);
+                        xtw.WriteOptionalAttributeString("htotal", display.HTotal);
+                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
+                        xtw.WriteOptionalAttributeString("hstart", display.HBStart);
+                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
+                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
+                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Driver:
                         var driver = datItem as Driver;
                         xtw.WriteStartElement("file");

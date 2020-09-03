@@ -356,6 +356,34 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "display":
+                        datItems.Add(new Display
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            DisplayType = reader.GetAttribute("type"),
+                            Rotate = reader.GetAttribute("rotate"),
+                            FlipX = reader.GetAttribute("flipx").AsYesNo(),
+                            Width = reader.GetAttribute("width"),
+                            Height = reader.GetAttribute("height"),
+                            Refresh = reader.GetAttribute("refresh"),
+                            PixClock = reader.GetAttribute("pixclock"),
+                            HTotal = reader.GetAttribute("htotal"),
+                            HBEnd = reader.GetAttribute("hbend"),
+                            HBStart = reader.GetAttribute("hbstart"),
+                            VTotal = reader.GetAttribute("vtotal"),
+                            VBEnd = reader.GetAttribute("vbend"),
+                            VBStart = reader.GetAttribute("vbstart"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        reader.Read();
+                        break;
+
                     case "driver":
                         datItems.Add(new Driver
                         {
@@ -517,32 +545,6 @@ namespace SabreTools.Library.DatFiles
                                 Name = filename,
                             },
                         });
-
-                        reader.Read();
-                        break;
-
-                    case "display":
-                        var display = new Display();
-                        display.Tag = reader.GetAttribute("tag");
-                        display.Type = reader.GetAttribute("type");
-                        display.Rotate = reader.GetAttribute("rotate");
-                        display.FlipX = reader.GetAttribute("flipx").AsYesNo();
-                        display.Width = reader.GetAttribute("width");
-                        display.Height = reader.GetAttribute("height");
-                        display.Refresh = reader.GetAttribute("refresh");
-                        display.PixClock = reader.GetAttribute("pixclock");
-                        display.HTotal = reader.GetAttribute("htotal");
-                        display.HBEnd = reader.GetAttribute("hbend");
-                        display.HBStart = reader.GetAttribute("hbstart");
-                        display.VTotal = reader.GetAttribute("vtotal");
-                        display.VBEnd = reader.GetAttribute("vbend");
-                        display.VBStart = reader.GetAttribute("vbstart");
-
-                        // Ensure the list exists
-                        if (machine.Displays == null)
-                            machine.Displays = new List<Display>();
-
-                        machine.Displays.Add(display);
 
                         reader.Read();
                         break;
@@ -1253,28 +1255,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
 
                 // TODO: These are all going away due to promotions
-                if (datItem.Machine.Displays != null)
-                {
-                    foreach (var display in datItem.Machine.Displays)
-                    {
-                        xtw.WriteStartElement("display");
-                        xtw.WriteOptionalAttributeString("tag", display.Tag);
-                        xtw.WriteOptionalAttributeString("type", display.Type);
-                        xtw.WriteOptionalAttributeString("rotate", display.Rotate);
-                        xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
-                        xtw.WriteOptionalAttributeString("width", display.Width);
-                        xtw.WriteOptionalAttributeString("height", display.Height);
-                        xtw.WriteOptionalAttributeString("refresh", display.Refresh);
-                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock);
-                        xtw.WriteOptionalAttributeString("htotal", display.HTotal);
-                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
-                        xtw.WriteOptionalAttributeString("hstart", display.HBStart);
-                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
-                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
-                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
-                        xtw.WriteEndElement();
-                    }
-                }
                 if (datItem.Machine.Inputs != null)
                 {
                     foreach (var input in datItem.Machine.Inputs)
@@ -1554,6 +1534,26 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
                         xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Display:
+                        var display = datItem as Display;
+                        xtw.WriteStartElement("display");
+                        xtw.WriteOptionalAttributeString("tag", display.Tag);
+                        xtw.WriteOptionalAttributeString("type", display.DisplayType);
+                        xtw.WriteOptionalAttributeString("rotate", display.Rotate);
+                        xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
+                        xtw.WriteOptionalAttributeString("width", display.Width);
+                        xtw.WriteOptionalAttributeString("height", display.Height);
+                        xtw.WriteOptionalAttributeString("refresh", display.Refresh);
+                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock);
+                        xtw.WriteOptionalAttributeString("htotal", display.HTotal);
+                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
+                        xtw.WriteOptionalAttributeString("hstart", display.HBStart);
+                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
+                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
+                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
                         xtw.WriteEndElement();
                         break;
 

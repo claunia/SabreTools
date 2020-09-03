@@ -42,8 +42,8 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Port-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Tag = mappings[Field.DatItem_Name];
+            if (mappings.Keys.Contains(Field.DatItem_Tag))
+                Tag = mappings[Field.DatItem_Tag];
 
             // TODO: Handle DatItem_Analog*
         }

@@ -572,51 +572,6 @@ namespace SabreTools.Library.Tools
                     case "runnable":
                         return Field.Machine_Runnable;
 
-                    case "displays":
-                        return Field.Machine_Displays;
-
-                    case "display_tag":
-                        return Field.Machine_Display_Tag;
-
-                    case "display_type":
-                        return Field.Machine_Display_Type;
-
-                    case "display_rotate":
-                        return Field.Machine_Display_Rotate;
-
-                    case "display_flipx":
-                        return Field.Machine_Display_FlipX;
-
-                    case "display_width":
-                        return Field.Machine_Display_Width;
-
-                    case "display_height":
-                        return Field.Machine_Display_Height;
-
-                    case "display_refresh":
-                        return Field.Machine_Display_Refresh;
-
-                    case "display_pixclock":
-                        return Field.Machine_Display_PixClock;
-
-                    case "display_htotal":
-                        return Field.Machine_Display_HTotal;
-
-                    case "display_hbend":
-                        return Field.Machine_Display_HBEnd;
-
-                    case "display_hbstart":
-                        return Field.Machine_Display_HBStart;
-
-                    case "display_vtotal":
-                        return Field.Machine_Display_VTotal;
-
-                    case "display_vbend":
-                        return Field.Machine_Display_VBEnd;
-
-                    case "display_vbstart":
-                        return Field.Machine_Display_VBStart;
-
                     case "inputs":
                         return Field.Machine_Inputs;
 
@@ -1079,6 +1034,46 @@ namespace SabreTools.Library.Tools
 
                     case "extension_name":
                         return Field.DatItem_Extension_Name;
+
+                    // Display
+                    case "displaytype":
+                        return Field.DatItem_DisplayType;
+
+                    case "rotate":
+                        return Field.DatItem_Rotate;
+
+                    case "flipx":
+                        return Field.DatItem_FlipX;
+
+                    case "width":
+                        return Field.DatItem_Width;
+
+                    case "height":
+                        return Field.DatItem_Height;
+
+                    case "refresh":
+                        return Field.DatItem_Refresh;
+
+                    case "pixclock":
+                        return Field.DatItem_PixClock;
+
+                    case "htotal":
+                        return Field.DatItem_HTotal;
+
+                    case "hbend":
+                        return Field.DatItem_HBEnd;
+
+                    case "hbstart":
+                        return Field.DatItem_HBStart;
+
+                    case "vtotal":
+                        return Field.DatItem_VTotal;
+
+                    case "vbend":
+                        return Field.DatItem_VBEnd;
+
+                    case "vbstart":
+                        return Field.DatItem_VBStart;
 
                     // Driver
                     case "supportstatus":
@@ -1670,6 +1665,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.DipSwitch;
                 case "disk":
                     return ItemType.Disk;
+                case "display":
+                    return ItemType.Display;
                 case "driver":
                     return ItemType.Driver;
                 case "extension":
@@ -1714,6 +1711,7 @@ namespace SabreTools.Library.Tools
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
+                "display" => ItemType.Display,
                 "driver" => ItemType.Driver,
                 "extension" => ItemType.Extension,
                 "feature" => ItemType.Feature,
@@ -2293,6 +2291,8 @@ namespace SabreTools.Library.Tools
                     return "dipswitch";
                 case ItemType.Disk:
                     return "disk";
+                case ItemType.Display:
+                    return "display";
                 case ItemType.Driver:
                     return "driver";
                 case ItemType.Extension:
@@ -2337,6 +2337,7 @@ namespace SabreTools.Library.Tools
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",
+                ItemType.Display => "display",
                 ItemType.Driver => "driver",
                 ItemType.Extension => "extension",
                 ItemType.Feature => "feature",

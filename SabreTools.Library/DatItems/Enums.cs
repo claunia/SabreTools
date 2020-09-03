@@ -186,23 +186,6 @@ namespace SabreTools.Library.DatItems
         Machine_SourceFile,
         Machine_Runnable,
 
-        // Displays
-        Machine_Displays,
-        Machine_Display_Tag,
-        Machine_Display_Type,
-        Machine_Display_Rotate,
-        Machine_Display_FlipX,
-        Machine_Display_Width,
-        Machine_Display_Height,
-        Machine_Display_Refresh,
-        Machine_Display_PixClock,
-        Machine_Display_HTotal,
-        Machine_Display_HBEnd,
-        Machine_Display_HBStart,
-        Machine_Display_VTotal,
-        Machine_Display_VBEnd,
-        Machine_Display_VBStart,
-
         // Inputs
         Machine_Inputs,
         Machine_Input_Service,
@@ -409,6 +392,21 @@ namespace SabreTools.Library.DatItems
         DatItem_Value_Value,
         DatItem_Value_Default,
 
+        // Display
+        DatItem_DisplayType,
+        DatItem_Rotate,
+        DatItem_FlipX,
+        DatItem_Width,
+        DatItem_Height,
+        DatItem_Refresh,
+        DatItem_PixClock,
+        DatItem_HTotal,
+        DatItem_HBEnd,
+        DatItem_HBStart,
+        DatItem_VTotal,
+        DatItem_VBEnd,
+        DatItem_VBStart,
+
         // Driver
         DatItem_SupportStatus,
         DatItem_EmulationStatus,
@@ -489,6 +487,7 @@ namespace SabreTools.Library.DatItems
         Device,
         DeviceReference,
         DipSwitch,
+        Display,
         Driver,
         Extension,
         Feature,

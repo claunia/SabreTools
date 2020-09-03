@@ -144,6 +144,12 @@ namespace SabreTools.Library.DatFiles
         public long DiskCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Display items
+        /// </summary>
+        [JsonIgnore]
+        public long DisplayCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Driver items
         /// </summary>
         [JsonIgnore]
@@ -578,6 +584,9 @@ namespace SabreTools.Library.DatFiles
                     NodumpCount += ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
                     VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
+                case ItemType.Display:
+                    DisplayCount++;
+                    break;
                 case ItemType.Driver:
                     DriverCount++;
                     break;
@@ -748,6 +757,9 @@ namespace SabreTools.Library.DatFiles
                     GoodCount -= ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
                     NodumpCount -= ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
                     VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                    break;
+                case ItemType.Display:
+                    DisplayCount--;
                     break;
                 case ItemType.Driver:
                     DriverCount--;

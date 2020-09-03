@@ -244,6 +244,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Disk:
                         datItem = datItemObj.ToObject<Disk>();
                         break;
+                    case ItemType.Display:
+                        datItem = datItemObj.ToObject<Display>();
+                        break;
                     case ItemType.Driver:
                         datItem = datItemObj.ToObject<Driver>();
                         break;

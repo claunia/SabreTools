@@ -5,6 +5,7 @@ using SabreTools.Library.DatItems;
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Library.Tools;
 
 /// <summary>
 /// This holds all of the auxiliary types needed for proper parsing
@@ -94,102 +95,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Ways3 { get; set; } // TODO: Int32? Float?
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Represents one ListXML display
-    /// </summary>
-    /// TODO: Promote to DatItem level
-    [JsonObject("display")]
-    public class Display
-    {
-        #region Fields
-
-        /// <summary>
-        /// Display tag
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Tag { get; set; }
-
-        /// <summary>
-        /// Display type
-        /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Type { get; set; } // TODO: (raster|vector|lcd|svg|unknown)
-
-        /// <summary>
-        /// Display rotation
-        /// </summary>
-        [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Rotate { get; set; } // TODO: (0|90|180|270) Int32?
-
-        /// <summary>
-        /// Determines if display is flipped in the X-coordinates
-        /// </summary>
-        [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? FlipX { get; set; }
-
-        /// <summary>
-        /// Display width
-        /// </summary>
-        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Width { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Display height
-        /// </summary>
-        [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Height { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Refresh rate
-        /// </summary>
-        [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Refresh { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Pixel clock timer
-        /// </summary>
-        [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string PixClock { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Total horizontal lines
-        /// </summary>
-        [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string HTotal { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Horizontal blank end
-        /// </summary>
-        [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string HBEnd { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Horizontal blank start
-        /// </summary>
-        [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string HBStart { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Total vertical lines
-        /// </summary>
-        [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string VTotal { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Vertical blank end
-        /// </summary>
-        [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string VBEnd { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Vertical blank start
-        /// </summary>
-        [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string VBStart { get; set; } // TODO: Int32? Float?
 
         #endregion
     }
