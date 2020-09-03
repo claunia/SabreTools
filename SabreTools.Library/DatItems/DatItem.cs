@@ -19,8 +19,6 @@ namespace SabreTools.Library.DatItems
     [JsonObject("datitem")]
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
-        // TODO: Should any of these be specific to certain types?
-        // Most of the "weird" fields might only apply to Rom or Disk?
         #region Fields
 
         #region Common Fields
@@ -47,22 +45,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonIgnore]
         public Machine Machine { get; set; } = new Machine();
-
-        #endregion
-
-        #region AttractMode Fields
-
-        /// <summary>
-        /// Alternate name for the item
-        /// </summary>
-        [JsonProperty("alt_romname", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string AltName { get; set; }
-
-        /// <summary>
-        /// Alternate title for the item
-        /// </summary>
-        [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string AltTitle { get; set; }
 
         #endregion
 
@@ -291,16 +273,6 @@ namespace SabreTools.Library.DatItems
                 Machine = new Machine();
 
             Machine.SetFields(mappings);
-
-            #region AttractMode
-
-            if (mappings.Keys.Contains(Field.DatItem_AltName))
-                AltName = mappings[Field.DatItem_AltName];
-
-            if (mappings.Keys.Contains(Field.DatItem_AltTitle))
-                AltTitle = mappings[Field.DatItem_AltTitle];
-
-            #endregion
         }
 
         #endregion
@@ -629,22 +601,6 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
-            #region AttractMode
-
-            // Filter on alt name
-            if (filter.DatItem_AltName.MatchesPositiveSet(AltName) == false)
-                return false;
-            if (filter.DatItem_AltName.MatchesNegativeSet(AltName) == true)
-                return false;
-
-            // Filter on alt title
-            if (filter.DatItem_AltTitle.MatchesPositiveSet(AltTitle) == false)
-                return false;
-            if (filter.DatItem_AltTitle.MatchesNegativeSet(AltTitle) == true)
-                return false;
-
-            #endregion
-
             return true;
         }
 
@@ -656,16 +612,6 @@ namespace SabreTools.Library.DatItems
         {
             // Remove machine fields
             Machine.RemoveFields(fields);
-
-            #region AttractMode
-
-            if (fields.Contains(Field.DatItem_AltName))
-                AltName = null;
-
-            if (fields.Contains(Field.DatItem_AltTitle))
-                AltTitle = null;
-
-            #endregion
         }
 
         /// <summary>
@@ -755,15 +701,6 @@ namespace SabreTools.Library.DatItems
         /// <param name="fields">List of Fields representing what should be updated</param>
         public virtual void ReplaceFields(DatItem item, List<Field> fields)
         {
-            #region AttractMode
-
-            if (fields.Contains(Field.DatItem_AltName))
-                AltName = item.AltName;
-
-            if (fields.Contains(Field.DatItem_AltTitle))
-                AltTitle = item.AltTitle;
-
-            #endregion
         }
 
         #endregion

@@ -99,17 +99,14 @@ namespace SabreTools.Library.DatItems
         {
             return new Chip()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
-
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Name = this.Name,
                 Tag = this.Tag,
                 ChipType = this.ChipType,
                 Clock = this.Clock,

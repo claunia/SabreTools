@@ -171,6 +171,22 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        #region AttractMode
+
+        /// <summary>
+        /// Alternate name for the item
+        /// </summary>
+        [JsonProperty("alt_romname", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string AltName { get; set; }
+
+        /// <summary>
+        /// Alternate title for the item
+        /// </summary>
+        [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string AltTitle { get; set; }
+
+        #endregion
+
         #region OpenMSX
 
         /// <summary>
@@ -317,6 +333,16 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.DatItem_Inverted))
                 Inverted = mappings[Field.DatItem_Optional].AsYesNo();
+
+            #endregion
+
+            #region AttractMode
+
+            if (mappings.Keys.Contains(Field.DatItem_AltName))
+                AltName = mappings[Field.DatItem_AltName];
+
+            if (mappings.Keys.Contains(Field.DatItem_AltTitle))
+                AltTitle = mappings[Field.DatItem_AltTitle];
 
             #endregion
 
@@ -472,17 +498,6 @@ namespace SabreTools.Library.DatItems
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
 
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
-
-                Original = this.Original,
-                OpenMSXSubType = this.OpenMSXSubType,
-                OpenMSXType = this.OpenMSXType,
-                Remark = this.Remark,
-                Boot = this.Boot,
-
-                LoadFlag = this.LoadFlag,
-
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
@@ -506,7 +521,17 @@ namespace SabreTools.Library.DatItems
                 Optional = this.Optional,
                 Inverted = this.Inverted,
 
+                AltName = this.AltName,
+                AltTitle = this.AltTitle,
+
+                Original = this.Original,
+                OpenMSXSubType = this.OpenMSXSubType,
+                OpenMSXType = this.OpenMSXType,
+                Remark = this.Remark,
+                Boot = this.Boot,
+
                 DataArea = this.DataArea,
+                LoadFlag = this.LoadFlag,
                 Part = this.Part,
                 Value = this.Value,
             };
@@ -815,6 +840,22 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
+            #region AttractMode
+
+            // Filter on alt name
+            if (filter.DatItem_AltName.MatchesPositiveSet(AltName) == false)
+                return false;
+            if (filter.DatItem_AltName.MatchesNegativeSet(AltName) == true)
+                return false;
+
+            // Filter on alt title
+            if (filter.DatItem_AltTitle.MatchesPositiveSet(AltTitle) == false)
+                return false;
+            if (filter.DatItem_AltTitle.MatchesNegativeSet(AltTitle) == true)
+                return false;
+
+            #endregion
+
             #region OpenMSX
 
             // Filter on original
@@ -973,6 +1014,16 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = null;
+
+            #endregion
+
+            #region AttractMode
+
+            if (fields.Contains(Field.DatItem_AltName))
+                AltName = null;
+
+            if (fields.Contains(Field.DatItem_AltTitle))
+                AltTitle = null;
 
             #endregion
 
@@ -1206,6 +1257,16 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = newItem.Inverted;
+
+            #endregion
+
+            #region AttractMode
+
+            if (fields.Contains(Field.DatItem_AltName))
+                AltName = newItem.AltName;
+
+            if (fields.Contains(Field.DatItem_AltTitle))
+                AltTitle = newItem.AltTitle;
 
             #endregion
 

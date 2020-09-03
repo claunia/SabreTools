@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using SabreTools.Library.Filtering;
-using Newtonsoft.Json;
 using SabreTools.Library.Tools;
+using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {
@@ -102,17 +103,14 @@ namespace SabreTools.Library.DatItems
         {
             return new Setting()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
-
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Name = this.Name,
                 Value = this.Value,
                 Default = this.Default,
                 Conditions = this.Conditions,

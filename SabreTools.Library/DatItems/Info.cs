@@ -78,17 +78,14 @@ namespace SabreTools.Library.DatItems
         {
             return new Info()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
-
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Name = this.Name,
                 Value = this.Value,
             };
         }

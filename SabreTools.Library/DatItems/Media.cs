@@ -135,17 +135,14 @@ namespace SabreTools.Library.DatItems
         {
             return new Media()
             {
-                Name = this.Name,
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
-
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Name = this.Name,
                 _md5 = this._md5,
                 _sha1 = this._sha1,
                 _sha256 = this._sha256,
@@ -160,17 +157,14 @@ namespace SabreTools.Library.DatItems
         {
             var rom = new Rom()
             {
-                Name = this.Name + ".aif",
                 ItemType = ItemType.Rom,
                 DupeType = this.DupeType,
-
-                AltName = this.AltName,
-                AltTitle = this.AltTitle,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Name = this.Name + ".aif",
                 MD5 = this.MD5,
                 SHA1 = this.SHA1,
                 SHA256 = this.SHA256,
