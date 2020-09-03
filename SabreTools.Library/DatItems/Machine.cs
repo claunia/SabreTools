@@ -264,13 +264,13 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in SoftwareList</remarks>
         [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<SoftwareListInfo> Infos { get; set; } = null;
+        public List<Info> Infos { get; set; } = null;
 
         /// <summary>
         /// List of shared feature items
         /// </summary>
         [JsonProperty("sharedfeat", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<SoftwareListSharedFeature> SharedFeatures { get; set; } = null;
+        public List<SharedFeature> SharedFeatures { get; set; } = null;
 
         #endregion
 

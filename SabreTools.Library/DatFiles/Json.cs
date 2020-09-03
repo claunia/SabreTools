@@ -232,6 +232,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Configuration:
                         datItem = datItemObj.ToObject<Configuration>();
                         break;
+                    case ItemType.Control:
+                        datItem = datItemObj.ToObject<Control>();
+                        break;
                     case ItemType.Device:
                         datItem = datItemObj.ToObject<Device>();
                         break;

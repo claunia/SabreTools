@@ -196,7 +196,7 @@ namespace SabreTools.Library.DatFiles
             int indexId)
         {
             List<DatItem> items = new List<DatItem>();
-            OpenMSXOriginal original = null;
+            Original original = null;
 
             while (!reader.EOF)
             {
@@ -238,7 +238,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "original":
-                        original = new OpenMSXOriginal();
+                        original = new Original();
                         original.Value = reader.GetAttribute("value").AsYesNo();
                         original.Content = reader.ReadElementContentAsString();
                         break;

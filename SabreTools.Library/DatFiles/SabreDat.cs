@@ -1486,7 +1486,7 @@ namespace SabreTools.Library.DatFiles
                             foreach (var control in input.Controls)
                             {
                                 xtw.WriteStartElement("control");
-                                xtw.WriteOptionalAttributeString("type", control.Type);
+                                xtw.WriteOptionalAttributeString("type", control.ControlType);
                                 xtw.WriteOptionalAttributeString("player", control.Player);
                                 xtw.WriteOptionalAttributeString("buttons", control.Buttons);
                                 xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);

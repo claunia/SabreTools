@@ -483,6 +483,7 @@ namespace SabreTools.Library.DatItems
         Chip,
         Condition,
         Configuration,
+        Control,
         Device,
         DeviceReference,
         DipSwitch,

@@ -164,13 +164,13 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "info":
-                        var info = new SoftwareListInfo();
+                        var info = new Info();
                         info.Name = reader.GetAttribute("name");
                         info.Value = reader.GetAttribute("value");
 
                         // Ensure the list exists
                         if (machine.Infos == null)
-                            machine.Infos = new List<SoftwareListInfo>();
+                            machine.Infos = new List<Info>();
 
                         machine.Infos.Add(info);
 
@@ -178,13 +178,13 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sharedfeat":
-                        var sharedFeature = new SoftwareListSharedFeature();
+                        var sharedFeature = new SharedFeature();
                         sharedFeature.Name = reader.GetAttribute("name");
                         sharedFeature.Value = reader.GetAttribute("value");
 
                         // Ensure the list exists
                         if (machine.SharedFeatures == null)
-                            machine.SharedFeatures = new List<SoftwareListSharedFeature>();
+                            machine.SharedFeatures = new List<SharedFeature>();
 
                         machine.SharedFeatures.Add(sharedFeature);
 
@@ -701,7 +701,7 @@ namespace SabreTools.Library.DatFiles
 
                 if (datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
                 {
-                    foreach (SoftwareListInfo kvp in datItem.Machine.Infos)
+                    foreach (Info kvp in datItem.Machine.Infos)
                     {
                         xtw.WriteStartElement("info");
                         xtw.WriteRequiredAttributeString("name", kvp.Name);
@@ -712,7 +712,7 @@ namespace SabreTools.Library.DatFiles
 
                 if (datItem.Machine.SharedFeatures != null && datItem.Machine.SharedFeatures.Count > 0)
                 {
-                    foreach (SoftwareListSharedFeature kvp in datItem.Machine.SharedFeatures)
+                    foreach (SharedFeature kvp in datItem.Machine.SharedFeatures)
                     {
                         xtw.WriteStartElement("sharedfeat");
                         xtw.WriteRequiredAttributeString("name", kvp.Name);

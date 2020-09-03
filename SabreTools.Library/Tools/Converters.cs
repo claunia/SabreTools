@@ -1655,6 +1655,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Condition;
                 case "configuration":
                     return ItemType.Configuration;
+                case "control":
+                    return ItemType.Control;
                 case "device":
                     return ItemType.Device;
                 case "device_ref":
@@ -1713,6 +1715,7 @@ namespace SabreTools.Library.Tools
                 "chip" => ItemType.Chip,
                 "condition" => ItemType.Condition,
                 "configuration" => ItemType.Configuration,
+                "control" => ItemType.Control,
                 "device" => ItemType.Device,
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
@@ -2293,6 +2296,8 @@ namespace SabreTools.Library.Tools
                     return "condition";
                 case ItemType.Configuration:
                     return "configuration";
+                case ItemType.Control:
+                    return "control";
                 case ItemType.Device:
                     return "device";
                 case ItemType.DeviceReference:
@@ -2351,6 +2356,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Chip => "chip",
                 ItemType.Condition => "condition",
                 ItemType.Configuration => "configuration",
+                ItemType.Control => "control",
                 ItemType.Device => "device",
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",

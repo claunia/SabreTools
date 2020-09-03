@@ -686,7 +686,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     case "control":
                         var control = new Control();
-                        control.Type = reader.GetAttribute("type");
+                        control.ControlType = reader.GetAttribute("type");
                         control.Player = reader.GetAttribute("player");
                         control.Buttons = reader.GetAttribute("buttons");
                         control.RegButtons = reader.GetAttribute("regbuttons");
@@ -1558,7 +1558,7 @@ namespace SabreTools.Library.DatFiles
                             foreach (var control in input.Controls)
                             {
                                 xtw.WriteStartElement("control");
-                                xtw.WriteOptionalAttributeString("type", control.Type);
+                                xtw.WriteOptionalAttributeString("type", control.ControlType);
                                 xtw.WriteOptionalAttributeString("player", control.Player);
                                 xtw.WriteOptionalAttributeString("buttons", control.Buttons);
                                 xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);

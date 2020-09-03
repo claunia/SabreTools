@@ -72,7 +72,7 @@ namespace SabreTools.Library.DatItems
         /// OpenMSX sub item type
         /// </summary>
         [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public OpenMSXOriginal Original { get; set; }
+        public Original Original { get; set; }
 
         /// <summary>
         /// OpenMSX sub item type
@@ -395,7 +395,7 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             if (mappings.Keys.Contains(Field.DatItem_Original))
-                Original = new OpenMSXOriginal() { Content = mappings[Field.DatItem_Original] };
+                Original = new Original() { Content = mappings[Field.DatItem_Original] };
 
             if (mappings.Keys.Contains(Field.DatItem_OpenMSXSubType))
                 OpenMSXSubType = mappings[Field.DatItem_OpenMSXSubType].AsOpenMSXSubType();
@@ -478,6 +478,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Configuration:
                     return new Configuration();
+                
+                case ItemType.Control:
+                    return new Control();
 
                 case ItemType.Device:
                     return new Device();

@@ -15,100 +15,13 @@ namespace SabreTools.Library.DatItems
 {
     #region Machine
 
-    #region ListXML
-
-    /// <summary>
-    /// Represents one ListXML control
-    /// </summary>
-    [JsonObject("control")]
-    public class Control
-    {
-        #region Fields
-
-        /// <summary>
-        /// Control type
-        /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Type { get; set; }
-
-        /// <summary>
-        /// Player ID
-        /// </summary>
-        [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Player { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Button count
-        /// </summary>
-        [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Buttons { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Regular button count
-        /// </summary>
-        [JsonProperty("regbuttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string RegButtons { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Minimum value
-        /// </summary>
-        [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Minimum { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Maximum value
-        /// </summary>
-        [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Maximum { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Sensitivity value
-        /// </summary>
-        [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Sensitivity { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Keypress delta
-        /// </summary>
-        [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string KeyDelta { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Determines if the control is reversed
-        /// </summary>
-        [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Reverse { get; set; }
-
-        /// <summary>
-        /// First set of ways
-        /// </summary>
-        [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Ways { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Second set of ways
-        /// </summary>
-        [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Ways2 { get; set; } // TODO: Int32? Float?
-
-        /// <summary>
-        /// Third set of ways
-        /// </summary>
-        [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Ways3 { get; set; } // TODO: Int32? Float?
-
-        #endregion
-    }
-
-    #endregion
-
     #region OpenMSX
 
     /// <summary>
     /// Represents the OpenMSX original value
     /// </summary>
     [JsonObject("original")]
-    public class OpenMSXOriginal
+    public class Original
     {
         [JsonProperty("value")]
         public bool? Value { get; set; }
@@ -125,7 +38,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one SoftwareList info
     /// </summary>
     [JsonObject("info")]
-    public class SoftwareListInfo
+    public class Info
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -138,7 +51,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one SoftwareList shared feature object
     /// </summary>
     [JsonObject("sharedfeat")]
-    public class SoftwareListSharedFeature
+    public class SharedFeature
     {
         [JsonProperty("name")]
         public string Name { get; set; }
