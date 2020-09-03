@@ -266,30 +266,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML port
-    /// </summary>
-    /// TODO: Promote to DatItem level (contains list)
-    [JsonObject("port")]
-    public class Port
-    {
-        #region Fields
-
-        /// <summary>
-        /// Tag for the port
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Tag { get; set; }
-
-        /// <summary>
-        /// List of analogs on the port
-        /// </summary>
-        [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Analog> Analogs { get; set; }
-
-        #endregion
-    }
-
-    /// <summary>
     /// Represents one ListXML confsetting or dipvalue
     /// </summary>
     [JsonObject("setting")]

@@ -671,18 +671,6 @@ namespace SabreTools.Library.Tools
                     case "input_control_ways3":
                         return Field.Machine_Input_Control_Ways3;
 
-                    case "ports":
-                        return Field.Machine_Ports;
-
-                    case "port_tag":
-                        return Field.Machine_Port_Tag;
-
-                    case "port_analogs":
-                        return Field.Machine_Port_Analogs;
-
-                    case "port_analog_mask":
-                        return Field.Machine_Port_Analog_Mask;
-
                     #endregion
 
                     #region Logiqx
@@ -1114,6 +1102,13 @@ namespace SabreTools.Library.Tools
 
                     case "featureoverall":
                         return Field.DatItem_FeatureOverall;
+
+                    // Port
+                    case "analogs":
+                        return Field.DatItem_Analogs;
+
+                    case "analog_mask":
+                        return Field.DatItem_Analog_Mask;
 
                     // Ram Option
                     case "content":
@@ -1685,6 +1680,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Instance;
                 case "media":
                     return ItemType.Media;
+                case "port":
+                    return ItemType.Port;
                 case "ramoption":
                     return ItemType.RamOption;
                 case "release":
@@ -1722,6 +1719,7 @@ namespace SabreTools.Library.Tools
                 "feature" => ItemType.Feature,
                 "instance" => ItemType.Instance,
                 "media" => ItemType.Media,
+                "port" => ItemType.Port,
                 "ramoption" => ItemType.RamOption,
                 "release" => ItemType.Release,
                 "rom" => ItemType.Rom,
@@ -2305,6 +2303,8 @@ namespace SabreTools.Library.Tools
                     return "instance";
                 case ItemType.Media:
                     return "media";
+                case ItemType.Port:
+                    return "port";
                 case ItemType.RamOption:
                     return "ramoption";
                 case ItemType.Release:
@@ -2342,6 +2342,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Feature => "feature",
                 ItemType.Instance => "instance",
                 ItemType.Media => "media",
+                ItemType.Port => "port",
                 ItemType.RamOption => "ramoption",
                 ItemType.Release => "release",
                 ItemType.Rom => "rom",

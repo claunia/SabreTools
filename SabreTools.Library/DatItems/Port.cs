@@ -1,24 +1,32 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
+using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents a single analog item
+    /// Represents a single port on a machine
     /// </summary>
-    [JsonObject("analog")]
-    public class Analog : DatItem
+    [JsonObject("port")]
+    public class Port : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Analog mask value
+        /// Tag for the port
         /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Mask { get; set; }
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Tag { get; set; }
+
+        /// <summary>
+        /// List of analogs on the port
+        /// </summary>
+        [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<Analog> Analogs { get; set; }
 
         #endregion
 
@@ -33,9 +41,11 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Analog-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Analog_Mask))
-                Mask = mappings[Field.DatItem_Analog_Mask];
+            // Handle Port-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_Name))
+                Tag = mappings[Field.DatItem_Name];
+
+            // TODO: Handle DatItem_Analog*
         }
 
         #endregion
@@ -43,11 +53,11 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Analog object
+        /// Create a default, empty Port object
         /// </summary>
-        public Analog()
+        public Port()
         {
-            ItemType = ItemType.Analog;
+            ItemType = ItemType.Port;
         }
 
         #endregion
@@ -56,7 +66,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Analog()
+            return new Port()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -83,7 +93,8 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                Mask = this.Mask,
+                Tag = this.Tag,
+                Analogs = this.Analogs,
             };
         }
 
@@ -93,15 +104,15 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a Analog, return false
+            // If we don't have a Port, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a Analog
-            Analog newOther = other as Analog;
+            // Otherwise, treat it as a Port
+            Port newOther = other as Port;
 
-            // If the Feature information matches
-            return (Mask == newOther.Mask);
+            // If the Port information matches
+            return (Tag == newOther.Tag); // TODO: Handle DatItem_Analog*
         }
 
         #endregion
@@ -119,11 +130,13 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on mask
-            if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
+            // Filter on tag
+            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
                 return false;
-            if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
+            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
                 return false;
+
+            // TODO: Handle DatItem_Analog*
 
             return true;
         }
@@ -138,8 +151,13 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Analog_Mask))
-                Mask = null;
+            if (fields.Contains(Field.DatItem_Tag))
+                Tag = null;
+
+            if (fields.Contains(Field.DatItem_Analogs))
+                Analogs = null;
+
+            // TODO: Handle DatItem_Analog*
         }
 
         #endregion
@@ -156,16 +174,21 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Analog to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Analog)
+            // If we don't have a Port to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Port)
                 return;
 
             // Cast for easier access
-            Analog newItem = item as Analog;
+            Port newItem = item as Port;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Analog_Mask))
-                Mask = newItem.Mask;
+            if (fields.Contains(Field.DatItem_Name))
+                Tag = newItem.Tag;
+
+            if (fields.Contains(Field.DatItem_Analogs))
+                Analogs = newItem.Analogs;
+
+            // TODO: Handle DatItem_Analog*
         }
 
         #endregion

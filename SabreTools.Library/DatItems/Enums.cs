@@ -225,14 +225,6 @@ namespace SabreTools.Library.DatItems
         Machine_Input_Control_Ways2,
         Machine_Input_Control_Ways3,
 
-        // Ports
-        Machine_Ports,
-        Machine_Port_Tag,
-
-        // Ports.Analogs
-        Machine_Port_Analogs,
-        Machine_Port_Analog_Mask,
-
         #endregion
 
         #region Logiqx
@@ -428,6 +420,10 @@ namespace SabreTools.Library.DatItems
         DatItem_FeatureStatus,
         DatItem_FeatureOverall,
 
+        // Port.Analogs
+        DatItem_Analogs,
+        DatItem_Analog_Mask,
+
         // Ram Option
         DatItem_Content,
 
@@ -497,6 +493,7 @@ namespace SabreTools.Library.DatItems
         Extension,
         Feature,
         Instance,
+        Port,
         RamOption,
         Release,
         Sample,

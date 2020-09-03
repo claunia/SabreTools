@@ -164,12 +164,6 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("inputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Input> Inputs { get; set; } = null;
 
-        /// <summary>
-        /// List of associated ports
-        /// </summary>
-        [JsonProperty("ports", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Port> Ports { get; set; } = null;
-
         #endregion
 
         #region Logiqx Fields
@@ -524,7 +518,6 @@ namespace SabreTools.Library.DatItems
                 Runnable = this.Runnable,
                 Displays = this.Displays,
                 Inputs = this.Inputs,
-                Ports = this.Ports,
 
                 #endregion
 
@@ -1006,11 +999,6 @@ namespace SabreTools.Library.DatItems
 
             // TODO: Inputs
             // TODO: Inputs.Controls
-            // TODO: Ports
-            // TODO: Ports.Analogs
-            // TODO: Devices
-            // TODO: Devices.Instances
-            // TODO: Devices.Extensions
 
             #endregion // ListXML
 

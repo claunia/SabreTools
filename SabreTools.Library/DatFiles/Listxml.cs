@@ -391,6 +391,27 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "port":
+                        var port = new Port
+                        {
+                            Tag = reader.GetAttribute("tag"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        // Now read the internal tags
+                        ReadPort(reader.ReadSubtree(), port);
+
+                        datItems.Add(port);
+
+                        // Skip the port now that we've processed it
+                        reader.Skip();
+                        break;
+
                     case "rom":
                         datItems.Add(new Rom
                         {
@@ -543,23 +564,6 @@ namespace SabreTools.Library.DatFiles
                         machine.Inputs.Add(input);
 
                         // Skip the input now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "port":
-                        var port = new Port();
-                        port.Tag = reader.GetAttribute("tag");
-
-                        // Now read the internal tags
-                        ReadPort(reader.ReadSubtree(), port);
-
-                        // Ensure the list exists
-                        if (machine.Ports == null)
-                            machine.Ports = new List<Port>();
-
-                        machine.Ports.Add(port);
-
-                        // Skip the port now that we've processed it
                         reader.Skip();
                         break;
 
@@ -1303,24 +1307,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Ports != null)
-                {
-                    foreach (var port in datItem.Machine.Ports)
-                    {
-                        xtw.WriteStartElement("port");
-                        xtw.WriteOptionalAttributeString("tag", port.Tag);
-                        if (port.Analogs != null)
-                        {
-                            foreach (var analog in port.Analogs)
-                            {
-                                xtw.WriteStartElement("analog");
-                                xtw.WriteOptionalAttributeString("mask", analog.Mask);
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        xtw.WriteEndElement();
-                    }
-                }
 
                 xtw.Flush();
             }
@@ -1587,6 +1573,22 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
                         xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
                         xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Port:
+                        var port = datItem as Port;
+                        xtw.WriteStartElement("port");
+                        xtw.WriteOptionalAttributeString("tag", port.Tag);
+                        if (port.Analogs != null)
+                        {
+                            foreach (var analog in port.Analogs)
+                            {
+                                xtw.WriteStartElement("analog");
+                                xtw.WriteOptionalAttributeString("mask", analog.Mask);
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 

@@ -90,14 +90,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> Machine_Input_Control_Ways2 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Machine_Input_Control_Ways3 { get; private set; } = new FilterItem<string>();
 
-        // Ports
-        public FilterItem<bool?> Machine_Ports { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Port_Tag { get; private set; } = new FilterItem<string>();
-
-        // Ports.Analogs
-        public FilterItem<bool?> Machine_Port_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Port_Analog_Mask { get; private set; } = new FilterItem<string>();
-
         #endregion
 
         #region Logiqx
@@ -292,6 +284,10 @@ namespace SabreTools.Library.Filtering
         public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
+
+        // Port.Analogs
+        public FilterItem<bool?> DatItem_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Analog_Mask { get; private set; } = new FilterItem<string>();
 
         // Ram Option
         public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
@@ -773,34 +769,20 @@ namespace SabreTools.Library.Filtering
                         Machine_Input_Control_Ways3.PositiveSet.Add(value);
                     break;
 
-                // Ports
-                case Field.Machine_Ports:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Ports.Neutral = false;
-                    else
-                        Machine_Ports.Neutral = true;
-                    break;
-
-                case Field.Machine_Port_Tag:
-                    if (negate)
-                        Machine_Port_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Port_Tag.PositiveSet.Add(value);
-                    break;
 
                 // Ports.Analogs
-                case Field.Machine_Port_Analogs:
+                case Field.DatItem_Analogs:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Port_Analogs.Neutral = false;
+                        DatItem_Analogs.Neutral = false;
                     else
-                        Machine_Port_Analogs.Neutral = true;
+                        DatItem_Analogs.Neutral = true;
                     break;
 
-                case Field.Machine_Port_Analog_Mask:
+                case Field.DatItem_Analog_Mask:
                     if (negate)
-                        Machine_Port_Analog_Mask.NegativeSet.Add(value);
+                        DatItem_Analog_Mask.NegativeSet.Add(value);
                     else
-                        Machine_Port_Analog_Mask.PositiveSet.Add(value);
+                        DatItem_Analog_Mask.PositiveSet.Add(value);
                     break;                
 
                 #endregion

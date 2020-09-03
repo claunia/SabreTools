@@ -1229,14 +1229,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
-                    case ItemType.Analog:
-                        var analog = datItem as Analog;
-                        xtw.WriteStartElement("file");
-                        xtw.WriteAttributeString("type", "analog");
-                        xtw.WriteOptionalAttributeString("mask", analog.Mask);
-                        xtw.WriteEndElement();
-                        break;
-
                     case ItemType.Archive:
                         var archive = datItem as Archive;
                         xtw.WriteStartElement("file");
@@ -1468,6 +1460,23 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Port:
+                        var port = datItem as Port;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "port");
+                        xtw.WriteOptionalAttributeString("tag", port.Tag);
+                        if (port.Analogs != null)
+                        {
+                            foreach (var analog in port.Analogs)
+                            {
+                                xtw.WriteStartElement("analog");
+                                xtw.WriteOptionalAttributeString("mask", analog.Mask);
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 
