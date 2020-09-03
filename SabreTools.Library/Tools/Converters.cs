@@ -1650,6 +1650,9 @@ namespace SabreTools.Library.Tools
                     return ItemType.Location;
                 case "media":
                     return ItemType.Media;
+                case "partfeature":
+                case "part_feature":
+                    return ItemType.PartFeature;
                 case "port":
                     return ItemType.Port;
                 case "ramoption":
@@ -1700,6 +1703,8 @@ namespace SabreTools.Library.Tools
                 "instance" => ItemType.Instance,
                 "location" => ItemType.Location,
                 "media" => ItemType.Media,
+                "partfeature" => ItemType.PartFeature,
+                "part_feature" => ItemType.PartFeature,
                 "port" => ItemType.Port,
                 "ramoption" => ItemType.RamOption,
                 "release" => ItemType.Release,
@@ -2297,6 +2302,8 @@ namespace SabreTools.Library.Tools
                     return "location";
                 case ItemType.Media:
                     return "media";
+                case ItemType.PartFeature:
+                    return "part_feature";
                 case ItemType.Port:
                     return "port";
                 case ItemType.RamOption:
@@ -2347,6 +2354,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Instance => "instance",
                 ItemType.Location => "location",
                 ItemType.Media => "media",
+                ItemType.PartFeature => "part_feature",
                 ItemType.Port => "port",
                 ItemType.RamOption => "ramoption",
                 ItemType.Release => "release",

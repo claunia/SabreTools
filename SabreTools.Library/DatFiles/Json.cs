@@ -274,6 +274,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
                         break;
+                    case ItemType.PartFeature:
+                        datItem = datItemObj.ToObject<PartFeature>();
+                        break;
                     case ItemType.Port:
                         datItem = datItemObj.ToObject<Port>();
                         break;

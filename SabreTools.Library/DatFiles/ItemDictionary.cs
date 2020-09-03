@@ -180,6 +180,12 @@ namespace SabreTools.Library.DatFiles
         public long MediaCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of PartFeature items
+        /// </summary>
+        [JsonIgnore]
+        public long PartFeatureCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Port items
         /// </summary>
         [JsonIgnore]
@@ -623,6 +629,9 @@ namespace SabreTools.Library.DatFiles
                     SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
                     break;
+                case ItemType.PartFeature:
+                    PartFeatureCount++;
+                    break;
                 case ItemType.Port:
                     PortCount++;
                     break;
@@ -805,6 +814,9 @@ namespace SabreTools.Library.DatFiles
                     MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                    break;
+                case ItemType.PartFeature:
+                    PartFeatureCount--;
                     break;
                 case ItemType.Port:
                     PortCount--;

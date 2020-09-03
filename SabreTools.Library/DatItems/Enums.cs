@@ -483,6 +483,7 @@ namespace SabreTools.Library.DatItems
         Input,
         Instance,
         Location,
+        PartFeature,
         Port,
         RamOption,
         Release,

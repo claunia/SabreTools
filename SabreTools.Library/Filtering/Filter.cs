@@ -11,9 +11,9 @@ namespace SabreTools.Library.Filtering
     /// Represents the filtering operations that need to be performed on a set of items, usually a DAT
     /// </summary>
     /// TODO: Can clever use of Filtering allow for easier external splitting methods?
-    /// TODO: Field name for filter population needs to be overhauled
     public class Filter
     {
+        // TODO: Reorder once all reorganization is done
         #region Fields
 
         #region Machine Filters

@@ -9,30 +9,24 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents one ListXML slotoption
+    /// Represents one part feature object
     /// </summary>
-    [JsonObject("slotoption")]
-    public class SlotOption : DatItem
+    [JsonObject("part_feature")]
+    public class PartFeature : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Slot option name
+        /// Name of the item
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Referenced device name
+        /// PartFeature value
         /// </summary>
-        [JsonProperty("devname")]
-        public string DeviceName { get; set; }
-
-        /// <summary>
-        /// Determines if this slot option is default or not
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Default { get; set; }
+        [JsonProperty("value")]
+        public string Value { get; set; }
 
         #endregion
 
@@ -56,15 +50,12 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle SlotOption-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_SlotOption_Name))
-                Name = mappings[Field.DatItem_SlotOption_Name];
+            // Handle PartFeature-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_Name))
+                Name = mappings[Field.DatItem_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_SlotOption_DeviceName))
-                DeviceName = mappings[Field.DatItem_SlotOption_DeviceName];
-
-            if (mappings.Keys.Contains(Field.DatItem_SlotOption_Default))
-                Default = mappings[Field.DatItem_SlotOption_Default].AsYesNo();
+            if (mappings.Keys.Contains(Field.DatItem_Value))
+                Value = mappings[Field.DatItem_Value];
         }
 
         #endregion
@@ -72,12 +63,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty SlotOption object
+        /// Create a default, empty PartFeature object
         /// </summary>
-        public SlotOption()
+        public PartFeature()
         {
             Name = string.Empty;
-            ItemType = ItemType.SlotOption;
+            ItemType = ItemType.PartFeature;
         }
 
         #endregion
@@ -86,7 +77,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new SlotOption()
+            return new PartFeature()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -96,8 +87,7 @@ namespace SabreTools.Library.DatItems
                 Remove = this.Remove,
 
                 Name = this.Name,
-                DeviceName = this.DeviceName,
-                Default = this.Default,
+                Value = this.Value,
             };
         }
 
@@ -107,17 +97,15 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a SlotOption, return false
+            // If we don't have a sample, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a SlotOption
-            SlotOption newOther = other as SlotOption;
+            // Otherwise, treat it as a PartFeature
+            PartFeature newOther = other as PartFeature;
 
-            // If the SlotOption information matches
-            return (Name == newOther.Name
-                && DeviceName == newOther.DeviceName
-                && Default == newOther.Default);
+            // If the archive information matches
+            return (Name == newOther.Name && Value == newOther.Value);
         }
 
         #endregion
@@ -163,19 +151,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_SlotOption_Name.MatchesPositiveSet(Name) == false)
+            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.DatItem_SlotOption_Name.MatchesNegativeSet(Name) == true)
-                return false;
-
-            // Filter on device name
-            if (filter.DatItem_SlotOption_DeviceName.MatchesPositiveSet(DeviceName) == false)
-                return false;
-            if (filter.DatItem_SlotOption_DeviceName.MatchesNegativeSet(DeviceName) == true)
+            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
-            // Filter on default
-            if (filter.DatItem_SlotOption_Default.MatchesNeutral(null, Default) == false)
+            // Filter on info value
+            if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
+                return false;
+            if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
                 return false;
 
             return true;
@@ -191,14 +175,11 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_SlotOption_Name))
+            if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_SlotOption_DeviceName))
-                DeviceName = null;
-
-            if (fields.Contains(Field.DatItem_SlotOption_Default))
-                Default = null;
+            if (fields.Contains(Field.DatItem_Value))
+                Value = null;
         }
 
         /// <summary>
@@ -225,22 +206,19 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a SlotOption to replace from, ignore specific fields
-            if (item.ItemType != ItemType.SlotOption)
+            // If we don't have a PartFeature to replace from, ignore specific fields
+            if (item.ItemType != ItemType.PartFeature)
                 return;
 
             // Cast for easier access
-            SlotOption newItem = item as SlotOption;
+            PartFeature newItem = item as PartFeature;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_SlotOption_Name))
+            if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_SlotOption_DeviceName))
-                DeviceName = newItem.DeviceName;
-
-            if (fields.Contains(Field.DatItem_SlotOption_Default))
-                Default = newItem.Default;
+            if (fields.Contains(Field.DatItem_Value))
+                Value = newItem.Value;
         }
 
         #endregion

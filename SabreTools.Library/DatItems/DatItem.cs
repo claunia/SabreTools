@@ -355,6 +355,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Media:
                     return new Media();
 
+                case ItemType.PartFeature:
+                    return new PartFeature();
+
                 case ItemType.Port:
                     return new Port();
 
@@ -414,6 +417,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Instance => new Instance(),
                 ItemType.Location => new Location(),
                 ItemType.Media => new Media(),
+                ItemType.PartFeature => new PartFeature(),
                 ItemType.Port => new Port(),
                 ItemType.RamOption => new RamOption(),
                 ItemType.Release => new Release(),

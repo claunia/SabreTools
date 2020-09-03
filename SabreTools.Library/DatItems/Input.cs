@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using SabreTools.Library.Filtering;
-using Newtonsoft.Json;
 using SabreTools.Library.Tools;
+using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {

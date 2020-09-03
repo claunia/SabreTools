@@ -4,9 +4,9 @@ using System.Linq;
 
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Filtering;
+using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using SabreTools.Library.Tools;
 
 /// <summary>
 /// This holds all of the auxiliary types needed for proper parsing
@@ -101,20 +101,6 @@ namespace SabreTools.Library.DatItems
     
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<PartFeature> Features { get; set; }
-    }
-
-    /// <summary>
-    /// Represents one SoftwareList feature object
-    /// </summary>
-    /// TODO: Promote this to DatItem
-    [JsonObject("part_feature")]
-    public class PartFeature
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
     }
 
     #endregion
