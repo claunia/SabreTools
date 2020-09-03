@@ -186,28 +186,6 @@ namespace SabreTools.Library.DatItems
         Machine_SourceFile,
         Machine_Runnable,
 
-        // Inputs
-        Machine_Inputs,
-        Machine_Input_Service,
-        Machine_Input_Tilt,
-        Machine_Input_Players,
-        Machine_Input_Coins,
-
-        // Inputs.Controls
-        Machine_Input_Controls,
-        Machine_Input_Control_Type,
-        Machine_Input_Control_Player,
-        Machine_Input_Control_Buttons,
-        Machine_Input_Control_RegButtons,
-        Machine_Input_Control_Minimum,
-        Machine_Input_Control_Maximum,
-        Machine_Input_Control_Sensitivity,
-        Machine_Input_Control_KeyDelta,
-        Machine_Input_Control_Reverse,
-        Machine_Input_Control_Ways,
-        Machine_Input_Control_Ways2,
-        Machine_Input_Control_Ways3,
-
         #endregion
 
         #region Logiqx
@@ -418,6 +396,27 @@ namespace SabreTools.Library.DatItems
         DatItem_FeatureStatus,
         DatItem_FeatureOverall,
 
+        // Inputs
+        DatItem_Service,
+        DatItem_Tilt,
+        DatItem_Players,
+        DatItem_Coins,
+
+        // Inputs.Controls
+        DatItem_Controls,
+        DatItem_Control_Type,
+        DatItem_Control_Player,
+        DatItem_Control_Buttons,
+        DatItem_Control_RegButtons,
+        DatItem_Control_Minimum,
+        DatItem_Control_Maximum,
+        DatItem_Control_Sensitivity,
+        DatItem_Control_KeyDelta,
+        DatItem_Control_Reverse,
+        DatItem_Control_Ways,
+        DatItem_Control_Ways2,
+        DatItem_Control_Ways3,
+
         // Port.Analogs
         DatItem_Analogs,
         DatItem_Analog_Mask,
@@ -491,6 +490,7 @@ namespace SabreTools.Library.DatItems
         Driver,
         Extension,
         Feature,
+        Input,
         Instance,
         Port,
         RamOption,

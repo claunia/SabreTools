@@ -419,6 +419,30 @@ namespace SabreTools.Library.DatFiles
                         reader.Read();
                         break;
 
+                    case "input":
+                        var input = new Input
+                        {
+                            Service = reader.GetAttribute("service").AsYesNo(),
+                            Tilt = reader.GetAttribute("tilt").AsYesNo(),
+                            Players = reader.GetAttribute("players"),
+                            Coins = reader.GetAttribute("coins"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        // Now read the internal tags
+                        ReadInput(reader.ReadSubtree(), input);
+
+                        datItems.Add(input);
+
+                        // Skip the input now that we've processed it
+                        reader.Skip();
+                        break;
+
                     case "port":
                         var port = new Port
                         {
@@ -547,26 +571,6 @@ namespace SabreTools.Library.DatFiles
                         });
 
                         reader.Read();
-                        break;
-
-                    case "input":
-                        var input = new Input();
-                        input.Service = reader.GetAttribute("service").AsYesNo();
-                        input.Tilt = reader.GetAttribute("tilt").AsYesNo();
-                        input.Players = reader.GetAttribute("players");
-                        input.Coins = reader.GetAttribute("coins");
-
-                        // Now read the internal tags
-                        ReadInput(reader.ReadSubtree(), input);
-
-                        // Ensure the list exists
-                        if (machine.Inputs == null)
-                            machine.Inputs = new List<Input>();
-
-                        machine.Inputs.Add(input);
-
-                        // Skip the input now that we've processed it
-                        reader.Skip();
                         break;
 
                     default:
@@ -1254,40 +1258,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalElementString("year", datItem.Machine.Year);
                 xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
 
-                // TODO: These are all going away due to promotions
-                if (datItem.Machine.Inputs != null)
-                {
-                    foreach (var input in datItem.Machine.Inputs)
-                    {
-                        xtw.WriteStartElement("input");
-                        xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
-                        xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
-                        xtw.WriteOptionalAttributeString("players", input.Players);
-                        xtw.WriteOptionalAttributeString("coins", input.Coins);
-                        if (input.Controls != null)
-                        {
-                            foreach (var control in input.Controls)
-                            {
-                                xtw.WriteStartElement("control");
-                                xtw.WriteOptionalAttributeString("type", control.Type);
-                                xtw.WriteOptionalAttributeString("player", control.Player);
-                                xtw.WriteOptionalAttributeString("buttons", control.Buttons);
-                                xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
-                                xtw.WriteOptionalAttributeString("minimum", control.Minimum);
-                                xtw.WriteOptionalAttributeString("maximum", control.Maximum);
-                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity);
-                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta);
-                                xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
-                                xtw.WriteOptionalAttributeString("ways", control.Ways);
-                                xtw.WriteOptionalAttributeString("ways2", control.Ways2);
-                                xtw.WriteOptionalAttributeString("ways3", control.Ways3);
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        xtw.WriteEndElement();
-                    }
-                }
-
                 xtw.Flush();
             }
             catch (Exception ex)
@@ -1573,6 +1543,36 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
                         xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
                         xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Input:
+                        var input = datItem as Input;
+                        xtw.WriteStartElement("input");
+                        xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
+                        xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
+                        xtw.WriteOptionalAttributeString("players", input.Players);
+                        xtw.WriteOptionalAttributeString("coins", input.Coins);
+                        if (input.Controls != null)
+                        {
+                            foreach (var control in input.Controls)
+                            {
+                                xtw.WriteStartElement("control");
+                                xtw.WriteOptionalAttributeString("type", control.Type);
+                                xtw.WriteOptionalAttributeString("player", control.Player);
+                                xtw.WriteOptionalAttributeString("buttons", control.Buttons);
+                                xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
+                                xtw.WriteOptionalAttributeString("minimum", control.Minimum);
+                                xtw.WriteOptionalAttributeString("maximum", control.Maximum);
+                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity);
+                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta);
+                                xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
+                                xtw.WriteOptionalAttributeString("ways", control.Ways);
+                                xtw.WriteOptionalAttributeString("ways2", control.Ways2);
+                                xtw.WriteOptionalAttributeString("ways3", control.Ways3);
+                                xtw.WriteEndElement();
+                            }
+                        }
                         xtw.WriteEndElement();
                         break;
 

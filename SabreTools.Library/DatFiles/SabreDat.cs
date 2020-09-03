@@ -1473,6 +1473,37 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Input:
+                        var input = datItem as Input;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "input");
+                        xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
+                        xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
+                        xtw.WriteOptionalAttributeString("players", input.Players);
+                        xtw.WriteOptionalAttributeString("coins", input.Coins);
+                        if (input.Controls != null)
+                        {
+                            foreach (var control in input.Controls)
+                            {
+                                xtw.WriteStartElement("control");
+                                xtw.WriteOptionalAttributeString("type", control.Type);
+                                xtw.WriteOptionalAttributeString("player", control.Player);
+                                xtw.WriteOptionalAttributeString("buttons", control.Buttons);
+                                xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
+                                xtw.WriteOptionalAttributeString("minimum", control.Minimum);
+                                xtw.WriteOptionalAttributeString("maximum", control.Maximum);
+                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity);
+                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta);
+                                xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
+                                xtw.WriteOptionalAttributeString("ways", control.Ways);
+                                xtw.WriteOptionalAttributeString("ways2", control.Ways2);
+                                xtw.WriteOptionalAttributeString("ways3", control.Ways3);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Media:
                         var media = datItem as Media;
                         xtw.WriteStartElement("file");

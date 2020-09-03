@@ -503,6 +503,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Feature:
                     return new Feature();
 
+                case ItemType.Input:
+                    return new Input();
+
                 case ItemType.Instance:
                     return new Instance();
 

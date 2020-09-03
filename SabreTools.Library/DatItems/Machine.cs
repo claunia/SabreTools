@@ -152,12 +152,6 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("runnable", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Runnable Runnable { get; set; } = Runnable.NULL;
 
-        /// <summary>
-        /// List of associated inputs
-        /// </summary>
-        [JsonProperty("inputs", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Input> Inputs { get; set; } = null;
-
         #endregion
 
         #region Logiqx Fields
@@ -493,7 +487,6 @@ namespace SabreTools.Library.DatItems
 
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
-                Inputs = this.Inputs,
 
                 #endregion
 

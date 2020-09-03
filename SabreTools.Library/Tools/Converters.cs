@@ -570,61 +570,7 @@ namespace SabreTools.Library.Tools
                         return Field.Machine_SourceFile;
 
                     case "runnable":
-                        return Field.Machine_Runnable;
-
-                    case "inputs":
-                        return Field.Machine_Inputs;
-
-                    case "input_service":
-                        return Field.Machine_Input_Service;
-
-                    case "input_tilt":
-                        return Field.Machine_Input_Tilt;
-
-                    case "input_players":
-                        return Field.Machine_Input_Players;
-
-                    case "input_coins":
-                        return Field.Machine_Input_Coins;
-
-                    case "input_controls":
-                        return Field.Machine_Input_Controls;
-
-                    case "input_control_type":
-                        return Field.Machine_Input_Control_Type;
-
-                    case "input_control_player":
-                        return Field.Machine_Input_Control_Player;
-
-                    case "input_control_buttons":
-                        return Field.Machine_Input_Control_Buttons;
-
-                    case "input_control_regbuttons":
-                        return Field.Machine_Input_Control_RegButtons;
-
-                    case "input_control_minimum":
-                        return Field.Machine_Input_Control_Minimum;
-
-                    case "input_control_maximum":
-                        return Field.Machine_Input_Control_Maximum;
-
-                    case "input_control_sensitivity":
-                        return Field.Machine_Input_Control_Sensitivity;
-
-                    case "input_control_keydelta":
-                        return Field.Machine_Input_Control_KeyDelta;
-
-                    case "input_control_reverse":
-                        return Field.Machine_Input_Control_Reverse;
-
-                    case "input_control_ways":
-                        return Field.Machine_Input_Control_Ways;
-
-                    case "input_control_ways2":
-                        return Field.Machine_Input_Control_Ways2;
-
-                    case "input_control_ways3":
-                        return Field.Machine_Input_Control_Ways3;
+                        return Field.Machine_Runnable;                    
 
                     #endregion
 
@@ -1097,6 +1043,58 @@ namespace SabreTools.Library.Tools
 
                     case "featureoverall":
                         return Field.DatItem_FeatureOverall;
+
+                    // Input
+                    case "service":
+                        return Field.DatItem_Service;
+
+                    case "tilt":
+                        return Field.DatItem_Tilt;
+
+                    case "players":
+                        return Field.DatItem_Players;
+
+                    case "coins":
+                        return Field.DatItem_Coins;
+
+                    case "controls":
+                        return Field.DatItem_Controls;
+
+                    case "control_type":
+                        return Field.DatItem_Control_Type;
+
+                    case "control_player":
+                        return Field.DatItem_Control_Player;
+
+                    case "control_buttons":
+                        return Field.DatItem_Control_Buttons;
+
+                    case "control_regbuttons":
+                        return Field.DatItem_Control_RegButtons;
+
+                    case "control_minimum":
+                        return Field.DatItem_Control_Minimum;
+
+                    case "control_maximum":
+                        return Field.DatItem_Control_Maximum;
+
+                    case "control_sensitivity":
+                        return Field.DatItem_Control_Sensitivity;
+
+                    case "control_keydelta":
+                        return Field.DatItem_Control_KeyDelta;
+
+                    case "control_reverse":
+                        return Field.DatItem_Control_Reverse;
+
+                    case "control_ways":
+                        return Field.DatItem_Control_Ways;
+
+                    case "control_ways2":
+                        return Field.DatItem_Control_Ways2;
+
+                    case "control_ways3":
+                        return Field.DatItem_Control_Ways3;
 
                     // Port
                     case "analogs":
@@ -1673,6 +1671,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Extension;
                 case "feature":
                     return ItemType.Feature;
+                case "input":
+                    return ItemType.Input;
                 case "instance":
                     return ItemType.Instance;
                 case "media":
@@ -1715,6 +1715,7 @@ namespace SabreTools.Library.Tools
                 "driver" => ItemType.Driver,
                 "extension" => ItemType.Extension,
                 "feature" => ItemType.Feature,
+                "input" => ItemType.Input,
                 "instance" => ItemType.Instance,
                 "media" => ItemType.Media,
                 "port" => ItemType.Port,
@@ -2299,6 +2300,8 @@ namespace SabreTools.Library.Tools
                     return "extension";
                 case ItemType.Feature:
                     return "feature";
+                case ItemType.Input:
+                    return "input";
                 case ItemType.Instance:
                     return "instance";
                 case ItemType.Media:
@@ -2341,6 +2344,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Driver => "driver",
                 ItemType.Extension => "extension",
                 ItemType.Feature => "feature",
+                ItemType.Input => "input",
                 ItemType.Instance => "instance",
                 ItemType.Media => "media",
                 ItemType.Port => "port",

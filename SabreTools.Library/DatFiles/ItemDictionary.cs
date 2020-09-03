@@ -162,6 +162,12 @@ namespace SabreTools.Library.DatFiles
         public long FeatureCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Input items
+        /// </summary>
+        [JsonIgnore]
+        public long InputCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Media items
         /// </summary>
         [JsonIgnore]
@@ -593,6 +599,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Feature:
                     FeatureCount++;
                     break;
+                case ItemType.Input:
+                    InputCount++;
+                    break;
                 case ItemType.Media:
                     MediaCount++;
                     MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
@@ -766,6 +775,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Feature:
                     FeatureCount--;
+                    break;
+                case ItemType.Input:
+                    InputCount--;
                     break;
                 case ItemType.Media:
                     MediaCount--;

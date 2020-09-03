@@ -50,28 +50,6 @@ namespace SabreTools.Library.Filtering
 
         public FilterItem<string> Machine_SourceFile { get; private set; } = new FilterItem<string>();
         public FilterItem<Runnable> Machine_Runnable { get; private set; } = new FilterItem<Runnable>() { Positive = Runnable.NULL, Negative = Runnable.NULL };
-        
-        // Inputs
-        public FilterItem<bool?> Machine_Inputs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<bool?> Machine_Input_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<bool?> Machine_Input_Tilt { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Input_Players { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Coins { get; private set; } = new FilterItem<string>();
-
-        // Inputs.Controls
-        public FilterItem<bool?> Machine_Input_Controls { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Input_Control_Type { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Player { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Buttons { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_RegButtons { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Minimum { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Maximum { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Sensitivity { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_KeyDelta { get; private set; } = new FilterItem<string>();
-        public FilterItem<bool?> Machine_Input_Control_Reverse { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Input_Control_Ways { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Ways2 { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Input_Control_Ways3 { get; private set; } = new FilterItem<string>();
 
         #endregion
 
@@ -282,6 +260,27 @@ namespace SabreTools.Library.Filtering
         public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
+
+        // Input
+        public FilterItem<bool?> DatItem_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> DatItem_Tilt { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Players { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Coins { get; private set; } = new FilterItem<string>();
+
+        // Input.Controls
+        public FilterItem<bool?> DatItem_Controls { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Control_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Player { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Buttons { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_RegButtons { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Minimum { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Maximum { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Sensitivity { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_KeyDelta { get; private set; } = new FilterItem<string>();
+        public FilterItem<bool?> DatItem_Control_Reverse { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Control_Ways { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Ways2 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Control_Ways3 { get; private set; } = new FilterItem<string>();
 
         // Port.Analogs
         public FilterItem<bool?> DatItem_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -531,151 +530,7 @@ namespace SabreTools.Library.Filtering
                         Machine_Runnable.Negative |= value.AsRunnable();
                     else
                         Machine_Runnable.Positive |= value.AsRunnable();
-                    break;
-
-                // Inputs
-                case Field.Machine_Inputs:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Inputs.Neutral = false;
-                    else
-                        Machine_Inputs.Neutral = true;
-                    break;
-
-                case Field.Machine_Input_Service:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Input_Service.Neutral = false;
-                    else
-                        Machine_Input_Service.Neutral = true;
-                    break;
-
-                case Field.Machine_Input_Tilt:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Input_Tilt.Neutral = false;
-                    else
-                        Machine_Input_Tilt.Neutral = true;
-                    break;
-
-                case Field.Machine_Input_Players:
-                    if (negate)
-                        Machine_Input_Players.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Players.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Coins:
-                    if (negate)
-                        Machine_Input_Coins.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Coins.PositiveSet.Add(value);
-                    break;
-
-                // Inputs.Controls
-                case Field.Machine_Input_Controls:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Input_Controls.Neutral = false;
-                    else
-                        Machine_Input_Controls.Neutral = true;
-                    break;
-
-                case Field.Machine_Input_Control_Type:
-                    if (negate)
-                        Machine_Input_Control_Type.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Type.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Player:
-                    if (negate)
-                        Machine_Input_Control_Player.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Player.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Buttons:
-                    if (negate)
-                        Machine_Input_Control_Buttons.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Buttons.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_RegButtons:
-                    if (negate)
-                        Machine_Input_Control_RegButtons.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_RegButtons.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Minimum:
-                    if (negate)
-                        Machine_Input_Control_Minimum.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Minimum.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Maximum:
-                    if (negate)
-                        Machine_Input_Control_Maximum.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Maximum.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Sensitivity:
-                    if (negate)
-                        Machine_Input_Control_Sensitivity.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Sensitivity.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_KeyDelta:
-                    if (negate)
-                        Machine_Input_Control_KeyDelta.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_KeyDelta.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Reverse:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Input_Control_Reverse.Neutral = false;
-                    else
-                        Machine_Input_Control_Reverse.Neutral = true;
-                    break;
-
-                case Field.Machine_Input_Control_Ways:
-                    if (negate)
-                        Machine_Input_Control_Ways.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Ways.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Ways2:
-                    if (negate)
-                        Machine_Input_Control_Ways2.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Ways2.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Input_Control_Ways3:
-                    if (negate)
-                        Machine_Input_Control_Ways3.NegativeSet.Add(value);
-                    else
-                        Machine_Input_Control_Ways3.PositiveSet.Add(value);
-                    break;
-
-
-                // Ports.Analogs
-                case Field.DatItem_Analogs:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Analogs.Neutral = false;
-                    else
-                        DatItem_Analogs.Neutral = true;
-                    break;
-
-                case Field.DatItem_Analog_Mask:
-                    if (negate)
-                        DatItem_Analog_Mask.NegativeSet.Add(value);
-                    else
-                        DatItem_Analog_Mask.PositiveSet.Add(value);
-                    break;                
+                    break;          
 
                 #endregion
 
@@ -1634,6 +1489,142 @@ namespace SabreTools.Library.Filtering
                         DatItem_FeatureOverall.Negative |= value.AsFeatureStatus();
                     else
                         DatItem_FeatureOverall.Positive |= value.AsFeatureStatus();
+                    break;
+
+                // Input
+                case Field.DatItem_Service:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Service.Neutral = false;
+                    else
+                        DatItem_Service.Neutral = true;
+                    break;
+
+                case Field.DatItem_Tilt:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Tilt.Neutral = false;
+                    else
+                        DatItem_Tilt.Neutral = true;
+                    break;
+
+                case Field.DatItem_Players:
+                    if (negate)
+                        DatItem_Players.NegativeSet.Add(value);
+                    else
+                        DatItem_Players.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Coins:
+                    if (negate)
+                        DatItem_Coins.NegativeSet.Add(value);
+                    else
+                        DatItem_Coins.PositiveSet.Add(value);
+                    break;
+
+                // Input.Controls
+                case Field.DatItem_Controls:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Controls.Neutral = false;
+                    else
+                        DatItem_Controls.Neutral = true;
+                    break;
+
+                case Field.DatItem_Control_Type:
+                    if (negate)
+                        DatItem_Control_Type.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Type.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Player:
+                    if (negate)
+                        DatItem_Control_Player.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Player.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Buttons:
+                    if (negate)
+                        DatItem_Control_Buttons.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Buttons.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_RegButtons:
+                    if (negate)
+                        DatItem_Control_RegButtons.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_RegButtons.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Minimum:
+                    if (negate)
+                        DatItem_Control_Minimum.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Minimum.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Maximum:
+                    if (negate)
+                        DatItem_Control_Maximum.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Maximum.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Sensitivity:
+                    if (negate)
+                        DatItem_Control_Sensitivity.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Sensitivity.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_KeyDelta:
+                    if (negate)
+                        DatItem_Control_KeyDelta.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_KeyDelta.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Reverse:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Control_Reverse.Neutral = false;
+                    else
+                        DatItem_Control_Reverse.Neutral = true;
+                    break;
+
+                case Field.DatItem_Control_Ways:
+                    if (negate)
+                        DatItem_Control_Ways.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Ways.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Ways2:
+                    if (negate)
+                        DatItem_Control_Ways2.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Ways2.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Control_Ways3:
+                    if (negate)
+                        DatItem_Control_Ways3.NegativeSet.Add(value);
+                    else
+                        DatItem_Control_Ways3.PositiveSet.Add(value);
+                    break;
+
+                // Port.Analogs
+                case Field.DatItem_Analogs:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Analogs.Neutral = false;
+                    else
+                        DatItem_Analogs.Neutral = true;
+                    break;
+
+                case Field.DatItem_Analog_Mask:
+                    if (negate)
+                        DatItem_Analog_Mask.NegativeSet.Add(value);
+                    else
+                        DatItem_Analog_Mask.PositiveSet.Add(value);
                     break;
 
                 // Ram Option

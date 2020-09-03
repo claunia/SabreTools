@@ -100,48 +100,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML input
-    /// </summary>
-    /// TODO: Promote to DatItem level (contains list)
-    [JsonObject("input")]
-    public class Input
-    {
-        #region Fields
-
-        /// <summary>
-        /// Input service ID
-        /// </summary>
-        [JsonProperty("service", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Service { get; set; }
-
-        /// <summary>
-        /// Determins if this has a tilt sensor
-        /// </summary>
-        [JsonProperty("tilt", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Tilt { get; set; }
-
-        /// <summary>
-        /// Number of players on the input
-        /// </summary>
-        [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Players { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Number of coins required
-        /// </summary>
-        [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Coins { get; set; } // TODO: Int32?
-
-        /// <summary>
-        /// Set of controls for the input
-        /// </summary>
-        [JsonProperty("controls", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Control> Controls { get; set; }
-
-        #endregion
-    }
-
-    /// <summary>
     /// Represents one ListXML conflocation or diplocation
     /// </summary>
     [JsonObject("location")]
