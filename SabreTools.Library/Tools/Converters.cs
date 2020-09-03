@@ -1675,6 +1675,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Input;
                 case "instance":
                     return ItemType.Instance;
+                case "location":
+                    return ItemType.Location;
                 case "media":
                     return ItemType.Media;
                 case "port":
@@ -1687,6 +1689,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Rom;
                 case "sample":
                     return ItemType.Sample;
+                case "setting":
+                    return ItemType.Setting;
                 case "slot":
                     return ItemType.Slot;
                 case "softwarelist":
@@ -1717,12 +1721,14 @@ namespace SabreTools.Library.Tools
                 "feature" => ItemType.Feature,
                 "input" => ItemType.Input,
                 "instance" => ItemType.Instance,
+                "location" => ItemType.Location,
                 "media" => ItemType.Media,
                 "port" => ItemType.Port,
                 "ramoption" => ItemType.RamOption,
                 "release" => ItemType.Release,
                 "rom" => ItemType.Rom,
                 "sample" => ItemType.Sample,
+                "setting" => ItemType.Setting,
                 "slot" => ItemType.Slot,
                 "softwarelist" => ItemType.SoftwareList,
                 "sound" => ItemType.Sound,
@@ -2304,6 +2310,8 @@ namespace SabreTools.Library.Tools
                     return "input";
                 case ItemType.Instance:
                     return "instance";
+                case ItemType.Location:
+                    return "location";
                 case ItemType.Media:
                     return "media";
                 case ItemType.Port:
@@ -2316,6 +2324,8 @@ namespace SabreTools.Library.Tools
                     return "rom";
                 case ItemType.Sample:
                     return "sample";
+                case ItemType.Setting:
+                    return "setting";
                 case ItemType.Slot:
                     return "slot";
                 case ItemType.SoftwareList:
@@ -2346,12 +2356,14 @@ namespace SabreTools.Library.Tools
                 ItemType.Feature => "feature",
                 ItemType.Input => "input",
                 ItemType.Instance => "instance",
+                ItemType.Location => "location",
                 ItemType.Media => "media",
                 ItemType.Port => "port",
                 ItemType.RamOption => "ramoption",
                 ItemType.Release => "release",
                 ItemType.Rom => "rom",
                 ItemType.Sample => "sample",
+                ItemType.Setting => "setting",
                 ItemType.Slot => "slot",
                 ItemType.SoftwareList => "softwarelist",
                 ItemType.Sound => "sound",

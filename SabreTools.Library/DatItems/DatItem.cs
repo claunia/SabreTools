@@ -509,6 +509,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Instance:
                     return new Instance();
 
+                case ItemType.Location:
+                    return new Location();
+
                 case ItemType.Media:
                     return new Media();
 
@@ -526,6 +529,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Sample:
                     return new Sample();
+
+                case ItemType.Setting:
+                    return new Setting();
 
                 case ItemType.Slot:
                     return new Slot();
@@ -559,6 +565,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Extension => new Extension(),
                 ItemType.Feature => new Feature(),
                 ItemType.Instance => new Instance(),
+                ItemType.Location => new Location(),
                 ItemType.Media => new Media(),
                 ItemType.Port => new Port(),
                 ItemType.RamOption => new RamOption(),

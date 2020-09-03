@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using SabreTools.Library.DatItems;
@@ -95,70 +96,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Ways3 { get; set; } // TODO: Int32? Float?
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Represents one ListXML conflocation or diplocation
-    /// </summary>
-    [JsonObject("location")]
-    public class Location
-    {
-        #region Fields
-
-        /// <summary>
-        /// Location name
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Location ID
-        /// </summary>
-        [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Number { get; set; }
-
-        /// <summary>
-        /// Determines if location is inverted or not
-        /// </summary>
-        [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Inverted { get; set; }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// Represents one ListXML confsetting or dipvalue
-    /// </summary>
-    [JsonObject("setting")]
-    public class Setting
-    {
-        #region Fields
-
-        /// <summary>
-        /// Setting name
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Setting value
-        /// </summary>
-        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Value { get; set; }
-
-        /// <summary>
-        /// Determines if the setting is default or not
-        /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public bool? Default { get; set; }
-
-        /// <summary>
-        /// List of conditions on the setting
-        /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Condition> Conditions { get; set; }
 
         #endregion
     }

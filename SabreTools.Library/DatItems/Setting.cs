@@ -1,56 +1,43 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
 using SabreTools.Library.Filtering;
-using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents which Configuration(s) is associated with a set
+    /// Represents one ListXML confsetting or dipvalue
     /// </summary>
-    [JsonObject("configuration")]
-    public class Configuration : DatItem
+    [JsonObject("setting")]
+    public class Setting : DatItem
     {
         #region Fields
 
         /// <summary>
-        /// Name of the item
+        /// Setting name
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
         /// <summary>
-        /// Tag associated with the configuration
+        /// Setting value
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Tag { get; set; }
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string SettingValue { get; set; }
 
         /// <summary>
-        /// Mask associated with the configuration
+        /// Determines if the setting is default or not
         /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Mask { get; set; }
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? Default { get; set; }
 
         /// <summary>
-        /// Conditions associated with the configuration
+        /// List of conditions on the setting
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<Condition> Conditions { get; set; }
-
-        /// <summary>
-        /// Locations associated with the configuration
-        /// </summary>
-        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Location> Locations { get; set; }
-
-        /// <summary>
-        /// Settings associated with the configuration
-        /// </summary>
-        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Setting> Settings { get; set; }
 
         #endregion
 
@@ -74,15 +61,15 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle Configuration-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            // Handle Setting-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_Setting_Name))
+                Name = mappings[Field.DatItem_Setting_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Tag))
-                Tag = mappings[Field.DatItem_Tag];
+            if (mappings.Keys.Contains(Field.DatItem_Setting_Value))
+                SettingValue = mappings[Field.DatItem_Setting_Value];
 
-            if (mappings.Keys.Contains(Field.DatItem_Mask))
-                Mask = mappings[Field.DatItem_Mask];
+            if (mappings.Keys.Contains(Field.DatItem_Setting_Default))
+                Default = mappings[Field.DatItem_Setting_Default].AsYesNo();
 
             // Field.DatItem_Conditions does not apply here
             if (Conditions != null)
@@ -92,24 +79,6 @@ namespace SabreTools.Library.DatItems
                     condition.SetFields(mappings);
                 }
             }
-
-            // Field.DatItem_Locations does not apply here
-            if (Locations != null)
-            {
-                foreach (Location location in Locations)
-                {
-                    location.SetFields(mappings);
-                }
-            }
-
-            // Field.DatItem_Settings does not apply here
-            if (Settings != null)
-            {
-                foreach (Setting setting in Settings)
-                {
-                    setting.SetFields(mappings);
-                }
-            }
         }
 
         #endregion
@@ -117,12 +86,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Configuration object
+        /// Create a default, empty Setting object
         /// </summary>
-        public Configuration()
+        public Setting()
         {
             Name = string.Empty;
-            ItemType = ItemType.Configuration;
+            ItemType = ItemType.Setting;
         }
 
         #endregion
@@ -131,7 +100,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new Configuration()
+            return new Setting()
             {
                 Name = this.Name,
                 ItemType = this.ItemType,
@@ -159,11 +128,9 @@ namespace SabreTools.Library.DatItems
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                Tag = this.Tag,
-                Mask = this.Mask,
+                SettingValue = this.SettingValue,
+                Default = this.Default,
                 Conditions = this.Conditions,
-                Locations = this.Locations,
-                Settings = this.Settings,
             };
         }
 
@@ -173,15 +140,17 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a Configuration, return false
+            // If we don't have a Setting, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a Configuration
-            Configuration newOther = other as Configuration;
+            // Otherwise, treat it as a Setting
+            Setting newOther = other as Setting;
 
-            // If the Configuration information matches
-            bool match = (Name == newOther.Name && Tag == newOther.Tag && Mask == newOther.Mask);
+            // If the Setting information matches
+            bool match = (Name == newOther.Name
+                && SettingValue == newOther.SettingValue
+                && Default == newOther.Default);
             if (!match)
                 return match;
 
@@ -191,24 +160,6 @@ namespace SabreTools.Library.DatItems
                 foreach (Condition condition in Conditions)
                 {
                     match &= newOther.Conditions.Contains(condition);
-                }
-            }
-
-            // If the locations match
-            if (Locations != null)
-            {
-                foreach (Location location in Locations)
-                {
-                    match &= newOther.Locations.Contains(location);
-                }
-            }
-
-            // If the settings match
-            if (Settings != null)
-            {
-                foreach (Setting setting in Settings)
-                {
-                    match &= newOther.Settings.Contains(setting);
                 }
             }
 
@@ -258,21 +209,19 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
+            if (filter.DatItem_Setting_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
-                return false;
-
-            // Filter on tag
-            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
-                return false;
-            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+            if (filter.DatItem_Setting_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
-            // Filter on mask
-            if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
+            // Filter on value
+            if (filter.DatItem_Setting_Value.MatchesPositiveSet(SettingValue) == false)
                 return false;
-            if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
+            if (filter.DatItem_Setting_Value.MatchesNegativeSet(SettingValue) == true)
+                return false;
+
+            // Filter on default
+            if (filter.DatItem_Setting_Default.MatchesNeutral(null, Default) == false)
                 return false;
 
             // Filter on conditions
@@ -285,34 +234,6 @@ namespace SabreTools.Library.DatItems
                 foreach (Condition condition in Conditions)
                 {
                     if (!condition.PassesFilter(filter))
-                        return false;
-                }
-            }
-
-            // Filter on locations
-            if (filter.DatItem_Locations.MatchesNeutral(null, Locations != null ? (bool?)(Locations.Count > 0) : null) == false)
-                return false;
-
-            // Filter on individual locations
-            if (Locations != null)
-            {
-                foreach (Location location in Locations)
-                {
-                    if (!location.PassesFilter(filter))
-                        return false;
-                }
-            }
-
-            // Filter on settings
-            if (filter.DatItem_Settings.MatchesNeutral(null, Settings != null ? (bool?)(Settings.Count > 0) : null) == false)
-                return false;
-
-            // Filter on individual conditions
-            if (Settings != null)
-            {
-                foreach (Setting setting in Settings)
-                {
-                    if (!setting.PassesFilter(filter))
                         return false;
                 }
             }
@@ -330,14 +251,14 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (fields.Contains(Field.DatItem_Setting_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Tag))
-                Tag = null;
+            if (fields.Contains(Field.DatItem_Setting_Value))
+                SettingValue = null;
 
-            if (fields.Contains(Field.DatItem_Mask))
-                Mask = null;
+            if (fields.Contains(Field.DatItem_Setting_Default))
+                Default = null;
 
             if (fields.Contains(Field.DatItem_Conditions))
                 Conditions = null;
@@ -347,28 +268,6 @@ namespace SabreTools.Library.DatItems
                 foreach (Condition condition in Conditions)
                 {
                     condition.RemoveFields(fields);
-                }
-            }
-
-            if (fields.Contains(Field.DatItem_Locations))
-                Locations = null;
-
-            if (Locations != null)
-            {
-                foreach (Location location in Locations)
-                {
-                    location.RemoveFields(fields);
-                }
-            }
-
-            if (fields.Contains(Field.DatItem_Settings))
-                Settings = null;
-
-            if (Settings != null)
-            {
-                foreach (Setting setting in Settings)
-                {
-                    setting.RemoveFields(fields);
                 }
             }
         }
@@ -397,37 +296,24 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a Configuration to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Configuration)
+            // If we don't have a Setting to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Setting)
                 return;
 
             // Cast for easier access
-            Configuration newItem = item as Configuration;
+            Setting newItem = item as Setting;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (fields.Contains(Field.DatItem_Setting_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Tag))
-                Tag = newItem.Tag;
+            if (fields.Contains(Field.DatItem_Setting_Value))
+                SettingValue = newItem.SettingValue;
 
-            if (fields.Contains(Field.DatItem_Mask))
-                Mask = newItem.Mask;
-
-            if (fields.Contains(Field.DatItem_Conditions))
-                Conditions = newItem.Conditions;
+            if (fields.Contains(Field.DatItem_Setting_Default))
+                Default = newItem.Default;
 
             // Field replacement doesn't make sense for DatItem_Condition*
-
-            if (fields.Contains(Field.DatItem_Locations))
-                Locations = newItem.Locations;
-
-            // Field replacement doesn't make sense for DatItem_Location*
-
-            if (fields.Contains(Field.DatItem_Settings))
-                Settings = newItem.Settings;
-
-            // Field replacement doesn't make sense for DatItem_Setting*
         }
 
         #endregion

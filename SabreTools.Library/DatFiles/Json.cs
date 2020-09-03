@@ -262,6 +262,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Instance:
                         datItem = datItemObj.ToObject<Instance>();
                         break;
+                    case ItemType.Location:
+                        datItem = datItemObj.ToObject<Location>();
+                        break;
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
                         break;
@@ -279,6 +282,9 @@ namespace SabreTools.Library.DatFiles
                         break;
                     case ItemType.Sample:
                         datItem = datItemObj.ToObject<Sample>();
+                        break;
+                    case ItemType.Setting:
+                        datItem = datItemObj.ToObject<Setting>();
                         break;
                     case ItemType.Slot:
                         datItem = datItemObj.ToObject<Slot>();
