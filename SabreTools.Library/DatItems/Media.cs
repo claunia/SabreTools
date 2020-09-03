@@ -148,8 +148,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                LoadFlag = this.LoadFlag,
-
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
@@ -180,8 +178,6 @@ namespace SabreTools.Library.DatItems
                 OpenMSXType = this.OpenMSXType,
                 Remark = this.Remark,
                 Boot = this.Boot,
-
-                LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,

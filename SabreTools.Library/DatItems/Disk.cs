@@ -165,6 +165,24 @@ namespace SabreTools.Library.DatItems
 
                 DiskArea.Name = mappings[Field.DatItem_AreaName];
             }
+
+            if (mappings.Keys.Contains(Field.DatItem_Part_Name))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Name = mappings[Field.DatItem_Part_Name];
+            }
+
+            if (mappings.Keys.Contains(Field.DatItem_Part_Interface))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Interface = mappings[Field.DatItem_Part_Interface];
+            }
+
+            // TODO: Handle DatItem_Feature*
         }
 
         #endregion
@@ -218,8 +236,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                LoadFlag = this.LoadFlag,
-
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
@@ -258,8 +274,6 @@ namespace SabreTools.Library.DatItems
                 OpenMSXType = this.OpenMSXType,
                 Remark = this.Remark,
                 Boot = this.Boot,
-
-                LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
@@ -496,6 +510,8 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
                 return false;
 
+            // TODO: Handle DatItem_Feature*
+
             #endregion
 
             return true;
@@ -559,6 +575,8 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Features) && Part != null)
                 Part.Features = null;
+
+            // TODO: Handle DatItem_Feature*
 
             #endregion
         }

@@ -102,17 +102,6 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region SoftwareList Fields
-
-        /// <summary>
-        /// Loading flag
-        /// </summary>
-        /// TODO: Convert to Enum?
-        [JsonProperty("loadflag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string LoadFlag { get; set; } // (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain|ignore)
-
-        #endregion
-
         #region Metadata information
 
         /// <summary>
@@ -134,6 +123,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Fields unique to a DatItem
         /// </summary>
+        /// TODO: Update this once reshuffling is done
         public static readonly List<Field> DatItemFields = new List<Field>()
         {
             #region Common
@@ -257,7 +247,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Fields unique to a Machine
         /// </summary>
-        /// TODO: Ensure list
+        /// TODO: Update this once reshuffling is done
         public static readonly List<Field> MachineFields = new List<Field>()
         {
             // Common
@@ -364,13 +354,6 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.DatItem_Boot))
                 Boot = mappings[Field.DatItem_Boot];
-
-            #endregion
-
-            #region SoftwareList
-
-            if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
-                LoadFlag = mappings[Field.DatItem_LoadFlag];
 
             #endregion
         }
@@ -751,16 +734,6 @@ namespace SabreTools.Library.DatItems
 
             #endregion
 
-            #region SoftwareList
-
-            // Filter on load flag
-            if (filter.DatItem_LoadFlag.MatchesPositiveSet(LoadFlag) == false)
-                return false;
-            if (filter.DatItem_LoadFlag.MatchesNegativeSet(LoadFlag) == true)
-                return false;
-
-            #endregion
-
             return true;
         }
 
@@ -799,13 +772,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Boot))
                 Boot = null;
-
-            #endregion
-
-            #region SoftwareList
-
-            if (fields.Contains(Field.DatItem_LoadFlag))
-                LoadFlag = null;
 
             #endregion
         }
@@ -923,13 +889,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Boot))
                 Boot = item.Boot;
-
-            #endregion
-
-            #region SoftwareList
-
-            if (fields.Contains(Field.DatItem_LoadFlag))
-                LoadFlag = item.LoadFlag;
 
             #endregion
         }
