@@ -100,6 +100,12 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DiskArea DiskArea { get; set; }
 
+        /// <summary>
+        /// Original hardware part associated with the item
+        /// </summary>
+        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Part Part { get; set; }
+
         #endregion
 
         #endregion // Fields
@@ -212,7 +218,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Part = this.Part,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -230,6 +235,7 @@ namespace SabreTools.Library.DatItems
                 Optional = this.Optional,
 
                 DiskArea = this.DiskArea,
+                Part = this.Part,
             };
         }
 
@@ -254,7 +260,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Part = this.Part,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -271,6 +276,7 @@ namespace SabreTools.Library.DatItems
                 SHA1 = this.SHA1,
 
                 DataArea = new DataArea { Name = this.DiskArea.Name },
+                Part = this.Part,
             };
 
             return rom;
@@ -418,6 +424,8 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
+            #region Common
+
             // Filter on item name
             if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
                 return false;
@@ -468,11 +476,29 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Optional.MatchesNeutral(null, Optional) == false)
                 return false;
 
+            #endregion
+
+            #region SoftwareList
+
             // Filter on area name
             if (filter.DatItem_AreaName.MatchesPositiveSet(DiskArea?.Name) == false)
                 return false;
             if (filter.DatItem_AreaName.MatchesNegativeSet(DiskArea?.Name) == true)
                 return false;
+
+            // Filter on part name
+            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
+                return false;
+            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
+                return false;
+
+            // Filter on part interface
+            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
+                return false;
+            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
+                return false;
+
+            #endregion
 
             return true;
         }
@@ -487,6 +513,9 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
+
+            #region Common
+
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
@@ -514,11 +543,26 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Optional))
                 Optional = null;
 
+            #endregion
+
+            #region SoftwareList
+
             if (fields.Contains(Field.DatItem_AreaName))
             {
                 if (DiskArea != null)
                     DiskArea.Name = null;
             }
+
+            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
+                Part.Name = null;
+
+            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
+                Part.Interface = null;
+
+            if (fields.Contains(Field.DatItem_Features) && Part != null)
+                Part.Features = null;
+
+            #endregion
         }
 
         /// <summary>
@@ -588,6 +632,9 @@ namespace SabreTools.Library.DatItems
             Disk newItem = item as Disk;
 
             // Replace the fields
+
+            #region Common
+
             if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
 
@@ -621,6 +668,10 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Optional))
                 Optional = newItem.Optional;
 
+            #endregion
+
+            #region SoftwareList
+
             if (fields.Contains(Field.DatItem_AreaName))
             {
                 if (DiskArea == null)
@@ -628,6 +679,32 @@ namespace SabreTools.Library.DatItems
 
                 DiskArea.Name = newItem.DiskArea?.Name;
             }
+
+            if (fields.Contains(Field.DatItem_Part_Name))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Name = newItem.Part?.Name;
+            }
+
+            if (fields.Contains(Field.DatItem_Part_Interface))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Interface = newItem.Part?.Interface;
+            }
+
+            if (fields.Contains(Field.DatItem_Features))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Features = newItem.Part?.Features;
+            }
+
+            #endregion
         }
 
         #endregion

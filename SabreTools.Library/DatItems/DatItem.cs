@@ -105,12 +105,6 @@ namespace SabreTools.Library.DatItems
         #region SoftwareList Fields
 
         /// <summary>
-        /// Original hardware part associated with the item
-        /// </summary>
-        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public Part Part { get; set; }
-
-        /// <summary>
         /// SoftwareList value associated with the item
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -769,18 +763,6 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            // Filter on part name
-            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
-                return false;
-            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
-                return false;
-
-            // Filter on part interface
-            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
-                return false;
-            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
-                return false;
-
             // Filter on softwarelist value
             if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
                 return false;
@@ -837,15 +819,6 @@ namespace SabreTools.Library.DatItems
             #endregion
 
             #region SoftwareList
-
-            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
-                Part.Name = null;
-
-            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
-                Part.Interface = null;
-
-            if (fields.Contains(Field.DatItem_Features) && Part != null)
-                Part.Features = null;
 
             if (fields.Contains(Field.DatItem_Value))
                 Value = null;
@@ -973,30 +946,6 @@ namespace SabreTools.Library.DatItems
             #endregion
 
             #region SoftwareList
-
-            if (fields.Contains(Field.DatItem_Part_Name))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Name = item.Part?.Name;
-            }
-
-            if (fields.Contains(Field.DatItem_Part_Interface))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Interface = item.Part?.Interface;
-            }
-
-            if (fields.Contains(Field.DatItem_Features))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Features = item.Part?.Features;
-            }
 
             if (fields.Contains(Field.DatItem_Value))
                 Value = item.Value;

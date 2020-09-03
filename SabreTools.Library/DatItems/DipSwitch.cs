@@ -16,6 +16,8 @@ namespace SabreTools.Library.DatItems
     {
         #region Fields
 
+        #region Common
+
         /// <summary>
         /// Name of the item
         /// </summary>
@@ -53,6 +55,18 @@ namespace SabreTools.Library.DatItems
         public List<Setting> Values { get; set; }
 
         #endregion
+
+        #region SoftwareList
+
+        /// <summary>
+        /// Original hardware part associated with the item
+        /// </summary>
+        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Part Part { get; set; }
+
+        #endregion
+
+        #endregion // Fields
 
         #region Accessors
 
@@ -123,7 +137,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Part = this.Part,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -136,6 +149,8 @@ namespace SabreTools.Library.DatItems
                 Conditions = this.Conditions,
                 Locations = this.Locations,
                 Values = this.Values,
+
+                Part = this.Part,
             };
         }
 
@@ -202,6 +217,8 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
+            #region Common
+
             // Filter on item name
             if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
                 return false;
@@ -224,6 +241,24 @@ namespace SabreTools.Library.DatItems
             // TODO: Handle DatItem_Location*
             // TODO: Handle DatItem_Value*
 
+            #endregion
+
+            #region SoftwareList
+
+            // Filter on part name
+            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
+                return false;
+            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
+                return false;
+
+            // Filter on part interface
+            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
+                return false;
+            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
+                return false;
+
+            #endregion
+
             return true;
         }
 
@@ -237,6 +272,9 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
+
+            #region Common
+
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
@@ -258,6 +296,21 @@ namespace SabreTools.Library.DatItems
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
             // TODO: Handle DatItem_Value*
+
+            #endregion
+
+            #region SoftwareList
+
+            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
+                Part.Name = null;
+
+            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
+                Part.Interface = null;
+
+            if (fields.Contains(Field.DatItem_Features) && Part != null)
+                Part.Features = null;
+
+            #endregion
         }
 
         /// <summary>
@@ -292,6 +345,9 @@ namespace SabreTools.Library.DatItems
             DipSwitch newItem = item as DipSwitch;
 
             // Replace the fields
+
+            #region Common
+
             if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
 
@@ -313,6 +369,36 @@ namespace SabreTools.Library.DatItems
             // TODO: Handle DatItem_Condition*
             // TODO: Handle DatItem_Location*
             // TODO: Handle DatItem_Value*
+
+            #endregion
+
+            #region SoftwareList
+
+            if (fields.Contains(Field.DatItem_Part_Name))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Name = newItem.Part?.Name;
+            }
+
+            if (fields.Contains(Field.DatItem_Part_Interface))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Interface = newItem.Part?.Interface;
+            }
+
+            if (fields.Contains(Field.DatItem_Features))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Features = newItem.Part?.Features;
+            }
+
+            #endregion
         }
 
         #endregion

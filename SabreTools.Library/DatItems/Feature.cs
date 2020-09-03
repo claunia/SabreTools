@@ -93,7 +93,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Part = this.Part,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 

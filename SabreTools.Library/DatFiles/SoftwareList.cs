@@ -313,7 +313,19 @@ namespace SabreTools.Library.DatFiles
             foreach (DatItem item in items)
             {
                 // Add all missing information
-                item.Part = part;
+                switch (item.ItemType)
+                {
+                    case ItemType.DipSwitch:
+                        (item as DipSwitch).Part = part;
+                        break;
+                    case ItemType.Disk:
+                        (item as Disk).Part = part;
+                        break;
+                    case ItemType.Rom:
+                        (item as Rom).Part = part;
+                        break;
+                }
+
                 item.Source = new Source(indexId, filename);
                 item.CopyMachineInformation(machine);
 
@@ -693,12 +705,12 @@ namespace SabreTools.Library.DatFiles
                             diskAreaName = "cdrom";
 
                         xtw.WriteStartElement("part");
-                        xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
-                        xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
+                        xtw.WriteRequiredAttributeString("name", disk.Part?.Name);
+                        xtw.WriteRequiredAttributeString("interface", disk.Part?.Interface);
 
-                        if (datItem.Part?.Features != null && datItem.Part?.Features.Count > 0)
+                        if (disk.Part?.Features != null && disk.Part?.Features.Count > 0)
                         {
-                            foreach (PartFeature partFeature in datItem.Part.Features)
+                            foreach (PartFeature partFeature in disk.Part.Features)
                             {
                                 xtw.WriteStartElement("feature");
                                 xtw.WriteRequiredAttributeString("name", partFeature.Name);
@@ -740,12 +752,12 @@ namespace SabreTools.Library.DatFiles
                             dataAreaName = "rom";
 
                         xtw.WriteStartElement("part");
-                        xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
-                        xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
+                        xtw.WriteRequiredAttributeString("name", rom.Part?.Name);
+                        xtw.WriteRequiredAttributeString("interface", rom.Part?.Interface);
 
-                        if (datItem.Part?.Features != null && datItem.Part?.Features.Count > 0)
+                        if (rom.Part?.Features != null && rom.Part?.Features.Count > 0)
                         {
-                            foreach (PartFeature kvp in datItem.Part.Features)
+                            foreach (PartFeature kvp in rom.Part.Features)
                             {
                                 xtw.WriteStartElement("feature");
                                 xtw.WriteRequiredAttributeString("name", kvp.Name);

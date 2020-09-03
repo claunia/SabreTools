@@ -179,6 +179,12 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("dataarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public DataArea DataArea { get; set; }
 
+        /// <summary>
+        /// Original hardware part associated with the item
+        /// </summary>
+        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Part Part { get; set; }
+
         #endregion
 
         #endregion // Fields
@@ -374,7 +380,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Part = this.Part,
                 Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
@@ -402,6 +407,7 @@ namespace SabreTools.Library.DatItems
                 Inverted = this.Inverted,
 
                 DataArea = this.DataArea,
+                Part = this.Part,
             };
         }
 
@@ -602,6 +608,8 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
+            #region Common
+
             // Filter on item name
             if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
                 return false;
@@ -704,6 +712,10 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Inverted.MatchesNeutral(null, Inverted) == false)
                 return false;
 
+            #endregion
+
+            #region SoftwareList
+
             // Filter on area name
             if (filter.DatItem_AreaName.MatchesPositiveSet(DataArea?.Name) == false)
                 return false;
@@ -730,6 +742,20 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_AreaEndianness.MatchesNegativeSet(DataArea?.Endianness) == true)
                 return false;
 
+            // Filter on part name
+            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
+                return false;
+            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
+                return false;
+
+            // Filter on part interface
+            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
+                return false;
+            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
+                return false;
+
+            #endregion
+
             return true;
         }
 
@@ -743,6 +769,9 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
+
+            #region Common
+
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
@@ -796,6 +825,10 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = null;
 
+            #endregion
+
+            #region SoftwareList
+
             if (fields.Contains(Field.DatItem_AreaName))
             {
                 if (DataArea != null)
@@ -819,6 +852,17 @@ namespace SabreTools.Library.DatItems
                 if (DataArea != null)
                     DataArea.Endianness = null;
             }
+
+            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
+                Part.Name = null;
+
+            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
+                Part.Interface = null;
+
+            if (fields.Contains(Field.DatItem_Features) && Part != null)
+                Part.Features = null;
+
+            #endregion
         }
 
         /// <summary>
@@ -910,6 +954,9 @@ namespace SabreTools.Library.DatItems
             Rom newItem = item as Rom;
 
             // Replace the fields
+
+            #region Common
+
             if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
 
@@ -984,6 +1031,10 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Inverted))
                 Inverted = newItem.Inverted;
 
+            #endregion
+
+            #region SoftwareList
+
             if (fields.Contains(Field.DatItem_AreaName))
             {
                 if (DataArea == null)
@@ -1015,6 +1066,32 @@ namespace SabreTools.Library.DatItems
 
                 DataArea.Endianness = newItem.DataArea?.Endianness;
             }
+
+            if (fields.Contains(Field.DatItem_Part_Name))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Name = newItem.Part?.Name;
+            }
+
+            if (fields.Contains(Field.DatItem_Part_Interface))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Interface = newItem.Part?.Interface;
+            }
+
+            if (fields.Contains(Field.DatItem_Features))
+            {
+                if (Part == null)
+                    Part = new Part();
+
+                Part.Features = newItem.Part?.Features;
+            }
+
+            #endregion
         }
 
         #endregion
