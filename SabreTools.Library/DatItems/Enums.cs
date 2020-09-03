@@ -221,11 +221,6 @@ namespace SabreTools.Library.DatItems
 
         Machine_Supported,
 
-        // SharedFeatures
-        Machine_SharedFeatures, // TODO: Fix usage of SharedFeatures
-        Machine_SharedFeature_Name,
-        Machine_SharedFeature_Value,
-
         #endregion
 
         #endregion // Machine
@@ -425,6 +420,9 @@ namespace SabreTools.Library.DatItems
         // Release
         DatItem_Language,
 
+        // SharedFeature
+        DatItem_SharedFeatureValue,
+
         // Slot.SlotOptions
         DatItem_SlotOptions,
         DatItem_SlotOption_Name,
@@ -498,6 +496,7 @@ namespace SabreTools.Library.DatItems
         Release,
         Sample,
         Setting,
+        SharedFeature,
         Slot,
         SlotOption,
         SoftwareList,

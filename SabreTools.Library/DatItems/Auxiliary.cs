@@ -13,27 +13,6 @@ using SabreTools.Library.Tools;
 /// </summary>
 namespace SabreTools.Library.DatItems
 {
-    #region Machine
-
-    #region SoftwareList
-
-    /// <summary>
-    /// Represents one SoftwareList shared feature object
-    /// </summary>
-    [JsonObject("sharedfeat")]
-    public class SharedFeature
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
-    }
-
-    #endregion
-
-    #endregion // Machine
-
     #region DatItem
 
     #region OpenMSX

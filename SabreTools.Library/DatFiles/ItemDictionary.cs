@@ -210,6 +210,12 @@ namespace SabreTools.Library.DatFiles
         public long SampleCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of SharedFeature items
+        /// </summary>
+        [JsonIgnore]
+        public long SharedFeatureCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Slot items
         /// </summary>
         [JsonIgnore]
@@ -650,6 +656,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Sample:
                     SampleCount++;
                     break;
+                case ItemType.SharedFeature:
+                    SharedFeatureCount++;
+                    break;
                 case ItemType.Slot:
                     SlotCount++;
                     break;
@@ -829,6 +838,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Sample:
                     SampleCount--;
+                    break;
+                case ItemType.SharedFeature:
+                    SharedFeatureCount--;
                     break;
                 case ItemType.Slot:
                     SlotCount--;

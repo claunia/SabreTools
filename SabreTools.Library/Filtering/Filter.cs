@@ -86,11 +86,6 @@ namespace SabreTools.Library.Filtering
 
         public FilterItem<Supported> Machine_Supported { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
 
-        // SharedFeatures
-        public FilterItem<bool?> Machine_SharedFeatures { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_SharedFeature_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_SharedFeature_Value { get; private set; } = new FilterItem<string>();
-
         #endregion
 
         #endregion // Machine Filters
@@ -289,6 +284,9 @@ namespace SabreTools.Library.Filtering
 
         // Release
         public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
+
+        // SharedFeature
+        public FilterItem<string> DatItem_SharedFeatureValue { get; private set; } = new FilterItem<string>();
 
         // Slots.SlotOptions
         public FilterItem<bool?> DatItem_SlotOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -649,28 +647,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Supported.Negative |= value.AsSupported();
                     else
                         Machine_Supported.Positive |= value.AsSupported();
-                    break;
-
-                // SharedFeatures
-                case Field.Machine_SharedFeatures:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_SharedFeatures.Neutral = false;
-                    else
-                        Machine_SharedFeatures.Neutral = true;
-                    break;
-
-                case Field.Machine_SharedFeature_Name:
-                    if (negate)
-                        Machine_SharedFeature_Name.NegativeSet.Add(value);
-                    else
-                        Machine_SharedFeature_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_SharedFeature_Value:
-                    if (negate)
-                        Machine_SharedFeature_Value.NegativeSet.Add(value);
-                    else
-                        Machine_SharedFeature_Value.PositiveSet.Add(value);
                     break;
 
                 #endregion
@@ -1625,6 +1601,14 @@ namespace SabreTools.Library.Filtering
                         DatItem_Language.NegativeSet.Add(value);
                     else
                         DatItem_Language.PositiveSet.Add(value);
+                    break;
+
+                // SharedFeature
+                case Field.DatItem_SharedFeatureValue:
+                    if (negate)
+                        DatItem_SharedFeatureValue.NegativeSet.Add(value);
+                    else
+                        DatItem_SharedFeatureValue.PositiveSet.Add(value);
                     break;
 
                 // Slots.SlotOptions

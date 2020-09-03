@@ -292,6 +292,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Setting:
                         datItem = datItemObj.ToObject<Setting>();
                         break;
+                    case ItemType.SharedFeature:
+                        datItem = datItemObj.ToObject<SharedFeature>();
+                        break;
                     case ItemType.Slot:
                         datItem = datItemObj.ToObject<Slot>();
                         break;

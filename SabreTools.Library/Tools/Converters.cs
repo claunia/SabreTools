@@ -644,15 +644,6 @@ namespace SabreTools.Library.Tools
                     case "supported":
                         return Field.Machine_Supported;
 
-                    case "sharedfeatures":
-                        return Field.Machine_SharedFeatures;
-
-                    case "sharedfeature_name":
-                        return Field.Machine_SharedFeature_Name;
-
-                    case "sharedfeature_value":
-                        return Field.Machine_SharedFeature_Value;
-
                     #endregion
                 }
             }
@@ -1106,6 +1097,10 @@ namespace SabreTools.Library.Tools
                     case "language":
                         return Field.DatItem_Language;
 
+                    // SharedFeature
+                    case "sharedfeaturevalue":
+                        return Field.DatItem_SharedFeatureValue;
+
                     // Slot
                     case "slotoptions":
                         return Field.DatItem_SlotOptions;
@@ -1325,16 +1320,6 @@ namespace SabreTools.Library.Tools
 
                 case "supported":
                     return Field.Machine_Supported;
-                case "sharedfeat":
-                case "shared feat":
-                case "shared-feat":
-                case "sharedfeature":
-                case "shared feature":
-                case "shared-feature":
-                case "sharedfeatures":
-                case "shared features":
-                case "shared-features":
-                    return Field.Machine_SharedFeatures;
 
                 #endregion
 
@@ -1687,6 +1672,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Sample;
                 case "setting":
                     return ItemType.Setting;
+                case "sharedfeat":
+                    return ItemType.SharedFeature;
                 case "slot":
                     return ItemType.Slot;
                 case "slotoption":
@@ -1729,6 +1716,7 @@ namespace SabreTools.Library.Tools
                 "rom" => ItemType.Rom,
                 "sample" => ItemType.Sample,
                 "setting" => ItemType.Setting,
+                "sharedfeat" => ItemType.SharedFeature,
                 "slot" => ItemType.Slot,
                 "slotoption" => ItemType.SlotOption,
                 "softwarelist" => ItemType.SoftwareList,
@@ -2331,6 +2319,8 @@ namespace SabreTools.Library.Tools
                     return "sample";
                 case ItemType.Setting:
                     return "setting";
+                case ItemType.SharedFeature:
+                    return "sharedfeat";
                 case ItemType.Slot:
                     return "slot";
                 case ItemType.SlotOption:
@@ -2373,6 +2363,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Rom => "rom",
                 ItemType.Sample => "sample",
                 ItemType.Setting => "setting",
+                ItemType.SharedFeature => "sharedfeat",
                 ItemType.Slot => "slot",
                 ItemType.SlotOption => "slotoption",
                 ItemType.SoftwareList => "softwarelist",

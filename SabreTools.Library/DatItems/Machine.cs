@@ -259,12 +259,6 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("supported", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Supported Supported { get; set; } = Supported.NULL;
 
-        /// <summary>
-        /// List of shared feature items
-        /// </summary>
-        [JsonProperty("sharedfeat", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<SharedFeature> SharedFeatures { get; set; } = null;
-
         #endregion
 
         #endregion
@@ -515,7 +509,6 @@ namespace SabreTools.Library.DatItems
                 #region SoftwareList
 
                 Supported = this.Supported,
-                SharedFeatures = this.SharedFeatures,
 
                 #endregion
             };
@@ -782,54 +775,6 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_Supported.MatchesNegative(Supported.NULL, Supported) == true)
                 return false;
 
-            #region SharedFeatures
-
-            // Machine_SharedFeatures
-            if (filter.Machine_SharedFeatures.MatchesNeutral(null, SharedFeatures?.Any() ?? false) == false)
-                return false;
-
-            // Machine_SharedFeature_Name
-            if (SharedFeatures?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var sharedFeature in SharedFeatures)
-                {
-                    if (filter.Machine_SharedFeature_Name.MatchesPositiveSet(sharedFeature?.Name) != false)
-                        anyPositive = true;
-                    if (filter.Machine_SharedFeature_Name.MatchesNegativeSet(sharedFeature?.Name) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_SharedFeature_Value
-            if (SharedFeatures?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var sharedFeature in SharedFeatures)
-                {
-                    if (filter.Machine_SharedFeature_Value.MatchesPositiveSet(sharedFeature?.Value) != false)
-                        anyPositive = true;
-                    if (filter.Machine_SharedFeature_Value.MatchesNegativeSet(sharedFeature?.Value) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            #endregion
-
             #endregion // SoftwareList
 
             return true;
@@ -972,9 +917,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_Supported))
                 Supported = Supported.NULL;
-
-            if (fields.Contains(Field.Machine_SharedFeatures))
-                SharedFeatures = null;
 
             #endregion
         }
@@ -1125,9 +1067,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_Supported))
                 Supported = machine.Supported;
-
-            if (fields.Contains(Field.Machine_SharedFeatures))
-                SharedFeatures = machine.SharedFeatures;
 
             #endregion
         }

@@ -349,7 +349,6 @@ namespace SabreTools.Library.DatItems
 
             // SoftwareList
             Field.Machine_Supported,
-            Field.Machine_SharedFeatures,
         };
 
         #endregion
@@ -538,6 +537,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Setting:
                     return new Setting();
 
+                case ItemType.SharedFeature:
+                    return new SharedFeature();
+
                 case ItemType.Slot:
                     return new Slot();
 
@@ -581,6 +583,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Release => new Release(),
                 ItemType.Rom => new Rom(),
                 ItemType.Sample => new Sample(),
+                ItemType.SharedFeature => new SharedFeature(),
                 ItemType.Slot => new Slot(),
                 ItemType.SlotOption => new SlotOption(),
                 ItemType.SoftwareList => new SoftwareList(),

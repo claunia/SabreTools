@@ -180,17 +180,17 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sharedfeat":
-                        var sharedFeature = new SharedFeature
+                        ParseAddHelper(new SharedFeature
                         {
                             Name = reader.GetAttribute("name"),
                             Value = reader.GetAttribute("value"),
-                        };
 
-                        // Ensure the list exists
-                        if (machine.SharedFeatures == null)
-                            machine.SharedFeatures = new List<SharedFeature>();
-
-                        machine.SharedFeatures.Add(sharedFeature);
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
 
                         reader.Read();
                         break;
@@ -703,17 +703,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
                 xtw.WriteOptionalElementString("category", datItem.Machine.Category);
 
-                if (datItem.Machine.SharedFeatures != null && datItem.Machine.SharedFeatures.Count > 0)
-                {
-                    foreach (SharedFeature kvp in datItem.Machine.SharedFeatures)
-                    {
-                        xtw.WriteStartElement("sharedfeat");
-                        xtw.WriteRequiredAttributeString("name", kvp.Name);
-                        xtw.WriteRequiredAttributeString("value", kvp.Value);
-                        xtw.WriteEndElement();
-                    }
-                }
-
                 xtw.Flush();
             }
             catch (Exception ex)
@@ -859,6 +848,14 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
 
                         // End dataarea
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.SharedFeature:
+                        var sharedFeature = datItem as SharedFeature;
+                        xtw.WriteStartElement("sharedfeat");
+                        xtw.WriteRequiredAttributeString("name", sharedFeature.Name);
+                        xtw.WriteRequiredAttributeString("value", sharedFeature.Value);
                         xtw.WriteEndElement();
                         break;
                 }

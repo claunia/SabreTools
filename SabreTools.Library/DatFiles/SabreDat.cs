@@ -1602,6 +1602,15 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.SharedFeature:
+                        var sharedFeature = datItem as SharedFeature;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "sharedfeat");
+                        xtw.WriteRequiredAttributeString("name", sharedFeature.Name);
+                        xtw.WriteRequiredAttributeString("value", sharedFeature.Value);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Slot:
                         var slot = datItem as Slot;
                         xtw.WriteStartElement("file");
