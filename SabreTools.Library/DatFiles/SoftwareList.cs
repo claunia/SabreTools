@@ -10,6 +10,7 @@ using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
+// TODO: Use softwarelist.dtd and *try* to make this write more correctly
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
@@ -251,7 +252,7 @@ namespace SabreTools.Library.DatFiles
                 areaEndinaness;
             long? areasize = null;
             SoftwareListPart part = null;
-            List<SoftwareListFeature> features = null;
+            List<PartFeature> features = null;
             List<DatItem> items = new List<DatItem>();
 
             while (!reader.EOF)
@@ -283,13 +284,13 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "feature":
-                        var feature = new SoftwareListFeature();
+                        var feature = new PartFeature();
                         feature.Name = reader.GetAttribute("name");
                         feature.Value = reader.GetAttribute("value");
 
                         // Ensure the list exists
                         if (features == null)
-                            features = new List<SoftwareListFeature>();
+                            features = new List<PartFeature>();
 
                         features.Add(feature);
 
@@ -661,9 +662,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteStartElement("softwarelist");
                 xtw.WriteRequiredAttributeString("name", Header.Name);
                 xtw.WriteRequiredAttributeString("description", Header.Description);
-                xtw.WriteOptionalAttributeString("forcepacking", Header.ForcePacking.FromPackingFlag(false));
-                xtw.WriteOptionalAttributeString("forcemerging", Header.ForceMerging.FromMergingFlag(false));
-                xtw.WriteOptionalAttributeString("forcenodump", Header.ForceNodump.FromNodumpFlag());
 
                 xtw.Flush();
             }
@@ -692,16 +690,13 @@ namespace SabreTools.Library.DatFiles
                 // Build the state
                 xtw.WriteStartElement("software");
                 xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
-
                 if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                     xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
-
                 xtw.WriteOptionalAttributeString("supported", datItem.Machine.Supported.FromSupported(false));
 
                 xtw.WriteOptionalElementString("description", datItem.Machine.Description);
                 xtw.WriteOptionalElementString("year", datItem.Machine.Year);
                 xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
-                xtw.WriteOptionalElementString("category", datItem.Machine.Category);
 
                 xtw.Flush();
             }
@@ -751,21 +746,6 @@ namespace SabreTools.Library.DatFiles
                 ProcessItemName(datItem, true);
 
                 // Build the state
-                xtw.WriteStartElement("part");
-                xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
-                xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
-
-                if (datItem.Features != null && datItem.Features.Count > 0)
-                {
-                    foreach (SoftwareListFeature kvp in datItem.Features)
-                    {
-                        xtw.WriteStartElement("feature");
-                        xtw.WriteRequiredAttributeString("name", kvp.Name);
-                        xtw.WriteRequiredAttributeString("value", kvp.Value);
-                        xtw.WriteEndElement();
-                    }
-                }
-
                 string areaName = datItem.AreaName;
                 switch (datItem.ItemType)
                 {
@@ -794,6 +774,21 @@ namespace SabreTools.Library.DatFiles
                         if (string.IsNullOrWhiteSpace(areaName))
                             areaName = "cdrom";
 
+                        xtw.WriteStartElement("part");
+                        xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
+                        xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
+
+                        if (datItem.Features != null && datItem.Features.Count > 0)
+                        {
+                            foreach (PartFeature partFeature in datItem.Features)
+                            {
+                                xtw.WriteStartElement("feature");
+                                xtw.WriteRequiredAttributeString("name", partFeature.Name);
+                                xtw.WriteRequiredAttributeString("value", partFeature.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
+
                         xtw.WriteStartElement("diskarea");
                         xtw.WriteRequiredAttributeString("name", areaName);
                         xtw.WriteOptionalAttributeString("size", disk.AreaSize.ToString());
@@ -807,6 +802,9 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
 
                         // End diskarea
+                        xtw.WriteEndElement();
+
+                        // End part
                         xtw.WriteEndElement();
                         break;
 
@@ -822,6 +820,21 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         if (string.IsNullOrWhiteSpace(areaName))
                             areaName = "rom";
+
+                        xtw.WriteStartElement("part");
+                        xtw.WriteRequiredAttributeString("name", datItem.Part?.Name);
+                        xtw.WriteRequiredAttributeString("interface", datItem.Part?.Interface);
+
+                        if (datItem.Features != null && datItem.Features.Count > 0)
+                        {
+                            foreach (PartFeature kvp in datItem.Features)
+                            {
+                                xtw.WriteStartElement("feature");
+                                xtw.WriteRequiredAttributeString("name", kvp.Name);
+                                xtw.WriteRequiredAttributeString("value", kvp.Value);
+                                xtw.WriteEndElement();
+                            }
+                        }
 
                         xtw.WriteStartElement("dataarea");
                         xtw.WriteRequiredAttributeString("name", areaName);
@@ -849,6 +862,9 @@ namespace SabreTools.Library.DatFiles
 
                         // End dataarea
                         xtw.WriteEndElement();
+
+                        // End part
+                        xtw.WriteEndElement();
                         break;
 
                     case ItemType.SharedFeature:
@@ -859,9 +875,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
                 }
-
-                // End part
-                xtw.WriteEndElement();
 
                 xtw.Flush();
             }

@@ -114,7 +114,7 @@ namespace SabreTools.Library.DatItems
         /// Features provided to/by the item
         /// </summary>
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<SoftwareListFeature> Features { get; set; }
+        public List<PartFeature> Features { get; set; }
 
         /// <summary>
         /// Original hardware part name within an item

@@ -37,8 +37,9 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one SoftwareList feature object
     /// </summary>
-    [JsonObject("feature")]
-    public class SoftwareListFeature
+    /// TODO: Promote this to DatItem
+    [JsonObject("part_feature")]
+    public class PartFeature
     {
         [JsonProperty("name")]
         public string Name { get; set; }
