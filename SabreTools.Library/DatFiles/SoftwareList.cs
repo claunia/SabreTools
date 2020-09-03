@@ -164,23 +164,27 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "info":
-                        var info = new Info();
-                        info.Name = reader.GetAttribute("name");
-                        info.Value = reader.GetAttribute("value");
+                        ParseAddHelper(new Info
+                        {
+                            Name = reader.GetAttribute("name"),
+                            InfoValue = reader.GetAttribute("value"),
 
-                        // Ensure the list exists
-                        if (machine.Infos == null)
-                            machine.Infos = new List<Info>();
-
-                        machine.Infos.Add(info);
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
 
                         reader.Read();
                         break;
 
                     case "sharedfeat":
-                        var sharedFeature = new SharedFeature();
-                        sharedFeature.Name = reader.GetAttribute("name");
-                        sharedFeature.Value = reader.GetAttribute("value");
+                        var sharedFeature = new SharedFeature
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Value = reader.GetAttribute("value"),
+                        };
 
                         // Ensure the list exists
                         if (machine.SharedFeatures == null)
@@ -699,17 +703,6 @@ namespace SabreTools.Library.DatFiles
                 xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
                 xtw.WriteOptionalElementString("category", datItem.Machine.Category);
 
-                if (datItem.Machine.Infos != null && datItem.Machine.Infos.Count > 0)
-                {
-                    foreach (Info kvp in datItem.Machine.Infos)
-                    {
-                        xtw.WriteStartElement("info");
-                        xtw.WriteRequiredAttributeString("name", kvp.Name);
-                        xtw.WriteRequiredAttributeString("value", kvp.Value);
-                        xtw.WriteEndElement();
-                    }
-                }
-
                 if (datItem.Machine.SharedFeatures != null && datItem.Machine.SharedFeatures.Count > 0)
                 {
                     foreach (SharedFeature kvp in datItem.Machine.SharedFeatures)
@@ -825,6 +818,14 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
 
                         // End diskarea
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Info:
+                        var info = datItem as Info;
+                        xtw.WriteStartElement("info");
+                        xtw.WriteRequiredAttributeString("name", info.Name);
+                        xtw.WriteRequiredAttributeString("value", info.InfoValue);
                         xtw.WriteEndElement();
                         break;
 

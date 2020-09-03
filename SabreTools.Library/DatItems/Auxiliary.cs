@@ -15,37 +15,7 @@ namespace SabreTools.Library.DatItems
 {
     #region Machine
 
-    #region OpenMSX
-
-    /// <summary>
-    /// Represents the OpenMSX original value
-    /// </summary>
-    [JsonObject("original")]
-    public class Original
-    {
-        [JsonProperty("value")]
-        public bool? Value { get; set; }
-
-        [JsonProperty("content")]
-        public string Content { get; set; }
-    }
-
-    #endregion
-
     #region SoftwareList
-
-    /// <summary>
-    /// Represents one SoftwareList info
-    /// </summary>
-    [JsonObject("info")]
-    public class Info
-    {
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("value")]
-        public string Value { get; set; }
-    }
 
     /// <summary>
     /// Represents one SoftwareList shared feature object
@@ -65,6 +35,23 @@ namespace SabreTools.Library.DatItems
     #endregion // Machine
 
     #region DatItem
+
+    #region OpenMSX
+
+    /// <summary>
+    /// Represents the OpenMSX original value
+    /// </summary>
+    [JsonObject("original")]
+    public class Original
+    {
+        [JsonProperty("value")]
+        public bool? Value { get; set; }
+
+        [JsonProperty("content")]
+        public string Content { get; set; }
+    }
+
+    #endregion
 
     #region SoftwareList
 

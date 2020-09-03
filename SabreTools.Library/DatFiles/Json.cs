@@ -259,6 +259,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Feature:
                         datItem = datItemObj.ToObject<Feature>();
                         break;
+                    case ItemType.Info:
+                        datItem = datItemObj.ToObject<Info>();
+                        break;
                     case ItemType.Input:
                         datItem = datItemObj.ToObject<Input>();
                         break;

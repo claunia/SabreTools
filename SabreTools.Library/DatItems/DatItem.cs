@@ -326,7 +326,6 @@ namespace SabreTools.Library.DatItems
             // ListXML
             Field.Machine_SourceFile,
             Field.Machine_Runnable,
-            Field.Machine_Infos,
 
             // Logiqx
             Field.Machine_Board,
@@ -506,6 +505,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Feature:
                     return new Feature();
 
+                case ItemType.Info:
+                    return new Info();
+
                 case ItemType.Input:
                     return new Input();
 
@@ -570,6 +572,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Driver => new Driver(),
                 ItemType.Extension => new Extension(),
                 ItemType.Feature => new Feature(),
+                ItemType.Info => new Info(),
                 ItemType.Instance => new Instance(),
                 ItemType.Location => new Location(),
                 ItemType.Media => new Media(),

@@ -162,6 +162,12 @@ namespace SabreTools.Library.DatFiles
         public long FeatureCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Info items
+        /// </summary>
+        [JsonIgnore]
+        public long InfoCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Input items
         /// </summary>
         [JsonIgnore]
@@ -599,6 +605,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Feature:
                     FeatureCount++;
                     break;
+                case ItemType.Info:
+                    InfoCount++;
+                    break;
                 case ItemType.Input:
                     InputCount++;
                     break;
@@ -775,6 +784,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Feature:
                     FeatureCount--;
+                    break;
+                case ItemType.Info:
+                    InfoCount--;
                     break;
                 case ItemType.Input:
                     InputCount--;

@@ -260,13 +260,6 @@ namespace SabreTools.Library.DatItems
         public Supported Supported { get; set; } = Supported.NULL;
 
         /// <summary>
-        /// List of info items
-        /// </summary>
-        /// <remarks>Also in SoftwareList</remarks>
-        [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Info> Infos { get; set; } = null;
-
-        /// <summary>
         /// List of shared feature items
         /// </summary>
         [JsonProperty("sharedfeat", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -522,7 +515,6 @@ namespace SabreTools.Library.DatItems
                 #region SoftwareList
 
                 Supported = this.Supported,
-                Infos = this.Infos,
                 SharedFeatures = this.SharedFeatures,
 
                 #endregion
@@ -790,54 +782,6 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_Supported.MatchesNegative(Supported.NULL, Supported) == true)
                 return false;
 
-            #region Infos
-
-            // Machine_Infos
-            if (filter.Machine_Infos.MatchesNeutral(null, Infos?.Any() ?? null) == false)
-                return false;
-
-            // Machine_Info_Name
-            if (Infos?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var info in Infos)
-                {
-                    if (filter.Machine_Info_Name.MatchesPositiveSet(info?.Name) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Info_Name.MatchesNegativeSet(info?.Name) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            // Machine_Info_Value
-            if (Infos?.Any() == true)
-            {
-                bool anyPositive = false;
-                bool anyNegative = false;
-
-                foreach (var info in Infos)
-                {
-                    if (filter.Machine_Info_Value.MatchesPositiveSet(info?.Value) != false)
-                        anyPositive = true;
-                    if (filter.Machine_Info_Value.MatchesNegativeSet(info?.Value) == true)
-                        anyNegative = true;
-                }
-
-                if (!anyPositive)
-                    return false;
-                if (anyNegative)
-                    return false;
-            }
-
-            #endregion
-
             #region SharedFeatures
 
             // Machine_SharedFeatures
@@ -967,9 +911,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_Runnable))
                 Runnable = Runnable.NULL;
-
-            if (fields.Contains(Field.Machine_Infos))
-                Infos = null;
 
             #endregion
 
@@ -1123,9 +1064,6 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.Machine_Runnable))
                 Runnable = machine.Runnable;
-
-            if (fields.Contains(Field.Machine_Infos))
-                Infos = machine.Infos;
 
             #endregion
 

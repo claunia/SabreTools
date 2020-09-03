@@ -1473,6 +1473,15 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Info:
+                        var info = datItem as Info;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "info");
+                        xtw.WriteRequiredAttributeString("name", info.Name);
+                        xtw.WriteRequiredAttributeString("value", info.InfoValue);
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.Input:
                         var input = datItem as Input;
                         xtw.WriteStartElement("file");

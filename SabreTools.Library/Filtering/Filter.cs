@@ -86,11 +86,6 @@ namespace SabreTools.Library.Filtering
 
         public FilterItem<Supported> Machine_Supported { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
 
-        // Infos
-        public FilterItem<bool?> Machine_Infos { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Info_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Info_Value { get; private set; } = new FilterItem<string>();
-
         // SharedFeatures
         public FilterItem<bool?> Machine_SharedFeatures { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_SharedFeature_Name { get; private set; } = new FilterItem<string>();
@@ -260,6 +255,9 @@ namespace SabreTools.Library.Filtering
         public FilterItem<FeatureType> DatItem_FeatureType { get; private set; } = new FilterItem<FeatureType>() { Positive = FeatureType.NULL, Negative = FeatureType.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
+
+        // Info
+        public FilterItem<string> DatItem_InfoValue { get; private set; } = new FilterItem<string>();
 
         // Input
         public FilterItem<bool?> DatItem_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -651,28 +649,6 @@ namespace SabreTools.Library.Filtering
                         Machine_Supported.Negative |= value.AsSupported();
                     else
                         Machine_Supported.Positive |= value.AsSupported();
-                    break;
-
-                // Infos
-                case Field.Machine_Infos:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Infos.Neutral = false;
-                    else
-                        Machine_Infos.Neutral = true;
-                    break;
-
-                case Field.Machine_Info_Name:
-                    if (negate)
-                        Machine_Info_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Info_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Info_Value:
-                    if (negate)
-                        Machine_Info_Value.NegativeSet.Add(value);
-                    else
-                        Machine_Info_Value.PositiveSet.Add(value);
                     break;
 
                 // SharedFeatures
@@ -1489,6 +1465,14 @@ namespace SabreTools.Library.Filtering
                         DatItem_FeatureOverall.Negative |= value.AsFeatureStatus();
                     else
                         DatItem_FeatureOverall.Positive |= value.AsFeatureStatus();
+                    break;
+
+                // Info
+                case Field.DatItem_InfoValue:
+                    if (negate)
+                        DatItem_InfoValue.NegativeSet.Add(value);
+                    else
+                        DatItem_InfoValue.PositiveSet.Add(value);
                     break;
 
                 // Input

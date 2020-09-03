@@ -644,15 +644,6 @@ namespace SabreTools.Library.Tools
                     case "supported":
                         return Field.Machine_Supported;
 
-                    case "infos":
-                        return Field.Machine_Infos;
-
-                    case "info_name":
-                        return Field.Machine_Info_Name;
-
-                    case "info_value":
-                        return Field.Machine_Info_Value;
-
                     case "sharedfeatures":
                         return Field.Machine_SharedFeatures;
 
@@ -1044,6 +1035,10 @@ namespace SabreTools.Library.Tools
                     case "featureoverall":
                         return Field.DatItem_FeatureOverall;
 
+                    // Info
+                    case "infovalue":
+                        return Field.DatItem_InfoValue;
+
                     // Input
                     case "service":
                         return Field.DatItem_Service;
@@ -1136,9 +1131,9 @@ namespace SabreTools.Library.Tools
                     case "channels":
                         return Field.DatItem_Channels;
 
-                        #endregion
+                    #endregion
 
-                        #endregion // Item-Specific
+                    #endregion // Item-Specific
                 }
             }
 
@@ -1254,9 +1249,6 @@ namespace SabreTools.Library.Tools
 
                 case "runnable":
                     return Field.Machine_Runnable;
-
-                case "infos":
-                    return Field.Machine_Infos;
 
                 #endregion
 
@@ -1673,6 +1665,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Extension;
                 case "feature":
                     return ItemType.Feature;
+                case "info":
+                    return ItemType.Info;
                 case "input":
                     return ItemType.Input;
                 case "instance":
@@ -1724,6 +1718,7 @@ namespace SabreTools.Library.Tools
                 "driver" => ItemType.Driver,
                 "extension" => ItemType.Extension,
                 "feature" => ItemType.Feature,
+                "info" => ItemType.Info,
                 "input" => ItemType.Input,
                 "instance" => ItemType.Instance,
                 "location" => ItemType.Location,
@@ -2314,6 +2309,8 @@ namespace SabreTools.Library.Tools
                     return "extension";
                 case ItemType.Feature:
                     return "feature";
+                case ItemType.Info:
+                    return "info";
                 case ItemType.Input:
                     return "input";
                 case ItemType.Instance:
@@ -2365,6 +2362,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Driver => "driver",
                 ItemType.Extension => "extension",
                 ItemType.Feature => "feature",
+                ItemType.Info => "info",
                 ItemType.Input => "input",
                 ItemType.Instance => "instance",
                 ItemType.Location => "location",

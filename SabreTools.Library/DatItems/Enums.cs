@@ -221,11 +221,6 @@ namespace SabreTools.Library.DatItems
 
         Machine_Supported,
 
-        // Infos
-        Machine_Infos, // TODO: Fix usage of Infos
-        Machine_Info_Name,
-        Machine_Info_Value,
-
         // SharedFeatures
         Machine_SharedFeatures, // TODO: Fix usage of SharedFeatures
         Machine_SharedFeature_Name,
@@ -396,6 +391,9 @@ namespace SabreTools.Library.DatItems
         DatItem_FeatureStatus,
         DatItem_FeatureOverall,
 
+        // Info
+        DatItem_InfoValue,
+
         // Inputs
         DatItem_Service,
         DatItem_Tilt,
@@ -491,6 +489,7 @@ namespace SabreTools.Library.DatItems
         Driver,
         Extension,
         Feature,
+        Info,
         Input,
         Instance,
         Location,
