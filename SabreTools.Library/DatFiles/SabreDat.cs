@@ -1478,7 +1478,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "info");
                         xtw.WriteRequiredAttributeString("name", info.Name);
-                        xtw.WriteRequiredAttributeString("value", info.InfoValue);
+                        xtw.WriteRequiredAttributeString("value", info.Value);
                         xtw.WriteEndElement();
                         break;
 

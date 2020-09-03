@@ -105,12 +105,6 @@ namespace SabreTools.Library.DatItems
         #region SoftwareList Fields
 
         /// <summary>
-        /// SoftwareList value associated with the item
-        /// </summary>
-        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Value { get; set; }
-
-        /// <summary>
         /// Loading flag
         /// </summary>
         /// TODO: Convert to Enum?
@@ -178,11 +172,6 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Feature_Name,
             Field.DatItem_Feature_Value,
 
-            Field.DatItem_AreaName,
-            Field.DatItem_AreaSize,
-            Field.DatItem_AreaWidth,
-            Field.DatItem_AreaEndianness,
-            Field.DatItem_Value,
             Field.DatItem_LoadFlag,
 
             #endregion
@@ -210,6 +199,13 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Status,
             Field.DatItem_Optional,
             Field.DatItem_Inverted,
+
+            // Rom (SoftwareList)
+            Field.DatItem_AreaName,
+            Field.DatItem_AreaSize,
+            Field.DatItem_AreaWidth,
+            Field.DatItem_AreaEndianness,
+            Field.DatItem_Value,
 
             // Disk
             Field.DatItem_Index,
@@ -372,12 +368,6 @@ namespace SabreTools.Library.DatItems
             #endregion
 
             #region SoftwareList
-
-            // TODO: Add DatItem_Part*
-            // TODO: Add DatItem_Feature*
-
-            if (mappings.Keys.Contains(Field.DatItem_Value))
-                Value = mappings[Field.DatItem_Value];
 
             if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = mappings[Field.DatItem_LoadFlag];
@@ -763,12 +753,6 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            // Filter on softwarelist value
-            if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
-                return false;
-            if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
-                return false;
-
             // Filter on load flag
             if (filter.DatItem_LoadFlag.MatchesPositiveSet(LoadFlag) == false)
                 return false;
@@ -819,9 +803,6 @@ namespace SabreTools.Library.DatItems
             #endregion
 
             #region SoftwareList
-
-            if (fields.Contains(Field.DatItem_Value))
-                Value = null;
 
             if (fields.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = null;
@@ -946,9 +927,6 @@ namespace SabreTools.Library.DatItems
             #endregion
 
             #region SoftwareList
-
-            if (fields.Contains(Field.DatItem_Value))
-                Value = item.Value;
 
             if (fields.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = item.LoadFlag;

@@ -218,7 +218,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
@@ -260,7 +259,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,

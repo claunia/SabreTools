@@ -142,7 +142,7 @@ namespace SabreTools.Library.DatFiles
                         ParseAddHelper(new Info
                         {
                             Name = reader.GetAttribute("name"),
-                            InfoValue = reader.GetAttribute("value"),
+                            Value = reader.GetAttribute("value"),
 
                             Source = new Source
                             {
@@ -741,7 +741,7 @@ namespace SabreTools.Library.DatFiles
                         var info = datItem as Info;
                         xtw.WriteStartElement("info");
                         xtw.WriteRequiredAttributeString("name", info.Name);
-                        xtw.WriteRequiredAttributeString("value", info.InfoValue);
+                        xtw.WriteRequiredAttributeString("value", info.Value);
                         xtw.WriteEndElement();
                         break;
 

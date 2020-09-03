@@ -25,7 +25,7 @@ namespace SabreTools.Library.DatItems
         /// Setting value
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string SettingValue { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
         /// Determines if the setting is default or not
@@ -66,7 +66,7 @@ namespace SabreTools.Library.DatItems
                 Name = mappings[Field.DatItem_Setting_Name];
 
             if (mappings.Keys.Contains(Field.DatItem_Setting_Value))
-                SettingValue = mappings[Field.DatItem_Setting_Value];
+                Value = mappings[Field.DatItem_Setting_Value];
 
             if (mappings.Keys.Contains(Field.DatItem_Setting_Default))
                 Default = mappings[Field.DatItem_Setting_Default].AsYesNo();
@@ -115,14 +115,13 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                SettingValue = this.SettingValue,
+                Value = this.Value,
                 Default = this.Default,
                 Conditions = this.Conditions,
             };
@@ -143,7 +142,7 @@ namespace SabreTools.Library.DatItems
 
             // If the Setting information matches
             bool match = (Name == newOther.Name
-                && SettingValue == newOther.SettingValue
+                && Value == newOther.Value
                 && Default == newOther.Default);
             if (!match)
                 return match;
@@ -209,9 +208,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on value
-            if (filter.DatItem_Setting_Value.MatchesPositiveSet(SettingValue) == false)
+            if (filter.DatItem_Setting_Value.MatchesPositiveSet(Value) == false)
                 return false;
-            if (filter.DatItem_Setting_Value.MatchesNegativeSet(SettingValue) == true)
+            if (filter.DatItem_Setting_Value.MatchesNegativeSet(Value) == true)
                 return false;
 
             // Filter on default
@@ -249,7 +248,7 @@ namespace SabreTools.Library.DatItems
                 Name = null;
 
             if (fields.Contains(Field.DatItem_Setting_Value))
-                SettingValue = null;
+                Value = null;
 
             if (fields.Contains(Field.DatItem_Setting_Default))
                 Default = null;
@@ -302,7 +301,7 @@ namespace SabreTools.Library.DatItems
                 Name = newItem.Name;
 
             if (fields.Contains(Field.DatItem_Setting_Value))
-                SettingValue = newItem.SettingValue;
+                Value = newItem.Value;
 
             if (fields.Contains(Field.DatItem_Setting_Default))
                 Default = newItem.Default;

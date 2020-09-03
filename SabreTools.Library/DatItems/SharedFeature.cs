@@ -25,7 +25,7 @@ namespace SabreTools.Library.DatItems
         /// SharedFeature value
         /// </summary>
         [JsonProperty("value")]
-        public string SharedFeatureValue { get; set; }
+        public string Value { get; set; }
 
         #endregion
 
@@ -53,8 +53,8 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Name))
                 Name = mappings[Field.DatItem_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_SharedFeatureValue))
-                SharedFeatureValue = mappings[Field.DatItem_SharedFeatureValue];
+            if (mappings.Keys.Contains(Field.DatItem_Value))
+                Value = mappings[Field.DatItem_Value];
         }
 
         #endregion
@@ -91,14 +91,13 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
-                SharedFeatureValue = this.SharedFeatureValue,
+                Value = this.Value,
             };
         }
 
@@ -116,7 +115,7 @@ namespace SabreTools.Library.DatItems
             SharedFeature newOther = other as SharedFeature;
 
             // If the archive information matches
-            return (Name == newOther.Name && SharedFeatureValue == newOther.SharedFeatureValue);
+            return (Name == newOther.Name && Value == newOther.Value);
         }
 
         #endregion
@@ -168,9 +167,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on info value
-            if (filter.DatItem_SharedFeatureValue.MatchesPositiveSet(SharedFeatureValue) == false)
+            if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
                 return false;
-            if (filter.DatItem_SharedFeatureValue.MatchesNegativeSet(SharedFeatureValue) == true)
+            if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
                 return false;
 
             return true;
@@ -189,8 +188,8 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_SharedFeatureValue))
-                SharedFeatureValue = null;
+            if (fields.Contains(Field.DatItem_Value))
+                Value = null;
         }
 
         /// <summary>
@@ -228,8 +227,8 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_SharedFeatureValue))
-                SharedFeatureValue = newItem.SharedFeatureValue;
+            if (fields.Contains(Field.DatItem_Value))
+                Value = newItem.Value;
         }
 
         #endregion

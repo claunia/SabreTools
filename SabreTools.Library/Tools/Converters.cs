@@ -734,25 +734,6 @@ namespace SabreTools.Library.Tools
                     case "feature_value":
                         return Field.DatItem_Feature_Value;
 
-                    case "areaname":
-                    case "area_name":
-                        return Field.DatItem_AreaName;
-
-                    case "areasize":
-                    case "area_size":
-                        return Field.DatItem_AreaSize;
-
-                    case "areawidth":
-                    case "area_width":
-                        return Field.DatItem_AreaWidth;
-
-                    case "areaendinanness":
-                    case "area_endianness":
-                        return Field.DatItem_AreaEndianness;
-
-                    case "value":
-                        return Field.DatItem_Value;
-
                     case "loadflag":
                     case "load_flag":
                         return Field.DatItem_LoadFlag;
@@ -839,6 +820,26 @@ namespace SabreTools.Library.Tools
                     case "inverted":
                         return Field.DatItem_Inverted;
 
+                    // Rom (SoftwareList)
+                    case "areaname":
+                    case "area_name":
+                        return Field.DatItem_AreaName;
+
+                    case "areasize":
+                    case "area_size":
+                        return Field.DatItem_AreaSize;
+
+                    case "areawidth":
+                    case "area_width":
+                        return Field.DatItem_AreaWidth;
+
+                    case "areaendinanness":
+                    case "area_endianness":
+                        return Field.DatItem_AreaEndianness;
+
+                    case "value":
+                        return Field.DatItem_Value;
+
                     // Disk
                     case "index":
                         return Field.DatItem_Index;
@@ -893,9 +894,6 @@ namespace SabreTools.Library.Tools
                     // Condition
                     case "relation":
                         return Field.DatItem_Relation;
-
-                    case "conditionvalue":
-                        return Field.DatItem_ConditionValue;
 
                     // Configuration
                     case "locations":
@@ -1026,10 +1024,6 @@ namespace SabreTools.Library.Tools
                     case "featureoverall":
                         return Field.DatItem_FeatureOverall;
 
-                    // Info
-                    case "infovalue":
-                        return Field.DatItem_InfoValue;
-
                     // Input
                     case "service":
                         return Field.DatItem_Service;
@@ -1096,10 +1090,6 @@ namespace SabreTools.Library.Tools
                     // Release
                     case "language":
                         return Field.DatItem_Language;
-
-                    // SharedFeature
-                    case "sharedfeaturevalue":
-                        return Field.DatItem_SharedFeatureValue;
 
                     // Slot
                     case "slotoptions":

@@ -263,11 +263,6 @@ namespace SabreTools.Library.DatItems
         DatItem_Feature_Name,
         DatItem_Feature_Value,
 
-        DatItem_AreaName,
-        DatItem_AreaSize,
-        DatItem_AreaWidth,
-        DatItem_AreaEndianness,
-        DatItem_Value,
         DatItem_LoadFlag,
 
         #endregion
@@ -295,6 +290,13 @@ namespace SabreTools.Library.DatItems
         DatItem_Status,
         DatItem_Optional,
         DatItem_Inverted,
+
+        // Rom (SoftwareList)
+        DatItem_AreaName,
+        DatItem_AreaSize,
+        DatItem_AreaWidth,
+        DatItem_AreaEndianness,
+        DatItem_Value,
 
         // Disk
         DatItem_Index,
@@ -324,7 +326,6 @@ namespace SabreTools.Library.DatItems
         DatItem_Clock,
 
         // Condition
-        DatItem_ConditionValue,
         DatItem_Relation,
 
         // Configuration.Locations
@@ -386,9 +387,6 @@ namespace SabreTools.Library.DatItems
         DatItem_FeatureStatus,
         DatItem_FeatureOverall,
 
-        // Info
-        DatItem_InfoValue,
-
         // Inputs
         DatItem_Service,
         DatItem_Tilt,
@@ -419,9 +417,6 @@ namespace SabreTools.Library.DatItems
 
         // Release
         DatItem_Language,
-
-        // SharedFeature
-        DatItem_SharedFeatureValue,
 
         // Slot.SlotOptions
         DatItem_SlotOptions,

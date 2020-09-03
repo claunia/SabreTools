@@ -128,11 +128,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Feature_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Feature_Value { get; private set; } = new FilterItem<string>();
 
-        public FilterItem<string> DatItem_AreaName { get; private set; } = new FilterItem<string>();
-        public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<string> DatItem_AreaWidth { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_AreaEndianness { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_LoadFlag { get; private set; } = new FilterItem<string>();
 
         #endregion
@@ -160,6 +155,13 @@ namespace SabreTools.Library.Filtering
         public FilterItem<ItemStatus> DatItem_Status { get; private set; } = new FilterItem<ItemStatus>() { Positive = ItemStatus.NULL, Negative = ItemStatus.NULL };
         public FilterItem<bool?> DatItem_Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> DatItem_Inverted { get; private set; } = new FilterItem<bool?>();
+
+        // Rom (SoftwareList)
+        public FilterItem<string> DatItem_AreaName { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<string> DatItem_AreaWidth { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_AreaEndianness { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Value { get; private set; } = new FilterItem<string>();
 
         // Disk
         public FilterItem<string> DatItem_Index { get; private set; } = new FilterItem<string>();
@@ -190,7 +192,6 @@ namespace SabreTools.Library.Filtering
 
         // Condition
         public FilterItem<string> DatItem_Relation { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_ConditionValue { get; private set; } = new FilterItem<string>();
 
         // Configuration.Locations
         public FilterItem<bool?> DatItem_Locations { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -251,9 +252,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<FeatureStatus> DatItem_FeatureStatus { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
         public FilterItem<FeatureStatus> DatItem_FeatureOverall { get; private set; } = new FilterItem<FeatureStatus>() { Positive = FeatureStatus.NULL, Negative = FeatureStatus.NULL };
 
-        // Info
-        public FilterItem<string> DatItem_InfoValue { get; private set; } = new FilterItem<string>();
-
         // Input
         public FilterItem<bool?> DatItem_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> DatItem_Tilt { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -284,9 +282,6 @@ namespace SabreTools.Library.Filtering
 
         // Release
         public FilterItem<string> DatItem_Language { get; private set; } = new FilterItem<string>();
-
-        // SharedFeature
-        public FilterItem<string> DatItem_SharedFeatureValue { get; private set; } = new FilterItem<string>();
 
         // Slots.SlotOptions
         public FilterItem<bool?> DatItem_SlotOptions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -1140,13 +1135,6 @@ namespace SabreTools.Library.Filtering
                         DatItem_Relation.PositiveSet.Add(value);
                     break;
 
-                case Field.DatItem_ConditionValue:
-                    if (negate)
-                        DatItem_ConditionValue.NegativeSet.Add(value);
-                    else
-                        DatItem_ConditionValue.PositiveSet.Add(value);
-                    break;
-
                 // Configurations.Locations
                 case Field.DatItem_Locations:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
@@ -1443,14 +1431,6 @@ namespace SabreTools.Library.Filtering
                         DatItem_FeatureOverall.Positive |= value.AsFeatureStatus();
                     break;
 
-                // Info
-                case Field.DatItem_InfoValue:
-                    if (negate)
-                        DatItem_InfoValue.NegativeSet.Add(value);
-                    else
-                        DatItem_InfoValue.PositiveSet.Add(value);
-                    break;
-
                 // Input
                 case Field.DatItem_Service:
                     if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
@@ -1601,14 +1581,6 @@ namespace SabreTools.Library.Filtering
                         DatItem_Language.NegativeSet.Add(value);
                     else
                         DatItem_Language.PositiveSet.Add(value);
-                    break;
-
-                // SharedFeature
-                case Field.DatItem_SharedFeatureValue:
-                    if (negate)
-                        DatItem_SharedFeatureValue.NegativeSet.Add(value);
-                    else
-                        DatItem_SharedFeatureValue.PositiveSet.Add(value);
                     break;
 
                 // Slots.SlotOptions

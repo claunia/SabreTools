@@ -230,7 +230,7 @@ namespace SabreTools.Library.DatFiles
                             Tag = reader.GetAttribute("tag"),
                             Mask = reader.GetAttribute("mask"),
                             Relation = reader.GetAttribute("relation"),
-                            ConditionValue = reader.GetAttribute("value"),
+                            Value = reader.GetAttribute("value"),
 
                             Source = new Source
                             {

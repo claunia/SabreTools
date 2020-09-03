@@ -185,6 +185,12 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Part Part { get; set; }
 
+        /// <summary>
+        /// SoftwareList value associated with the item
+        /// </summary>
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Value { get; set; }
+
         #endregion
 
         #endregion // Fields
@@ -210,6 +216,9 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Rom-specific fields
+
+            #region Common
+
             if (mappings.Keys.Contains(Field.DatItem_Name))
                 Name = mappings[Field.DatItem_Name];
 
@@ -266,6 +275,10 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Inverted))
                 Inverted = mappings[Field.DatItem_Optional].AsYesNo();
 
+            #endregion
+
+            #region SoftwareList
+
             if (mappings.Keys.Contains(Field.DatItem_AreaName))
             {
                 if (DataArea == null)
@@ -298,6 +311,11 @@ namespace SabreTools.Library.DatItems
 
                 DataArea.Endianness = mappings[Field.DatItem_AreaEndianness];
             }
+
+            if (mappings.Keys.Contains(Field.DatItem_Value))
+                Value = mappings[Field.DatItem_Value];
+
+            #endregion
         }
 
         #endregion
@@ -380,7 +398,6 @@ namespace SabreTools.Library.DatItems
                 Remark = this.Remark,
                 Boot = this.Boot,
 
-                Value = this.Value,
                 LoadFlag = this.LoadFlag,
 
                 Machine = this.Machine.Clone() as Machine,
@@ -408,6 +425,7 @@ namespace SabreTools.Library.DatItems
 
                 DataArea = this.DataArea,
                 Part = this.Part,
+                Value = this.Value,
             };
         }
 
@@ -754,6 +772,12 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
                 return false;
 
+            // Filter on value
+            if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
+                return false;
+            if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
+                return false;
+
             #endregion
 
             return true;
@@ -861,6 +885,9 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_Features) && Part != null)
                 Part.Features = null;
+
+            if (fields.Contains(Field.DatItem_Value))
+                Value = null;
 
             #endregion
         }
