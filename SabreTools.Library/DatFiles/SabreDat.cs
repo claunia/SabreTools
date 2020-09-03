@@ -1322,6 +1322,37 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                         break;
 
+                    case ItemType.Device:
+                        var device = datItem as Device;
+                        xtw.WriteStartElement("file");
+                        xtw.WriteAttributeString("type", "device");
+                        xtw.WriteOptionalAttributeString("type", device.DeviceType);
+                        xtw.WriteOptionalAttributeString("tag", device.Tag);
+                        xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
+                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
+                        xtw.WriteOptionalAttributeString("interface", device.Interface);
+                        if (device.Instances != null)
+                        {
+                            foreach (var instance in device.Instances)
+                            {
+                                xtw.WriteStartElement("instance");
+                                xtw.WriteOptionalAttributeString("name", instance.Name);
+                                xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (device.Extensions != null)
+                        {
+                            foreach (var extension in device.Extensions)
+                            {
+                                xtw.WriteStartElement("extension");
+                                xtw.WriteOptionalAttributeString("name", extension.Name);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
                     case ItemType.DeviceReference:
                         var deviceRef = datItem as DeviceReference;
                         xtw.WriteStartElement("file");

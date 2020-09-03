@@ -683,39 +683,6 @@ namespace SabreTools.Library.Tools
                     case "port_analog_mask":
                         return Field.Machine_Port_Analog_Mask;
 
-                    case "devices":
-                        return Field.Machine_Devices;
-
-                    case "device_type":
-                        return Field.Machine_Device_Type;
-
-                    case "device_tag":
-                        return Field.Machine_Device_Tag;
-
-                    case "device_fixedimage":
-                        return Field.Machine_Device_FixedImage;
-
-                    case "device_mandatory":
-                        return Field.Machine_Device_Mandatory;
-
-                    case "device_interface":
-                        return Field.Machine_Device_Interface;
-
-                    case "device_instances":
-                        return Field.Machine_Device_Instances;
-
-                    case "device_instance_name":
-                        return Field.Machine_Device_Instance_Name;
-
-                    case "device_instance_briefname":
-                        return Field.Machine_Device_Instance_BriefName;
-
-                    case "device_extensions":
-                        return Field.Machine_Device_Extensions;
-
-                    case "device_extension_name":
-                        return Field.Machine_Device_Extension_Name;
-
                     #endregion
 
                     #region Logiqx
@@ -1096,6 +1063,34 @@ namespace SabreTools.Library.Tools
 
                     case "value_default":
                         return Field.DatItem_Value_Default;
+
+                    // Device
+                    case "devicetype":
+                        return Field.DatItem_DeviceType;
+
+                    case "fixedimage":
+                        return Field.DatItem_FixedImage;
+
+                    case "mandatory":
+                        return Field.DatItem_Mandatory;
+
+                    case "interface":
+                        return Field.DatItem_Interface;
+
+                    case "instances":
+                        return Field.DatItem_Instances;
+
+                    case "instance_name":
+                        return Field.DatItem_Instance_Name;
+
+                    case "instance_briefname":
+                        return Field.DatItem_Instance_BriefName;
+
+                    case "extensions":
+                        return Field.DatItem_Extensions;
+
+                    case "extension_name":
+                        return Field.DatItem_Extension_Name;
 
                     // Driver
                     case "supportstatus":
@@ -1672,6 +1667,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Condition;
                 case "configuration":
                     return ItemType.Configuration;
+                case "device":
+                    return ItemType.Device;
                 case "device_ref":
                     return ItemType.DeviceReference;
                 case "dipswitch":
@@ -1716,6 +1713,7 @@ namespace SabreTools.Library.Tools
                 "chip" => ItemType.Chip,
                 "condition" => ItemType.Condition,
                 "configuration" => ItemType.Configuration,
+                "device" => ItemType.Device,
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
@@ -2289,6 +2287,8 @@ namespace SabreTools.Library.Tools
                     return "condition";
                 case ItemType.Configuration:
                     return "configuration";
+                case ItemType.Device:
+                    return "device";
                 case ItemType.DeviceReference:
                     return "device_ref";
                 case ItemType.DipSwitch:
@@ -2333,6 +2333,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Chip => "chip",
                 ItemType.Condition => "condition",
                 ItemType.Configuration => "configuration",
+                ItemType.Device => "device",
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",

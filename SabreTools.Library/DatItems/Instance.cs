@@ -51,11 +51,11 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Instance-specific fields
-            if (mappings.Keys.Contains(Field.Machine_Device_Instance_Name))
-                Name = mappings[Field.Machine_Device_Instance_Name];
+            if (mappings.Keys.Contains(Field.DatItem_Instance_Name))
+                Name = mappings[Field.DatItem_Instance_Name];
 
-            if (mappings.Keys.Contains(Field.Machine_Device_Instance_BriefName))
-                BriefName = mappings[Field.Machine_Device_Instance_BriefName];
+            if (mappings.Keys.Contains(Field.DatItem_Instance_BriefName))
+                BriefName = mappings[Field.DatItem_Instance_BriefName];
         }
 
         #endregion
@@ -169,15 +169,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.Machine_Device_Instance_Name.MatchesPositiveSet(Name) == false)
+            if (filter.DatItem_Instance_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.Machine_Device_Instance_Name.MatchesNegativeSet(Name) == true)
+            if (filter.DatItem_Instance_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
             // Filter on brief name
-            if (filter.Machine_Device_Instance_BriefName.MatchesPositiveSet(Name) == false)
+            if (filter.DatItem_Instance_BriefName.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.Machine_Device_Instance_BriefName.MatchesNegativeSet(Name) == true)
+            if (filter.DatItem_Instance_BriefName.MatchesNegativeSet(Name) == true)
                 return false;
 
             return true;
@@ -193,10 +193,10 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.Machine_Device_Instance_Name))
+            if (fields.Contains(Field.DatItem_Instance_Name))
                 Name = null;
 
-            if (fields.Contains(Field.Machine_Device_Instance_BriefName))
+            if (fields.Contains(Field.DatItem_Instance_BriefName))
                 BriefName = null;
         }
 
@@ -232,10 +232,10 @@ namespace SabreTools.Library.DatItems
             Instance newItem = item as Instance;
 
             // Replace the fields
-            if (fields.Contains(Field.Machine_Device_Instance_Name))
+            if (fields.Contains(Field.DatItem_Instance_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.Machine_Device_Instance_BriefName))
+            if (fields.Contains(Field.DatItem_Instance_BriefName))
                 BriefName = newItem.BriefName;
         }
 

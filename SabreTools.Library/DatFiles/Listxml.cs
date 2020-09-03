@@ -268,6 +268,31 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
+                    case "device":
+                        var device = new Device
+                        {
+                            DeviceType = reader.GetAttribute("type"),
+                            Tag = reader.GetAttribute("tag"),
+                            FixedImage = reader.GetAttribute("fixed_image"),
+                            Mandatory = reader.GetAttribute("mandatory"),
+                            Interface = reader.GetAttribute("interface"),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        };
+
+                        // Now read the internal tags
+                        ReadDevice(reader.ReadSubtree(), device);
+
+                        datItems.Add(device);
+
+                        // Skip the device now that we've processed it
+                        reader.Skip();
+                        break;
+
                     case "device_ref":
                         datItems.Add(new DeviceReference
                         {
@@ -535,27 +560,6 @@ namespace SabreTools.Library.DatFiles
                         machine.Ports.Add(port);
 
                         // Skip the port now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "device":
-                        var device = new Device();
-                        device.Type = reader.GetAttribute("type");
-                        device.Tag = reader.GetAttribute("tag");
-                        device.FixedImage = reader.GetAttribute("fixed_image");
-                        device.Mandatory = reader.GetAttribute("mandatory");
-                        device.Interface = reader.GetAttribute("interface");
-
-                        // Now read the internal tags
-                        ReadDevice(reader.ReadSubtree(), device);
-
-                        // Ensure the list exists
-                        if (machine.Devices == null)
-                            machine.Devices = new List<Device>();
-
-                        machine.Devices.Add(device);
-
-                        // Skip the device now that we've processed it
                         reader.Skip();
                         break;
 
@@ -1317,38 +1321,6 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteEndElement();
                     }
                 }
-                if (datItem.Machine.Devices != null)
-                {
-                    foreach (var device in datItem.Machine.Devices)
-                    {
-                        xtw.WriteStartElement("device");
-                        xtw.WriteOptionalAttributeString("type", device.Type);
-                        xtw.WriteOptionalAttributeString("tag", device.Tag);
-                        xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
-                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
-                        xtw.WriteOptionalAttributeString("interface", device.Interface);
-                        if (device.Instances != null)
-                        {
-                            foreach (var instance in device.Instances)
-                            {
-                                xtw.WriteStartElement("instance");
-                                xtw.WriteOptionalAttributeString("name", instance.Name);
-                                xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        if (device.Extensions != null)
-                        {
-                            foreach (var extension in device.Extensions)
-                            {
-                                xtw.WriteStartElement("extension");
-                                xtw.WriteOptionalAttributeString("name", extension.Name);
-                                xtw.WriteEndElement();
-                            }
-                        }
-                        xtw.WriteEndElement();
-                    }
-                }
 
                 xtw.Flush();
             }
@@ -1487,6 +1459,36 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteOptionalAttributeString("name", setting.Name);
                                 xtw.WriteOptionalAttributeString("value", setting.Value);
                                 xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        xtw.WriteEndElement();
+                        break;
+
+                    case ItemType.Device:
+                        var device = datItem as Device;
+                        xtw.WriteStartElement("device");
+                        xtw.WriteOptionalAttributeString("type", device.DeviceType);
+                        xtw.WriteOptionalAttributeString("tag", device.Tag);
+                        xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
+                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
+                        xtw.WriteOptionalAttributeString("interface", device.Interface);
+                        if (device.Instances != null)
+                        {
+                            foreach (var instance in device.Instances)
+                            {
+                                xtw.WriteStartElement("instance");
+                                xtw.WriteOptionalAttributeString("name", instance.Name);
+                                xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
+                                xtw.WriteEndElement();
+                            }
+                        }
+                        if (device.Extensions != null)
+                        {
+                            foreach (var extension in device.Extensions)
+                            {
+                                xtw.WriteStartElement("extension");
+                                xtw.WriteOptionalAttributeString("name", extension.Name);
                                 xtw.WriteEndElement();
                             }
                         }

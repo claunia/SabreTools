@@ -99,60 +99,6 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Represents one ListXML device
-    /// </summary>
-    /// TODO: Promote to DatItem level (contains list)
-    [JsonObject("device")]
-    public class Device
-    {
-        #region Fields
-
-        /// <summary>
-        /// Device type
-        /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Type { get; set; }
-
-        /// <summary>
-        /// Device tag
-        /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Tag { get; set; }
-
-        /// <summary>
-        /// Fixed image format
-        /// </summary>
-        [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string FixedImage { get; set; }
-
-        /// <summary>
-        /// Determines if the devices is mandatory
-        /// </summary>
-        [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Mandatory { get; set; } // TODO: bool?
-
-        /// <summary>
-        /// Device interface
-        /// </summary>
-        [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Interface { get; set; }
-
-        /// <summary>
-        /// Device instances
-        /// </summary>
-        [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Instance> Instances { get; set; }
-
-        /// <summary>
-        /// Device extensions
-        /// </summary>
-        [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<Extension> Extensions { get; set; }
-
-        #endregion
-    }
-
-    /// <summary>
     /// Represents one ListXML display
     /// </summary>
     /// TODO: Promote to DatItem level

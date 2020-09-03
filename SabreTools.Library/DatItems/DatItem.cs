@@ -479,6 +479,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Configuration:
                     return new Configuration();
 
+                case ItemType.Device:
+                    return new Device();
+
                 case ItemType.DeviceReference:
                     return new DeviceReference();
 
@@ -538,6 +541,7 @@ namespace SabreTools.Library.DatItems
                 ItemType.Chip => new Chip(),
                 ItemType.Condition => new Condition(),
                 ItemType.Configuration => new Configuration(),
+                ItemType.Device => new Device(),
                 ItemType.DeviceReference => new DeviceReference(),
                 ItemType.DipSwitch => new DipSwitch(),
                 ItemType.Disk => new Disk(),

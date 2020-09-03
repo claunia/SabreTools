@@ -233,23 +233,6 @@ namespace SabreTools.Library.DatItems
         Machine_Port_Analogs,
         Machine_Port_Analog_Mask,
 
-        // Devices
-        Machine_Devices,
-        Machine_Device_Type,
-        Machine_Device_Tag,
-        Machine_Device_FixedImage,
-        Machine_Device_Mandatory,
-        Machine_Device_Interface,
-
-        // Devices.Instances
-        Machine_Device_Instances,
-        Machine_Device_Instance_Name,
-        Machine_Device_Instance_BriefName,
-
-        // Devices.Extensions
-        Machine_Device_Extensions,
-        Machine_Device_Extension_Name,
-
         #endregion
 
         #region Logiqx
@@ -413,6 +396,21 @@ namespace SabreTools.Library.DatItems
         DatItem_Setting_Value,
         DatItem_Setting_Default,
 
+        // Device
+        DatItem_DeviceType,
+        DatItem_FixedImage,
+        DatItem_Mandatory,
+        DatItem_Interface,
+
+        // Device.Instances
+        DatItem_Instances,
+        DatItem_Instance_Name,
+        DatItem_Instance_BriefName,
+
+        // Device.Extensions
+        DatItem_Extensions,
+        DatItem_Extension_Name,
+
         // DipSwitch.Values
         DatItem_Values,
         DatItem_Value_Name,
@@ -492,6 +490,7 @@ namespace SabreTools.Library.DatItems
         Chip,
         Condition,
         Configuration,
+        Device,
         DeviceReference,
         DipSwitch,
         Driver,

@@ -45,8 +45,8 @@ namespace SabreTools.Library.DatItems
             base.SetFields(mappings);
 
             // Handle Sample-specific fields
-            if (mappings.Keys.Contains(Field.Machine_Device_Extension_Name))
-                Name = mappings[Field.Machine_Device_Extension_Name];
+            if (mappings.Keys.Contains(Field.DatItem_Extension_Name))
+                Name = mappings[Field.DatItem_Extension_Name];
         }
 
         #endregion
@@ -158,9 +158,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.Machine_Device_Extension_Name.MatchesPositiveSet(Name) == false)
+            if (filter.DatItem_Extension_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.Machine_Device_Extension_Name.MatchesNegativeSet(Name) == true)
+            if (filter.DatItem_Extension_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
             return true;
@@ -176,7 +176,7 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.Machine_Device_Extension_Name))
+            if (fields.Contains(Field.DatItem_Extension_Name))
                 Name = null;
         }
 
@@ -212,7 +212,7 @@ namespace SabreTools.Library.DatItems
             Extension newItem = item as Extension;
 
             // Replace the fields
-            if (fields.Contains(Field.Machine_Device_Extension_Name))
+            if (fields.Contains(Field.DatItem_Extension_Name))
                 Name = newItem.Name;
         }
 

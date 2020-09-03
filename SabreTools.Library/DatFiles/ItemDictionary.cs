@@ -120,6 +120,12 @@ namespace SabreTools.Library.DatFiles
         public long ConfigurationCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of Device items
+        /// </summary>
+        [JsonIgnore]
+        public long DeviceCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Device Reference items
         /// </summary>
         [JsonIgnore]
@@ -544,6 +550,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Configuration:
                     ConfigurationCount++;
                     break;
+                case ItemType.Device:
+                    DeviceCount++;
+                    break;
                 case ItemType.DeviceReference:
                     DeviceReferenceCount++;
                     break;
@@ -708,6 +717,9 @@ namespace SabreTools.Library.DatFiles
                     break;
                 case ItemType.Configuration:
                     ConfigurationCount--;
+                    break;
+                case ItemType.Device:
+                    DeviceCount--;
                     break;
                 case ItemType.DeviceReference:
                     DeviceReferenceCount--;

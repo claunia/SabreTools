@@ -98,23 +98,6 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> Machine_Port_Analogs { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> Machine_Port_Analog_Mask { get; private set; } = new FilterItem<string>();
 
-        // Devices
-        public FilterItem<bool?> Machine_Devices { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Device_Type { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Device_Tag { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Device_FixedImage { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Device_Mandatory { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Device_Interface { get; private set; } = new FilterItem<string>();
-
-        // Devices.Instances
-        public FilterItem<bool?> Machine_Device_Instances { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Device_Instance_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> Machine_Device_Instance_BriefName { get; private set; } = new FilterItem<string>();
-
-        // Devices.Extensions
-        public FilterItem<bool?> Machine_Device_Extensions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> Machine_Device_Extension_Name { get; private set; } = new FilterItem<string>();
-
         #endregion
 
         #region Logiqx
@@ -277,6 +260,21 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Setting_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Setting_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Setting_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+
+        // Device
+        public FilterItem<string> DatItem_DeviceType { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_FixedImage { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Mandatory { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Interface { get; private set; } = new FilterItem<string>();
+
+        // Device.Instances
+        public FilterItem<bool?> DatItem_Instances { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Instance_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Instance_BriefName { get; private set; } = new FilterItem<string>();
+
+        // Device.Extensions
+        public FilterItem<bool?> DatItem_Extensions { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<string> DatItem_Extension_Name { get; private set; } = new FilterItem<string>();
 
         // DipSwitch.Values
         public FilterItem<bool?> DatItem_Values { get; private set; } = new FilterItem<bool?>() { Neutral = null };
@@ -804,86 +802,6 @@ namespace SabreTools.Library.Filtering
                     else
                         Machine_Port_Analog_Mask.PositiveSet.Add(value);
                     break;                
-
-                // Devices
-                case Field.Machine_Devices:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Devices.Neutral = false;
-                    else
-                        Machine_Devices.Neutral = true;
-                    break;
-
-                case Field.Machine_Device_Type:
-                    if (negate)
-                        Machine_Device_Type.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Type.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Device_Tag:
-                    if (negate)
-                        Machine_Device_Tag.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Tag.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Device_FixedImage:
-                    if (negate)
-                        Machine_Device_FixedImage.NegativeSet.Add(value);
-                    else
-                        Machine_Device_FixedImage.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Device_Mandatory:
-                    if (negate)
-                        Machine_Device_Mandatory.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Mandatory.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Device_Interface:
-                    if (negate)
-                        Machine_Device_Interface.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Interface.PositiveSet.Add(value);
-                    break;
-
-                // Devices.Instances
-                case Field.Machine_Device_Instances:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Device_Instances.Neutral = false;
-                    else
-                        Machine_Device_Instances.Neutral = true;
-                    break;
-
-                case Field.Machine_Device_Instance_Name:
-                    if (negate)
-                        Machine_Device_Instance_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Instance_Name.PositiveSet.Add(value);
-                    break;
-
-                case Field.Machine_Device_Instance_BriefName:
-                    if (negate)
-                        Machine_Device_Instance_BriefName.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Instance_BriefName.PositiveSet.Add(value);
-                    break;
-
-                // Devices.Extensions
-                case Field.Machine_Device_Extensions:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_Device_Extensions.Neutral = false;
-                    else
-                        Machine_Device_Extensions.Neutral = true;
-                    break;
-
-                case Field.Machine_Device_Extension_Name:
-                    if (negate)
-                        Machine_Device_Extension_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Device_Extension_Name.PositiveSet.Add(value);
-                    break;
 
                 #endregion
 
@@ -1604,6 +1522,72 @@ namespace SabreTools.Library.Filtering
                         DatItem_Setting_Default.Neutral = false;
                     else
                         DatItem_Setting_Default.Neutral = true;
+                    break;
+
+                // Device
+                case Field.DatItem_DeviceType:
+                    if (negate)
+                        DatItem_DeviceType.NegativeSet.Add(value);
+                    else
+                        DatItem_DeviceType.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_FixedImage:
+                    if (negate)
+                        DatItem_FixedImage.NegativeSet.Add(value);
+                    else
+                        DatItem_FixedImage.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Mandatory:
+                    if (negate)
+                        DatItem_Mandatory.NegativeSet.Add(value);
+                    else
+                        DatItem_Mandatory.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Interface:
+                    if (negate)
+                        DatItem_Interface.NegativeSet.Add(value);
+                    else
+                        DatItem_Interface.PositiveSet.Add(value);
+                    break;
+
+                // Devices.Instances
+                case Field.DatItem_Instances:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Instances.Neutral = false;
+                    else
+                        DatItem_Instances.Neutral = true;
+                    break;
+
+                case Field.DatItem_Instance_Name:
+                    if (negate)
+                        DatItem_Instance_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_Instance_Name.PositiveSet.Add(value);
+                    break;
+
+                case Field.DatItem_Instance_BriefName:
+                    if (negate)
+                        DatItem_Instance_BriefName.NegativeSet.Add(value);
+                    else
+                        DatItem_Instance_BriefName.PositiveSet.Add(value);
+                    break;
+
+                // Devices.Extensions
+                case Field.DatItem_Extensions:
+                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                        DatItem_Extensions.Neutral = false;
+                    else
+                        DatItem_Extensions.Neutral = true;
+                    break;
+
+                case Field.DatItem_Extension_Name:
+                    if (negate)
+                        DatItem_Extension_Name.NegativeSet.Add(value);
+                    else
+                        DatItem_Extension_Name.PositiveSet.Add(value);
                     break;
 
                 // DipSwitches.Values
