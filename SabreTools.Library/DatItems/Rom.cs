@@ -51,6 +51,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Byte size of the rom
         /// </summary>
+        /// TODO: Can this be made optional instead of concrete long? Use `null` instead of `-1`?
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public long Size { get; set; }
 

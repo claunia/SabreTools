@@ -359,23 +359,7 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "rom":
-                        // If the rom is continue or ignore, add the size to the previous rom
-                        if (reader.GetAttribute("loadflag") == "continue" || reader.GetAttribute("loadflag") == "ignore")
-                        {
-                            int index = Items[key].Count - 1;
-                            DatItem lastrom = Items[key][index];
-                            if (lastrom.ItemType == ItemType.Rom)
-                            {
-                                ((Rom)lastrom).Size += Sanitizer.CleanSize(reader.GetAttribute("size"));
-                            }
-
-                            Items[key].RemoveAt(index);
-                            Items[key].Add(lastrom);
-                            reader.Read();
-                            continue;
-                        }
-
-                        DatItem rom = new Rom
+                        var rom = new Rom
                         {
                             Name = reader.GetAttribute("name"),
                             Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
@@ -388,6 +372,24 @@ namespace SabreTools.Library.DatFiles
 
                             DataArea = dataArea,
                         };
+
+                        // If the rom is continue or ignore, add the size to the previous rom
+                        // TODO: Can this be done on write? We technically lose information this way.
+                        // Order is not guaranteed, and since these don't tend to have any way
+                        // of determining what the "previous" item was after this, that info would
+                        // have to be stored *with* the item somehow
+                        if (rom.LoadFlag == LoadFlag.Continue || rom.LoadFlag == LoadFlag.Ignore)
+                        {
+                            int index = Items[key].Count - 1;
+                            DatItem lastrom = Items[key][index];
+                            if (lastrom.ItemType == ItemType.Rom)
+                                (lastrom as Rom).Size += rom.Size;
+
+                            Items[key].RemoveAt(index);
+                            Items[key].Add(lastrom);
+                            reader.Read();
+                            continue;
+                        }
 
                         items.Add(rom);
                         reader.Read();

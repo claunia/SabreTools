@@ -35,8 +35,9 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Determines if the devices is mandatory
         /// </summary>
+        /// <remarks>Only value used seems to be 1. Used like bool, but actually int</remarks>
         [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Mandatory { get; set; } // TODO: bool?
+        public string Mandatory { get; set; } // TODO: long?
 
         /// <summary>
         /// Device interface

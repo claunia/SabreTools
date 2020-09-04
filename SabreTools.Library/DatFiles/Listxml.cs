@@ -357,11 +357,10 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "display":
-                        datItems.Add(new Display
+                        var display = new Display
                         {
                             Tag = reader.GetAttribute("tag"),
                             DisplayType = reader.GetAttribute("type").AsDisplayType(),
-                            Rotate = reader.GetAttribute("rotate"),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
                             Width = reader.GetAttribute("width"),
                             Height = reader.GetAttribute("height"),
@@ -379,7 +378,16 @@ namespace SabreTools.Library.DatFiles
                                 Index = indexId,
                                 Name = filename,
                             },
-                        });
+                        };
+
+                        // Set the rotation
+                        if (reader.GetAttribute("rotate") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("rotate"), out long rotate))
+                                display.Rotate = rotate;
+                        }
+
+                        datItems.Add(display);
 
                         reader.Read();
                         break;
@@ -1531,7 +1539,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("display");
                         xtw.WriteOptionalAttributeString("tag", display.Tag);
                         xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
-                        xtw.WriteOptionalAttributeString("rotate", display.Rotate);
+                        xtw.WriteOptionalAttributeString("rotate", display.Rotate?.ToString());
                         xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
                         xtw.WriteOptionalAttributeString("width", display.Width);
                         xtw.WriteOptionalAttributeString("height", display.Height);

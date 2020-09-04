@@ -197,7 +197,7 @@ namespace SabreTools.Library.Filtering
 
         // Display
         public FilterItem<DisplayType> DatItem_DisplayType { get; private set; } = new FilterItem<DisplayType>() { Positive = DisplayType.NULL, Negative = DisplayType.NULL };
-        public FilterItem<string> DatItem_Rotate { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Rotate { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<bool?> DatItem_FlipX { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> DatItem_Width { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Height { get; private set; } = new FilterItem<string>();
@@ -839,7 +839,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Rotate:
-                    SetStringFilter(DatItem_Rotate, value, negate);
+                    SetOptionalLongFilter(DatItem_Rotate, value, negate);
                     break;
 
                 case Field.DatItem_FlipX:

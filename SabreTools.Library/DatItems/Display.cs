@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
@@ -33,7 +34,7 @@ namespace SabreTools.Library.DatItems
         /// Display rotation
         /// </summary>
         [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Rotate { get; set; } // TODO: (0|90|180|270) Int32?
+        public long? Rotate { get; set; }
 
         /// <summary>
         /// Determines if display is flipped in the X-coordinates
@@ -122,7 +123,10 @@ namespace SabreTools.Library.DatItems
                 DisplayType = mappings[Field.DatItem_DisplayType].AsDisplayType();
 
             if (mappings.Keys.Contains(Field.DatItem_Rotate))
-                Rotate = mappings[Field.DatItem_Rotate];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Rotate], out long rotate))
+                    Rotate = rotate;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_FlipX))
                 FlipX = mappings[Field.DatItem_FlipX].AsYesNo();
@@ -260,9 +264,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on rotation
-            if (filter.DatItem_Rotate.MatchesPositiveSet(Rotate) == false)
+            if (filter.DatItem_Rotate.MatchesPositive(null, Rotate) == false)
                 return false;
-            if (filter.DatItem_Rotate.MatchesNegativeSet(Rotate) == true)
+            if (filter.DatItem_Rotate.MatchesNegative(null, Rotate) == true)
                 return false;
 
             // Filter on flipx
