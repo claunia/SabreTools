@@ -513,6 +513,14 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
+        // TODO: Can there be a special filter for machine that says if one item in a machine
+        // explicitly passes then the machine is included? This will be difficult to attempt to
+        // implement because technically, you'd want to keep games that don't match a negative
+        // instead of the inverse. Possible way of doing it would be: filter on machine-level
+        // things first, then see if any items inside explicitly fail. If ANY fail inside, filter
+        // out the machine. This would likely have to be an entirely separate flag. A proof
+        // of concept implementation would be best first, likely living under Filtering of
+        // the DatFile class.
         #region Filtering
 
         /// <summary>
