@@ -363,7 +363,6 @@ namespace SabreTools.Library.DatFiles
                             DisplayType = reader.GetAttribute("type").AsDisplayType(),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
                             Refresh = reader.GetAttribute("refresh"),
-                            PixClock = reader.GetAttribute("pixclock"),
                             HTotal = reader.GetAttribute("htotal"),
                             HBEnd = reader.GetAttribute("hbend"),
                             HBStart = reader.GetAttribute("hbstart"),
@@ -397,6 +396,13 @@ namespace SabreTools.Library.DatFiles
                         {
                             if (Int64.TryParse(reader.GetAttribute("height"), out long height))
                                 display.Height = height;
+                        }
+
+                        // Set the pixclock
+                        if (reader.GetAttribute("pixclock") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("pixclock"), out long pixclock))
+                                display.PixClock = pixclock;
                         }
 
                         datItems.Add(display);
@@ -1556,7 +1562,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("width", display.Width?.ToString());
                         xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
                         xtw.WriteOptionalAttributeString("refresh", display.Refresh);
-                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock);
+                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
                         xtw.WriteOptionalAttributeString("htotal", display.HTotal);
                         xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
                         xtw.WriteOptionalAttributeString("hstart", display.HBStart);

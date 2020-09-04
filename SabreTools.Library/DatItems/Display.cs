@@ -64,7 +64,7 @@ namespace SabreTools.Library.DatItems
         /// Pixel clock timer
         /// </summary>
         [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string PixClock { get; set; } // TODO: Int32? Float?
+        public long? PixClock { get; set; }
 
         /// <summary>
         /// Total horizontal lines
@@ -147,7 +147,10 @@ namespace SabreTools.Library.DatItems
                 Refresh = mappings[Field.DatItem_Refresh];
 
             if (mappings.Keys.Contains(Field.DatItem_PixClock))
-                PixClock = mappings[Field.DatItem_PixClock];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_PixClock], out long pixClock))
+                    PixClock = pixClock;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_HTotal))
                 HTotal = mappings[Field.DatItem_HTotal];
@@ -298,9 +301,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on pixclock
-            if (filter.DatItem_PixClock.MatchesPositiveSet(PixClock) == false)
+            if (filter.DatItem_PixClock.MatchesPositive(null, PixClock) == false)
                 return false;
-            if (filter.DatItem_PixClock.MatchesNegativeSet(PixClock) == true)
+            if (filter.DatItem_PixClock.MatchesNegative(null, PixClock) == true)
                 return false;
 
             // Filter on htotal

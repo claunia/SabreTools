@@ -202,7 +202,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<long?> DatItem_Width { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_Height { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_Refresh { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_PixClock { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_PixClock { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_HTotal { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_HBEnd { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_HBStart { get; private set; } = new FilterItem<string>();
@@ -859,7 +859,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_PixClock:
-                    SetStringFilter(DatItem_PixClock, value, negate);
+                    SetOptionalLongFilter(DatItem_PixClock, value, negate);
                     break;
 
                 case Field.DatItem_HTotal:
