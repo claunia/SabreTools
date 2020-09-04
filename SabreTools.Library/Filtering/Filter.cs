@@ -165,7 +165,7 @@ namespace SabreTools.Library.Filtering
         // Chip
         public FilterItem<string> DatItem_Tag { get; private set; } = new FilterItem<string>();
         public FilterItem<ChipType> DatItem_ChipType { get; private set; } = new FilterItem<ChipType>() { Positive = ChipType.NULL, Negative = ChipType.NULL };
-        public FilterItem<string> DatItem_Clock { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Clock { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
 
         // Condition
         public FilterItem<string> DatItem_Mask { get; private set; } = new FilterItem<string>();
@@ -730,7 +730,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Clock:
-                    SetStringFilter(DatItem_Clock, value, negate);
+                    SetOptionalLongFilter(DatItem_Clock, value, negate);
                     break;
 
                 // Condition

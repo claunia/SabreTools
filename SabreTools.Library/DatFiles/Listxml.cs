@@ -207,19 +207,27 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "chip":
-                        datItems.Add(new Chip
+                        var chip = new Chip
                         {
                             Name = reader.GetAttribute("name"),
                             Tag = reader.GetAttribute("tag"),
                             ChipType = reader.GetAttribute("type").AsChipType(),
-                            Clock = reader.GetAttribute("clock"),
 
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
-                        });
+                        };
+
+                        // Set the clock
+                        if (reader.GetAttribute("clock") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("clock"), out long clock))
+                                chip.Clock = clock;
+                        }
+
+                        datItems.Add(chip);
 
                         reader.Read();
                         break;
@@ -1430,7 +1438,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", chip.Name);
                         xtw.WriteOptionalAttributeString("tag", chip.Tag);
                         xtw.WriteOptionalAttributeString("type", chip.ChipType.FromChipType());
-                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
+                        xtw.WriteOptionalAttributeString("clock", chip.Clock?.ToString());
                         xtw.WriteEndElement();
                         break;
 

@@ -400,7 +400,6 @@ namespace SabreTools.Library.DatFiles
                                     Name = reader.GetAttribute("name"),
                                     Tag = reader.GetAttribute("tag"),
                                     ChipType = reader.GetAttribute("chiptype").AsChipType(),
-                                    Clock = reader.GetAttribute("clock"),
 
                                     Source = new Source
                                     {
@@ -408,6 +407,14 @@ namespace SabreTools.Library.DatFiles
                                         Name = filename,
                                     },
                                 };
+
+                                // Set the clock
+                                if (reader.GetAttribute("clock") != null)
+                                {
+                                    if (Int64.TryParse(reader.GetAttribute("clock"), out long clock))
+                                        (datItem as Chip).Clock = clock;
+                                }
+
                                 break;
 
                             case "configuration":
@@ -1254,7 +1261,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", chip.Name);
                         xtw.WriteOptionalAttributeString("tag", chip.Tag);
                         xtw.WriteOptionalAttributeString("chiptype", chip.ChipType.FromChipType());
-                        xtw.WriteOptionalAttributeString("clock", chip.Clock);
+                        xtw.WriteOptionalAttributeString("clock", chip.Clock.ToString());
                         xtw.WriteEndElement();
                         break;
 

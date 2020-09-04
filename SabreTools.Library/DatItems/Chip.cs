@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -40,7 +41,7 @@ namespace SabreTools.Library.DatItems
         /// Clock speed
         /// </summary>
         [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Clock { get; set; }
+        public long? Clock { get; set; }
 
         #endregion
 
@@ -75,7 +76,10 @@ namespace SabreTools.Library.DatItems
                 ChipType = mappings[Field.DatItem_ChipType].AsChipType();
 
             if (mappings.Keys.Contains(Field.DatItem_Clock))
-                Clock = mappings[Field.DatItem_Clock];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Clock], out long clock))
+                    Clock = clock;
+            }
         }
 
         #endregion
@@ -194,9 +198,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // DatItem_Clock
-            if (filter.DatItem_Clock.MatchesPositiveSet(Clock) == false)
+            if (filter.DatItem_Clock.MatchesPositive(null, Clock) == false)
                 return false;
-            if (filter.DatItem_Clock.MatchesNegativeSet(Clock) == true)
+            if (filter.DatItem_Clock.MatchesNegative(null, Clock) == true)
                 return false;
 
             return true;
