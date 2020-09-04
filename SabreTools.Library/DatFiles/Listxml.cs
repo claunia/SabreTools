@@ -571,16 +571,23 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "sound":
-                        datItems.Add(new Sound
+                        var sound = new Sound
                         {
-                            Channels = reader.GetAttribute("channels"),
-
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
-                        });
+                        };
+
+                        // Set the channels
+                        if (reader.GetAttribute("channels") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("channels"), out long channels))
+                                sound.Channels = channels;
+                        }
+
+                        datItems.Add(sound);
 
                         reader.Read();
                         break;
@@ -1666,7 +1673,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Sound:
                         var sound = datItem as Sound;
                         xtw.WriteStartElement("sound");
-                        xtw.WriteOptionalAttributeString("channels", sound.Channels);
+                        xtw.WriteOptionalAttributeString("channels", sound.Channels?.ToString());
                         xtw.WriteEndElement();
                         break;
                 }

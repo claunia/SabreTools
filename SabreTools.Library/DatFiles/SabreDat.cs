@@ -1644,7 +1644,7 @@ namespace SabreTools.Library.DatFiles
                         var sound = datItem as Sound;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "sound");
-                        xtw.WriteOptionalAttributeString("channels", sound.Channels);
+                        xtw.WriteOptionalAttributeString("channels", sound.Channels?.ToString());
                         xtw.WriteEndElement();
                         break;
                 }

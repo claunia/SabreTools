@@ -260,7 +260,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Filter { get; private set; } = new FilterItem<string>();
 
         // Sound
-        public FilterItem<string> DatItem_Channels { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Channels { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
 
         #endregion
 
@@ -1574,17 +1574,62 @@ namespace SabreTools.Library.Filtering
 
                 // Sound
                 case Field.DatItem_Channels:
-                    if (negate)
-                        DatItem_Channels.NegativeSet.Add(value);
-                    else
-                        DatItem_Channels.PositiveSet.Add(value);
+                    bool? channelsOperation = null;
+                    if (value.StartsWith(">"))
+                        channelsOperation = true;
+                    else if (value.StartsWith("<"))
+                        channelsOperation = false;
+                    else if (value.StartsWith("="))
+                        channelsOperation = null;
+
+                    string channelsString = value.TrimStart('>', '<', '=');
+                    if (!Int64.TryParse(channelsString, out long channels))
+                        return;
+
+                    // Equal
+                    if (channelsOperation == null && !negate)
+                    {
+                        DatItem_Channels.Neutral = channels;
+                    }
+
+                    // Not Equal
+                    else if (channelsOperation == null && negate)
+                    {
+                        DatItem_Channels.Negative = channels - 1;
+                        DatItem_Channels.Positive = channels + 1;
+                    }
+
+                    // Greater Than or Equal
+                    else if (channelsOperation == true && !negate)
+                    {
+                        DatItem_Channels.Positive = channels;
+                    }
+
+                    // Strictly Less Than
+                    else if (channelsOperation == true && negate)
+                    {
+                        DatItem_Channels.Negative = channels - 1;
+                    }
+
+                    // Less Than or Equal
+                    else if (channelsOperation == false && !negate)
+                    {
+                        DatItem_Channels.Negative = channels;
+                    }
+
+                    // Strictly Greater Than
+                    else if (channelsOperation == false && negate)
+                    {
+                        DatItem_Channels.Positive = channels + 1;
+                    }
+
                     break;
 
-                    #endregion
+                #endregion
 
-                    #endregion // Item-Specific
+                #endregion // Item-Specific
 
-                    #endregion // DatItem Filters
+                #endregion // DatItem Filters
             }
         }
 

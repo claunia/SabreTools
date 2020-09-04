@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
@@ -18,7 +19,7 @@ namespace SabreTools.Library.DatItems
         /// Number of channels
         /// </summary>
         [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Channels { get; set; } // TODO: Int32?
+        public long? Channels { get; set; }
 
         #endregion
 
@@ -35,7 +36,10 @@ namespace SabreTools.Library.DatItems
 
             // Handle Sound-specific fields
             if (mappings.Keys.Contains(Field.DatItem_Channels))
-                Channels = mappings[Field.DatItem_Channels];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Channels], out long channels))
+                    Channels = channels;
+            }
         }
 
         #endregion
@@ -102,9 +106,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on channels
-            if (filter.DatItem_Channels.MatchesPositiveSet(Channels) == false)
+            if (filter.DatItem_Channels.MatchesNeutral(null, Channels) == false)
                 return false;
-            if (filter.DatItem_Channels.MatchesNegativeSet(Channels) == true)
+            else if (filter.DatItem_Channels.MatchesPositive(null, Channels) == false)
+                return false;
+            else if (filter.DatItem_Channels.MatchesNegative(null, Channels) == false)
                 return false;
 
             return true;
