@@ -2,7 +2,9 @@
 using System.Linq;
 
 using SabreTools.Library.Filtering;
+using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -30,7 +32,8 @@ namespace SabreTools.Library.DatItems
         /// Condition relationship
         /// </summary>
         [JsonProperty("relation", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Relation { get; set; } // TODO: (eq|ne|gt|le|lt|ge)
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Relation Relation { get; set; }
 
         /// <summary>
         /// Condition value
@@ -71,7 +74,7 @@ namespace SabreTools.Library.DatItems
                     Mask = mappings[Field.DatItem_Condition_Mask];
 
                 if (mappings.Keys.Contains(Field.DatItem_Condition_Relation))
-                    Relation = mappings[Field.DatItem_Condition_Relation];
+                    Relation = mappings[Field.DatItem_Condition_Relation].AsRelation();
 
                 if (mappings.Keys.Contains(Field.DatItem_Condition_Value))
                     Value = mappings[Field.DatItem_Condition_Value];
@@ -85,7 +88,7 @@ namespace SabreTools.Library.DatItems
                     Mask = mappings[Field.DatItem_Mask];
 
                 if (mappings.Keys.Contains(Field.DatItem_Relation))
-                    Relation = mappings[Field.DatItem_Relation];
+                    Relation = mappings[Field.DatItem_Relation].AsRelation();
 
                 if (mappings.Keys.Contains(Field.DatItem_Value))
                     Value = mappings[Field.DatItem_Value];
@@ -187,9 +190,9 @@ namespace SabreTools.Library.DatItems
                     return false;
 
                 // Filter on relation
-                if (filter.DatItem_Condition_Relation.MatchesPositiveSet(Relation) == false)
+                if (filter.DatItem_Condition_Relation.MatchesPositive(Relation.NULL, Relation) == false)
                     return false;
-                if (filter.DatItem_Condition_Relation.MatchesNegativeSet(Relation) == true)
+                if (filter.DatItem_Condition_Relation.MatchesNegative(Relation.NULL, Relation) == true)
                     return false;
 
                 // Filter on value
@@ -213,9 +216,9 @@ namespace SabreTools.Library.DatItems
                     return false;
 
                 // Filter on relation
-                if (filter.DatItem_Relation.MatchesPositiveSet(Relation) == false)
+                if (filter.DatItem_Relation.MatchesPositive(Relation.NULL, Relation) == false)
                     return false;
-                if (filter.DatItem_Relation.MatchesNegativeSet(Relation) == true)
+                if (filter.DatItem_Relation.MatchesNegative(Relation.NULL, Relation) == true)
                     return false;
 
                 // Filter on value
@@ -257,7 +260,7 @@ namespace SabreTools.Library.DatItems
                     Mask = null;
 
                 if (fields.Contains(Field.DatItem_Condition_Relation))
-                    Relation = null;
+                    Relation = Relation.NULL;
 
                 if (fields.Contains(Field.DatItem_Condition_Value))
                     Value = null;
@@ -271,7 +274,7 @@ namespace SabreTools.Library.DatItems
                     Mask = null;
 
                 if (fields.Contains(Field.DatItem_Relation))
-                    Relation = null;
+                    Relation = Relation.NULL;
 
                 if (fields.Contains(Field.DatItem_Value))
                     Value = null;

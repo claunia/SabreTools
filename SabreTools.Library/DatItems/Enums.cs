@@ -561,6 +561,25 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine relation of value to condition
+    /// </summary>
+    [Flags]
+    public enum Relation
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Equal = 1 << 0,
+        NotEqual = 1 << 1,
+        GreaterThan = 1 << 2,
+        LessThanOrEqual = 1 << 3,
+        LessThan = 1 << 4,
+        GreaterThanOrEqual = 1 << 5,
+    }
+
+    /// <summary>
     /// Determine machine runnable status
     /// </summary>
     [Flags]

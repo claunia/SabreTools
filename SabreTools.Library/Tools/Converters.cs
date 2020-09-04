@@ -1972,6 +1972,45 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get Relation value from input string
+        /// </summary>
+        /// <param name="relation">String to get value from</param>
+        /// <returns>Relation value corresponding to the string</returns>
+        public static Relation AsRelation(this string relation)
+        {
+#if NET_FRAMEWORK
+            switch (relation?.ToLowerInvariant())
+            {
+                case "eq":
+                    return Relation.Equal;
+                case "ne":
+                    return Relation.NotEqual;
+                case "gt":
+                    return Relation.GreaterThan;
+                case "le":
+                    return Relation.LessThanOrEqual;
+                case "lt":
+                    return Relation.LessThan;
+                case "ge":
+                    return Relation.GreaterThanOrEqual;
+                default:
+                    return Relation.NULL;
+            }
+#else
+            return relation?.ToLowerInvariant() switch
+            {
+                "eq" => Relation.Equal,
+                "ne" => Relation.NotEqual,
+                "gt" => Relation.GreaterThan,
+                "le" => Relation.LessThanOrEqual,
+                "lt" => Relation.LessThan,
+                "ge" => Relation.GreaterThanOrEqual,
+                _ => Relation.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get Runnable value from input string
         /// </summary>
         /// <param name="runnable">String to get value from</param>
@@ -2779,6 +2818,45 @@ namespace SabreTools.Library.Tools
                 PackingFlag.Unzip => yesno ? "yes" : "zip",
                 PackingFlag.Partial => "partial",
                 PackingFlag.Flat => "flat",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input Relation
+        /// </summary>
+        /// <param name="relation">Relation to get value from</param>
+        /// <returns>String value corresponding to the Relation</returns>
+        public static string FromRelation(this Relation relation)
+        {
+#if NET_FRAMEWORK
+            switch (relation)
+            {
+                case Relation.Equal:
+                    return "eq";
+                case Relation.NotEqual:
+                    return "ne";
+                case Relation.GreaterThan:
+                    return "gt";
+                case Relation.LessThanOrEqual:
+                    return "le";
+                case Relation.LessThan:
+                    return "lt";
+                case Relation.GreaterThanOrEqual:
+                    return "ge";
+                default:
+                    return null;
+            }
+#else
+            return relation switch
+            {
+                Relation.Equal => "eq",
+                Relation.NotEqual => "ne",
+                Relation.GreaterThan => "gt",
+                Relation.LessThanOrEqual => "le",
+                Relation.LessThan => "lt",
+                Relation.GreaterThanOrEqual => "ge",
                 _ => null,
             };
 #endif

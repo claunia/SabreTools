@@ -56,7 +56,7 @@ namespace SabreTools.Library.DatItems
         public long? Size { get; set; }
 
         /// <summary>
-        /// Byte width of the area
+        /// Word width for the area
         /// </summary>
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Width { get; set; } // TODO: (8|16|32|64) "8"

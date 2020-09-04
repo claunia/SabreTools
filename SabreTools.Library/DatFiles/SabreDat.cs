@@ -664,7 +664,7 @@ namespace SabreTools.Library.DatFiles
                         var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Relation = reader.GetAttribute("relation").AsRelation();
                         condition.Value = reader.GetAttribute("value");
 
                         (adjuster as Adjuster).Conditions.Add(condition);
@@ -718,7 +718,7 @@ namespace SabreTools.Library.DatFiles
                         var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Relation = reader.GetAttribute("relation").AsRelation();
                         condition.Value = reader.GetAttribute("value");
 
                         (configuration as Configuration).Conditions.Add(condition);
@@ -792,7 +792,7 @@ namespace SabreTools.Library.DatFiles
                         var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Relation = reader.GetAttribute("relation").AsRelation();
                         condition.Value = reader.GetAttribute("value");
 
                         confSetting.Conditions.Add(condition);
@@ -846,7 +846,7 @@ namespace SabreTools.Library.DatFiles
                         var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Relation = reader.GetAttribute("relation").AsRelation();
                         condition.Value = reader.GetAttribute("value");
 
                         (dipSwitch as DipSwitch).Conditions.Add(condition);
@@ -920,7 +920,7 @@ namespace SabreTools.Library.DatFiles
                         var condition = new Condition();
                         condition.Tag = reader.GetAttribute("tag");
                         condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation");
+                        condition.Relation = reader.GetAttribute("relation").AsRelation();
                         condition.Value = reader.GetAttribute("value");
 
                         dipValue.Conditions.Add(condition);
@@ -1221,7 +1221,7 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteStartElement("condition");
                                 xtw.WriteOptionalAttributeString("tag", adjusterCondition.Tag);
                                 xtw.WriteOptionalAttributeString("mask", adjusterCondition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation);
+                                xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation.FromRelation());
                                 xtw.WriteOptionalAttributeString("value", adjusterCondition.Value);
                                 xtw.WriteEndElement();
                             }
@@ -1264,7 +1264,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("type", "condition");
                         xtw.WriteOptionalAttributeString("tag", condition.Tag);
                         xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                        xtw.WriteOptionalAttributeString("relation", condition.Relation);
+                        xtw.WriteOptionalAttributeString("relation", condition.Relation.FromRelation());
                         xtw.WriteOptionalAttributeString("value", condition.Value);
                         xtw.WriteEndElement();
                         break;
@@ -1284,7 +1284,7 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteStartElement("condition");
                                 xtw.WriteOptionalAttributeString("tag", configurationCondition.Tag);
                                 xtw.WriteOptionalAttributeString("mask", configurationCondition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation);
+                                xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation.FromRelation());
                                 xtw.WriteOptionalAttributeString("value", configurationCondition.Value);
                                 xtw.WriteEndElement();
                             }
@@ -1367,7 +1367,7 @@ namespace SabreTools.Library.DatFiles
                                 xtw.WriteStartElement("condition");
                                 xtw.WriteOptionalAttributeString("tag", dipSwitchCondition.Tag);
                                 xtw.WriteOptionalAttributeString("mask", dipSwitchCondition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation);
+                                xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation.FromRelation());
                                 xtw.WriteOptionalAttributeString("value", dipSwitchCondition.Value);
                                 xtw.WriteEndElement();
                             }
@@ -1398,7 +1398,7 @@ namespace SabreTools.Library.DatFiles
                                         xtw.WriteStartElement("condition");
                                         xtw.WriteOptionalAttributeString("tag", dipValueCondition.Tag);
                                         xtw.WriteOptionalAttributeString("mask", dipValueCondition.Mask);
-                                        xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation);
+                                        xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation.FromRelation());
                                         xtw.WriteOptionalAttributeString("value", dipValueCondition.Value);
                                         xtw.WriteEndElement();
                                     }

@@ -3545,6 +3545,7 @@ namespace SabreTools.Library.DatFiles
                 .Replace("%size%", size);
 
             // TODO: Add GameName logic here too?
+            // TODO: Figure out what I meant by the above ^
 
             return fix;
         }

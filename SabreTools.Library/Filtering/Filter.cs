@@ -169,10 +169,10 @@ namespace SabreTools.Library.Filtering
 
         // Condition
         public FilterItem<string> DatItem_Mask { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Relation { get; private set; } = new FilterItem<string>();
+        public FilterItem<Relation> DatItem_Relation { get; private set; } = new FilterItem<Relation>() { Positive = Relation.NULL, Negative = Relation.NULL };
         public FilterItem<string> DatItem_Condition_Tag { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Condition_Mask { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Condition_Relation { get; private set; } = new FilterItem<string>();
+        public FilterItem<Relation> DatItem_Condition_Relation { get; private set; } = new FilterItem<Relation>() { Positive = Relation.NULL, Negative = Relation.NULL };
         public FilterItem<string> DatItem_Condition_Value { get; private set; } = new FilterItem<string>();
 
         // Control
@@ -1043,9 +1043,9 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Relation:
                     if (negate)
-                        DatItem_Relation.NegativeSet.Add(value);
+                        DatItem_Relation.Negative |= value.AsRelation();
                     else
-                        DatItem_Relation.PositiveSet.Add(value);
+                        DatItem_Relation.Positive |= value.AsRelation();
                     break;
 
                 case Field.DatItem_Condition_Tag:
@@ -1064,9 +1064,9 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Condition_Relation:
                     if (negate)
-                        DatItem_Condition_Relation.NegativeSet.Add(value);
+                        DatItem_Condition_Relation.Negative |= value.AsRelation();
                     else
-                        DatItem_Condition_Relation.PositiveSet.Add(value);
+                        DatItem_Condition_Relation.Positive |= value.AsRelation();
                     break;
 
                 case Field.DatItem_Condition_Value:
