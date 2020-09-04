@@ -34,6 +34,8 @@ namespace SabreTools.Library.Tools
                     return Field.DatItem_SHA384;
                 case Hash.SHA512:
                     return Field.DatItem_SHA512;
+                case Hash.SpamSum:
+                    return Field.DatItem_SpamSum;
 
                 default:
                     return Field.NULL;
@@ -160,6 +162,8 @@ namespace SabreTools.Library.Tools
                 case "smdb":
                 case "everdrive":
                     return DatFormat.EverdriveSMDB;
+                case "spamsum":
+                    return DatFormat.RedumpSpamSum;
                 case "ssv":
                     return DatFormat.SSV;
                 case "tsv":
@@ -788,6 +792,10 @@ namespace SabreTools.Library.Tools
                     case "sha_512hash":
                     case "sha_512_hash":
                         return Field.DatItem_SHA512;
+                        
+                    case "spamsum":
+                    case "spam_sum":
+                        return Field.DatItem_SpamSum;
 
                     case "merge":
                     case "mergetag":
@@ -1477,6 +1485,10 @@ namespace SabreTools.Library.Tools
                 case "sha_512hash":
                 case "sha_512_hash":
                     return Field.DatItem_SHA512;
+
+                case "spamsum":
+                case "spam_sum":
+                    return Field.DatItem_SpamSum;
 
                 case "merge":
                 case "mergetag":

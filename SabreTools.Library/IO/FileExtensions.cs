@@ -91,6 +91,8 @@ namespace SabreTools.Library.IO
                     return DatFormat.RedumpSHA384;
                 case "sha512":
                     return DatFormat.RedumpSHA512;
+                case "spamsum":
+                    return DatFormat.RedumpSpamSum;
                 case "ssv":
                     return DatFormat.SSV;
                 case "tsv":

@@ -149,6 +149,11 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         RedumpSHA512 = 1 << 24,
 
+        /// <summary>
+        /// SpamSum hash list
+        /// </summary>
+        RedumpSpamSum = 1 << 25,
+
         #endregion
 
         // Specialty combinations
@@ -191,15 +196,16 @@ namespace SabreTools.Library.DatFiles
         SHA256 = 1 << 4,
         SHA384 = 1 << 5,
         SHA512 = 1 << 6,
+        SpamSum = 1 << 7,
 
         // Special combinations
         Standard = CRC | MD5 | SHA1,
 #if NET_FRAMEWORK
-        DeepHashes = RIPEMD160 | SHA256 | SHA384 | SHA512,
-        SecureHashes = MD5 | RIPEMD160 | SHA1 | SHA256 | SHA384 | SHA512,
+        DeepHashes = RIPEMD160 | SHA256 | SHA384 | SHA512 | SpamSum,
+        SecureHashes = MD5 | RIPEMD160 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
 #else
-        DeepHashes = SHA256 | SHA384 | SHA512,
-        SecureHashes = MD5 | SHA1 | SHA256 | SHA384 | SHA512,
+        DeepHashes = SHA256 | SHA384 | SHA512 | SpamSum,
+        SecureHashes = MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
 #endif
     }
 

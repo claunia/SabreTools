@@ -29,6 +29,7 @@ namespace SabreTools.Features
             AddFeature(SkipSha256Flag);
             AddFeature(SkipSha384Flag);
             AddFeature(SkipSha512Flag);
+            AddFeature(SkipSpamSumFlag);
 
             AddFeature(NoAutomaticDateFlag);
             AddFeature(AaruFormatsAsFilesFlag);

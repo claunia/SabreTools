@@ -796,6 +796,17 @@ namespace SabreTools.Library.DatFiles
 
             #endregion
 
+            #region .spamsum
+
+            // Redump SpamSum
+            if (DatFormat.HasFlag(DatFormat.RedumpSpamSum))
+            {
+                outfileNames.Add(DatFormat.RedumpSpamSum, CreateOutFileNamesHelper(outDir, ".spamsum", overwrite));
+                usedExtensions.Add(".spamsum");
+            };
+
+            #endregion
+
             #region .ssv
 
             // SSV

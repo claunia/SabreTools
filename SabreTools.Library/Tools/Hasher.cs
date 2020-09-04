@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-
+using Aaru.Checksums;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.External;
 
@@ -58,6 +58,10 @@ namespace SabreTools.Library.Tools
                 case Hash.SHA512:
                     _hasher = SHA512.Create();
                     break;
+
+                case Hash.SpamSum:
+                    _hasher = new SpamSumContext();
+                    break;
             }
         }
 
@@ -87,6 +91,10 @@ namespace SabreTools.Library.Tools
                 case Hash.SHA512:
                     await Task.Run(() => (_hasher as HashAlgorithm).TransformBlock(buffer, 0, size, null, 0));
                     break;
+
+                case Hash.SpamSum:
+                    await Task.Run(() => (_hasher as SpamSumContext).Update(buffer));
+                    break;
             }
         }
 
@@ -112,6 +120,10 @@ namespace SabreTools.Library.Tools
                 case Hash.SHA512:
                     await Task.Run(() => (_hasher as HashAlgorithm).TransformFinalBlock(emptyBuffer, 0, 0));
                     break;
+
+                case Hash.SpamSum:
+                    // No finalization step needed
+                    break;
             }
         }
 
@@ -134,6 +146,9 @@ namespace SabreTools.Library.Tools
                 case Hash.SHA384:
                 case Hash.SHA512:
                     return (_hasher as HashAlgorithm).Hash;
+
+                case Hash.SpamSum:
+                    return (_hasher as SpamSumContext).Final();
             }
 
             return null;

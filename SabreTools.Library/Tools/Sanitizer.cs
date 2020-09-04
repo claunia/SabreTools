@@ -145,7 +145,7 @@ namespace SabreTools.Library.Tools
         /// <param name="hash">Hash string to sanitize</param>
         /// <param name="padding">Amount of characters to pad to</param>
         /// <returns>Cleaned string</returns>
-        private static string CleanHashData(string hash, int padding)
+        public static string CleanHashData(string hash, int padding)
         {
             // If we have a known blank hash, return blank
             if (string.IsNullOrWhiteSpace(hash) || hash == "-" || hash == "_")

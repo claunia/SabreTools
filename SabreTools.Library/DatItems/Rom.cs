@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
@@ -29,6 +30,7 @@ namespace SabreTools.Library.DatItems
         private byte[] _sha256; // 32 bytes
         private byte[] _sha384; // 48 bytes
         private byte[] _sha512; // 64 bytes
+        private byte[] _spamsum; // variable bytes
 
         #endregion
 
@@ -125,6 +127,16 @@ namespace SabreTools.Library.DatItems
         {
             get { return _sha512.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha512); }
             set { _sha512 = Utilities.StringToByteArray(Sanitizer.CleanSHA512(value)); }
+        }
+
+        /// <summary>
+        /// File SpamSum fuzzy hash
+        /// </summary>
+        [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string SpamSum
+        {
+            get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }
+            set { _spamsum = Encoding.UTF8.GetBytes(value); }
         }
 
         /// <summary>
@@ -314,6 +326,9 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_SHA512))
                 SHA512 = mappings[Field.DatItem_SHA512];
 
+            if (mappings.Keys.Contains(Field.DatItem_SpamSum))
+                SpamSum = mappings[Field.DatItem_SpamSum];
+
             if (mappings.Keys.Contains(Field.DatItem_Merge))
                 MergeTag = mappings[Field.DatItem_Merge];
 
@@ -441,6 +456,7 @@ namespace SabreTools.Library.DatItems
             _sha256 = baseFile.SHA256;
             _sha384 = baseFile.SHA384;
             _sha512 = baseFile.SHA512;
+            _spamsum = baseFile.SpamSum;
 
             ItemType = ItemType.Rom;
             DupeType = 0x00;
@@ -475,6 +491,7 @@ namespace SabreTools.Library.DatItems
                 _sha256 = this._sha256,
                 _sha384 = this._sha384,
                 _sha512 = this._sha512,
+                _spamsum = this._spamsum,
                 MergeTag = this.MergeTag,
                 Region = this.Region,
                 Offset = this.Offset,
@@ -568,6 +585,9 @@ namespace SabreTools.Library.DatItems
 
             if (_sha512.IsNullOrEmpty() && !other._sha512.IsNullOrEmpty())
                 _sha512 = other._sha512;
+
+            if (_spamsum.IsNullOrEmpty() && !other._spamsum.IsNullOrEmpty())
+                _spamsum = other._spamsum;
         }
 
         /// <summary>
@@ -588,6 +608,8 @@ namespace SabreTools.Library.DatItems
                 return $"_{SHA384}";
             else if (!_sha512.IsNullOrEmpty())
                 return $"_{SHA512}";
+            else if (!_spamsum.IsNullOrEmpty())
+                return $"_{SpamSum}";
             else
                 return "_1";
         }
@@ -607,7 +629,8 @@ namespace SabreTools.Library.DatItems
                 || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
                 || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty())
                 || !(_sha384.IsNullOrEmpty() ^ other._sha384.IsNullOrEmpty())
-                || !(_sha512.IsNullOrEmpty() ^ other._sha512.IsNullOrEmpty());
+                || !(_sha512.IsNullOrEmpty() ^ other._sha512.IsNullOrEmpty())
+                || !(_spamsum.IsNullOrEmpty() ^ other._spamsum.IsNullOrEmpty());
         }
 
         /// <summary>
@@ -624,7 +647,8 @@ namespace SabreTools.Library.DatItems
                 || !_sha1.IsNullOrEmpty()
                 || !_sha256.IsNullOrEmpty()
                 || !_sha384.IsNullOrEmpty()
-                || !_sha512.IsNullOrEmpty();
+                || !_sha512.IsNullOrEmpty()
+                || !_spamsum.IsNullOrEmpty();
         }
 
         /// <summary>
@@ -651,7 +675,8 @@ namespace SabreTools.Library.DatItems
                 && ConditionalHashEquals(_sha1, other._sha1)
                 && ConditionalHashEquals(_sha256, other._sha256)
                 && ConditionalHashEquals(_sha384, other._sha384)
-                && ConditionalHashEquals(_sha512, other._sha512);
+                && ConditionalHashEquals(_sha512, other._sha512)
+                && ConditionalHashEquals(_spamsum, other._spamsum);
         }
 
         #endregion
@@ -760,6 +785,12 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_SHA512.MatchesPositiveSet(SHA512) == false)
                 return false;
             if (filter.DatItem_SHA512.MatchesNegativeSet(SHA512) == true)
+                return false;
+
+            // Filter on SpamSum
+            if (filter.DatItem_SpamSum.MatchesPositiveSet(SpamSum) == false)
+                return false;
+            if (filter.DatItem_SpamSum.MatchesNegativeSet(SpamSum) == true)
                 return false;
 
             // Filter on merge tag
@@ -930,6 +961,9 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_SHA512))
                 SHA512 = null;
 
+            if (fields.Contains(Field.DatItem_SpamSum))
+                SpamSum = null;
+
             if (fields.Contains(Field.DatItem_Merge))
                 MergeTag = null;
 
@@ -1058,6 +1092,10 @@ namespace SabreTools.Library.DatItems
                     key = SHA512;
                     break;
 
+                case Field.DatItem_SpamSum:
+                    key = SpamSum;
+                    break;
+
                 // Let the base handle generic stuff
                 default:
                     return base.GetKey(bucketedBy, lower, norename);
@@ -1142,6 +1180,12 @@ namespace SabreTools.Library.DatItems
             {
                 if (string.IsNullOrEmpty(SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
                     SHA512 = newItem.SHA512;
+            }
+
+            if (fields.Contains(Field.DatItem_SpamSum))
+            {
+                if (string.IsNullOrEmpty(SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
+                    SpamSum = newItem.SpamSum;
             }
 
             if (fields.Contains(Field.DatItem_Merge))

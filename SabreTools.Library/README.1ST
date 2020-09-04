@@ -230,6 +230,10 @@ Options:
 		  This allows the user to skip calculating the SHA-512 for each of the
 		  files which will speed up the creation of the DAT.
 
+	  --nss, --skip-spamsum	   Include SpamSum in output
+		  This allows the user to skip calculating the SpamSum for each of the
+		  files which will speed up the creation of the DAT.
+
 	  -b, --no-automatic-date	 Don't include date in file name
 		  Normally, the DAT will be created with the date in the file name in
 		  brackets. This flag removes that instead of the default.

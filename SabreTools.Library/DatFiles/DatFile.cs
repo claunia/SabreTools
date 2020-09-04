@@ -129,6 +129,9 @@ namespace SabreTools.Library.DatFiles
                 case DatFormat.RedumpSHA512:
                     return new Hashfile(baseDat, Hash.SHA512);
 
+                case DatFormat.RedumpSpamSum:
+                    return new Hashfile(baseDat, Hash.SpamSum);
+
                 case DatFormat.RomCenter:
                     return new RomCenter(baseDat);
 
@@ -3491,7 +3494,8 @@ namespace SabreTools.Library.DatFiles
                 sha256 = string.Empty,
                 sha384 = string.Empty,
                 sha512 = string.Empty,
-                size = string.Empty;
+                size = string.Empty,
+                spamsum = string.Empty;
 
             // If we have a prefix
             if (prefix)
@@ -3512,6 +3516,7 @@ namespace SabreTools.Library.DatFiles
                 md5 = (item as Media).MD5 ?? string.Empty;
                 sha1 = (item as Media).SHA1 ?? string.Empty;
                 sha256 = (item as Media).SHA256 ?? string.Empty;
+                spamsum = (item as Media).SpamSum ?? string.Empty;
             }
             else if (item.ItemType == ItemType.Rom)
             {
@@ -3525,6 +3530,7 @@ namespace SabreTools.Library.DatFiles
                 sha384 = (item as Rom).SHA384 ?? string.Empty;
                 sha512 = (item as Rom).SHA512 ?? string.Empty;
                 size = (item as Rom).Size.ToString();
+                spamsum = (item as Rom).SpamSum ?? string.Empty;
             }
 
             // Now do bulk replacement where possible
@@ -3542,7 +3548,8 @@ namespace SabreTools.Library.DatFiles
                 .Replace("%sha256%", sha256)
                 .Replace("%sha384%", sha384)
                 .Replace("%sha512%", sha512)
-                .Replace("%size%", size);
+                .Replace("%size%", size)
+                .Replace("%spamsum%", spamsum);
 
             // TODO: Add GameName logic here too?
             // TODO: Figure out what I meant by the above ^

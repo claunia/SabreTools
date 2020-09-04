@@ -118,6 +118,7 @@ namespace SabreTools.Library.IO
                     new Hasher(Hash.SHA256),
                     new Hasher(Hash.SHA384),
                     new Hasher(Hash.SHA512),
+                    new Hasher(Hash.SpamSum),
                 };
 
                 // Initialize the hashing helpers
@@ -184,6 +185,8 @@ namespace SabreTools.Library.IO
                     rom.SHA384 = hashers.First(h => h.HashType == Hash.SHA384).GetHash();
                 if (!omitFromScan.HasFlag(Hash.SHA512))
                     rom.SHA512 = hashers.First(h => h.HashType == Hash.SHA512).GetHash();
+                if (!omitFromScan.HasFlag(Hash.SpamSum))
+                    rom.SpamSum = hashers.First(h => h.HashType == Hash.SpamSum).GetHash();
 
                 // Dispose of the hashers
                 loadBuffer.Dispose();

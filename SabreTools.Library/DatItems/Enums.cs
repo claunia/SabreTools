@@ -282,6 +282,7 @@ namespace SabreTools.Library.DatItems
         DatItem_SHA256,
         DatItem_SHA384,
         DatItem_SHA512,
+        DatItem_SpamSum,
         DatItem_Merge,
         DatItem_Region,
         DatItem_Offset,

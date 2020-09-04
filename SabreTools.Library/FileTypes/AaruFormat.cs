@@ -38,12 +38,6 @@ namespace SabreTools.Library.FileTypes
 
         #endregion
 
-        #region Hashes
-
-        // TODO: Support SpamSum
-
-        #endregion
-
         #endregion // Private instance variables
 
         #region Constructors
@@ -204,7 +198,7 @@ namespace SabreTools.Library.FileTypes
                                             aif.SHA256 = checksumEntry.checksum;
                                             break;
                                         case AaruChecksumAlgorithm.SpamSum:
-                                            // TODO: Support SpamSum
+                                            aif.SpamSum = checksumEntry.checksum;
                                             break;
                                     }
                                 }

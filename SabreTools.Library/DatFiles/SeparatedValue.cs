@@ -187,6 +187,7 @@ namespace SabreTools.Library.DatFiles
                     "SHA256",
                     //"SHA384",
                     //"SHA512",
+                    //"SpamSum",
                     "Nodump",
                 };
 
@@ -219,7 +220,7 @@ namespace SabreTools.Library.DatFiles
 
                 // Build the state
                 // TODO: Can we have some way of saying what fields to write out? Support for read extends to all fields now
-                string[] fields = new string[14]; // 17;
+                string[] fields = new string[14]; // 18;
                 fields[0] = Header.FileName;
                 fields[1] = Header.Name;
                 fields[2] = Header.Description;
@@ -241,6 +242,7 @@ namespace SabreTools.Library.DatFiles
                         fields[12] = string.Empty;
                         //fields[13] = string.Empty;
                         //fields[14] = string.Empty;
+                        //fields[15] = string.Empty;
                         fields[13] = disk.ItemStatus.ToString();
                         break;
 
@@ -257,6 +259,7 @@ namespace SabreTools.Library.DatFiles
                         fields[12] = media.SHA256?.ToLowerInvariant();
                         //fields[13] = string.Empty;
                         //fields[14] = string.Empty;
+                        //fields[15] = media.SpamSum?.ToLowerInvariant();
                         fields[13] = string.Empty;
                         break;
 
@@ -273,6 +276,7 @@ namespace SabreTools.Library.DatFiles
                         fields[12] = rom.SHA256?.ToLowerInvariant();
                         //fields[13] = rom.SHA384?.ToLowerInvariant();
                         //fields[14] = rom.SHA512?.ToLowerInvariant();
+                        //fields[15] = rom.SpamSum?.ToLowerInvariant();
                         fields[13] = rom.ItemStatus.ToString();
                         break;
                 }

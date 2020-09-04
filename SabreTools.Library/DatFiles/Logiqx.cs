@@ -446,6 +446,7 @@ namespace SabreTools.Library.DatFiles
                             MD5 = reader.GetAttribute("md5"),
                             SHA1 = reader.GetAttribute("sha1"),
                             SHA256 = reader.GetAttribute("sha256"),
+                            SpamSum = reader.GetAttribute("spamsum"),
 
                             Source = new Source
                             {
@@ -498,6 +499,7 @@ namespace SabreTools.Library.DatFiles
                             SHA256 = reader.GetAttribute("sha256"),
                             SHA384 = reader.GetAttribute("sha384"),
                             SHA512 = reader.GetAttribute("sha512"),
+                            SpamSum = reader.GetAttribute("spamsum"),
                             MergeTag = reader.GetAttribute("merge"),
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             Date = Sanitizer.CleanDate(reader.GetAttribute("date")),
@@ -970,6 +972,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("spamsum", media.SpamSum?.ToLowerInvariant());
                         xtw.WriteEndElement();
                         break;
 
@@ -998,6 +1001,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
+                        xtw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("date", rom.Date);
                         xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                         xtw.WriteOptionalAttributeString("inverted", rom.Inverted.FromYesNo());

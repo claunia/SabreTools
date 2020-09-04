@@ -94,6 +94,7 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_SHA256,
             Field.DatItem_SHA384,
             Field.DatItem_SHA512,
+            Field.DatItem_SpamSum,
             Field.DatItem_Merge,
             Field.DatItem_Region,
             Field.DatItem_Offset,
@@ -781,6 +782,10 @@ namespace SabreTools.Library.DatItems
 
                 case Field.DatItem_SHA512:
                     key = Constants.SHA512Zero;
+                    break;
+
+                case Field.DatItem_SpamSum:
+                    key = null;
                     break;
             }
 

@@ -114,6 +114,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_SHA256 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_SHA384 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_SHA512 { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_SpamSum { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Merge { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Region { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Offset { get; private set; } = new FilterItem<string>();
@@ -582,6 +583,10 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_SHA512:
                     SetStringFilter(DatItem_SHA512, value, negate);
+                    break;
+
+                case Field.DatItem_SpamSum:
+                    SetStringFilter(DatItem_SpamSum, value, negate);
                     break;
 
                 case Field.DatItem_Merge:

@@ -1020,6 +1020,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string SkipSpamSumValue = "skip-spamsum";
+        internal static Library.Help.Feature SkipSpamSumFlag
+        {
+            get
+            {
+                return new Library.Help.Feature(
+                    SkipSpamSumValue,
+                    new List<string>() { "-nss", "--skip-spamsum" },
+                    "Include SpamSum in output", // TODO: This needs to be inverted later
+                    Library.Help.FeatureType.Flag,
+                    longDescription: "This allows the user to skip calculating the SpamSum for each of the files which will speed up the creation of the DAT.");
+            }
+        }
+
         internal const string SuperdatValue = "superdat";
         internal static Library.Help.Feature SuperdatFlag
         {
@@ -2462,6 +2476,8 @@ Some special strings that can be used:
                 omitFromScan &= ~Hash.SHA384; // TODO: This needs to be inverted later
             if (GetBoolean(features, SkipSha512Value))
                 omitFromScan &= ~Hash.SHA512; // TODO: This needs to be inverted later
+            if (GetBoolean(features, SkipSpamSumValue))
+                omitFromScan &= ~Hash.SpamSum; // TODO: This needs to be inverted later
 
             return omitFromScan;
         }
@@ -2611,6 +2627,7 @@ Some special strings that can be used:
                 updateFields.Add(Field.DatItem_SHA256);
                 updateFields.Add(Field.DatItem_SHA384);
                 updateFields.Add(Field.DatItem_SHA512);
+                updateFields.Add(Field.DatItem_SpamSum);
             }
 
             if (GetBoolean(features, UpdateManufacturerValue))

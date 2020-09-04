@@ -23,6 +23,7 @@ namespace SabreTools.Library.FileTypes
         public byte[] SHA256 { get; set; }
         public byte[] SHA384 { get; set; }
         public byte[] SHA512 { get; set; }
+        public byte[] SpamSum { get; set; }
 
         #endregion
 
@@ -60,6 +61,7 @@ namespace SabreTools.Library.FileTypes
                     this.SHA256 = temp.SHA256;
                     this.SHA384 = temp.SHA384;
                     this.SHA512 = temp.SHA512;
+                    this.SpamSum = temp.SpamSum;
                 }
             }
         }
@@ -90,6 +92,7 @@ namespace SabreTools.Library.FileTypes
                     this.SHA256 = temp.SHA256;
                     this.SHA384 = temp.SHA384;
                     this.SHA512 = temp.SHA512;
+                    this.SpamSum = temp.SpamSum;
                 }
             }
 

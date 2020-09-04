@@ -341,6 +341,13 @@ namespace SabreTools.Library.DatFiles
                                     (item as Rom).SHA512 = attrVal;
 
                                 break;
+                            case "spamsum":
+                                if (item.ItemType == ItemType.Media)
+                                    (item as Media).SpamSum = attrVal;
+                                else if (item.ItemType == ItemType.Rom)
+                                    (item as Rom).SpamSum = attrVal;
+
+                                break;
                             case "status":
                                 ItemStatus tempFlagStatus = attrVal.AsItemStatus();
                                 if (item.ItemType == ItemType.Disk)
@@ -634,6 +641,7 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
                         cmpw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
                         cmpw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("spamsum", media.SpamSum?.ToLowerInvariant());
                         cmpw.WriteEndElement();
                         break;
 
@@ -662,6 +670,7 @@ namespace SabreTools.Library.DatFiles
                         cmpw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
                         cmpw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
                         cmpw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
+                        cmpw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant());
                         cmpw.WriteOptionalAttributeString("date", rom.Date);
                         cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
                         cmpw.WriteEndElement();

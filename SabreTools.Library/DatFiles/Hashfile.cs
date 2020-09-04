@@ -75,6 +75,7 @@ namespace SabreTools.Library.DatFiles
                     SHA256 = (_hash.HasFlag(Hash.SHA256) ? hash : null),
                     SHA384 = (_hash.HasFlag(Hash.SHA384) ? hash : null),
                     SHA512 = (_hash.HasFlag(Hash.SHA512) ? hash : null),
+                    SpamSum = (_hash.HasFlag(Hash.SpamSum) ? hash : null),
                     ItemStatus = ItemStatus.None,
 
                     Machine = new Machine
@@ -312,6 +313,24 @@ namespace SabreTools.Library.DatFiles
                             case ItemType.Rom:
                                 var rom = datItem as Rom;
                                 fields[0] = rom.SHA512;
+                                fields[1] = name;
+                                break;
+                        }
+
+                        break;
+
+                    case Hash.SpamSum:
+                        switch (datItem.ItemType)
+                        {
+                            case ItemType.Media:
+                                var media = datItem as Media;
+                                fields[0] = media.SpamSum;
+                                fields[1] = name;
+                                break;
+
+                            case ItemType.Rom:
+                                var rom = datItem as Rom;
+                                fields[0] = rom.SpamSum;
                                 fields[1] = name;
                                 break;
                         }

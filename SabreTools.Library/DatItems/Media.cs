@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
@@ -20,7 +21,7 @@ namespace SabreTools.Library.DatItems
         private byte[] _md5; // 16 bytes
         private byte[] _sha1; // 20 bytes
         private byte[] _sha256; // 32 bytes
-                                // TODO: Implement SpamSum
+        private byte[] _spamsum; // variable bytes
 
         #endregion
 
@@ -62,6 +63,16 @@ namespace SabreTools.Library.DatItems
             set { _sha256 = Utilities.StringToByteArray(Sanitizer.CleanSHA256(value)); }
         }
 
+        /// <summary>
+        /// File SpamSum fuzzy hash
+        /// </summary>
+        [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string SpamSum
+        {
+            get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }
+            set { _spamsum = Encoding.UTF8.GetBytes(value); }
+        }
+
         #endregion
 
         #region Accessors
@@ -96,6 +107,9 @@ namespace SabreTools.Library.DatItems
 
             if (mappings.Keys.Contains(Field.DatItem_SHA256))
                 SHA256 = mappings[Field.DatItem_SHA256];
+
+            if (mappings.Keys.Contains(Field.DatItem_SpamSum))
+                SpamSum = mappings[Field.DatItem_SpamSum];
         }
 
         #endregion
@@ -122,6 +136,7 @@ namespace SabreTools.Library.DatItems
             _md5 = baseFile.MD5;
             _sha1 = baseFile.SHA1;
             _sha256 = baseFile.SHA256;
+            _spamsum = baseFile.SpamSum;
 
             ItemType = ItemType.Media;
             DupeType = 0x00;
@@ -146,11 +161,12 @@ namespace SabreTools.Library.DatItems
                 _md5 = this._md5,
                 _sha1 = this._sha1,
                 _sha256 = this._sha256,
+                _spamsum = this._spamsum,
             };
         }
 
         /// <summary>
-        /// Convert a disk to the closest Rom approximation
+        /// Convert a media to the closest Rom approximation
         /// </summary>
         /// <returns></returns>
         public Rom ConvertToRom()
@@ -168,6 +184,7 @@ namespace SabreTools.Library.DatItems
                 MD5 = this.MD5,
                 SHA1 = this.SHA1,
                 SHA256 = this.SHA256,
+                SpamSum = this.SpamSum,
             };
 
             return rom;
@@ -209,6 +226,9 @@ namespace SabreTools.Library.DatItems
 
             if (_sha256.IsNullOrEmpty() && !other._sha256.IsNullOrEmpty())
                 _sha256 = other._sha256;
+
+            if (_spamsum.IsNullOrEmpty() && !other._spamsum.IsNullOrEmpty())
+                _spamsum = other._spamsum;
         }
 
         /// <summary>
@@ -223,6 +243,8 @@ namespace SabreTools.Library.DatItems
                 return $"_{SHA1}";
             else if (!_sha256.IsNullOrEmpty())
                 return $"_{SHA256}";
+            else if (!_spamsum.IsNullOrEmpty())
+                return $"_{SpamSum}";
             else
                 return "_1";
         }
@@ -236,7 +258,8 @@ namespace SabreTools.Library.DatItems
         {
             return !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
                 || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
-                || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty());
+                || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty())
+                || !(_spamsum.IsNullOrEmpty() ^ other._spamsum.IsNullOrEmpty());
         }
 
         /// <summary>
@@ -247,7 +270,8 @@ namespace SabreTools.Library.DatItems
         {
             return !_md5.IsNullOrEmpty()
                 || !_sha1.IsNullOrEmpty()
-                || !_sha256.IsNullOrEmpty();
+                || !_sha256.IsNullOrEmpty()
+                || !_spamsum.IsNullOrEmpty();
         }
 
         /// <summary>
@@ -268,7 +292,7 @@ namespace SabreTools.Library.DatItems
             // Return if all hashes match according to merge rules
             return ConditionalHashEquals(_md5, other._md5)
                 && ConditionalHashEquals(_sha1, other._sha1)
-                && ConditionalHashEquals(_sha256, other._sha256);
+                && ConditionalHashEquals(_spamsum, other._spamsum);
         }
 
         #endregion
@@ -337,6 +361,12 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_SHA256.MatchesNegativeSet(SHA256) == true)
                 return false;
 
+            // Filter on SpamSum
+            if (filter.DatItem_SpamSum.MatchesPositiveSet(SpamSum) == false)
+                return false;
+            if (filter.DatItem_SpamSum.MatchesNegativeSet(SpamSum) == true)
+                return false;
+
             return true;
         }
 
@@ -361,6 +391,9 @@ namespace SabreTools.Library.DatItems
 
             if (fields.Contains(Field.DatItem_SHA256))
                 SHA256 = null;
+
+            if (fields.Contains(Field.DatItem_SpamSum))
+                SpamSum = null;
         }
 
         /// <summary>
@@ -402,6 +435,10 @@ namespace SabreTools.Library.DatItems
 
                 case Field.DatItem_SHA256:
                     key = SHA256;
+                    break;
+
+                case Field.DatItem_SpamSum:
+                    key = SpamSum;
                     break;
 
                 // Let the base handle generic stuff
@@ -453,6 +490,12 @@ namespace SabreTools.Library.DatItems
             {
                 if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
                     SHA256 = newItem.SHA256;
+            }
+
+            if (fields.Contains(Field.DatItem_SpamSum))
+            {
+                if (string.IsNullOrEmpty(SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
+                    SpamSum = newItem.SpamSum;
             }
         }
 

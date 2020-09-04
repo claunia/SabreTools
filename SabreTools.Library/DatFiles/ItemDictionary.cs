@@ -315,6 +315,12 @@ namespace SabreTools.Library.DatFiles
         public long SHA512Count { get; private set; } = 0;
 
         /// <summary>
+        /// Number of items with a SpamSum fuzzy hash
+        /// </summary>
+        [JsonIgnore]
+        public long SpamSumCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of items with the baddump status
         /// </summary>
         [JsonIgnore]
@@ -652,6 +658,7 @@ namespace SabreTools.Library.DatFiles
                     MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                    SpamSumCount += (string.IsNullOrWhiteSpace((item as Media).SpamSum) ? 0 : 1);
                     break;
                 case ItemType.Part:
                     PartCount++;
@@ -682,6 +689,7 @@ namespace SabreTools.Library.DatFiles
                         SHA256Count += (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
                         SHA384Count += (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
                         SHA512Count += (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
+                        SpamSumCount += (string.IsNullOrWhiteSpace((item as Rom).SpamSum) ? 0 : 1);
                     }
 
                     BaddumpCount += ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
