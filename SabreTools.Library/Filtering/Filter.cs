@@ -201,7 +201,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<bool?> DatItem_FlipX { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<long?> DatItem_Width { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_Height { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<string> DatItem_Refresh { get; private set; } = new FilterItem<string>();
+        public FilterItem<double?> DatItem_Refresh { get; private set; } = new FilterItem<double?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_PixClock { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_HTotal { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_HBEnd { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
@@ -855,7 +855,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Refresh:
-                    SetStringFilter(DatItem_Refresh, value, negate);
+                    SetDoubleFilter(DatItem_Refresh, value, negate);
                     break;
 
                 case Field.DatItem_PixClock:
@@ -1054,6 +1054,64 @@ namespace SabreTools.Library.Filtering
                 filterItem.Neutral = false;
             else
                 filterItem.Neutral = true;
+        }
+
+        /// <summary>
+        /// Set a long? filter
+        /// </summary>
+        /// <param name="filterItem">FilterItem to populate</param>
+        /// <param name="value">String value to add</param>
+        /// <param name="negate">True to set negative filter, false otherwise</param>
+        private void SetDoubleFilter(FilterItem<double?> filterItem, string value, bool negate)
+        {
+            bool? operation = null;
+            if (value.StartsWith(">"))
+                operation = true;
+            else if (value.StartsWith("<"))
+                operation = false;
+            else if (value.StartsWith("="))
+                operation = null;
+
+            string valueString = value.TrimStart('>', '<', '=');
+            if (!Double.TryParse(valueString, out double valueDouble))
+                return;
+
+            // Equal
+            if (operation == null && !negate)
+            {
+                filterItem.Neutral = valueDouble;
+            }
+
+            // Not Equal
+            else if (operation == null && negate)
+            {
+                filterItem.Negative = valueDouble - 1;
+                filterItem.Positive = valueDouble + 1;
+            }
+
+            // Greater Than or Equal
+            else if (operation == true && !negate)
+            {
+                filterItem.Positive = valueDouble;
+            }
+
+            // Strictly Less Than
+            else if (operation == true && negate)
+            {
+                filterItem.Negative = valueDouble - 1;
+            }
+
+            // Less Than or Equal
+            else if (operation == false && !negate)
+            {
+                filterItem.Negative = valueDouble;
+            }
+
+            // Strictly Greater Than
+            else if (operation == false && negate)
+            {
+                filterItem.Positive = valueDouble + 1;
+            }
         }
 
         /// <summary>

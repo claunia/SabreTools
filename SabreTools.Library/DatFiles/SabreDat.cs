@@ -1441,7 +1441,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
                         xtw.WriteOptionalAttributeString("width", display.Width?.ToString());
                         xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
-                        xtw.WriteOptionalAttributeString("refresh", display.Refresh);
+                        xtw.WriteOptionalAttributeString("refresh", display.Refresh?.ToString("N6"));
                         xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
                         xtw.WriteOptionalAttributeString("htotal", display.HTotal?.ToString());
                         xtw.WriteOptionalAttributeString("hbend", display.HBEnd?.ToString());

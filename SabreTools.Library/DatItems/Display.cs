@@ -58,7 +58,7 @@ namespace SabreTools.Library.DatItems
         /// Refresh rate
         /// </summary>
         [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Refresh { get; set; } // TODO: Float?
+        public double? Refresh { get; set; }
 
         /// <summary>
         /// Pixel clock timer
@@ -144,7 +144,10 @@ namespace SabreTools.Library.DatItems
             }
 
             if (mappings.Keys.Contains(Field.DatItem_Refresh))
-                Refresh = mappings[Field.DatItem_Refresh];
+            {
+                if (Double.TryParse(mappings[Field.DatItem_Refresh], out double refresh))
+                    Refresh = refresh;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_PixClock))
             {
@@ -313,9 +316,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on refresh
-            if (filter.DatItem_Refresh.MatchesPositiveSet(Refresh) == false)
+            if (filter.DatItem_Refresh.MatchesPositive(null, Refresh) == false)
                 return false;
-            if (filter.DatItem_Refresh.MatchesNegativeSet(Refresh) == true)
+            if (filter.DatItem_Refresh.MatchesNegative(null, Refresh) == true)
                 return false;
 
             // Filter on pixclock
