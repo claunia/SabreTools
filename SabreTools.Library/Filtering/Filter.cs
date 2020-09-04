@@ -136,7 +136,7 @@ namespace SabreTools.Library.Filtering
         // Rom (SoftwareList)
         public FilterItem<string> DatItem_AreaName { get; private set; } = new FilterItem<string>();
         public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<string> DatItem_AreaWidth { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_AreaWidth { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<Endianness> DatItem_AreaEndianness { get; private set; } = new FilterItem<Endianness>() { Positive = Endianness.NULL, Negative = Endianness.NULL };
         public FilterItem<LoadFlag> DatItem_LoadFlag { get; private set; } = new FilterItem<LoadFlag>() { Positive = LoadFlag.NULL, Negative = LoadFlag.NULL };
         public FilterItem<string> DatItem_Part_Name { get; private set; } = new FilterItem<string>();
@@ -652,7 +652,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_AreaWidth:
-                    SetStringFilter(DatItem_AreaWidth, value, negate);
+                    SetOptionalLongFilter(DatItem_AreaWidth, value, negate);
                     break;
 
                 case Field.DatItem_AreaEndianness:

@@ -390,7 +390,8 @@ namespace SabreTools.Library.DatItems
                 if (DataArea == null)
                     DataArea = new DataArea();
 
-                DataArea.Width = mappings[Field.DatItem_AreaWidth];
+                if (Int64.TryParse(mappings[Field.DatItem_AreaWidth], out long areaWidth))
+                    DataArea.Width = areaWidth;
             }
 
             if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
@@ -908,9 +909,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on area byte width
-            if (filter.DatItem_AreaWidth.MatchesPositiveSet(DataArea?.Width) == false)
+            if (filter.DatItem_AreaWidth.MatchesPositive(null, DataArea?.Width) == false)
                 return false;
-            if (filter.DatItem_AreaWidth.MatchesNegativeSet(DataArea?.Width) == true)
+            if (filter.DatItem_AreaWidth.MatchesNegative(null, DataArea?.Width) == true)
                 return false;
 
             // Filter on area endianness
