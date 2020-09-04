@@ -177,13 +177,13 @@ namespace SabreTools.Library.Filtering
 
         // Control
         public FilterItem<string> DatItem_Control_Type { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Control_Player { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Control_Buttons { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Control_Player { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_Control_Buttons { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_Control_RegButtons { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Control_Minimum { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Control_Maximum { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Control_Sensitivity { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Control_KeyDelta { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Control_Minimum { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_Control_Maximum { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_Control_Sensitivity { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_Control_KeyDelta { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<bool?> DatItem_Control_Reverse { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> DatItem_Control_Ways { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Control_Ways2 { get; private set; } = new FilterItem<string>();
@@ -770,11 +770,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Control_Player:
-                    SetStringFilter(DatItem_Control_Player, value, negate);
+                    SetOptionalLongFilter(DatItem_Control_Player, value, negate);
                     break;
 
                 case Field.DatItem_Control_Buttons:
-                    SetStringFilter(DatItem_Control_Buttons, value, negate);
+                    SetOptionalLongFilter(DatItem_Control_Buttons, value, negate);
                     break;
 
                 case Field.DatItem_Control_RegButtons:
@@ -782,19 +782,19 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Control_Minimum:
-                    SetStringFilter(DatItem_Control_Minimum, value, negate);
+                    SetOptionalLongFilter(DatItem_Control_Minimum, value, negate);
                     break;
 
                 case Field.DatItem_Control_Maximum:
-                    SetStringFilter(DatItem_Control_Maximum, value, negate);
+                    SetOptionalLongFilter(DatItem_Control_Maximum, value, negate);
                     break;
 
                 case Field.DatItem_Control_Sensitivity:
-                    SetStringFilter(DatItem_Control_Sensitivity, value, negate);
+                    SetOptionalLongFilter(DatItem_Control_Sensitivity, value, negate);
                     break;
 
                 case Field.DatItem_Control_KeyDelta:
-                    SetStringFilter(DatItem_Control_KeyDelta, value, negate);
+                    SetOptionalLongFilter(DatItem_Control_KeyDelta, value, negate);
                     break;
 
                 case Field.DatItem_Control_Reverse:

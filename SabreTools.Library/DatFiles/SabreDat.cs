@@ -1503,13 +1503,13 @@ namespace SabreTools.Library.DatFiles
                             {
                                 xtw.WriteStartElement("control");
                                 xtw.WriteOptionalAttributeString("type", control.ControlType);
-                                xtw.WriteOptionalAttributeString("player", control.Player);
-                                xtw.WriteOptionalAttributeString("buttons", control.Buttons);
+                                xtw.WriteOptionalAttributeString("player", control.Player?.ToString());
+                                xtw.WriteOptionalAttributeString("buttons", control.Buttons?.ToString());
                                 xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
-                                xtw.WriteOptionalAttributeString("minimum", control.Minimum);
-                                xtw.WriteOptionalAttributeString("maximum", control.Maximum);
-                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity);
-                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta);
+                                xtw.WriteOptionalAttributeString("minimum", control.Minimum?.ToString());
+                                xtw.WriteOptionalAttributeString("maximum", control.Maximum?.ToString());
+                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity?.ToString());
+                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta?.ToString());
                                 xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
                                 xtw.WriteOptionalAttributeString("ways", control.Ways);
                                 xtw.WriteOptionalAttributeString("ways2", control.Ways2);

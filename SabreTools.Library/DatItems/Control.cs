@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
@@ -25,17 +26,18 @@ namespace SabreTools.Library.DatItems
         /// Player ID
         /// </summary>
         [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Player { get; set; } // TODO: Int32?
+        public long? Player { get; set; }
 
         /// <summary>
         /// Button count
         /// </summary>
         [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Buttons { get; set; } // TODO: Int32?
+        public long? Buttons { get; set; }
 
         /// <summary>
         /// Regular button count
         /// </summary>
+        /// <remarks>Couldn't find this used in newest ListXML</remarks>
         [JsonProperty("regbuttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string RegButtons { get; set; } // TODO: Int32?
 
@@ -43,25 +45,25 @@ namespace SabreTools.Library.DatItems
         /// Minimum value
         /// </summary>
         [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Minimum { get; set; } // TODO: Int32? Float?
+        public long? Minimum { get; set; }
 
         /// <summary>
         /// Maximum value
         /// </summary>
         [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Maximum { get; set; } // TODO: Int32? Float?
+        public long? Maximum { get; set; }
 
         /// <summary>
         /// Sensitivity value
         /// </summary>
         [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Sensitivity { get; set; } // TODO: Int32? Float?
+        public long? Sensitivity { get; set; }
 
         /// <summary>
         /// Keypress delta
         /// </summary>
         [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string KeyDelta { get; set; } // TODO: Int32? Float?
+        public long? KeyDelta { get; set; }
 
         /// <summary>
         /// Determines if the control is reversed
@@ -73,19 +75,19 @@ namespace SabreTools.Library.DatItems
         /// First set of ways
         /// </summary>
         [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Ways { get; set; } // TODO: Int32? Float?
+        public string Ways { get; set; }
 
         /// <summary>
         /// Second set of ways
         /// </summary>
         [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Ways2 { get; set; } // TODO: Int32? Float?
+        public string Ways2 { get; set; }
 
         /// <summary>
         /// Third set of ways
         /// </summary>
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Ways3 { get; set; } // TODO: Int32? Float?
+        public string Ways3 { get; set; }
 
         #endregion
 
@@ -105,25 +107,43 @@ namespace SabreTools.Library.DatItems
                 ControlType = mappings[Field.DatItem_Control_Type];
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Player))
-                Player = mappings[Field.DatItem_Control_Player];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Control_Player], out long player))
+                    Player = player;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Buttons))
-                Buttons = mappings[Field.DatItem_Control_Buttons];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Control_Buttons], out long buttons))
+                    Buttons = buttons;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Control_RegButtons))
                 RegButtons = mappings[Field.DatItem_Control_RegButtons];
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Minimum))
-                Minimum = mappings[Field.DatItem_Control_Minimum];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Control_Minimum], out long minimum))
+                    Minimum = minimum;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Maximum))
-                Maximum = mappings[Field.DatItem_Control_Maximum];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Control_Maximum], out long maximum))
+                    Maximum = maximum;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Sensitivity))
-                Sensitivity = mappings[Field.DatItem_Control_Sensitivity];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Control_Sensitivity], out long sensitivity))
+                    Sensitivity = sensitivity;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Control_KeyDelta))
-                KeyDelta = mappings[Field.DatItem_Control_KeyDelta];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Control_KeyDelta], out long keyDelta))
+                    KeyDelta = keyDelta;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Reverse))
                 Reverse = mappings[Field.DatItem_Control_Reverse].AsYesNo();
@@ -230,15 +250,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on display type
-            if (filter.DatItem_Control_Player.MatchesPositiveSet(Player) == false)
+            if (filter.DatItem_Control_Player.MatchesPositive(null, Player) == false)
                 return false;
-            if (filter.DatItem_Control_Player.MatchesNegativeSet(Player) == true)
+            if (filter.DatItem_Control_Player.MatchesNegative(null, Player) == true)
                 return false;
 
             // Filter on buttons
-            if (filter.DatItem_Control_Buttons.MatchesPositiveSet(Buttons) == false)
+            if (filter.DatItem_Control_Buttons.MatchesPositive(null, Buttons) == false)
                 return false;
-            if (filter.DatItem_Control_Buttons.MatchesNegativeSet(Buttons) == true)
+            if (filter.DatItem_Control_Buttons.MatchesNegative(null, Buttons) == true)
                 return false;
 
             // Filter on regbuttons
@@ -248,27 +268,27 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on minimum
-            if (filter.DatItem_Control_Minimum.MatchesPositiveSet(Minimum) == false)
+            if (filter.DatItem_Control_Minimum.MatchesPositive(null, Minimum) == false)
                 return false;
-            if (filter.DatItem_Control_Minimum.MatchesNegativeSet(Minimum) == true)
+            if (filter.DatItem_Control_Minimum.MatchesNegative(null, Minimum) == true)
                 return false;
 
             // Filter on maximum
-            if (filter.DatItem_Control_Maximum.MatchesPositiveSet(Maximum) == false)
+            if (filter.DatItem_Control_Maximum.MatchesPositive(null, Maximum) == false)
                 return false;
-            if (filter.DatItem_Control_Maximum.MatchesNegativeSet(Maximum) == true)
+            if (filter.DatItem_Control_Maximum.MatchesNegative(null, Maximum) == true)
                 return false;
 
             // Filter on sensitivity
-            if (filter.DatItem_Control_Sensitivity.MatchesPositiveSet(Sensitivity) == false)
+            if (filter.DatItem_Control_Sensitivity.MatchesPositive(null, Sensitivity) == false)
                 return false;
-            if (filter.DatItem_Control_Sensitivity.MatchesNegativeSet(Sensitivity) == true)
+            if (filter.DatItem_Control_Sensitivity.MatchesNegative(null, Sensitivity) == true)
                 return false;
 
             // Filter on keydelta
-            if (filter.DatItem_Control_KeyDelta.MatchesPositiveSet(KeyDelta) == false)
+            if (filter.DatItem_Control_KeyDelta.MatchesPositive(null, KeyDelta) == false)
                 return false;
-            if (filter.DatItem_Control_KeyDelta.MatchesNegativeSet(KeyDelta) == true)
+            if (filter.DatItem_Control_KeyDelta.MatchesNegative(null, KeyDelta) == true)
                 return false;
 
             // Filter on reverse
