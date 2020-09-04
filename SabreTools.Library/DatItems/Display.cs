@@ -4,6 +4,7 @@ using System.Linq;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -25,7 +26,8 @@ namespace SabreTools.Library.DatItems
         /// Display type
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string DisplayType { get; set; } // TODO: (raster|vector|lcd|svg|unknown)
+        [JsonConverter(typeof(StringEnumConverter))]
+        public DisplayType DisplayType { get; set; }
 
         /// <summary>
         /// Display rotation
@@ -117,7 +119,7 @@ namespace SabreTools.Library.DatItems
                 Tag = mappings[Field.DatItem_Tag];
 
             if (mappings.Keys.Contains(Field.DatItem_DisplayType))
-                DisplayType = mappings[Field.DatItem_DisplayType];
+                DisplayType = mappings[Field.DatItem_DisplayType].AsDisplayType();
 
             if (mappings.Keys.Contains(Field.DatItem_Rotate))
                 Rotate = mappings[Field.DatItem_Rotate];
@@ -252,9 +254,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on display type
-            if (filter.DatItem_DisplayType.MatchesPositiveSet(DisplayType) == false)
+            if (filter.DatItem_DisplayType.MatchesPositive(DisplayType.NULL, DisplayType) == false)
                 return false;
-            if (filter.DatItem_DisplayType.MatchesNegativeSet(DisplayType) == true)
+            if (filter.DatItem_DisplayType.MatchesNegative(DisplayType.NULL, DisplayType) == true)
                 return false;
 
             // Filter on rotation
@@ -344,7 +346,7 @@ namespace SabreTools.Library.DatItems
                 Tag = null;
 
             if (fields.Contains(Field.DatItem_DisplayType))
-                DisplayType = null;
+                DisplayType = DisplayType.NULL;
 
             if (fields.Contains(Field.DatItem_Rotate))
                 Rotate = null;

@@ -384,7 +384,7 @@ namespace SabreTools.Library.DatFiles
                             Offset = reader.GetAttribute("offset"),
                             Value = reader.GetAttribute("value"),
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            LoadFlag = reader.GetAttribute("loadflag"),
+                            LoadFlag = reader.GetAttribute("loadflag").AsLoadFlag(),
 
                             DataArea = dataArea,
                         };
@@ -787,7 +787,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("offset", rom.Offset);
                         xtw.WriteOptionalAttributeString("value", rom.Value);
                         xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
-                        xtw.WriteOptionalAttributeString("loadflag", rom.LoadFlag);
+                        xtw.WriteOptionalAttributeString("loadflag", rom.LoadFlag.FromLoadFlag());
                         xtw.WriteEndElement();
 
                         // End dataarea

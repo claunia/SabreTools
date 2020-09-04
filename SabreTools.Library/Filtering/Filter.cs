@@ -138,7 +138,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_AreaWidth { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_AreaEndianness { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_LoadFlag { get; private set; } = new FilterItem<string>();
+        public FilterItem<LoadFlag> DatItem_LoadFlag { get; private set; } = new FilterItem<LoadFlag>() { Positive = LoadFlag.NULL, Negative = LoadFlag.NULL };
         public FilterItem<string> DatItem_Part_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Part_Interface { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Part_Feature_Name { get; private set; } = new FilterItem<string>();
@@ -196,7 +196,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Interface { get; private set; } = new FilterItem<string>();
 
         // Display
-        public FilterItem<string> DatItem_DisplayType { get; private set; } = new FilterItem<string>();
+        public FilterItem<DisplayType> DatItem_DisplayType { get; private set; } = new FilterItem<DisplayType>() { Positive = DisplayType.NULL, Negative = DisplayType.NULL };
         public FilterItem<string> DatItem_Rotate { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_FlipX { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<string> DatItem_Width { get; private set; } = new FilterItem<string>();
@@ -928,9 +928,9 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_LoadFlag:
                     if (negate)
-                        DatItem_LoadFlag.NegativeSet.Add(value);
+                        DatItem_LoadFlag.Negative |= value.AsLoadFlag();
                     else
-                        DatItem_LoadFlag.PositiveSet.Add(value);
+                        DatItem_LoadFlag.Positive |= value.AsLoadFlag();
                     break;
 
                 case Field.DatItem_Part_Name:
@@ -1193,9 +1193,9 @@ namespace SabreTools.Library.Filtering
                 // Display
                 case Field.DatItem_DisplayType:
                     if (negate)
-                        DatItem_DisplayType.NegativeSet.Add(value);
+                        DatItem_DisplayType.Negative |= value.AsDisplayType();
                     else
-                        DatItem_DisplayType.PositiveSet.Add(value);
+                        DatItem_DisplayType.Positive |= value.AsDisplayType();
                     break;
 
                 case Field.DatItem_Rotate:

@@ -360,7 +360,7 @@ namespace SabreTools.Library.DatFiles
                         datItems.Add(new Display
                         {
                             Tag = reader.GetAttribute("tag"),
-                            DisplayType = reader.GetAttribute("type"),
+                            DisplayType = reader.GetAttribute("type").AsDisplayType(),
                             Rotate = reader.GetAttribute("rotate"),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
                             Width = reader.GetAttribute("width"),
@@ -1511,7 +1511,7 @@ namespace SabreTools.Library.DatFiles
                         var display = datItem as Display;
                         xtw.WriteStartElement("display");
                         xtw.WriteOptionalAttributeString("tag", display.Tag);
-                        xtw.WriteOptionalAttributeString("type", display.DisplayType);
+                        xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
                         xtw.WriteOptionalAttributeString("rotate", display.Rotate);
                         xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
                         xtw.WriteOptionalAttributeString("width", display.Width);

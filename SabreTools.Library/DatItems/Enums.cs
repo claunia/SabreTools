@@ -18,6 +18,24 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine the display type
+    /// </summary>
+    [Flags]
+    public enum DisplayType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Raster = 1 << 0,
+        Vector = 1 << 1,
+        LCD = 1 << 2,
+        SVG = 1 << 3,
+        Unknown = 1 << 4,
+    }
+
+    /// <summary>
     /// Determines which type of duplicate a file is
     /// </summary>
     [Flags]
@@ -78,7 +96,6 @@ namespace SabreTools.Library.DatItems
     /// List of valid field types within a DatItem/Machine
     /// </summary>
     /// TODO: Move this to a more common location
-    /// TODO: Ensure the order of these after all shuffling
     public enum Field : int
     {
         NULL = 0,
@@ -469,19 +486,30 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
-    /// Determine which OpenMSX subtype an item is
+    /// Determine the loadflag value
     /// </summary>
     [Flags]
-    public enum OpenMSXSubType
+    public enum LoadFlag
     {
         /// <summary>
         /// This is a fake flag that is used for filter only
         /// </summary>
         NULL = 0,
 
-        Rom = 1 << 0,
-        MegaRom = 1 << 1,
-        SCCPlusCart = 1 << 2,
+        Load16Byte = 1 << 0,
+        Load16Word = 1 << 1,
+        Load16WordSwap = 1 << 2,
+        Load32Byte = 1 << 3,
+        Load32Word = 1 << 4,
+        Load32WordSwap = 1 << 5,
+        Load32DWord = 1 << 6,
+        Load64Word = 1 << 7,
+        Load64WordSwap = 1 << 8,
+        Reload = 1 << 9,
+        Fill = 1 << 10,
+        Continue = 1 << 11,
+        ReloadPlain = 1 << 12,
+        Ignore = 1 << 13,
     }
 
     /// <summary>
@@ -498,6 +526,22 @@ namespace SabreTools.Library.DatItems
         Bios = 1 << 1,
         Device = 1 << 2,
         Mechanical = 1 << 3,
+    }
+
+    /// <summary>
+    /// Determine which OpenMSX subtype an item is
+    /// </summary>
+    [Flags]
+    public enum OpenMSXSubType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Rom = 1 << 0,
+        MegaRom = 1 << 1,
+        SCCPlusCart = 1 << 2,
     }
 
     /// <summary>

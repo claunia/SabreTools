@@ -235,8 +235,8 @@ namespace SabreTools.Library.DatItems
         /// Loading flag
         /// </summary>
         [JsonProperty("loadflag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string LoadFlag { get; set; } // TODO: (load16_byte|load16_word|load16_word_swap|load32_byte|load32_word|load32_word_swap|load32_dword|load64_word|load64_word_swap|reload|fill|continue|reload_plain|ignore)
-
+        [JsonConverter(typeof(StringEnumConverter))]
+        public LoadFlag LoadFlag { get; set; }
 
         /// <summary>
         /// Original hardware part associated with the item
@@ -401,7 +401,7 @@ namespace SabreTools.Library.DatItems
             }
 
             if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
-                LoadFlag = mappings[Field.DatItem_LoadFlag];
+                LoadFlag = mappings[Field.DatItem_LoadFlag].AsLoadFlag();
 
             if (mappings.Keys.Contains(Field.DatItem_Part_Name))
             {
@@ -919,9 +919,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on load flag
-            if (filter.DatItem_LoadFlag.MatchesPositiveSet(LoadFlag) == false)
+            if (filter.DatItem_LoadFlag.MatchesPositive(LoadFlag.NULL, LoadFlag) == false)
                 return false;
-            if (filter.DatItem_LoadFlag.MatchesNegativeSet(LoadFlag) == true)
+            if (filter.DatItem_LoadFlag.MatchesNegative(LoadFlag.NULL, LoadFlag) == true)
                 return false;
 
             // Filter on part name
@@ -942,7 +942,7 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
                 return false;
 
-            // TODO: Handle DatItem_Feature*
+            // TODO: Handle DatItem_Part_Feature*
 
             #endregion
 
@@ -1073,7 +1073,7 @@ namespace SabreTools.Library.DatItems
             }
 
             if (fields.Contains(Field.DatItem_LoadFlag))
-                LoadFlag = null;
+                LoadFlag = LoadFlag.NULL;
 
             if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
                 Part.Name = null;
@@ -1081,7 +1081,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
                 Part.Interface = null;
 
-            // TODO: Handle DatItem_Feature*
+            // TODO: Handle DatItem_Part_Feature*
 
             if (fields.Contains(Field.DatItem_Value))
                 Value = null;

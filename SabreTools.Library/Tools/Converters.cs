@@ -173,6 +173,42 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get DisplayType value from input string
+        /// </summary>
+        /// <param name="displayType">String to get value from</param>
+        /// <returns>DisplayType value corresponding to the string</returns>
+        public static DisplayType AsDisplayType(this string displayType)
+        {
+#if NET_FRAMEWORK
+            switch (displayType?.ToLowerInvariant())
+            {
+                case "raster":
+                    return DisplayType.Raster;
+                case "vector":
+                    return DisplayType.Vector;
+                case "lcd":
+                    return DisplayType.LCD;
+                case "svg":
+                    return DisplayType.SVG;
+                case "unknown":
+                    return DisplayType.Unknown;
+                default:
+                    return DisplayType.NULL;
+            }
+#else
+            return displayType?.ToLowerInvariant() switch
+            {
+                "raster" => DisplayType.Raster,
+                "vector" => DisplayType.Vector,
+                "lcd" => DisplayType.LCD,
+                "svg" => DisplayType.SVG,
+                "unknown" => DisplayType.Unknown,
+                _ => DisplayType.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get FeatureStatus value from input string
         /// </summary>
         /// <param name="featureStatus">String to get value from</param>
@@ -1670,6 +1706,69 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get LoadFlag value from input string
+        /// </summary>
+        /// <param name="loadFlag">String to get value from</param>
+        /// <returns>LoadFlag value corresponding to the string</returns>
+        public static LoadFlag AsLoadFlag(this string loadFlag)
+        {
+#if NET_FRAMEWORK
+            switch (loadFlag?.ToLowerInvariant())
+            {
+                case "load16_byte":
+                    return LoadFlag.Load16Byte;
+                case "load16_word":
+                    return LoadFlag.Load16Word;
+                case "load16_word_swap":
+                    return LoadFlag.Load16WordSwap;
+                case "load32_byte":
+                    return LoadFlag.Load32Byte;
+                case "load32_word":
+                    return LoadFlag.Load32Word;
+                case "load32_word_swap":
+                    return LoadFlag.Load32WordSwap;
+                case "load32_dword":
+                    return LoadFlag.Load32DWord;
+                case "load64_word":
+                    return LoadFlag.Load64Word;
+                case "load64_word_swap":
+                    return LoadFlag.Load64WordSwap;
+                case "reload":
+                    return LoadFlag.Reload;
+                case "fill":
+                    return LoadFlag.Fill;
+                case "continue":
+                    return LoadFlag.Continue;
+                case "reload_plain":
+                    return LoadFlag.ReloadPlain;
+                case "sccpluscart":
+                    return LoadFlag.Ignore;
+                default:
+                    return LoadFlag.NULL;
+            }
+#else
+            return loadFlag?.ToLowerInvariant() switch
+            {
+                "load16_byte" => LoadFlag.Load16Byte,
+                "load16_word" => LoadFlag.Load16Word,
+                "load16_word_swap" => LoadFlag.Load16WordSwap,
+                "load32_byte" => LoadFlag.Load32Byte,
+                "load32_word" => LoadFlag.Load32Word,
+                "load32_word_swap" => LoadFlag.Load32WordSwap,
+                "load32_dword" => LoadFlag.Load32DWord,
+                "load64_word" => LoadFlag.Load64Word,
+                "load64_word_swap" => LoadFlag.Load64WordSwap,
+                "reload" => LoadFlag.Reload,
+                "fill" => LoadFlag.Fill,
+                "continue" => LoadFlag.Continue,
+                "reload_plain" => LoadFlag.ReloadPlain,
+                "ignore" => LoadFlag.Ignore,
+                _ => LoadFlag.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get MachineType value from input string
         /// </summary>
         /// <param name="gametype">String to get value from</param>
@@ -2073,6 +2172,42 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get string value from input DisplayType
+        /// </summary>
+        /// <param name="displayType">DisplayType to get value from</param>
+        /// <returns>String value corresponding to the DisplayType</returns>
+        public static string FromDisplayType(this DisplayType displayType)
+        {
+#if NET_FRAMEWORK
+            switch (displayType)
+            {
+                case DisplayType.Raster:
+                    return "raster";
+                case DisplayType.Vector:
+                    return "vector";
+                case DisplayType.LCD:
+                    return "lcd";
+                case DisplayType.SVG:
+                    return "svg";
+                case DisplayType.Unknown:
+                    return "unknown";
+                default:
+                    return null;
+            }
+#else
+            return displayType switch
+            {
+                DisplayType.Raster => "raster",
+                DisplayType.Vector => "vector",
+                DisplayType.LCD => "lcd",
+                DisplayType.SVG => "svg",
+                DisplayType.Unknown => "unknown",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get string value from input FeatureStatus
         /// </summary>
         /// <param name="featureStatus">FeatureStatus to get value from</param>
@@ -2191,6 +2326,69 @@ namespace SabreTools.Library.Tools
                 ItemStatus.BadDump => "baddump",
                 ItemStatus.Nodump => yesno ? "yes" : "nodump",
                 ItemStatus.Verified => "verified",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input LoadFlag
+        /// </summary>
+        /// <param name="loadFlag">LoadFlag to get value from</param>
+        /// <returns>String value corresponding to the LoadFlag</returns>
+        public static string FromLoadFlag(this LoadFlag loadFlag)
+        {
+#if NET_FRAMEWORK
+            switch (loadFlag)
+            {
+                case LoadFlag.Load16Byte:
+                    return "load16_byte";
+                case LoadFlag.Load16Word:
+                    return "load16_word";
+                case LoadFlag.Load16WordSwap:
+                    return "load16_word_swap";
+                case LoadFlag.Load32Byte:
+                    return "load32_byte";
+                case LoadFlag.Load32Word:
+                    return "load32_word";
+                case LoadFlag.Load32WordSwap:
+                    return "load32_word_swap";
+                case LoadFlag.Load32DWord:
+                    return "load32_dword";
+                case LoadFlag.Load64Word:
+                    return "load64_word";
+                case LoadFlag.Load64WordSwap:
+                    return "load64_word_swap";
+                case LoadFlag.Reload:
+                    return "reload";
+                case LoadFlag.Fill:
+                    return "fill";
+                case LoadFlag.Continue:
+                    return "continue";
+                case LoadFlag.ReloadPlain:
+                    return "reload_plain";
+                case LoadFlag.Ignore:
+                    return "sccpluscart";
+                default:
+                    return null;
+            }
+#else
+            return loadFlag switch
+            {
+                LoadFlag.Load16Byte => "load16_byte",
+                LoadFlag.Load16Word => "load16_word",
+                LoadFlag.Load16WordSwap => "load16_word_swap",
+                LoadFlag.Load32Byte => "load32_byte",
+                LoadFlag.Load32Word => "load32_word",
+                LoadFlag.Load32WordSwap => "load32_word_swap",
+                LoadFlag.Load32DWord => "load32_dword",
+                LoadFlag.Load64Word => "load64_word",
+                LoadFlag.Load64WordSwap => "load64_word_swap",
+                LoadFlag.Reload => "reload",
+                LoadFlag.Fill => "fill",
+                LoadFlag.Continue => "continue",
+                LoadFlag.ReloadPlain => "reload_plain",
+                LoadFlag.Ignore => "ignore",
                 _ => null,
             };
 #endif

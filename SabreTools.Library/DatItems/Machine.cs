@@ -402,9 +402,6 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.Machine_Supported))
                 Supported = mappings[Field.Machine_Supported].AsSupported();
 
-            // TODO: Add Machine_Info*
-            // TODO: Add Machine_SharedFeature*
-
             #endregion
         }
 

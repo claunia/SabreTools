@@ -1436,7 +1436,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "display");
                         xtw.WriteOptionalAttributeString("tag", display.Tag);
-                        xtw.WriteOptionalAttributeString("type", display.DisplayType);
+                        xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
                         xtw.WriteOptionalAttributeString("rotate", display.Rotate);
                         xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
                         xtw.WriteOptionalAttributeString("width", display.Width);
