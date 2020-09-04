@@ -209,6 +209,33 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get Endianness value from input string
+        /// </summary>
+        /// <param name="endianness">String to get value from</param>
+        /// <returns>Endianness value corresponding to the string</returns>
+        public static Endianness AsEndianness(this string endianness)
+        {
+#if NET_FRAMEWORK
+            switch (endianness?.ToLowerInvariant())
+            {
+                case "big":
+                    return Endianness.Big;
+                case "little":
+                    return Endianness.Little;
+                default:
+                    return Endianness.NULL;
+            }
+#else
+            return endianness?.ToLowerInvariant() switch
+            {
+                "big" => Endianness.Big,
+                "little" => Endianness.Little,
+                _ => Endianness.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get FeatureStatus value from input string
         /// </summary>
         /// <param name="featureStatus">String to get value from</param>
@@ -2202,6 +2229,33 @@ namespace SabreTools.Library.Tools
                 DisplayType.LCD => "lcd",
                 DisplayType.SVG => "svg",
                 DisplayType.Unknown => "unknown",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input Endianness
+        /// </summary>
+        /// <param name="endianness">Endianness to get value from</param>
+        /// <returns>String value corresponding to the Endianness</returns>
+        public static string FromEndianness(this Endianness endianness)
+        {
+#if NET_FRAMEWORK
+            switch (endianness)
+            {
+                case Endianness.Big:
+                    return "big";
+                case Endianness.Little:
+                    return "little";
+                default:
+                    return null;
+            }
+#else
+            return endianness switch
+            {
+                Endianness.Big => "big",
+                Endianness.Little => "little",
                 _ => null,
             };
 #endif

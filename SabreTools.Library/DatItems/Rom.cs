@@ -397,7 +397,7 @@ namespace SabreTools.Library.DatItems
                 if (DataArea == null)
                     DataArea = new DataArea();
 
-                DataArea.Endianness = mappings[Field.DatItem_AreaEndianness];
+                DataArea.Endianness = mappings[Field.DatItem_AreaEndianness].AsEndianness();
             }
 
             if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
@@ -913,9 +913,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on area endianness
-            if (filter.DatItem_AreaEndianness.MatchesPositiveSet(DataArea?.Endianness) == false)
+            if (filter.DatItem_AreaEndianness.MatchesPositive(Endianness.NULL, DataArea?.Endianness ?? Endianness.NULL) == false)
                 return false;
-            if (filter.DatItem_AreaEndianness.MatchesNegativeSet(DataArea?.Endianness) == true)
+            if (filter.DatItem_AreaEndianness.MatchesNegative(Endianness.NULL, DataArea?.Endianness ?? Endianness.NULL) == true)
                 return false;
 
             // Filter on load flag
@@ -1069,7 +1069,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_AreaEndianness))
             {
                 if (DataArea != null)
-                    DataArea.Endianness = null;
+                    DataArea.Endianness = Endianness.NULL;
             }
 
             if (fields.Contains(Field.DatItem_LoadFlag))
@@ -1317,7 +1317,7 @@ namespace SabreTools.Library.DatItems
                 if (DataArea == null)
                     DataArea = new DataArea();
 
-                DataArea.Endianness = newItem.DataArea?.Endianness;
+                DataArea.Endianness = newItem.DataArea?.Endianness ?? Endianness.NULL;
             }
 
             if (fields.Contains(Field.DatItem_LoadFlag))

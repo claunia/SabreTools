@@ -257,7 +257,7 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
                             Width = reader.GetAttribute("width"),
-                            Endianness = reader.GetAttribute("endianness"),
+                            Endianness = reader.GetAttribute("endianness").AsEndianness(),
                         };
 
                         List<DatItem> roms = ReadDataArea(reader.ReadSubtree(), dataArea);
@@ -770,7 +770,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteRequiredAttributeString("name", dataAreaName);
                         xtw.WriteOptionalAttributeString("size", rom.DataArea?.Size.ToString());
                         xtw.WriteOptionalAttributeString("width", rom.DataArea?.Width);
-                        xtw.WriteOptionalAttributeString("endianness", rom.DataArea?.Endianness);
+                        xtw.WriteOptionalAttributeString("endianness", rom.DataArea?.Endianness.FromEndianness());
 
                         xtw.WriteStartElement("rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);

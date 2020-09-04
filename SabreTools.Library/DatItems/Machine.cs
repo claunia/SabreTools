@@ -665,9 +665,6 @@ namespace SabreTools.Library.DatItems
             if (filter.Machine_Runnable.MatchesNegative(Runnable.NULL, Runnable) == true)
                 return false;
 
-            // TODO: Inputs
-            // TODO: Inputs.Controls
-
             #endregion // ListXML
 
             #region Logiqx
@@ -781,7 +778,6 @@ namespace SabreTools.Library.DatItems
         /// Remove fields from the Machine
         /// </summary>
         /// <param name="fields">List of Fields to remove</param>
-        /// TODO: Add new ListXML and SoftwareList fields
         public void RemoveFields(List<Field> fields)
         {
             #region Common
@@ -928,7 +924,6 @@ namespace SabreTools.Library.DatItems
         /// <param name="item">DatItem to pull new information from</param>
         /// <param name="fields">List of Fields representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        /// TODO: Add new ListXML and SoftwareList fields
         public void ReplaceFields(Machine machine, List<Field> fields, bool onlySame)
         {
             #region Common

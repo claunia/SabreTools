@@ -51,6 +51,22 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine the endianness
+    /// </summary>
+    [Flags]
+    public enum Endianness
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        // TODO: (big|little) "little"
+        Big = 1 << 0,
+        Little = 1 << 1,
+    }
+
+    /// <summary>
     /// Determine the emulation status
     /// </summary>
     [Flags]

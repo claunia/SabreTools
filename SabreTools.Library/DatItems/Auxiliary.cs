@@ -65,7 +65,7 @@ namespace SabreTools.Library.DatItems
         /// Byte endianness of the area
         /// </summary>
         [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Endianness { get; set; } // TODO: (big|little) "little"
+        public Endianness Endianness { get; set; }
     }
 
     /// <summary>
