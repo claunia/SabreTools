@@ -61,7 +61,6 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         NULL = 0,
 
-        // TODO: (big|little) "little"
         Big = 1 << 0,
         Little = 1 << 1,
     }

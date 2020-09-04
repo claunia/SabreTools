@@ -342,73 +342,43 @@ namespace SabreTools.Library.Filtering
                 #region Common
 
                 case Field.Machine_Name:
-                    if (negate)
-                        Machine_Name.NegativeSet.Add(value);
-                    else
-                        Machine_Name.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Name, value, negate);
                     break;
 
                 case Field.Machine_Comment:
-                    if (negate)
-                        Machine_Comment.NegativeSet.Add(value);
-                    else
-                        Machine_Comment.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Comment, value, negate);
                     break;
 
                 case Field.Machine_Description:
-                    if (negate)
-                        Machine_Description.NegativeSet.Add(value);
-                    else
-                        Machine_Description.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Description, value, negate);
                     break;
 
                 case Field.Machine_Year:
-                    if (negate)
-                        Machine_Year.NegativeSet.Add(value);
-                    else
-                        Machine_Year.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Year, value, negate);
                     break;
 
                 case Field.Machine_Manufacturer:
-                    if (negate)
-                        Machine_Manufacturer.NegativeSet.Add(value);
-                    else
-                        Machine_Manufacturer.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Manufacturer, value, negate);
                     break;
 
                 case Field.Machine_Publisher:
-                    if (negate)
-                        Machine_Publisher.NegativeSet.Add(value);
-                    else
-                        Machine_Publisher.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Publisher, value, negate);
                     break;
 
                 case Field.Machine_Category:
-                    if (negate)
-                        Machine_Category.NegativeSet.Add(value);
-                    else
-                        Machine_Category.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Category, value, negate);
                     break;
 
                 case Field.Machine_RomOf:
-                    if (negate)
-                        Machine_RomOf.NegativeSet.Add(value);
-                    else
-                        Machine_RomOf.PositiveSet.Add(value);
+                    SetStringFilter(Machine_RomOf, value, negate);
                     break;
 
                 case Field.Machine_CloneOf:
-                    if (negate)
-                        Machine_CloneOf.NegativeSet.Add(value);
-                    else
-                        Machine_CloneOf.PositiveSet.Add(value);
+                    SetStringFilter(Machine_CloneOf, value, negate);
                     break;
 
                 case Field.Machine_SampleOf:
-                    if (negate)
-                        Machine_SampleOf.NegativeSet.Add(value);
-                    else
-                        Machine_SampleOf.PositiveSet.Add(value);
+                    SetStringFilter(Machine_SampleOf, value, negate);
                     break;
 
                 case Field.Machine_Type:
@@ -423,52 +393,31 @@ namespace SabreTools.Library.Filtering
                 #region AttractMode
 
                 case Field.Machine_Players:
-                    if (negate)
-                        Machine_Players.NegativeSet.Add(value);
-                    else
-                        Machine_Players.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Players, value, negate);
                     break;
 
                 case Field.Machine_Rotation:
-                    if (negate)
-                        Machine_Rotation.NegativeSet.Add(value);
-                    else
-                        Machine_Rotation.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Rotation, value, negate);
                     break;
 
                 case Field.Machine_Control:
-                    if (negate)
-                        Machine_Control.NegativeSet.Add(value);
-                    else
-                        Machine_Control.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Control, value, negate);
                     break;
 
                 case Field.Machine_Status:
-                    if (negate)
-                        Machine_Status.NegativeSet.Add(value);
-                    else
-                        Machine_Status.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Status, value, negate);
                     break;
 
                 case Field.Machine_DisplayCount:
-                    if (negate)
-                        Machine_DisplayCount.NegativeSet.Add(value);
-                    else
-                        Machine_DisplayCount.PositiveSet.Add(value);
+                    SetStringFilter(Machine_DisplayCount, value, negate);
                     break;
 
                 case Field.Machine_DisplayType:
-                    if (negate)
-                        Machine_DisplayType.NegativeSet.Add(value);
-                    else
-                        Machine_DisplayType.PositiveSet.Add(value);
+                    SetStringFilter(Machine_DisplayType, value, negate);
                     break;
 
                 case Field.Machine_Buttons:
-                    if (negate)
-                        Machine_Buttons.NegativeSet.Add(value);
-                    else
-                        Machine_Buttons.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Buttons, value, negate);
                     break;
 
                 #endregion
@@ -476,10 +425,7 @@ namespace SabreTools.Library.Filtering
                 #region ListXML
 
                 case Field.Machine_SourceFile:
-                    if (negate)
-                        Machine_SourceFile.NegativeSet.Add(value);
-                    else
-                        Machine_SourceFile.PositiveSet.Add(value);
+                    SetStringFilter(Machine_SourceFile, value, negate);
                     break;
 
                 case Field.Machine_Runnable:
@@ -494,17 +440,11 @@ namespace SabreTools.Library.Filtering
                 #region Logiqx
 
                 case Field.Machine_Board:
-                    if (negate)
-                        Machine_Board.NegativeSet.Add(value);
-                    else
-                        Machine_Board.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Board, value, negate);
                     break;
 
                 case Field.Machine_RebuildTo:
-                    if (negate)
-                        Machine_RebuildTo.NegativeSet.Add(value);
-                    else
-                        Machine_RebuildTo.PositiveSet.Add(value);
+                    SetStringFilter(Machine_RebuildTo, value, negate);
                     break;
 
                 #endregion
@@ -512,66 +452,39 @@ namespace SabreTools.Library.Filtering
                 #region Logiqx EmuArc
 
                 case Field.Machine_TitleID:
-                    if (negate)
-                        Machine_TitleID.NegativeSet.Add(value);
-                    else
-                        Machine_TitleID.PositiveSet.Add(value);
+                    SetStringFilter(Machine_TitleID, value, negate);
                     break;
 
                 case Field.Machine_Developer:
-                    if (negate)
-                        Machine_Developer.NegativeSet.Add(value);
-                    else
-                        Machine_Developer.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Developer, value, negate);
                     break;
 
                 case Field.Machine_Genre:
-                    if (negate)
-                        Machine_Genre.NegativeSet.Add(value);
-                    else
-                        Machine_Genre.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Genre, value, negate);
                     break;
 
                 case Field.Machine_Subgenre:
-                    if (negate)
-                        Machine_Subgenre.NegativeSet.Add(value);
-                    else
-                        Machine_Subgenre.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Subgenre, value, negate);
                     break;
 
                 case Field.Machine_Ratings:
-                    if (negate)
-                        Machine_Ratings.NegativeSet.Add(value);
-                    else
-                        Machine_Ratings.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Ratings, value, negate);
                     break;
 
                 case Field.Machine_Score:
-                    if (negate)
-                        Machine_Score.NegativeSet.Add(value);
-                    else
-                        Machine_Score.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Score, value, negate);
                     break;
 
                 case Field.Machine_Enabled:
-                    if (negate)
-                        Machine_Enabled.NegativeSet.Add(value);
-                    else
-                        Machine_Enabled.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Enabled, value, negate);
                     break;
 
                 case Field.Machine_CRC:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        Machine_CRC.Neutral = false;
-                    else
-                        Machine_CRC.Neutral = true;
+                    SetBooleanFilter(Machine_CRC, value, negate);
                     break;
 
                 case Field.Machine_RelatedTo:
-                    if (negate)
-                        Machine_RelatedTo.NegativeSet.Add(value);
-                    else
-                        Machine_RelatedTo.PositiveSet.Add(value);
+                    SetStringFilter(Machine_RelatedTo, value, negate);
                     break;
 
                 #endregion
@@ -579,24 +492,15 @@ namespace SabreTools.Library.Filtering
                 #region OpenMSX
 
                 case Field.Machine_GenMSXID:
-                    if (negate)
-                        Machine_GenMSXID.NegativeSet.Add(value);
-                    else
-                        Machine_GenMSXID.PositiveSet.Add(value);
+                    SetStringFilter(Machine_GenMSXID, value, negate);
                     break;
 
                 case Field.Machine_System:
-                    if (negate)
-                        Machine_System.NegativeSet.Add(value);
-                    else
-                        Machine_System.PositiveSet.Add(value);
+                    SetStringFilter(Machine_System, value, negate);
                     break;
 
                 case Field.Machine_Country:
-                    if (negate)
-                        Machine_Country.NegativeSet.Add(value);
-                    else
-                        Machine_Country.PositiveSet.Add(value);
+                    SetStringFilter(Machine_Country, value, negate);
                     break;
 
                 #endregion
@@ -622,10 +526,7 @@ namespace SabreTools.Library.Filtering
                     if (value.AsItemType() == null)
                         return;
 
-                    if (negate)
-                        DatItem_Type.NegativeSet.Add(value);
-                    else
-                        DatItem_Type.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Type, value, negate);
                     break;
 
                 #endregion
@@ -636,148 +537,61 @@ namespace SabreTools.Library.Filtering
 
                 // Rom
                 case Field.DatItem_Name:
-                    if (negate)
-                        DatItem_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Name, value, negate);
                     break;
 
                 case Field.DatItem_Bios:
-                    if (negate)
-                        DatItem_Bios.NegativeSet.Add(value);
-                    else
-                        DatItem_Bios.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Bios, value, negate);
                     break;
 
                 case Field.DatItem_Size:
-                    bool? sizeOperation = null;
-                    if (value.StartsWith(">"))
-                        sizeOperation = true;
-                    else if (value.StartsWith("<"))
-                        sizeOperation = false;
-                    else if (value.StartsWith("="))
-                        sizeOperation = null;
-
-                    string sizeString = value.TrimStart('>', '<', '=');
-                    if (!Int64.TryParse(sizeString, out long size))
-                        return;
-
-                    // Equal
-                    if (sizeOperation == null && !negate)
-                    {
-                        DatItem_Size.Neutral = size;
-                    }
-
-                    // Not Equal
-                    else if (sizeOperation == null && negate)
-                    {
-                        DatItem_Size.Negative = size - 1;
-                        DatItem_Size.Positive = size + 1;
-                    }
-
-                    // Greater Than or Equal
-                    else if (sizeOperation == true && !negate)
-                    {
-                        DatItem_Size.Positive = size;
-                    }
-
-                    // Strictly Less Than
-                    else if (sizeOperation == true && negate)
-                    {
-                        DatItem_Size.Negative = size - 1;
-                    }
-
-                    // Less Than or Equal
-                    else if (sizeOperation == false && !negate)
-                    {
-                        DatItem_Size.Negative = size;
-                    }
-
-                    // Strictly Greater Than
-                    else if (sizeOperation == false && negate)
-                    {
-                        DatItem_Size.Positive = size + 1;
-                    }
-
+                    SetLongFilter(DatItem_Size, value, negate);
                     break;
 
                 case Field.DatItem_CRC:
-                    if (negate)
-                        DatItem_CRC.NegativeSet.Add(value);
-                    else
-                        DatItem_CRC.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_CRC, value, negate);
                     break;
 
                 case Field.DatItem_MD5:
-                    if (negate)
-                        DatItem_MD5.NegativeSet.Add(value);
-                    else
-                        DatItem_MD5.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_MD5, value, negate);
                     break;
 
 #if NET_FRAMEWORK
                 case Field.DatItem_RIPEMD160:
-                    if (negate)
-                        DatItem_RIPEMD160.NegativeSet.Add(value);
-                    else
-                        DatItem_RIPEMD160.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_RIPEMD160, value, negate);
                     break;
 #endif
 
                 case Field.DatItem_SHA1:
-                    if (negate)
-                        DatItem_SHA1.NegativeSet.Add(value);
-                    else
-                        DatItem_SHA1.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_SHA1, value, negate);
                     break;
 
                 case Field.DatItem_SHA256:
-                    if (negate)
-                        DatItem_SHA256.NegativeSet.Add(value);
-                    else
-                        DatItem_SHA256.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_SHA256, value, negate);
                     break;
 
                 case Field.DatItem_SHA384:
-                    if (negate)
-                        DatItem_SHA384.NegativeSet.Add(value);
-                    else
-                        DatItem_SHA384.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_SHA384, value, negate);
                     break;
 
                 case Field.DatItem_SHA512:
-                    if (negate)
-                        DatItem_SHA512.NegativeSet.Add(value);
-                    else
-                        DatItem_SHA512.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_SHA512, value, negate);
                     break;
 
                 case Field.DatItem_Merge:
-                    if (negate)
-                        DatItem_Merge.NegativeSet.Add(value);
-                    else
-                        DatItem_Merge.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Merge, value, negate);
                     break;
 
                 case Field.DatItem_Region:
-                    if (negate)
-                        DatItem_Region.NegativeSet.Add(value);
-                    else
-                        DatItem_Region.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Region, value, negate);
                     break;
 
                 case Field.DatItem_Offset:
-                    if (negate)
-                        DatItem_Offset.NegativeSet.Add(value);
-                    else
-                        DatItem_Offset.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Offset, value, negate);
                     break;
 
                 case Field.DatItem_Date:
-                    if (negate)
-                        DatItem_Date.NegativeSet.Add(value);
-                    else
-                        DatItem_Date.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Date, value, negate);
                     break;
 
                 case Field.DatItem_Status:
@@ -788,40 +602,25 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Optional:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Optional.Neutral = false;
-                    else
-                        DatItem_Optional.Neutral = true;
+                    SetBooleanFilter(DatItem_Optional, value, negate);
                     break;
 
                 case Field.DatItem_Inverted:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Inverted.Neutral = false;
-                    else
-                        DatItem_Inverted.Neutral = true;
+                    SetBooleanFilter(DatItem_Inverted, value, negate);
                     break;
 
                 // Rom (AttractMode)
                 case Field.DatItem_AltName:
-                    if (negate)
-                        DatItem_AltName.NegativeSet.Add(value);
-                    else
-                        DatItem_AltName.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_AltName, value, negate);
                     break;
 
                 case Field.DatItem_AltTitle:
-                    if (negate)
-                        DatItem_AltTitle.NegativeSet.Add(value);
-                    else
-                        DatItem_AltTitle.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_AltTitle, value, negate);
                     break;
 
                 // Rom (OpenMSX)
                 case Field.DatItem_Original:
-                    if (negate)
-                        DatItem_Original.NegativeSet.Add(value);
-                    else
-                        DatItem_Original.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Original, value, negate);
                     break;
 
                 case Field.DatItem_OpenMSXSubType:
@@ -832,91 +631,28 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_OpenMSXType:
-                    if (negate)
-                        DatItem_OpenMSXType.NegativeSet.Add(value);
-                    else
-                        DatItem_OpenMSXType.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_OpenMSXType, value, negate);
                     break;
 
                 case Field.DatItem_Remark:
-                    if (negate)
-                        DatItem_Remark.NegativeSet.Add(value);
-                    else
-                        DatItem_Remark.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Remark, value, negate);
                     break;
 
                 case Field.DatItem_Boot:
-                    if (negate)
-                        DatItem_Boot.NegativeSet.Add(value);
-                    else
-                        DatItem_Boot.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Boot, value, negate);
                     break;
 
                 // Rom (SoftwareList)
                 case Field.DatItem_AreaName:
-                    if (negate)
-                        DatItem_AreaName.NegativeSet.Add(value);
-                    else
-                        DatItem_AreaName.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_AreaName, value, negate);
                     break;
 
                 case Field.DatItem_AreaSize:
-                    bool? asOperation = null;
-                    if (value.StartsWith(">"))
-                        asOperation = true;
-                    else if (value.StartsWith("<"))
-                        asOperation = false;
-                    else if (value.StartsWith("="))
-                        asOperation = null;
-
-                    string areasizeString = value.TrimStart('>', '<', '=');
-                    if (!Int64.TryParse(areasizeString, out long areasize))
-                        return;
-
-                    // Equal
-                    if (asOperation == null && !negate)
-                    {
-                        DatItem_AreaSize.Neutral = areasize;
-                    }
-
-                    // Not Equal
-                    else if (asOperation == null && negate)
-                    {
-                        DatItem_AreaSize.Negative = areasize - 1;
-                        DatItem_AreaSize.Positive = areasize + 1;
-                    }
-
-                    // Greater Than or Equal
-                    else if (asOperation == true && !negate)
-                    {
-                        DatItem_AreaSize.Positive = areasize;
-                    }
-
-                    // Strictly Less Than
-                    else if (asOperation == true && negate)
-                    {
-                        DatItem_AreaSize.Negative = areasize - 1;
-                    }
-
-                    // Less Than or Equal
-                    else if (asOperation == false && !negate)
-                    {
-                        DatItem_AreaSize.Negative = areasize;
-                    }
-
-                    // Strictly Greater Than
-                    else if (asOperation == false && negate)
-                    {
-                        DatItem_AreaSize.Positive = areasize + 1;
-                    }
-
+                    SetOptionalLongFilter(DatItem_AreaSize, value, negate);
                     break;
 
                 case Field.DatItem_AreaWidth:
-                    if (negate)
-                        DatItem_AreaWidth.NegativeSet.Add(value);
-                    else
-                        DatItem_AreaWidth.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_AreaWidth, value, negate);
                     break;
 
                 case Field.DatItem_AreaEndianness:
@@ -934,53 +670,32 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Part_Name:
-                    if (negate)
-                        DatItem_Part_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Part_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Part_Name, value, negate);
                     break;
 
                 case Field.DatItem_Part_Interface:
-                    if (negate)
-                        DatItem_Part_Interface.NegativeSet.Add(value);
-                    else
-                        DatItem_Part_Interface.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Part_Interface, value, negate);
                     break;
 
                 case Field.DatItem_Part_Feature_Name:
-                    if (negate)
-                        DatItem_Part_Feature_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Part_Feature_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Part_Feature_Name, value, negate);
                     break;
 
                 case Field.DatItem_Part_Feature_Value:
-                    if (negate)
-                        DatItem_Part_Feature_Value.NegativeSet.Add(value);
-                    else
-                        DatItem_Part_Feature_Value.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Part_Feature_Value, value, negate);
                     break;
 
                 case Field.DatItem_Value:
-                    if (negate)
-                        DatItem_Value.NegativeSet.Add(value);
-                    else
-                        DatItem_Value.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Value, value, negate);
                     break;
 
                 // Disk
                 case Field.DatItem_Index:
-                    if (negate)
-                        DatItem_Index.NegativeSet.Add(value);
-                    else
-                        DatItem_Index.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Index, value, negate);
                     break;
 
                 case Field.DatItem_Writable:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Writable.Neutral = false;
-                    else
-                        DatItem_Writable.Neutral = true;
+                    SetBooleanFilter(DatItem_Writable, value, negate);
                     break;
 
                 #endregion
@@ -989,34 +704,22 @@ namespace SabreTools.Library.Filtering
 
                 // Adjuster
                 case Field.DatItem_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Default.Neutral = false;
-                    else
-                        DatItem_Default.Neutral = true;
+                    SetBooleanFilter(DatItem_Default, value, negate);
                     break;
 
                 // Analog
                 case Field.DatItem_Analog_Mask:
-                    if (negate)
-                        DatItem_Analog_Mask.NegativeSet.Add(value);
-                    else
-                        DatItem_Analog_Mask.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Analog_Mask, value, negate);
                     break;
 
                 // BiosSet
                 case Field.DatItem_Description:
-                    if (negate)
-                        DatItem_Description.NegativeSet.Add(value);
-                    else
-                        DatItem_Description.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Description, value, negate);
                     break;
 
                 // Chip
                 case Field.DatItem_Tag:
-                    if (negate)
-                        DatItem_Tag.NegativeSet.Add(value);
-                    else
-                        DatItem_Tag.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Tag, value, negate);
                     break;
 
                 case Field.DatItem_ChipType:
@@ -1027,18 +730,12 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Clock:
-                    if (negate)
-                        DatItem_Clock.NegativeSet.Add(value);
-                    else
-                        DatItem_Clock.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Clock, value, negate);
                     break;
 
                 // Condition
                 case Field.DatItem_Mask:
-                    if (negate)
-                        DatItem_Mask.NegativeSet.Add(value);
-                    else
-                        DatItem_Mask.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Mask, value, negate);
                     break;
 
                 case Field.DatItem_Relation:
@@ -1049,17 +746,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Condition_Tag:
-                    if (negate)
-                        DatItem_Condition_Tag.NegativeSet.Add(value);
-                    else
-                        DatItem_Condition_Tag.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Condition_Tag, value, negate);
                     break;
 
                 case Field.DatItem_Condition_Mask:
-                    if (negate)
-                        DatItem_Condition_Mask.NegativeSet.Add(value);
-                    else
-                        DatItem_Condition_Mask.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Condition_Mask, value, negate);
                     break;
 
                 case Field.DatItem_Condition_Relation:
@@ -1070,124 +761,73 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Condition_Value:
-                    if (negate)
-                        DatItem_Condition_Value.NegativeSet.Add(value);
-                    else
-                        DatItem_Condition_Value.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Condition_Value, value, negate);
                     break;
 
                 // Control
                 case Field.DatItem_Control_Type:
-                    if (negate)
-                        DatItem_Control_Type.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Type.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Type, value, negate);
                     break;
 
                 case Field.DatItem_Control_Player:
-                    if (negate)
-                        DatItem_Control_Player.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Player.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Player, value, negate);
                     break;
 
                 case Field.DatItem_Control_Buttons:
-                    if (negate)
-                        DatItem_Control_Buttons.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Buttons.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Buttons, value, negate);
                     break;
 
                 case Field.DatItem_Control_RegButtons:
-                    if (negate)
-                        DatItem_Control_RegButtons.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_RegButtons.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_RegButtons, value, negate);
                     break;
 
                 case Field.DatItem_Control_Minimum:
-                    if (negate)
-                        DatItem_Control_Minimum.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Minimum.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Minimum, value, negate);
                     break;
 
                 case Field.DatItem_Control_Maximum:
-                    if (negate)
-                        DatItem_Control_Maximum.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Maximum.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Maximum, value, negate);
                     break;
 
                 case Field.DatItem_Control_Sensitivity:
-                    if (negate)
-                        DatItem_Control_Sensitivity.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Sensitivity.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Sensitivity, value, negate);
                     break;
 
                 case Field.DatItem_Control_KeyDelta:
-                    if (negate)
-                        DatItem_Control_KeyDelta.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_KeyDelta.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_KeyDelta, value, negate);
                     break;
 
                 case Field.DatItem_Control_Reverse:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Control_Reverse.Neutral = false;
-                    else
-                        DatItem_Control_Reverse.Neutral = true;
+                    SetBooleanFilter(DatItem_Control_Reverse, value, negate);
                     break;
 
                 case Field.DatItem_Control_Ways:
-                    if (negate)
-                        DatItem_Control_Ways.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Ways.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Ways, value, negate);
                     break;
 
                 case Field.DatItem_Control_Ways2:
-                    if (negate)
-                        DatItem_Control_Ways2.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Ways2.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Ways2, value, negate);
                     break;
 
                 case Field.DatItem_Control_Ways3:
-                    if (negate)
-                        DatItem_Control_Ways3.NegativeSet.Add(value);
-                    else
-                        DatItem_Control_Ways3.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Control_Ways3, value, negate);
                     break;
 
                 // Device
                 case Field.DatItem_DeviceType:
-                    if (negate)
-                        DatItem_DeviceType.NegativeSet.Add(value);
-                    else
-                        DatItem_DeviceType.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_DeviceType, value, negate);
                     break;
 
                 case Field.DatItem_FixedImage:
-                    if (negate)
-                        DatItem_FixedImage.NegativeSet.Add(value);
-                    else
-                        DatItem_FixedImage.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_FixedImage, value, negate);
                     break;
 
                 case Field.DatItem_Mandatory:
-                    if (negate)
-                        DatItem_Mandatory.NegativeSet.Add(value);
-                    else
-                        DatItem_Mandatory.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Mandatory, value, negate);
                     break;
 
                 case Field.DatItem_Interface:
-                    if (negate)
-                        DatItem_Interface.NegativeSet.Add(value);
-                    else
-                        DatItem_Interface.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Interface, value, negate);
                     break;
 
                 // Display
@@ -1199,87 +839,51 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Rotate:
-                    if (negate)
-                        DatItem_Rotate.NegativeSet.Add(value);
-                    else
-                        DatItem_Rotate.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Rotate, value, negate);
                     break;
 
                 case Field.DatItem_FlipX:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_FlipX.Neutral = false;
-                    else
-                        DatItem_FlipX.Neutral = true;
+                    SetBooleanFilter(DatItem_FlipX, value, negate);
                     break;
 
                 case Field.DatItem_Width:
-                    if (negate)
-                        DatItem_Width.NegativeSet.Add(value);
-                    else
-                        DatItem_Width.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Width, value, negate);
                     break;
 
                 case Field.DatItem_Height:
-                    if (negate)
-                        DatItem_Height.NegativeSet.Add(value);
-                    else
-                        DatItem_Height.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Height, value, negate);
                     break;
 
                 case Field.DatItem_Refresh:
-                    if (negate)
-                        DatItem_Refresh.NegativeSet.Add(value);
-                    else
-                        DatItem_Refresh.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Refresh, value, negate);
                     break;
 
                 case Field.DatItem_PixClock:
-                    if (negate)
-                        DatItem_PixClock.NegativeSet.Add(value);
-                    else
-                        DatItem_PixClock.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_PixClock, value, negate);
                     break;
 
                 case Field.DatItem_HTotal:
-                    if (negate)
-                        DatItem_HTotal.NegativeSet.Add(value);
-                    else
-                        DatItem_HTotal.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_HTotal, value, negate);
                     break;
 
                 case Field.DatItem_HBEnd:
-                    if (negate)
-                        DatItem_HBEnd.NegativeSet.Add(value);
-                    else
-                        DatItem_HBEnd.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_HBEnd, value, negate);
                     break;
 
                 case Field.DatItem_HBStart:
-                    if (negate)
-                        DatItem_HBStart.NegativeSet.Add(value);
-                    else
-                        DatItem_HBStart.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_HBStart, value, negate);
                     break;
 
                 case Field.DatItem_VTotal:
-                    if (negate)
-                        DatItem_VTotal.NegativeSet.Add(value);
-                    else
-                        DatItem_VTotal.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_VTotal, value, negate);
                     break;
 
                 case Field.DatItem_VBEnd:
-                    if (negate)
-                        DatItem_VBEnd.NegativeSet.Add(value);
-                    else
-                        DatItem_VBEnd.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_VBEnd, value, negate);
                     break;
 
                 case Field.DatItem_VBStart:
-                    if (negate)
-                        DatItem_VBStart.NegativeSet.Add(value);
-                    else
-                        DatItem_VBStart.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_VBStart, value, negate);
                     break;
 
                 // Driver
@@ -1313,10 +917,7 @@ namespace SabreTools.Library.Filtering
 
                 // Extension
                 case Field.DatItem_Extension_Name:
-                    if (negate)
-                        DatItem_Extension_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Extension_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Extension_Name, value, negate);
                     break;
 
                 // Feature
@@ -1343,218 +944,77 @@ namespace SabreTools.Library.Filtering
 
                 // Input
                 case Field.DatItem_Service:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Service.Neutral = false;
-                    else
-                        DatItem_Service.Neutral = true;
+                    SetBooleanFilter(DatItem_Service, value, negate);
                     break;
 
                 case Field.DatItem_Tilt:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Tilt.Neutral = false;
-                    else
-                        DatItem_Tilt.Neutral = true;
+                    SetBooleanFilter(DatItem_Tilt, value, negate);
                     break;
 
                 case Field.DatItem_Players:
-                    bool? playersOperation = null;
-                    if (value.StartsWith(">"))
-                        playersOperation = true;
-                    else if (value.StartsWith("<"))
-                        playersOperation = false;
-                    else if (value.StartsWith("="))
-                        playersOperation = null;
-
-                    string playersString = value.TrimStart('>', '<', '=');
-                    if (!Int64.TryParse(playersString, out long players))
-                        return;
-
-                    // Equal
-                    if (playersOperation == null && !negate)
-                    {
-                        DatItem_Players.Neutral = players;
-                    }
-
-                    // Not Equal
-                    else if (playersOperation == null && negate)
-                    {
-                        DatItem_Players.Negative = players - 1;
-                        DatItem_Players.Positive = players + 1;
-                    }
-
-                    // Greater Than or Equal
-                    else if (playersOperation == true && !negate)
-                    {
-                        DatItem_Players.Positive = players;
-                    }
-
-                    // Strictly Less Than
-                    else if (playersOperation == true && negate)
-                    {
-                        DatItem_Players.Negative = players - 1;
-                    }
-
-                    // Less Than or Equal
-                    else if (playersOperation == false && !negate)
-                    {
-                        DatItem_Players.Negative = players;
-                    }
-
-                    // Strictly Greater Than
-                    else if (playersOperation == false && negate)
-                    {
-                        DatItem_Players.Positive = players + 1;
-                    }
-
+                    SetOptionalLongFilter(DatItem_Players, value, negate);
                     break;
 
                 case Field.DatItem_Coins:
-                    bool? coinsOperation = null;
-                    if (value.StartsWith(">"))
-                        coinsOperation = true;
-                    else if (value.StartsWith("<"))
-                        coinsOperation = false;
-                    else if (value.StartsWith("="))
-                        coinsOperation = null;
-
-                    string coinsString = value.TrimStart('>', '<', '=');
-                    if (!Int64.TryParse(coinsString, out long coins))
-                        return;
-
-                    // Equal
-                    if (coinsOperation == null && !negate)
-                    {
-                        DatItem_Coins.Neutral = coins;
-                    }
-
-                    // Not Equal
-                    else if (coinsOperation == null && negate)
-                    {
-                        DatItem_Coins.Negative = coins - 1;
-                        DatItem_Coins.Positive = coins + 1;
-                    }
-
-                    // Greater Than or Equal
-                    else if (coinsOperation == true && !negate)
-                    {
-                        DatItem_Coins.Positive = coins;
-                    }
-
-                    // Strictly Less Than
-                    else if (coinsOperation == true && negate)
-                    {
-                        DatItem_Coins.Negative = coins - 1;
-                    }
-
-                    // Less Than or Equal
-                    else if (coinsOperation == false && !negate)
-                    {
-                        DatItem_Coins.Negative = coins;
-                    }
-
-                    // Strictly Greater Than
-                    else if (coinsOperation == false && negate)
-                    {
-                        DatItem_Coins.Positive = coins + 1;
-                    }
-
+                    SetOptionalLongFilter(DatItem_Coins, value, negate);
                     break;
 
                 // Instance
                 case Field.DatItem_Instance_Name:
-                    if (negate)
-                        DatItem_Instance_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Instance_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Instance_Name, value, negate);
                     break;
 
                 case Field.DatItem_Instance_BriefName:
-                    if (negate)
-                        DatItem_Instance_BriefName.NegativeSet.Add(value);
-                    else
-                        DatItem_Instance_BriefName.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Instance_BriefName, value, negate);
                     break;
 
                 // Location
                 case Field.DatItem_Location_Name:
-                    if (negate)
-                        DatItem_Location_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Location_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Location_Name, value, negate);
                     break;
 
                 case Field.DatItem_Location_Number:
-                    if (negate)
-                        DatItem_Location_Number.NegativeSet.Add(value);
-                    else
-                        DatItem_Location_Number.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Location_Number, value, negate);
                     break;
 
                 case Field.DatItem_Location_Inverted:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Location_Inverted.Neutral = false;
-                    else
-                        DatItem_Location_Inverted.Neutral = true;
+                    SetBooleanFilter(DatItem_Location_Inverted, value, negate);
                     break;
 
                 // RamOption
                 case Field.DatItem_Content:
-                    if (negate)
-                        DatItem_Content.NegativeSet.Add(value);
-                    else
-                        DatItem_Content.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Content, value, negate);
                     break;
 
                 // Release
                 case Field.DatItem_Language:
-                    if (negate)
-                        DatItem_Language.NegativeSet.Add(value);
-                    else
-                        DatItem_Language.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Language, value, negate);
                     break;
 
                 // Setting
                 case Field.DatItem_Setting_Name:
-                    if (negate)
-                        DatItem_Setting_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_Setting_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Setting_Name, value, negate);
                     break;
 
                 case Field.DatItem_Setting_Value:
-                    if (negate)
-                        DatItem_Setting_Value.NegativeSet.Add(value);
-                    else
-                        DatItem_Setting_Value.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Setting_Value, value, negate);
                     break;
 
                 case Field.DatItem_Setting_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_Setting_Default.Neutral = false;
-                    else
-                        DatItem_Setting_Default.Neutral = true;
+                    SetBooleanFilter(DatItem_Setting_Default, value, negate);
                     break;
 
                 // SlotOption
                 case Field.DatItem_SlotOption_Name:
-                    if (negate)
-                        DatItem_SlotOption_Name.NegativeSet.Add(value);
-                    else
-                        DatItem_SlotOption_Name.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_SlotOption_Name, value, negate);
                     break;
 
                 case Field.DatItem_SlotOption_DeviceName:
-                    if (negate)
-                        DatItem_SlotOption_DeviceName.NegativeSet.Add(value);
-                    else
-                        DatItem_SlotOption_DeviceName.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_SlotOption_DeviceName, value, negate);
                     break;
 
                 case Field.DatItem_SlotOption_Default:
-                    if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
-                        DatItem_SlotOption_Default.Neutral = false;
-                    else
-                        DatItem_SlotOption_Default.Neutral = true;
+                    SetBooleanFilter(DatItem_SlotOption_Default, value, negate);
                     break;
 
                 // SoftwareList
@@ -1566,63 +1026,12 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Filter:
-                    if (negate)
-                        DatItem_Filter.NegativeSet.Add(value);
-                    else
-                        DatItem_Filter.PositiveSet.Add(value);
+                    SetStringFilter(DatItem_Filter, value, negate);
                     break;
 
                 // Sound
                 case Field.DatItem_Channels:
-                    bool? channelsOperation = null;
-                    if (value.StartsWith(">"))
-                        channelsOperation = true;
-                    else if (value.StartsWith("<"))
-                        channelsOperation = false;
-                    else if (value.StartsWith("="))
-                        channelsOperation = null;
-
-                    string channelsString = value.TrimStart('>', '<', '=');
-                    if (!Int64.TryParse(channelsString, out long channels))
-                        return;
-
-                    // Equal
-                    if (channelsOperation == null && !negate)
-                    {
-                        DatItem_Channels.Neutral = channels;
-                    }
-
-                    // Not Equal
-                    else if (channelsOperation == null && negate)
-                    {
-                        DatItem_Channels.Negative = channels - 1;
-                        DatItem_Channels.Positive = channels + 1;
-                    }
-
-                    // Greater Than or Equal
-                    else if (channelsOperation == true && !negate)
-                    {
-                        DatItem_Channels.Positive = channels;
-                    }
-
-                    // Strictly Less Than
-                    else if (channelsOperation == true && negate)
-                    {
-                        DatItem_Channels.Negative = channels - 1;
-                    }
-
-                    // Less Than or Equal
-                    else if (channelsOperation == false && !negate)
-                    {
-                        DatItem_Channels.Negative = channels;
-                    }
-
-                    // Strictly Greater Than
-                    else if (channelsOperation == false && negate)
-                    {
-                        DatItem_Channels.Positive = channels + 1;
-                    }
-
+                    SetOptionalLongFilter(DatItem_Channels, value, negate);
                     break;
 
                 #endregion
@@ -1631,6 +1040,151 @@ namespace SabreTools.Library.Filtering
 
                 #endregion // DatItem Filters
             }
+        }
+
+        /// <summary>
+        /// Set a bool? filter
+        /// </summary>
+        /// <param name="filterItem">FilterItem to populate</param>
+        /// <param name="value">String value to add</param>
+        /// <param name="negate">True to set negative filter, false otherwise</param>
+        private void SetBooleanFilter(FilterItem<bool?> filterItem, string value, bool negate)
+        {
+            if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
+                filterItem.Neutral = false;
+            else
+                filterItem.Neutral = true;
+        }
+
+        /// <summary>
+        /// Set a long filter
+        /// </summary>
+        /// <param name="filterItem">FilterItem to populate</param>
+        /// <param name="value">String value to add</param>
+        /// <param name="negate">True to set negative filter, false otherwise</param>
+        /// TODO: Can anything using this go with SetOptionalLongFilter instead?
+        private void SetLongFilter(FilterItem<long> filterItem, string value, bool negate)
+        {
+            bool? operation = null;
+            if (value.StartsWith(">"))
+                operation = true;
+            else if (value.StartsWith("<"))
+                operation = false;
+            else if (value.StartsWith("="))
+                operation = null;
+
+            string valueString = value.TrimStart('>', '<', '=');
+            if (!Int64.TryParse(valueString, out long valueLong))
+                return;
+
+            // Equal
+            if (operation == null && !negate)
+            {
+                filterItem.Neutral = valueLong;
+            }
+
+            // Not Equal
+            else if (operation == null && negate)
+            {
+                filterItem.Negative = valueLong - 1;
+                filterItem.Positive = valueLong + 1;
+            }
+
+            // Greater Than or Equal
+            else if (operation == true && !negate)
+            {
+                filterItem.Positive = valueLong;
+            }
+
+            // Strictly Less Than
+            else if (operation == true && negate)
+            {
+                filterItem.Negative = valueLong - 1;
+            }
+
+            // Less Than or Equal
+            else if (operation == false && !negate)
+            {
+                filterItem.Negative = valueLong;
+            }
+
+            // Strictly Greater Than
+            else if (operation == false && negate)
+            {
+                filterItem.Positive = valueLong + 1;
+            }
+        }
+
+        /// <summary>
+        /// Set a long? filter
+        /// </summary>
+        /// <param name="filterItem">FilterItem to populate</param>
+        /// <param name="value">String value to add</param>
+        /// <param name="negate">True to set negative filter, false otherwise</param>
+        private void SetOptionalLongFilter(FilterItem<long?> filterItem, string value, bool negate)
+        {
+            bool? operation = null;
+            if (value.StartsWith(">"))
+                operation = true;
+            else if (value.StartsWith("<"))
+                operation = false;
+            else if (value.StartsWith("="))
+                operation = null;
+
+            string valueString = value.TrimStart('>', '<', '=');
+            if (!Int64.TryParse(valueString, out long valueLong))
+                return;
+
+            // Equal
+            if (operation == null && !negate)
+            {
+                filterItem.Neutral = valueLong;
+            }
+
+            // Not Equal
+            else if (operation == null && negate)
+            {
+                filterItem.Negative = valueLong - 1;
+                filterItem.Positive = valueLong + 1;
+            }
+
+            // Greater Than or Equal
+            else if (operation == true && !negate)
+            {
+                filterItem.Positive = valueLong;
+            }
+
+            // Strictly Less Than
+            else if (operation == true && negate)
+            {
+                filterItem.Negative = valueLong - 1;
+            }
+
+            // Less Than or Equal
+            else if (operation == false && !negate)
+            {
+                filterItem.Negative = valueLong;
+            }
+
+            // Strictly Greater Than
+            else if (operation == false && negate)
+            {
+                filterItem.Positive = valueLong + 1;
+            }
+        }
+
+        /// <summary>
+        /// Set a string filter
+        /// </summary>
+        /// <param name="filterItem">FilterItem to populate</param>
+        /// <param name="value">String value to add</param>
+        /// <param name="negate">True to set negative filter, false otherwise</param>
+        private void SetStringFilter(FilterItem<string> filterItem, string value, bool negate)
+        {
+            if (negate)
+                filterItem.NegativeSet.Add(value);
+            else
+                filterItem.PositiveSet.Add(value);
         }
 
         #endregion
