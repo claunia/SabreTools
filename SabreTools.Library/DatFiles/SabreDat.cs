@@ -1443,12 +1443,12 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
                         xtw.WriteOptionalAttributeString("refresh", display.Refresh);
                         xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
-                        xtw.WriteOptionalAttributeString("htotal", display.HTotal);
-                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
-                        xtw.WriteOptionalAttributeString("hstart", display.HBStart);
-                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
-                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
-                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
+                        xtw.WriteOptionalAttributeString("htotal", display.HTotal?.ToString());
+                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd?.ToString());
+                        xtw.WriteOptionalAttributeString("hstart", display.HBStart?.ToString());
+                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal?.ToString());
+                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd?.ToString());
+                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart?.ToString());
                         xtw.WriteEndElement();
                         break;
 

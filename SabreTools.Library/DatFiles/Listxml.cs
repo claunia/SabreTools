@@ -363,12 +363,6 @@ namespace SabreTools.Library.DatFiles
                             DisplayType = reader.GetAttribute("type").AsDisplayType(),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
                             Refresh = reader.GetAttribute("refresh"),
-                            HTotal = reader.GetAttribute("htotal"),
-                            HBEnd = reader.GetAttribute("hbend"),
-                            HBStart = reader.GetAttribute("hbstart"),
-                            VTotal = reader.GetAttribute("vtotal"),
-                            VBEnd = reader.GetAttribute("vbend"),
-                            VBStart = reader.GetAttribute("vbstart"),
 
                             Source = new Source
                             {
@@ -403,6 +397,48 @@ namespace SabreTools.Library.DatFiles
                         {
                             if (Int64.TryParse(reader.GetAttribute("pixclock"), out long pixclock))
                                 display.PixClock = pixclock;
+                        }
+
+                        // Set the htotal
+                        if (reader.GetAttribute("htotal") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("htotal"), out long htotal))
+                                display.HTotal = htotal;
+                        }
+
+                        // Set the hbend
+                        if (reader.GetAttribute("hbend") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("hbend"), out long hbend))
+                                display.HBEnd = hbend;
+                        }
+
+                        // Set the hbstart
+                        if (reader.GetAttribute("hbstart") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("hbstart"), out long hbstart))
+                                display.HBStart = hbstart;
+                        }
+
+                        // Set the vtotal
+                        if (reader.GetAttribute("vtotal") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("vtotal"), out long vtotal))
+                                display.VTotal = vtotal;
+                        }
+
+                        // Set the vbend
+                        if (reader.GetAttribute("vbend") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("vbend"), out long vbend))
+                                display.VBEnd = vbend;
+                        }
+
+                        // Set the vbstart
+                        if (reader.GetAttribute("vbstart") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("vbstart"), out long vbstart))
+                                display.VBStart = vbstart;
                         }
 
                         datItems.Add(display);
@@ -1563,12 +1599,12 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
                         xtw.WriteOptionalAttributeString("refresh", display.Refresh);
                         xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
-                        xtw.WriteOptionalAttributeString("htotal", display.HTotal);
-                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd);
-                        xtw.WriteOptionalAttributeString("hstart", display.HBStart);
-                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal);
-                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd);
-                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart);
+                        xtw.WriteOptionalAttributeString("htotal", display.HTotal?.ToString());
+                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd?.ToString());
+                        xtw.WriteOptionalAttributeString("hstart", display.HBStart?.ToString());
+                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal?.ToString());
+                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd?.ToString());
+                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart?.ToString());
                         xtw.WriteEndElement();
                         break;
 

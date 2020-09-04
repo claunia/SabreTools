@@ -203,12 +203,12 @@ namespace SabreTools.Library.Filtering
         public FilterItem<long?> DatItem_Height { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_Refresh { get; private set; } = new FilterItem<string>();
         public FilterItem<long?> DatItem_PixClock { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<string> DatItem_HTotal { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_HBEnd { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_HBStart { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_VTotal { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_VBEnd { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_VBStart { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_HTotal { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_HBEnd { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_HBStart { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_VTotal { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_VBEnd { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_VBStart { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
 
         // Driver
         public FilterItem<SupportStatus> DatItem_SupportStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = SupportStatus.NULL, Negative = SupportStatus.NULL };
@@ -863,27 +863,27 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_HTotal:
-                    SetStringFilter(DatItem_HTotal, value, negate);
+                    SetOptionalLongFilter(DatItem_HTotal, value, negate);
                     break;
 
                 case Field.DatItem_HBEnd:
-                    SetStringFilter(DatItem_HBEnd, value, negate);
+                    SetOptionalLongFilter(DatItem_HBEnd, value, negate);
                     break;
 
                 case Field.DatItem_HBStart:
-                    SetStringFilter(DatItem_HBStart, value, negate);
+                    SetOptionalLongFilter(DatItem_HBStart, value, negate);
                     break;
 
                 case Field.DatItem_VTotal:
-                    SetStringFilter(DatItem_VTotal, value, negate);
+                    SetOptionalLongFilter(DatItem_VTotal, value, negate);
                     break;
 
                 case Field.DatItem_VBEnd:
-                    SetStringFilter(DatItem_VBEnd, value, negate);
+                    SetOptionalLongFilter(DatItem_VBEnd, value, negate);
                     break;
 
                 case Field.DatItem_VBStart:
-                    SetStringFilter(DatItem_VBStart, value, negate);
+                    SetOptionalLongFilter(DatItem_VBStart, value, negate);
                     break;
 
                 // Driver

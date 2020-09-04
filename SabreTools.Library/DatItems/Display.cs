@@ -70,37 +70,37 @@ namespace SabreTools.Library.DatItems
         /// Total horizontal lines
         /// </summary>
         [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string HTotal { get; set; } // TODO: Int32? Float?
+        public long? HTotal { get; set; }
 
         /// <summary>
         /// Horizontal blank end
         /// </summary>
         [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string HBEnd { get; set; } // TODO: Int32? Float?
+        public long? HBEnd { get; set; }
 
         /// <summary>
         /// Horizontal blank start
         /// </summary>
         [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string HBStart { get; set; } // TODO: Int32? Float?
+        public long? HBStart { get; set; }
 
         /// <summary>
         /// Total vertical lines
         /// </summary>
         [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string VTotal { get; set; } // TODO: Int32? Float?
+        public long? VTotal { get; set; }
 
         /// <summary>
         /// Vertical blank end
         /// </summary>
         [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string VBEnd { get; set; } // TODO: Int32? Float?
+        public long? VBEnd { get; set; }
 
         /// <summary>
         /// Vertical blank start
         /// </summary>
         [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string VBStart { get; set; } // TODO: Int32? Float?
+        public long? VBStart { get; set; }
 
         #endregion
 
@@ -153,22 +153,40 @@ namespace SabreTools.Library.DatItems
             }
 
             if (mappings.Keys.Contains(Field.DatItem_HTotal))
-                HTotal = mappings[Field.DatItem_HTotal];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_HTotal], out long hTotal))
+                    HTotal = hTotal;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_HBEnd))
-                HBEnd = mappings[Field.DatItem_HBEnd];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_HBEnd], out long hbEnd))
+                    HBEnd = hbEnd;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_HBStart))
-                HBStart = mappings[Field.DatItem_HBStart];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_HBStart], out long hbStart))
+                    HBStart = hbStart;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_VTotal))
-                VTotal = mappings[Field.DatItem_VTotal];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_VTotal], out long vTotal))
+                    VTotal = vTotal;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_VBEnd))
-                VBEnd = mappings[Field.DatItem_VBEnd];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_VBEnd], out long vbEnd))
+                    VBEnd = vbEnd;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_VBStart))
-                VBStart = mappings[Field.DatItem_VBStart];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_VBStart], out long vbStart))
+                    VBStart = vbStart;
+            }
         }
 
         #endregion
@@ -307,39 +325,39 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on htotal
-            if (filter.DatItem_HTotal.MatchesPositiveSet(HTotal) == false)
+            if (filter.DatItem_HTotal.MatchesPositive(null, HTotal) == false)
                 return false;
-            if (filter.DatItem_HTotal.MatchesNegativeSet(HTotal) == true)
+            if (filter.DatItem_HTotal.MatchesNegative(null, HTotal) == true)
                 return false;
 
             // Filter on hbend
-            if (filter.DatItem_HBEnd.MatchesPositiveSet(HBEnd) == false)
+            if (filter.DatItem_HBEnd.MatchesPositive(null, HBEnd) == false)
                 return false;
-            if (filter.DatItem_HBEnd.MatchesNegativeSet(HBEnd) == true)
+            if (filter.DatItem_HBEnd.MatchesNegative(null, HBEnd) == true)
                 return false;
 
             // Filter on hbstart
-            if (filter.DatItem_HBStart.MatchesPositiveSet(HBStart) == false)
+            if (filter.DatItem_HBStart.MatchesPositive(null, HBStart) == false)
                 return false;
-            if (filter.DatItem_HBStart.MatchesNegativeSet(HBStart) == true)
+            if (filter.DatItem_HBStart.MatchesNegative(null, HBStart) == true)
                 return false;
 
             // Filter on vtotal
-            if (filter.DatItem_VTotal.MatchesPositiveSet(VTotal) == false)
+            if (filter.DatItem_VTotal.MatchesPositive(null, VTotal) == false)
                 return false;
-            if (filter.DatItem_VTotal.MatchesNegativeSet(VTotal) == true)
+            if (filter.DatItem_VTotal.MatchesNegative(null, VTotal) == true)
                 return false;
 
             // Filter on vbend
-            if (filter.DatItem_VBEnd.MatchesPositiveSet(VBEnd) == false)
+            if (filter.DatItem_VBEnd.MatchesPositive(null, VBEnd) == false)
                 return false;
-            if (filter.DatItem_VBEnd.MatchesNegativeSet(VBEnd) == true)
+            if (filter.DatItem_VBEnd.MatchesNegative(null, VBEnd) == true)
                 return false;
 
             // Filter on vbstart
-            if (filter.DatItem_VBStart.MatchesPositiveSet(VBStart) == false)
+            if (filter.DatItem_VBStart.MatchesPositive(null, VBStart) == false)
                 return false;
-            if (filter.DatItem_VBStart.MatchesNegativeSet(VBStart) == true)
+            if (filter.DatItem_VBStart.MatchesNegative(null, VBStart) == true)
                 return false;
 
             return true;
