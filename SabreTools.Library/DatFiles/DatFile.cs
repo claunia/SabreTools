@@ -2311,7 +2311,7 @@ namespace SabreTools.Library.DatFiles
                 else if (itemName.EndsWith(".aaruf"))
                     itemName = itemName.Substring(0, itemName.Length - 6);
                 else if (itemName.EndsWith(".aif"))
-                    itemName = itemName.Substring(0, itemName.Length - 3);
+                    itemName = itemName.Substring(0, itemName.Length - 4);
             }
 
             // Set the item name back
