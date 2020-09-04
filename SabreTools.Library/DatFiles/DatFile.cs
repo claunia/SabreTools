@@ -1341,126 +1341,125 @@ namespace SabreTools.Library.DatFiles
         /// Use device_ref and optionally slotoption tags to add roms to the children
         /// </summary>
         /// <param name="dev">True if only child device sets are touched, false for non-device sets (default)</param>
-        /// <param name="slotoptions">True if slotoptions tags are used as well, false otherwise</param>
-        private bool AddRomsFromDevices(bool dev = false, bool slotoptions = false)
+        /// <param name="useSlotOptions">True if slotoptions tags are used as well, false otherwise</param>
+        private bool AddRomsFromDevices(bool dev = false, bool useSlotOptions = false)
         {
             bool foundnew = false;
-            List<string> games = Items.Keys.OrderBy(g => g).ToList();
-            foreach (string game in games)
+            List<string> machines = Items.Keys.OrderBy(g => g).ToList();
+            foreach (string machine in machines)
             {
-                // If the game doesn't have items, we continue
-                if (Items[game] == null || Items[game].Count == 0)
+                // If the machine doesn't have items, we continue
+                if (Items[machine] == null || Items[machine].Count == 0)
                     continue;
 
-                // If the game (is/is not) a device, we want to continue
-                if (dev ^ (Items[game][0].Machine.MachineType.HasFlag(MachineType.Device)))
+                // If the machine (is/is not) a device, we want to continue
+                if (dev ^ (Items[machine][0].Machine.MachineType.HasFlag(MachineType.Device)))
                     continue;
 
-                // If the game has no devices, mark it
-                bool devices = true;
-                if (Items[game].Count(i => i.ItemType == ItemType.DeviceReference) == 0)
-                {
-                    devices = false;
-                }
+                // Get all device reference names from the current machine
+                List<string> deviceReferences = Items[machine]
+                    .Where(i => i.ItemType == ItemType.DeviceReference)
+                    .Select(i => i as DeviceReference)
+                    .Select(dr => dr.Name)
+                    .Distinct()
+                    .ToList();
 
-                // If we're checking devices
-                if (devices)
+                // Get all slot option names from the current machine
+                List<string> slotOptions = Items[machine]
+                    .Where(i => i.ItemType == ItemType.Slot)
+                    .Select(i => i as Slot)
+                    .Where(s => s.SlotOptions != null && s.SlotOptions.Count != 0)
+                    .SelectMany(s => s.SlotOptions)
+                    .Select(so => so.DeviceName)
+                    .Distinct()
+                    .ToList();
+
+                // If we're checking device references
+                if (deviceReferences.Any())
                 {
-                    // Determine if the game has any devices or not
-                    List<string> deviceReferences = Items[game]
-                        .Where(i => i.ItemType == ItemType.DeviceReference)
-                        .Select(i => (i as DeviceReference).Name)
-                        .ToList();
-                    List<string> newdevs = new List<string>();
+                    // Loop through all names and check the corresponding machines
+                    List<string> newDeviceReferences = new List<string>();
                     foreach (string deviceReference in deviceReferences)
                     {
-                        // If the device doesn't exist then we continue
+                        // If the machine doesn't exist then we continue
                         if (Items[deviceReference] == null || Items[deviceReference].Count == 0)
                             continue;
 
-                        // Otherwise, copy the items from the device to the current game
-                        DatItem copyFrom = Items[game][0];
+                        // Add to the list of new device reference names
                         List<DatItem> devItems = Items[deviceReference];
-                        newdevs.AddRange((Items[deviceReference] ?? new List<DatItem>())
+                        newDeviceReferences.AddRange(devItems
                             .Where(i => i.ItemType == ItemType.DeviceReference)
                             .Select(i => (i as DeviceReference).Name));
 
+                        // Set new machine information and add to the current machine
+                        DatItem copyFrom = Items[machine][0];
                         foreach (DatItem item in devItems)
                         {
-                            DatItem datItem = (DatItem)item.Clone();
-                            datItem.CopyMachineInformation(copyFrom);
-                            if (Items[game].Where(i => i.ItemType == ItemType.DeviceReference && (i as DeviceReference).Name == (datItem as DeviceReference).Name).Count() == 0)
+                            // If the parent machine doesn't already contain this item, add it
+                            if (!Items[machine].Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
                             {
+                                // Set that we found new items
                                 foundnew = true;
-                                Items.Add(game, datItem);
+
+                                // Clone the item and then add it
+                                DatItem datItem = (DatItem)item.Clone();
+                                datItem.CopyMachineInformation(copyFrom);
+                                Items.Add(machine, datItem);
                             }
                         }
                     }
 
-                    // Now that every device is accounted for, add the new list of devices, if they don't already exist
-                    foreach (string device in newdevs)
+                    // Now that every device reference is accounted for, add the new list of device references, if they don't already exist
+                    foreach (string deviceReference in newDeviceReferences.Distinct())
                     {
-                        if (!deviceReferences.Contains(device))
-                            Items[game].Add(new DeviceReference() { Name = device });
+                        if (!deviceReferences.Contains(deviceReference))
+                            Items[machine].Add(new DeviceReference() { Name = deviceReference });
                     }
                 }
-                
 
                 // If we're checking slotoptions
-                if (slotoptions)
+                if (useSlotOptions && slotOptions.Any())
                 {
-                    // If the game has no slot options, we continue
-                    if (Items[game]
-                        .Where(i => i.ItemType == ItemType.Slot)
-                        .SelectMany(s => (s as Slot).SlotOptions ?? new List<SlotOption>()).Count() == 0)
-                    {
-                        continue;
-                    }
-
-                    // Determine if the game has any slot options or not
-                    List<string> slotOptions = Items[game]
-                        .Where(i => i.ItemType == ItemType.Slot)
-                        .Where(s => (s as Slot).SlotOptions != null && (s as Slot).SlotOptions.Count != 0)
-                        .SelectMany(s => (s as Slot).SlotOptions)
-                        .Select(o => o.DeviceName)
-                        .Distinct()
-                        .ToList();
+                    // Loop through all names and check the corresponding machines
                     List<string> newSlotOptions = new List<string>();
                     foreach (string slotOption in slotOptions)
                     {
-                        // If the slot option doesn't exist then we continue
+                        // If the machine doesn't exist then we continue
                         if (Items[slotOption] == null || Items[slotOption].Count == 0)
                             continue;
 
-                        // Otherwise, copy the items from the slot option to the current game
-                        DatItem copyFrom = Items[game][0];
-                        List<DatItem> slotOptionItems = Items[slotOption];
-                        newSlotOptions.AddRange((Items[slotOption] ?? new List<DatItem>())
+                        // Add to the list of new slot option names
+                        List<DatItem> slotItems = Items[slotOption];
+                        newSlotOptions.AddRange(slotItems
                             .Where(i => i.ItemType == ItemType.Slot)
-                            .Where(s => (s as Slot).SlotOptions != null && (s as Slot).SlotOptions.Count != 0)
+                            .Where(s => (s as Slot).SlotOptions != null)
+                            .Where(s => (s as Slot).SlotOptions.Count != 0)
                             .SelectMany(s => (s as Slot).SlotOptions)
                             .Select(o => o.DeviceName));
 
-                        foreach (DatItem item in slotOptionItems)
+                        // Set new machine information and add to the current machine
+                        DatItem copyFrom = Items[machine][0];
+                        foreach (DatItem item in slotItems)
                         {
-                            DatItem datItem = (DatItem)item.Clone();
-                            datItem.CopyMachineInformation(copyFrom);
-                            if (Items[game].Where(i => i.ItemType == ItemType.Slot && (i as Slot).Name == (datItem as Slot).Name).Count() == 0)
+                            // If the parent machine doesn't already contain this item, add it
+                            if (!Items[machine].Any(i => i.ItemType == item.ItemType && i.GetName() == item.GetName()))
                             {
+                                // Set that we found new items
                                 foundnew = true;
-                                Items.Add(game, datItem);
+
+                                // Clone the item and then add it
+                                DatItem datItem = (DatItem)item.Clone();
+                                datItem.CopyMachineInformation(copyFrom);
+                                Items.Add(machine, datItem);
                             }
                         }
                     }
 
-                    // Ensure we don't have unnecessary duplicates
-                    newSlotOptions = newSlotOptions.Distinct().ToList();
-
-                    // Now that every slot option is accounted for, add the new list of options, if they don't already exist
-                    foreach (string slotOption in newSlotOptions)
+                    // Now that every device is accounted for, add the new list of slot options, if they don't already exist
+                    foreach (string slotOption in newSlotOptions.Distinct())
                     {
                         if (!slotOptions.Contains(slotOption))
-                            Items[game].Add(new Slot() { SlotOptions = new List<SlotOption> { new SlotOption { DeviceName = slotOption } } });
+                            Items[machine].Add(new Slot() { SlotOptions = new List<SlotOption> { new SlotOption { DeviceName = slotOption } } });
                     }
                 }
             }
