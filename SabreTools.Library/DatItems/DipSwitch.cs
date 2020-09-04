@@ -145,7 +145,7 @@ namespace SabreTools.Library.DatItems
                 Part.Interface = mappings[Field.DatItem_Part_Interface];
             }
 
-            // TODO: Handle DatItem_Feature*
+            // TODO: Handle DatItem_Part_Feature*
 
             #endregion
         }
@@ -349,7 +349,7 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
                 return false;
 
-            // TODO: Handle DatItem_Feature*
+            // TODO: Handle DatItem_Part_Feature*
 
             #endregion
 
@@ -412,7 +412,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
                 Part.Interface = null;
 
-            // TODO: Handle DatItem_Feature*
+            // TODO: Handle DatItem_Part_Feature*
 
             #endregion
         }

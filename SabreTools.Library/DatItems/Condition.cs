@@ -303,7 +303,6 @@ namespace SabreTools.Library.DatItems
             Condition newItem = item as Condition;
 
             // Replace the fields
-            // TODO: Would this ever make sense to have these `else` statements?
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = newItem.Tag;
             else if (fields.Contains(Field.DatItem_Condition_Tag))

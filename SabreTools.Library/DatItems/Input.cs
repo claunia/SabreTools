@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
@@ -31,13 +32,13 @@ namespace SabreTools.Library.DatItems
         /// Number of players on the input
         /// </summary>
         [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Players { get; set; } // TODO: Int32?
+        public long? Players { get; set; }
 
         /// <summary>
         /// Number of coins required
         /// </summary>
         [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Coins { get; set; } // TODO: Int32?
+        public long? Coins { get; set; }
 
         /// <summary>
         /// Set of controls for the input
@@ -66,10 +67,16 @@ namespace SabreTools.Library.DatItems
                 Tilt = mappings[Field.DatItem_Tilt].AsYesNo();
 
             if (mappings.Keys.Contains(Field.DatItem_Players))
-                Players = mappings[Field.DatItem_Players];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Players], out long players))
+                    Players = players;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Coins))
-                Coins = mappings[Field.DatItem_Coins];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Coins], out long coins))
+                    Coins = coins;
+            }
 
             if (Controls != null)
             {
@@ -172,15 +179,19 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on players
-            if (filter.DatItem_Players.MatchesPositiveSet(Players) == false)
+            if (filter.DatItem_Players.MatchesNeutral(null, Players) == false)
                 return false;
-            if (filter.DatItem_Players.MatchesNegativeSet(Players) == true)
+            else if (filter.DatItem_Players.MatchesPositive(null, Players) == false)
+                return false;
+            else if (filter.DatItem_Players.MatchesNegative(null, Players) == false)
                 return false;
 
             // Filter on coins
-            if (filter.DatItem_Coins.MatchesPositiveSet(Coins) == false)
+            if (filter.DatItem_Coins.MatchesNeutral(null, Coins) == false)
                 return false;
-            if (filter.DatItem_Coins.MatchesNegativeSet(Coins) == true)
+            else if (filter.DatItem_Coins.MatchesPositive(null, Coins) == false)
+                return false;
+            else if (filter.DatItem_Coins.MatchesNegative(null, Coins) == false)
                 return false;
 
             // Filter on individual controls
@@ -213,7 +224,7 @@ namespace SabreTools.Library.DatItems
                 Tilt = null;
 
             if (fields.Contains(Field.DatItem_Players))
-                Players = null;
+                Players = 0;
 
             if (fields.Contains(Field.DatItem_Coins))
                 Coins = null;

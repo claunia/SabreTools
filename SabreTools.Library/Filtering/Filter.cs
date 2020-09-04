@@ -227,8 +227,8 @@ namespace SabreTools.Library.Filtering
         // Input
         public FilterItem<bool?> DatItem_Service { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> DatItem_Tilt { get; private set; } = new FilterItem<bool?>() { Neutral = null };
-        public FilterItem<string> DatItem_Players { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Coins { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Players { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_Coins { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
 
         // Instance
         public FilterItem<string> DatItem_Instance_Name { get; private set; } = new FilterItem<string>();
@@ -650,51 +650,51 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Size:
-                    bool? sOperation = null;
+                    bool? sizeOperation = null;
                     if (value.StartsWith(">"))
-                        sOperation = true;
+                        sizeOperation = true;
                     else if (value.StartsWith("<"))
-                        sOperation = false;
+                        sizeOperation = false;
                     else if (value.StartsWith("="))
-                        sOperation = null;
+                        sizeOperation = null;
 
                     string sizeString = value.TrimStart('>', '<', '=');
                     if (!Int64.TryParse(sizeString, out long size))
                         return;
 
                     // Equal
-                    if (sOperation == null && !negate)
+                    if (sizeOperation == null && !negate)
                     {
                         DatItem_Size.Neutral = size;
                     }
 
                     // Not Equal
-                    else if (sOperation == null && negate)
+                    else if (sizeOperation == null && negate)
                     {
                         DatItem_Size.Negative = size - 1;
                         DatItem_Size.Positive = size + 1;
                     }
 
                     // Greater Than or Equal
-                    else if (sOperation == true && !negate)
+                    else if (sizeOperation == true && !negate)
                     {
                         DatItem_Size.Positive = size;
                     }
 
                     // Strictly Less Than
-                    else if (sOperation == true && negate)
+                    else if (sizeOperation == true && negate)
                     {
                         DatItem_Size.Negative = size - 1;
                     }
 
                     // Less Than or Equal
-                    else if (sOperation == false && !negate)
+                    else if (sizeOperation == false && !negate)
                     {
                         DatItem_Size.Negative = size;
                     }
 
                     // Strictly Greater Than
-                    else if (sOperation == false && negate)
+                    else if (sizeOperation == false && negate)
                     {
                         DatItem_Size.Positive = size + 1;
                     }
@@ -1357,17 +1357,107 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Players:
-                    if (negate)
-                        DatItem_Players.NegativeSet.Add(value);
-                    else
-                        DatItem_Players.PositiveSet.Add(value);
+                    bool? playersOperation = null;
+                    if (value.StartsWith(">"))
+                        playersOperation = true;
+                    else if (value.StartsWith("<"))
+                        playersOperation = false;
+                    else if (value.StartsWith("="))
+                        playersOperation = null;
+
+                    string playersString = value.TrimStart('>', '<', '=');
+                    if (!Int64.TryParse(playersString, out long players))
+                        return;
+
+                    // Equal
+                    if (playersOperation == null && !negate)
+                    {
+                        DatItem_Players.Neutral = players;
+                    }
+
+                    // Not Equal
+                    else if (playersOperation == null && negate)
+                    {
+                        DatItem_Players.Negative = players - 1;
+                        DatItem_Players.Positive = players + 1;
+                    }
+
+                    // Greater Than or Equal
+                    else if (playersOperation == true && !negate)
+                    {
+                        DatItem_Players.Positive = players;
+                    }
+
+                    // Strictly Less Than
+                    else if (playersOperation == true && negate)
+                    {
+                        DatItem_Players.Negative = players - 1;
+                    }
+
+                    // Less Than or Equal
+                    else if (playersOperation == false && !negate)
+                    {
+                        DatItem_Players.Negative = players;
+                    }
+
+                    // Strictly Greater Than
+                    else if (playersOperation == false && negate)
+                    {
+                        DatItem_Players.Positive = players + 1;
+                    }
+
                     break;
 
                 case Field.DatItem_Coins:
-                    if (negate)
-                        DatItem_Coins.NegativeSet.Add(value);
-                    else
-                        DatItem_Coins.PositiveSet.Add(value);
+                    bool? coinsOperation = null;
+                    if (value.StartsWith(">"))
+                        coinsOperation = true;
+                    else if (value.StartsWith("<"))
+                        coinsOperation = false;
+                    else if (value.StartsWith("="))
+                        coinsOperation = null;
+
+                    string coinsString = value.TrimStart('>', '<', '=');
+                    if (!Int64.TryParse(coinsString, out long coins))
+                        return;
+
+                    // Equal
+                    if (coinsOperation == null && !negate)
+                    {
+                        DatItem_Coins.Neutral = coins;
+                    }
+
+                    // Not Equal
+                    else if (coinsOperation == null && negate)
+                    {
+                        DatItem_Coins.Negative = coins - 1;
+                        DatItem_Coins.Positive = coins + 1;
+                    }
+
+                    // Greater Than or Equal
+                    else if (coinsOperation == true && !negate)
+                    {
+                        DatItem_Coins.Positive = coins;
+                    }
+
+                    // Strictly Less Than
+                    else if (coinsOperation == true && negate)
+                    {
+                        DatItem_Coins.Negative = coins - 1;
+                    }
+
+                    // Less Than or Equal
+                    else if (coinsOperation == false && !negate)
+                    {
+                        DatItem_Coins.Negative = coins;
+                    }
+
+                    // Strictly Greater Than
+                    else if (coinsOperation == false && negate)
+                    {
+                        DatItem_Coins.Positive = coins + 1;
+                    }
+
                     break;
 
                 // Instance

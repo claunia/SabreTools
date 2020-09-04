@@ -1488,8 +1488,8 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteAttributeString("type", "input");
                         xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
                         xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
-                        xtw.WriteOptionalAttributeString("players", input.Players);
-                        xtw.WriteOptionalAttributeString("coins", input.Coins);
+                        xtw.WriteOptionalAttributeString("players", input.Players?.ToString());
+                        xtw.WriteOptionalAttributeString("coins", input.Coins?.ToString());
                         if (input.Controls != null)
                         {
                             foreach (var control in input.Controls)

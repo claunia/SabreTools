@@ -419,7 +419,7 @@ namespace SabreTools.Library.DatItems
                 Part.Interface = mappings[Field.DatItem_Part_Interface];
             }
 
-            // TODO: Handle DatItem_Feature*
+            // TODO: Handle DatItem_Part_Feature*
 
             if (mappings.Keys.Contains(Field.DatItem_Value))
                 Value = mappings[Field.DatItem_Value];

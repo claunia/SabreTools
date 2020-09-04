@@ -424,8 +424,6 @@ namespace SabreTools.Library.DatFiles
                         {
                             Service = reader.GetAttribute("service").AsYesNo(),
                             Tilt = reader.GetAttribute("tilt").AsYesNo(),
-                            Players = reader.GetAttribute("players"),
-                            Coins = reader.GetAttribute("coins"),
 
                             Source = new Source
                             {
@@ -433,6 +431,20 @@ namespace SabreTools.Library.DatFiles
                                 Name = filename,
                             },
                         };
+
+                        // Set the players count
+                        if (reader.GetAttribute("players") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("players"), out long players))
+                                input.Players = players;
+                        }
+
+                        // Set the coins count
+                        if (reader.GetAttribute("coins") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("coins"), out long coins))
+                                input.Coins = coins;
+                        }
 
                         // Now read the internal tags
                         ReadInput(reader.ReadSubtree(), input);
@@ -464,6 +476,22 @@ namespace SabreTools.Library.DatFiles
                         reader.Skip();
                         break;
 
+                    case "ramoption":
+                        datItems.Add(new RamOption
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Default = reader.GetAttribute("default").AsYesNo(),
+                            Content = reader.ReadElementContentAsString(),
+
+                            Source = new Source
+                            {
+                                Index = indexId,
+                                Name = filename,
+                            },
+                        });
+
+                        break;
+
                     case "rom":
                         datItems.Add(new Rom
                         {
@@ -486,22 +514,6 @@ namespace SabreTools.Library.DatFiles
                         });
 
                         reader.Read();
-                        break;
-
-                    case "ramoption":
-                        datItems.Add(new RamOption
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Default = reader.GetAttribute("default").AsYesNo(),
-                            Content = reader.ReadElementContentAsString(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        });
-
                         break;
 
                     case "sample":
@@ -1551,8 +1563,8 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("input");
                         xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
                         xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
-                        xtw.WriteOptionalAttributeString("players", input.Players);
-                        xtw.WriteOptionalAttributeString("coins", input.Coins);
+                        xtw.WriteOptionalAttributeString("players", input.Players?.ToString());
+                        xtw.WriteOptionalAttributeString("coins", input.Coins?.ToString());
                         if (input.Controls != null)
                         {
                             foreach (var control in input.Controls)
