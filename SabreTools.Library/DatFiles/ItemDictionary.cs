@@ -120,6 +120,12 @@ namespace SabreTools.Library.DatFiles
         public long ConfigurationCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of DataArea items
+        /// </summary>
+        [JsonIgnore]
+        public long DataAreaCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Device items
         /// </summary>
         [JsonIgnore]
@@ -142,6 +148,12 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public long DiskCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of DiskArea items
+        /// </summary>
+        [JsonIgnore]
+        public long DiskAreaCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Display items
@@ -178,6 +190,12 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         [JsonIgnore]
         public long MediaCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Part items
+        /// </summary>
+        [JsonIgnore]
+        public long PartCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of PartFeature items
@@ -586,6 +604,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Configuration:
                     ConfigurationCount++;
                     break;
+                case ItemType.DataArea:
+                    DataAreaCount++;
+                    break;
                 case ItemType.Device:
                     DeviceCount++;
                     break;
@@ -608,6 +629,9 @@ namespace SabreTools.Library.DatFiles
                     NodumpCount += ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
                     VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
+                case ItemType.DiskArea:
+                    DiskAreaCount++;
+                    break;
                 case ItemType.Display:
                     DisplayCount++;
                     break;
@@ -628,6 +652,9 @@ namespace SabreTools.Library.DatFiles
                     MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                    break;
+                case ItemType.Part:
+                    PartCount++;
                     break;
                 case ItemType.PartFeature:
                     PartFeatureCount++;
@@ -772,6 +799,9 @@ namespace SabreTools.Library.DatFiles
                 case ItemType.Configuration:
                     ConfigurationCount--;
                     break;
+                case ItemType.DataArea:
+                    DataAreaCount--;
+                    break;
                 case ItemType.Device:
                     DeviceCount--;
                     break;
@@ -794,6 +824,9 @@ namespace SabreTools.Library.DatFiles
                     NodumpCount -= ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
                     VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
                     break;
+                case ItemType.DiskArea:
+                    DiskAreaCount--;
+                    break;
                 case ItemType.Display:
                     DisplayCount--;
                     break;
@@ -814,6 +847,9 @@ namespace SabreTools.Library.DatFiles
                     MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
                     SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
                     SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                    break;
+                case ItemType.Part:
+                    PartCount--;
                     break;
                 case ItemType.PartFeature:
                     PartFeatureCount--;

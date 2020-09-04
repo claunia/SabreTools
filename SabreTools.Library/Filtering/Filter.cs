@@ -134,15 +134,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Boot { get; private set; } = new FilterItem<string>();
 
         // Rom (SoftwareList)
-        public FilterItem<string> DatItem_AreaName { get; private set; } = new FilterItem<string>();
-        public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<long?> DatItem_AreaWidth { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<Endianness> DatItem_AreaEndianness { get; private set; } = new FilterItem<Endianness>() { Positive = Endianness.NULL, Negative = Endianness.NULL };
         public FilterItem<LoadFlag> DatItem_LoadFlag { get; private set; } = new FilterItem<LoadFlag>() { Positive = LoadFlag.NULL, Negative = LoadFlag.NULL };
-        public FilterItem<string> DatItem_Part_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Part_Interface { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Part_Feature_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Part_Feature_Value { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Value { get; private set; } = new FilterItem<string>();
 
         // Disk
@@ -188,6 +180,12 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Control_Ways { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Control_Ways2 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Control_Ways3 { get; private set; } = new FilterItem<string>();
+
+        // DataArea
+        public FilterItem<string> DatItem_AreaName { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_AreaSize { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<long?> DatItem_AreaWidth { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
+        public FilterItem<Endianness> DatItem_AreaEndianness { get; private set; } = new FilterItem<Endianness>() { Positive = Endianness.NULL, Negative = Endianness.NULL };
 
         // Device
         public FilterItem<string> DatItem_DeviceType { get; private set; } = new FilterItem<string>();
@@ -238,6 +236,14 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Location_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Location_Number { get; private set; } = new FilterItem<string>();
         public FilterItem<bool?> DatItem_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        
+        // Part
+        public FilterItem<string> DatItem_Part_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Part_Interface { get; private set; } = new FilterItem<string>();
+        
+        // PartFeature
+        public FilterItem<string> DatItem_Part_Feature_Name { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DatItem_Part_Feature_Value { get; private set; } = new FilterItem<string>();
 
         // RamOption
         public FilterItem<string> DatItem_Content { get; private set; } = new FilterItem<string>();
@@ -643,46 +649,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 // Rom (SoftwareList)
-                case Field.DatItem_AreaName:
-                    SetStringFilter(DatItem_AreaName, value, negate);
-                    break;
-
-                case Field.DatItem_AreaSize:
-                    SetOptionalLongFilter(DatItem_AreaSize, value, negate);
-                    break;
-
-                case Field.DatItem_AreaWidth:
-                    SetOptionalLongFilter(DatItem_AreaWidth, value, negate);
-                    break;
-
-                case Field.DatItem_AreaEndianness:
-                    if (negate)
-                        DatItem_AreaEndianness.Negative |= value.AsEndianness();
-                    else
-                        DatItem_AreaEndianness.Positive |= value.AsEndianness();
-                    break;
-
                 case Field.DatItem_LoadFlag:
                     if (negate)
                         DatItem_LoadFlag.Negative |= value.AsLoadFlag();
                     else
                         DatItem_LoadFlag.Positive |= value.AsLoadFlag();
-                    break;
-
-                case Field.DatItem_Part_Name:
-                    SetStringFilter(DatItem_Part_Name, value, negate);
-                    break;
-
-                case Field.DatItem_Part_Interface:
-                    SetStringFilter(DatItem_Part_Interface, value, negate);
-                    break;
-
-                case Field.DatItem_Part_Feature_Name:
-                    SetStringFilter(DatItem_Part_Feature_Name, value, negate);
-                    break;
-
-                case Field.DatItem_Part_Feature_Value:
-                    SetStringFilter(DatItem_Part_Feature_Value, value, negate);
                     break;
 
                 case Field.DatItem_Value:
@@ -811,6 +782,26 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Control_Ways3:
                     SetStringFilter(DatItem_Control_Ways3, value, negate);
+                    break;
+
+                // DataArea
+                case Field.DatItem_AreaName:
+                    SetStringFilter(DatItem_AreaName, value, negate);
+                    break;
+
+                case Field.DatItem_AreaSize:
+                    SetOptionalLongFilter(DatItem_AreaSize, value, negate);
+                    break;
+
+                case Field.DatItem_AreaWidth:
+                    SetOptionalLongFilter(DatItem_AreaWidth, value, negate);
+                    break;
+
+                case Field.DatItem_AreaEndianness:
+                    if (negate)
+                        DatItem_AreaEndianness.Negative |= value.AsEndianness();
+                    else
+                        DatItem_AreaEndianness.Positive |= value.AsEndianness();
                     break;
 
                 // Device
@@ -979,6 +970,24 @@ namespace SabreTools.Library.Filtering
 
                 case Field.DatItem_Location_Inverted:
                     SetBooleanFilter(DatItem_Location_Inverted, value, negate);
+                    break;
+
+                // Part
+                case Field.DatItem_Part_Name:
+                    SetStringFilter(DatItem_Part_Name, value, negate);
+                    break;
+
+                case Field.DatItem_Part_Interface:
+                    SetStringFilter(DatItem_Part_Interface, value, negate);
+                    break;
+
+                // PartFeature
+                case Field.DatItem_Part_Feature_Name:
+                    SetStringFilter(DatItem_Part_Feature_Name, value, negate);
+                    break;
+
+                case Field.DatItem_Part_Feature_Value:
+                    SetStringFilter(DatItem_Part_Feature_Value, value, negate);
                     break;
 
                 // RamOption

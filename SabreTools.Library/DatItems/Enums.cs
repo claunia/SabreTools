@@ -302,15 +302,7 @@ namespace SabreTools.Library.DatItems
         DatItem_Boot,
 
         // Rom (SoftwareList)
-        DatItem_AreaName, // TODO: DataArea/DiskArea?
-        DatItem_AreaSize, // TODO: DataArea?
-        DatItem_AreaWidth, // TODO: DataArea?
-        DatItem_AreaEndianness, // TODO: DataArea?
         DatItem_LoadFlag,
-        DatItem_Part_Name, // TODO: Part?
-        DatItem_Part_Interface, // TODO: Part?
-        DatItem_Part_Feature_Name, // TODO: PartFeature?
-        DatItem_Part_Feature_Value, // TODO: PartFeature?
         DatItem_Value,
 
         // Disk
@@ -356,6 +348,12 @@ namespace SabreTools.Library.DatItems
         DatItem_Control_Ways,
         DatItem_Control_Ways2,
         DatItem_Control_Ways3,
+
+        // DataArea
+        DatItem_AreaName,
+        DatItem_AreaSize,
+        DatItem_AreaWidth,
+        DatItem_AreaEndianness,
 
         // Device
         DatItem_DeviceType,
@@ -406,6 +404,14 @@ namespace SabreTools.Library.DatItems
         DatItem_Location_Name,
         DatItem_Location_Number,
         DatItem_Location_Inverted,
+
+        // Part
+        DatItem_Part_Name,
+        DatItem_Part_Interface,
+
+        // PartFeature
+        DatItem_Part_Feature_Name,
+        DatItem_Part_Feature_Value,
 
         // RamOption
         DatItem_Content,
@@ -474,9 +480,11 @@ namespace SabreTools.Library.DatItems
         Condition,
         Configuration,
         Control,
+        DataArea,
         Device,
         DeviceReference,
         DipSwitch,
+        DiskArea,
         Display,
         Driver,
         Extension,
@@ -485,6 +493,7 @@ namespace SabreTools.Library.DatItems
         Input,
         Instance,
         Location,
+        Part,
         PartFeature,
         Port,
         RamOption,

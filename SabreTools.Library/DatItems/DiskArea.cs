@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,24 +10,19 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents one part feature object
+    /// SoftwareList diskarea information
     /// </summary>
-    [JsonObject("part_feature")]
-    public class PartFeature : DatItem
+    /// <remarks>One DiskArea can contain multiple Disk items</remarks>
+    [JsonObject("diskarea")]
+    public class DiskArea : DatItem
     {
         #region Fields
 
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
-
-        /// <summary>
-        /// PartFeature value
-        /// </summary>
-        [JsonProperty("value")]
-        public string Value { get; set; }
 
         #endregion
 
@@ -50,12 +46,9 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle PartFeature-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Part_Feature_Name))
-                Name = mappings[Field.DatItem_Part_Feature_Name];
-
-            if (mappings.Keys.Contains(Field.DatItem_Part_Feature_Value))
-                Value = mappings[Field.DatItem_Part_Feature_Value];
+            // Handle DiskArea-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_AreaName))
+                Name = mappings[Field.DatItem_AreaName];
         }
 
         #endregion
@@ -63,12 +56,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty PartFeature object
+        /// Create a default, empty DiskArea object
         /// </summary>
-        public PartFeature()
+        public DiskArea()
         {
             Name = string.Empty;
-            ItemType = ItemType.PartFeature;
+            ItemType = ItemType.DiskArea;
         }
 
         #endregion
@@ -77,7 +70,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new PartFeature()
+            return new DiskArea()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -87,7 +80,6 @@ namespace SabreTools.Library.DatItems
                 Remove = this.Remove,
 
                 Name = this.Name,
-                Value = this.Value,
             };
         }
 
@@ -97,15 +89,15 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a sample, return false
+            // If we don't have a DiskArea, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a PartFeature
-            PartFeature newOther = other as PartFeature;
+            // Otherwise, treat it as a DiskArea
+            DiskArea newOther = other as DiskArea;
 
-            // If the archive information matches
-            return (Name == newOther.Name && Value == newOther.Value);
+            // If the DiskArea information matches
+            return (Name == newOther.Name);
         }
 
         #endregion
@@ -150,16 +142,10 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on item name
-            if (filter.DatItem_Part_Feature_Name.MatchesPositiveSet(Name) == false)
+            // Filter on area name
+            if (filter.DatItem_AreaName.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.DatItem_Part_Feature_Name.MatchesNegativeSet(Name) == true)
-                return false;
-
-            // Filter on info value
-            if (filter.DatItem_Part_Feature_Value.MatchesPositiveSet(Value) == false)
-                return false;
-            if (filter.DatItem_Part_Feature_Value.MatchesNegativeSet(Value) == true)
+            if (filter.DatItem_AreaName.MatchesNegativeSet(Name) == true)
                 return false;
 
             return true;
@@ -175,11 +161,8 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Part_Feature_Name))
+            if (fields.Contains(Field.DatItem_AreaName))
                 Name = null;
-
-            if (fields.Contains(Field.DatItem_Part_Feature_Value))
-                Value = null;
         }
 
         /// <summary>
@@ -206,19 +189,16 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a PartFeature to replace from, ignore specific fields
-            if (item.ItemType != ItemType.PartFeature)
+            // If we don't have a DiskArea to replace from, ignore specific fields
+            if (item.ItemType != ItemType.DiskArea)
                 return;
 
             // Cast for easier access
-            PartFeature newItem = item as PartFeature;
+            DiskArea newItem = item as DiskArea;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Part_Feature_Name))
+            if (fields.Contains(Field.DatItem_AreaName))
                 Name = newItem.Name;
-
-            if (fields.Contains(Field.DatItem_Part_Feature_Value))
-                Value = newItem.Value;
         }
 
         #endregion

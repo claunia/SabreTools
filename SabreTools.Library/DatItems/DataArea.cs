@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,24 +10,37 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents one part feature object
+    /// SoftwareList dataarea information
     /// </summary>
-    [JsonObject("part_feature")]
-    public class PartFeature : DatItem
+    /// <remarks>One DataArea can contain multiple Rom items</remarks>
+    [JsonObject("dataarea")]
+    public class DataArea : DatItem
     {
         #region Fields
 
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Name { get; set; }
 
         /// <summary>
-        /// PartFeature value
+        /// Total size of the area
         /// </summary>
-        [JsonProperty("value")]
-        public string Value { get; set; }
+        [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public long? Size { get; set; }
+
+        /// <summary>
+        /// Word width for the area
+        /// </summary>
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public long? Width { get; set; }
+
+        /// <summary>
+        /// Byte endianness of the area
+        /// </summary>
+        [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Endianness Endianness { get; set; }
 
         #endregion
 
@@ -50,12 +64,24 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle PartFeature-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Part_Feature_Name))
-                Name = mappings[Field.DatItem_Part_Feature_Name];
+            // Handle DataArea-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_AreaName))
+                Name = mappings[Field.DatItem_AreaName];
 
-            if (mappings.Keys.Contains(Field.DatItem_Part_Feature_Value))
-                Value = mappings[Field.DatItem_Part_Feature_Value];
+            if (mappings.Keys.Contains(Field.DatItem_AreaSize))
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_AreaSize], out long areaSize))
+                    Size = areaSize;
+            }
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_AreaWidth], out long areaWidth))
+                    Width = areaWidth;
+            }
+
+            if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
+                Endianness = mappings[Field.DatItem_AreaEndianness].AsEndianness();
         }
 
         #endregion
@@ -63,12 +89,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty PartFeature object
+        /// Create a default, empty DataArea object
         /// </summary>
-        public PartFeature()
+        public DataArea()
         {
             Name = string.Empty;
-            ItemType = ItemType.PartFeature;
+            ItemType = ItemType.DataArea;
         }
 
         #endregion
@@ -77,7 +103,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new PartFeature()
+            return new DataArea()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -87,7 +113,9 @@ namespace SabreTools.Library.DatItems
                 Remove = this.Remove,
 
                 Name = this.Name,
-                Value = this.Value,
+                Size = this.Size,
+                Width = this.Width,
+                Endianness = this.Endianness,
             };
         }
 
@@ -97,15 +125,18 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a sample, return false
+            // If we don't have a DataArea, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a PartFeature
-            PartFeature newOther = other as PartFeature;
+            // Otherwise, treat it as a DataArea
+            DataArea newOther = other as DataArea;
 
-            // If the archive information matches
-            return (Name == newOther.Name && Value == newOther.Value);
+            // If the DataArea information matches
+            return (Name == newOther.Name
+                && Size == newOther.Size
+                && Width == newOther.Width
+                && Endianness == newOther.Endianness);
         }
 
         #endregion
@@ -150,16 +181,30 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on item name
-            if (filter.DatItem_Part_Feature_Name.MatchesPositiveSet(Name) == false)
+            // Filter on area name
+            if (filter.DatItem_AreaName.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.DatItem_Part_Feature_Name.MatchesNegativeSet(Name) == true)
+            if (filter.DatItem_AreaName.MatchesNegativeSet(Name) == true)
                 return false;
 
-            // Filter on info value
-            if (filter.DatItem_Part_Feature_Value.MatchesPositiveSet(Value) == false)
+            // Filter on area size
+            if (filter.DatItem_AreaSize.MatchesNeutral(null, Size) == false)
                 return false;
-            if (filter.DatItem_Part_Feature_Value.MatchesNegativeSet(Value) == true)
+            else if (filter.DatItem_AreaSize.MatchesPositive(null, Size) == false)
+                return false;
+            else if (filter.DatItem_AreaSize.MatchesNegative(null, Size) == false)
+                return false;
+
+            // Filter on area byte width
+            if (filter.DatItem_AreaWidth.MatchesPositive(null, Width) == false)
+                return false;
+            if (filter.DatItem_AreaWidth.MatchesNegative(null, Width) == true)
+                return false;
+
+            // Filter on area endianness
+            if (filter.DatItem_AreaEndianness.MatchesPositive(Endianness.NULL, Endianness) == false)
+                return false;
+            if (filter.DatItem_AreaEndianness.MatchesNegative(Endianness.NULL, Endianness) == true)
                 return false;
 
             return true;
@@ -175,11 +220,17 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Part_Feature_Name))
+            if (fields.Contains(Field.DatItem_AreaName))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Part_Feature_Value))
-                Value = null;
+            if (fields.Contains(Field.DatItem_AreaSize))
+                Size = null;
+
+            if (fields.Contains(Field.DatItem_AreaWidth))
+                Width = null;
+
+            if (fields.Contains(Field.DatItem_AreaEndianness))
+                Endianness = Endianness.NULL;
         }
 
         /// <summary>
@@ -206,19 +257,25 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a PartFeature to replace from, ignore specific fields
-            if (item.ItemType != ItemType.PartFeature)
+            // If we don't have a DataArea to replace from, ignore specific fields
+            if (item.ItemType != ItemType.DataArea)
                 return;
 
             // Cast for easier access
-            PartFeature newItem = item as PartFeature;
+            DataArea newItem = item as DataArea;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Part_Feature_Name))
+            if (fields.Contains(Field.DatItem_AreaName))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Part_Feature_Value))
-                Value = newItem.Value;
+            if (fields.Contains(Field.DatItem_AreaSize))
+                Size = newItem.Size;
+
+            if (fields.Contains(Field.DatItem_AreaWidth))
+                Width = newItem.Width;
+
+            if (fields.Contains(Field.DatItem_AreaEndianness))
+                Endianness = newItem.Endianness;
         }
 
         #endregion

@@ -129,23 +129,11 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (mappings.Keys.Contains(Field.DatItem_Part_Name))
-            {
-                if (Part == null)
-                    Part = new Part();
+            // Handle Part-specific fields
+            if (Part == null)
+                Part = new Part();
 
-                Part.Name = mappings[Field.DatItem_Part_Name];
-            }
-
-            if (mappings.Keys.Contains(Field.DatItem_Part_Interface))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Interface = mappings[Field.DatItem_Part_Interface];
-            }
-
-            // TODO: Handle DatItem_Part_Feature*
+            Part.SetFields(mappings);
 
             #endregion
         }
@@ -209,7 +197,9 @@ namespace SabreTools.Library.DatItems
             if (!match)
                 return match;
 
-            // TODO: Handle Part*
+            // If the part matches
+            if (Part != null)
+                match &= (Part == newOther.Part);
 
             // If the conditions match
             if (Conditions != null)
@@ -337,19 +327,12 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            // Filter on part name
-            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
-                return false;
-            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
-                return false;
-
-            // Filter on part interface
-            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
-                return false;
-            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
-                return false;
-
-            // TODO: Handle DatItem_Part_Feature*
+            // Filter on Part
+            if (Part != null)
+            {
+                if (!Part.PassesFilter(filter))
+                    return false;
+            }
 
             #endregion
 
@@ -406,13 +389,8 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
-                Part.Name = null;
-
-            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
-                Part.Interface = null;
-
-            // TODO: Handle DatItem_Part_Feature*
+            if (Part != null)
+                Part.RemoveFields(fields);
 
             #endregion
         }
@@ -477,23 +455,8 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (fields.Contains(Field.DatItem_Part_Name))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Name = newItem.Part?.Name;
-            }
-
-            if (fields.Contains(Field.DatItem_Part_Interface))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Interface = newItem.Part?.Interface;
-            }
-
-            // TODO: Handle DatItem_Part_Feature*
+            if (Part != null && newItem.Part != null)
+                Part.ReplaceFields(newItem.Part, fields);
 
             #endregion
         }

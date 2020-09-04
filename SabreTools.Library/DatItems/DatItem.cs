@@ -114,15 +114,7 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Boot,
 
             // Rom (SoftwareList)
-            Field.DatItem_AreaName,
-            Field.DatItem_AreaSize,
-            Field.DatItem_AreaWidth,
-            Field.DatItem_AreaEndianness,
             Field.DatItem_LoadFlag,
-            Field.DatItem_Part_Name,
-            Field.DatItem_Part_Interface,
-            Field.DatItem_Part_Feature_Name,
-            Field.DatItem_Part_Feature_Value,
             Field.DatItem_Value,
 
             // Disk
@@ -168,6 +160,12 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Control_Ways,
             Field.DatItem_Control_Ways2,
             Field.DatItem_Control_Ways3,
+
+            // DataArea
+            Field.DatItem_AreaName,
+            Field.DatItem_AreaSize,
+            Field.DatItem_AreaWidth,
+            Field.DatItem_AreaEndianness,
 
             // Device
             Field.DatItem_DeviceType,
@@ -218,6 +216,14 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Location_Name,
             Field.DatItem_Location_Number,
             Field.DatItem_Location_Inverted,
+
+            // Part
+            Field.DatItem_Part_Name,
+            Field.DatItem_Part_Interface,
+
+            // PartFeature
+            Field.DatItem_Part_Feature_Name,
+            Field.DatItem_Part_Feature_Value,
 
             // RamOption
             Field.DatItem_Content,
@@ -394,6 +400,9 @@ namespace SabreTools.Library.DatItems
                 case ItemType.Control:
                     return new Control();
 
+                case ItemType.DataArea:
+                    return new DataArea();
+
                 case ItemType.Device:
                     return new Device();
 
@@ -405,6 +414,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Disk:
                     return new Disk();
+
+                case ItemType.DiskArea:
+                    return new DiskArea();
 
                 case ItemType.Display:
                     return new Display();
@@ -432,6 +444,9 @@ namespace SabreTools.Library.DatItems
 
                 case ItemType.Media:
                     return new Media();
+
+                case ItemType.Part:
+                    return new Part();
 
                 case ItemType.PartFeature:
                     return new PartFeature();

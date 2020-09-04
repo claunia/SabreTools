@@ -1635,6 +1635,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Configuration;
                 case "control":
                     return ItemType.Control;
+                case "dataarea":
+                    return ItemType.DataArea;
                 case "device":
                     return ItemType.Device;
                 case "device_ref":
@@ -1643,6 +1645,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.DipSwitch;
                 case "disk":
                     return ItemType.Disk;
+                case "diskarea":
+                    return ItemType.DiskArea;
                 case "display":
                     return ItemType.Display;
                 case "driver":
@@ -1661,6 +1665,8 @@ namespace SabreTools.Library.Tools
                     return ItemType.Location;
                 case "media":
                     return ItemType.Media;
+                case "part":
+                    return ItemType.Part;
                 case "partfeature":
                 case "part_feature":
                     return ItemType.PartFeature;
@@ -1701,10 +1707,12 @@ namespace SabreTools.Library.Tools
                 "condition" => ItemType.Condition,
                 "configuration" => ItemType.Configuration,
                 "control" => ItemType.Control,
+                "dataarea" => ItemType.DataArea,
                 "device" => ItemType.Device,
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
+                "diskarea" => ItemType.DiskArea,
                 "display" => ItemType.Display,
                 "driver" => ItemType.Driver,
                 "extension" => ItemType.Extension,
@@ -1714,6 +1722,7 @@ namespace SabreTools.Library.Tools
                 "instance" => ItemType.Instance,
                 "location" => ItemType.Location,
                 "media" => ItemType.Media,
+                "part" => ItemType.Part,
                 "partfeature" => ItemType.PartFeature,
                 "part_feature" => ItemType.PartFeature,
                 "port" => ItemType.Port,
@@ -2515,6 +2524,8 @@ namespace SabreTools.Library.Tools
                     return "configuration";
                 case ItemType.Control:
                     return "control";
+                case ItemType.DataArea:
+                    return "dataarea";
                 case ItemType.Device:
                     return "device";
                 case ItemType.DeviceReference:
@@ -2523,6 +2534,8 @@ namespace SabreTools.Library.Tools
                     return "dipswitch";
                 case ItemType.Disk:
                     return "disk";
+                case ItemType.DiskArea:
+                    return "diskarea";
                 case ItemType.Display:
                     return "display";
                 case ItemType.Driver:
@@ -2541,6 +2554,8 @@ namespace SabreTools.Library.Tools
                     return "location";
                 case ItemType.Media:
                     return "media";
+                case ItemType.Part:
+                    return "part";
                 case ItemType.PartFeature:
                     return "part_feature";
                 case ItemType.Port:
@@ -2580,10 +2595,12 @@ namespace SabreTools.Library.Tools
                 ItemType.Condition => "condition",
                 ItemType.Configuration => "configuration",
                 ItemType.Control => "control",
+                ItemType.DataArea => "dataarea",
                 ItemType.Device => "device",
                 ItemType.DeviceReference => "device_ref",
                 ItemType.DipSwitch => "dipswitch",
                 ItemType.Disk => "disk",
+                ItemType.DiskArea => "diskarea",
                 ItemType.Display => "display",
                 ItemType.Driver => "driver",
                 ItemType.Extension => "extension",
@@ -2593,6 +2610,7 @@ namespace SabreTools.Library.Tools
                 ItemType.Instance => "instance",
                 ItemType.Location => "location",
                 ItemType.Media => "media",
+                ItemType.Part => "part",
                 ItemType.PartFeature => "part_feature",
                 ItemType.Port => "port",
                 ItemType.RamOption => "ramoption",

@@ -235,6 +235,9 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Control:
                         datItem = datItemObj.ToObject<Control>();
                         break;
+                    case ItemType.DataArea:
+                        datItem = datItemObj.ToObject<DataArea>();
+                        break;
                     case ItemType.Device:
                         datItem = datItemObj.ToObject<Device>();
                         break;
@@ -246,6 +249,9 @@ namespace SabreTools.Library.DatFiles
                         break;
                     case ItemType.Disk:
                         datItem = datItemObj.ToObject<Disk>();
+                        break;
+                    case ItemType.DiskArea:
+                        datItem = datItemObj.ToObject<DiskArea>();
                         break;
                     case ItemType.Display:
                         datItem = datItemObj.ToObject<Display>();
@@ -273,6 +279,9 @@ namespace SabreTools.Library.DatFiles
                         break;
                     case ItemType.Media:
                         datItem = datItemObj.ToObject<Media>();
+                        break;
+                    case ItemType.Part:
+                        datItem = datItemObj.ToObject<Part>();
                         break;
                     case ItemType.PartFeature:
                         datItem = datItemObj.ToObject<PartFeature>();

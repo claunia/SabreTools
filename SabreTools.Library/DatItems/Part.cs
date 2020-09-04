@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,24 +10,22 @@ using Newtonsoft.Json;
 namespace SabreTools.Library.DatItems
 {
     /// <summary>
-    /// Represents one part feature object
+    /// SoftwareList part information
     /// </summary>
-    [JsonObject("part_feature")]
-    public class PartFeature : DatItem
+    /// <remarks>One Part can contain multiple PartFeature, DataArea, DiskArea, and DipSwitch items</remarks>
+    [JsonObject("part")]
+    public class Part : DatItem
     {
         #region Fields
 
-        /// <summary>
-        /// Name of the item
-        /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// PartFeature value
-        /// </summary>
-        [JsonProperty("value")]
-        public string Value { get; set; }
+        [JsonProperty("interface")]
+        public string Interface { get; set; }
+    
+        [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<PartFeature> Features { get; set; }
 
         #endregion
 
@@ -50,12 +49,21 @@ namespace SabreTools.Library.DatItems
             // Set base fields
             base.SetFields(mappings);
 
-            // Handle PartFeature-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Part_Feature_Name))
-                Name = mappings[Field.DatItem_Part_Feature_Name];
+            // Handle Part-specific fields
+            if (mappings.Keys.Contains(Field.DatItem_Part_Name))
+                Name = mappings[Field.DatItem_Part_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Part_Feature_Value))
-                Value = mappings[Field.DatItem_Part_Feature_Value];
+            if (mappings.Keys.Contains(Field.DatItem_Part_Interface))
+                Interface = mappings[Field.DatItem_Part_Interface];
+
+            // Handle Feature-specific fields
+            if (Features != null)
+            {
+                foreach (PartFeature partFeature in Features)
+                {
+                    partFeature.SetFields(mappings);
+                }
+            }
         }
 
         #endregion
@@ -63,12 +71,12 @@ namespace SabreTools.Library.DatItems
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty PartFeature object
+        /// Create a default, empty Part object
         /// </summary>
-        public PartFeature()
+        public Part()
         {
             Name = string.Empty;
-            ItemType = ItemType.PartFeature;
+            ItemType = ItemType.Part;
         }
 
         #endregion
@@ -77,7 +85,7 @@ namespace SabreTools.Library.DatItems
 
         public override object Clone()
         {
-            return new PartFeature()
+            return new Part()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -87,7 +95,8 @@ namespace SabreTools.Library.DatItems
                 Remove = this.Remove,
 
                 Name = this.Name,
-                Value = this.Value,
+                Interface = this.Interface,
+                Features = this.Features,
             };
         }
 
@@ -97,15 +106,29 @@ namespace SabreTools.Library.DatItems
 
         public override bool Equals(DatItem other)
         {
-            // If we don't have a sample, return false
+            // If we don't have a Part, return false
             if (ItemType != other.ItemType)
                 return false;
 
-            // Otherwise, treat it as a PartFeature
-            PartFeature newOther = other as PartFeature;
+            // Otherwise, treat it as a Part
+            Part newOther = other as Part;
 
-            // If the archive information matches
-            return (Name == newOther.Name && Value == newOther.Value);
+            // If the Part information matches
+            bool match = (Name == newOther.Name
+                && Interface == newOther.Interface);
+            if (!match)
+                return match;
+
+            // If the features match
+            if (Features != null)
+            {
+                foreach (PartFeature partFeature in Features)
+                {
+                    match &= newOther.Features.Contains(partFeature);
+                }
+            }
+
+            return match;
         }
 
         #endregion
@@ -150,17 +173,27 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on item name
-            if (filter.DatItem_Part_Feature_Name.MatchesPositiveSet(Name) == false)
+            // Filter on part name
+            if (filter.DatItem_Part_Name.MatchesPositiveSet(Name) == false)
                 return false;
-            if (filter.DatItem_Part_Feature_Name.MatchesNegativeSet(Name) == true)
+            if (filter.DatItem_Part_Name.MatchesNegativeSet(Name) == true)
                 return false;
 
-            // Filter on info value
-            if (filter.DatItem_Part_Feature_Value.MatchesPositiveSet(Value) == false)
+            // Filter on part interface
+            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Interface) == false)
                 return false;
-            if (filter.DatItem_Part_Feature_Value.MatchesNegativeSet(Value) == true)
+            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Interface) == true)
                 return false;
+
+            // Filter on features
+            if (Features != null)
+            {
+                foreach (PartFeature partFeature in Features)
+                {
+                    if (!partFeature.PassesFilter(filter))
+                        return false;
+                }
+            }
 
             return true;
         }
@@ -175,11 +208,19 @@ namespace SabreTools.Library.DatItems
             base.RemoveFields(fields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Part_Feature_Name))
+            if (fields.Contains(Field.DatItem_Part_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Part_Feature_Value))
-                Value = null;
+            if (fields.Contains(Field.DatItem_Part_Interface))
+                Interface = null;
+
+            if (Features != null)
+            {
+                foreach (PartFeature partFeature in Features)
+                {
+                    partFeature.RemoveFields(fields);
+                }
+            }
         }
 
         /// <summary>
@@ -206,19 +247,23 @@ namespace SabreTools.Library.DatItems
             // Replace common fields first
             base.ReplaceFields(item, fields);
 
-            // If we don't have a PartFeature to replace from, ignore specific fields
-            if (item.ItemType != ItemType.PartFeature)
+            // If we don't have a Part to replace from, ignore specific fields
+            if (item.ItemType != ItemType.Part)
                 return;
 
             // Cast for easier access
-            PartFeature newItem = item as PartFeature;
+            Part newItem = item as Part;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Part_Feature_Name))
+            if (fields.Contains(Field.DatItem_Part_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Part_Feature_Value))
-                Value = newItem.Value;
+            if (fields.Contains(Field.DatItem_Part_Interface))
+                Interface = newItem.Interface;
+
+            // DatItem_Part_Feature_* doesn't make sense here
+            // since not every part feature under the other item
+            // can replace every part feature under this item
         }
 
         #endregion

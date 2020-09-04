@@ -368,63 +368,23 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (mappings.Keys.Contains(Field.DatItem_AreaName))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                DataArea.Name = mappings[Field.DatItem_AreaName];
-            }
-
-            if (mappings.Keys.Contains(Field.DatItem_AreaSize))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                if (Int64.TryParse(mappings[Field.DatItem_AreaSize], out long areaSize))
-                    DataArea.Size = areaSize;
-            }
-
-            if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                if (Int64.TryParse(mappings[Field.DatItem_AreaWidth], out long areaWidth))
-                    DataArea.Width = areaWidth;
-            }
-
-            if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                DataArea.Endianness = mappings[Field.DatItem_AreaEndianness].AsEndianness();
-            }
-
             if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = mappings[Field.DatItem_LoadFlag].AsLoadFlag();
 
-            if (mappings.Keys.Contains(Field.DatItem_Part_Name))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Name = mappings[Field.DatItem_Part_Name];
-            }
-
-            if (mappings.Keys.Contains(Field.DatItem_Part_Interface))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Interface = mappings[Field.DatItem_Part_Interface];
-            }
-
-            // TODO: Handle DatItem_Part_Feature*
-
             if (mappings.Keys.Contains(Field.DatItem_Value))
                 Value = mappings[Field.DatItem_Value];
+
+            // Handle DataArea-specific fields
+            if (DataArea == null)
+                DataArea = new DataArea();
+
+            DataArea.SetFields(mappings);
+
+            // Handle Part-specific fields
+            if (Part == null)
+                Part = new Part();
+
+            Part.SetFields(mappings);
 
             #endregion
         }
@@ -894,48 +854,10 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            // Filter on area name
-            if (filter.DatItem_AreaName.MatchesPositiveSet(DataArea?.Name) == false)
-                return false;
-            if (filter.DatItem_AreaName.MatchesNegativeSet(DataArea?.Name) == true)
-                return false;
-
-            // Filter on area size
-            if (filter.DatItem_AreaSize.MatchesNeutral(null, DataArea?.Size) == false)
-                return false;
-            else if (filter.DatItem_AreaSize.MatchesPositive(null, DataArea?.Size) == false)
-                return false;
-            else if (filter.DatItem_AreaSize.MatchesNegative(null, DataArea?.Size) == false)
-                return false;
-
-            // Filter on area byte width
-            if (filter.DatItem_AreaWidth.MatchesPositive(null, DataArea?.Width) == false)
-                return false;
-            if (filter.DatItem_AreaWidth.MatchesNegative(null, DataArea?.Width) == true)
-                return false;
-
-            // Filter on area endianness
-            if (filter.DatItem_AreaEndianness.MatchesPositive(Endianness.NULL, DataArea?.Endianness ?? Endianness.NULL) == false)
-                return false;
-            if (filter.DatItem_AreaEndianness.MatchesNegative(Endianness.NULL, DataArea?.Endianness ?? Endianness.NULL) == true)
-                return false;
-
             // Filter on load flag
             if (filter.DatItem_LoadFlag.MatchesPositive(LoadFlag.NULL, LoadFlag) == false)
                 return false;
             if (filter.DatItem_LoadFlag.MatchesNegative(LoadFlag.NULL, LoadFlag) == true)
-                return false;
-
-            // Filter on part name
-            if (filter.DatItem_Part_Name.MatchesPositiveSet(Part?.Name) == false)
-                return false;
-            if (filter.DatItem_Part_Name.MatchesNegativeSet(Part?.Name) == true)
-                return false;
-
-            // Filter on part interface
-            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Part?.Interface) == false)
-                return false;
-            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Part?.Interface) == true)
                 return false;
 
             // Filter on value
@@ -944,7 +866,19 @@ namespace SabreTools.Library.DatItems
             if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
                 return false;
 
-            // TODO: Handle DatItem_Part_Feature*
+            // Filter on DataArea
+            if (DataArea != null)
+            {
+                if (!DataArea.PassesFilter(filter))
+                    return false;
+            }
+
+            // Filter on Part
+            if (Part != null)
+            {
+                if (!Part.PassesFilter(filter))
+                    return false;
+            }
 
             #endregion
 
@@ -1050,43 +984,17 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (fields.Contains(Field.DatItem_AreaName))
-            {
-                if (DataArea != null)
-                    DataArea.Name = null;
-            }
-
-            if (fields.Contains(Field.DatItem_AreaSize))
-            {
-                if (DataArea != null)
-                    DataArea.Size = null;
-            }
-
-            if (fields.Contains(Field.DatItem_AreaWidth))
-            {
-                if (DataArea != null)
-                    DataArea.Width = null;
-            }
-
-            if (fields.Contains(Field.DatItem_AreaEndianness))
-            {
-                if (DataArea != null)
-                    DataArea.Endianness = Endianness.NULL;
-            }
-
             if (fields.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = LoadFlag.NULL;
 
-            if (fields.Contains(Field.DatItem_Part_Name) && Part != null)
-                Part.Name = null;
-
-            if (fields.Contains(Field.DatItem_Part_Interface) && Part != null)
-                Part.Interface = null;
-
-            // TODO: Handle DatItem_Part_Feature*
-
             if (fields.Contains(Field.DatItem_Value))
                 Value = null;
+
+            if (DataArea != null)
+                DataArea.RemoveFields(fields);
+
+            if (Part != null)
+                Part.RemoveFields(fields);
 
             #endregion
         }
@@ -1290,58 +1198,17 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (fields.Contains(Field.DatItem_AreaName))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                DataArea.Name = newItem.DataArea?.Name;
-            }
-
-            if (fields.Contains(Field.DatItem_AreaSize))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                DataArea.Size = newItem.DataArea?.Size;
-            }
-
-            if (fields.Contains(Field.DatItem_AreaWidth))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                DataArea.Width = newItem.DataArea?.Width;
-            }
-
-            if (fields.Contains(Field.DatItem_AreaEndianness))
-            {
-                if (DataArea == null)
-                    DataArea = new DataArea();
-
-                DataArea.Endianness = newItem.DataArea?.Endianness ?? Endianness.NULL;
-            }
-
             if (fields.Contains(Field.DatItem_LoadFlag))
                 LoadFlag = newItem.LoadFlag;
 
-            if (fields.Contains(Field.DatItem_Part_Name))
-            {
-                if (Part == null)
-                    Part = new Part();
+            if (fields.Contains(Field.DatItem_Value))
+                Value = newItem.Value;
 
-                Part.Name = newItem.Part?.Name;
-            }
+            if (DataArea != null && newItem.DataArea != null)
+                DataArea.ReplaceFields(newItem.DataArea, fields);
 
-            if (fields.Contains(Field.DatItem_Part_Interface))
-            {
-                if (Part == null)
-                    Part = new Part();
-
-                Part.Interface = newItem.Part?.Interface;
-            }
-
-            // TODO: Handle DatItem_Part_Feature*
+            if (Part != null && newItem.Part != null)
+                Part.ReplaceFields(newItem.Part, fields);
 
             #endregion
         }
