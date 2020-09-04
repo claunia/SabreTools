@@ -46,19 +46,19 @@ namespace SabreTools.Library.DatItems
         /// Display width
         /// </summary>
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Width { get; set; } // TODO: Int32?
+        public long? Width { get; set; }
 
         /// <summary>
         /// Display height
         /// </summary>
         [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Height { get; set; } // TODO: Int32?
+        public long? Height { get; set; }
 
         /// <summary>
         /// Refresh rate
         /// </summary>
         [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Refresh { get; set; } // TODO: Int32? Float?
+        public string Refresh { get; set; } // TODO: Float?
 
         /// <summary>
         /// Pixel clock timer
@@ -132,10 +132,16 @@ namespace SabreTools.Library.DatItems
                 FlipX = mappings[Field.DatItem_FlipX].AsYesNo();
 
             if (mappings.Keys.Contains(Field.DatItem_Width))
-                Width = mappings[Field.DatItem_Width];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Width], out long width))
+                    Width = width;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Height))
-                Height = mappings[Field.DatItem_Height];
+            {
+                if (Int64.TryParse(mappings[Field.DatItem_Height], out long height))
+                    Height = height;
+            }
 
             if (mappings.Keys.Contains(Field.DatItem_Refresh))
                 Refresh = mappings[Field.DatItem_Refresh];

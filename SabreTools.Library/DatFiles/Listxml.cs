@@ -362,8 +362,6 @@ namespace SabreTools.Library.DatFiles
                             Tag = reader.GetAttribute("tag"),
                             DisplayType = reader.GetAttribute("type").AsDisplayType(),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
-                            Width = reader.GetAttribute("width"),
-                            Height = reader.GetAttribute("height"),
                             Refresh = reader.GetAttribute("refresh"),
                             PixClock = reader.GetAttribute("pixclock"),
                             HTotal = reader.GetAttribute("htotal"),
@@ -385,6 +383,20 @@ namespace SabreTools.Library.DatFiles
                         {
                             if (Int64.TryParse(reader.GetAttribute("rotate"), out long rotate))
                                 display.Rotate = rotate;
+                        }
+
+                        // Set the width
+                        if (reader.GetAttribute("width") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("width"), out long width))
+                                display.Width = width;
+                        }
+
+                        // Set the height
+                        if (reader.GetAttribute("height") != null)
+                        {
+                            if (Int64.TryParse(reader.GetAttribute("height"), out long height))
+                                display.Height = height;
                         }
 
                         datItems.Add(display);
@@ -1541,8 +1553,8 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
                         xtw.WriteOptionalAttributeString("rotate", display.Rotate?.ToString());
                         xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
-                        xtw.WriteOptionalAttributeString("width", display.Width);
-                        xtw.WriteOptionalAttributeString("height", display.Height);
+                        xtw.WriteOptionalAttributeString("width", display.Width?.ToString());
+                        xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
                         xtw.WriteOptionalAttributeString("refresh", display.Refresh);
                         xtw.WriteOptionalAttributeString("pixclock", display.PixClock);
                         xtw.WriteOptionalAttributeString("htotal", display.HTotal);
