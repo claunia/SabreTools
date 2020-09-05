@@ -160,10 +160,10 @@ Reset the internal state:           reset();";
 
                             // Apply a filter
                             case "filter":
-                                if (command.Arguments.Count < 2 || command.Arguments.Count > 3)
+                                if (command.Arguments.Count < 2 || command.Arguments.Count > 4)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected between 2-3 arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: filter(field, value, [negate = false]);");
+                                    Globals.Logger.User($"Invoked {command.Name} and expected between 2-4 arguments, but {command.Arguments.Count} arguments were provided");
+                                    Globals.Logger.User("Usage: filter(field, value, [negate = false, [perMachine = false]]);");
                                     continue;
                                 }
 
@@ -173,6 +173,9 @@ Reset the internal state:           reset();";
                                 bool? filterNegate = false;
                                 if (command.Arguments.Count == 3)
                                     filterNegate = command.Arguments[2].AsYesNo();
+                                bool? filterPerMachine = false;
+                                if (command.Arguments.Count == 4)
+                                    filterPerMachine = command.Arguments[3].AsYesNo();
 
                                 // If we had an invalid input, log and continue
                                 if (filterField == Field.NULL)
@@ -185,13 +188,18 @@ Reset the internal state:           reset();";
                                     Globals.Logger.User($"{command.Arguments[2]} was an invalid true/false value");
                                     continue;
                                 }
+                                if (filterPerMachine == null)
+                                {
+                                    Globals.Logger.User($"{command.Arguments[3]} was an invalid true/false value");
+                                    continue;
+                                }
 
                                 // Create a filter with this new set of fields
                                 Filter filter = new Filter();
                                 filter.SetFilter(filterField, filterValue, filterNegate.Value);
 
                                 // Apply the filter blindly
-                                datFile.ApplyFilter(filter);
+                                datFile.ApplyFilter(filter, filterPerMachine.Value);
                                 datFile.Items.ClearMarked(); // TODO: We might not want to remove immediately
 
                                 break;

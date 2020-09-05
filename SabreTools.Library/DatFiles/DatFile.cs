@@ -821,12 +821,17 @@ namespace SabreTools.Library.DatFiles
         /// Apply a Filter on the DatFile
         /// </summary>
         /// <param name="filter">Filter to use</param>
+        /// <param name="perMachine">True if entire machines are considered, false otherwise (default)</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
-        public bool ApplyFilter(Filter filter)
+        public bool ApplyFilter(Filter filter, bool perMachine = false)
         {
             // If we have a null filter, return false
             if (filter == null)
                 return false;
+
+            // If we're filtering per machine, bucket by machine first
+            if (perMachine)
+                Items.BucketBy(Field.Machine_Name, DedupeType.None);
 
             try
             {
@@ -835,6 +840,7 @@ namespace SabreTools.Library.DatFiles
                 foreach (string key in keys)
                 {
                     // For every item in the current key
+                    bool machinePass = true;
                     List<DatItem> items = Items[key];
                     foreach (DatItem item in items)
                     {
@@ -844,7 +850,25 @@ namespace SabreTools.Library.DatFiles
 
                         // If the rom doesn't pass the filter, mark for removal
                         if (!item.PassesFilter(filter))
+                        {
                             item.Remove = true;
+
+                            // If we're in machine mode, set and break
+                            if (perMachine)
+                            {
+                                machinePass = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If we didn't pass and we're in machine mode, set all items as remove
+                    if (perMachine && !machinePass)
+                    {
+                        foreach (DatItem item in items)
+                        {
+                            item.Remove = true;
+                        }
                     }
 
                     // Assign back for caution
