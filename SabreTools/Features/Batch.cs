@@ -30,7 +30,7 @@ The following commands are currently implemented:
 Set a header field (if default):    set(header.field, value);
 Parse new file(s):                  input(datpath, ...);
 Perform a dir2dat:                  d2d(path, ...);
-Filter on a field and value:        filter(machine.field|item.field, value, [negate = false]);
+Filter on a field and value:        filter(machine.field|item.field, value, [remove = false, [perMachine = false]]);
 Apply a MAME Extra INI for a field: extra(field, inipath);
 Perform a split/merge:              merge(split|merged|nonmerged|full|device);
 Set game names from description:    descname();
@@ -163,16 +163,16 @@ Reset the internal state:           reset();";
                                 if (command.Arguments.Count < 2 || command.Arguments.Count > 4)
                                 {
                                     Globals.Logger.User($"Invoked {command.Name} and expected between 2-4 arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: filter(field, value, [negate = false, [perMachine = false]]);");
+                                    Globals.Logger.User("Usage: filter(field, value, [remove = false, [perMachine = false]]);");
                                     continue;
                                 }
 
                                 // Read in the individual arguments
                                 Field filterField = command.Arguments[0].AsField();
                                 string filterValue = command.Arguments[1];
-                                bool? filterNegate = false;
+                                bool? filterRemove = false;
                                 if (command.Arguments.Count == 3)
-                                    filterNegate = command.Arguments[2].AsYesNo();
+                                    filterRemove = command.Arguments[2].AsYesNo();
                                 bool? filterPerMachine = false;
                                 if (command.Arguments.Count == 4)
                                     filterPerMachine = command.Arguments[3].AsYesNo();
@@ -183,7 +183,7 @@ Reset the internal state:           reset();";
                                     Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
                                 }
-                                if (filterNegate == null)
+                                if (filterRemove == null)
                                 {
                                     Globals.Logger.User($"{command.Arguments[2]} was an invalid true/false value");
                                     continue;
@@ -196,7 +196,7 @@ Reset the internal state:           reset();";
 
                                 // Create a filter with this new set of fields
                                 Filter filter = new Filter();
-                                filter.SetFilter(filterField, filterValue, filterNegate.Value);
+                                filter.SetFilter(filterField, filterValue, filterRemove.Value);
 
                                 // Apply the filter blindly
                                 datFile.ApplyFilter(filter, filterPerMachine.Value);
