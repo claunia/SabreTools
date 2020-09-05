@@ -848,6 +848,10 @@ namespace SabreTools.Library.DatFiles
                         if (item == null)
                             continue;
 
+                        // If the item is already filtered out, we skip
+                        if (item.Remove)
+                            continue;
+
                         // If the rom doesn't pass the filter, mark for removal
                         if (!item.PassesFilter(filter))
                         {
