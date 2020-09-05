@@ -2159,7 +2159,7 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                 return new Library.Help.Feature(
                     OutputDirStringValue,
                     new List<string>() { "-out", "--output-dir" },
-                    "Output directory",
+                    "Set output directory",
                     Library.Help.FeatureType.String,
                     longDescription: "This sets an output folder to be used when the files are created. If a path is not defined, the runtime directory is used instead.");
             }
