@@ -218,7 +218,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// TODO: This is horrendeously out of date. Once all done promoting, try to make this like JSON
+        /// TODO: Convert this to a direct serializer like JSON is
         private bool ReadDirectory(
             XmlReader reader,
             List<string> parent,
@@ -234,7 +234,7 @@ namespace SabreTools.Library.DatFiles
             XmlReader flagreader;
             bool empty = true;
             string key = string.Empty, date = string.Empty;
-            long size = -1;
+            long? size = null;
             ItemStatus its = ItemStatus.None;
 
             // If there's no subtree to the header, skip it
@@ -339,7 +339,7 @@ namespace SabreTools.Library.DatFiles
                         date = Sanitizer.CleanDate(reader.GetAttribute("date"));
 
                         // Take care of hex-sized files
-                        size = Sanitizer.CleanSize(reader.GetAttribute("size"));
+                        size = Sanitizer.CleanLong(reader.GetAttribute("size"));
 
                         Machine dir = new Machine
                         {
@@ -1578,7 +1578,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);
-                        if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
+                        xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK

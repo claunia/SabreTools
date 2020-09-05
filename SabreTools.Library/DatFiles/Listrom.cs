@@ -146,13 +146,10 @@ namespace SabreTools.Library.DatFiles
                     // Standard ROMs have 4 pieces (name, size, crc, sha1)
                     else if (split.Length == 3)
                     {
-                        if (!Int64.TryParse(split[0], out long size))
-                            size = 0;
-
                         Rom rom = new Rom()
                         {
                             Name = romname,
-                            Size = size,
+                            Size = Sanitizer.CleanLong(split[0]),
                             CRC = Sanitizer.CleanListromHashData(split[1]),
                             SHA1 = Sanitizer.CleanListromHashData(split[2]),
 
@@ -197,13 +194,10 @@ namespace SabreTools.Library.DatFiles
                     // Baddump ROMs have 6 pieces (name, size, BAD, crc, sha1, BAD_DUMP)
                     else if (split.Length == 5 && line.EndsWith("BAD_DUMP"))
                     {
-                        if (!Int64.TryParse(split[0], out long size))
-                            size = 0;
-
                         Rom rom = new Rom()
                         {
                             Name = romname,
-                            Size = size,
+                            Size = Sanitizer.CleanLong(split[0]),
                             CRC = Sanitizer.CleanListromHashData(split[2]),
                             SHA1 = Sanitizer.CleanListromHashData(split[3]),
                             ItemStatus = ItemStatus.BadDump,
@@ -226,13 +220,10 @@ namespace SabreTools.Library.DatFiles
                     // Nodump ROMs have 6 pieces (name, size, NO, GOOD, DUMP, KNOWN)
                     else if (split.Length == 5 && line.EndsWith("NO GOOD DUMP KNOWN"))
                     {
-                        if (!Int64.TryParse(split[0], out long size))
-                            size = 0;
-
                         Rom rom = new Rom()
                         {
                             Name = romname,
-                            Size = size,
+                            Size = Sanitizer.CleanLong(split[0]),
                             ItemStatus = ItemStatus.Nodump,
 
                             Machine = new Machine
@@ -429,13 +420,13 @@ namespace SabreTools.Library.DatFiles
 
                         // The name is padded out to a particular length
                         if (rom.Name.Length < 43)
-                            sw.Write(rom.Name.PadRight(43 - rom.Size.ToString().Length, ' '));
+                            sw.Write(rom.Name.PadRight(43 - rom.Size?.ToString().Length ?? 0, ' '));
                         else
                             sw.Write($"{rom.Name}          ");
 
                         // If we don't have a nodump, write out the size
                         if (rom.ItemStatus != ItemStatus.Nodump)
-                            sw.Write(rom.Size);
+                            sw.Write(rom.Size?.ToString() ?? string.Empty);
 
                         // If we have a baddump, put the first indicator
                         if (rom.ItemStatus == ItemStatus.BadDump)

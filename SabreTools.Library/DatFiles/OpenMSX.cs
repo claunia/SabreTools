@@ -329,7 +329,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
                     Offset = offset,
-                    Size = -1,
+                    Size = null,
                     SHA1 = hash,
 
                     Source = new Source
@@ -411,7 +411,7 @@ namespace SabreTools.Library.DatFiles
                 {
                     Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
                     Offset = offset,
-                    Size = -1,
+                    Size = null,
                     SHA1 = hash,
 
                     Source = new Source
@@ -487,7 +487,7 @@ namespace SabreTools.Library.DatFiles
                 return new Rom
                 {
                     Name = machine.Name + "_" + diskno + (!string.IsNullOrWhiteSpace(remark) ? " " + remark : string.Empty),
-                    Size = -1,
+                    Size = null,
                     SHA1 = hash,
 
                     Source = new Source

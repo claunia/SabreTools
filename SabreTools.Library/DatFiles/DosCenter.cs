@@ -7,6 +7,7 @@ using System.Text;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -209,11 +210,7 @@ namespace SabreTools.Library.DatFiles
                                 break;
 
                             case "size":
-                                if (Int64.TryParse(attrVal, out long size))
-                                    item.Size = size;
-                                else
-                                    item.Size = -1;
-
+                                item.Size = Sanitizer.CleanLong(attrVal);
                                 break;
 
                             case "crc":
@@ -435,7 +432,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("file");
                         cmpw.WriteRequiredAttributeString("name", rom.Name);
-                        if (rom.Size != -1) cmpw.WriteAttributeString("size", rom.Size.ToString());
+                        cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                         cmpw.WriteOptionalAttributeString("date", rom.Date);
                         cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         cmpw.WriteEndElement();

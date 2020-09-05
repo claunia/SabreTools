@@ -286,12 +286,7 @@ namespace SabreTools.Library.DatFiles
 
                             case "size":
                                 if (item.ItemType == ItemType.Rom)
-                                {
-                                    if (Int64.TryParse(attrVal, out long size))
-                                        (item as Rom).Size = size;
-                                    else
-                                        (item as Rom).Size = -1;
-                                }
+                                    (item as Rom).Size = Sanitizer.CleanLong(attrVal);
 
                                 break;
                             case "crc":
@@ -660,7 +655,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         cmpw.WriteStartElement("rom");
                         cmpw.WriteRequiredAttributeString("name", rom.Name);
-                        if (rom.Size != -1) cmpw.WriteAttributeString("size", rom.Size.ToString());
+                        cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                         cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         cmpw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK

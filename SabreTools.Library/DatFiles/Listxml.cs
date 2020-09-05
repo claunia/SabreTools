@@ -212,6 +212,7 @@ namespace SabreTools.Library.DatFiles
                             Name = reader.GetAttribute("name"),
                             Tag = reader.GetAttribute("tag"),
                             ChipType = reader.GetAttribute("type").AsChipType(),
+                            Clock = Sanitizer.CleanLong(reader.GetAttribute("clock")),
 
                             Source = new Source
                             {
@@ -219,13 +220,6 @@ namespace SabreTools.Library.DatFiles
                                 Name = filename,
                             },
                         };
-
-                        // Set the clock
-                        if (reader.GetAttribute("clock") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("clock"), out long clock))
-                                chip.Clock = clock;
-                        }
 
                         datItems.Add(chip);
 
@@ -369,7 +363,17 @@ namespace SabreTools.Library.DatFiles
                         {
                             Tag = reader.GetAttribute("tag"),
                             DisplayType = reader.GetAttribute("type").AsDisplayType(),
+                            Rotate = Sanitizer.CleanLong(reader.GetAttribute("rotate")),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
+                            Width = Sanitizer.CleanLong(reader.GetAttribute("width")),
+                            Height = Sanitizer.CleanLong(reader.GetAttribute("height")),
+                            PixClock = Sanitizer.CleanLong(reader.GetAttribute("pixclock")),
+                            HTotal = Sanitizer.CleanLong(reader.GetAttribute("htotal")),
+                            HBEnd = Sanitizer.CleanLong(reader.GetAttribute("hbend")),
+                            HBStart = Sanitizer.CleanLong(reader.GetAttribute("hbstart")),
+                            VTotal = Sanitizer.CleanLong(reader.GetAttribute("vtotal")),
+                            VBEnd = Sanitizer.CleanLong(reader.GetAttribute("vbend")),
+                            VBStart = Sanitizer.CleanLong(reader.GetAttribute("vbstart")),
 
                             Source = new Source
                             {
@@ -378,81 +382,11 @@ namespace SabreTools.Library.DatFiles
                             },
                         };
 
-                        // Set the rotation
-                        if (reader.GetAttribute("rotate") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("rotate"), out long rotate))
-                                display.Rotate = rotate;
-                        }
-
-                        // Set the width
-                        if (reader.GetAttribute("width") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("width"), out long width))
-                                display.Width = width;
-                        }
-
-                        // Set the height
-                        if (reader.GetAttribute("height") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("height"), out long height))
-                                display.Height = height;
-                        }
-
                         // Set the refresh
                         if (reader.GetAttribute("refresh") != null)
                         {
                             if (Double.TryParse(reader.GetAttribute("refresh"), out double refresh))
                                 display.Refresh = refresh;
-                        }
-
-                        // Set the pixclock
-                        if (reader.GetAttribute("pixclock") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("pixclock"), out long pixclock))
-                                display.PixClock = pixclock;
-                        }
-
-                        // Set the htotal
-                        if (reader.GetAttribute("htotal") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("htotal"), out long htotal))
-                                display.HTotal = htotal;
-                        }
-
-                        // Set the hbend
-                        if (reader.GetAttribute("hbend") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("hbend"), out long hbend))
-                                display.HBEnd = hbend;
-                        }
-
-                        // Set the hbstart
-                        if (reader.GetAttribute("hbstart") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("hbstart"), out long hbstart))
-                                display.HBStart = hbstart;
-                        }
-
-                        // Set the vtotal
-                        if (reader.GetAttribute("vtotal") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("vtotal"), out long vtotal))
-                                display.VTotal = vtotal;
-                        }
-
-                        // Set the vbend
-                        if (reader.GetAttribute("vbend") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("vbend"), out long vbend))
-                                display.VBEnd = vbend;
-                        }
-
-                        // Set the vbstart
-                        if (reader.GetAttribute("vbstart") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("vbstart"), out long vbstart))
-                                display.VBStart = vbstart;
                         }
 
                         datItems.Add(display);
@@ -500,6 +434,8 @@ namespace SabreTools.Library.DatFiles
                         {
                             Service = reader.GetAttribute("service").AsYesNo(),
                             Tilt = reader.GetAttribute("tilt").AsYesNo(),
+                            Players = Sanitizer.CleanLong(reader.GetAttribute("players")),
+                            Coins = Sanitizer.CleanLong(reader.GetAttribute("coins")),
 
                             Source = new Source
                             {
@@ -507,20 +443,6 @@ namespace SabreTools.Library.DatFiles
                                 Name = filename,
                             },
                         };
-
-                        // Set the players count
-                        if (reader.GetAttribute("players") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("players"), out long players))
-                                input.Players = players;
-                        }
-
-                        // Set the coins count
-                        if (reader.GetAttribute("coins") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("coins"), out long coins))
-                                input.Coins = coins;
-                        }
 
                         // Now read the internal tags
                         ReadInput(reader.ReadSubtree(), input);
@@ -573,7 +495,7 @@ namespace SabreTools.Library.DatFiles
                         {
                             Name = reader.GetAttribute("name"),
                             Bios = reader.GetAttribute("bios"),
-                            Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
+                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
                             SHA1 = reader.GetAttribute("sha1"),
                             MergeTag = reader.GetAttribute("merge"),
@@ -649,19 +571,14 @@ namespace SabreTools.Library.DatFiles
                     case "sound":
                         var sound = new Sound
                         {
+                            Channels = Sanitizer.CleanLong(reader.GetAttribute("channels")),
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
-
-                        // Set the channels
-                        if (reader.GetAttribute("channels") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("channels"), out long channels))
-                                sound.Channels = channels;
-                        }
 
                         datItems.Add(sound);
 
@@ -1738,7 +1655,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = datItem as Rom;
                         xtw.WriteStartElement("rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);
-                        if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
+                        xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("bios", rom.Bios);

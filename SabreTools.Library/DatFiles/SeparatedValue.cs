@@ -268,7 +268,7 @@ namespace SabreTools.Library.DatFiles
                         fields[5] = "rom";
                         fields[6] = rom.Name;
                         fields[7] = string.Empty;
-                        fields[8] = rom.Size.ToString();
+                        fields[8] = rom.Size?.ToString();
                         fields[9] = rom.CRC?.ToLowerInvariant();
                         fields[10] = rom.MD5?.ToLowerInvariant();
                         //fields[11] = rom.RIPEMD160?.ToLowerInvariant();

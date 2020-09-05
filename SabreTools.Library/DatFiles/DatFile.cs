@@ -1876,7 +1876,7 @@ namespace SabreTools.Library.DatFiles
                 Rom rom = item as Rom;
 
                 // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
-                if (rom.Size == -1
+                if (rom.Size == null
                     && string.IsNullOrWhiteSpace(rom.CRC)
                     && string.IsNullOrWhiteSpace(rom.MD5)
 #if NET_FRAMEWORK
@@ -1892,7 +1892,7 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
-                else if ((rom.Size == 0 || rom.Size == -1)
+                else if ((rom.Size == 0 || rom.Size == null)
                     && ((rom.CRC == Constants.CRCZero || string.IsNullOrWhiteSpace(rom.CRC))
                         || rom.MD5 == Constants.MD5Zero
 #if NET_FRAMEWORK
@@ -1917,7 +1917,7 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // If the file has no size and it's not the above case, skip and log
-                else if (rom.ItemStatus != ItemStatus.Nodump && (rom.Size == 0 || rom.Size == -1))
+                else if (rom.ItemStatus != ItemStatus.Nodump && (rom.Size == 0 || rom.Size == null))
                 {
                     Globals.Logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
                     rom.ItemStatus = ItemStatus.Nodump;
@@ -1925,6 +1925,7 @@ namespace SabreTools.Library.DatFiles
 
                 // If the file has a size but aboslutely no hashes, skip and log
                 else if (rom.ItemStatus != ItemStatus.Nodump
+                    && rom.Size != null
                     && rom.Size > 0
                     && string.IsNullOrWhiteSpace(rom.CRC)
                     && string.IsNullOrWhiteSpace(rom.MD5)
@@ -3360,6 +3361,10 @@ namespace SabreTools.Library.DatFiles
                     if (item.ItemType != ItemType.Rom)
                         lessThan.Items.Add(key, item);
 
+                    // If the file is a Rom and has no size, put it in the "lesser" dat
+                    else if (item.ItemType == ItemType.Rom && (item as Rom).Size == null)
+                        lessThan.Items.Add(key, item);
+
                     // If the file is a Rom and less than the radix, put it in the "lesser" dat
                     else if (item.ItemType == ItemType.Rom && (item as Rom).Size < radix)
                         lessThan.Items.Add(key, item);
@@ -3557,7 +3562,7 @@ namespace SabreTools.Library.DatFiles
                 sha256 = (item as Rom).SHA256 ?? string.Empty;
                 sha384 = (item as Rom).SHA384 ?? string.Empty;
                 sha512 = (item as Rom).SHA512 ?? string.Empty;
-                size = (item as Rom).Size.ToString();
+                size = (item as Rom).Size?.ToString() ?? string.Empty;
                 spamsum = (item as Rom).SpamSum ?? string.Empty;
             }
 
@@ -3690,7 +3695,7 @@ namespace SabreTools.Library.DatFiles
             Rom rom = datItem as Rom;
 
             // If the Rom has "null" characteristics, ensure all fields
-            if (rom.Size == -1 && rom.CRC == "null")
+            if (rom.Size == null && rom.CRC == "null")
             {
                 Globals.Logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
 
@@ -3732,7 +3737,7 @@ namespace SabreTools.Library.DatFiles
                 Rom rom = datItem as Rom;
 
                 // If we have a 0-size or blank rom, then we ignore
-                if (rom.Size == 0 || rom.Size == -1)
+                if (rom.Size == 0 || rom.Size == null)
                     return true;
             }
 

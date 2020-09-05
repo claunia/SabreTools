@@ -478,7 +478,7 @@ namespace SabreTools.Library.FileTypes
                                 .Concat(Utilities.StringToByteArray(rom.CRC)) // CRC
                             .ToArray();
                 sw.Write(data);
-                sw.Write((ulong)rom.Size); // Long size (Unsigned, Mirrored)
+                sw.Write((ulong)(rom.Size ?? 0)); // Long size (Unsigned, Mirrored)
 
                 // Now create a deflatestream from the input file
                 ZlibBaseStream ds = new ZlibBaseStream(outputStream, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
@@ -496,7 +496,7 @@ namespace SabreTools.Library.FileTypes
 
                 // Now write the standard footer
                 sw.Write(Utilities.StringToByteArray(rom.CRC).Reverse().ToArray());
-                sw.Write((uint)rom.Size);
+                sw.Write((uint)(rom.Size ?? 0));
 
                 // Dispose of everything
                 sw.Dispose();

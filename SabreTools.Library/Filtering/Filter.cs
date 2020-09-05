@@ -104,7 +104,7 @@ namespace SabreTools.Library.Filtering
         // Rom
         public FilterItem<string> DatItem_Name { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Bios { get; private set; } = new FilterItem<string>();
-        public FilterItem<long> DatItem_Size { get; private set; } = new FilterItem<long>() { Positive = -1, Negative = -1, Neutral = -1 };
+        public FilterItem<long?> DatItem_Size { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_CRC { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_MD5 { get; private set; } = new FilterItem<string>();
 #if NET_FRAMEWORK
@@ -706,7 +706,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Clock:
-                    SetOptionalLongFilter(DatItem_Clock, value, negate);
+                    SetLongFilter(DatItem_Clock, value, negate);
                     break;
 
                 // Condition
@@ -746,11 +746,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Control_Player:
-                    SetOptionalLongFilter(DatItem_Control_Player, value, negate);
+                    SetLongFilter(DatItem_Control_Player, value, negate);
                     break;
 
                 case Field.DatItem_Control_Buttons:
-                    SetOptionalLongFilter(DatItem_Control_Buttons, value, negate);
+                    SetLongFilter(DatItem_Control_Buttons, value, negate);
                     break;
 
                 case Field.DatItem_Control_RegButtons:
@@ -758,19 +758,19 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Control_Minimum:
-                    SetOptionalLongFilter(DatItem_Control_Minimum, value, negate);
+                    SetLongFilter(DatItem_Control_Minimum, value, negate);
                     break;
 
                 case Field.DatItem_Control_Maximum:
-                    SetOptionalLongFilter(DatItem_Control_Maximum, value, negate);
+                    SetLongFilter(DatItem_Control_Maximum, value, negate);
                     break;
 
                 case Field.DatItem_Control_Sensitivity:
-                    SetOptionalLongFilter(DatItem_Control_Sensitivity, value, negate);
+                    SetLongFilter(DatItem_Control_Sensitivity, value, negate);
                     break;
 
                 case Field.DatItem_Control_KeyDelta:
-                    SetOptionalLongFilter(DatItem_Control_KeyDelta, value, negate);
+                    SetLongFilter(DatItem_Control_KeyDelta, value, negate);
                     break;
 
                 case Field.DatItem_Control_Reverse:
@@ -795,11 +795,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_AreaSize:
-                    SetOptionalLongFilter(DatItem_AreaSize, value, negate);
+                    SetLongFilter(DatItem_AreaSize, value, negate);
                     break;
 
                 case Field.DatItem_AreaWidth:
-                    SetOptionalLongFilter(DatItem_AreaWidth, value, negate);
+                    SetLongFilter(DatItem_AreaWidth, value, negate);
                     break;
 
                 case Field.DatItem_AreaEndianness:
@@ -835,7 +835,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Rotate:
-                    SetOptionalLongFilter(DatItem_Rotate, value, negate);
+                    SetLongFilter(DatItem_Rotate, value, negate);
                     break;
 
                 case Field.DatItem_FlipX:
@@ -843,11 +843,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Width:
-                    SetOptionalLongFilter(DatItem_Width, value, negate);
+                    SetLongFilter(DatItem_Width, value, negate);
                     break;
 
                 case Field.DatItem_Height:
-                    SetOptionalLongFilter(DatItem_Height, value, negate);
+                    SetLongFilter(DatItem_Height, value, negate);
                     break;
 
                 case Field.DatItem_Refresh:
@@ -855,31 +855,31 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_PixClock:
-                    SetOptionalLongFilter(DatItem_PixClock, value, negate);
+                    SetLongFilter(DatItem_PixClock, value, negate);
                     break;
 
                 case Field.DatItem_HTotal:
-                    SetOptionalLongFilter(DatItem_HTotal, value, negate);
+                    SetLongFilter(DatItem_HTotal, value, negate);
                     break;
 
                 case Field.DatItem_HBEnd:
-                    SetOptionalLongFilter(DatItem_HBEnd, value, negate);
+                    SetLongFilter(DatItem_HBEnd, value, negate);
                     break;
 
                 case Field.DatItem_HBStart:
-                    SetOptionalLongFilter(DatItem_HBStart, value, negate);
+                    SetLongFilter(DatItem_HBStart, value, negate);
                     break;
 
                 case Field.DatItem_VTotal:
-                    SetOptionalLongFilter(DatItem_VTotal, value, negate);
+                    SetLongFilter(DatItem_VTotal, value, negate);
                     break;
 
                 case Field.DatItem_VBEnd:
-                    SetOptionalLongFilter(DatItem_VBEnd, value, negate);
+                    SetLongFilter(DatItem_VBEnd, value, negate);
                     break;
 
                 case Field.DatItem_VBStart:
-                    SetOptionalLongFilter(DatItem_VBStart, value, negate);
+                    SetLongFilter(DatItem_VBStart, value, negate);
                     break;
 
                 // Driver
@@ -948,11 +948,11 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Players:
-                    SetOptionalLongFilter(DatItem_Players, value, negate);
+                    SetLongFilter(DatItem_Players, value, negate);
                     break;
 
                 case Field.DatItem_Coins:
-                    SetOptionalLongFilter(DatItem_Coins, value, negate);
+                    SetLongFilter(DatItem_Coins, value, negate);
                     break;
 
                 // Instance
@@ -1045,7 +1045,7 @@ namespace SabreTools.Library.Filtering
 
                 // Sound
                 case Field.DatItem_Channels:
-                    SetOptionalLongFilter(DatItem_Channels, value, negate);
+                    SetLongFilter(DatItem_Channels, value, negate);
                     break;
 
                 #endregion
@@ -1129,71 +1129,12 @@ namespace SabreTools.Library.Filtering
         }
 
         /// <summary>
-        /// Set a long filter
-        /// </summary>
-        /// <param name="filterItem">FilterItem to populate</param>
-        /// <param name="value">String value to add</param>
-        /// <param name="negate">True to set negative filter, false otherwise</param>
-        /// TODO: Can anything using this go with SetOptionalLongFilter instead?
-        private void SetLongFilter(FilterItem<long> filterItem, string value, bool negate)
-        {
-            bool? operation = null;
-            if (value.StartsWith(">"))
-                operation = true;
-            else if (value.StartsWith("<"))
-                operation = false;
-            else if (value.StartsWith("="))
-                operation = null;
-
-            string valueString = value.TrimStart('>', '<', '=');
-            if (!Int64.TryParse(valueString, out long valueLong))
-                return;
-
-            // Equal
-            if (operation == null && !negate)
-            {
-                filterItem.Neutral = valueLong;
-            }
-
-            // Not Equal
-            else if (operation == null && negate)
-            {
-                filterItem.Negative = valueLong - 1;
-                filterItem.Positive = valueLong + 1;
-            }
-
-            // Greater Than or Equal
-            else if (operation == true && !negate)
-            {
-                filterItem.Positive = valueLong;
-            }
-
-            // Strictly Less Than
-            else if (operation == true && negate)
-            {
-                filterItem.Negative = valueLong - 1;
-            }
-
-            // Less Than or Equal
-            else if (operation == false && !negate)
-            {
-                filterItem.Negative = valueLong;
-            }
-
-            // Strictly Greater Than
-            else if (operation == false && negate)
-            {
-                filterItem.Positive = valueLong + 1;
-            }
-        }
-
-        /// <summary>
         /// Set a long? filter
         /// </summary>
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        private void SetOptionalLongFilter(FilterItem<long?> filterItem, string value, bool negate)
+        private void SetLongFilter(FilterItem<long?> filterItem, string value, bool negate)
         {
             bool? operation = null;
             if (value.StartsWith(">"))

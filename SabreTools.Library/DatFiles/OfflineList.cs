@@ -874,7 +874,7 @@ namespace SabreTools.Library.DatFiles
                 if (datItem.ItemType == ItemType.Rom)
                 {
                     var rom = datItem as Rom;
-                    xtw.WriteRequiredElementString("romSize", rom.Size.ToString());
+                    xtw.WriteRequiredElementString("romSize", rom.Size?.ToString());
                 }
 
                 xtw.WriteRequiredElementString("publisher", datItem.Machine.Publisher);

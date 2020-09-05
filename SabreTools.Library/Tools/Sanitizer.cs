@@ -202,15 +202,18 @@ namespace SabreTools.Library.Tools
         /// Get a sanitized size from an input string
         /// </summary>
         /// <param name="input">String to get value from</param>
-        /// <returns>Size as a long, if possible</returns>
-        public static long CleanSize(string input)
+        /// <returns>Size as a long?, if possible</returns>
+        public static long? CleanLong(string input)
         {
-            long size = -1;
+            long? size = null;
             if (input != null && input.Contains("0x"))
                 size = Convert.ToInt64(input, 16);
 
             else if (input != null)
-                Int64.TryParse(input, out size);
+            {
+                if (Int64.TryParse(input, out long longSize))
+                    size = longSize;
+            }
 
             return size;
         }

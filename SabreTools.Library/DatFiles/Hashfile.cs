@@ -65,7 +65,7 @@ namespace SabreTools.Library.DatFiles
                 Rom rom = new Rom
                 {
                     Name = name,
-                    Size = -1,
+                    Size = null,
                     CRC = (_hash.HasFlag(Hash.CRC) ? hash : null),
                     MD5 = (_hash.HasFlag(Hash.MD5) ? hash : null),
 #if NET_FRAMEWORK

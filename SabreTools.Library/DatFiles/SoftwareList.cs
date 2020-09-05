@@ -374,7 +374,7 @@ namespace SabreTools.Library.DatFiles
                         var rom = new Rom
                         {
                             Name = reader.GetAttribute("name"),
-                            Size = Sanitizer.CleanSize(reader.GetAttribute("size")),
+                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
                             SHA1 = reader.GetAttribute("sha1"),
                             Offset = reader.GetAttribute("offset"),
@@ -788,7 +788,7 @@ namespace SabreTools.Library.DatFiles
 
                         xtw.WriteStartElement("rom");
                         xtw.WriteRequiredAttributeString("name", rom.Name);
-                        if (rom.Size != -1) xtw.WriteAttributeString("size", rom.Size.ToString());
+                        xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                         xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                         xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK

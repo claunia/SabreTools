@@ -110,7 +110,6 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// List of valid field types within a DatItem/Machine
     /// </summary>
-    /// TODO: Move this to a more common location
     public enum Field : int
     {
         NULL = 0,

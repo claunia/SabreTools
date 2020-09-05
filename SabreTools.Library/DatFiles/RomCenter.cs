@@ -508,7 +508,7 @@ namespace SabreTools.Library.DatFiles
                             iw.WriteString($"¬{rom.Machine.Description ?? string.Empty}");
                         iw.WriteString($"¬{rom.Name ?? string.Empty}");
                         iw.WriteString($"¬{rom.CRC ?? string.Empty}");
-                        iw.WriteString($"¬{rom.Size}");
+                        iw.WriteString($"¬{rom.Size?.ToString() ?? string.Empty}");
                         iw.WriteString($"¬{rom.Machine.RomOf ?? string.Empty}");
                         iw.WriteString($"¬{rom.MergeTag ?? string.Empty}");
                         iw.WriteString("¬");

@@ -679,7 +679,7 @@ namespace SabreTools.Library.DatFiles
                     RomCount++;
                     if ((item as Rom).ItemStatus != ItemStatus.Nodump)
                     {
-                        TotalSize += (item as Rom).Size;
+                        TotalSize += (item as Rom).Size ?? 0;
                         CRCCount += (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
                         MD5Count += (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
 #if NET_FRAMEWORK
@@ -875,7 +875,7 @@ namespace SabreTools.Library.DatFiles
                     RomCount--;
                     if ((item as Rom).ItemStatus != ItemStatus.Nodump)
                     {
-                        TotalSize -= (item as Rom).Size;
+                        TotalSize -= (item as Rom).Size ?? 0;
                         CRCCount -= (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
                         MD5Count -= (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
 #if NET_FRAMEWORK

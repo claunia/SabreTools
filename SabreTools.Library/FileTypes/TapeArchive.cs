@@ -342,7 +342,7 @@ namespace SabreTools.Library.FileTypes
 
                     // Copy the input stream to the output
                     inputStream.Seek(0, SeekOrigin.Begin);
-                    tarFile.AddEntry(rom.Name, inputStream, size: rom.Size, modified: usableDate);
+                    tarFile.AddEntry(rom.Name, inputStream, size: rom.Size ?? 0, modified: usableDate);
                 }
 
                 // Otherwise, sort the input files and write out in the correct order
@@ -394,7 +394,7 @@ namespace SabreTools.Library.FileTypes
                         {
                             // Copy the input file to the output
                             inputStream.Seek(0, SeekOrigin.Begin);
-                            tarFile.AddEntry(rom.Name, inputStream, size: rom.Size, modified: usableDate);
+                            tarFile.AddEntry(rom.Name, inputStream, size: rom.Size ?? 0, modified: usableDate);
                         }
 
                         // Otherwise, copy the file from the old archive
@@ -514,7 +514,7 @@ namespace SabreTools.Library.FileTypes
                         }
 
                         // Copy the input stream to the output
-                        tarFile.AddEntry(roms[index].Name, FileExtensions.TryOpenRead(inputFiles[index]), size: roms[index].Size, modified: usableDate);
+                        tarFile.AddEntry(roms[index].Name, FileExtensions.TryOpenRead(inputFiles[index]), size: roms[index].Size ?? 0, modified: usableDate);
                     }
                 }
 
@@ -574,7 +574,7 @@ namespace SabreTools.Library.FileTypes
                             }
 
                             // Copy the input file to the output
-                            tarFile.AddEntry(roms[-index - 1].Name, FileExtensions.TryOpenRead(inputFiles[-index - 1]), size: roms[-index - 1].Size, modified: usableDate);
+                            tarFile.AddEntry(roms[-index - 1].Name, FileExtensions.TryOpenRead(inputFiles[-index - 1]), size: roms[-index - 1].Size ?? 0, modified: usableDate);
                         }
 
                         // Otherwise, copy the file from the old archive

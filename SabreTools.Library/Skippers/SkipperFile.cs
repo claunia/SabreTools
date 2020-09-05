@@ -158,26 +158,18 @@ namespace SabreTools.Library.Skippers
                 {
                     string offset = xtr.GetAttribute("start_offset");
                     if (offset.ToLowerInvariant() == "eof")
-                    {
                         rule.StartOffset = null;
-                    }
                     else
-                    {
                         rule.StartOffset = Convert.ToInt64(offset, 16);
-                    }
                 }
 
                 if (xtr.GetAttribute("end_offset") != null)
                 {
                     string offset = xtr.GetAttribute("end_offset");
                     if (offset.ToLowerInvariant() == "eof")
-                    {
                         rule.EndOffset = null;
-                    }
                     else
-                    {
                         rule.EndOffset = Convert.ToInt64(offset, 16);
-                    }
                 }
 
                 if (xtr.GetAttribute("operation") != null)

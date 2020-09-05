@@ -53,9 +53,8 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Byte size of the rom
         /// </summary>
-        /// TODO: Can this be made optional instead of concrete long? Use `null` instead of `-1`?
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public long Size { get; set; }
+        public long? Size { get; set; }
 
         /// <summary>
         /// File CRC32 hash
@@ -429,7 +428,7 @@ namespace SabreTools.Library.DatItems
         {
             Name = name;
             ItemType = ItemType.Rom;
-            Size = -1;
+            Size = null;
             ItemStatus = ItemStatus.None;
 
             Machine = new Machine
@@ -446,7 +445,7 @@ namespace SabreTools.Library.DatItems
         public Rom(BaseFile baseFile)
         {
             Name = baseFile.Filename;
-            Size = baseFile.Size ?? -1;
+            Size = baseFile.Size;
             _crc = baseFile.CRC;
             _md5 = baseFile.MD5;
 #if NET_FRAMEWORK
@@ -540,7 +539,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // If we have a file that has no known size, rely on the hashes only
-            else if (Size == -1 && HashMatch(newOther))
+            else if (Size == null && HashMatch(newOther))
             {
                 dupefound = true;
             }
@@ -560,7 +559,7 @@ namespace SabreTools.Library.DatItems
         /// <param name="other">Rom to fill information from</param>
         public void FillMissingInformation(Rom other)
         {
-            if (Size == -1 && other.Size != -1)
+            if (Size == null && other.Size != null)
                 Size = other.Size;
 
             if (_crc.IsNullOrEmpty() && !other._crc.IsNullOrEmpty())
@@ -736,11 +735,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on rom size
-            if (filter.DatItem_Size.MatchesNeutral(-1, Size) == false)
+            if (filter.DatItem_Size.MatchesNeutral(null, Size) == false)
                 return false;
-            else if (filter.DatItem_Size.MatchesPositive(-1, Size) == false)
+            else if (filter.DatItem_Size.MatchesPositive(null, Size) == false)
                 return false;
-            else if (filter.DatItem_Size.MatchesNegative(-1, Size) == false)
+            else if (filter.DatItem_Size.MatchesNegative(null, Size) == false)
                 return false;
 
             // Filter on CRC

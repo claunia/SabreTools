@@ -55,7 +55,7 @@ namespace SabreTools.Library.DatFiles
                 Rom rom = new Rom
                 {
                     Name = gameinfo[1].Substring(fullname[0].Length + 1),
-                    Size = -1, // No size provided, but we don't want the size being 0
+                    Size = null, // No size provided, but we don't want the size being 0
                     CRC = gameinfo[4],
                     MD5 = gameinfo[3],
                     SHA1 = gameinfo[2],
