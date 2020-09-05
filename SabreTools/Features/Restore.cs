@@ -16,7 +16,7 @@ namespace SabreTools.Features
             Flags = new List<string>() { "-re", "--restore" };
             Description = "Restore header to file based on SHA-1";
             _featureType = FeatureType.Flag;
-            LongDescription = @"This will make use of stored copier headers and reapply them to files if they match the included hash. More than one header can be applied to a file, so they will be output to new files, suffixed with .newX, where X is a number. No input files are altered in the process.
+            LongDescription = @"This will make use of stored copier headers and reapply them to files if they match the included hash. More than one header can be applied to a file, so they will be output to new files, suffixed with .newX, where X is a number. No input files are altered in the process. Only uncompressed files will be processed.
 
 The following systems have headers that this program can work with:
   - Atari 7800
