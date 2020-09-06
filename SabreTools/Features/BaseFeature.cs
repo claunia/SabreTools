@@ -102,7 +102,7 @@ namespace SabreTools.Features
                 return new Library.Help.Feature(
                     AddDateValue,
                     new List<string>() { "-ad", "--add-date" },
-                    "Add dates to items, where posible",
+                    "Add dates to items, where possible",
                     Library.Help.FeatureType.Flag,
                     longDescription: "If this flag is set, then the Date will be appended to each file information in the output DAT. The output format is standardized as \"yyyy/MM/dd HH:mm:ss\".");
             }
@@ -959,7 +959,7 @@ namespace SabreTools.Features
                     new List<string>() { "-nr160", "--skip-ripemd160" },
                     "Include RIPEMD160 in output", // TODO: This needs to be inverted later
                     Library.Help.FeatureType.Flag,
-                    longDescription: "This allows the user to skip calculating the RIPEMD160 for each of the files which will speed up the creation of the DAT.");
+                    longDescription: "This allows the user to include calculating the RIPEMD160 for each of the files.");
             }
         }
 #endif
@@ -988,7 +988,7 @@ namespace SabreTools.Features
                     new List<string>() { "-ns256", "--skip-sha256" },
                     "Include SHA-256 in output", // TODO: This needs to be inverted later
                     Library.Help.FeatureType.Flag,
-                    longDescription: "This allows the user to skip calculating the SHA-256 for each of the files which will speed up the creation of the DAT.");
+                    longDescription: "This allows the user to include calculating the SHA-256 for each of the files.");
             }
         }
 
@@ -1002,7 +1002,7 @@ namespace SabreTools.Features
                     new List<string>() { "-ns384", "--skip-sha384" },
                     "Include SHA-384 in output", // TODO: This needs to be inverted later
                     Library.Help.FeatureType.Flag,
-                    longDescription: "This allows the user to skip calculating the SHA-384 for each of the files which will speed up the creation of the DAT.");
+                    longDescription: "This allows the user to include calculating the SHA-384 for each of the files.");
             }
         }
 
@@ -1016,7 +1016,7 @@ namespace SabreTools.Features
                     new List<string>() { "-ns512", "--skip-sha512" },
                     "Include SHA-512 in output", // TODO: This needs to be inverted later
                     Library.Help.FeatureType.Flag,
-                    longDescription: "This allows the user to skip calculating the SHA-512 for each of the files which will speed up the creation of the DAT.");
+                    longDescription: "This allows the user to include calculating the SHA-512 for each of the files.");
             }
         }
 
@@ -1030,7 +1030,7 @@ namespace SabreTools.Features
                     new List<string>() { "-nss", "--skip-spamsum" },
                     "Include SpamSum in output", // TODO: This needs to be inverted later
                     Library.Help.FeatureType.Flag,
-                    longDescription: "This allows the user to skip calculating the SpamSum for each of the files which will speed up the creation of the DAT.");
+                    longDescription: "This allows the user to include calculating the SpamSum for each of the files.");
             }
         }
 
@@ -1434,7 +1434,7 @@ namespace SabreTools.Features
                     new List<string>() { "-fi", "--filter" },
                     "Filter a game/rom field with the given value(s)",
                     Library.Help.FeatureType.List,
-                    longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'key:value' or '!key:value', where the '!' signifies 'not' matching. Numeric values may also prefix the 'value' with '>', '<', or '=' accordingly. Key examples include: romof, category, and game. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
+                    longDescription: "Filter any valid item or machine field from inputs. Filters are input in the form 'key:value' or '!key:value', where the '!' signifies 'not matching'. Numeric values may also prefix the 'value' with '>', '<', or '=' accordingly. Key examples include: romof, category, and game. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
 
