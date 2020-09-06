@@ -63,7 +63,7 @@ namespace SabreTools.Library.DatItems
                 Name = mappings[Field.DatItem_Name];
 
             if (mappings.Keys.Contains(Field.DatItem_SoftwareListStatus))
-                Status = mappings[Field.DatItem_Default].AsSoftwareListStatus();
+                Status = mappings[Field.DatItem_SoftwareListStatus].AsSoftwareListStatus();
 
             if (mappings.Keys.Contains(Field.DatItem_Filter))
                 Filter = mappings[Field.DatItem_Filter];
