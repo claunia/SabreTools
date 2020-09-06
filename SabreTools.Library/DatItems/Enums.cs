@@ -166,7 +166,6 @@ namespace SabreTools.Library.DatItems
         DatHeader_RomTitle,
 
         // Infos
-        DatHeader_Infos,
         DatHeader_Info_Name,
         DatHeader_Info_Visible,
         DatHeader_Info_IsNamingOption,

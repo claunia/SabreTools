@@ -117,6 +117,9 @@ namespace SabreTools.Library.Tools
                 case "dc":
                 case "doscenter":
                     return DatFormat.DOSCenter;
+                case "everdrive":
+                case "smdb":
+                    return DatFormat.EverdriveSMDB;
                 case "json":
                     return DatFormat.Json;
                 case "lr":
@@ -159,9 +162,6 @@ namespace SabreTools.Library.Tools
                 case "sl":
                 case "softwarelist":
                     return DatFormat.SoftwareList;
-                case "smdb":
-                case "everdrive":
-                    return DatFormat.EverdriveSMDB;
                 case "spamsum":
                     return DatFormat.RedumpSpamSum;
                 case "ssv":
@@ -502,10 +502,6 @@ namespace SabreTools.Library.Tools
                     case "screenshot_height":
                     case "screenshots_height":
                         return Field.DatHeader_ScreenshotsHeight;
-
-                    case "info":
-                    case "infos":
-                        return Field.DatHeader_Infos;
 
                     case "info_name":
                     case "infos_name":
@@ -1789,7 +1785,7 @@ namespace SabreTools.Library.Tools
                     return LoadFlag.Continue;
                 case "reload_plain":
                     return LoadFlag.ReloadPlain;
-                case "sccpluscart":
+                case "ignore":
                     return LoadFlag.Ignore;
                 default:
                     return LoadFlag.NULL;

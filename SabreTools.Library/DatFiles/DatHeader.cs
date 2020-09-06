@@ -156,6 +156,12 @@ namespace SabreTools.Library.DatFiles
         public string Build { get; set; }
 
         /// <summary>
+        /// Logiqx/RomCenter plugin, OfflineList System
+        /// </summary>
+        [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string System { get; set; }
+
+        /// <summary>
         /// RomCenter rom mode
         /// </summary>
         /// <remarks>(merged|split|unmerged) "split"</remarks>
@@ -207,13 +213,6 @@ namespace SabreTools.Library.DatFiles
         #endregion
 
         #region OfflineList Fields
-
-        /// <summary>
-        /// System
-        /// </summary>
-        /// <remarks>Known as "plugin" in Logiqx and RomCenter</remarks>
-        [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string System { get; set; }
 
         /// <summary>
         /// Screenshots width

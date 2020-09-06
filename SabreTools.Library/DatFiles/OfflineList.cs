@@ -756,9 +756,9 @@ namespace SabreTools.Library.DatFiles
                     foreach (var info in Header.Infos)
                     {
                         xtw.WriteStartElement(info.Name);
-                        xtw.WriteAttributeString("visible", info.Visible.ToString());
-                        xtw.WriteAttributeString("inNamingOption", info.InNamingOption.ToString());
-                        xtw.WriteAttributeString("default", info.Default.ToString());
+                        xtw.WriteAttributeString("visible", info.Visible?.ToString());
+                        xtw.WriteAttributeString("inNamingOption", info.InNamingOption?.ToString());
+                        xtw.WriteAttributeString("default", info.Default?.ToString());
                         xtw.WriteEndElement();
                     }
 
