@@ -771,7 +771,7 @@ namespace SabreTools.Library.DatFiles
                     case "diplocation":
                         var dipLocation = new Location();
                         dipLocation.Name = reader.GetAttribute("name");
-                        dipLocation.Number = reader.GetAttribute("number");
+                        dipLocation.Number = Sanitizer.CleanLong(reader.GetAttribute("number"));
                         dipLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
 
                         dipSwitch.Locations.Add(dipLocation);
@@ -895,7 +895,7 @@ namespace SabreTools.Library.DatFiles
                     case "conflocation":
                         var confLocation = new Location();
                         confLocation.Name = reader.GetAttribute("name");
-                        confLocation.Number = reader.GetAttribute("number");
+                        confLocation.Number = Sanitizer.CleanLong(reader.GetAttribute("number"));
                         confLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
 
                         configuration.Locations.Add(confLocation);
@@ -1396,7 +1396,7 @@ namespace SabreTools.Library.DatFiles
                             {
                                 xtw.WriteStartElement("conflocation");
                                 xtw.WriteOptionalAttributeString("name", location.Name);
-                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
                                 xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
                                 xtw.WriteEndElement();
                             }
@@ -1476,7 +1476,7 @@ namespace SabreTools.Library.DatFiles
                             {
                                 xtw.WriteStartElement("diplocation");
                                 xtw.WriteOptionalAttributeString("name", location.Name);
-                                xtw.WriteOptionalAttributeString("number", location.Number);
+                                xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
                                 xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
                                 xtw.WriteEndElement();
                             }

@@ -26,7 +26,7 @@ namespace SabreTools.Library.DatItems
         /// Location ID
         /// </summary>
         [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Number { get; set; }
+        public long? Number { get; set; }
 
         /// <summary>
         /// Determines if location is inverted or not
@@ -61,7 +61,7 @@ namespace SabreTools.Library.DatItems
                 Name = mappings[Field.DatItem_Location_Name];
 
             if (mappings.Keys.Contains(Field.DatItem_Location_Number))
-                Number = mappings[Field.DatItem_Location_Number];
+                Number = Sanitizer.CleanLong(mappings[Field.DatItem_Location_Number]);
 
             if (mappings.Keys.Contains(Field.DatItem_Location_Inverted))
                 Inverted = mappings[Field.DatItem_Location_Inverted].AsYesNo();
@@ -169,9 +169,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on number
-            if (filter.DatItem_Location_Number.MatchesPositiveSet(Number) == false)
+            if (filter.DatItem_Location_Number.MatchesNeutral(null, Number) == false)
                 return false;
-            if (filter.DatItem_Location_Number.MatchesNegativeSet(Number) == true)
+            else if (filter.DatItem_Location_Number.MatchesPositive(null, Number) == false)
+                return false;
+            else if (filter.DatItem_Location_Number.MatchesNegative(null, Number) == false)
                 return false;
 
             // Filter on inverted

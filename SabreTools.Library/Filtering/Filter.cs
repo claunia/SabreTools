@@ -235,7 +235,7 @@ namespace SabreTools.Library.Filtering
 
         // Location
         public FilterItem<string> DatItem_Location_Name { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Location_Number { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Location_Number { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<bool?> DatItem_Location_Inverted { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         
         // Part
@@ -974,7 +974,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Location_Number:
-                    SetStringFilter(DatItem_Location_Number, value, negate);
+                    SetLongFilter(DatItem_Location_Number, value, negate);
                     break;
 
                 case Field.DatItem_Location_Inverted:
