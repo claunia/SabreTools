@@ -191,7 +191,7 @@ namespace SabreTools.Library.Filtering
         // Device
         public FilterItem<DeviceType> DatItem_DeviceType { get; private set; } = new FilterItem<DeviceType>() { Positive = DeviceType.NULL, Negative = DeviceType.NULL };
         public FilterItem<string> DatItem_FixedImage { get; private set; } = new FilterItem<string>();
-        public FilterItem<string> DatItem_Mandatory { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Mandatory { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> DatItem_Interface { get; private set; } = new FilterItem<string>();
 
         // Display
@@ -826,7 +826,7 @@ namespace SabreTools.Library.Filtering
                     break;
 
                 case Field.DatItem_Mandatory:
-                    SetStringFilter(DatItem_Mandatory, value, negate);
+                    SetLongFilter(DatItem_Mandatory, value, negate);
                     break;
 
                 case Field.DatItem_Interface:

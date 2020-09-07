@@ -276,7 +276,7 @@ namespace SabreTools.Library.DatFiles
                             DeviceType = reader.GetAttribute("type").AsDeviceType(),
                             Tag = reader.GetAttribute("tag"),
                             FixedImage = reader.GetAttribute("fixed_image"),
-                            Mandatory = reader.GetAttribute("mandatory"),
+                            Mandatory = Sanitizer.CleanLong(reader.GetAttribute("mandatory")),
                             Interface = reader.GetAttribute("interface"),
 
                             Source = new Source
@@ -1421,7 +1421,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
                         xtw.WriteOptionalAttributeString("tag", device.Tag);
                         xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
-                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
+                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory?.ToString());
                         xtw.WriteOptionalAttributeString("interface", device.Interface);
                         if (device.Instances != null)
                         {

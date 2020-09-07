@@ -1324,7 +1324,7 @@ namespace SabreTools.Library.DatFiles
                         xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
                         xtw.WriteOptionalAttributeString("tag", device.Tag);
                         xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
-                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);
+                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory?.ToString());
                         xtw.WriteOptionalAttributeString("interface", device.Interface);
                         if (device.Instances != null)
                         {

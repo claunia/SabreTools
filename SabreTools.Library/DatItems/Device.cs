@@ -38,7 +38,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Only value used seems to be 1. Used like bool, but actually int</remarks>
         [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Mandatory { get; set; } // TODO: long?
+        public long? Mandatory { get; set; }
 
         /// <summary>
         /// Device interface
@@ -82,7 +82,7 @@ namespace SabreTools.Library.DatItems
                 FixedImage = mappings[Field.DatItem_FixedImage];
 
             if (mappings.Keys.Contains(Field.DatItem_Mandatory))
-                Mandatory = mappings[Field.DatItem_Mandatory];
+                Mandatory = Sanitizer.CleanLong(mappings[Field.DatItem_Mandatory]);
 
             if (mappings.Keys.Contains(Field.DatItem_Interface))
                 Interface = mappings[Field.DatItem_Interface];
@@ -218,9 +218,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on mandatory
-            if (filter.DatItem_Mandatory.MatchesPositiveSet(Mandatory) == false)
+            if (filter.DatItem_Mandatory.MatchesNeutral(null, Mandatory) == false)
                 return false;
-            if (filter.DatItem_Mandatory.MatchesNegativeSet(Mandatory) == true)
+            else if (filter.DatItem_Mandatory.MatchesPositive(null, Mandatory) == false)
+                return false;
+            else if (filter.DatItem_Mandatory.MatchesNegative(null, Mandatory) == false)
                 return false;
 
             // Filter on interface
