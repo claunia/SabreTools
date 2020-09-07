@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
@@ -17,6 +18,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a generic file within a set
     /// </summary>
     [JsonObject("rom")]
+    [XmlRoot("rom")]
     public class Rom : DatItem
     {
         #region Private instance variables
@@ -42,24 +44,28 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlAttribute("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// What BIOS is required for this rom
         /// </summary>
         [JsonProperty("bios", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("bios")]
         public string Bios { get; set; }
 
         /// <summary>
         /// Byte size of the rom
         /// </summary>
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("size")]
         public long? Size { get; set; }
 
         /// <summary>
         /// File CRC32 hash
         /// </summary>
         [JsonProperty("crc", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("crc")]
         public string CRC
         {
             get { return _crc.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_crc); }
@@ -70,6 +76,7 @@ namespace SabreTools.Library.DatItems
         /// File MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("md5")]
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
@@ -81,6 +88,7 @@ namespace SabreTools.Library.DatItems
         /// File RIPEMD160 hash
         /// </summary>
         [JsonProperty("ripemd160", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("ripemd160")]
         public string RIPEMD160
         {
             get { return _ripemd160.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_ripemd160); }
@@ -92,6 +100,7 @@ namespace SabreTools.Library.DatItems
         /// File SHA-1 hash
         /// </summary>
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha1")]
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
@@ -102,6 +111,7 @@ namespace SabreTools.Library.DatItems
         /// File SHA-256 hash
         /// </summary>
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha256")]
         public string SHA256
         {
             get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
@@ -112,6 +122,7 @@ namespace SabreTools.Library.DatItems
         /// File SHA-384 hash
         /// </summary>
         [JsonProperty("sha384", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha384")]
         public string SHA384
         {
             get { return _sha384.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha384); }
@@ -122,6 +133,7 @@ namespace SabreTools.Library.DatItems
         /// File SHA-512 hash
         /// </summary>
         [JsonProperty("sha512", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha512")]
         public string SHA512
         {
             get { return _sha512.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha512); }
@@ -132,6 +144,7 @@ namespace SabreTools.Library.DatItems
         /// File SpamSum fuzzy hash
         /// </summary>
         [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("spamsum")]
         public string SpamSum
         {
             get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }
@@ -142,24 +155,28 @@ namespace SabreTools.Library.DatItems
         /// Rom name to merge from parent
         /// </summary>
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("merge")]
         public string MergeTag { get; set; }
 
         /// <summary>
         /// Rom region
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("biregionos")]
         public string Region { get; set; }
 
         /// <summary>
         /// Data offset within rom
         /// </summary>
         [JsonProperty("offset", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("offset")]
         public string Offset { get; set; }
 
         /// <summary>
         /// File created date
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("date")]
         public string Date { get; set; }
 
         /// <summary>
@@ -167,18 +184,21 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("status")]
         public ItemStatus ItemStatus { get; set; }
 
         /// <summary>
         /// Determine if the rom is optional in the set
         /// </summary>
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("optional")]
         public bool? Optional { get; set; }
 
         /// <summary>
         /// Determine if the CRC32 hash is inverted
         /// </summary>
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("inverted")]
         public bool? Inverted { get; set; }
 
         #endregion
@@ -189,12 +209,14 @@ namespace SabreTools.Library.DatItems
         /// Alternate name for the item
         /// </summary>
         [JsonProperty("alt_romname", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("alt_romname")]
         public string AltName { get; set; }
 
         /// <summary>
         /// Alternate title for the item
         /// </summary>
         [JsonProperty("alt_title", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("alt_title")]
         public string AltTitle { get; set; }
 
         #endregion
@@ -205,12 +227,14 @@ namespace SabreTools.Library.DatItems
         /// OpenMSX sub item type
         /// </summary>
         [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("original")]
         public Original Original { get; set; }
 
         /// <summary>
         /// OpenMSX sub item type
         /// </summary>
         [JsonProperty("openmsx_subtype", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("openmsx_subtype")]
         [JsonConverter(typeof(StringEnumConverter))]
         public OpenMSXSubType OpenMSXSubType { get; set; }
 
@@ -219,18 +243,21 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Not related to the subtype above</remarks>
         [JsonProperty("openmsx_type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("openmsx_type")]
         public string OpenMSXType { get; set; }
 
         /// <summary>
         /// Item remark (like a comment)
         /// </summary>
         [JsonProperty("remark", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("remark")]
         public string Remark { get; set; }
 
         /// <summary>
         /// Boot state
         /// </summary>
         [JsonProperty("boot", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("boot")]
         public string Boot { get; set; }
 
         #endregion
@@ -241,12 +268,14 @@ namespace SabreTools.Library.DatItems
         /// Data area information
         /// </summary>
         [JsonProperty("dataarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("dataarea")]
         public DataArea DataArea { get; set; }
 
         /// <summary>
         /// Loading flag
         /// </summary>
         [JsonProperty("loadflag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("loadflag")]
         [JsonConverter(typeof(StringEnumConverter))]
         public LoadFlag LoadFlag { get; set; }
 
@@ -254,15 +283,60 @@ namespace SabreTools.Library.DatItems
         /// Original hardware part associated with the item
         /// </summary>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("part")]
         public Part Part { get; set; }
 
         /// <summary>
         /// SoftwareList value associated with the item
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("value")]
         public string Value { get; set; }
 
         #endregion
+
+        #region XML Serialization Nullable Specifications
+
+        #region Common
+
+        [JsonIgnore]
+        public bool SizeSpecified { get { return Size != null; } }
+
+        [JsonIgnore]
+        public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL && ItemStatus != ItemStatus.None; } }
+
+        [JsonIgnore]
+        public bool OptionalSpecified { get { return Optional != null; } }
+
+        [JsonIgnore]
+        public bool InvertedSpecified { get { return Inverted != null; } }
+
+        #endregion
+
+        #region OpenMSX
+
+        [JsonIgnore]
+        public bool OriginalSpecified { get { return Original != null && Original != default; } }
+
+        [JsonIgnore]
+        public bool OpenMSXSubTypeSpecified { get { return OpenMSXSubType != OpenMSXSubType.NULL; } }
+
+        #endregion
+
+        #region SoftwareList
+
+        [JsonIgnore]
+        public bool DataAreaSpecified { get { return DataArea != null && DataArea != default; } }
+
+        [JsonIgnore]
+        public bool LoadFlagSpecified { get { return LoadFlag != LoadFlag.NULL; } }
+
+        [JsonIgnore]
+        public bool PartSpecified { get { return Part != null && Part != default; } }
+
+        #endregion
+
+        #endregion // XML Serialization Nullable Specifications
 
         #endregion // Fields
 

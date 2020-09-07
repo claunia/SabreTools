@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -13,6 +14,7 @@ namespace SabreTools.Library.DatItems
     /// Represents the information specific to a set/game/machine
     /// </summary>
     [JsonObject("machine")]
+    [XmlRoot("machine")]
     public class Machine : ICloneable
     {
         #region Fields
@@ -23,6 +25,7 @@ namespace SabreTools.Library.DatItems
         /// Name of the machine
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlAttribute("name")]
         public string Name { get; set; } = null;
 
         /// <summary>
@@ -30,54 +33,63 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Known as "Extra" in AttractMode</remarks>
         [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("comment")]
         public string Comment { get; set; } = null;
 
         /// <summary>
         /// Extended description
         /// </summary>
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("description")]
         public string Description { get; set; } = null;
 
         /// <summary>
         /// Year(s) of release/manufacture
         /// </summary>
         [JsonProperty("year", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("year")]
         public string Year { get; set; } = null;
 
         /// <summary>
         /// Manufacturer, if available
         /// </summary>
         [JsonProperty("manufacturer", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("manufacturer")]
         public string Manufacturer { get; set; } = null;
 
         /// <summary>
         /// Publisher, if available
         /// </summary>
         [JsonProperty("publisher", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("publisher")]
         public string Publisher { get; set; } = null;
 
         /// <summary>
         /// Category, if available
         /// </summary>
         [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("category")]
         public string Category { get; set; } = null;
 
         /// <summary>
         /// fomof parent
         /// </summary>
         [JsonProperty("romof", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("romof")]
         public string RomOf { get; set; } = null;
 
         /// <summary>
         /// cloneof parent
         /// </summary>
         [JsonProperty("cloneof", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("cloneof")]
         public string CloneOf { get; set; } = null;
 
         /// <summary>
         /// sampleof parent
         /// </summary>
         [JsonProperty("sampleof", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("sampleof")]
         public string SampleOf { get; set; } = null;
 
         /// <summary>
@@ -85,6 +97,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlAttribute("type")]
         public MachineType MachineType { get; set; } = 0x0;
 
         #endregion
@@ -96,42 +109,49 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in Logiqx EmuArc</remarks>
         [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("players")]
         public string Players { get; set; } = null;
 
         /// <summary>
         /// Screen rotation
         /// </summary>
         [JsonProperty("rotation", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("rotation")]
         public string Rotation { get; set; } = null;
 
         /// <summary>
         /// Control method
         /// </summary>
         [JsonProperty("control", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("control")]
         public string Control { get; set; } = null;
 
         /// <summary>
         /// Support status
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("status")]
         public string Status { get; set; } = null;
 
         /// <summary>
         /// Display count
         /// </summary>
         [JsonProperty("displaycount", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("displaycount")]
         public string DisplayCount { get; set; } = null;
 
         /// <summary>
         /// Display type
         /// </summary>
         [JsonProperty("displaytype", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("displaytype")]
         public string DisplayType { get; set; } = null;
 
         /// <summary>
         /// Number of input buttons
         /// </summary>
         [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("buttons")]
         public string Buttons { get; set; } = null;
 
         #endregion
@@ -143,6 +163,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("sourcefile", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("sourcefile")]
         public string SourceFile { get; set; } = null;
 
         /// <summary>
@@ -150,6 +171,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("runnable", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("runnable")]
         public Runnable Runnable { get; set; } = Runnable.NULL;
 
         #endregion
@@ -160,12 +182,14 @@ namespace SabreTools.Library.DatItems
         /// Machine board name
         /// </summary>
         [JsonProperty("board", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("board")]
         public string Board { get; set; } = null;
 
         /// <summary>
         /// Rebuild location if different than machine name
         /// </summary>
         [JsonProperty("rebuildto", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlAttribute("rebuildto")]
         public string RebuildTo { get; set; } = null;
 
         #endregion
@@ -177,54 +201,63 @@ namespace SabreTools.Library.DatItems
         /// Title ID
         /// </summary>
         [JsonProperty("titleid", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("titleid")]
         public string TitleID { get; set; } = null;
 
         /// <summary>
         /// Machine developer
         /// </summary>
         [JsonProperty("developer", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("developer")]
         public string Developer { get; set; } = null;
 
         /// <summary>
         /// Game genre
         /// </summary>
         [JsonProperty("genre", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("genre")]
         public string Genre { get; set; } = null;
 
         /// <summary>
         /// Game subgenre
         /// </summary>
         [JsonProperty("subgenre", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("subgenre")]
         public string Subgenre { get; set; } = null;
 
         /// <summary>
         /// Game ratings
         /// </summary>
         [JsonProperty("ratings", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("ratings")]
         public string Ratings { get; set; } = null;
 
         /// <summary>
         /// Game score
         /// </summary>
         [JsonProperty("score", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("score")]
         public string Score { get; set; } = null;
 
         /// <summary>
         /// Is the machine enabled
         /// </summary>
         [JsonProperty("enabled", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("enabled")]
         public string Enabled { get; set; } = null; // bool?
 
         /// <summary>
         /// Does the game have a CRC check
         /// </summary>
         [JsonProperty("hascrc", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("hascrc")]
         public bool? Crc { get; set; } = null;
 
         /// <summary>
         /// Machine relations
         /// </summary>
         [JsonProperty("relatedto", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("relatedto")]
         public string RelatedTo { get; set; } = null;
 
         #endregion
@@ -235,18 +268,21 @@ namespace SabreTools.Library.DatItems
         /// Generation MSX ID
         /// </summary>
         [JsonProperty("genmsxid", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("genmsxid")]
         public string GenMSXID { get; set; } = null;
 
         /// <summary>
         /// MSX System
         /// </summary>
         [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("system")]
         public string System { get; set; } = null;
 
         /// <summary>
         /// Machine country of origin
         /// </summary>
         [JsonProperty("country", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("country")]
         public string Country { get; set; } = null;
 
         #endregion
@@ -257,9 +293,42 @@ namespace SabreTools.Library.DatItems
         /// Support status
         /// </summary>
         [JsonProperty("supported", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("supported")]
         public Supported Supported { get; set; } = Supported.NULL;
 
         #endregion
+
+        #region XML Serialization Nullable Specifications
+
+        #region Common
+
+        [JsonIgnore]
+        public bool MachineTypeSpecified { get { return MachineType != 0x0 && MachineType != MachineType.NULL; } }
+
+        #endregion
+
+        #region ListXML
+
+        [JsonIgnore]
+        public bool RunnableSpecified { get { return Runnable != Runnable.NULL; } }
+
+        #endregion
+
+        #region Logiqx EmuArc Fields
+
+        [JsonIgnore]
+        public bool CrcSpecified { get { return Crc != null; } }
+
+        #endregion
+
+        #region SoftwareList
+
+        [JsonIgnore]
+        public bool SupportedSpecified { get { return Supported != Supported.NULL; } }
+
+        #endregion
+
+        #endregion // XML Serialization Nullable Specifications
 
         #endregion
 

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Xml.Serialization;
 
-using SabreTools.Library.DatItems;
-using SabreTools.Library.Filtering;
-using SabreTools.Library.Tools;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 /// <summary>
 /// This holds all of the auxiliary types needed for proper parsing
@@ -22,6 +15,7 @@ namespace SabreTools.Library.DatItems
     /// Represents the OpenMSX original value
     /// </summary>
     [JsonObject("original")]
+    [XmlRoot("original")]
     public class Original
     {
         [JsonProperty("value")]

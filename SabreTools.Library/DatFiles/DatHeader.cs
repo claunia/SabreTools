@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
@@ -14,6 +15,7 @@ namespace SabreTools.Library.DatFiles
     /// Represents all possible DAT header information
     /// </summary>
     [JsonObject("header")]
+    [XmlRoot("header")]
     public class DatHeader : ICloneable
     {
         #region Fields
@@ -24,108 +26,126 @@ namespace SabreTools.Library.DatFiles
         /// External name of the DAT
         /// </summary>
         [JsonProperty("filename", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("filename")]
         public string FileName { get; set; }
 
         /// <summary>
         /// Internal name of the DAT
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// DAT description
         /// </summary>
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// Root directory for the files; currently TruRip/EmuARC-exclusive
         /// </summary>
         [JsonProperty("rootdir", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("rootdir")]
         public string RootDir { get; set; }
 
         /// <summary>
         /// General category of items found in the DAT
         /// </summary>
         [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("category")]
         public string Category { get; set; }
 
         /// <summary>
         /// Version of the DAT
         /// </summary>
         [JsonProperty("version", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("version")]
         public string Version { get; set; }
 
         /// <summary>
         /// Creation or modification date
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("date")]
         public string Date { get; set; }
 
         /// <summary>
         /// List of authors who contributed to the DAT
         /// </summary>
         [JsonProperty("author", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("author")]
         public string Author { get; set; }
 
         /// <summary>
         /// Email address for DAT author(s)
         /// </summary>
         [JsonProperty("email", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("email")]
         public string Email { get; set; }
 
         /// <summary>
         /// Author or distribution homepage name
         /// </summary>
         [JsonProperty("homepage", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("homepage")]
         public string Homepage { get; set; }
 
         /// <summary>
         /// Author or distribution URL
         /// </summary>
         [JsonProperty("url", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("url")]
         public string Url { get; set; }
 
         /// <summary>
         /// Any comment that does not already fit an existing field
         /// </summary>
         [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("comment")]
         public string Comment { get; set; }
 
         /// <summary>
         /// Header skipper to be used when loading the DAT
         /// </summary>
         [JsonProperty("header", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("header")]
         public string HeaderSkipper { get; set; }
 
         /// <summary>
         /// Classification of the DAT. Generally only used for SuperDAT
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Force a merging style when loaded
         /// </summary>
         [JsonProperty("forcemerging", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("forcemerging")]
         public MergingFlag ForceMerging { get; set; }
 
         /// <summary>
         /// Force nodump handling when loaded
         /// </summary>
         [JsonProperty("forcenodump", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("forcenodump")]
         public NodumpFlag ForceNodump { get; set; }
 
         /// <summary>
         /// Force output packing when loaded
         /// </summary>
         [JsonProperty("forcepacking", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("forcepacking")]
         public PackingFlag ForcePacking { get; set; }
 
         /// <summary>
         /// Read or write format
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public DatFormat DatFormat { get; set; }
 
         #endregion
@@ -137,12 +157,14 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("debug", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("debug")]
         public bool? Debug { get; set; } = null;
 
         /// <summary>
         /// MAME configuration name
         /// </summary>
         [JsonProperty("mameconfig", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("mameconfig")]
         public string MameConfig { get; set; }
 
         #endregion
@@ -153,12 +175,14 @@ namespace SabreTools.Library.DatFiles
         /// Build version
         /// </summary>
         [JsonProperty("build", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("build")]
         public string Build { get; set; }
 
         /// <summary>
         /// Logiqx/RomCenter plugin, OfflineList System
         /// </summary>
         [JsonProperty("system", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("system")]
         public string System { get; set; }
 
         /// <summary>
@@ -166,6 +190,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <remarks>(merged|split|unmerged) "split"</remarks>
         [JsonProperty("rommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("rommode")]
         public MergingFlag RomMode { get; set; }
 
         /// <summary>
@@ -173,6 +198,7 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <remarks>(merged|split|unmerged) "split"</remarks>
         [JsonProperty("biosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("biosmode")]
         public MergingFlag BiosMode { get; set; }
 
         /// <summary>
@@ -180,24 +206,28 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <remarks>(merged|unmerged) "merged"</remarks>
         [JsonProperty("samplemode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("samplemode")]
         public MergingFlag SampleMode { get; set; }
 
         /// <summary>
         /// RomCenter lock rom mode
         /// </summary>
         [JsonProperty("lockrommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("lockrommode")]
         public bool? LockRomMode { get; set; }
 
         /// <summary>
         /// RomCenter lock bios mode
         /// </summary>
         [JsonProperty("lockbiosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("lockbiosmode")]
         public bool? LockBiosMode { get; set; }
 
         /// <summary>
         /// RomCenter lock sample mode
         /// </summary>
         [JsonProperty("locksamplemode", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("locksamplemode")]
         public bool? LockSampleMode { get; set; }
 
         #endregion
@@ -208,6 +238,7 @@ namespace SabreTools.Library.DatFiles
         /// Output the item name
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public bool UseRomName { get; set; }
 
         #endregion
@@ -218,24 +249,28 @@ namespace SabreTools.Library.DatFiles
         /// Screenshots width
         /// </summary>
         [JsonProperty("screenshotswidth", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("screenshotswidth")]
         public string ScreenshotsWidth { get; set; }
 
         /// <summary>
         /// Screenshots height
         /// </summary>
         [JsonProperty("screenshotsheight", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("screenshotsheight")]
         public string ScreenshotsHeight { get; set; }
 
         /// <summary>
         /// OfflineList info list
         /// </summary>
         [JsonProperty("infos", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("infos")]
         public List<OfflineListInfo> Infos { get; set; }
 
         /// <summary>
         /// OfflineList can-open extensions
         /// </summary>
         [JsonProperty("canopen", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("canopen")]
         public List<string> CanOpen { get; set; }
 
         // TODO: Implement the following header values:
@@ -250,6 +285,7 @@ namespace SabreTools.Library.DatFiles
         /// Rom title
         /// </summary>
         [JsonProperty("romtitle", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("romtitle")]
         public string RomTitle { get; set; }
 
         #endregion
@@ -260,6 +296,7 @@ namespace SabreTools.Library.DatFiles
         /// RomCenter DAT format version
         /// </summary>
         [JsonProperty("rcversion", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("rcversion")]
         public string RomCenterVersion { get; set; }
 
         #endregion
@@ -270,45 +307,108 @@ namespace SabreTools.Library.DatFiles
         /// Text to prepend to all outputted lines
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public string Prefix { get; set; }
 
         /// <summary>
         /// Text to append to all outputted lines
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public string Postfix { get; set; }
 
         /// <summary>
         /// Add a new extension to all items
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public string AddExtension { get; set; }
 
         /// <summary>
         /// Replace all item extensions
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public string ReplaceExtension { get; set; }
 
         /// <summary>
         /// Remove all item extensions
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public bool RemoveExtension { get; set; }
 
         /// <summary>
         /// Output the machine name
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public bool GameName { get; set; }
 
         /// <summary>
         /// Wrap quotes around the entire line, sans prefix and postfix
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public bool Quotes { get; set; }
 
         #endregion
+
+        #region XML Serialization Nullable Specifications
+
+        #region Common
+
+        [JsonIgnore]
+        public bool ForceMergingSpecified { get { return ForceMerging != MergingFlag.None; } }
+
+        [JsonIgnore]
+        public bool ForceNodumpSpecified { get { return ForceNodump != NodumpFlag.None; } }
+
+        [JsonIgnore]
+        public bool ForcePackingSpecified { get { return ForcePacking != PackingFlag.None; } }
+
+        #endregion
+
+        #region ListXML
+
+        [JsonIgnore]
+        public bool DebugSpecified { get { return Debug != null; } }
+
+        #endregion
+
+        #region Logiqx
+
+        [JsonIgnore]
+        public bool RomModeSpecified { get { return RomMode != MergingFlag.None; } }
+        
+        [JsonIgnore]
+        public bool BiosModeSpecified { get { return BiosMode != MergingFlag.None; } }
+        
+        [JsonIgnore]
+        public bool SampleModeSpecified { get { return SampleMode != MergingFlag.None; } }
+
+        [JsonIgnore]
+        public bool LockRomModeSpecified { get { return LockRomMode != null; } }
+
+        [JsonIgnore]
+        public bool LockBiosModeSpecified { get { return LockBiosMode != null; } }
+
+        [JsonIgnore]
+        public bool LockSampleModeSpecified { get { return LockSampleMode != null; } }
+
+        #endregion
+
+        #region OfflineList
+
+        [JsonIgnore]
+        public bool InfosSpecified { get { return Infos != null; } }
+
+        [JsonIgnore]
+        public bool CanOpenSpecified { get { return CanOpen != null; } }
+
+        #endregion
+
+        #endregion // XML Serialization Nullable Specifications
 
         #region Depot Information
 
@@ -316,12 +416,14 @@ namespace SabreTools.Library.DatFiles
         /// Input depot information
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public DepotInformation InputDepot { get; set; }
 
         /// <summary>
         /// Output depot information
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public DepotInformation OutputDepot { get; set; }
 
         #endregion

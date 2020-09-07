@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
@@ -17,6 +18,44 @@ namespace SabreTools.Library.DatItems
     /// Base class for all items included in a set
     /// </summary>
     [JsonObject("datitem")]
+    [XmlRoot("datitem")]
+    [XmlInclude(typeof(Adjuster))]
+    [XmlInclude(typeof(Analog))]
+    [XmlInclude(typeof(Archive))]
+    [XmlInclude(typeof(BiosSet))]
+    [XmlInclude(typeof(Blank))]
+    [XmlInclude(typeof(Chip))]
+    [XmlInclude(typeof(Condition))]
+    [XmlInclude(typeof(Configuration))]
+    [XmlInclude(typeof(Control))]
+    [XmlInclude(typeof(DataArea))]
+    [XmlInclude(typeof(Device))]
+    [XmlInclude(typeof(DeviceReference))]
+    [XmlInclude(typeof(DipSwitch))]
+    [XmlInclude(typeof(Disk))]
+    [XmlInclude(typeof(DiskArea))]
+    [XmlInclude(typeof(Display))]
+    [XmlInclude(typeof(Driver))]
+    [XmlInclude(typeof(Extension))]
+    [XmlInclude(typeof(Feature))]
+    [XmlInclude(typeof(Info))]
+    [XmlInclude(typeof(Input))]
+    [XmlInclude(typeof(Instance))]
+    [XmlInclude(typeof(Location))]
+    [XmlInclude(typeof(Media))]
+    [XmlInclude(typeof(Part))]
+    [XmlInclude(typeof(PartFeature))]
+    [XmlInclude(typeof(Port))]
+    [XmlInclude(typeof(RamOption))]
+    [XmlInclude(typeof(Release))]
+    [XmlInclude(typeof(Rom))]
+    [XmlInclude(typeof(Sample))]
+    [XmlInclude(typeof(Setting))]
+    [XmlInclude(typeof(SharedFeature))]
+    [XmlInclude(typeof(Slot))]
+    [XmlInclude(typeof(SlotOption))]
+    [XmlInclude(typeof(SoftwareList))]
+    [XmlInclude(typeof(Sound))]
     public abstract class DatItem : IEquatable<DatItem>, IComparable<DatItem>, ICloneable
     {
         #region Fields
@@ -28,12 +67,14 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("type")]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlAttribute("type")]
         public ItemType ItemType { get; set; }
 
         /// <summary>
         /// Duplicate type when compared to another item
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public DupeType DupeType { get; set; }
 
         #endregion
@@ -44,6 +85,7 @@ namespace SabreTools.Library.DatItems
         /// Machine values
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public Machine Machine { get; set; } = new Machine();
 
         #endregion
@@ -54,12 +96,14 @@ namespace SabreTools.Library.DatItems
         /// Source information
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public Source Source { get; set; } = new Source();
 
         /// <summary>
         /// Flag if item should be removed
         /// </summary>
         [JsonIgnore]
+        [XmlIgnore]
         public bool Remove { get; set; }
 
         #endregion

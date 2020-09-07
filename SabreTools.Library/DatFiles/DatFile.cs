@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
@@ -24,6 +25,7 @@ namespace SabreTools.Library.DatFiles
     /// Represents a format-agnostic DAT
     /// </summary>
     [JsonObject("datfile")]
+    [XmlRoot("datfile")]
     public abstract class DatFile
     {
         #region Fields
@@ -32,12 +34,14 @@ namespace SabreTools.Library.DatFiles
         /// Header values
         /// </summary>
         [JsonProperty("header")]
+        [XmlElement("header")]
         public DatHeader Header { get; set; } = new DatHeader();
 
         /// <summary>
         /// DatItems and related statistics
         /// </summary>
         [JsonProperty("items")]
+        [XmlElement("items")]
         public ItemDictionary Items { get; set; } = new ItemDictionary();
 
         #endregion
