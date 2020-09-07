@@ -189,7 +189,7 @@ namespace SabreTools.Library.Filtering
         public FilterItem<Endianness> DatItem_AreaEndianness { get; private set; } = new FilterItem<Endianness>() { Positive = Endianness.NULL, Negative = Endianness.NULL };
 
         // Device
-        public FilterItem<string> DatItem_DeviceType { get; private set; } = new FilterItem<string>();
+        public FilterItem<DeviceType> DatItem_DeviceType { get; private set; } = new FilterItem<DeviceType>() { Positive = DeviceType.NULL, Negative = DeviceType.NULL };
         public FilterItem<string> DatItem_FixedImage { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Mandatory { get; private set; } = new FilterItem<string>();
         public FilterItem<string> DatItem_Interface { get; private set; } = new FilterItem<string>();
@@ -815,7 +815,10 @@ namespace SabreTools.Library.Filtering
 
                 // Device
                 case Field.DatItem_DeviceType:
-                    SetStringFilter(DatItem_DeviceType, value, negate);
+                    if (negate)
+                        DatItem_DeviceType.Negative |= value.AsDeviceType();
+                    else
+                        DatItem_DeviceType.Positive |= value.AsDeviceType();
                     break;
 
                 case Field.DatItem_FixedImage:

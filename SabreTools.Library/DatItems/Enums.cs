@@ -46,6 +46,40 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine the device type
+    /// </summary>
+    [Flags]
+    public enum DeviceType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Unknown = 1 << 0,
+        Cartridge = 1 << 1,
+        FloppyDisk = 1 << 2,
+        HardDisk = 1 << 3,
+        Cylinder = 1 << 4,
+        Cassette = 1 << 5,
+        PunchCard = 1 << 6,
+        PunchTape = 1 << 7,
+        Printout = 1 << 8,
+        Serial = 1 << 9,
+        Parallel = 1 << 10,
+        Snapshot = 1 << 11,
+        QuickLoad = 1 << 12,
+        MemCard = 1 << 13,
+        CDROM = 1 << 14,
+        MagTape = 1 << 15,
+        ROMImage = 1 << 16,
+        MIDIIn = 1 << 17,
+        MIDIOut = 1 << 18,
+        Picture = 1 << 19,
+        VidFile = 1 << 20,
+    }
+
+    /// <summary>
     /// Determine the display type
     /// </summary>
     [Flags]

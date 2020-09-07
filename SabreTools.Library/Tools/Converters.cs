@@ -243,6 +243,90 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get DeviceType value from input string
+        /// </summary>
+        /// <param name="deviceType">String to get value from</param>
+        /// <returns>DeviceType value corresponding to the string</returns>
+        public static DeviceType AsDeviceType(this string deviceType)
+        {
+#if NET_FRAMEWORK
+            switch (deviceType?.ToLowerInvariant())
+            {
+                case "unknown":
+                    return DeviceType.Unknown;
+                case "cartridge":
+                    return DeviceType.Cartridge;
+                case "floppydisk":
+                    return DeviceType.FloppyDisk;
+                case "harddisk":
+                    return DeviceType.HardDisk;
+                case "cylinder":
+                    return DeviceType.Cylinder;
+                case "cassette":
+                    return DeviceType.Cassette;
+                case "punchcard":
+                    return DeviceType.PunchCard;
+                case "punchtape":
+                    return DeviceType.PunchTape;
+                case "printout":
+                    return DeviceType.Printout;
+                case "serial":
+                    return DeviceType.Serial;
+                case "parallel":
+                    return DeviceType.Parallel;
+                case "snapshot":
+                    return DeviceType.Snapshot;
+                case "quickload":
+                    return DeviceType.QuickLoad;
+                case "memcard":
+                    return DeviceType.MemCard;
+                case "cdrom":
+                    return DeviceType.CDROM;
+                case "magtape":
+                    return DeviceType.MagTape;
+                case "romimage":
+                    return DeviceType.ROMImage;
+                case "midiin":
+                    return DeviceType.MIDIIn;
+                case "midiout":
+                    return DeviceType.MIDIOut;
+                case "picture":
+                    return DeviceType.Picture;
+                case "vidfile":
+                    return DeviceType.VidFile;
+                default:
+                    return DeviceType.NULL;
+            }
+#else
+            return deviceType?.ToLowerInvariant() switch
+            {
+                "unknown" => DeviceType.Unknown,
+                "cartridge" => DeviceType.Cartridge,
+                "floppydisk" => DeviceType.FloppyDisk,
+                "harddisk" => DeviceType.HardDisk,
+                "cylinder" => DeviceType.Cylinder,
+                "cassette" => DeviceType.Cassette,
+                "punchcard" => DeviceType.PunchCard,
+                "punchtape" => DeviceType.PunchTape,
+                "printout" => DeviceType.Printout,
+                "serial" => DeviceType.Serial,
+                "parallel" => DeviceType.Parallel,
+                "snapshot" => DeviceType.Snapshot,
+                "quickload" => DeviceType.QuickLoad,
+                "memcard" => DeviceType.MemCard,
+                "cdrom" => DeviceType.CDROM,
+                "magtape" => DeviceType.MagTape,
+                "romimage" => DeviceType.ROMImage,
+                "midiin" => DeviceType.MIDIIn,
+                "midiout" => DeviceType.MIDIOut,
+                "picture" => DeviceType.Picture,
+                "vidfile" => DeviceType.VidFile,
+                _ => DeviceType.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get DisplayType value from input string
         /// </summary>
         /// <param name="displayType">String to get value from</param>
@@ -2385,6 +2469,91 @@ namespace SabreTools.Library.Tools
             };
 #endif
         }
+
+        /// <summary>
+        /// Get string value from input DeviceType
+        /// </summary>
+        /// <param name="deviceType">vDeviceType to get value from</param>
+        /// <returns>String value corresponding to the DeviceType</returns>
+        public static string FromDeviceType(this DeviceType deviceType)
+        {
+#if NET_FRAMEWORK
+            switch (deviceType)
+            {
+                case DeviceType.Unknown:
+                    return "unknown";
+                case DeviceType.Cartridge:
+                    return "cartridge";
+                case DeviceType.FloppyDisk:
+                    return "floppydisk";
+                case DeviceType.HardDisk:
+                    return "harddisk";
+                case DeviceType.Cylinder:
+                    return "cylinder";
+                case DeviceType.Cassette:
+                    return "cassette";
+                case DeviceType.PunchCard:
+                    return "punchcard";
+                case DeviceType.PunchTape:
+                    return "punchtape";
+                case DeviceType.Printout:
+                    return "printout";
+                case DeviceType.Serial:
+                    return "serial";
+                case DeviceType.Parallel:
+                    return "parallel";
+                case DeviceType.Snapshot:
+                    return "snapshot";
+                case DeviceType.QuickLoad:
+                    return "quickload";
+                case DeviceType.MemCard:
+                    return "memcard";
+                case DeviceType.CDROM:
+                    return "cdrom";
+                case DeviceType.MagTape:
+                    return "magtape";
+                case DeviceType.ROMImage:
+                    return "romimage";
+                case DeviceType.MIDIIn:
+                    return "midiin";
+                case DeviceType.MIDIOut:
+                    return "midiout";
+                case DeviceType.Picture:
+                    return "picture";
+                case DeviceType.VidFile:
+                    return "vidfile";
+                default:
+                    return null;
+            }
+#else
+            return deviceType switch
+            {
+                DeviceType.Unknown => "unknown",
+                DeviceType.Cartridge => "cartridge",
+                DeviceType.FloppyDisk => "floppydisk",
+                DeviceType.HardDisk => "harddisk",
+                DeviceType.Cylinder => "cylinder",
+                DeviceType.Cassette => "cassette",
+                DeviceType.PunchCard => "punchcard",
+                DeviceType.PunchTape => "punchtape",
+                DeviceType.Printout => "printout",
+                DeviceType.Serial => "serial",
+                DeviceType.Parallel => "parallel",
+                DeviceType.Snapshot => "snapshot",
+                DeviceType.QuickLoad => "quickload",
+                DeviceType.MemCard => "memcard",
+                DeviceType.CDROM => "cdrom",
+                DeviceType.MagTape => "magtape",
+                DeviceType.ROMImage => "romimage",
+                DeviceType.MIDIIn => "midiin",
+                DeviceType.MIDIOut => "midiout",
+                DeviceType.Picture => "picture",
+                DeviceType.VidFile => "vidfile",
+                _ => null,
+            };
+#endif
+        }
+
 
         /// <summary>
         /// Get string value from input DisplayType

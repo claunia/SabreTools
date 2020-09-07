@@ -273,7 +273,7 @@ namespace SabreTools.Library.DatFiles
                     case "device":
                         var device = new Device
                         {
-                            DeviceType = reader.GetAttribute("type"),
+                            DeviceType = reader.GetAttribute("type").AsDeviceType(),
                             Tag = reader.GetAttribute("tag"),
                             FixedImage = reader.GetAttribute("fixed_image"),
                             Mandatory = reader.GetAttribute("mandatory"),
@@ -1418,7 +1418,7 @@ namespace SabreTools.Library.DatFiles
                     case ItemType.Device:
                         var device = datItem as Device;
                         xtw.WriteStartElement("device");
-                        xtw.WriteOptionalAttributeString("type", device.DeviceType);
+                        xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
                         xtw.WriteOptionalAttributeString("tag", device.Tag);
                         xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
                         xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);

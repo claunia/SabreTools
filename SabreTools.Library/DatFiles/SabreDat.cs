@@ -1321,7 +1321,7 @@ namespace SabreTools.Library.DatFiles
                         var device = datItem as Device;
                         xtw.WriteStartElement("file");
                         xtw.WriteAttributeString("type", "device");
-                        xtw.WriteOptionalAttributeString("type", device.DeviceType);
+                        xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
                         xtw.WriteOptionalAttributeString("tag", device.Tag);
                         xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
                         xtw.WriteOptionalAttributeString("mandatory", device.Mandatory);

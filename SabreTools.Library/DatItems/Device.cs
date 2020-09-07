@@ -2,6 +2,7 @@
 using System.Linq;
 
 using SabreTools.Library.Filtering;
+using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
@@ -18,7 +19,7 @@ namespace SabreTools.Library.DatItems
         /// Device type
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string DeviceType { get; set; }
+        public DeviceType DeviceType { get; set; }
 
         /// <summary>
         /// Device tag
@@ -72,7 +73,7 @@ namespace SabreTools.Library.DatItems
 
             // Handle Device-specific fields
             if (mappings.Keys.Contains(Field.DatItem_DeviceType))
-                DeviceType = mappings[Field.DatItem_DeviceType];
+                DeviceType = mappings[Field.DatItem_DeviceType].AsDeviceType();
 
             if (mappings.Keys.Contains(Field.DatItem_Tag))
                 Tag = mappings[Field.DatItem_Tag];
@@ -199,9 +200,9 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on device type
-            if (filter.DatItem_DeviceType.MatchesPositiveSet(DeviceType) == false)
+            if (filter.DatItem_DeviceType.MatchesPositive(DeviceType.NULL, DeviceType) == false)
                 return false;
-            if (filter.DatItem_DeviceType.MatchesNegativeSet(DeviceType) == true)
+            if (filter.DatItem_DeviceType.MatchesNegative(DeviceType.NULL, DeviceType) == true)
                 return false;
 
             // Filter on tag
@@ -262,7 +263,7 @@ namespace SabreTools.Library.DatItems
 
             // Remove the fields
             if (fields.Contains(Field.DatItem_DeviceType))
-                DeviceType = null;
+                DeviceType = DeviceType.NULL;
 
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = null;
