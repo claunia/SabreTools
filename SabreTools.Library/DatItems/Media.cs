@@ -70,7 +70,7 @@ namespace SabreTools.Library.DatItems
         public string SpamSum
         {
             get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }
-            set { _spamsum = Encoding.UTF8.GetBytes(value); }
+            set { _spamsum = Encoding.UTF8.GetBytes(value ?? string.Empty); }
         }
 
         #endregion
