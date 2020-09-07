@@ -94,6 +94,8 @@ namespace SabreTools.Library.DatFiles
                     ParseAddHelper(datItem);
                 }
             }
+
+            svr.Dispose();
         }
 
         /// <summary>

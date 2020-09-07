@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -34,35 +33,37 @@ namespace SabreTools.Library.DatFiles
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
-            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
-
-            sr.ReadLine(); // Skip the first line since it's the header
-            while (!sr.EndOfStream)
+            SeparatedValueReader svr = new SeparatedValueReader(FileExtensions.TryOpenRead(filename), enc)
             {
-                string line = sr.ReadLine();
+                Header = true,
+                Quotes = false,
+                Separator = ';',
+                VerifyFieldCount = true
+            };
 
-                /*
-                The gameinfo order is as follows
-                0 - game name
-                1 - game description
-                2 - emulator name (filename)
-                3 - cloneof
-                4 - year
-                5 - manufacturer
-                6 - category
-                7 - players
-                8 - rotation
-                9 - control
-                10 - status
-                11 - displaycount
-                12 - displaytype
-                13 - alt romname
-                14 - alt title
-                15 - extra
-                16 - buttons
-                */
+            // If we're somehow at the end of the stream already, we can't do anything
+            if (svr.EndOfStream)
+                return;
 
-                string[] gameinfo = line.Split(';');
+            // Read in the header
+            svr.ReadHeader();
+
+            // Header values should match
+            // #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+
+            // Loop through all of the data lines
+            while (!svr.EndOfStream)
+            {
+                try
+                {
+                    // Get the current line, split and parse
+                    svr.ReadNextLine();
+                }
+                catch (InvalidDataException)
+                {
+                    Globals.Logger.Warning($"Malformed line found in '{filename}' at line {svr.LineNumber}");
+                    continue;
+                }
 
                 Rom rom = new Rom
                 {
@@ -70,32 +71,29 @@ namespace SabreTools.Library.DatFiles
                     Size = Constants.SizeZero,
                     CRC = Constants.CRCZero,
                     MD5 = Constants.MD5Zero,
-#if NET_FRAMEWORK
-                    RIPEMD160 = Constants.RIPEMD160Zero,
-#endif
                     SHA1 = Constants.SHA1Zero,
                     ItemStatus = ItemStatus.None,
 
                     Machine = new Machine
                     {
-                        Name = gameinfo[0],
-                        Description = gameinfo[1],
-                        CloneOf = gameinfo[3],
-                        Year = gameinfo[4],
-                        Manufacturer = gameinfo[5],
-                        Category = gameinfo[6],
-                        Players = gameinfo[7],
-                        Rotation = gameinfo[8],
-                        Control = gameinfo[9],
-                        Status = gameinfo[10],
-                        DisplayCount = gameinfo[11],
-                        DisplayType = gameinfo[12],
-                        Comment = gameinfo[15],
-                        Buttons = gameinfo[16],
+                        Name = svr.Line[0], // #Name
+                        Description = svr.Line[1], // Title
+                        CloneOf = svr.Line[3], // CloneOf
+                        Year = svr.Line[4], // Year
+                        Manufacturer = svr.Line[5], // Manufacturer
+                        Category = svr.Line[6], // Category
+                        Players = svr.Line[7], // Players
+                        Rotation = svr.Line[8], // Rotation
+                        Control = svr.Line[9], // Control
+                        Status = svr.Line[10], // Status
+                        DisplayCount = svr.Line[11], // DisplayCount
+                        DisplayType = svr.Line[12], // DisplayType
+                        Comment = svr.Line[15], // Extra
+                        Buttons = svr.Line[16], // Buttons
                     },
 
-                    AltName = gameinfo[13],
-                    AltTitle = gameinfo[14],
+                    AltName = svr.Line[13], // AltRomname
+                    AltTitle = svr.Line[14], // AltTitle
 
                     Source = new Source
                     {
@@ -108,7 +106,7 @@ namespace SabreTools.Library.DatFiles
                 ParseAddHelper(rom);
             }
 
-            sr.Dispose();
+            svr.Dispose();
         }
 
         /// <summary>
@@ -186,8 +184,8 @@ namespace SabreTools.Library.DatFiles
             {
                 string[] headers = new string[]
                 {
-                    "#Title",
-                    "Name",
+                    "#Name",
+                    "Title",
                     "Emulator",
                     "CloneOf",
                     "Year",
