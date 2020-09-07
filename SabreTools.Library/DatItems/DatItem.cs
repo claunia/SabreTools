@@ -152,7 +152,7 @@ namespace SabreTools.Library.DatItems
             Field.DatItem_Control_Type,
             Field.DatItem_Control_Player,
             Field.DatItem_Control_Buttons,
-            Field.DatItem_Control_RegButtons,
+            Field.DatItem_Control_RequiredButtons,
             Field.DatItem_Control_Minimum,
             Field.DatItem_Control_Maximum,
             Field.DatItem_Control_Sensitivity,

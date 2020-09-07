@@ -123,25 +123,16 @@ namespace SabreTools.Library.DatItems
                 DisplayType = mappings[Field.DatItem_DisplayType].AsDisplayType();
 
             if (mappings.Keys.Contains(Field.DatItem_Rotate))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Rotate], out long rotate))
-                    Rotate = rotate;
-            }
+                Rotate = Sanitizer.CleanLong(mappings[Field.DatItem_Rotate]);
 
             if (mappings.Keys.Contains(Field.DatItem_FlipX))
                 FlipX = mappings[Field.DatItem_FlipX].AsYesNo();
 
             if (mappings.Keys.Contains(Field.DatItem_Width))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Width], out long width))
-                    Width = width;
-            }
+                Width = Sanitizer.CleanLong(mappings[Field.DatItem_Width]);
 
             if (mappings.Keys.Contains(Field.DatItem_Height))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Height], out long height))
-                    Height = height;
-            }
+                Height = Sanitizer.CleanLong(mappings[Field.DatItem_Height]);
 
             if (mappings.Keys.Contains(Field.DatItem_Refresh))
             {
@@ -150,46 +141,25 @@ namespace SabreTools.Library.DatItems
             }
 
             if (mappings.Keys.Contains(Field.DatItem_PixClock))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_PixClock], out long pixClock))
-                    PixClock = pixClock;
-            }
+                PixClock = Sanitizer.CleanLong(mappings[Field.DatItem_PixClock]);
 
             if (mappings.Keys.Contains(Field.DatItem_HTotal))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_HTotal], out long hTotal))
-                    HTotal = hTotal;
-            }
+                HTotal = Sanitizer.CleanLong(mappings[Field.DatItem_HTotal]);
 
             if (mappings.Keys.Contains(Field.DatItem_HBEnd))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_HBEnd], out long hbEnd))
-                    HBEnd = hbEnd;
-            }
+                HBEnd = Sanitizer.CleanLong(mappings[Field.DatItem_HBEnd]);
 
             if (mappings.Keys.Contains(Field.DatItem_HBStart))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_HBStart], out long hbStart))
-                    HBStart = hbStart;
-            }
+                HBStart = Sanitizer.CleanLong(mappings[Field.DatItem_HBStart]);
 
             if (mappings.Keys.Contains(Field.DatItem_VTotal))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_VTotal], out long vTotal))
-                    VTotal = vTotal;
-            }
+                VTotal = Sanitizer.CleanLong(mappings[Field.DatItem_VTotal]);
 
             if (mappings.Keys.Contains(Field.DatItem_VBEnd))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_VBEnd], out long vbEnd))
-                    VBEnd = vbEnd;
-            }
+                VBEnd = Sanitizer.CleanLong(mappings[Field.DatItem_VBEnd]);
 
             if (mappings.Keys.Contains(Field.DatItem_VBStart))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_VBStart], out long vbStart))
-                    VBStart = vbStart;
-            }
+                VBStart = Sanitizer.CleanLong(mappings[Field.DatItem_VBStart]);
         }
 
         #endregion
@@ -294,9 +264,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on rotation
-            if (filter.DatItem_Rotate.MatchesPositive(null, Rotate) == false)
+            if (filter.DatItem_Rotate.MatchesNeutral(null, Rotate) == false)
                 return false;
-            if (filter.DatItem_Rotate.MatchesNegative(null, Rotate) == true)
+            else if (filter.DatItem_Rotate.MatchesPositive(null, Rotate) == false)
+                return false;
+            else if (filter.DatItem_Rotate.MatchesNegative(null, Rotate) == false)
                 return false;
 
             // Filter on flipx
@@ -304,63 +276,83 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on width
-            if (filter.DatItem_Width.MatchesPositiveSet(Width) == false)
+            if (filter.DatItem_Width.MatchesNeutral(null, Width) == false)
                 return false;
-            if (filter.DatItem_Width.MatchesNegativeSet(Width) == true)
+            else if (filter.DatItem_Width.MatchesPositive(null, Width) == false)
+                return false;
+            else if (filter.DatItem_Width.MatchesNegative(null, Width) == false)
                 return false;
 
             // Filter on height
-            if (filter.DatItem_Height.MatchesPositiveSet(Height) == false)
+            if (filter.DatItem_Height.MatchesNeutral(null, Height) == false)
                 return false;
-            if (filter.DatItem_Height.MatchesNegativeSet(Height) == true)
+            else if (filter.DatItem_Height.MatchesPositive(null, Height) == false)
+                return false;
+            else if (filter.DatItem_Height.MatchesNegative(null, Height) == false)
                 return false;
 
             // Filter on refresh
-            if (filter.DatItem_Refresh.MatchesPositive(null, Refresh) == false)
+            if (filter.DatItem_Refresh.MatchesNeutral(null, Refresh) == false)
                 return false;
-            if (filter.DatItem_Refresh.MatchesNegative(null, Refresh) == true)
+            else if (filter.DatItem_Refresh.MatchesPositive(null, Refresh) == false)
+                return false;
+            else if (filter.DatItem_Refresh.MatchesNegative(null, Refresh) == false)
                 return false;
 
             // Filter on pixclock
-            if (filter.DatItem_PixClock.MatchesPositive(null, PixClock) == false)
+            if (filter.DatItem_PixClock.MatchesNeutral(null, PixClock) == false)
                 return false;
-            if (filter.DatItem_PixClock.MatchesNegative(null, PixClock) == true)
+            else if (filter.DatItem_PixClock.MatchesPositive(null, PixClock) == false)
+                return false;
+            else if (filter.DatItem_PixClock.MatchesNegative(null, PixClock) == false)
                 return false;
 
             // Filter on htotal
-            if (filter.DatItem_HTotal.MatchesPositive(null, HTotal) == false)
+            if (filter.DatItem_HTotal.MatchesNeutral(null, HTotal) == false)
                 return false;
-            if (filter.DatItem_HTotal.MatchesNegative(null, HTotal) == true)
+            else if (filter.DatItem_HTotal.MatchesPositive(null, HTotal) == false)
+                return false;
+            else if (filter.DatItem_HTotal.MatchesNegative(null, HTotal) == false)
                 return false;
 
             // Filter on hbend
-            if (filter.DatItem_HBEnd.MatchesPositive(null, HBEnd) == false)
+            if (filter.DatItem_HBEnd.MatchesNeutral(null, HBEnd) == false)
                 return false;
-            if (filter.DatItem_HBEnd.MatchesNegative(null, HBEnd) == true)
+            else if (filter.DatItem_HBEnd.MatchesPositive(null, HBEnd) == false)
+                return false;
+            else if (filter.DatItem_HBEnd.MatchesNegative(null, HBEnd) == false)
                 return false;
 
             // Filter on hbstart
-            if (filter.DatItem_HBStart.MatchesPositive(null, HBStart) == false)
+            if (filter.DatItem_HBStart.MatchesNeutral(null, HBStart) == false)
                 return false;
-            if (filter.DatItem_HBStart.MatchesNegative(null, HBStart) == true)
+            else if (filter.DatItem_HBStart.MatchesPositive(null, HBStart) == false)
+                return false;
+            else if (filter.DatItem_HBStart.MatchesNegative(null, HBStart) == false)
                 return false;
 
             // Filter on vtotal
-            if (filter.DatItem_VTotal.MatchesPositive(null, VTotal) == false)
+            if (filter.DatItem_VTotal.MatchesNeutral(null, VTotal) == false)
                 return false;
-            if (filter.DatItem_VTotal.MatchesNegative(null, VTotal) == true)
+            else if (filter.DatItem_VTotal.MatchesPositive(null, VTotal) == false)
+                return false;
+            else if (filter.DatItem_VTotal.MatchesNegative(null, VTotal) == false)
                 return false;
 
             // Filter on vbend
-            if (filter.DatItem_VBEnd.MatchesPositive(null, VBEnd) == false)
+            if (filter.DatItem_VBEnd.MatchesNeutral(null, VBEnd) == false)
                 return false;
-            if (filter.DatItem_VBEnd.MatchesNegative(null, VBEnd) == true)
+            else if (filter.DatItem_VBEnd.MatchesPositive(null, VBEnd) == false)
+                return false;
+            else if (filter.DatItem_VBEnd.MatchesNegative(null, VBEnd) == false)
                 return false;
 
             // Filter on vbstart
-            if (filter.DatItem_VBStart.MatchesPositive(null, VBStart) == false)
+            if (filter.DatItem_VBStart.MatchesNeutral(null, VBStart) == false)
                 return false;
-            if (filter.DatItem_VBStart.MatchesNegative(null, VBStart) == true)
+            else if (filter.DatItem_VBStart.MatchesPositive(null, VBStart) == false)
+                return false;
+            else if (filter.DatItem_VBStart.MatchesNegative(null, VBStart) == false)
                 return false;
 
             return true;

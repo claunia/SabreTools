@@ -400,6 +400,7 @@ namespace SabreTools.Library.DatFiles
                                     Name = reader.GetAttribute("name"),
                                     Tag = reader.GetAttribute("tag"),
                                     ChipType = reader.GetAttribute("chiptype").AsChipType(),
+                                    Clock = Sanitizer.CleanLong(reader.GetAttribute("clock")),
 
                                     Source = new Source
                                     {
@@ -407,13 +408,6 @@ namespace SabreTools.Library.DatFiles
                                         Name = filename,
                                     },
                                 };
-
-                                // Set the clock
-                                if (reader.GetAttribute("clock") != null)
-                                {
-                                    if (Int64.TryParse(reader.GetAttribute("clock"), out long clock))
-                                        (datItem as Chip).Clock = clock;
-                                }
 
                                 break;
 
@@ -1504,10 +1498,10 @@ namespace SabreTools.Library.DatFiles
                             foreach (var control in input.Controls)
                             {
                                 xtw.WriteStartElement("control");
-                                xtw.WriteOptionalAttributeString("type", control.ControlType);
+                                xtw.WriteOptionalAttributeString("type", control.ControlType.FromControlType());
                                 xtw.WriteOptionalAttributeString("player", control.Player?.ToString());
                                 xtw.WriteOptionalAttributeString("buttons", control.Buttons?.ToString());
-                                xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
+                                xtw.WriteOptionalAttributeString("reqbuttons", control.RequiredButtons?.ToString());
                                 xtw.WriteOptionalAttributeString("minimum", control.Minimum?.ToString());
                                 xtw.WriteOptionalAttributeString("maximum", control.Maximum?.ToString());
                                 xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity?.ToString());

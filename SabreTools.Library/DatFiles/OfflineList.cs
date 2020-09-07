@@ -466,7 +466,7 @@ namespace SabreTools.Library.DatFiles
         {
             // Prepare all internal variables
             string releaseNumber = string.Empty, duplicateid;
-            long size = -1;
+            long? size = null;
             List<Rom> datItems = new List<Rom>();
             Machine machine = new Machine();
 
@@ -510,9 +510,7 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "romsize":
-                        if (!Int64.TryParse(reader.ReadElementContentAsString(), out size))
-                            size = -1;
-
+                        size = Sanitizer.CleanLong(reader.ReadElementContentAsString());
                         break;
 
                     case "publisher":

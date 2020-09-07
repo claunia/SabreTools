@@ -255,22 +255,10 @@ namespace SabreTools.Library.DatFiles
                         var dataArea = new DataArea
                         {
                             Name = reader.GetAttribute("name"),
+                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
+                            Width = Sanitizer.CleanLong(reader.GetAttribute("width")),
                             Endianness = reader.GetAttribute("endianness").AsEndianness(),
                         };
-
-                        // Set the size
-                        if (reader.GetAttribute("size") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("width"), out long size))
-                                dataArea.Size = size;
-                        }
-
-                        // Set the width
-                        if (reader.GetAttribute("width") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("width"), out long width))
-                                dataArea.Width = width;
-                        }
 
                         List<DatItem> roms = ReadDataArea(reader.ReadSubtree(), dataArea);
 

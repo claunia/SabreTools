@@ -699,55 +699,19 @@ namespace SabreTools.Library.DatFiles
                     case "control":
                         var control = new Control
                         {
-                            ControlType = reader.GetAttribute("type"),
-                            RegButtons = reader.GetAttribute("regbuttons"),
+                            ControlType = reader.GetAttribute("type").AsControlType(),
+                            Player = Sanitizer.CleanLong(reader.GetAttribute("player")),
+                            Buttons = Sanitizer.CleanLong(reader.GetAttribute("buttons")),
+                            RequiredButtons = Sanitizer.CleanLong(reader.GetAttribute("reqbuttons")),
+                            Minimum = Sanitizer.CleanLong(reader.GetAttribute("minimum")),
+                            Maximum = Sanitizer.CleanLong(reader.GetAttribute("maximum")),
+                            Sensitivity = Sanitizer.CleanLong(reader.GetAttribute("sensitivity")),
+                            KeyDelta = Sanitizer.CleanLong(reader.GetAttribute("keydelta")),
                             Reverse = reader.GetAttribute("reverse").AsYesNo(),
                             Ways = reader.GetAttribute("ways"),
                             Ways2 = reader.GetAttribute("ways2"),
                             Ways3 = reader.GetAttribute("ways3"),
                         };
-
-                        // Set the player
-                        if (reader.GetAttribute("player") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("player"), out long player))
-                                control.Player = player;
-                        }
-
-                        // Set the buttons
-                        if (reader.GetAttribute("buttons") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("buttons"), out long buttons))
-                                control.Buttons = buttons;
-                        }
-
-                        // Set the minimum
-                        if (reader.GetAttribute("minimum") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("minimum"), out long minimum))
-                                control.Minimum = minimum;
-                        }
-
-                        // Set the maximum
-                        if (reader.GetAttribute("maximum") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("maximum"), out long maximum))
-                                control.Maximum = maximum;
-                        }
-
-                        // Set the sensitivity
-                        if (reader.GetAttribute("sensitivity") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("sensitivity"), out long sensitivity))
-                                control.Sensitivity = sensitivity;
-                        }
-
-                        // Set the keydelta
-                        if (reader.GetAttribute("keydelta") != null)
-                        {
-                            if (Int64.TryParse(reader.GetAttribute("keydelta"), out long keyDelta))
-                                control.KeyDelta = keyDelta;
-                        }
 
                         input.Controls.Add(control);
 
@@ -1608,10 +1572,10 @@ namespace SabreTools.Library.DatFiles
                             foreach (var control in input.Controls)
                             {
                                 xtw.WriteStartElement("control");
-                                xtw.WriteOptionalAttributeString("type", control.ControlType);
+                                xtw.WriteOptionalAttributeString("type", control.ControlType.FromControlType());
                                 xtw.WriteOptionalAttributeString("player", control.Player?.ToString());
                                 xtw.WriteOptionalAttributeString("buttons", control.Buttons?.ToString());
-                                xtw.WriteOptionalAttributeString("regbuttons", control.RegButtons);
+                                xtw.WriteOptionalAttributeString("reqbuttons", control.RequiredButtons?.ToString());
                                 xtw.WriteOptionalAttributeString("minimum", control.Minimum?.ToString());
                                 xtw.WriteOptionalAttributeString("maximum", control.Maximum?.ToString());
                                 xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity?.ToString());

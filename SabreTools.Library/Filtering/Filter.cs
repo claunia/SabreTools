@@ -169,10 +169,10 @@ namespace SabreTools.Library.Filtering
         public FilterItem<string> DatItem_Condition_Value { get; private set; } = new FilterItem<string>();
 
         // Control
-        public FilterItem<string> DatItem_Control_Type { get; private set; } = new FilterItem<string>();
+        public FilterItem<ControlType> DatItem_Control_Type { get; private set; } = new FilterItem<ControlType>() { Positive = ControlType.NULL, Negative = ControlType.NULL };
         public FilterItem<long?> DatItem_Control_Player { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_Control_Buttons { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
-        public FilterItem<string> DatItem_Control_RegButtons { get; private set; } = new FilterItem<string>();
+        public FilterItem<long?> DatItem_Control_ReqButtons { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_Control_Minimum { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_Control_Maximum { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<long?> DatItem_Control_Sensitivity { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
@@ -742,7 +742,11 @@ namespace SabreTools.Library.Filtering
 
                 // Control
                 case Field.DatItem_Control_Type:
-                    SetStringFilter(DatItem_Control_Type, value, negate);
+
+                    if (negate)
+                        DatItem_Control_Type.Negative |= value.AsControlType();
+                    else
+                        DatItem_Control_Type.Positive |= value.AsControlType();
                     break;
 
                 case Field.DatItem_Control_Player:
@@ -753,8 +757,8 @@ namespace SabreTools.Library.Filtering
                     SetLongFilter(DatItem_Control_Buttons, value, negate);
                     break;
 
-                case Field.DatItem_Control_RegButtons:
-                    SetStringFilter(DatItem_Control_RegButtons, value, negate);
+                case Field.DatItem_Control_RequiredButtons:
+                    SetLongFilter(DatItem_Control_ReqButtons, value, negate);
                     break;
 
                 case Field.DatItem_Control_Minimum:

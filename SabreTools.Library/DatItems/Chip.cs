@@ -76,10 +76,7 @@ namespace SabreTools.Library.DatItems
                 ChipType = mappings[Field.DatItem_ChipType].AsChipType();
 
             if (mappings.Keys.Contains(Field.DatItem_Clock))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Clock], out long clock))
-                    Clock = clock;
-            }
+                Clock = Sanitizer.CleanLong(mappings[Field.DatItem_Clock]);
         }
 
         #endregion
@@ -198,9 +195,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // DatItem_Clock
-            if (filter.DatItem_Clock.MatchesPositive(null, Clock) == false)
+            if (filter.DatItem_Clock.MatchesNeutral(null, Clock) == false)
                 return false;
-            if (filter.DatItem_Clock.MatchesNegative(null, Clock) == true)
+            else if (filter.DatItem_Clock.MatchesPositive(null, Clock) == false)
+                return false;
+            else if (filter.DatItem_Clock.MatchesNegative(null, Clock) == false)
                 return false;
 
             return true;

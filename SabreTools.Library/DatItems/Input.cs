@@ -67,16 +67,10 @@ namespace SabreTools.Library.DatItems
                 Tilt = mappings[Field.DatItem_Tilt].AsYesNo();
 
             if (mappings.Keys.Contains(Field.DatItem_Players))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Players], out long players))
-                    Players = players;
-            }
+                Players = Sanitizer.CleanLong(mappings[Field.DatItem_Players]);
 
             if (mappings.Keys.Contains(Field.DatItem_Coins))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Coins], out long coins))
-                    Coins = coins;
-            }
+                Coins = Sanitizer.CleanLong(mappings[Field.DatItem_Coins]);
 
             if (Controls != null)
             {

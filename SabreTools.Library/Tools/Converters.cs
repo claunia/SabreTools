@@ -96,6 +96,72 @@ namespace SabreTools.Library.Tools
         }
 
         /// <summary>
+        /// Get ControlType value from input string
+        /// </summary>
+        /// <param name="controlType">String to get value from</param>
+        /// <returns>ControlType value corresponding to the string</returns>
+        public static ControlType AsControlType(this string controlType)
+        {
+#if NET_FRAMEWORK
+            switch (controlType?.ToLowerInvariant())
+            {
+                case "joy":
+                    return ControlType.Joy;
+                case "stick":
+                    return ControlType.Stick;
+                case "paddle":
+                    return ControlType.Paddle;
+                case "pedal":
+                    return ControlType.Pedal;
+                case "lightgun":
+                    return ControlType.Lightgun;
+                case "positional":
+                    return ControlType.Positional;
+                case "dial":
+                    return ControlType.Dial;
+                case "trackball":
+                    return ControlType.Trackball;
+                case "mouse":
+                    return ControlType.Mouse;
+                case "only_buttons":
+                    return ControlType.OnlyButtons;
+                case "keypad":
+                    return ControlType.Keypad;
+                case "keyboard":
+                    return ControlType.Keyboard;
+                case "mahjong":
+                    return ControlType.Mahjong;
+                case "hanafuda":
+                    return ControlType.Hanafuda;
+                case "gambling":
+                    return ControlType.Gambling;
+                default:
+                    return ControlType.NULL;
+            }
+#else
+            return controlType?.ToLowerInvariant() switch
+            {
+                "joy" => ControlType.Joy,
+                "stick" => ControlType.Stick,
+                "paddle" => ControlType.Paddle,
+                "pedal" => ControlType.Pedal,
+                "lightgun" => ControlType.Lightgun,
+                "positional" => ControlType.Positional,
+                "dial" => ControlType.Dial,
+                "trackball" => ControlType.Trackball,
+                "mouse" => ControlType.Mouse,
+                "only_buttons" => ControlType.OnlyButtons,
+                "keypad" => ControlType.Keypad,
+                "keyboard" => ControlType.Keyboard,
+                "mahjong" => ControlType.Mahjong,
+                "hanafuda" => ControlType.Hanafuda,
+                "gambling" => ControlType.Gambling,
+                _ => ControlType.NULL,
+            };
+#endif
+        }
+
+        /// <summary>
         /// Get DatFormat value from input string
         /// </summary>
         /// <param name="input">String to get value from</param>
@@ -956,8 +1022,8 @@ namespace SabreTools.Library.Tools
                     case "control_buttons":
                         return Field.DatItem_Control_Buttons;
 
-                    case "control_regbuttons":
-                        return Field.DatItem_Control_RegButtons;
+                    case "control_reqbuttons":
+                        return Field.DatItem_Control_RequiredButtons;
 
                     case "control_minimum":
                         return Field.DatItem_Control_Minimum;
@@ -2249,6 +2315,72 @@ namespace SabreTools.Library.Tools
             {
                 ChipType.CPU => "cpu",
                 ChipType.Audio => "audio",
+                _ => null,
+            };
+#endif
+        }
+
+        /// <summary>
+        /// Get string value from input ControlType
+        /// </summary>
+        /// <param name="controlType">ControlType to get value from</param>
+        /// <returns>String value corresponding to the ControlType</returns>
+        public static string FromControlType(this ControlType controlType)
+        {
+#if NET_FRAMEWORK
+            switch (controlType)
+            {
+                case ControlType.Joy:
+                    return "joy";
+                case ControlType.Stick:
+                    return "stick";
+                case ControlType.Paddle:
+                    return "paddle";
+                case ControlType.Pedal:
+                    return "pedal";
+                case ControlType.Lightgun:
+                    return "lightgun";
+                case ControlType.Positional:
+                    return "positional";
+                case ControlType.Dial:
+                    return "dial";
+                case ControlType.Trackball:
+                    return "trackball";
+                case ControlType.Mouse:
+                    return "mouse";
+                case ControlType.OnlyButtons:
+                    return "only_buttons";
+                case ControlType.Keypad:
+                    return "keypad";
+                case ControlType.Keyboard:
+                    return "keyboard";
+                case ControlType.Mahjong:
+                    return "mahjong";
+                case ControlType.Hanafuda:
+                    return "hanafuda";
+                case ControlType.Gambling:
+                    return "gambling";
+                default:
+                    return null;
+            }
+#else
+            return controlType switch
+            {
+                ControlType.Joy => "joy",
+                ControlType.Stick => "stick",
+                ControlType.Paddle => "paddle",
+                ControlType.Pedal => "pedal",
+                ControlType.Lightgun => "lightgun",
+                ControlType.Positional => "positional",
+                ControlType.Dial => "dial",
+                ControlType.Trackball => "trackball",
+                ControlType.Mouse => "mouse",
+                ControlType.OnlyButtons => "only_buttons",
+                ControlType.Keypad => "keypad",
+                ControlType.Keyboard => "keyboard",
+                ControlType.Mahjong => "mahjong",
+                ControlType.Hanafuda => "hanafuda",
+                ControlType.Gambling => "gambling",
                 _ => null,
             };
 #endif

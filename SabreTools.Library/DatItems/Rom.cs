@@ -297,10 +297,7 @@ namespace SabreTools.Library.DatItems
                 Bios = mappings[Field.DatItem_Bios];
 
             if (mappings.Keys.Contains(Field.DatItem_Size))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Size], out long size))
-                    Size = size;
-            }
+                Size = Sanitizer.CleanLong(mappings[Field.DatItem_Size]);
 
             if (mappings.Keys.Contains(Field.DatItem_CRC))
                 CRC = mappings[Field.DatItem_CRC];

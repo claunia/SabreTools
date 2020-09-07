@@ -18,6 +18,34 @@ namespace SabreTools.Library.DatItems
     }
 
     /// <summary>
+    /// Determine the control type
+    /// </summary>
+    [Flags]
+    public enum ControlType
+    {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
+        NULL = 0,
+
+        Joy = 1 << 0,
+        Stick = 1 << 1,
+        Paddle = 1 << 2,
+        Pedal = 1 << 3,
+        Lightgun = 1 << 4,
+        Positional = 1 << 5,
+        Dial = 1 << 6,
+        Trackball = 1 << 7,
+        Mouse = 1 << 8,
+        OnlyButtons = 1 << 9,
+        Keypad = 1 << 10,
+        Keyboard = 1 << 11,
+        Mahjong = 1 << 12,
+        Hanafuda = 1 << 13,
+        Gambling = 1 << 14,
+    }
+
+    /// <summary>
     /// Determine the display type
     /// </summary>
     [Flags]
@@ -338,7 +366,7 @@ namespace SabreTools.Library.DatItems
         DatItem_Control_Type,
         DatItem_Control_Player,
         DatItem_Control_Buttons,
-        DatItem_Control_RegButtons,
+        DatItem_Control_RequiredButtons,
         DatItem_Control_Minimum,
         DatItem_Control_Maximum,
         DatItem_Control_Sensitivity,

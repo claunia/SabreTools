@@ -69,16 +69,10 @@ namespace SabreTools.Library.DatItems
                 Name = mappings[Field.DatItem_AreaName];
 
             if (mappings.Keys.Contains(Field.DatItem_AreaSize))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_AreaSize], out long areaSize))
-                    Size = areaSize;
-            }
+                Size = Sanitizer.CleanLong(mappings[Field.DatItem_AreaSize]);
 
             if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_AreaWidth], out long areaWidth))
-                    Width = areaWidth;
-            }
+                Width = Sanitizer.CleanLong(mappings[Field.DatItem_AreaWidth]);
 
             if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
                 Endianness = mappings[Field.DatItem_AreaEndianness].AsEndianness();
@@ -196,9 +190,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on area byte width
-            if (filter.DatItem_AreaWidth.MatchesPositive(null, Width) == false)
+            if (filter.DatItem_AreaWidth.MatchesNeutral(null, Width) == false)
                 return false;
-            if (filter.DatItem_AreaWidth.MatchesNegative(null, Width) == true)
+            else if (filter.DatItem_AreaWidth.MatchesPositive(null, Width) == false)
+                return false;
+            else if (filter.DatItem_AreaWidth.MatchesNegative(null, Width) == false)
                 return false;
 
             // Filter on area endianness

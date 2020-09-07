@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SabreTools.Library.Filtering;
+using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
@@ -16,7 +17,7 @@ namespace SabreTools.Library.DatItems
         #region Fields
 
         /// <summary>
-        /// Number of channels
+        /// Number of speakers or channels
         /// </summary>
         [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public long? Channels { get; set; }
@@ -36,10 +37,7 @@ namespace SabreTools.Library.DatItems
 
             // Handle Sound-specific fields
             if (mappings.Keys.Contains(Field.DatItem_Channels))
-            {
-                if (Int64.TryParse(mappings[Field.DatItem_Channels], out long channels))
-                    Channels = channels;
-            }
+                Channels = Sanitizer.CleanLong(mappings[Field.DatItem_Channels]);
         }
 
         #endregion

@@ -7,6 +7,7 @@ using System.Text;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -328,15 +329,10 @@ namespace SabreTools.Library.DatFiles
                 9 - merge name
                 */
                 string[] rominfo = line.Split('¬');
-
-                // Try getting the size separately
-                if (!Int64.TryParse(rominfo[7], out long size))
-                    size = 0;
-
                 Rom rom = new Rom
                 {
                     Name = rominfo[5],
-                    Size = size,
+                    Size = Sanitizer.CleanLong(rominfo[7]),
                     CRC = rominfo[6],
                     ItemStatus = ItemStatus.None,
 
