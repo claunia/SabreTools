@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one ListXML slotoption
     /// </summary>
     [JsonObject("slotoption")]
+    [XmlRoot("slotoption")]
     public class SlotOption : DatItem
     {
         #region Fields
@@ -20,19 +22,25 @@ namespace SabreTools.Library.DatItems
         /// Slot option name
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Referenced device name
         /// </summary>
         [JsonProperty("devname")]
+        [XmlElement("devname")]
         public string DeviceName { get; set; }
 
         /// <summary>
         /// Determines if this slot option is default or not
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("default")]
         public bool? Default { get; set; }
+
+        [JsonIgnore]
+        public bool DefaultSpecified { get { return Default != null; } }
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a single instance of another item
     /// </summary>
     [JsonObject("instance")]
+    [XmlRoot("instance")]
     public class Instance : DatItem
     {
         #region Fields
@@ -20,12 +22,14 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Short name for the instance
         /// </summary>
         [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("briefname")]
         public string BriefName { get; set; }
 
         #endregion

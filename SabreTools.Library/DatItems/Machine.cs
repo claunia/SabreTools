@@ -19,13 +19,13 @@ namespace SabreTools.Library.DatItems
     {
         #region Fields
 
-        #region Common Fields
+        #region Common
 
         /// <summary>
         /// Name of the machine
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Include)]
-        [XmlAttribute("name")]
+        [XmlElement("name")]
         public string Name { get; set; } = null;
 
         /// <summary>
@@ -75,21 +75,21 @@ namespace SabreTools.Library.DatItems
         /// fomof parent
         /// </summary>
         [JsonProperty("romof", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("romof")]
+        [XmlElement("romof")]
         public string RomOf { get; set; } = null;
 
         /// <summary>
         /// cloneof parent
         /// </summary>
         [JsonProperty("cloneof", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("cloneof")]
+        [XmlElement("cloneof")]
         public string CloneOf { get; set; } = null;
 
         /// <summary>
         /// sampleof parent
         /// </summary>
         [JsonProperty("sampleof", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("sampleof")]
+        [XmlElement("sampleof")]
         public string SampleOf { get; set; } = null;
 
         /// <summary>
@@ -97,12 +97,15 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlAttribute("type")]
+        [XmlElement("type")]
         public MachineType MachineType { get; set; } = 0x0;
+
+        [JsonIgnore]
+        public bool MachineTypeSpecified { get { return MachineType != 0x0 && MachineType != MachineType.NULL; } }
 
         #endregion
 
-        #region AttractMode Fields
+        #region AttractMode
 
         /// <summary>
         /// Player count
@@ -156,14 +159,14 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region ListXML Fields
+        #region ListXML
 
         /// <summary>
         /// Emulator source file related to the machine
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("sourcefile", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("sourcefile")]
+        [XmlElement("sourcefile")]
         public string SourceFile { get; set; } = null;
 
         /// <summary>
@@ -171,31 +174,34 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
         [JsonProperty("runnable", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("runnable")]
+        [XmlElement("runnable")]
         public Runnable Runnable { get; set; } = Runnable.NULL;
+
+        [JsonIgnore]
+        public bool RunnableSpecified { get { return Runnable != Runnable.NULL; } }
 
         #endregion
 
-        #region Logiqx Fields
+        #region Logiqx
 
         /// <summary>
         /// Machine board name
         /// </summary>
         [JsonProperty("board", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("board")]
+        [XmlElement("board")]
         public string Board { get; set; } = null;
 
         /// <summary>
         /// Rebuild location if different than machine name
         /// </summary>
         [JsonProperty("rebuildto", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlAttribute("rebuildto")]
+        [XmlElement("rebuildto")]
         public string RebuildTo { get; set; } = null;
 
         #endregion
 
         // TODO: Should this be a separate object for TruRip?
-        #region Logiqx EmuArc Fields
+        #region Logiqx EmuArc
 
         /// <summary>
         /// Title ID
@@ -253,6 +259,9 @@ namespace SabreTools.Library.DatItems
         [XmlElement("hascrc")]
         public bool? Crc { get; set; } = null;
 
+        [JsonIgnore]
+        public bool CrcSpecified { get { return Crc != null; } }
+
         /// <summary>
         /// Machine relations
         /// </summary>
@@ -262,7 +271,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region OpenMSX Fields
+        #region OpenMSX
 
         /// <summary>
         /// Generation MSX ID
@@ -287,7 +296,7 @@ namespace SabreTools.Library.DatItems
 
         #endregion
 
-        #region SoftwareList Fields
+        #region SoftwareList
 
         /// <summary>
         /// Support status
@@ -296,41 +305,12 @@ namespace SabreTools.Library.DatItems
         [XmlElement("supported")]
         public Supported Supported { get; set; } = Supported.NULL;
 
-        #endregion
-
-        #region XML Serialization Nullable Specifications
-
-        #region Common
-
-        [JsonIgnore]
-        public bool MachineTypeSpecified { get { return MachineType != 0x0 && MachineType != MachineType.NULL; } }
-
-        #endregion
-
-        #region ListXML
-
-        [JsonIgnore]
-        public bool RunnableSpecified { get { return Runnable != Runnable.NULL; } }
-
-        #endregion
-
-        #region Logiqx EmuArc Fields
-
-        [JsonIgnore]
-        public bool CrcSpecified { get { return Crc != null; } }
-
-        #endregion
-
-        #region SoftwareList
-
         [JsonIgnore]
         public bool SupportedSpecified { get { return Supported != Supported.NULL; } }
 
         #endregion
 
-        #endregion // XML Serialization Nullable Specifications
-
-        #endregion
+        #endregion // Fields
 
         #region Accessors
 

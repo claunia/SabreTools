@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a single analog item
     /// </summary>
     [JsonObject("analog")]
+    [XmlRoot("analog")]
     public class Analog : DatItem
     {
         #region Fields
@@ -18,6 +20,7 @@ namespace SabreTools.Library.DatItems
         /// Analog mask value
         /// </summary>
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("mask")]
         public string Mask { get; set; }
 
         #endregion

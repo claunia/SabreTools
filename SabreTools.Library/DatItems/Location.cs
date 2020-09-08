@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one conflocation or diplocation
     /// </summary>
     [JsonObject("location")]
+    [XmlRoot("location")]
     public class Location : DatItem
     {
         #region Fields
@@ -20,19 +22,28 @@ namespace SabreTools.Library.DatItems
         /// Location name
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Location ID
         /// </summary>
         [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("number")]
         public long? Number { get; set; }
+
+        [JsonIgnore]
+        public bool NumberSpecified { get { return Number != null; } }
 
         /// <summary>
         /// Determines if location is inverted or not
         /// </summary>
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("inverted")]
         public bool? Inverted { get; set; }
+
+        [JsonIgnore]
+        public bool InvertedSpecified { get { return Inverted != null; } }
 
         #endregion
 

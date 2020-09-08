@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a (usually WAV-formatted) sample to be included for use in the set
     /// </summary>
     [JsonObject("sample")]
+    [XmlRoot("sample")]
     public class Sample : DatItem
     {
         #region Fields
@@ -20,6 +22,7 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         #endregion

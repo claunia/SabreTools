@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a condition on a machine or other item
     /// </summary>
     [JsonObject("condition")]
+    [XmlRoot("condition")]
     public class Condition : DatItem
     {
         #region Fields
@@ -20,12 +22,14 @@ namespace SabreTools.Library.DatItems
         /// Condition tag value
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Condition mask
         /// </summary>
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("mask")]
         public string Mask { get; set; }
 
         /// <summary>
@@ -33,12 +37,17 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("relation", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("relation")]
         public Relation Relation { get; set; }
+
+        [JsonIgnore]
+        public bool RelationSpecified { get { return Relation != Relation.NULL; } }
 
         /// <summary>
         /// Condition value
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("value")]
         public string Value { get; set; }
 
         #endregion

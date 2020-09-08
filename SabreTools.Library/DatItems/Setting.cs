@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one ListXML confsetting or dipvalue
     /// </summary>
     [JsonObject("setting")]
+    [XmlRoot("setting")]
     public class Setting : DatItem
     {
         #region Fields
@@ -20,25 +22,35 @@ namespace SabreTools.Library.DatItems
         /// Setting name
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Setting value
         /// </summary>
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("value")]
         public string Value { get; set; }
 
         /// <summary>
         /// Determines if the setting is default or not
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("default")]
         public bool? Default { get; set; }
+
+        [JsonIgnore]
+        public bool DefaultSpecified { get { return Default != null; } }
 
         /// <summary>
         /// List of conditions on the setting
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("conditions")]
         public List<Condition> Conditions { get; set; }
+
+        [JsonIgnore]
+        public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
 
         #endregion
 

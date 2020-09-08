@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Xml.Serialization;
+
+using Newtonsoft.Json;
 
 namespace SabreTools.Library.DatItems
 {
@@ -6,6 +8,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a blank set from an input DAT
     /// </summary>
     [JsonObject("blank")]
+    [XmlRoot("blank")]
     public class Blank : DatItem
     {
         #region Constructors

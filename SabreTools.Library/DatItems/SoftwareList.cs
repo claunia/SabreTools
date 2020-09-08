@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -13,6 +14,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which SoftwareList(s) is associated with a set
     /// </summary>
     [JsonObject("softwarelist")]
+    [XmlRoot("softwarelist")]
     public class SoftwareList : DatItem
     {
         #region Fields
@@ -21,6 +23,7 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -28,12 +31,17 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("status")]
         public SoftwareListStatus Status { get; set; }
+
+        [JsonIgnore]
+        public bool StatusSpecified { get { return Status != SoftwareListStatus.NULL; } }
 
         /// <summary>
         /// Filter to apply to the software list
         /// </summary>
         [JsonProperty("filter", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("filter")]
         public string Filter { get; set; }
 
         #endregion

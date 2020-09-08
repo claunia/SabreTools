@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -12,6 +14,7 @@ namespace SabreTools.Library.DatItems
     /// Represents control for an input
     /// </summary>
     [JsonObject("control")]
+    [XmlRoot("control")]
     public class Control : DatItem
     {
         #region Fields
@@ -20,55 +23,92 @@ namespace SabreTools.Library.DatItems
         /// General type of input
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("type")]
         public ControlType ControlType { get; set; }
+
+        [JsonIgnore]
+        public bool ControlTypeSpecified { get { return ControlType != ControlType.NULL; } }
 
         /// <summary>
         /// Player which the input belongs to
         /// </summary>
         [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("player")]
         public long? Player { get; set; }
+
+        [JsonIgnore]
+        public bool PlayerSpecified { get { return Player != null; } }
 
         /// <summary>
         /// Total number of buttons
         /// </summary>
         [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("buttons")]
         public long? Buttons { get; set; }
+
+        [JsonIgnore]
+        public bool ButtonsSpecified { get { return Buttons != null; } }
 
         /// <summary>
         /// Total number of non-optional buttons
         /// </summary>
         [JsonProperty("reqbuttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("reqbuttons")]
         public long? RequiredButtons { get; set; }
+
+        [JsonIgnore]
+        public bool RequiredButtonsSpecified { get { return RequiredButtons != null; } }
 
         /// <summary>
         /// Analog minimum value
         /// </summary>
         [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("minimum")]
         public long? Minimum { get; set; }
+
+        [JsonIgnore]
+        public bool MinimumSpecified { get { return Minimum != null; } }
 
         /// <summary>
         /// Analog maximum value
         /// </summary>
         [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("maximum")]
         public long? Maximum { get; set; }
+
+        [JsonIgnore]
+        public bool MaximumSpecified { get { return Maximum != null; } }
 
         /// <summary>
         /// Default analog sensitivity
         /// </summary>
         [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sensitivity")]
         public long? Sensitivity { get; set; }
+
+        [JsonIgnore]
+        public bool SensitivitySpecified { get { return Sensitivity != null; } }
 
         /// <summary>
         /// Default analog keydelta
         /// </summary>
         [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("keydelta")]
         public long? KeyDelta { get; set; }
+
+        [JsonIgnore]
+        public bool KeyDeltaSpecified { get { return KeyDelta != null; } }
 
         /// <summary>
         /// Default analog reverse setting
         /// </summary>
         [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("type")]
         public bool? Reverse { get; set; }
+
+        [JsonIgnore]
+        public bool ReverseSpecified { get { return Reverse != null; } }
 
         /// <summary>
         /// First set of ways
@@ -80,12 +120,14 @@ namespace SabreTools.Library.DatItems
         /// Second set of ways
         /// </summary>
         [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("type")]
         public string Ways2 { get; set; }
 
         /// <summary>
         /// Third set of ways
         /// </summary>
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("type")]
         public string Ways3 { get; set; }
 
         #endregion

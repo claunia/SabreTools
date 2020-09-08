@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents the sound output for a machine
     /// </summary>
     [JsonObject("sound")]
+    [XmlRoot("sound")]
     public class Sound : DatItem
     {
         #region Fields
@@ -20,7 +22,11 @@ namespace SabreTools.Library.DatItems
         /// Number of speakers or channels
         /// </summary>
         [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("channels")]
         public long? Channels { get; set; }
+
+        [JsonIgnore]
+        public bool ChannelsSpecified { get { return Channels != null; } }
 
         #endregion
 

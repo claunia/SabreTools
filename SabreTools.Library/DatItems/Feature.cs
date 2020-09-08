@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents the a feature of the machine
     /// </summary>
     [JsonObject("feature")]
+    [XmlRoot("feature")]
     public class Feature : DatItem
     {
         #region Fields
@@ -21,21 +23,33 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("type")]
         public FeatureType Type { get; set; }
+
+        [JsonIgnore]
+        public bool TypeSpecified { get { return Type != FeatureType.NULL; } }
 
         /// <summary>
         /// Emulation status
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("status")]
         public FeatureStatus Status { get; set; }
+
+        [JsonIgnore]
+        public bool StatusSpecified { get { return Status != FeatureStatus.NULL; } }
 
         /// <summary>
         /// Overall status
         /// </summary>
         [JsonProperty("overall", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("overall")]
         public FeatureStatus Overall { get; set; }
+
+        [JsonIgnore]
+        public bool OverallSpecified { get { return Overall != FeatureStatus.NULL; } }
 
         #endregion
 

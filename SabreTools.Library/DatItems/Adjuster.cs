@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which Adjuster(s) is associated with a set
     /// </summary>
     [JsonObject("adjuster")]
+    [XmlRoot("adjuster")]
     public class Adjuster : DatItem
     {
         #region Fields
@@ -20,19 +22,28 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Determine whether the value is default
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("default")]
         public bool? Default { get; set; }
+
+        [JsonIgnore]
+        public bool DefaultSpecified { get { return Default != null; } }
 
         /// <summary>
         /// Conditions associated with the adjustment
         /// </summary>
         [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("conditions")]
         public List<Condition> Conditions { get; set; }
+
+        [JsonIgnore]
+        public bool ConditionsSpecified { get { return Conditions != null && Conditions.Count > 0; } }
 
         #endregion
 

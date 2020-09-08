@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SabreTools.Library.DatItems
 {
@@ -11,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a single device on the machine
     /// </summary>
     [JsonObject("device")]
+    [XmlRoot("device")]
     public class Device : DatItem
     {
         #region Fields
@@ -19,18 +22,25 @@ namespace SabreTools.Library.DatItems
         /// Device type
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("type")]
         public DeviceType DeviceType { get; set; }
+
+        [JsonIgnore]
+        public bool DeviceTypeSpecified { get { return DeviceType != DeviceType.NULL; } }
 
         /// <summary>
         /// Device tag
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Fixed image format
         /// </summary>
         [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("fixed_image")]
         public string FixedImage { get; set; }
 
         /// <summary>
@@ -38,25 +48,38 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         /// <remarks>Only value used seems to be 1. Used like bool, but actually int</remarks>
         [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("mandatory")]
         public long? Mandatory { get; set; }
+
+        [JsonIgnore]
+        public bool MandatorySpecified { get { return Mandatory != null; } }
 
         /// <summary>
         /// Device interface
         /// </summary>
         [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("interface")]
         public string Interface { get; set; }
 
         /// <summary>
         /// Device instances
         /// </summary>
         [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("instances")]
         public List<Instance> Instances { get; set; }
+
+        [JsonIgnore]
+        public bool InstancesSpecified { get { return Instances != null && Instances.Count > 0; } }
 
         /// <summary>
         /// Device extensions
         /// </summary>
         [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("extensions")]
         public List<Extension> Extensions { get; set; }
+
+        [JsonIgnore]
+        public bool ExtensionsSpecified { get { return Extensions != null && Extensions.Count > 0; } }
 
         #endregion
 

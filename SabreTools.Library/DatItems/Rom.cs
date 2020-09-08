@@ -44,7 +44,7 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
-        [XmlAttribute("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
@@ -60,6 +60,9 @@ namespace SabreTools.Library.DatItems
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("size")]
         public long? Size { get; set; }
+
+        [JsonIgnore]
+        public bool SizeSpecified { get { return Size != null; } }
 
         /// <summary>
         /// File CRC32 hash
@@ -187,6 +190,9 @@ namespace SabreTools.Library.DatItems
         [XmlElement("status")]
         public ItemStatus ItemStatus { get; set; }
 
+        [JsonIgnore]
+        public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL && ItemStatus != ItemStatus.None; } }
+
         /// <summary>
         /// Determine if the rom is optional in the set
         /// </summary>
@@ -194,12 +200,18 @@ namespace SabreTools.Library.DatItems
         [XmlElement("optional")]
         public bool? Optional { get; set; }
 
+        [JsonIgnore]
+        public bool OptionalSpecified { get { return Optional != null; } }
+
         /// <summary>
         /// Determine if the CRC32 hash is inverted
         /// </summary>
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("inverted")]
         public bool? Inverted { get; set; }
+
+        [JsonIgnore]
+        public bool InvertedSpecified { get { return Inverted != null; } }
 
         #endregion
 
@@ -230,6 +242,9 @@ namespace SabreTools.Library.DatItems
         [XmlElement("original")]
         public Original Original { get; set; }
 
+        [JsonIgnore]
+        public bool OriginalSpecified { get { return Original != null && Original != default; } }
+
         /// <summary>
         /// OpenMSX sub item type
         /// </summary>
@@ -237,6 +252,9 @@ namespace SabreTools.Library.DatItems
         [XmlElement("openmsx_subtype")]
         [JsonConverter(typeof(StringEnumConverter))]
         public OpenMSXSubType OpenMSXSubType { get; set; }
+
+        [JsonIgnore]
+        public bool OpenMSXSubTypeSpecified { get { return OpenMSXSubType != OpenMSXSubType.NULL; } }
 
         /// <summary>
         /// OpenMSX sub item type
@@ -271,6 +289,19 @@ namespace SabreTools.Library.DatItems
         [XmlElement("dataarea")]
         public DataArea DataArea { get; set; }
 
+        [JsonIgnore]
+        public bool DataAreaSpecified
+        {
+            get
+            {
+                return DataArea != null && DataArea != default
+                    && ((DataArea.Name != null && DataArea.Name != default)
+                        || (DataArea.Size != null && DataArea.Size != default)
+                        || (DataArea.Width != null && DataArea.Width != default)
+                        || (DataArea.Endianness != Endianness.NULL));
+            }
+        }
+
         /// <summary>
         /// Loading flag
         /// </summary>
@@ -279,12 +310,26 @@ namespace SabreTools.Library.DatItems
         [JsonConverter(typeof(StringEnumConverter))]
         public LoadFlag LoadFlag { get; set; }
 
+        [JsonIgnore]
+        public bool LoadFlagSpecified { get { return LoadFlag != LoadFlag.NULL; } }
+
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("part")]
         public Part Part { get; set; }
+
+        [JsonIgnore]
+        public bool PartSpecified
+        {
+            get
+            {
+                return Part != null && Part != default
+                    && ((Part.Name != null && Part.Name != default)
+                        || (Part.Interface != null && Part.Interface != default));
+            }
+        }
 
         /// <summary>
         /// SoftwareList value associated with the item
@@ -294,49 +339,6 @@ namespace SabreTools.Library.DatItems
         public string Value { get; set; }
 
         #endregion
-
-        #region XML Serialization Nullable Specifications
-
-        #region Common
-
-        [JsonIgnore]
-        public bool SizeSpecified { get { return Size != null; } }
-
-        [JsonIgnore]
-        public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL && ItemStatus != ItemStatus.None; } }
-
-        [JsonIgnore]
-        public bool OptionalSpecified { get { return Optional != null; } }
-
-        [JsonIgnore]
-        public bool InvertedSpecified { get { return Inverted != null; } }
-
-        #endregion
-
-        #region OpenMSX
-
-        [JsonIgnore]
-        public bool OriginalSpecified { get { return Original != null && Original != default; } }
-
-        [JsonIgnore]
-        public bool OpenMSXSubTypeSpecified { get { return OpenMSXSubType != OpenMSXSubType.NULL; } }
-
-        #endregion
-
-        #region SoftwareList
-
-        [JsonIgnore]
-        public bool DataAreaSpecified { get { return DataArea != null && DataArea != default; } }
-
-        [JsonIgnore]
-        public bool LoadFlagSpecified { get { return LoadFlag != LoadFlag.NULL; } }
-
-        [JsonIgnore]
-        public bool PartSpecified { get { return Part != null && Part != default; } }
-
-        #endregion
-
-        #endregion // XML Serialization Nullable Specifications
 
         #endregion // Fields
 

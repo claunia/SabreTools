@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which Device Reference(s) is associated with a set
     /// </summary>
     [JsonObject("device_ref")]
+    [XmlRoot("device_ref")]
     public class DeviceReference : DatItem
     {
         #region Fields
@@ -20,6 +22,7 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         #endregion

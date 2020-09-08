@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -14,18 +15,25 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// <remarks>One Part can contain multiple PartFeature, DataArea, DiskArea, and DipSwitch items</remarks>
     [JsonObject("part")]
+    [XmlRoot("part")]
     public class Part : DatItem
     {
         #region Fields
 
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         [JsonProperty("interface")]
+        [XmlElement("interface")]
         public string Interface { get; set; }
     
         [JsonProperty("features", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("features")]
         public List<PartFeature> Features { get; set; }
+
+        [JsonIgnore]
+        public bool FeaturesSpecified { get { return Features != null && Features.Count > 0; } }
 
         #endregion
 

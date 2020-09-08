@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one shared feature object
     /// </summary>
     [JsonObject("sharedfeat")]
+    [XmlRoot("sharedfeat")]
     public class SharedFeature : DatItem
     {
         #region Fields
@@ -20,12 +22,14 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// SharedFeature value
         /// </summary>
         [JsonProperty("value")]
+        [XmlElement("value")]
         public string Value { get; set; }
 
         #endregion

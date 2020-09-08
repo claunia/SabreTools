@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -14,6 +15,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which Chip(s) is associated with a set
     /// </summary>
     [JsonObject("chip")]
+    [XmlRoot("chip")]
     public class Chip : DatItem
     {
         #region Fields
@@ -22,26 +24,36 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Internal tag
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Type of the chip
         /// </summary>
-        [JsonProperty("chiptype", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("type")]
         public ChipType ChipType { get; set; }
+
+        [JsonIgnore]
+        public bool ChipTypeSpecified { get { return ChipType != ChipType.NULL; } }
 
         /// <summary>
         /// Clock speed
         /// </summary>
         [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("clock")]
         public long? Clock { get; set; }
+
+        [JsonIgnore]
+        public bool ClockTypeSpecified { get { return Clock != null; } }
 
         #endregion
 

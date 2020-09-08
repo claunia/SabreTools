@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -14,6 +15,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// <remarks>One DataArea can contain multiple Rom items</remarks>
     [JsonObject("dataarea")]
+    [XmlRoot("dataarea")]
     public class DataArea : DatItem
     {
         #region Fields
@@ -22,25 +24,38 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Total size of the area
         /// </summary>
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("size")]
         public long? Size { get; set; }
+
+        [JsonIgnore]
+        public bool SizeSpecified { get { return Size != null; } }
 
         /// <summary>
         /// Word width for the area
         /// </summary>
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("width")]
         public long? Width { get; set; }
+
+        [JsonIgnore]
+        public bool WidthSpecified { get { return Width != null; } }
 
         /// <summary>
         /// Byte endianness of the area
         /// </summary>
         [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("endianness")]
         public Endianness Endianness { get; set; }
+
+        [JsonIgnore]
+        public bool EndiannessSpecified { get { return Endianness != Endianness.NULL; } }
 
         #endregion
 

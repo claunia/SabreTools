@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -14,6 +15,7 @@ namespace SabreTools.Library.DatItems
     /// </summary>
     /// <remarks>One DiskArea can contain multiple Disk items</remarks>
     [JsonObject("diskarea")]
+    [XmlRoot("diskarea")]
     public class DiskArea : DatItem
     {
         #region Fields
@@ -22,6 +24,7 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         #endregion

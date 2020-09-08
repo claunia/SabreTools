@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents the a driver of the machine
     /// </summary>
     [JsonObject("driver")]
+    [XmlRoot("driver")]
     public class Driver : DatItem
     {
         #region Fields
@@ -21,28 +23,44 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("status")]
         public SupportStatus Status { get; set; }
+
+        [JsonIgnore]
+        public bool StatusSpecified { get { return Status != SupportStatus.NULL; } }
 
         /// <summary>
         /// Driver emulation status
         /// </summary>
         [JsonProperty("emulation", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("emulation")]
         public SupportStatus Emulation { get; set; }
+
+        [JsonIgnore]
+        public bool EmulationSpecified { get { return Emulation != SupportStatus.NULL; ; } }
 
         /// <summary>
         /// Cocktail orientation status
         /// </summary>
         [JsonProperty("cocktail", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("cocktail")]
         public SupportStatus Cocktail { get; set; }
+
+        [JsonIgnore]
+        public bool CocktailSpecified { get { return Cocktail != SupportStatus.NULL; ; } }
 
         /// <summary>
         /// Save state support status
         /// </summary>
         [JsonProperty("savestate", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("savestate")]
         public Supported SaveState { get; set; }
+
+        [JsonIgnore]
+        public bool SaveStateSpecified { get { return SaveState != Supported.NULL; } }
 
         #endregion
 

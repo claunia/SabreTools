@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
@@ -14,6 +15,7 @@ namespace SabreTools.Library.DatItems
     /// Represents Aaruformat images which use internal hashes
     /// </summary>
     [JsonObject("media")]
+    [XmlRoot("media")]
     public class Media : DatItem
     {
         #region Private instance variables
@@ -31,12 +33,14 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Data MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("md5")]
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
@@ -47,6 +51,7 @@ namespace SabreTools.Library.DatItems
         /// Data SHA-1 hash
         /// </summary>
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha1")]
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
@@ -57,6 +62,7 @@ namespace SabreTools.Library.DatItems
         /// Data SHA-256 hash
         /// </summary>
         [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha256")]
         public string SHA256
         {
             get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
@@ -67,6 +73,7 @@ namespace SabreTools.Library.DatItems
         /// File SpamSum fuzzy hash
         /// </summary>
         [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("spamsum")]
         public string SpamSum
         {
             get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }

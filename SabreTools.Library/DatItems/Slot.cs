@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which Slot(s) is associated with a set
     /// </summary>
     [JsonObject("slot")]
+    [XmlRoot("slot")]
     public class Slot : DatItem
     {
         #region Fields
@@ -20,13 +22,18 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Slot options associated with the slot
         /// </summary>
         [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("slotoptions")]
         public List<SlotOption> SlotOptions { get; set; }
+
+        [JsonIgnore]
+        public bool SlotOptionsSpecified { get { return SlotOptions != null && SlotOptions.Count > 0; } }
 
         #endregion
 

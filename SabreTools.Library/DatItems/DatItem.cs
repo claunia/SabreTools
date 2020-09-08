@@ -65,9 +65,9 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Item type for outputting
         /// </summary>
-        [JsonProperty("type")]
+        [JsonProperty("itemtype")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlAttribute("type")]
+        [XmlElement("itemtype")]
         public ItemType ItemType { get; set; }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which RAM option(s) is associated with a set
     /// </summary>
     [JsonObject("ramoption")]
+    [XmlRoot("ramoption")]
     public class RamOption : DatItem
     {
         #region Fields
@@ -20,18 +22,24 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Determine whether the RamOption is default
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("default")]
         public bool? Default { get; set; }
+
+        [JsonIgnore]
+        public bool DefaultSpecified { get { return Default != null; } }
 
         /// <summary>
         /// Determines the content of the RamOption
         /// </summary>
         [JsonProperty("content", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("content")]
         public string Content { get; set; }
 
         #endregion

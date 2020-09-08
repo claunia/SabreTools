@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
@@ -10,6 +11,7 @@ namespace SabreTools.Library.DatItems
     /// Represents a single port on a machine
     /// </summary>
     [JsonObject("port")]
+    [XmlRoot("port")]
     public class Port : DatItem
     {
         #region Fields
@@ -18,13 +20,18 @@ namespace SabreTools.Library.DatItems
         /// Tag for the port
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// List of analogs on the port
         /// </summary>
         [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("analogs")]
         public List<Analog> Analogs { get; set; }
+
+        [JsonIgnore]
+        public bool AnalogsSpecified { get { return Analogs != null && Analogs.Count > 0; } }
 
         #endregion
 

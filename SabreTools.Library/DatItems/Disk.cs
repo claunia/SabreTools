@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
@@ -14,6 +15,7 @@ namespace SabreTools.Library.DatItems
     /// Represents Compressed Hunks of Data (CHD) formatted disks which use internal hashes
     /// </summary>
     [JsonObject("disk")]
+    [XmlRoot("disk")]
     public class Disk : DatItem
     {
         #region Private instance variables
@@ -31,12 +33,14 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Data MD5 hash
         /// </summary>
         [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("md5")]
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
@@ -47,6 +51,7 @@ namespace SabreTools.Library.DatItems
         /// Data SHA-1 hash
         /// </summary>
         [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("sha1")]
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
@@ -57,38 +62,53 @@ namespace SabreTools.Library.DatItems
         /// Disk name to merge from parent
         /// </summary>
         [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("merge")]
         public string MergeTag { get; set; }
 
         /// <summary>
         /// Disk region
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("region")]
         public string Region { get; set; }
 
         /// <summary>
         /// Disk index
         /// </summary>
         [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("index")]
         public string Index { get; set; }
 
         /// <summary>
         /// Disk writable flag
         /// </summary>
         [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("writable")]
         public bool? Writable { get; set; }
+
+        [JsonIgnore]
+        public bool WritableSpecified { get { return Writable != null; } }
 
         /// <summary>
         /// Disk dump status
         /// </summary>
         [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("status")]
         public ItemStatus ItemStatus { get; set; }
+
+        [JsonIgnore]
+        public bool ItemStatusSpecified { get { return ItemStatus != ItemStatus.NULL; } }
 
         /// <summary>
         /// Determine if the disk is optional in the set
         /// </summary>
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("optional")]
         public bool? Optional { get; set; }
+
+        [JsonIgnore]
+        public bool OptionalSpecified { get { return Optional != null; } }
 
         #endregion
 
@@ -98,13 +118,36 @@ namespace SabreTools.Library.DatItems
         /// Disk area information
         /// </summary>
         [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("diskarea")]
         public DiskArea DiskArea { get; set; }
+
+        [JsonIgnore]
+        public bool DiskAreaSpecified
+        {
+            get
+            {
+                return DiskArea != null && DiskArea != default
+                    && DiskArea.Name != null && DiskArea.Name != default;
+            }
+        }
 
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("part")]
         public Part Part { get; set; }
+
+        [JsonIgnore]
+        public bool PartSpecified
+        {
+            get
+            {
+                return Part != null && Part != default
+                    && ((Part.Name != null && Part.Name != default)
+                        || (Part.Interface != null && Part.Interface != default));
+            }
+        }
 
         #endregion
 

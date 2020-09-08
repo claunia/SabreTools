@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents release information about a set
     /// </summary>
     [JsonObject("release")]
+    [XmlRoot("release")]
     public class Release : DatItem
     {
         #region Fields
@@ -20,31 +22,39 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Release region(s)
         /// </summary>
         [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("region")]
         public string Region { get; set; }
 
         /// <summary>
         /// Release language(s)
         /// </summary>
         [JsonProperty("language", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("language")]
         public string Language { get; set; }
 
         /// <summary>
         /// Date of release
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("date")]
         public string Date { get; set; }
 
         /// <summary>
         /// Default release, if applicable
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("default")]
         public bool? Default { get; set; }
+
+        [JsonIgnore]
+        public bool DefaultSpecified { get { return Default != null; } }
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -12,6 +13,7 @@ namespace SabreTools.Library.DatItems
     /// Represents which BIOS(es) is associated with a set
     /// </summary>
     [JsonObject("biosset")]
+    [XmlRoot("biosset")]
     public class BiosSet : DatItem
     {
         #region Fields
@@ -20,19 +22,25 @@ namespace SabreTools.Library.DatItems
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
+        [XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Description of the BIOS
         /// </summary>
         [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// Determine whether the BIOS is default
         /// </summary>
         [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("default")]
         public bool? Default { get; set; }
+
+        [JsonIgnore]
+        public bool DefaultSpecified { get { return Default != null; } }
 
         #endregion
 

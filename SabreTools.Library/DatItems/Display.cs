@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -13,6 +14,7 @@ namespace SabreTools.Library.DatItems
     /// Represents one machine display
     /// </summary>
     [JsonObject("display")]
+    [XmlRoot("display")]
     public class Display : DatItem
     {
         #region Fields
@@ -21,6 +23,7 @@ namespace SabreTools.Library.DatItems
         /// Display tag
         /// </summary>
         [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
@@ -28,79 +31,131 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
+        [XmlElement("type")]
         public DisplayType DisplayType { get; set; }
+
+        [JsonIgnore]
+        public bool DisplayTypeSpecified { get { return DisplayType != DisplayType.NULL; } }
 
         /// <summary>
         /// Display rotation
         /// </summary>
         [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("rotate")]
         public long? Rotate { get; set; }
+
+        [JsonIgnore]
+        public bool RotateSpecified { get { return Rotate != null; } }
 
         /// <summary>
         /// Determines if display is flipped in the X-coordinates
         /// </summary>
         [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("flipx")]
         public bool? FlipX { get; set; }
+
+        [JsonIgnore]
+        public bool FlipXSpecified { get { return FlipX != null; } }
 
         /// <summary>
         /// Display width
         /// </summary>
         [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("width")]
         public long? Width { get; set; }
+
+        [JsonIgnore]
+        public bool WidthSpecified { get { return Width != null; } }
 
         /// <summary>
         /// Display height
         /// </summary>
         [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("height")]
         public long? Height { get; set; }
+
+        [JsonIgnore]
+        public bool HeightSpecified { get { return Height != null; } }
 
         /// <summary>
         /// Refresh rate
         /// </summary>
         [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("refresh")]
         public double? Refresh { get; set; }
+
+        [JsonIgnore]
+        public bool RefreshSpecified { get { return Refresh != null; } }
 
         /// <summary>
         /// Pixel clock timer
         /// </summary>
         [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("pixclock")]
         public long? PixClock { get; set; }
+
+        [JsonIgnore]
+        public bool PixClockSpecified { get { return PixClock != null; } }
 
         /// <summary>
         /// Total horizontal lines
         /// </summary>
         [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("htotal")]
         public long? HTotal { get; set; }
+
+        [JsonIgnore]
+        public bool HTotalSpecified { get { return HTotal != null; } }
 
         /// <summary>
         /// Horizontal blank end
         /// </summary>
         [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("hbend")]
         public long? HBEnd { get; set; }
+
+        [JsonIgnore]
+        public bool HBEndSpecified { get { return HBEnd != null; } }
 
         /// <summary>
         /// Horizontal blank start
         /// </summary>
         [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("hbstart")]
         public long? HBStart { get; set; }
+
+        [JsonIgnore]
+        public bool HBStartSpecified { get { return HBStart != null; } }
 
         /// <summary>
         /// Total vertical lines
         /// </summary>
         [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("vtotal")]
         public long? VTotal { get; set; }
+
+        [JsonIgnore]
+        public bool VTotalSpecified { get { return VTotal != null; } }
 
         /// <summary>
         /// Vertical blank end
         /// </summary>
         [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("vbend")]
         public long? VBEnd { get; set; }
+
+        [JsonIgnore]
+        public bool VBEndSpecified { get { return VBEnd != null; } }
 
         /// <summary>
         /// Vertical blank start
         /// </summary>
         [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("vbstart")]
         public long? VBStart { get; set; }
+
+        [JsonIgnore]
+        public bool VBStartSpecified { get { return VBStart != null; } }
 
         #endregion
 
