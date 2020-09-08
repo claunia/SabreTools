@@ -80,16 +80,16 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("part")]
-        public Part Part { get; set; }
+        public Part Part { get; set; } = null;
 
         [JsonIgnore]
         public bool PartSpecified
         {
             get
             {
-                return Part != null && Part != default
-                    && ((Part.Name != null && Part.Name != default)
-                        || (Part.Interface != null && Part.Interface != default));
+                return Part != null
+                    && (!string.IsNullOrEmpty(Part.Name)
+                        || !string.IsNullOrEmpty(Part.Interface));
             }
         }
 

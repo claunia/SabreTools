@@ -59,7 +59,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("size")]
-        public long? Size { get; set; }
+        public long? Size { get; set; } = null;
 
         [JsonIgnore]
         public bool SizeSpecified { get { return Size != null; } }
@@ -198,7 +198,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("optional")]
-        public bool? Optional { get; set; }
+        public bool? Optional { get; set; } = null;
 
         [JsonIgnore]
         public bool OptionalSpecified { get { return Optional != null; } }
@@ -208,7 +208,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("inverted")]
-        public bool? Inverted { get; set; }
+        public bool? Inverted { get; set; } = null;
 
         [JsonIgnore]
         public bool InvertedSpecified { get { return Inverted != null; } }
@@ -240,7 +240,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("original", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("original")]
-        public Original Original { get; set; }
+        public Original Original { get; set; } = null;
 
         [JsonIgnore]
         public bool OriginalSpecified { get { return Original != null && Original != default; } }
@@ -287,17 +287,17 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("dataarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("dataarea")]
-        public DataArea DataArea { get; set; }
+        public DataArea DataArea { get; set; } = null;
 
         [JsonIgnore]
         public bool DataAreaSpecified
         {
             get
             {
-                return DataArea != null && DataArea != default
-                    && ((DataArea.Name != null && DataArea.Name != default)
-                        || (DataArea.Size != null && DataArea.Size != default)
-                        || (DataArea.Width != null && DataArea.Width != default)
+                return DataArea != null
+                    && (!string.IsNullOrEmpty(DataArea.Name)
+                        || (DataArea.Size != null)
+                        || (DataArea.Width != null)
                         || (DataArea.Endianness != Endianness.NULL));
             }
         }
@@ -318,16 +318,16 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("part")]
-        public Part Part { get; set; }
+        public Part Part { get; set; } = null;
 
         [JsonIgnore]
         public bool PartSpecified
         {
             get
             {
-                return Part != null && Part != default
-                    && ((Part.Name != null && Part.Name != default)
-                        || (Part.Interface != null && Part.Interface != default));
+                return Part != null
+                    && (!string.IsNullOrEmpty(Part.Name)
+                        || !string.IsNullOrEmpty(Part.Interface));
             }
         }
 

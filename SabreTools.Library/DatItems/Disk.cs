@@ -84,7 +84,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("writable")]
-        public bool? Writable { get; set; }
+        public bool? Writable { get; set; } = null;
 
         [JsonIgnore]
         public bool WritableSpecified { get { return Writable != null; } }
@@ -105,7 +105,7 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("optional")]
-        public bool? Optional { get; set; }
+        public bool? Optional { get; set; } = null;
 
         [JsonIgnore]
         public bool OptionalSpecified { get { return Optional != null; } }
@@ -119,15 +119,15 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("diskarea")]
-        public DiskArea DiskArea { get; set; }
+        public DiskArea DiskArea { get; set; } = null;
 
         [JsonIgnore]
         public bool DiskAreaSpecified
         {
             get
             {
-                return DiskArea != null && DiskArea != default
-                    && DiskArea.Name != null && DiskArea.Name != default;
+                return DiskArea != null
+                    && !string.IsNullOrEmpty(DiskArea.Name);
             }
         }
 
@@ -136,16 +136,16 @@ namespace SabreTools.Library.DatItems
         /// </summary>
         [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("part")]
-        public Part Part { get; set; }
+        public Part Part { get; set; } = null;
 
         [JsonIgnore]
         public bool PartSpecified
         {
             get
             {
-                return Part != null && Part != default
-                    && ((Part.Name != null && Part.Name != default)
-                        || (Part.Interface != null && Part.Interface != default));
+                return Part != null
+                    && (!string.IsNullOrEmpty(Part.Name)
+                        || !string.IsNullOrEmpty(Part.Interface));
             }
         }
 
