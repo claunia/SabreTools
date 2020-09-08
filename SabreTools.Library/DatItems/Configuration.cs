@@ -255,21 +255,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on tag
-            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
-                return false;
-            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+            if (!PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // Filter on mask
-            if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
-                return false;
-            if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
+            if (!PassStringFilter(filter.DatItem_Mask, Mask))
                 return false;
 
             // Filter on individual conditions

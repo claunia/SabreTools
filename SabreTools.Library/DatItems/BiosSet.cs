@@ -170,19 +170,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on description
-            if (filter.DatItem_Description.MatchesPositiveSet(Description) == false)
-                return false;
-            if (filter.DatItem_Description.MatchesNegativeSet(Description) == true)
+            if (!PassStringFilter(filter.DatItem_Description, Description))
                 return false;
 
             // Filter on default
-            if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
+            if (!PassBoolFilter(filter.DatItem_Default, Default))
                 return false;
 
             return true;

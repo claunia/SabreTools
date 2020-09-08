@@ -186,15 +186,11 @@ namespace SabreTools.Library.DatItems
             if (sub)
             {
                 // Filter on tag
-                if (filter.DatItem_Condition_Tag.MatchesPositiveSet(Tag) == false)
-                    return false;
-                if (filter.DatItem_Condition_Tag.MatchesNegativeSet(Tag) == true)
+                if (!PassStringFilter(filter.DatItem_Condition_Tag, Tag))
                     return false;
 
                 // Filter on mask
-                if (filter.DatItem_Condition_Mask.MatchesPositiveSet(Mask) == false)
-                    return false;
-                if (filter.DatItem_Condition_Mask.MatchesNegativeSet(Mask) == true)
+                if (!PassStringFilter(filter.DatItem_Condition_Mask, Mask))
                     return false;
 
                 // Filter on relation
@@ -204,23 +200,17 @@ namespace SabreTools.Library.DatItems
                     return false;
 
                 // Filter on value
-                if (filter.DatItem_Condition_Value.MatchesPositiveSet(Value) == false)
-                    return false;
-                if (filter.DatItem_Condition_Value.MatchesNegativeSet(Value) == true)
+                if (!PassStringFilter(filter.DatItem_Condition_Value, Value))
                     return false;
             }
             else
             {
                 // Filter on tag
-                if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
-                    return false;
-                if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+                if (!PassStringFilter(filter.DatItem_Tag, Tag))
                     return false;
 
                 // Filter on mask
-                if (filter.DatItem_Mask.MatchesPositiveSet(Mask) == false)
-                    return false;
-                if (filter.DatItem_Mask.MatchesNegativeSet(Mask) == true)
+                if (!PassStringFilter(filter.DatItem_Mask, Mask))
                     return false;
 
                 // Filter on relation
@@ -230,9 +220,7 @@ namespace SabreTools.Library.DatItems
                     return false;
 
                 // Filter on value
-                if (filter.DatItem_Value.MatchesPositiveSet(Value) == false)
-                    return false;
-                if (filter.DatItem_Value.MatchesNegativeSet(Value) == true)
+                if (!PassStringFilter(filter.DatItem_Value, Value))
                     return false;
             }
 

@@ -153,16 +153,12 @@ namespace SabreTools.Library.DatItems
             if (!base.PassesFilter(filter))
                 return false;
 
-            // Filter on item name
-            if (filter.DatItem_Part_Feature_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Part_Feature_Name.MatchesNegativeSet(Name) == true)
+            // Filter on name
+            if (!PassStringFilter(filter.DatItem_Part_Feature_Name, Name))
                 return false;
 
-            // Filter on info value
-            if (filter.DatItem_Part_Feature_Value.MatchesPositiveSet(Value) == false)
-                return false;
-            if (filter.DatItem_Part_Feature_Value.MatchesNegativeSet(Value) == true)
+            // Filter on value
+            if (!PassStringFilter(filter.DatItem_Part_Feature_Value, Value))
                 return false;
 
             return true;

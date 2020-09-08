@@ -143,9 +143,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_Extension_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Extension_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Extension_Name, Name))
                 return false;
 
             return true;

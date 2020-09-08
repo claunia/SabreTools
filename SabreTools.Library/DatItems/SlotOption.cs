@@ -170,19 +170,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_SlotOption_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_SlotOption_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_SlotOption_Name, Name))
                 return false;
 
             // Filter on device name
-            if (filter.DatItem_SlotOption_DeviceName.MatchesPositiveSet(DeviceName) == false)
-                return false;
-            if (filter.DatItem_SlotOption_DeviceName.MatchesNegativeSet(DeviceName) == true)
+            if (!PassStringFilter(filter.DatItem_SlotOption_DeviceName, DeviceName))
                 return false;
 
             // Filter on default
-            if (filter.DatItem_SlotOption_Default.MatchesNeutral(null, Default) == false)
+            if (!PassBoolFilter(filter.DatItem_SlotOption_Default, Default))
                 return false;
 
             return true;

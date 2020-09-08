@@ -173,21 +173,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_Location_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Location_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Location_Name, Name))
                 return false;
 
             // Filter on number
-            if (filter.DatItem_Location_Number.MatchesNeutral(null, Number) == false)
-                return false;
-            else if (filter.DatItem_Location_Number.MatchesPositive(null, Number) == false)
-                return false;
-            else if (filter.DatItem_Location_Number.MatchesNegative(null, Number) == false)
+            if (!PassLongFilter(filter.DatItem_Location_Number, Number))
                 return false;
 
             // Filter on inverted
-            if (filter.DatItem_Location_Inverted.MatchesNeutral(null, Inverted) == false)
+            if (!PassBoolFilter(filter.DatItem_Location_Inverted, Inverted))
                 return false;
 
             return true;

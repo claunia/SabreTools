@@ -104,9 +104,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on mask
-            if (filter.DatItem_Analog_Mask.MatchesPositiveSet(Mask) == false)
-                return false;
-            if (filter.DatItem_Analog_Mask.MatchesNegativeSet(Mask) == true)
+            if (!PassStringFilter(filter.DatItem_Analog_Mask, Mask))
                 return false;
 
             return true;

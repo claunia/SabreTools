@@ -449,43 +449,31 @@ namespace SabreTools.Library.DatItems
             #region Common
 
             // Filter on item name
-            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on MD5
-            if (filter.DatItem_MD5.MatchesPositiveSet(MD5) == false)
-                return false;
-            if (filter.DatItem_MD5.MatchesNegativeSet(MD5) == true)
+            if (!PassStringFilter(filter.DatItem_MD5, MD5))
                 return false;
 
             // Filter on SHA-1
-            if (filter.DatItem_SHA1.MatchesPositiveSet(SHA1) == false)
-                return false;
-            if (filter.DatItem_SHA1.MatchesNegativeSet(SHA1) == true)
+            if (!PassStringFilter(filter.DatItem_SHA1, SHA1))
                 return false;
 
             // Filter on merge tag
-            if (filter.DatItem_Merge.MatchesPositiveSet(MergeTag) == false)
-                return false;
-            if (filter.DatItem_Merge.MatchesNegativeSet(MergeTag) == true)
+            if (!PassStringFilter(filter.DatItem_Merge, MergeTag))
                 return false;
 
             // Filter on region
-            if (filter.DatItem_Region.MatchesPositiveSet(Region) == false)
-                return false;
-            if (filter.DatItem_Region.MatchesNegativeSet(Region) == true)
+            if (!PassStringFilter(filter.DatItem_Region, Region))
                 return false;
 
             // Filter on index
-            if (filter.DatItem_Index.MatchesPositiveSet(Index) == false)
-                return false;
-            if (filter.DatItem_Index.MatchesNegativeSet(Index) == true)
+            if (!PassStringFilter(filter.DatItem_Index, Index))
                 return false;
 
             // Filter on writable
-            if (filter.DatItem_Writable.MatchesNeutral(null, Writable) == false)
+            if (!PassBoolFilter(filter.DatItem_Writable, Writable))
                 return false;
 
             // Filter on status
@@ -495,7 +483,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on optional
-            if (filter.DatItem_Optional.MatchesNeutral(null, Optional) == false)
+            if (!PassBoolFilter(filter.DatItem_Optional, Optional))
                 return false;
 
             #endregion

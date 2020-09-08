@@ -228,29 +228,19 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on tag
-            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
-                return false;
-            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+            if (!PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // Filter on fixed image
-            if (filter.DatItem_FixedImage.MatchesPositiveSet(FixedImage) == false)
-                return false;
-            if (filter.DatItem_FixedImage.MatchesNegativeSet(FixedImage) == true)
+            if (!PassStringFilter(filter.DatItem_FixedImage, FixedImage))
                 return false;
 
             // Filter on mandatory
-            if (filter.DatItem_Mandatory.MatchesNeutral(null, Mandatory) == false)
-                return false;
-            else if (filter.DatItem_Mandatory.MatchesPositive(null, Mandatory) == false)
-                return false;
-            else if (filter.DatItem_Mandatory.MatchesNegative(null, Mandatory) == false)
+            if (!PassLongFilter(filter.DatItem_Mandatory, Mandatory))
                 return false;
 
             // Filter on interface
-            if (filter.DatItem_Interface.MatchesPositiveSet(Interface) == false)
-                return false;
-            if (filter.DatItem_Interface.MatchesNegativeSet(Interface) == true)
+            if (!PassStringFilter(filter.DatItem_Interface, Interface))
                 return false;
 
             // Filter on individual instances

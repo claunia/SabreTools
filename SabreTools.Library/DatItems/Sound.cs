@@ -109,11 +109,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on channels
-            if (filter.DatItem_Channels.MatchesNeutral(null, Channels) == false)
-                return false;
-            else if (filter.DatItem_Channels.MatchesPositive(null, Channels) == false)
-                return false;
-            else if (filter.DatItem_Channels.MatchesNegative(null, Channels) == false)
+            if (!PassLongFilter(filter.DatItem_Channels, Channels))
                 return false;
 
             return true;

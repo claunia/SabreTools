@@ -306,9 +306,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on tag
-            if (filter.DatItem_Tag.MatchesPositiveSet(Tag) == false)
-                return false;
-            if (filter.DatItem_Tag.MatchesNegativeSet(Tag) == true)
+            if (!PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // Filter on display type
@@ -318,95 +316,51 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on rotation
-            if (filter.DatItem_Rotate.MatchesNeutral(null, Rotate) == false)
-                return false;
-            else if (filter.DatItem_Rotate.MatchesPositive(null, Rotate) == false)
-                return false;
-            else if (filter.DatItem_Rotate.MatchesNegative(null, Rotate) == false)
+            if (!PassLongFilter(filter.DatItem_Rotate, Rotate))
                 return false;
 
             // Filter on flipx
-            if (filter.DatItem_FlipX.MatchesNeutral(null, FlipX) == false)
+            if (!PassBoolFilter(filter.DatItem_FlipX, FlipX))
                 return false;
 
             // Filter on width
-            if (filter.DatItem_Width.MatchesNeutral(null, Width) == false)
-                return false;
-            else if (filter.DatItem_Width.MatchesPositive(null, Width) == false)
-                return false;
-            else if (filter.DatItem_Width.MatchesNegative(null, Width) == false)
+            if (!PassLongFilter(filter.DatItem_Width, Width))
                 return false;
 
             // Filter on height
-            if (filter.DatItem_Height.MatchesNeutral(null, Height) == false)
-                return false;
-            else if (filter.DatItem_Height.MatchesPositive(null, Height) == false)
-                return false;
-            else if (filter.DatItem_Height.MatchesNegative(null, Height) == false)
+            if (!PassLongFilter(filter.DatItem_Height, Height))
                 return false;
 
             // Filter on refresh
-            if (filter.DatItem_Refresh.MatchesNeutral(null, Refresh) == false)
-                return false;
-            else if (filter.DatItem_Refresh.MatchesPositive(null, Refresh) == false)
-                return false;
-            else if (filter.DatItem_Refresh.MatchesNegative(null, Refresh) == false)
+            if (!PassDoubleFilter(filter.DatItem_Refresh, Refresh))
                 return false;
 
             // Filter on pixclock
-            if (filter.DatItem_PixClock.MatchesNeutral(null, PixClock) == false)
-                return false;
-            else if (filter.DatItem_PixClock.MatchesPositive(null, PixClock) == false)
-                return false;
-            else if (filter.DatItem_PixClock.MatchesNegative(null, PixClock) == false)
+            if (!PassLongFilter(filter.DatItem_PixClock, PixClock))
                 return false;
 
             // Filter on htotal
-            if (filter.DatItem_HTotal.MatchesNeutral(null, HTotal) == false)
-                return false;
-            else if (filter.DatItem_HTotal.MatchesPositive(null, HTotal) == false)
-                return false;
-            else if (filter.DatItem_HTotal.MatchesNegative(null, HTotal) == false)
+            if (!PassLongFilter(filter.DatItem_HTotal, HTotal))
                 return false;
 
             // Filter on hbend
-            if (filter.DatItem_HBEnd.MatchesNeutral(null, HBEnd) == false)
-                return false;
-            else if (filter.DatItem_HBEnd.MatchesPositive(null, HBEnd) == false)
-                return false;
-            else if (filter.DatItem_HBEnd.MatchesNegative(null, HBEnd) == false)
+            if (!PassLongFilter(filter.DatItem_HBEnd, HBEnd))
                 return false;
 
             // Filter on hbstart
-            if (filter.DatItem_HBStart.MatchesNeutral(null, HBStart) == false)
-                return false;
-            else if (filter.DatItem_HBStart.MatchesPositive(null, HBStart) == false)
-                return false;
-            else if (filter.DatItem_HBStart.MatchesNegative(null, HBStart) == false)
+            if (!PassLongFilter(filter.DatItem_HBStart, HBStart))
                 return false;
 
             // Filter on vtotal
-            if (filter.DatItem_VTotal.MatchesNeutral(null, VTotal) == false)
-                return false;
-            else if (filter.DatItem_VTotal.MatchesPositive(null, VTotal) == false)
-                return false;
-            else if (filter.DatItem_VTotal.MatchesNegative(null, VTotal) == false)
+            if (!PassLongFilter(filter.DatItem_VTotal, VTotal))
                 return false;
 
             // Filter on vbend
-            if (filter.DatItem_VBEnd.MatchesNeutral(null, VBEnd) == false)
-                return false;
-            else if (filter.DatItem_VBEnd.MatchesPositive(null, VBEnd) == false)
-                return false;
-            else if (filter.DatItem_VBEnd.MatchesNegative(null, VBEnd) == false)
+            if (!PassLongFilter(filter.DatItem_VBEnd, VBEnd))
                 return false;
 
             // Filter on vbstart
-            if (filter.DatItem_VBStart.MatchesNeutral(null, VBStart) == false)
-                return false;
-            else if (filter.DatItem_VBStart.MatchesPositive(null, VBStart) == false)
-                return false;
-            else if (filter.DatItem_VBStart.MatchesNegative(null, VBStart) == false)
+            if (!PassLongFilter(filter.DatItem_VBStart, VBStart))
                 return false;
 
             return true;

@@ -181,15 +181,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on part name
-            if (filter.DatItem_Part_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Part_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Part_Name, Name))
                 return false;
 
             // Filter on part interface
-            if (filter.DatItem_Part_Interface.MatchesPositiveSet(Interface) == false)
-                return false;
-            if (filter.DatItem_Part_Interface.MatchesNegativeSet(Interface) == true)
+            if (!PassStringFilter(filter.DatItem_Part_Interface, Interface))
                 return false;
 
             // Filter on features

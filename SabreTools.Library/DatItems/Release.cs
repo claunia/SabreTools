@@ -198,31 +198,23 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (filter.DatItem_Name.MatchesPositiveSet(Name) == false)
-                return false;
-            if (filter.DatItem_Name.MatchesNegativeSet(Name) == true)
+            if (!PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on region
-            if (filter.DatItem_Region.MatchesPositiveSet(Region) == false)
-                return false;
-            if (filter.DatItem_Region.MatchesNegativeSet(Region) == true)
+            if (!PassStringFilter(filter.DatItem_Region, Region))
                 return false;
 
             // Filter on language
-            if (filter.DatItem_Language.MatchesPositiveSet(Language) == false)
-                return false;
-            if (filter.DatItem_Language.MatchesNegativeSet(Language) == true)
+            if (!PassStringFilter(filter.DatItem_Language, Language))
                 return false;
 
             // Filter on date
-            if (filter.DatItem_Date.MatchesPositiveSet(Date) == false)
-                return false;
-            if (filter.DatItem_Date.MatchesNegativeSet(Date) == true)
+            if (!PassStringFilter(filter.DatItem_Date, Date))
                 return false;
 
             // Filter on default
-            if (filter.DatItem_Default.MatchesNeutral(null, Default) == false)
+            if (!PassBoolFilter(filter.DatItem_Default, Default))
                 return false;
 
             return true;

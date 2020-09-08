@@ -273,81 +273,47 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on player
-            if (filter.DatItem_Control_Player.MatchesNeutral(null, Player) == false)
-                return false;
-            else if (filter.DatItem_Control_Player.MatchesPositive(null, Player) == false)
-                return false;
-            else if (filter.DatItem_Control_Player.MatchesNegative(null, Player) == false)
+            if (!PassLongFilter(filter.DatItem_Control_Player, Player))
                 return false;
 
             // Filter on buttons
-            if (filter.DatItem_Control_Buttons.MatchesNeutral(null, Buttons) == false)
-                return false;
-            else if (filter.DatItem_Control_Buttons.MatchesPositive(null, Buttons) == false)
-                return false;
-            else if (filter.DatItem_Control_Buttons.MatchesNegative(null, Buttons) == false)
+            if (!PassLongFilter(filter.DatItem_Control_Buttons, Buttons))
                 return false;
 
             // Filter on reqbuttons
-            if (filter.DatItem_Control_ReqButtons.MatchesNeutral(null, RequiredButtons) == false)
-                return false;
-            else if (filter.DatItem_Control_ReqButtons.MatchesPositive(null, RequiredButtons) == false)
-                return false;
-            else if (filter.DatItem_Control_ReqButtons.MatchesNegative(null, RequiredButtons) == false)
+            if (!PassLongFilter(filter.DatItem_Control_ReqButtons, RequiredButtons))
                 return false;
 
             // Filter on minimum
-            if (filter.DatItem_Control_Minimum.MatchesNeutral(null, Minimum) == false)
-                return false;
-            else if (filter.DatItem_Control_Minimum.MatchesPositive(null, Minimum) == false)
-                return false;
-            else if (filter.DatItem_Control_Minimum.MatchesNegative(null, Minimum) == false)
+            if (!PassLongFilter(filter.DatItem_Control_Minimum, Minimum))
                 return false;
 
             // Filter on maximum
-            if (filter.DatItem_Control_Maximum.MatchesNeutral(null, Maximum) == false)
-                return false;
-            else if (filter.DatItem_Control_Maximum.MatchesPositive(null, Maximum) == false)
-                return false;
-            else if (filter.DatItem_Control_Maximum.MatchesNegative(null, Maximum) == false)
+            if (!PassLongFilter(filter.DatItem_Control_Maximum, Maximum))
                 return false;
 
             // Filter on sensitivity
-            if (filter.DatItem_Control_Sensitivity.MatchesNeutral(null, Sensitivity) == false)
-                return false;
-            else if (filter.DatItem_Control_Sensitivity.MatchesPositive(null, Sensitivity) == false)
-                return false;
-            else if (filter.DatItem_Control_Sensitivity.MatchesNegative(null, Sensitivity) == false)
+            if (!PassLongFilter(filter.DatItem_Control_Sensitivity, Sensitivity))
                 return false;
 
             // Filter on keydelta
-            if (filter.DatItem_Control_KeyDelta.MatchesNeutral(null, KeyDelta) == false)
-                return false;
-            else if (filter.DatItem_Control_KeyDelta.MatchesPositive(null, KeyDelta) == false)
-                return false;
-            else if (filter.DatItem_Control_KeyDelta.MatchesNegative(null, KeyDelta) == false)
+            if (!PassLongFilter(filter.DatItem_Control_KeyDelta, KeyDelta))
                 return false;
 
             // Filter on reverse
-            if (filter.DatItem_Control_Reverse.MatchesNeutral(null, Reverse) == false)
+            if (!PassBoolFilter(filter.DatItem_Control_Reverse, Reverse))
                 return false;
 
             // Filter on ways
-            if (filter.DatItem_Control_Ways.MatchesPositiveSet(Ways) == false)
-                return false;
-            if (filter.DatItem_Control_Ways.MatchesNegativeSet(Ways) == true)
+            if (!PassStringFilter(filter.DatItem_Control_Ways, Ways))
                 return false;
 
             // Filter on ways2
-            if (filter.DatItem_Control_Ways2.MatchesPositiveSet(Ways2) == false)
-                return false;
-            if (filter.DatItem_Control_Ways2.MatchesNegativeSet(Ways2) == true)
+            if (!PassStringFilter(filter.DatItem_Control_Ways2, Ways2))
                 return false;
 
             // Filter on ways3
-            if (filter.DatItem_Control_Ways3.MatchesPositiveSet(Ways3) == false)
-                return false;
-            if (filter.DatItem_Control_Ways3.MatchesNegativeSet(Ways3) == true)
+            if (!PassStringFilter(filter.DatItem_Control_Ways3, Ways3))
                 return false;
 
             return true;
