@@ -573,22 +573,13 @@ namespace SabreTools.Library.DatItems
             #region Common
 
             // Machine_Name
-            bool? machineNameFound = filter.Machine_Name.MatchesPositiveSet(Name);
+            bool passes = filter.PassStringFilter(filter.Machine_Name, Name);
             if (filter.IncludeOfInGame)
             {
-                machineNameFound |= (filter.Machine_Name.MatchesPositiveSet(CloneOf) == true);
-                machineNameFound |= (filter.Machine_Name.MatchesPositiveSet(RomOf) == true);
+                passes |= filter.PassStringFilter(filter.Machine_Name, CloneOf);
+                passes |= filter.PassStringFilter(filter.Machine_Name, RomOf);
             }
-            if (machineNameFound == false)
-                return false;
-
-            machineNameFound = filter.Machine_Name.MatchesNegativeSet(Name);
-            if (filter.IncludeOfInGame)
-            {
-                machineNameFound |= (filter.Machine_Name.MatchesNegativeSet(CloneOf) == true);
-                machineNameFound |= (filter.Machine_Name.MatchesNegativeSet(RomOf) == true);
-            }
-            if (machineNameFound == false)
+            if (!passes)
                 return false;
 
             // Machine_Comment
