@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -138,7 +137,6 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Prepare internal variables
-            JsonSerializer js = new JsonSerializer();
             Machine machine = null;
 
             // Read the machine info, if possible
@@ -454,7 +452,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
 
                 // Build the state
                 jtw.WriteStartObject();

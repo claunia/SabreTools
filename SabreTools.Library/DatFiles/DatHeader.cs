@@ -20,7 +20,7 @@ namespace SabreTools.Library.DatFiles
     {
         #region Fields
 
-        #region Common Fields
+        #region Common
 
         /// <summary>
         /// External name of the DAT
@@ -127,6 +127,9 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("forcemerging")]
         public MergingFlag ForceMerging { get; set; }
 
+        [JsonIgnore]
+        public bool ForceMergingSpecified { get { return ForceMerging != MergingFlag.None; } }
+
         /// <summary>
         /// Force nodump handling when loaded
         /// </summary>
@@ -134,12 +137,18 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("forcenodump")]
         public NodumpFlag ForceNodump { get; set; }
 
+        [JsonIgnore]
+        public bool ForceNodumpSpecified { get { return ForceNodump != NodumpFlag.None; } }
+
         /// <summary>
         /// Force output packing when loaded
         /// </summary>
         [JsonProperty("forcepacking", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("forcepacking")]
         public PackingFlag ForcePacking { get; set; }
+
+        [JsonIgnore]
+        public bool ForcePackingSpecified { get { return ForcePacking != PackingFlag.None; } }
 
         /// <summary>
         /// Read or write format
@@ -150,7 +159,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        #region ListXML Fields
+        #region ListXML
 
         /// <summary>
         /// Debug build flag
@@ -159,6 +168,9 @@ namespace SabreTools.Library.DatFiles
         [JsonProperty("debug", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("debug")]
         public bool? Debug { get; set; } = null;
+
+        [JsonIgnore]
+        public bool DebugSpecified { get { return Debug != null; } }
 
         /// <summary>
         /// MAME configuration name
@@ -193,6 +205,9 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("rommode")]
         public MergingFlag RomMode { get; set; }
 
+        [JsonIgnore]
+        public bool RomModeSpecified { get { return RomMode != MergingFlag.None; } }
+
         /// <summary>
         /// RomCenter bios mode
         /// </summary>
@@ -200,6 +215,9 @@ namespace SabreTools.Library.DatFiles
         [JsonProperty("biosmode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("biosmode")]
         public MergingFlag BiosMode { get; set; }
+
+        [JsonIgnore]
+        public bool BiosModeSpecified { get { return BiosMode != MergingFlag.None; } }
 
         /// <summary>
         /// RomCenter sample mode
@@ -209,12 +227,18 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("samplemode")]
         public MergingFlag SampleMode { get; set; }
 
+        [JsonIgnore]
+        public bool SampleModeSpecified { get { return SampleMode != MergingFlag.None; } }
+
         /// <summary>
         /// RomCenter lock rom mode
         /// </summary>
         [JsonProperty("lockrommode", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("lockrommode")]
         public bool? LockRomMode { get; set; }
+
+        [JsonIgnore]
+        public bool LockRomModeSpecified { get { return LockRomMode != null; } }
 
         /// <summary>
         /// RomCenter lock bios mode
@@ -223,6 +247,9 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("lockbiosmode")]
         public bool? LockBiosMode { get; set; }
 
+        [JsonIgnore]
+        public bool LockBiosModeSpecified { get { return LockBiosMode != null; } }
+
         /// <summary>
         /// RomCenter lock sample mode
         /// </summary>
@@ -230,9 +257,12 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("locksamplemode")]
         public bool? LockSampleMode { get; set; }
 
+        [JsonIgnore]
+        public bool LockSampleModeSpecified { get { return LockSampleMode != null; } }
+
         #endregion
 
-        #region Missfile Fields
+        #region Missfile
 
         /// <summary>
         /// Output the item name
@@ -243,7 +273,7 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        #region OfflineList Fields
+        #region OfflineList
 
         /// <summary>
         /// Screenshots width
@@ -266,12 +296,18 @@ namespace SabreTools.Library.DatFiles
         [XmlElement("infos")]
         public List<OfflineListInfo> Infos { get; set; }
 
+        [JsonIgnore]
+        public bool InfosSpecified { get { return Infos != null && Infos.Count > 0; } }
+
         /// <summary>
         /// OfflineList can-open extensions
         /// </summary>
         [JsonProperty("canopen", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("canopen")]
         public List<string> CanOpen { get; set; }
+
+        [JsonIgnore]
+        public bool CanOpenSpecified { get { return CanOpen != null && CanOpen.Count > 0; } }
 
         // TODO: Implement the following header values:
         // - newdat.datversionurl (currently reads and writes to Header.Url, not strictly correct)
@@ -353,62 +389,6 @@ namespace SabreTools.Library.DatFiles
         public bool Quotes { get; set; }
 
         #endregion
-
-        #region XML Serialization Nullable Specifications
-
-        #region Common
-
-        [JsonIgnore]
-        public bool ForceMergingSpecified { get { return ForceMerging != MergingFlag.None; } }
-
-        [JsonIgnore]
-        public bool ForceNodumpSpecified { get { return ForceNodump != NodumpFlag.None; } }
-
-        [JsonIgnore]
-        public bool ForcePackingSpecified { get { return ForcePacking != PackingFlag.None; } }
-
-        #endregion
-
-        #region ListXML
-
-        [JsonIgnore]
-        public bool DebugSpecified { get { return Debug != null; } }
-
-        #endregion
-
-        #region Logiqx
-
-        [JsonIgnore]
-        public bool RomModeSpecified { get { return RomMode != MergingFlag.None; } }
-        
-        [JsonIgnore]
-        public bool BiosModeSpecified { get { return BiosMode != MergingFlag.None; } }
-        
-        [JsonIgnore]
-        public bool SampleModeSpecified { get { return SampleMode != MergingFlag.None; } }
-
-        [JsonIgnore]
-        public bool LockRomModeSpecified { get { return LockRomMode != null; } }
-
-        [JsonIgnore]
-        public bool LockBiosModeSpecified { get { return LockBiosMode != null; } }
-
-        [JsonIgnore]
-        public bool LockSampleModeSpecified { get { return LockSampleMode != null; } }
-
-        #endregion
-
-        #region OfflineList
-
-        [JsonIgnore]
-        public bool InfosSpecified { get { return Infos != null; } }
-
-        [JsonIgnore]
-        public bool CanOpenSpecified { get { return CanOpen != null; } }
-
-        #endregion
-
-        #endregion // XML Serialization Nullable Specifications
 
         #region Depot Information
 
