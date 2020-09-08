@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// SoftwareList diskarea information
     /// </summary>
     /// <remarks>One DiskArea can contain multiple Disk items</remarks>
-    [JsonObject("diskarea")]
-    [XmlRoot("diskarea")]
+    [JsonObject("diskarea"), XmlRoot("diskarea")]
     public class DiskArea : DatItem
     {
         #region Fields

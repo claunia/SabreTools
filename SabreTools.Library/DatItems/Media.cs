@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents Aaruformat images which use internal hashes
     /// </summary>
-    [JsonObject("media")]
-    [XmlRoot("media")]
+    [JsonObject("media"), XmlRoot("media")]
     public class Media : DatItem
     {
         #region Private instance variables

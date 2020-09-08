@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one part feature object
     /// </summary>
-    [JsonObject("part_feature")]
-    [XmlRoot("part_feature")]
+    [JsonObject("part_feature"), XmlRoot("part_feature")]
     public class PartFeature : DatItem
     {
         #region Fields

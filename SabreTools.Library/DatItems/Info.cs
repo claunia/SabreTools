@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents special information about a machine
     /// </summary>
-    [JsonObject("info")]
-    [XmlRoot("info")]
+    [JsonObject("info"), XmlRoot("info")]
     public class Info : DatItem
     {
         #region Fields

@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents the a driver of the machine
     /// </summary>
-    [JsonObject("driver")]
-    [XmlRoot("driver")]
+    [JsonObject("driver"), XmlRoot("driver")]
     public class Driver : DatItem
     {
         #region Fields

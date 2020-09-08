@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which Adjuster(s) is associated with a set
     /// </summary>
-    [JsonObject("adjuster")]
-    [XmlRoot("adjuster")]
+    [JsonObject("adjuster"), XmlRoot("adjuster")]
     public class Adjuster : DatItem
     {
         #region Fields

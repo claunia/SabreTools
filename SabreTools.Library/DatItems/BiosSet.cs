@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which BIOS(es) is associated with a set
     /// </summary>
-    [JsonObject("biosset")]
-    [XmlRoot("biosset")]
+    [JsonObject("biosset"), XmlRoot("biosset")]
     public class BiosSet : DatItem
     {
         #region Fields

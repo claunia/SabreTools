@@ -10,8 +10,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a single analog item
     /// </summary>
-    [JsonObject("analog")]
-    [XmlRoot("analog")]
+    [JsonObject("analog"), XmlRoot("analog")]
     public class Analog : DatItem
     {
         #region Fields

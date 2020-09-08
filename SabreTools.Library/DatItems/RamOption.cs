@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which RAM option(s) is associated with a set
     /// </summary>
-    [JsonObject("ramoption")]
-    [XmlRoot("ramoption")]
+    [JsonObject("ramoption"), XmlRoot("ramoption")]
     public class RamOption : DatItem
     {
         #region Fields

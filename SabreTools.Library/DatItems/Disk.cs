@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents Compressed Hunks of Data (CHD) formatted disks which use internal hashes
     /// </summary>
-    [JsonObject("disk")]
-    [XmlRoot("disk")]
+    [JsonObject("disk"), XmlRoot("disk")]
     public class Disk : DatItem
     {
         #region Private instance variables

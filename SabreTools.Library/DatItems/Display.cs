@@ -13,8 +13,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one machine display
     /// </summary>
-    [JsonObject("display")]
-    [XmlRoot("display")]
+    [JsonObject("display"), XmlRoot("display")]
     public class Display : DatItem
     {
         #region Fields

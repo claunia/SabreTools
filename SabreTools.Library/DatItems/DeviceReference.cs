@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which Device Reference(s) is associated with a set
     /// </summary>
-    [JsonObject("device_ref")]
-    [XmlRoot("device_ref")]
+    [JsonObject("device_ref"), XmlRoot("device_ref")]
     public class DeviceReference : DatItem
     {
         #region Fields

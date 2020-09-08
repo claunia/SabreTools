@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents generic archive files to be included in a set
     /// </summary>
-    [JsonObject("archive")]
-    [XmlRoot("archive")]
+    [JsonObject("archive"), XmlRoot("archive")]
     public class Archive : DatItem
     {
         #region Fields

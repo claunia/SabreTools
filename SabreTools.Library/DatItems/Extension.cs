@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a matchable extension
     /// </summary>
-    [JsonObject("extension")]
-    [XmlRoot("extension")]
+    [JsonObject("extension"), XmlRoot("extension")]
     public class Extension : DatItem
     {
         #region Fields

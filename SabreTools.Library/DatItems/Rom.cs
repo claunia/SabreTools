@@ -17,8 +17,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a generic file within a set
     /// </summary>
-    [JsonObject("rom")]
-    [XmlRoot("rom")]
+    [JsonObject("rom"), XmlRoot("rom")]
     public class Rom : DatItem
     {
         #region Private instance variables

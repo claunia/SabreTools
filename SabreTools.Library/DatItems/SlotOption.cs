@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML slotoption
     /// </summary>
-    [JsonObject("slotoption")]
-    [XmlRoot("slotoption")]
+    [JsonObject("slotoption"), XmlRoot("slotoption")]
     public class SlotOption : DatItem
     {
         #region Fields

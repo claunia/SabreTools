@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML confsetting or dipvalue
     /// </summary>
-    [JsonObject("setting")]
-    [XmlRoot("setting")]
+    [JsonObject("setting"), XmlRoot("setting")]
     public class Setting : DatItem
     {
         #region Fields

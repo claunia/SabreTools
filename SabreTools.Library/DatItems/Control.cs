@@ -13,8 +13,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents control for an input
     /// </summary>
-    [JsonObject("control")]
-    [XmlRoot("control")]
+    [JsonObject("control"), XmlRoot("control")]
     public class Control : DatItem
     {
         #region Fields

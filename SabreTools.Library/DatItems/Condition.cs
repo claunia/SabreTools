@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a condition on a machine or other item
     /// </summary>
-    [JsonObject("condition")]
-    [XmlRoot("condition")]
+    [JsonObject("condition"), XmlRoot("condition")]
     public class Condition : DatItem
     {
         #region Fields

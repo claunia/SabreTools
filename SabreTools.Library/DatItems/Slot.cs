@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which Slot(s) is associated with a set
     /// </summary>
-    [JsonObject("slot")]
-    [XmlRoot("slot")]
+    [JsonObject("slot"), XmlRoot("slot")]
     public class Slot : DatItem
     {
         #region Fields

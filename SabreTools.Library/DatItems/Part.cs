@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// SoftwareList part information
     /// </summary>
     /// <remarks>One Part can contain multiple PartFeature, DataArea, DiskArea, and DipSwitch items</remarks>
-    [JsonObject("part")]
-    [XmlRoot("part")]
+    [JsonObject("part"), XmlRoot("part")]
     public class Part : DatItem
     {
         #region Fields

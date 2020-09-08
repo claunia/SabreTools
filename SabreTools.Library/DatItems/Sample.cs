@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a (usually WAV-formatted) sample to be included for use in the set
     /// </summary>
-    [JsonObject("sample")]
-    [XmlRoot("sample")]
+    [JsonObject("sample"), XmlRoot("sample")]
     public class Sample : DatItem
     {
         #region Fields

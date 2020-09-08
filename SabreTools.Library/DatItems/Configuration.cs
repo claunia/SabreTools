@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which Configuration(s) is associated with a set
     /// </summary>
-    [JsonObject("configuration")]
-    [XmlRoot("configuration")]
+    [JsonObject("configuration"), XmlRoot("configuration")]
     public class Configuration : DatItem
     {
         #region Fields

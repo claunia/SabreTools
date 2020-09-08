@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which DIP Switch(es) is associated with a set
     /// </summary>
-    [JsonObject("dipswitch")]
-    [XmlRoot("dipswitch")]
+    [JsonObject("dipswitch"), XmlRoot("dipswitch")]
     public class DipSwitch : DatItem
     {
         #region Fields

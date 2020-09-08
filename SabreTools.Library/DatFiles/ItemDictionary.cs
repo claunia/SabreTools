@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
@@ -18,7 +19,7 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Item dictionary with statistics, bucketing, and sorting
     /// </summary>
-    [JsonObject("items")]
+    [JsonObject("items"), XmlRoot("items")]
     public class ItemDictionary : IDictionary<string, List<DatItem>>
     {
         #region Private instance variables
@@ -48,6 +49,7 @@ namespace SabreTools.Library.DatFiles
         /// Get the keys from the file dictionary
         /// </summary>
         /// <returns>List of the keys</returns>
+        [JsonIgnore, XmlIgnore]
         public ICollection<string> Keys
         {
             get { return items.Keys; }
@@ -57,6 +59,7 @@ namespace SabreTools.Library.DatFiles
         /// Get the keys in sorted order from the file dictionary
         /// </summary>
         /// <returns>List of the keys in sorted order</returns>
+        [JsonIgnore, XmlIgnore]
         public List<string> SortedKeys
         {
             get
@@ -74,73 +77,73 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Overall item count
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long TotalCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Adjuster items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long AdjusterCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Analog items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long AnalogCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Archive items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long ArchiveCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of BiosSet items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long BiosSetCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Chip items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long ChipCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of top-level Condition items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long ConditionCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Configuration items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long ConfigurationCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of DataArea items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DataAreaCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Device items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DeviceCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Device Reference items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DeviceReferenceCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of DIP Switch items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DipSwitchCount { get; private set; } = 0;
 
         /// <summary>
@@ -152,202 +155,202 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Number of DiskArea items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DiskAreaCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Display items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DisplayCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Driver items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DriverCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Feature items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long FeatureCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Info items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long InfoCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Input items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long InputCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Media items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long MediaCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Part items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long PartCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of PartFeature items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long PartFeatureCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Port items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long PortCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of RamOption items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long RamOptionCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Release items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long ReleaseCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Rom items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long RomCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Sample items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SampleCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of SharedFeature items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SharedFeatureCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Slot items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SlotCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of SoftwareList items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SoftwareListCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of Sound items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SoundCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of machines
         /// </summary>
         /// <remarks>Special count only used by statistics output</remarks>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long GameCount { get; private set; } = 0;
 
         /// <summary>
         /// Total uncompressed size
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long TotalSize { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a CRC hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long CRCCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with an MD5 hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long MD5Count { get; private set; } = 0;
 
 #if NET_FRAMEWORK
         /// <summary>
         /// Number of items with a RIPEMD160 hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long RIPEMD160Count { get; private set; } = 0;
 #endif
 
         /// <summary>
         /// Number of items with a SHA-1 hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SHA1Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SHA-256 hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SHA256Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SHA-384 hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SHA384Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SHA-512 hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SHA512Count { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with a SpamSum fuzzy hash
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long SpamSumCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the baddump status
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long BaddumpCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the good status
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long GoodCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the nodump status
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long NodumpCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the remove flag
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long RemovedCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of items with the verified status
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long VerifiedCount { get; private set; } = 0;
 
         #endregion

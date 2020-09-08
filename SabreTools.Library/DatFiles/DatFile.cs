@@ -24,8 +24,7 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Represents a format-agnostic DAT
     /// </summary>
-    [JsonObject("datfile")]
-    [XmlRoot("datfile")]
+    [JsonObject("datfile"), XmlRoot("datfile")]
     public abstract class DatFile
     {
         #region Fields

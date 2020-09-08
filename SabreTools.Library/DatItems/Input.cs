@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one ListXML input
     /// </summary>
-    [JsonObject("input")]
-    [XmlRoot("input")]
+    [JsonObject("input"), XmlRoot("input")]
     public class Input : DatItem
     {
         #region Fields

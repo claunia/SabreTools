@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one shared feature object
     /// </summary>
-    [JsonObject("sharedfeat")]
-    [XmlRoot("sharedfeat")]
+    [JsonObject("sharedfeat"), XmlRoot("sharedfeat")]
     public class SharedFeature : DatItem
     {
         #region Fields

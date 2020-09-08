@@ -17,8 +17,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Base class for all items included in a set
     /// </summary>
-    [JsonObject("datitem")]
-    [XmlRoot("datitem")]
+    [JsonObject("datitem"), XmlRoot("datitem")]
     [XmlInclude(typeof(Adjuster))]
     [XmlInclude(typeof(Analog))]
     [XmlInclude(typeof(Archive))]
@@ -73,8 +72,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Duplicate type when compared to another item
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public DupeType DupeType { get; set; }
 
         #endregion
@@ -84,8 +82,7 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Machine values
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public Machine Machine { get; set; } = new Machine();
 
         #endregion
@@ -95,15 +92,13 @@ namespace SabreTools.Library.DatItems
         /// <summary>
         /// Source information
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public Source Source { get; set; } = new Source();
 
         /// <summary>
         /// Flag if item should be removed
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool Remove { get; set; }
 
         #endregion

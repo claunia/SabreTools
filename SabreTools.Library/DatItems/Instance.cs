@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a single instance of another item
     /// </summary>
-    [JsonObject("instance")]
-    [XmlRoot("instance")]
+    [JsonObject("instance"), XmlRoot("instance")]
     public class Instance : DatItem
     {
         #region Fields

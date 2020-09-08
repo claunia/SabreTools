@@ -13,8 +13,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which SoftwareList(s) is associated with a set
     /// </summary>
-    [JsonObject("softwarelist")]
-    [XmlRoot("softwarelist")]
+    [JsonObject("softwarelist"), XmlRoot("softwarelist")]
     public class SoftwareList : DatItem
     {
         #region Fields

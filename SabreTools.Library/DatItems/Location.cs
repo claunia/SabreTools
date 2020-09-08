@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents one conflocation or diplocation
     /// </summary>
-    [JsonObject("location")]
-    [XmlRoot("location")]
+    [JsonObject("location"), XmlRoot("location")]
     public class Location : DatItem
     {
         #region Fields

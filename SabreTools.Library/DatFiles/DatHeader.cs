@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Represents all possible DAT header information
     /// </summary>
-    [JsonObject("header")]
-    [XmlRoot("header")]
+    [JsonObject("header"), XmlRoot("header")]
     public class DatHeader : ICloneable
     {
         #region Fields
@@ -153,8 +152,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Read or write format
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public DatFormat DatFormat { get; set; }
 
         #endregion
@@ -267,8 +265,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Output the item name
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool UseRomName { get; set; }
 
         #endregion
@@ -342,50 +339,43 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Text to prepend to all outputted lines
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public string Prefix { get; set; }
 
         /// <summary>
         /// Text to append to all outputted lines
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public string Postfix { get; set; }
 
         /// <summary>
         /// Add a new extension to all items
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public string AddExtension { get; set; }
 
         /// <summary>
         /// Replace all item extensions
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public string ReplaceExtension { get; set; }
 
         /// <summary>
         /// Remove all item extensions
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool RemoveExtension { get; set; }
 
         /// <summary>
         /// Output the machine name
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool GameName { get; set; }
 
         /// <summary>
         /// Wrap quotes around the entire line, sans prefix and postfix
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public bool Quotes { get; set; }
 
         #endregion
@@ -395,15 +385,13 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Input depot information
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public DepotInformation InputDepot { get; set; }
 
         /// <summary>
         /// Output depot information
         /// </summary>
-        [JsonIgnore]
-        [XmlIgnore]
+        [JsonIgnore, XmlIgnore]
         public DepotInformation OutputDepot { get; set; }
 
         #endregion

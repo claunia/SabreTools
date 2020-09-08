@@ -7,8 +7,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a blank set from an input DAT
     /// </summary>
-    [JsonObject("blank")]
-    [XmlRoot("blank")]
+    [JsonObject("blank"), XmlRoot("blank")]
     public class Blank : DatItem
     {
         #region Constructors

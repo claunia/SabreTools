@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents the sound output for a machine
     /// </summary>
-    [JsonObject("sound")]
-    [XmlRoot("sound")]
+    [JsonObject("sound"), XmlRoot("sound")]
     public class Sound : DatItem
     {
         #region Fields

@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents release information about a set
     /// </summary>
-    [JsonObject("release")]
-    [XmlRoot("release")]
+    [JsonObject("release"), XmlRoot("release")]
     public class Release : DatItem
     {
         #region Fields

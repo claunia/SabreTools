@@ -10,8 +10,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a single port on a machine
     /// </summary>
-    [JsonObject("port")]
-    [XmlRoot("port")]
+    [JsonObject("port"), XmlRoot("port")]
     public class Port : DatItem
     {
         #region Fields

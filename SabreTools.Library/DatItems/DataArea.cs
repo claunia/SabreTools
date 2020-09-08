@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// SoftwareList dataarea information
     /// </summary>
     /// <remarks>One DataArea can contain multiple Rom items</remarks>
-    [JsonObject("dataarea")]
-    [XmlRoot("dataarea")]
+    [JsonObject("dataarea"), XmlRoot("dataarea")]
     public class DataArea : DatItem
     {
         #region Fields

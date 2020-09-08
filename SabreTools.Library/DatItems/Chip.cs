@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents which Chip(s) is associated with a set
     /// </summary>
-    [JsonObject("chip")]
-    [XmlRoot("chip")]
+    [JsonObject("chip"), XmlRoot("chip")]
     public class Chip : DatItem
     {
         #region Fields

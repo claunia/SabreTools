@@ -13,8 +13,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents the information specific to a set/game/machine
     /// </summary>
-    [JsonObject("machine")]
-    [XmlRoot("machine")]
+    [JsonObject("machine"), XmlRoot("machine")]
     public class Machine : ICloneable
     {
         #region Fields

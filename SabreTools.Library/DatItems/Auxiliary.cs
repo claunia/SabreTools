@@ -14,8 +14,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents the OpenMSX original value
     /// </summary>
-    [JsonObject("original")]
-    [XmlRoot("original")]
+    [JsonObject("original"), XmlRoot("original")]
     public class Original
     {
         [JsonProperty("value")]

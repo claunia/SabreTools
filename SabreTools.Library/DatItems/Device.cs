@@ -12,8 +12,7 @@ namespace SabreTools.Library.DatItems
     /// <summary>
     /// Represents a single device on the machine
     /// </summary>
-    [JsonObject("device")]
-    [XmlRoot("device")]
+    [JsonObject("device"), XmlRoot("device")]
     public class Device : DatItem
     {
         #region Fields
