@@ -1762,6 +1762,7 @@ Possible values are:
     sha512           - SHA512
     smdb, everdrive  - Everdrive SMDB
     sl, softwarelist - MAME Software List XML
+    spamsum          - SpamSum
     ssv              - Standardized Semicolon-Separated Value
     tsv              - Standardized Tab-Separated Value
     xml, logiqx      - Logiqx XML");
