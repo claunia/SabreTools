@@ -190,15 +190,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on area name
-            if (!PassStringFilter(filter.DatItem_AreaName, Name))
+            if (!filter.PassStringFilter(filter.DatItem_AreaName, Name))
                 return false;
 
             // Filter on area size
-            if (!PassLongFilter(filter.DatItem_AreaSize, Size))
+            if (!filter.PassLongFilter(filter.DatItem_AreaSize, Size))
                 return false;
 
             // Filter on area width
-            if (!PassLongFilter(filter.DatItem_AreaWidth, Width))
+            if (!filter.PassLongFilter(filter.DatItem_AreaWidth, Width))
                 return false;
 
             // Filter on area endianness

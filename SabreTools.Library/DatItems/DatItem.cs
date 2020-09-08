@@ -729,73 +729,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item type
-            if (!PassStringFilter(filter.DatItem_Type, ItemType.ToString()))
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines if a value passes a bool? filter
-        /// </summary>
-        /// <param name="filterItem">Filter item to check</param>
-        /// <param name="value">Value to check</param>
-        /// <returns>True if the value passes, false otherwise</returns>
-        protected bool PassBoolFilter(FilterItem<bool?> filterItem, bool? value)
-        {
-            if (filterItem.MatchesNeutral(null, value) == false)
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines if a value passes a double? filter
-        /// </summary>
-        /// <param name="filterItem">Filter item to check</param>
-        /// <param name="value">Value to check</param>
-        /// <returns>True if the value passes, false otherwise</returns>
-        protected bool PassDoubleFilter(FilterItem<double?> filterItem, double? value)
-        {
-            if (filterItem.MatchesNeutral(null, value) == false)
-                return false;
-            else if (filterItem.MatchesPositive(null, value) == false)
-                return false;
-            else if (filterItem.MatchesNegative(null, value) == false)
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines if a value passes a long? filter
-        /// </summary>
-        /// <param name="filterItem">Filter item to check</param>
-        /// <param name="value">Value to check</param>
-        /// <returns>True if the value passes, false otherwise</returns>
-        protected bool PassLongFilter(FilterItem<long?> filterItem, long? value)
-        {
-            if (filterItem.MatchesNeutral(null, value) == false)
-                return false;
-            else if (filterItem.MatchesPositive(null, value) == false)
-                return false;
-            else if (filterItem.MatchesNegative(null, value) == false)
-                return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Determines if a value passes a string filter
-        /// </summary>
-        /// <param name="filterItem">Filter item to check</param>
-        /// <param name="value">Value to check</param>
-        /// <returns>True if the value passes, false otherwise</returns>
-        protected bool PassStringFilter(FilterItem<string> filterItem, string value)
-        {
-            if (filterItem.MatchesPositiveSet(value) == false)
-                return false;
-            if (filterItem.MatchesNegativeSet(value) == true)
+            if (!filter.PassStringFilter(filter.DatItem_Type, ItemType.ToString()))
                 return false;
 
             return true;

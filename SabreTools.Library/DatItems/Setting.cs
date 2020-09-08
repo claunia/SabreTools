@@ -202,15 +202,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_Setting_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Setting_Name, Name))
                 return false;
 
             // Filter on value
-            if (!PassStringFilter(filter.DatItem_Setting_Value, Value))
+            if (!filter.PassStringFilter(filter.DatItem_Setting_Value, Value))
                 return false;
 
             // Filter on default
-            if (!PassBoolFilter(filter.DatItem_Setting_Default, Default))
+            if (!filter.PassBoolFilter(filter.DatItem_Setting_Default, Default))
                 return false;
 
             // Filter on individual conditions

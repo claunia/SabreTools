@@ -170,15 +170,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_SlotOption_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_SlotOption_Name, Name))
                 return false;
 
             // Filter on device name
-            if (!PassStringFilter(filter.DatItem_SlotOption_DeviceName, DeviceName))
+            if (!filter.PassStringFilter(filter.DatItem_SlotOption_DeviceName, DeviceName))
                 return false;
 
             // Filter on default
-            if (!PassBoolFilter(filter.DatItem_SlotOption_Default, Default))
+            if (!filter.PassBoolFilter(filter.DatItem_SlotOption_Default, Default))
                 return false;
 
             return true;

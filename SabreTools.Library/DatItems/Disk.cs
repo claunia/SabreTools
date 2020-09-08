@@ -449,31 +449,31 @@ namespace SabreTools.Library.DatItems
             #region Common
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on MD5
-            if (!PassStringFilter(filter.DatItem_MD5, MD5))
+            if (!filter.PassStringFilter(filter.DatItem_MD5, MD5))
                 return false;
 
             // Filter on SHA-1
-            if (!PassStringFilter(filter.DatItem_SHA1, SHA1))
+            if (!filter.PassStringFilter(filter.DatItem_SHA1, SHA1))
                 return false;
 
             // Filter on merge tag
-            if (!PassStringFilter(filter.DatItem_Merge, MergeTag))
+            if (!filter.PassStringFilter(filter.DatItem_Merge, MergeTag))
                 return false;
 
             // Filter on region
-            if (!PassStringFilter(filter.DatItem_Region, Region))
+            if (!filter.PassStringFilter(filter.DatItem_Region, Region))
                 return false;
 
             // Filter on index
-            if (!PassStringFilter(filter.DatItem_Index, Index))
+            if (!filter.PassStringFilter(filter.DatItem_Index, Index))
                 return false;
 
             // Filter on writable
-            if (!PassBoolFilter(filter.DatItem_Writable, Writable))
+            if (!filter.PassBoolFilter(filter.DatItem_Writable, Writable))
                 return false;
 
             // Filter on status
@@ -483,7 +483,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on optional
-            if (!PassBoolFilter(filter.DatItem_Optional, Optional))
+            if (!filter.PassBoolFilter(filter.DatItem_Optional, Optional))
                 return false;
 
             #endregion

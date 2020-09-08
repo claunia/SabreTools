@@ -136,7 +136,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on tag
-            if (!PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // Filter on individual analogs

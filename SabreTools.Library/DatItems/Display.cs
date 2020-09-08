@@ -306,7 +306,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on tag
-            if (!PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // Filter on display type
@@ -316,51 +316,51 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on rotation
-            if (!PassLongFilter(filter.DatItem_Rotate, Rotate))
+            if (!filter.PassLongFilter(filter.DatItem_Rotate, Rotate))
                 return false;
 
             // Filter on flipx
-            if (!PassBoolFilter(filter.DatItem_FlipX, FlipX))
+            if (!filter.PassBoolFilter(filter.DatItem_FlipX, FlipX))
                 return false;
 
             // Filter on width
-            if (!PassLongFilter(filter.DatItem_Width, Width))
+            if (!filter.PassLongFilter(filter.DatItem_Width, Width))
                 return false;
 
             // Filter on height
-            if (!PassLongFilter(filter.DatItem_Height, Height))
+            if (!filter.PassLongFilter(filter.DatItem_Height, Height))
                 return false;
 
             // Filter on refresh
-            if (!PassDoubleFilter(filter.DatItem_Refresh, Refresh))
+            if (!filter.PassDoubleFilter(filter.DatItem_Refresh, Refresh))
                 return false;
 
             // Filter on pixclock
-            if (!PassLongFilter(filter.DatItem_PixClock, PixClock))
+            if (!filter.PassLongFilter(filter.DatItem_PixClock, PixClock))
                 return false;
 
             // Filter on htotal
-            if (!PassLongFilter(filter.DatItem_HTotal, HTotal))
+            if (!filter.PassLongFilter(filter.DatItem_HTotal, HTotal))
                 return false;
 
             // Filter on hbend
-            if (!PassLongFilter(filter.DatItem_HBEnd, HBEnd))
+            if (!filter.PassLongFilter(filter.DatItem_HBEnd, HBEnd))
                 return false;
 
             // Filter on hbstart
-            if (!PassLongFilter(filter.DatItem_HBStart, HBStart))
+            if (!filter.PassLongFilter(filter.DatItem_HBStart, HBStart))
                 return false;
 
             // Filter on vtotal
-            if (!PassLongFilter(filter.DatItem_VTotal, VTotal))
+            if (!filter.PassLongFilter(filter.DatItem_VTotal, VTotal))
                 return false;
 
             // Filter on vbend
-            if (!PassLongFilter(filter.DatItem_VBEnd, VBEnd))
+            if (!filter.PassLongFilter(filter.DatItem_VBEnd, VBEnd))
                 return false;
 
             // Filter on vbstart
-            if (!PassLongFilter(filter.DatItem_VBStart, VBStart))
+            if (!filter.PassLongFilter(filter.DatItem_VBStart, VBStart))
                 return false;
 
             return true;

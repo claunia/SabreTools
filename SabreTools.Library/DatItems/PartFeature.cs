@@ -154,11 +154,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on name
-            if (!PassStringFilter(filter.DatItem_Part_Feature_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Part_Feature_Name, Name))
                 return false;
 
             // Filter on value
-            if (!PassStringFilter(filter.DatItem_Part_Feature_Value, Value))
+            if (!filter.PassStringFilter(filter.DatItem_Part_Feature_Value, Value))
                 return false;
 
             return true;

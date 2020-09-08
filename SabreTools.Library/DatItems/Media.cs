@@ -344,23 +344,23 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on MD5
-            if (!PassStringFilter(filter.DatItem_MD5, MD5))
+            if (!filter.PassStringFilter(filter.DatItem_MD5, MD5))
                 return false;
 
             // Filter on SHA-1
-            if (!PassStringFilter(filter.DatItem_SHA1, SHA1))
+            if (!filter.PassStringFilter(filter.DatItem_SHA1, SHA1))
                 return false;
 
             // Filter on SHA-256
-            if (!PassStringFilter(filter.DatItem_SHA256, SHA256))
+            if (!filter.PassStringFilter(filter.DatItem_SHA256, SHA256))
                 return false;
 
             // Filter on SpamSum
-            if (!PassStringFilter(filter.DatItem_SpamSum, SpamSum))
+            if (!filter.PassStringFilter(filter.DatItem_SpamSum, SpamSum))
                 return false;
 
             return true;

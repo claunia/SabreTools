@@ -273,47 +273,47 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on player
-            if (!PassLongFilter(filter.DatItem_Control_Player, Player))
+            if (!filter.PassLongFilter(filter.DatItem_Control_Player, Player))
                 return false;
 
             // Filter on buttons
-            if (!PassLongFilter(filter.DatItem_Control_Buttons, Buttons))
+            if (!filter.PassLongFilter(filter.DatItem_Control_Buttons, Buttons))
                 return false;
 
             // Filter on reqbuttons
-            if (!PassLongFilter(filter.DatItem_Control_ReqButtons, RequiredButtons))
+            if (!filter.PassLongFilter(filter.DatItem_Control_ReqButtons, RequiredButtons))
                 return false;
 
             // Filter on minimum
-            if (!PassLongFilter(filter.DatItem_Control_Minimum, Minimum))
+            if (!filter.PassLongFilter(filter.DatItem_Control_Minimum, Minimum))
                 return false;
 
             // Filter on maximum
-            if (!PassLongFilter(filter.DatItem_Control_Maximum, Maximum))
+            if (!filter.PassLongFilter(filter.DatItem_Control_Maximum, Maximum))
                 return false;
 
             // Filter on sensitivity
-            if (!PassLongFilter(filter.DatItem_Control_Sensitivity, Sensitivity))
+            if (!filter.PassLongFilter(filter.DatItem_Control_Sensitivity, Sensitivity))
                 return false;
 
             // Filter on keydelta
-            if (!PassLongFilter(filter.DatItem_Control_KeyDelta, KeyDelta))
+            if (!filter.PassLongFilter(filter.DatItem_Control_KeyDelta, KeyDelta))
                 return false;
 
             // Filter on reverse
-            if (!PassBoolFilter(filter.DatItem_Control_Reverse, Reverse))
+            if (!filter.PassBoolFilter(filter.DatItem_Control_Reverse, Reverse))
                 return false;
 
             // Filter on ways
-            if (!PassStringFilter(filter.DatItem_Control_Ways, Ways))
+            if (!filter.PassStringFilter(filter.DatItem_Control_Ways, Ways))
                 return false;
 
             // Filter on ways2
-            if (!PassStringFilter(filter.DatItem_Control_Ways2, Ways2))
+            if (!filter.PassStringFilter(filter.DatItem_Control_Ways2, Ways2))
                 return false;
 
             // Filter on ways3
-            if (!PassStringFilter(filter.DatItem_Control_Ways3, Ways3))
+            if (!filter.PassStringFilter(filter.DatItem_Control_Ways3, Ways3))
                 return false;
 
             return true;

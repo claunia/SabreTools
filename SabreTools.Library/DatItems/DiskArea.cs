@@ -145,7 +145,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on area name
-            if (!PassStringFilter(filter.DatItem_AreaName, Name))
+            if (!filter.PassStringFilter(filter.DatItem_AreaName, Name))
                 return false;
 
             return true;

@@ -181,11 +181,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on part name
-            if (!PassStringFilter(filter.DatItem_Part_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Part_Name, Name))
                 return false;
 
             // Filter on part interface
-            if (!PassStringFilter(filter.DatItem_Part_Interface, Interface))
+            if (!filter.PassStringFilter(filter.DatItem_Part_Interface, Interface))
                 return false;
 
             // Filter on features

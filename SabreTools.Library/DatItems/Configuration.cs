@@ -255,15 +255,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on tag
-            if (!PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // Filter on mask
-            if (!PassStringFilter(filter.DatItem_Mask, Mask))
+            if (!filter.PassStringFilter(filter.DatItem_Mask, Mask))
                 return false;
 
             // Filter on individual conditions

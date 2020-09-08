@@ -795,65 +795,65 @@ namespace SabreTools.Library.DatItems
             #region Common
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // Filter on bios
-            if (!PassStringFilter(filter.DatItem_Bios, Bios))
+            if (!filter.PassStringFilter(filter.DatItem_Bios, Bios))
                 return false;
 
             // Filter on rom size
-            if (!PassLongFilter(filter.DatItem_Size, Size))
+            if (!filter.PassLongFilter(filter.DatItem_Size, Size))
                 return false;
 
             // Filter on CRC
-            if (!PassStringFilter(filter.DatItem_CRC, CRC))
+            if (!filter.PassStringFilter(filter.DatItem_CRC, CRC))
                 return false;
 
             // Filter on MD5
-            if (!PassStringFilter(filter.DatItem_MD5, MD5))
+            if (!filter.PassStringFilter(filter.DatItem_MD5, MD5))
                 return false;
 
 #if NET_FRAMEWORK
             // Filter on RIPEMD160
-            if (!PassStringFilter(filter.DatItem_RIPEMD160, RIPEMD160))
+            if (!filter.PassStringFilter(filter.DatItem_RIPEMD160, RIPEMD160))
                 return false;
 #endif
 
             // Filter on SHA-1
-            if (!PassStringFilter(filter.DatItem_SHA1, SHA1))
+            if (!filter.PassStringFilter(filter.DatItem_SHA1, SHA1))
                 return false;
 
             // Filter on SHA-256
-            if (!PassStringFilter(filter.DatItem_SHA256, SHA256))
+            if (!filter.PassStringFilter(filter.DatItem_SHA256, SHA256))
                 return false;
 
             // Filter on SHA-384
-            if (!PassStringFilter(filter.DatItem_SHA384, SHA384))
+            if (!filter.PassStringFilter(filter.DatItem_SHA384, SHA384))
                 return false;
 
             // Filter on SHA-512
-            if (!PassStringFilter(filter.DatItem_SHA512, SHA512))
+            if (!filter.PassStringFilter(filter.DatItem_SHA512, SHA512))
                 return false;
 
             // Filter on SpamSum
-            if (!PassStringFilter(filter.DatItem_SpamSum, SpamSum))
+            if (!filter.PassStringFilter(filter.DatItem_SpamSum, SpamSum))
                 return false;
 
             // Filter on merge tag
-            if (!PassStringFilter(filter.DatItem_Merge, MergeTag))
+            if (!filter.PassStringFilter(filter.DatItem_Merge, MergeTag))
                 return false;
 
             // Filter on region
-            if (!PassStringFilter(filter.DatItem_Region, Region))
+            if (!filter.PassStringFilter(filter.DatItem_Region, Region))
                 return false;
 
             // Filter on offset
-            if (!PassStringFilter(filter.DatItem_Offset, Offset))
+            if (!filter.PassStringFilter(filter.DatItem_Offset, Offset))
                 return false;
 
             // Filter on date
-            if (!PassStringFilter(filter.DatItem_Date, Date))
+            if (!filter.PassStringFilter(filter.DatItem_Date, Date))
                 return false;
 
             // Filter on status
@@ -863,11 +863,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on optional
-            if (!PassBoolFilter(filter.DatItem_Optional, Optional))
+            if (!filter.PassBoolFilter(filter.DatItem_Optional, Optional))
                 return false;
 
             // Filter on inverted
-            if (!PassBoolFilter(filter.DatItem_Inverted, Inverted))
+            if (!filter.PassBoolFilter(filter.DatItem_Inverted, Inverted))
                 return false;
 
             #endregion
@@ -875,11 +875,11 @@ namespace SabreTools.Library.DatItems
             #region AttractMode
 
             // Filter on alt name
-            if (!PassStringFilter(filter.DatItem_AltName, AltName))
+            if (!filter.PassStringFilter(filter.DatItem_AltName, AltName))
                 return false;
 
             // Filter on alt title
-            if (!PassStringFilter(filter.DatItem_AltTitle, AltTitle))
+            if (!filter.PassStringFilter(filter.DatItem_AltTitle, AltTitle))
                 return false;
 
             #endregion
@@ -887,7 +887,7 @@ namespace SabreTools.Library.DatItems
             #region OpenMSX
 
             // Filter on original
-            if (!PassStringFilter(filter.DatItem_Original, Original?.Content))
+            if (!filter.PassStringFilter(filter.DatItem_Original, Original?.Content))
                 return false;
 
             // Filter on OpenMSX subtype
@@ -897,15 +897,15 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on OpenMSX type
-            if (!PassStringFilter(filter.DatItem_OpenMSXType, OpenMSXType))
+            if (!filter.PassStringFilter(filter.DatItem_OpenMSXType, OpenMSXType))
                 return false;
 
             // Filter on remark
-            if (!PassStringFilter(filter.DatItem_Remark, Remark))
+            if (!filter.PassStringFilter(filter.DatItem_Remark, Remark))
                 return false;
 
             // Filter on boot
-            if (!PassStringFilter(filter.DatItem_Boot, Boot))
+            if (!filter.PassStringFilter(filter.DatItem_Boot, Boot))
                 return false;
 
             #endregion
@@ -919,7 +919,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on value
-            if (!PassStringFilter(filter.DatItem_Value, Value))
+            if (!filter.PassStringFilter(filter.DatItem_Value, Value))
                 return false;
 
             // Filter on DataArea

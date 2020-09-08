@@ -188,11 +188,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on item name
-            if (!PassStringFilter(filter.DatItem_Name, Name))
+            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
                 return false;
 
             // DatItem_Tag
-            if (!PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
                 return false;
 
             // DatItem_ChipType
@@ -202,7 +202,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // DatItem_Clock
-            if (!PassLongFilter(filter.DatItem_Clock, Clock))
+            if (!filter.PassLongFilter(filter.DatItem_Clock, Clock))
                 return false;
 
             return true;

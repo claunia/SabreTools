@@ -186,11 +186,11 @@ namespace SabreTools.Library.DatItems
             if (sub)
             {
                 // Filter on tag
-                if (!PassStringFilter(filter.DatItem_Condition_Tag, Tag))
+                if (!filter.PassStringFilter(filter.DatItem_Condition_Tag, Tag))
                     return false;
 
                 // Filter on mask
-                if (!PassStringFilter(filter.DatItem_Condition_Mask, Mask))
+                if (!filter.PassStringFilter(filter.DatItem_Condition_Mask, Mask))
                     return false;
 
                 // Filter on relation
@@ -200,17 +200,17 @@ namespace SabreTools.Library.DatItems
                     return false;
 
                 // Filter on value
-                if (!PassStringFilter(filter.DatItem_Condition_Value, Value))
+                if (!filter.PassStringFilter(filter.DatItem_Condition_Value, Value))
                     return false;
             }
             else
             {
                 // Filter on tag
-                if (!PassStringFilter(filter.DatItem_Tag, Tag))
+                if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
                     return false;
 
                 // Filter on mask
-                if (!PassStringFilter(filter.DatItem_Mask, Mask))
+                if (!filter.PassStringFilter(filter.DatItem_Mask, Mask))
                     return false;
 
                 // Filter on relation
@@ -220,7 +220,7 @@ namespace SabreTools.Library.DatItems
                     return false;
 
                 // Filter on value
-                if (!PassStringFilter(filter.DatItem_Value, Value))
+                if (!filter.PassStringFilter(filter.DatItem_Value, Value))
                     return false;
             }
 

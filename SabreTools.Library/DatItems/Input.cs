@@ -186,19 +186,19 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on service
-            if (!PassBoolFilter(filter.DatItem_Service, Service))
+            if (!filter.PassBoolFilter(filter.DatItem_Service, Service))
                 return false;
 
             // Filter on tilt
-            if (!PassBoolFilter(filter.DatItem_Tilt, Tilt))
+            if (!filter.PassBoolFilter(filter.DatItem_Tilt, Tilt))
                 return false;
 
             // Filter on players
-            if (!PassLongFilter(filter.DatItem_Players, Players))
+            if (!filter.PassLongFilter(filter.DatItem_Players, Players))
                 return false;
 
             // Filter on coins
-            if (!PassLongFilter(filter.DatItem_Coins, Coins))
+            if (!filter.PassLongFilter(filter.DatItem_Coins, Coins))
                 return false;
 
             // Filter on individual controls
