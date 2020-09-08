@@ -104,7 +104,7 @@ namespace SabreTools.Library.DatItems
         /// Default analog reverse setting
         /// </summary>
         [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("type")]
+        [XmlElement("reverse")]
         public bool? Reverse { get; set; }
 
         [JsonIgnore]
@@ -114,20 +114,21 @@ namespace SabreTools.Library.DatItems
         /// First set of ways
         /// </summary>
         [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("ways")]
         public string Ways { get; set; }
 
         /// <summary>
         /// Second set of ways
         /// </summary>
         [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("type")]
+        [XmlElement("ways2")]
         public string Ways2 { get; set; }
 
         /// <summary>
         /// Third set of ways
         /// </summary>
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("type")]
+        [XmlElement("ways3")]
         public string Ways3 { get; set; }
 
         #endregion
