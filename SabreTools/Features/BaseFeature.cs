@@ -1741,7 +1741,7 @@ Possible values are:
     cmp, clrmamepro  - ClrMamePro
     csv              - Standardized Comma-Separated Value
     dc, doscenter    - DOSCenter
-    json             - JSON
+    json             - SabreJSON
     lr, listrom      - MAME Listrom
     lx, listxml      - MAME Listxml
     miss, missfile   - GoodTools Missfile
@@ -1754,7 +1754,7 @@ Possible values are:
     ripemd160        - RIPEMD160"
 #endif
 + @"
-    sd, sabredat     - SabreDat XML
+    sd, sabredat     - SabreDAT XML
     sfv              - SFV
     sha1             - SHA1
     sha256           - SHA256

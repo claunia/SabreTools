@@ -86,9 +86,6 @@ namespace SabreTools.Library.DatFiles
                 case DatFormat.EverdriveSMDB:
                     return new EverdriveSMDB(baseDat);
 
-                case DatFormat.Json:
-                    return new Json(baseDat);
-
                 case DatFormat.Listrom:
                     return new Listrom(baseDat);
 
@@ -139,8 +136,11 @@ namespace SabreTools.Library.DatFiles
                 case DatFormat.RomCenter:
                     return new RomCenter(baseDat);
 
-                case DatFormat.SabreDat:
+                case DatFormat.SabreDAT:
                     return new SabreDat(baseDat);
+
+                case DatFormat.SabreJSON:
+                    return new SabreJSON(baseDat);
 
                 case DatFormat.SoftwareList:
                     return new SoftwareList(baseDat);

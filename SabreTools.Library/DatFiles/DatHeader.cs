@@ -790,9 +790,9 @@ namespace SabreTools.Library.DatFiles
             #region .json
 
             // JSON
-            if (DatFormat.HasFlag(DatFormat.Json))
+            if (DatFormat.HasFlag(DatFormat.SabreJSON))
             {
-                outfileNames.Add(DatFormat.Json, CreateOutFileNamesHelper(outDir, ".json", overwrite));
+                outfileNames.Add(DatFormat.SabreJSON, CreateOutFileNamesHelper(outDir, ".json", overwrite));
                 usedExtensions.Add(".json");
             }
 
@@ -981,16 +981,16 @@ namespace SabreTools.Library.DatFiles
             }
 
             // SabreDAT
-            if (DatFormat.HasFlag(DatFormat.SabreDat))
+            if (DatFormat.HasFlag(DatFormat.SabreDAT))
             {
                 if (usedExtensions.Contains(".xml"))
                 {
-                    outfileNames.Add(DatFormat.SabreDat, CreateOutFileNamesHelper(outDir, ".sd.xml", overwrite));
+                    outfileNames.Add(DatFormat.SabreDAT, CreateOutFileNamesHelper(outDir, ".sd.xml", overwrite));
                     usedExtensions.Add(".sd.xml");
                 }
                 else
                 {
-                    outfileNames.Add(DatFormat.SabreDat, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
+                    outfileNames.Add(DatFormat.SabreDAT, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
                     usedExtensions.Add(".xml");
                 }
             }

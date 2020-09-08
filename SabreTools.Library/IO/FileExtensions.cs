@@ -74,7 +74,7 @@ namespace SabreTools.Library.IO
                 case "csv":
                     return DatFormat.CSV;
                 case "json":
-                    return DatFormat.Json;
+                    return DatFormat.SabreJSON;
                 case "md5":
                     return DatFormat.RedumpMD5;
 #if NET_FRAMEWORK
@@ -148,7 +148,7 @@ namespace SabreTools.Library.IO
                         return DatFormat.SoftwareList;
 
                     else if (second.StartsWith("<!doctype sabredat"))
-                        return DatFormat.SabreDat;
+                        return DatFormat.SabreDAT;
 
                     else if ((second.StartsWith("<dat") && !second.StartsWith("<datafile"))
                         || second.StartsWith("<?xml-stylesheet"))

@@ -36,9 +36,9 @@ namespace SabreTools.Library.DatFiles
         OfflineList = 1 << 4,
 
         /// <summary>
-        /// SabreDat XML
+        /// SabreDAT XML
         /// </summary>
-        SabreDat = 1 << 5,
+        SabreDAT = 1 << 5,
 
         /// <summary>
         /// openMSX Software List XML
@@ -104,9 +104,9 @@ namespace SabreTools.Library.DatFiles
         EverdriveSMDB = 1 << 16,
 
         /// <summary>
-        /// JSON
+        /// SabreJSON
         /// </summary>
-        Json = 1 << 17,
+        SabreJSON = 1 << 17,
 
         #endregion
 

@@ -13,15 +13,15 @@ using Newtonsoft.Json.Linq;
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Represents parsing and writing of a reference JSON DAT
+    /// Represents parsing and writing of a reference SabreJSON DAT
     /// </summary>
-    internal class Json : DatFile
+    internal class SabreJSON : DatFile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public Json(DatFile datFile)
+        public SabreJSON(DatFile datFile)
             : base(datFile)
         {
         }
