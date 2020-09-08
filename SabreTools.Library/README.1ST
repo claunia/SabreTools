@@ -262,7 +262,6 @@ Options:
 		  cmp, clrmamepro	- ClrMamePro
 		  csv				- Standardized Comma-Separated Value
 		  dc, doscenter		- DOSCenter
-		  json				- SabreJSON
 		  lr, listrom		- MAME Listrom
 		  lx, listxml		- MAME Listxml
 		  miss, missfile	- GoodTools Missfile
@@ -271,7 +270,8 @@ Options:
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
 		  ripemd160         - RIPEMD160 (.NET Framework 4.8 only)
-		  sd, sabredat		- SabreDAT XML
+		  sj, sabrejson     - SabreJSON
+		  sx, sabrexml      - SabreDAT XML
 		  sfv				- SFV
 		  sha1				- SHA1
 		  sha256			- SHA256
@@ -635,7 +635,6 @@ Options:
 		  cmp, clrmamepro	- ClrMamePro
 		  csv				- Standardized Comma-Separated Value
 		  dc, doscenter		- DOSCenter
-		  json				- SabreJSON
 		  lr, listrom		- MAME Listrom
 		  lx, listxml		- MAME Listxml
 		  miss, missfile	- GoodTools Missfile
@@ -644,7 +643,8 @@ Options:
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
 		  ripemd160			- RIPEMD160 (.NET Framework 4.8 only)
-		  sd, sabredat		- SabreDAT XML
+		  sj, sabrejson     - SabreJSON
+		  sx, sabrexml      - SabreDAT XML
 		  sfv				- SFV
 		  sha1				- SHA1
 		  sha256			- SHA256
@@ -790,7 +790,6 @@ Options:
 		  cmp, clrmamepro	- ClrMamePro
 		  csv				- Standardized Comma-Separated Value
 		  dc, doscenter		- DOSCenter
-		  json				- SabreJSON
 		  lr, listrom		- MAME Listrom
 		  lx, listxml		- MAME Listxml
 		  miss, missfile	- GoodTools Missfile
@@ -799,7 +798,8 @@ Options:
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
 		  ripemd160			- RIPEMD160 (.NET Framework 4.8 only)
-		  sd, sabredat		- SabreDAT XML
+		  sj, sabrejson     - SabreJSON
+		  sx, sabrexml      - SabreDAT XML
 		  sfv				- SFV
 		  sha1				- SHA1
 		  sha256			- SHA256

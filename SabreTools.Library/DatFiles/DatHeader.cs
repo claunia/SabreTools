@@ -981,16 +981,16 @@ namespace SabreTools.Library.DatFiles
             }
 
             // SabreDAT
-            if (DatFormat.HasFlag(DatFormat.SabreDAT))
+            if (DatFormat.HasFlag(DatFormat.SabreXML))
             {
                 if (usedExtensions.Contains(".xml"))
                 {
-                    outfileNames.Add(DatFormat.SabreDAT, CreateOutFileNamesHelper(outDir, ".sd.xml", overwrite));
+                    outfileNames.Add(DatFormat.SabreXML, CreateOutFileNamesHelper(outDir, ".sd.xml", overwrite));
                     usedExtensions.Add(".sd.xml");
                 }
                 else
                 {
-                    outfileNames.Add(DatFormat.SabreDAT, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
+                    outfileNames.Add(DatFormat.SabreXML, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
                     usedExtensions.Add(".xml");
                 }
             }

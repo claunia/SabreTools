@@ -38,7 +38,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// SabreDAT XML
         /// </summary>
-        SabreDAT = 1 << 5,
+        SabreXML = 1 << 5,
 
         /// <summary>
         /// openMSX Software List XML
@@ -55,7 +55,7 @@ namespace SabreTools.Library.DatFiles
         ClrMamePro = 1 << 7,
 
         /// <summary>
-        /// RomCetner INI-based
+        /// RomCenter INI-based
         /// </summary>
         RomCenter = 1 << 8,
 

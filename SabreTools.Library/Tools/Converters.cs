@@ -187,6 +187,8 @@ namespace SabreTools.Library.Tools
                 case "smdb":
                     return DatFormat.EverdriveSMDB;
                 case "json":
+                case "sj":
+                case "sabrejson":
                     return DatFormat.SabreJSON;
                 case "lr":
                 case "listrom":
@@ -214,7 +216,9 @@ namespace SabreTools.Library.Tools
 #endif
                 case "sd":
                 case "sabredat":
-                    return DatFormat.SabreDAT;
+                case "sx":
+                case "sabrexml":
+                    return DatFormat.SabreXML;
                 case "sfv":
                     return DatFormat.RedumpSFV;
                 case "sha1":

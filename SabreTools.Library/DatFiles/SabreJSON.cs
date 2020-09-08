@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Represents parsing and writing of a reference SabreJSON DAT
+    /// Represents parsing and writing of a reference SabreDAT JSON
     /// </summary>
     internal class SabreJSON : DatFile
     {

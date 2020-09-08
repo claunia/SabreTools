@@ -12,15 +12,15 @@ using SabreTools.Library.IO;
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Represents parsing and writing of a SabreDat XML DAT
+    /// Represents parsing and writing of a SabreDAT XML
     /// </summary>
-    internal class SabreDat : DatFile
+    internal class SabreXML : DatFile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public SabreDat(DatFile datFile)
+        public SabreXML(DatFile datFile)
             : base(datFile)
         {
         }

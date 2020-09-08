@@ -136,11 +136,11 @@ namespace SabreTools.Library.DatFiles
                 case DatFormat.RomCenter:
                     return new RomCenter(baseDat);
 
-                case DatFormat.SabreDAT:
-                    return new SabreDat(baseDat);
-
                 case DatFormat.SabreJSON:
                     return new SabreJSON(baseDat);
+
+                case DatFormat.SabreXML:
+                    return new SabreXML(baseDat);
 
                 case DatFormat.SoftwareList:
                     return new SoftwareList(baseDat);

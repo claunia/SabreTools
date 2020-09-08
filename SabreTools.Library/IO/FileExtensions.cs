@@ -148,7 +148,7 @@ namespace SabreTools.Library.IO
                         return DatFormat.SoftwareList;
 
                     else if (second.StartsWith("<!doctype sabredat"))
-                        return DatFormat.SabreDAT;
+                        return DatFormat.SabreXML;
 
                     else if ((second.StartsWith("<dat") && !second.StartsWith("<datafile"))
                         || second.StartsWith("<?xml-stylesheet"))
