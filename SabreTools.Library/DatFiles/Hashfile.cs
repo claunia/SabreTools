@@ -34,7 +34,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
@@ -102,8 +103,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -152,9 +154,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -162,201 +162,187 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out DatItem using the supplied StreamWriter
+        /// Write out DatItem using the supplied SeparatedValueWriter
         /// </summary>
         /// <param name="svw">SeparatedValueWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
+        private void WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
         {
-            try
+            // Build the state
+            string[] fields = new string[2];
+
+            // Get the name field
+            string name = string.Empty;
+            switch (datItem.ItemType)
             {
-                // Build the state
-                string[] fields = new string[2];
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
+                    if (Header.GameName)
+                        name = $"{disk.Machine.Name}{Path.DirectorySeparatorChar}";
 
-                // Get the name field
-                string name = string.Empty;
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Disk:
-                        var disk = datItem as Disk;
-                        if (Header.GameName)
-                            name = $"{disk.Machine.Name}{Path.DirectorySeparatorChar}";
+                    name += disk.Name;
+                    break;
 
-                        name += disk.Name;
-                        break;
+                case ItemType.Media:
+                    var media = datItem as Media;
+                    if (Header.GameName)
+                        name = $"{media.Machine.Name}{Path.DirectorySeparatorChar}";
 
-                    case ItemType.Media:
-                        var media = datItem as Media;
-                        if (Header.GameName)
-                            name = $"{media.Machine.Name}{Path.DirectorySeparatorChar}";
+                    name += media.Name;
+                    break;
 
-                        name += media.Name;
-                        break;
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    if (Header.GameName)
+                        name = $"{rom.Machine.Name}{Path.DirectorySeparatorChar}";
 
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        if (Header.GameName)
-                            name = $"{rom.Machine.Name}{Path.DirectorySeparatorChar}";
+                    name += rom.Name;
+                    break;
+            }
 
-                        name += rom.Name;
-                        break;
-                }
+            // Get the hash field and set final fields
+            string hash = string.Empty;
+            switch (_hash)
+            {
+                case Hash.CRC:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = name;
+                            fields[1] = rom.CRC;
+                            break;
+                    }
 
-                // Get the hash field and set final fields
-                string hash = string.Empty;
-                switch (_hash)
-                {
-                    case Hash.CRC:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = name;
-                                fields[1] = rom.CRC;
-                                break;
-                        }
+                    break;
 
-                        break;
+                case Hash.MD5:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Disk:
+                            var disk = datItem as Disk;
+                            fields[0] = disk.MD5;
+                            fields[1] = name;
+                            break;
 
-                    case Hash.MD5:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Disk:
-                                var disk = datItem as Disk;
-                                fields[0] = disk.MD5;
-                                fields[1] = name;
-                                break;
+                        case ItemType.Media:
+                            var media = datItem as Media;
+                            fields[0] = media.MD5;
+                            fields[1] = name;
+                            break;
 
-                            case ItemType.Media:
-                                var media = datItem as Media;
-                                fields[0] = media.MD5;
-                                fields[1] = name;
-                                break;
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.MD5;
+                            fields[1] = name;
+                            break;
+                    }
 
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.MD5;
-                                fields[1] = name;
-                                break;
-                        }
-
-                        break;
+                    break;
 
 #if NET_FRAMEWORK
-                    case Hash.RIPEMD160:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.RIPEMD160;
-                                fields[1] = name;
-                                break;
-                        }
+                case Hash.RIPEMD160:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.RIPEMD160;
+                            fields[1] = name;
+                            break;
+                    }
 
-                        break;
+                    break;
 #endif
-                    case Hash.SHA1:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Disk:
-                                var disk = datItem as Disk;
-                                fields[0] = disk.SHA1;
-                                fields[1] = name;
-                                break;
+                case Hash.SHA1:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Disk:
+                            var disk = datItem as Disk;
+                            fields[0] = disk.SHA1;
+                            fields[1] = name;
+                            break;
 
-                            case ItemType.Media:
-                                var media = datItem as Media;
-                                fields[0] = media.SHA1;
-                                fields[1] = name;
-                                break;
+                        case ItemType.Media:
+                            var media = datItem as Media;
+                            fields[0] = media.SHA1;
+                            fields[1] = name;
+                            break;
 
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.SHA1;
-                                fields[1] = name;
-                                break;
-                        }
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.SHA1;
+                            fields[1] = name;
+                            break;
+                    }
 
-                        break;
+                    break;
 
-                    case Hash.SHA256:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Media:
-                                var media = datItem as Media;
-                                fields[0] = media.SHA256;
-                                fields[1] = name;
-                                break;
+                case Hash.SHA256:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Media:
+                            var media = datItem as Media;
+                            fields[0] = media.SHA256;
+                            fields[1] = name;
+                            break;
 
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.SHA256;
-                                fields[1] = name;
-                                break;
-                        }
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.SHA256;
+                            fields[1] = name;
+                            break;
+                    }
 
-                        break;
+                    break;
 
-                    case Hash.SHA384:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.SHA384;
-                                fields[1] = name;
-                                break;
-                        }
+                case Hash.SHA384:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.SHA384;
+                            fields[1] = name;
+                            break;
+                    }
 
-                        break;
+                    break;
 
-                    case Hash.SHA512:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.SHA512;
-                                fields[1] = name;
-                                break;
-                        }
+                case Hash.SHA512:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.SHA512;
+                            fields[1] = name;
+                            break;
+                    }
 
-                        break;
+                    break;
 
-                    case Hash.SpamSum:
-                        switch (datItem.ItemType)
-                        {
-                            case ItemType.Media:
-                                var media = datItem as Media;
-                                fields[0] = media.SpamSum;
-                                fields[1] = name;
-                                break;
+                case Hash.SpamSum:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Media:
+                            var media = datItem as Media;
+                            fields[0] = media.SpamSum;
+                            fields[1] = name;
+                            break;
 
-                            case ItemType.Rom:
-                                var rom = datItem as Rom;
-                                fields[0] = rom.SpamSum;
-                                fields[1] = name;
-                                break;
-                        }
+                        case ItemType.Rom:
+                            var rom = datItem as Rom;
+                            fields[0] = rom.SpamSum;
+                            fields[1] = name;
+                            break;
+                    }
 
-                        break;
-                }
-
-                // If we had at least one field filled in
-                if (!string.IsNullOrEmpty(fields[0]) || !string.IsNullOrEmpty(fields[1]))
-                    svw.WriteValues(fields);
-
-                svw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                    break;
             }
 
-            return true;
+            // If we had at least one field filled in
+            if (!string.IsNullOrEmpty(fields[0]) || !string.IsNullOrEmpty(fields[1]))
+                svw.WriteValues(fields);
+
+            svw.Flush();
         }
     }
 }

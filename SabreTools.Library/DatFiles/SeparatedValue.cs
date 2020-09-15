@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -36,7 +35,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
@@ -106,8 +106,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -159,9 +160,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -172,13 +171,10 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="svw">SeparatedValueWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(SeparatedValueWriter svw)
+        private void WriteHeader(SeparatedValueWriter svw)
         {
-            try
-            {
-                string[] headers = new string[]
-                {
+            string[] headers = new string[]
+                            {
                     "File Name",
                     "Internal Name",
                     "Description",
@@ -197,22 +193,11 @@ namespace SabreTools.Library.DatFiles
                     //"SHA512",
                     //"SpamSum",
                     "Nodump",
-                };
+                            };
 
-                svw.WriteHeader(headers);
+            svw.WriteHeader(headers);
 
-                svw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            svw.Flush();
         }
 
         /// <summary>
@@ -220,95 +205,81 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="svw">SeparatedValueWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
+        private void WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
         {
-            try
+            // Separated values should only output Rom and Disk
+            if (datItem.ItemType != ItemType.Disk && datItem.ItemType != ItemType.Rom)
+                return;
+
+            // Build the state
+            // TODO: Can we have some way of saying what fields to write out? Support for read extends to all fields now
+            string[] fields = new string[14]; // 18;
+            fields[0] = Header.FileName;
+            fields[1] = Header.Name;
+            fields[2] = Header.Description;
+            fields[3] = datItem.Machine.Name;
+            fields[4] = datItem.Machine.Description;
+
+            switch (datItem.ItemType)
             {
-                // Separated values should only output Rom and Disk
-                if (datItem.ItemType != ItemType.Disk && datItem.ItemType != ItemType.Rom)
-                    return true;
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
+                    fields[5] = "disk";
+                    fields[6] = string.Empty;
+                    fields[7] = disk.Name;
+                    fields[8] = string.Empty;
+                    fields[9] = string.Empty;
+                    fields[10] = disk.MD5?.ToLowerInvariant();
+                    //fields[11] = string.Empty;
+                    fields[11] = disk.SHA1?.ToLowerInvariant();
+                    fields[12] = string.Empty;
+                    //fields[13] = string.Empty;
+                    //fields[14] = string.Empty;
+                    //fields[15] = string.Empty;
+                    fields[13] = disk.ItemStatus.ToString();
+                    break;
 
-                // Build the state
-                // TODO: Can we have some way of saying what fields to write out? Support for read extends to all fields now
-                string[] fields = new string[14]; // 18;
-                fields[0] = Header.FileName;
-                fields[1] = Header.Name;
-                fields[2] = Header.Description;
-                fields[3] = datItem.Machine.Name;
-                fields[4] = datItem.Machine.Description;
+                case ItemType.Media:
+                    var media = datItem as Media;
+                    fields[5] = "media";
+                    fields[6] = string.Empty;
+                    fields[7] = media.Name;
+                    fields[8] = string.Empty;
+                    fields[9] = string.Empty;
+                    fields[10] = media.MD5?.ToLowerInvariant();
+                    //fields[11] = string.Empty;
+                    fields[11] = media.SHA1?.ToLowerInvariant();
+                    fields[12] = media.SHA256?.ToLowerInvariant();
+                    //fields[13] = string.Empty;
+                    //fields[14] = string.Empty;
+                    //fields[15] = media.SpamSum?.ToLowerInvariant();
+                    fields[13] = string.Empty;
+                    break;
 
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Disk:
-                        var disk = datItem as Disk;
-                        fields[5] = "disk";
-                        fields[6] = string.Empty;
-                        fields[7] = disk.Name;
-                        fields[8] = string.Empty;
-                        fields[9] = string.Empty;
-                        fields[10] = disk.MD5?.ToLowerInvariant();
-                        //fields[11] = string.Empty;
-                        fields[11] = disk.SHA1?.ToLowerInvariant();
-                        fields[12] = string.Empty;
-                        //fields[13] = string.Empty;
-                        //fields[14] = string.Empty;
-                        //fields[15] = string.Empty;
-                        fields[13] = disk.ItemStatus.ToString();
-                        break;
-
-                    case ItemType.Media:
-                        var media = datItem as Media;
-                        fields[5] = "media";
-                        fields[6] = string.Empty;
-                        fields[7] = media.Name;
-                        fields[8] = string.Empty;
-                        fields[9] = string.Empty;
-                        fields[10] = media.MD5?.ToLowerInvariant();
-                        //fields[11] = string.Empty;
-                        fields[11] = media.SHA1?.ToLowerInvariant();
-                        fields[12] = media.SHA256?.ToLowerInvariant();
-                        //fields[13] = string.Empty;
-                        //fields[14] = string.Empty;
-                        //fields[15] = media.SpamSum?.ToLowerInvariant();
-                        fields[13] = string.Empty;
-                        break;
-
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        fields[5] = "rom";
-                        fields[6] = rom.Name;
-                        fields[7] = string.Empty;
-                        fields[8] = rom.Size?.ToString();
-                        fields[9] = rom.CRC?.ToLowerInvariant();
-                        fields[10] = rom.MD5?.ToLowerInvariant();
-                        //fields[11] = rom.RIPEMD160?.ToLowerInvariant();
-                        fields[11] = rom.SHA1?.ToLowerInvariant();
-                        fields[12] = rom.SHA256?.ToLowerInvariant();
-                        //fields[13] = rom.SHA384?.ToLowerInvariant();
-                        //fields[14] = rom.SHA512?.ToLowerInvariant();
-                        //fields[15] = rom.SpamSum?.ToLowerInvariant();
-                        fields[13] = rom.ItemStatus.ToString();
-                        break;
-                }
-
-                svw.WriteString(CreatePrefixPostfix(datItem, true));
-                svw.WriteValues(fields, false);
-                svw.WriteString(CreatePrefixPostfix(datItem, false));
-                svw.WriteLine();
-
-                svw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    fields[5] = "rom";
+                    fields[6] = rom.Name;
+                    fields[7] = string.Empty;
+                    fields[8] = rom.Size?.ToString();
+                    fields[9] = rom.CRC?.ToLowerInvariant();
+                    fields[10] = rom.MD5?.ToLowerInvariant();
+                    //fields[11] = rom.RIPEMD160?.ToLowerInvariant();
+                    fields[11] = rom.SHA1?.ToLowerInvariant();
+                    fields[12] = rom.SHA256?.ToLowerInvariant();
+                    //fields[13] = rom.SHA384?.ToLowerInvariant();
+                    //fields[14] = rom.SHA512?.ToLowerInvariant();
+                    //fields[15] = rom.SpamSum?.ToLowerInvariant();
+                    fields[13] = rom.ItemStatus.ToString();
+                    break;
             }
 
-            return true;
+            svw.WriteString(CreatePrefixPostfix(datItem, true));
+            svw.WriteValues(fields, false);
+            svw.WriteString(CreatePrefixPostfix(datItem, false));
+            svw.WriteLine();
+
+            svw.Flush();
         }
     }
 }

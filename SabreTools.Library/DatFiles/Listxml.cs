@@ -32,9 +32,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <remarks>
-        /// </remarks>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = filename.GetXmlTextReader();
@@ -92,8 +91,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
+                if (throwOnError) throw ex;
 
                 // For XML errors, just skip the affected node
                 xtr?.Read();
@@ -1133,8 +1131,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -1203,9 +1202,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -1216,30 +1213,16 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(XmlTextWriter xtw)
+        private void WriteHeader(XmlTextWriter xtw)
         {
-            try
-            {
-                xtw.WriteStartDocument();
+            xtw.WriteStartDocument();
 
-                xtw.WriteStartElement("mame");
-                xtw.WriteRequiredAttributeString("build", Header.Name);
-                xtw.WriteOptionalAttributeString("debug", Header.Debug.FromYesNo());
-                xtw.WriteOptionalAttributeString("mameconfig", Header.MameConfig);
+            xtw.WriteStartElement("mame");
+            xtw.WriteRequiredAttributeString("build", Header.Name);
+            xtw.WriteOptionalAttributeString("debug", Header.Debug.FromYesNo());
+            xtw.WriteOptionalAttributeString("mameconfig", Header.MameConfig);
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -1248,76 +1231,49 @@ namespace SabreTools.Library.DatFiles
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(XmlTextWriter xtw, DatItem datItem)
+        private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state
-                xtw.WriteStartElement("machine");
-                xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
-                xtw.WriteOptionalAttributeString("sourcefile", datItem.Machine.SourceFile);
+            // Build the state
+            xtw.WriteStartElement("machine");
+            xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
+            xtw.WriteOptionalAttributeString("sourcefile", datItem.Machine.SourceFile);
 
-                if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
-                    xtw.WriteAttributeString("isbios", "yes");
-                if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
-                    xtw.WriteAttributeString("isdevice", "yes");
-                if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
-                    xtw.WriteAttributeString("ismechanical", "yes");
+            if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
+                xtw.WriteAttributeString("isbios", "yes");
+            if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
+                xtw.WriteAttributeString("isdevice", "yes");
+            if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
+                xtw.WriteAttributeString("ismechanical", "yes");
 
-                xtw.WriteOptionalAttributeString("runnable", datItem.Machine.Runnable.FromRunnable());
+            xtw.WriteOptionalAttributeString("runnable", datItem.Machine.Runnable.FromRunnable());
 
-                if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
-                if (!string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteOptionalAttributeString("romof", datItem.Machine.RomOf);
-                if (!string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteOptionalAttributeString("sampleof", datItem.Machine.SampleOf);
+            if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
+                xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
+            if (!string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
+                xtw.WriteOptionalAttributeString("romof", datItem.Machine.RomOf);
+            if (!string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
+                xtw.WriteOptionalAttributeString("sampleof", datItem.Machine.SampleOf);
 
-                xtw.WriteOptionalElementString("description", datItem.Machine.Description);
-                xtw.WriteOptionalElementString("year", datItem.Machine.Year);
-                xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
+            xtw.WriteOptionalElementString("description", datItem.Machine.Description);
+            xtw.WriteOptionalElementString("year", datItem.Machine.Year);
+            xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(XmlTextWriter xtw)
+        private void WriteEndGame(XmlTextWriter xtw)
         {
-            try
-            {
-                // End machine
-                xtw.WriteEndElement();
+            // End machine
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -1325,409 +1281,381 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(XmlTextWriter xtw, DatItem datItem)
+        private void WriteDatItem(XmlTextWriter xtw, DatItem datItem)
         {
-            try
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
-
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Adjuster:
-                        var adjuster = datItem as Adjuster;
-                        xtw.WriteStartElement("adjuster");
-                        xtw.WriteRequiredAttributeString("name", adjuster.Name);
-                        xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
-                        if (adjuster.Conditions != null)
+                case ItemType.Adjuster:
+                    var adjuster = datItem as Adjuster;
+                    xtw.WriteStartElement("adjuster");
+                    xtw.WriteRequiredAttributeString("name", adjuster.Name);
+                    xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
+                    if (adjuster.Conditions != null)
+                    {
+                        foreach (var adjusterCondition in adjuster.Conditions)
                         {
-                            foreach (var adjusterCondition in adjuster.Conditions)
-                            {
-                                xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", adjusterCondition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", adjusterCondition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation.FromRelation());
-                                xtw.WriteOptionalAttributeString("value", adjusterCondition.Value);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("condition");
+                            xtw.WriteOptionalAttributeString("tag", adjusterCondition.Tag);
+                            xtw.WriteOptionalAttributeString("mask", adjusterCondition.Mask);
+                            xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation.FromRelation());
+                            xtw.WriteOptionalAttributeString("value", adjusterCondition.Value);
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.BiosSet:
-                        var biosSet = datItem as BiosSet;
-                        xtw.WriteStartElement("biosset");
-                        xtw.WriteRequiredAttributeString("name", biosSet.Name);
-                        xtw.WriteOptionalAttributeString("description", biosSet.Description);
-                        xtw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.BiosSet:
+                    var biosSet = datItem as BiosSet;
+                    xtw.WriteStartElement("biosset");
+                    xtw.WriteRequiredAttributeString("name", biosSet.Name);
+                    xtw.WriteOptionalAttributeString("description", biosSet.Description);
+                    xtw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Chip:
-                        var chip = datItem as Chip;
-                        xtw.WriteStartElement("chip");
-                        xtw.WriteRequiredAttributeString("name", chip.Name);
-                        xtw.WriteOptionalAttributeString("tag", chip.Tag);
-                        xtw.WriteOptionalAttributeString("type", chip.ChipType.FromChipType());
-                        xtw.WriteOptionalAttributeString("clock", chip.Clock?.ToString());
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Chip:
+                    var chip = datItem as Chip;
+                    xtw.WriteStartElement("chip");
+                    xtw.WriteRequiredAttributeString("name", chip.Name);
+                    xtw.WriteOptionalAttributeString("tag", chip.Tag);
+                    xtw.WriteOptionalAttributeString("type", chip.ChipType.FromChipType());
+                    xtw.WriteOptionalAttributeString("clock", chip.Clock?.ToString());
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Condition:
-                        var condition = datItem as Condition;
-                        xtw.WriteStartElement("condition");
-                        xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                        xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                        xtw.WriteOptionalAttributeString("relation", condition.Relation.FromRelation());
-                        xtw.WriteOptionalAttributeString("value", condition.Value);
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Condition:
+                    var condition = datItem as Condition;
+                    xtw.WriteStartElement("condition");
+                    xtw.WriteOptionalAttributeString("tag", condition.Tag);
+                    xtw.WriteOptionalAttributeString("mask", condition.Mask);
+                    xtw.WriteOptionalAttributeString("relation", condition.Relation.FromRelation());
+                    xtw.WriteOptionalAttributeString("value", condition.Value);
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Configuration:
-                        var configuration = datItem as Configuration;
-                        xtw.WriteStartElement("configuration");
-                        xtw.WriteOptionalAttributeString("name", configuration.Name);
-                        xtw.WriteOptionalAttributeString("tag", configuration.Tag);
-                        xtw.WriteOptionalAttributeString("mask", configuration.Mask);
+                case ItemType.Configuration:
+                    var configuration = datItem as Configuration;
+                    xtw.WriteStartElement("configuration");
+                    xtw.WriteOptionalAttributeString("name", configuration.Name);
+                    xtw.WriteOptionalAttributeString("tag", configuration.Tag);
+                    xtw.WriteOptionalAttributeString("mask", configuration.Mask);
 
-                        if (configuration.Conditions != null)
+                    if (configuration.Conditions != null)
+                    {
+                        foreach (var configurationCondition in configuration.Conditions)
                         {
-                            foreach (var configurationCondition in configuration.Conditions)
-                            {
-                                xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", configurationCondition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", configurationCondition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation.FromRelation());
-                                xtw.WriteOptionalAttributeString("value", configurationCondition.Value);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("condition");
+                            xtw.WriteOptionalAttributeString("tag", configurationCondition.Tag);
+                            xtw.WriteOptionalAttributeString("mask", configurationCondition.Mask);
+                            xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation.FromRelation());
+                            xtw.WriteOptionalAttributeString("value", configurationCondition.Value);
+                            xtw.WriteEndElement();
                         }
-                        if (configuration.Locations != null)
+                    }
+                    if (configuration.Locations != null)
+                    {
+                        foreach (var location in configuration.Locations)
                         {
-                            foreach (var location in configuration.Locations)
-                            {
-                                xtw.WriteStartElement("conflocation");
-                                xtw.WriteOptionalAttributeString("name", location.Name);
-                                xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
-                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("conflocation");
+                            xtw.WriteOptionalAttributeString("name", location.Name);
+                            xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
+                            xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+                            xtw.WriteEndElement();
                         }
-                        if (configuration.Settings != null)
+                    }
+                    if (configuration.Settings != null)
+                    {
+                        foreach (var setting in configuration.Settings)
                         {
-                            foreach (var setting in configuration.Settings)
-                            {
-                                xtw.WriteStartElement("confsetting");
-                                xtw.WriteOptionalAttributeString("name", setting.Name);
-                                xtw.WriteOptionalAttributeString("value", setting.Value);
-                                xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("confsetting");
+                            xtw.WriteOptionalAttributeString("name", setting.Name);
+                            xtw.WriteOptionalAttributeString("value", setting.Value);
+                            xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Device:
-                        var device = datItem as Device;
-                        xtw.WriteStartElement("device");
-                        xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
-                        xtw.WriteOptionalAttributeString("tag", device.Tag);
-                        xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
-                        xtw.WriteOptionalAttributeString("mandatory", device.Mandatory?.ToString());
-                        xtw.WriteOptionalAttributeString("interface", device.Interface);
-                        if (device.Instances != null)
+                case ItemType.Device:
+                    var device = datItem as Device;
+                    xtw.WriteStartElement("device");
+                    xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
+                    xtw.WriteOptionalAttributeString("tag", device.Tag);
+                    xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
+                    xtw.WriteOptionalAttributeString("mandatory", device.Mandatory?.ToString());
+                    xtw.WriteOptionalAttributeString("interface", device.Interface);
+                    if (device.Instances != null)
+                    {
+                        foreach (var instance in device.Instances)
                         {
-                            foreach (var instance in device.Instances)
-                            {
-                                xtw.WriteStartElement("instance");
-                                xtw.WriteOptionalAttributeString("name", instance.Name);
-                                xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("instance");
+                            xtw.WriteOptionalAttributeString("name", instance.Name);
+                            xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
+                            xtw.WriteEndElement();
                         }
-                        if (device.Extensions != null)
+                    }
+                    if (device.Extensions != null)
+                    {
+                        foreach (var extension in device.Extensions)
                         {
-                            foreach (var extension in device.Extensions)
-                            {
-                                xtw.WriteStartElement("extension");
-                                xtw.WriteOptionalAttributeString("name", extension.Name);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("extension");
+                            xtw.WriteOptionalAttributeString("name", extension.Name);
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.DeviceReference:
-                        var deviceRef = datItem as DeviceReference;
-                        xtw.WriteStartElement("device_ref");
-                        xtw.WriteRequiredAttributeString("name", deviceRef.Name);
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.DeviceReference:
+                    var deviceRef = datItem as DeviceReference;
+                    xtw.WriteStartElement("device_ref");
+                    xtw.WriteRequiredAttributeString("name", deviceRef.Name);
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.DipSwitch:
-                        var dipSwitch = datItem as DipSwitch;
-                        xtw.WriteStartElement("dipswitch");
-                        xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
-                        xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
-                        xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
-                        if (dipSwitch.Conditions != null)
+                case ItemType.DipSwitch:
+                    var dipSwitch = datItem as DipSwitch;
+                    xtw.WriteStartElement("dipswitch");
+                    xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
+                    xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
+                    xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
+                    if (dipSwitch.Conditions != null)
+                    {
+                        foreach (var dipSwitchCondition in dipSwitch.Conditions)
                         {
-                            foreach (var dipSwitchCondition in dipSwitch.Conditions)
-                            {
-                                xtw.WriteStartElement("condition");
-                                xtw.WriteOptionalAttributeString("tag", dipSwitchCondition.Tag);
-                                xtw.WriteOptionalAttributeString("mask", dipSwitchCondition.Mask);
-                                xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation.FromRelation());
-                                xtw.WriteOptionalAttributeString("value", dipSwitchCondition.Value);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("condition");
+                            xtw.WriteOptionalAttributeString("tag", dipSwitchCondition.Tag);
+                            xtw.WriteOptionalAttributeString("mask", dipSwitchCondition.Mask);
+                            xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation.FromRelation());
+                            xtw.WriteOptionalAttributeString("value", dipSwitchCondition.Value);
+                            xtw.WriteEndElement();
                         }
-                        if (dipSwitch.Locations != null)
+                    }
+                    if (dipSwitch.Locations != null)
+                    {
+                        foreach (var location in dipSwitch.Locations)
                         {
-                            foreach (var location in dipSwitch.Locations)
-                            {
-                                xtw.WriteStartElement("diplocation");
-                                xtw.WriteOptionalAttributeString("name", location.Name);
-                                xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
-                                xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("diplocation");
+                            xtw.WriteOptionalAttributeString("name", location.Name);
+                            xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
+                            xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
+                            xtw.WriteEndElement();
                         }
-                        if (dipSwitch.Values != null)
+                    }
+                    if (dipSwitch.Values != null)
+                    {
+                        foreach (var value in dipSwitch.Values)
                         {
-                            foreach (var value in dipSwitch.Values)
+                            xtw.WriteStartElement("dipvalue");
+                            xtw.WriteOptionalAttributeString("name", value.Name);
+                            xtw.WriteOptionalAttributeString("value", value.Value);
+                            xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
+                            if (value.Conditions != null)
                             {
-                                xtw.WriteStartElement("dipvalue");
-                                xtw.WriteOptionalAttributeString("name", value.Name);
-                                xtw.WriteOptionalAttributeString("value", value.Value);
-                                xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
-                                if (value.Conditions != null)
+                                foreach (var dipValueCondition in value.Conditions)
                                 {
-                                    foreach (var dipValueCondition in value.Conditions)
-                                    {
-                                        xtw.WriteStartElement("condition");
-                                        xtw.WriteOptionalAttributeString("tag", dipValueCondition.Tag);
-                                        xtw.WriteOptionalAttributeString("mask", dipValueCondition.Mask);
-                                        xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation.FromRelation());
-                                        xtw.WriteOptionalAttributeString("value", dipValueCondition.Value);
-                                        xtw.WriteEndElement();
-                                    }
+                                    xtw.WriteStartElement("condition");
+                                    xtw.WriteOptionalAttributeString("tag", dipValueCondition.Tag);
+                                    xtw.WriteOptionalAttributeString("mask", dipValueCondition.Mask);
+                                    xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation.FromRelation());
+                                    xtw.WriteOptionalAttributeString("value", dipValueCondition.Value);
+                                    xtw.WriteEndElement();
                                 }
-                                xtw.WriteEndElement();
                             }
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Disk:
-                        var disk = datItem as Disk;
-                        xtw.WriteStartElement("disk");
-                        xtw.WriteRequiredAttributeString("name", disk.Name);
-                        xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("merge", disk.MergeTag);
-                        xtw.WriteOptionalAttributeString("region", disk.Region);
-                        xtw.WriteOptionalAttributeString("index", disk.Index);
-                        xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
-                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
-                        xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
+                    xtw.WriteStartElement("disk");
+                    xtw.WriteRequiredAttributeString("name", disk.Name);
+                    xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("merge", disk.MergeTag);
+                    xtw.WriteOptionalAttributeString("region", disk.Region);
+                    xtw.WriteOptionalAttributeString("index", disk.Index);
+                    xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
+                    xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
+                    xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Display:
-                        var display = datItem as Display;
-                        xtw.WriteStartElement("display");
-                        xtw.WriteOptionalAttributeString("tag", display.Tag);
-                        xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
-                        xtw.WriteOptionalAttributeString("rotate", display.Rotate?.ToString());
-                        xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
-                        xtw.WriteOptionalAttributeString("width", display.Width?.ToString());
-                        xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
-                        xtw.WriteOptionalAttributeString("refresh", display.Refresh?.ToString("N6"));
-                        xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
-                        xtw.WriteOptionalAttributeString("htotal", display.HTotal?.ToString());
-                        xtw.WriteOptionalAttributeString("hbend", display.HBEnd?.ToString());
-                        xtw.WriteOptionalAttributeString("hstart", display.HBStart?.ToString());
-                        xtw.WriteOptionalAttributeString("vtotal", display.VTotal?.ToString());
-                        xtw.WriteOptionalAttributeString("vbend", display.VBEnd?.ToString());
-                        xtw.WriteOptionalAttributeString("vbstart", display.VBStart?.ToString());
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Display:
+                    var display = datItem as Display;
+                    xtw.WriteStartElement("display");
+                    xtw.WriteOptionalAttributeString("tag", display.Tag);
+                    xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
+                    xtw.WriteOptionalAttributeString("rotate", display.Rotate?.ToString());
+                    xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
+                    xtw.WriteOptionalAttributeString("width", display.Width?.ToString());
+                    xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
+                    xtw.WriteOptionalAttributeString("refresh", display.Refresh?.ToString("N6"));
+                    xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
+                    xtw.WriteOptionalAttributeString("htotal", display.HTotal?.ToString());
+                    xtw.WriteOptionalAttributeString("hbend", display.HBEnd?.ToString());
+                    xtw.WriteOptionalAttributeString("hstart", display.HBStart?.ToString());
+                    xtw.WriteOptionalAttributeString("vtotal", display.VTotal?.ToString());
+                    xtw.WriteOptionalAttributeString("vbend", display.VBEnd?.ToString());
+                    xtw.WriteOptionalAttributeString("vbstart", display.VBStart?.ToString());
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Driver:
-                        var driver = datItem as Driver;
-                        xtw.WriteStartElement("driver");
-                        xtw.WriteOptionalAttributeString("status", driver.Status.FromSupportStatus());
-                        xtw.WriteOptionalAttributeString("emulation", driver.Emulation.FromSupportStatus());
-                        xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail.FromSupportStatus());
-                        xtw.WriteOptionalAttributeString("savestate", driver.SaveState.FromSupported(true));
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Driver:
+                    var driver = datItem as Driver;
+                    xtw.WriteStartElement("driver");
+                    xtw.WriteOptionalAttributeString("status", driver.Status.FromSupportStatus());
+                    xtw.WriteOptionalAttributeString("emulation", driver.Emulation.FromSupportStatus());
+                    xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail.FromSupportStatus());
+                    xtw.WriteOptionalAttributeString("savestate", driver.SaveState.FromSupported(true));
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Feature:
-                        var feature = datItem as Feature;
-                        xtw.WriteStartElement("feature");
-                        xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
-                        xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
-                        xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Feature:
+                    var feature = datItem as Feature;
+                    xtw.WriteStartElement("feature");
+                    xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
+                    xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
+                    xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Input:
-                        var input = datItem as Input;
-                        xtw.WriteStartElement("input");
-                        xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
-                        xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
-                        xtw.WriteOptionalAttributeString("players", input.Players?.ToString());
-                        xtw.WriteOptionalAttributeString("coins", input.Coins?.ToString());
-                        if (input.Controls != null)
+                case ItemType.Input:
+                    var input = datItem as Input;
+                    xtw.WriteStartElement("input");
+                    xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
+                    xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
+                    xtw.WriteOptionalAttributeString("players", input.Players?.ToString());
+                    xtw.WriteOptionalAttributeString("coins", input.Coins?.ToString());
+                    if (input.Controls != null)
+                    {
+                        foreach (var control in input.Controls)
                         {
-                            foreach (var control in input.Controls)
-                            {
-                                xtw.WriteStartElement("control");
-                                xtw.WriteOptionalAttributeString("type", control.ControlType.FromControlType());
-                                xtw.WriteOptionalAttributeString("player", control.Player?.ToString());
-                                xtw.WriteOptionalAttributeString("buttons", control.Buttons?.ToString());
-                                xtw.WriteOptionalAttributeString("reqbuttons", control.RequiredButtons?.ToString());
-                                xtw.WriteOptionalAttributeString("minimum", control.Minimum?.ToString());
-                                xtw.WriteOptionalAttributeString("maximum", control.Maximum?.ToString());
-                                xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity?.ToString());
-                                xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta?.ToString());
-                                xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
-                                xtw.WriteOptionalAttributeString("ways", control.Ways);
-                                xtw.WriteOptionalAttributeString("ways2", control.Ways2);
-                                xtw.WriteOptionalAttributeString("ways3", control.Ways3);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("control");
+                            xtw.WriteOptionalAttributeString("type", control.ControlType.FromControlType());
+                            xtw.WriteOptionalAttributeString("player", control.Player?.ToString());
+                            xtw.WriteOptionalAttributeString("buttons", control.Buttons?.ToString());
+                            xtw.WriteOptionalAttributeString("reqbuttons", control.RequiredButtons?.ToString());
+                            xtw.WriteOptionalAttributeString("minimum", control.Minimum?.ToString());
+                            xtw.WriteOptionalAttributeString("maximum", control.Maximum?.ToString());
+                            xtw.WriteOptionalAttributeString("sensitivity", control.Sensitivity?.ToString());
+                            xtw.WriteOptionalAttributeString("keydelta", control.KeyDelta?.ToString());
+                            xtw.WriteOptionalAttributeString("reverse", control.Reverse.FromYesNo());
+                            xtw.WriteOptionalAttributeString("ways", control.Ways);
+                            xtw.WriteOptionalAttributeString("ways2", control.Ways2);
+                            xtw.WriteOptionalAttributeString("ways3", control.Ways3);
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Port:
-                        var port = datItem as Port;
-                        xtw.WriteStartElement("port");
-                        xtw.WriteOptionalAttributeString("tag", port.Tag);
-                        if (port.Analogs != null)
+                case ItemType.Port:
+                    var port = datItem as Port;
+                    xtw.WriteStartElement("port");
+                    xtw.WriteOptionalAttributeString("tag", port.Tag);
+                    if (port.Analogs != null)
+                    {
+                        foreach (var analog in port.Analogs)
                         {
-                            foreach (var analog in port.Analogs)
-                            {
-                                xtw.WriteStartElement("analog");
-                                xtw.WriteOptionalAttributeString("mask", analog.Mask);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("analog");
+                            xtw.WriteOptionalAttributeString("mask", analog.Mask);
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.RamOption:
-                        var ramOption = datItem as RamOption;
-                        xtw.WriteStartElement("ramoption");
-                        xtw.WriteRequiredAttributeString("name", ramOption.Name);
-                        xtw.WriteOptionalAttributeString("default", ramOption.Default.FromYesNo());
-                        xtw.WriteRaw(ramOption.Content ?? string.Empty);
-                        xtw.WriteFullEndElement();
-                        break;
+                case ItemType.RamOption:
+                    var ramOption = datItem as RamOption;
+                    xtw.WriteStartElement("ramoption");
+                    xtw.WriteRequiredAttributeString("name", ramOption.Name);
+                    xtw.WriteOptionalAttributeString("default", ramOption.Default.FromYesNo());
+                    xtw.WriteRaw(ramOption.Content ?? string.Empty);
+                    xtw.WriteFullEndElement();
+                    break;
 
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        xtw.WriteStartElement("rom");
-                        xtw.WriteRequiredAttributeString("name", rom.Name);
-                        xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
-                        xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("bios", rom.Bios);
-                        xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
-                        xtw.WriteOptionalAttributeString("region", rom.Region);
-                        xtw.WriteOptionalAttributeString("offset", rom.Offset);
-                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
-                        xtw.WriteOptionalAttributeString("optional", rom.Optional.FromYesNo());
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    xtw.WriteStartElement("rom");
+                    xtw.WriteRequiredAttributeString("name", rom.Name);
+                    xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
+                    xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("bios", rom.Bios);
+                    xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
+                    xtw.WriteOptionalAttributeString("region", rom.Region);
+                    xtw.WriteOptionalAttributeString("offset", rom.Offset);
+                    xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
+                    xtw.WriteOptionalAttributeString("optional", rom.Optional.FromYesNo());
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Sample:
-                        var sample = datItem as Sample;
-                        xtw.WriteStartElement("sample");
-                        xtw.WriteRequiredAttributeString("name", sample.Name);
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Sample:
+                    var sample = datItem as Sample;
+                    xtw.WriteStartElement("sample");
+                    xtw.WriteRequiredAttributeString("name", sample.Name);
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Slot:
-                        var slot = datItem as Slot;
-                        xtw.WriteStartElement("slot");
-                        xtw.WriteOptionalAttributeString("name", slot.Name);
-                        if (slot.SlotOptions != null)
+                case ItemType.Slot:
+                    var slot = datItem as Slot;
+                    xtw.WriteStartElement("slot");
+                    xtw.WriteOptionalAttributeString("name", slot.Name);
+                    if (slot.SlotOptions != null)
+                    {
+                        foreach (var slotOption in slot.SlotOptions)
                         {
-                            foreach (var slotOption in slot.SlotOptions)
-                            {
-                                xtw.WriteStartElement("slotoption");
-                                xtw.WriteOptionalAttributeString("name", slotOption.Name);
-                                xtw.WriteOptionalAttributeString("devname", slotOption.DeviceName);
-                                xtw.WriteOptionalAttributeString("default", slotOption.Default.FromYesNo());
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("slotoption");
+                            xtw.WriteOptionalAttributeString("name", slotOption.Name);
+                            xtw.WriteOptionalAttributeString("devname", slotOption.DeviceName);
+                            xtw.WriteOptionalAttributeString("default", slotOption.Default.FromYesNo());
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.SoftwareList:
-                        var softwareList = datItem as DatItems.SoftwareList;
-                        xtw.WriteStartElement("softwarelist");
-                        xtw.WriteRequiredAttributeString("name", softwareList.Name);
-                        xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
-                        xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.SoftwareList:
+                    var softwareList = datItem as DatItems.SoftwareList;
+                    xtw.WriteStartElement("softwarelist");
+                    xtw.WriteRequiredAttributeString("name", softwareList.Name);
+                    xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
+                    xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Sound:
-                        var sound = datItem as Sound;
-                        xtw.WriteStartElement("sound");
-                        xtw.WriteOptionalAttributeString("channels", sound.Channels?.ToString());
-                        xtw.WriteEndElement();
-                        break;
-                }
-
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                case ItemType.Sound:
+                    var sound = datItem as Sound;
+                    xtw.WriteStartElement("sound");
+                    xtw.WriteOptionalAttributeString("channels", sound.Channels?.ToString());
+                    xtw.WriteEndElement();
+                    break;
             }
 
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out DAT footer using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(XmlTextWriter xtw)
+        private void WriteFooter(XmlTextWriter xtw)
         {
-            try
-            {
-                // End machine
-                xtw.WriteEndElement();
+            // End machine
+            xtw.WriteEndElement();
 
-                // End mame
-                xtw.WriteEndElement();
+            // End mame
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
     }
 }

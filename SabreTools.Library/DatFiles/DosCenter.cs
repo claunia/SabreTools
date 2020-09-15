@@ -31,7 +31,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
@@ -246,14 +247,14 @@ namespace SabreTools.Library.DatFiles
             }
         }
 
-
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -322,9 +323,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -335,36 +334,22 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(ClrMameProWriter cmpw)
+        private void WriteHeader(ClrMameProWriter cmpw)
         {
-            try
-            {
-                // Build the state
-                cmpw.WriteStartElement("DOSCenter");
+            // Build the state
+            cmpw.WriteStartElement("DOSCenter");
 
-                cmpw.WriteRequiredStandalone("Name:", Header.Name, false);
-                cmpw.WriteRequiredStandalone("Description:", Header.Description, false);
-                cmpw.WriteRequiredStandalone("Version:", Header.Version, false);
-                cmpw.WriteRequiredStandalone("Date:", Header.Date, false);
-                cmpw.WriteRequiredStandalone("Author:", Header.Author, false);
-                cmpw.WriteRequiredStandalone("Homepage:", Header.Homepage, false);
-                cmpw.WriteRequiredStandalone("Comment:", Header.Comment, false);
+            cmpw.WriteRequiredStandalone("Name:", Header.Name, false);
+            cmpw.WriteRequiredStandalone("Description:", Header.Description, false);
+            cmpw.WriteRequiredStandalone("Version:", Header.Version, false);
+            cmpw.WriteRequiredStandalone("Date:", Header.Date, false);
+            cmpw.WriteRequiredStandalone("Author:", Header.Author, false);
+            cmpw.WriteRequiredStandalone("Homepage:", Header.Homepage, false);
+            cmpw.WriteRequiredStandalone("Comment:", Header.Comment, false);
 
-                cmpw.WriteEndElement();
+            cmpw.WriteEndElement();
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
@@ -372,56 +357,28 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(ClrMameProWriter cmpw, DatItem datItem)
+        private void WriteStartGame(ClrMameProWriter cmpw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state
-                cmpw.WriteStartElement("game");
-                cmpw.WriteRequiredStandalone("name", $"{datItem.Machine.Name}.zip", true);
+            // Build the state
+            cmpw.WriteStartElement("game");
+            cmpw.WriteRequiredStandalone("name", $"{datItem.Machine.Name}.zip", true);
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
         /// Write out Game end using the supplied StreamWriter
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(ClrMameProWriter cmpw)
+        private void WriteEndGame(ClrMameProWriter cmpw)
         {
-            try
-            {
-                // End game
-                cmpw.WriteEndElement();
+            // End game
+            cmpw.WriteEndElement();
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
@@ -429,40 +386,26 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(ClrMameProWriter cmpw, DatItem datItem)
+        private void WriteDatItem(ClrMameProWriter cmpw, DatItem datItem)
         {
-            try
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
-
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        cmpw.WriteStartElement("file");
-                        cmpw.WriteRequiredAttributeString("name", rom.Name);
-                        cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
-                        cmpw.WriteOptionalAttributeString("date", rom.Date);
-                        cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                        cmpw.WriteEndElement();
-                        break;
-                }
-
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    cmpw.WriteStartElement("file");
+                    cmpw.WriteRequiredAttributeString("name", rom.Name);
+                    cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
+                    cmpw.WriteOptionalAttributeString("date", rom.Date);
+                    cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                    cmpw.WriteEndElement();
+                    break;
             }
 
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
@@ -470,25 +413,12 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
         /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(ClrMameProWriter cmpw)
+        private void WriteFooter(ClrMameProWriter cmpw)
         {
-            try
-            {
-                // End game
-                cmpw.WriteEndElement();
+            // End game
+            cmpw.WriteEndElement();
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
     }
 }

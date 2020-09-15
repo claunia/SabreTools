@@ -32,7 +32,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
             StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), new UTF8Encoding(false));
@@ -78,8 +79,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
+                if (throwOnError) throw ex;
             }
 
             jtr.Close();
@@ -336,8 +336,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -407,9 +408,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -420,33 +419,19 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(JsonTextWriter jtw)
+        private void WriteHeader(JsonTextWriter jtw)
         {
-            try
-            {
-                jtw.WriteStartObject();
+            jtw.WriteStartObject();
 
-                // Write the DatHeader
-                jtw.WritePropertyName("header");
-                JsonSerializer js = new JsonSerializer() { Formatting = Formatting.Indented };
-                js.Serialize(jtw, Header);
+            // Write the DatHeader
+            jtw.WritePropertyName("header");
+            JsonSerializer js = new JsonSerializer() { Formatting = Formatting.Indented };
+            js.Serialize(jtw, Header);
 
-                jtw.WritePropertyName("machines");
-                jtw.WriteStartArray();
+            jtw.WritePropertyName("machines");
+            jtw.WriteStartArray();
 
-                jtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            jtw.Flush();
         }
 
         /// <summary>
@@ -454,66 +439,38 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(JsonTextWriter jtw, DatItem datItem)
+        private void WriteStartGame(JsonTextWriter jtw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
 
-                // Build the state
-                jtw.WriteStartObject();
+            // Build the state
+            jtw.WriteStartObject();
 
-                // Write the Machine
-                jtw.WritePropertyName("machine");
-                JsonSerializer js = new JsonSerializer() { Formatting = Formatting.Indented };
-                js.Serialize(jtw, datItem.Machine);
+            // Write the Machine
+            jtw.WritePropertyName("machine");
+            JsonSerializer js = new JsonSerializer() { Formatting = Formatting.Indented };
+            js.Serialize(jtw, datItem.Machine);
 
-                jtw.WritePropertyName("items");
-                jtw.WriteStartArray();
+            jtw.WritePropertyName("items");
+            jtw.WriteStartArray();
 
-                jtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            jtw.Flush();
         }
 
         /// <summary>
         /// Write out Game end using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(JsonTextWriter jtw)
+        private void WriteEndGame(JsonTextWriter jtw)
         {
-            try
-            {
-                // End items
-                jtw.WriteEndArray();
+            // End items
+            jtw.WriteEndArray();
 
-                // End machine
-                jtw.WriteEndObject();
+            // End machine
+            jtw.WriteEndObject();
 
-                jtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            jtw.Flush();
         }
 
         /// <summary>
@@ -521,72 +478,44 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(JsonTextWriter jtw, DatItem datItem)
+        private void WriteDatItem(JsonTextWriter jtw, DatItem datItem)
         {
-            try
-            {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
 
-                // Build the state
-                jtw.WriteStartObject();
+            // Build the state
+            jtw.WriteStartObject();
 
-                // Write the DatItem
-                jtw.WritePropertyName("datitem");
-                JsonSerializer js = new JsonSerializer() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
-                js.Serialize(jtw, datItem);
+            // Write the DatItem
+            jtw.WritePropertyName("datitem");
+            JsonSerializer js = new JsonSerializer() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
+            js.Serialize(jtw, datItem);
 
-                // End item
-                jtw.WriteEndObject();
+            // End item
+            jtw.WriteEndObject();
 
-                jtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            jtw.Flush();
         }
 
         /// <summary>
         /// Write out DAT footer using the supplied JsonTextWriter
         /// </summary>
         /// <param name="jtw">JsonTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(JsonTextWriter jtw)
+        private void WriteFooter(JsonTextWriter jtw)
         {
-            try
-            {
-                // End items
-                jtw.WriteEndArray();
+            // End items
+            jtw.WriteEndArray();
 
-                // End machine
-                jtw.WriteEndObject();
+            // End machine
+            jtw.WriteEndObject();
 
-                // End machines
-                jtw.WriteEndArray();
+            // End machines
+            jtw.WriteEndArray();
 
-                // End file
-                jtw.WriteEndObject();
+            // End file
+            jtw.WriteEndObject();
 
-                jtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            jtw.Flush();
         }
     }
 }

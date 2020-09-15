@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -32,6 +31,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <remarks>
         /// In a new style MAME listrom DAT, each game has the following format:
         /// 
@@ -41,7 +41,7 @@ namespace SabreTools.Library.DatFiles
         /// 6331.sound-u8                            32 BAD CRC(1d298cb0) SHA1(bb0bb62365402543e3154b9a77be9c75010e6abc) BAD_DUMP
         /// 16v8h-blue.u24                          279 NO GOOD DUMP KNOWN
         /// </remarks>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
@@ -255,8 +255,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -314,9 +315,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -328,56 +327,28 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="sw">StreamWriter to output to</param>
         /// <param name="rom">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(StreamWriter sw, DatItem rom)
+        private void WriteStartGame(StreamWriter sw, DatItem rom)
         {
-            try
-            {
-                // No game should start with a path separator
-                rom.Machine.Name = rom.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            // No game should start with a path separator
+            rom.Machine.Name = rom.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state
-                sw.Write($"ROMs required for driver \"{rom.Machine.Name}\".\n");
-                sw.Write("Name                                   Size Checksum\n");
+            // Build the state
+            sw.Write($"ROMs required for driver \"{rom.Machine.Name}\".\n");
+            sw.Write("Name                                   Size Checksum\n");
 
-                sw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            sw.Flush();
         }
 
         /// <summary>
         /// Write out Game end using the supplied StreamWriter
         /// </summary>
         /// <param name="sw">StreamWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(StreamWriter sw)
+        private void WriteEndGame(StreamWriter sw)
         {
-            try
-            {
-                // End driver
-                sw.Write("\n");
+            // End driver
+            sw.Write("\n");
 
-                sw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            sw.Flush();
         }
 
         /// <summary>
@@ -385,96 +356,82 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="sw">StreamWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(StreamWriter sw, DatItem datItem)
+        private void WriteDatItem(StreamWriter sw, DatItem datItem)
         {
-            try
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
 
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Disk:
-                        var disk = datItem as Disk;
+                    // The name is padded out to a particular length
+                    if (disk.Name.Length < 43)
+                        sw.Write(disk.Name.PadRight(43, ' '));
+                    else
+                        sw.Write($"{disk.Name}          ");
 
-                        // The name is padded out to a particular length
-                        if (disk.Name.Length < 43)
-                            sw.Write(disk.Name.PadRight(43, ' '));
-                        else
-                            sw.Write($"{disk.Name}          ");
+                    // If we have a baddump, put the first indicator
+                    if (disk.ItemStatus == ItemStatus.BadDump)
+                        sw.Write(" BAD");
 
-                        // If we have a baddump, put the first indicator
-                        if (disk.ItemStatus == ItemStatus.BadDump)
-                            sw.Write(" BAD");
+                    // If we have a nodump, write out the indicator
+                    if (disk.ItemStatus == ItemStatus.Nodump)
+                        sw.Write(" NO GOOD DUMP KNOWN");
 
-                        // If we have a nodump, write out the indicator
-                        if (disk.ItemStatus == ItemStatus.Nodump)
-                            sw.Write(" NO GOOD DUMP KNOWN");
+                    // Otherwise, write out the SHA-1 hash
+                    else if (!string.IsNullOrWhiteSpace(disk.SHA1))
+                        sw.Write($" SHA1({disk.SHA1 ?? string.Empty})");
 
-                        // Otherwise, write out the SHA-1 hash
-                        else if (!string.IsNullOrWhiteSpace(disk.SHA1))
-                            sw.Write($" SHA1({disk.SHA1 ?? string.Empty})");
+                    // If we have a baddump, put the second indicator
+                    if (disk.ItemStatus == ItemStatus.BadDump)
+                        sw.Write(" BAD_DUMP");
 
-                        // If we have a baddump, put the second indicator
-                        if (disk.ItemStatus == ItemStatus.BadDump)
-                            sw.Write(" BAD_DUMP");
+                    sw.Write("\n");
+                    break;
 
-                        sw.Write("\n");
-                        break;
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
 
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
+                    // The name is padded out to a particular length
+                    if (rom.Name.Length < 43)
+                        sw.Write(rom.Name.PadRight(43 - rom.Size?.ToString().Length ?? 0, ' '));
+                    else
+                        sw.Write($"{rom.Name}          ");
 
-                        // The name is padded out to a particular length
-                        if (rom.Name.Length < 43)
-                            sw.Write(rom.Name.PadRight(43 - rom.Size?.ToString().Length ?? 0, ' '));
-                        else
-                            sw.Write($"{rom.Name}          ");
+                    // If we don't have a nodump, write out the size
+                    if (rom.ItemStatus != ItemStatus.Nodump)
+                        sw.Write(rom.Size?.ToString() ?? string.Empty);
 
-                        // If we don't have a nodump, write out the size
-                        if (rom.ItemStatus != ItemStatus.Nodump)
-                            sw.Write(rom.Size?.ToString() ?? string.Empty);
+                    // If we have a baddump, put the first indicator
+                    if (rom.ItemStatus == ItemStatus.BadDump)
+                        sw.Write(" BAD");
 
-                        // If we have a baddump, put the first indicator
-                        if (rom.ItemStatus == ItemStatus.BadDump)
-                            sw.Write(" BAD");
+                    // If we have a nodump, write out the indicator
+                    if (rom.ItemStatus == ItemStatus.Nodump)
+                    {
+                        sw.Write(" NO GOOD DUMP KNOWN");
+                    }
+                    // Otherwise, write out the CRC and SHA-1 hashes
+                    else
+                    {
+                        if (!string.IsNullOrWhiteSpace(rom.CRC))
+                            sw.Write($" CRC({rom.CRC ?? string.Empty})");
+                        if (!string.IsNullOrWhiteSpace(rom.SHA1))
+                            sw.Write($" SHA1({rom.SHA1 ?? string.Empty})");
+                    }
 
-                        // If we have a nodump, write out the indicator
-                        if (rom.ItemStatus == ItemStatus.Nodump)
-                        {
-                            sw.Write(" NO GOOD DUMP KNOWN");
-                        }
-                        // Otherwise, write out the CRC and SHA-1 hashes
-                        else
-                        {
-                            if (!string.IsNullOrWhiteSpace(rom.CRC))
-                                sw.Write($" CRC({rom.CRC ?? string.Empty})");
-                            if (!string.IsNullOrWhiteSpace(rom.SHA1))
-                                sw.Write($" SHA1({rom.SHA1 ?? string.Empty})");
-                        }
+                    // If we have a baddump, put the second indicator
+                    if (rom.ItemStatus == ItemStatus.BadDump)
+                        sw.Write(" BAD_DUMP");
 
-                        // If we have a baddump, put the second indicator
-                        if (rom.ItemStatus == ItemStatus.BadDump)
-                            sw.Write(" BAD_DUMP");
-
-                        sw.Write("\n");
-                        break;
-                }
-
-                sw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                    sw.Write("\n");
+                    break;
             }
 
-            return true;
+            sw.Flush();
         }
     }
 }

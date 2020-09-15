@@ -33,7 +33,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = filename.GetXmlTextReader();
@@ -81,8 +82,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
+                if (throwOnError) throw ex;
 
                 // For XML errors, just skip the affected node
                 xtr?.Read();
@@ -505,8 +505,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -575,9 +576,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -588,30 +587,16 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(XmlTextWriter xtw)
+        private void WriteHeader(XmlTextWriter xtw)
         {
-            try
-            {
-                xtw.WriteStartDocument();
-                xtw.WriteDocType("softwarelist", null, "softwarelist.dtd", null);
+            xtw.WriteStartDocument();
+            xtw.WriteDocType("softwarelist", null, "softwarelist.dtd", null);
 
-                xtw.WriteStartElement("softwarelist");
-                xtw.WriteRequiredAttributeString("name", Header.Name);
-                xtw.WriteRequiredAttributeString("description", Header.Description);
+            xtw.WriteStartElement("softwarelist");
+            xtw.WriteRequiredAttributeString("name", Header.Name);
+            xtw.WriteRequiredAttributeString("description", Header.Description);
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -619,63 +604,35 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(XmlTextWriter xtw, DatItem datItem)
+        private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state
-                xtw.WriteStartElement("software");
-                xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
-                if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
-                    xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
-                xtw.WriteOptionalAttributeString("supported", datItem.Machine.Supported.FromSupported(false));
+            // Build the state
+            xtw.WriteStartElement("software");
+            xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
+            if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
+                xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
+            xtw.WriteOptionalAttributeString("supported", datItem.Machine.Supported.FromSupported(false));
 
-                xtw.WriteOptionalElementString("description", datItem.Machine.Description);
-                xtw.WriteOptionalElementString("year", datItem.Machine.Year);
-                xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
+            xtw.WriteOptionalElementString("description", datItem.Machine.Description);
+            xtw.WriteOptionalElementString("year", datItem.Machine.Year);
+            xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(XmlTextWriter xtw)
+        private void WriteEndGame(XmlTextWriter xtw)
         {
-            try
-            {
-                // End software
-                xtw.WriteEndElement();
+            // End software
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -683,186 +640,158 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(XmlTextWriter xtw, DatItem datItem)
+        private void WriteDatItem(XmlTextWriter xtw, DatItem datItem)
         {
-            try
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
-
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.DipSwitch:
-                        var dipSwitch = datItem as DipSwitch;
-                        xtw.WriteStartElement("dipswitch");
-                        xtw.WriteRequiredAttributeString("name", dipSwitch.Name);
-                        xtw.WriteRequiredAttributeString("tag", dipSwitch.Tag);
-                        xtw.WriteRequiredAttributeString("mask", dipSwitch.Mask);
-                        if (dipSwitch.Values != null)
+                case ItemType.DipSwitch:
+                    var dipSwitch = datItem as DipSwitch;
+                    xtw.WriteStartElement("dipswitch");
+                    xtw.WriteRequiredAttributeString("name", dipSwitch.Name);
+                    xtw.WriteRequiredAttributeString("tag", dipSwitch.Tag);
+                    xtw.WriteRequiredAttributeString("mask", dipSwitch.Mask);
+                    if (dipSwitch.Values != null)
+                    {
+                        foreach (Setting dipValue in dipSwitch.Values)
                         {
-                            foreach (Setting dipValue in dipSwitch.Values)
-                            {
-                                xtw.WriteStartElement("dipvalue");
-                                xtw.WriteRequiredAttributeString("name", dipValue.Name);
-                                xtw.WriteOptionalAttributeString("value", dipValue.Value);
-                                xtw.WriteOptionalAttributeString("default", dipValue.Default.FromYesNo());
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("dipvalue");
+                            xtw.WriteRequiredAttributeString("name", dipValue.Name);
+                            xtw.WriteOptionalAttributeString("value", dipValue.Value);
+                            xtw.WriteOptionalAttributeString("default", dipValue.Default.FromYesNo());
+                            xtw.WriteEndElement();
                         }
-                        xtw.WriteEndElement();
-                        break;
+                    }
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Disk:
-                        var disk = datItem as Disk;
-                        string diskAreaName = disk.DiskArea?.Name;
-                        if (string.IsNullOrWhiteSpace(diskAreaName))
-                            diskAreaName = "cdrom";
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
+                    string diskAreaName = disk.DiskArea?.Name;
+                    if (string.IsNullOrWhiteSpace(diskAreaName))
+                        diskAreaName = "cdrom";
 
-                        xtw.WriteStartElement("part");
-                        xtw.WriteRequiredAttributeString("name", disk.Part?.Name);
-                        xtw.WriteRequiredAttributeString("interface", disk.Part?.Interface);
+                    xtw.WriteStartElement("part");
+                    xtw.WriteRequiredAttributeString("name", disk.Part?.Name);
+                    xtw.WriteRequiredAttributeString("interface", disk.Part?.Interface);
 
-                        if (disk.Part?.Features != null && disk.Part?.Features.Count > 0)
+                    if (disk.Part?.Features != null && disk.Part?.Features.Count > 0)
+                    {
+                        foreach (PartFeature partFeature in disk.Part.Features)
                         {
-                            foreach (PartFeature partFeature in disk.Part.Features)
-                            {
-                                xtw.WriteStartElement("feature");
-                                xtw.WriteRequiredAttributeString("name", partFeature.Name);
-                                xtw.WriteRequiredAttributeString("value", partFeature.Value);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("feature");
+                            xtw.WriteRequiredAttributeString("name", partFeature.Name);
+                            xtw.WriteRequiredAttributeString("value", partFeature.Value);
+                            xtw.WriteEndElement();
                         }
+                    }
 
-                        xtw.WriteStartElement("diskarea");
-                        xtw.WriteRequiredAttributeString("name", diskAreaName);
+                    xtw.WriteStartElement("diskarea");
+                    xtw.WriteRequiredAttributeString("name", diskAreaName);
 
-                        xtw.WriteStartElement("disk");
-                        xtw.WriteRequiredAttributeString("name", disk.Name);
-                        xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
-                        xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
-                        xtw.WriteEndElement();
+                    xtw.WriteStartElement("disk");
+                    xtw.WriteRequiredAttributeString("name", disk.Name);
+                    xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
+                    xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
+                    xtw.WriteEndElement();
 
-                        // End diskarea
-                        xtw.WriteEndElement();
+                    // End diskarea
+                    xtw.WriteEndElement();
 
-                        // End part
-                        xtw.WriteEndElement();
-                        break;
+                    // End part
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Info:
-                        var info = datItem as Info;
-                        xtw.WriteStartElement("info");
-                        xtw.WriteRequiredAttributeString("name", info.Name);
-                        xtw.WriteRequiredAttributeString("value", info.Value);
-                        xtw.WriteEndElement();
-                        break;
+                case ItemType.Info:
+                    var info = datItem as Info;
+                    xtw.WriteStartElement("info");
+                    xtw.WriteRequiredAttributeString("name", info.Name);
+                    xtw.WriteRequiredAttributeString("value", info.Value);
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        string dataAreaName = rom.DataArea?.Name;
-                        if (string.IsNullOrWhiteSpace(dataAreaName))
-                            dataAreaName = "rom";
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    string dataAreaName = rom.DataArea?.Name;
+                    if (string.IsNullOrWhiteSpace(dataAreaName))
+                        dataAreaName = "rom";
 
-                        xtw.WriteStartElement("part");
-                        xtw.WriteRequiredAttributeString("name", rom.Part?.Name);
-                        xtw.WriteRequiredAttributeString("interface", rom.Part?.Interface);
+                    xtw.WriteStartElement("part");
+                    xtw.WriteRequiredAttributeString("name", rom.Part?.Name);
+                    xtw.WriteRequiredAttributeString("interface", rom.Part?.Interface);
 
-                        if (rom.Part?.Features != null && rom.Part?.Features.Count > 0)
+                    if (rom.Part?.Features != null && rom.Part?.Features.Count > 0)
+                    {
+                        foreach (PartFeature kvp in rom.Part.Features)
                         {
-                            foreach (PartFeature kvp in rom.Part.Features)
-                            {
-                                xtw.WriteStartElement("feature");
-                                xtw.WriteRequiredAttributeString("name", kvp.Name);
-                                xtw.WriteRequiredAttributeString("value", kvp.Value);
-                                xtw.WriteEndElement();
-                            }
+                            xtw.WriteStartElement("feature");
+                            xtw.WriteRequiredAttributeString("name", kvp.Name);
+                            xtw.WriteRequiredAttributeString("value", kvp.Value);
+                            xtw.WriteEndElement();
                         }
+                    }
 
-                        xtw.WriteStartElement("dataarea");
-                        xtw.WriteRequiredAttributeString("name", dataAreaName);
-                        xtw.WriteOptionalAttributeString("size", rom.DataArea?.Size.ToString());
-                        xtw.WriteOptionalAttributeString("width", rom.DataArea?.Width?.ToString());
-                        xtw.WriteOptionalAttributeString("endianness", rom.DataArea?.Endianness.FromEndianness());
+                    xtw.WriteStartElement("dataarea");
+                    xtw.WriteRequiredAttributeString("name", dataAreaName);
+                    xtw.WriteOptionalAttributeString("size", rom.DataArea?.Size.ToString());
+                    xtw.WriteOptionalAttributeString("width", rom.DataArea?.Width?.ToString());
+                    xtw.WriteOptionalAttributeString("endianness", rom.DataArea?.Endianness.FromEndianness());
 
-                        xtw.WriteStartElement("rom");
-                        xtw.WriteRequiredAttributeString("name", rom.Name);
-                        xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
-                        xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
+                    xtw.WriteStartElement("rom");
+                    xtw.WriteRequiredAttributeString("name", rom.Name);
+                    xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
+                    xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
 #endif
-                        xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
-                        xtw.WriteOptionalAttributeString("offset", rom.Offset);
-                        xtw.WriteOptionalAttributeString("value", rom.Value);
-                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
-                        xtw.WriteOptionalAttributeString("loadflag", rom.LoadFlag.FromLoadFlag());
-                        xtw.WriteEndElement();
+                    xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
+                    xtw.WriteOptionalAttributeString("offset", rom.Offset);
+                    xtw.WriteOptionalAttributeString("value", rom.Value);
+                    xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
+                    xtw.WriteOptionalAttributeString("loadflag", rom.LoadFlag.FromLoadFlag());
+                    xtw.WriteEndElement();
 
-                        // End dataarea
-                        xtw.WriteEndElement();
+                    // End dataarea
+                    xtw.WriteEndElement();
 
-                        // End part
-                        xtw.WriteEndElement();
-                        break;
+                    // End part
+                    xtw.WriteEndElement();
+                    break;
 
-                    case ItemType.SharedFeature:
-                        var sharedFeature = datItem as SharedFeature;
-                        xtw.WriteStartElement("sharedfeat");
-                        xtw.WriteRequiredAttributeString("name", sharedFeature.Name);
-                        xtw.WriteRequiredAttributeString("value", sharedFeature.Value);
-                        xtw.WriteEndElement();
-                        break;
-                }
-
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                case ItemType.SharedFeature:
+                    var sharedFeature = datItem as SharedFeature;
+                    xtw.WriteStartElement("sharedfeat");
+                    xtw.WriteRequiredAttributeString("name", sharedFeature.Name);
+                    xtw.WriteRequiredAttributeString("value", sharedFeature.Value);
+                    xtw.WriteEndElement();
+                    break;
             }
 
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out DAT footer using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(XmlTextWriter xtw)
+        private void WriteFooter(XmlTextWriter xtw)
         {
-            try
-            {
-                // End software
-                xtw.WriteEndElement();
+            // End software
+            xtw.WriteEndElement();
 
-                // End softwarelist
-                xtw.WriteEndElement();
+            // End softwarelist
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
     }
 }

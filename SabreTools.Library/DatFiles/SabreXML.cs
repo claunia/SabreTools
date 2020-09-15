@@ -31,7 +31,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = filename.GetXmlTextReader();
@@ -77,9 +78,8 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
+                
                 // For XML errors, just skip the affected node
                 xtr?.Read();
             }
@@ -103,46 +103,34 @@ namespace SabreTools.Library.DatFiles
             Machine machine = null;
 
             // Otherwise, read the directory
-            try
+            xtr.MoveToContent();
+            while (!xtr.EOF)
             {
-                xtr.MoveToContent();
-                while (!xtr.EOF)
+                // We only want elements
+                if (xtr.NodeType != XmlNodeType.Element)
                 {
-                    // We only want elements
-                    if (xtr.NodeType != XmlNodeType.Element)
-                    {
-                        xtr.Read();
-                        continue;
-                    }
-
-                    switch (xtr.Name)
-                    {
-                        case "machine":
-                            XmlSerializer xs = new XmlSerializer(typeof(Machine));
-                            machine = xs.Deserialize(xtr.ReadSubtree()) as Machine;
-                            xtr.Skip();
-                            break;
-
-                        case "files":
-                            ReadFiles(xtr.ReadSubtree(), machine, filename, indexId);
-
-                            // Skip the directory node now that we've processed it
-                            xtr.Read();
-                            break;
-                        default:
-                            xtr.Read();
-                            break;
-                    }
+                    xtr.Read();
+                    continue;
                 }
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
 
-                // For XML errors, just skip the affected node
-                xtr?.Read();
+                switch (xtr.Name)
+                {
+                    case "machine":
+                        XmlSerializer xs = new XmlSerializer(typeof(Machine));
+                        machine = xs.Deserialize(xtr.ReadSubtree()) as Machine;
+                        xtr.Skip();
+                        break;
+
+                    case "files":
+                        ReadFiles(xtr.ReadSubtree(), machine, filename, indexId);
+
+                        // Skip the directory node now that we've processed it
+                        xtr.Read();
+                        break;
+                    default:
+                        xtr.Read();
+                        break;
+                }
             }
         }
 
@@ -160,42 +148,30 @@ namespace SabreTools.Library.DatFiles
                 return;
 
             // Otherwise, read the items
-            try
+            xtr.MoveToContent();
+            while (!xtr.EOF)
             {
-                xtr.MoveToContent();
-                while (!xtr.EOF)
+                // We only want elements
+                if (xtr.NodeType != XmlNodeType.Element)
                 {
-                    // We only want elements
-                    if (xtr.NodeType != XmlNodeType.Element)
-                    {
-                        xtr.Read();
-                        continue;
-                    }
-
-                    switch (xtr.Name)
-                    {
-                        case "datitem":
-                            XmlSerializer xs = new XmlSerializer(typeof(DatItem));
-                            DatItem item = xs.Deserialize(xtr.ReadSubtree()) as DatItem;
-                            item.CopyMachineInformation(machine);
-                            item.Source = new Source { Name = filename, Index = indexId };
-                            ParseAddHelper(item);
-                            xtr.Skip();
-                            break;
-                        default:
-                            xtr.Read();
-                            break;
-                    }
+                    xtr.Read();
+                    continue;
                 }
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
 
-                // For XML errors, just skip the affected node
-                xtr?.Read();
+                switch (xtr.Name)
+                {
+                    case "datitem":
+                        XmlSerializer xs = new XmlSerializer(typeof(DatItem));
+                        DatItem item = xs.Deserialize(xtr.ReadSubtree()) as DatItem;
+                        item.CopyMachineInformation(machine);
+                        item.Source = new Source { Name = filename, Index = indexId };
+                        ParseAddHelper(item);
+                        xtr.Skip();
+                        break;
+                    default:
+                        xtr.Read();
+                        break;
+                }
             }
         }
 
@@ -204,9 +180,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        /// TODO: Fix writing out files that have a path in the name
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -275,9 +251,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -288,34 +262,20 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(XmlTextWriter xtw)
+        private void WriteHeader(XmlTextWriter xtw)
         {
-            try
-            {
-                xtw.WriteStartDocument();
+            xtw.WriteStartDocument();
 
-                xtw.WriteStartElement("datafile");
+            xtw.WriteStartElement("datafile");
 
-                XmlSerializer xs = new XmlSerializer(typeof(DatHeader));
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                xs.Serialize(xtw, Header, ns);
+            XmlSerializer xs = new XmlSerializer(typeof(DatHeader));
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            xs.Serialize(xtw, Header, ns);
 
-                xtw.WriteStartElement("data");
+            xtw.WriteStartElement("data");
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -323,63 +283,36 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(XmlTextWriter xtw, DatItem datItem)
+        private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name?.TrimStart(Path.DirectorySeparatorChar) ?? string.Empty;
 
-                // Write the machine
-                xtw.WriteStartElement("directory");
-                XmlSerializer xs = new XmlSerializer(typeof(Machine));
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                xs.Serialize(xtw, datItem.Machine, ns);
+            // Write the machine
+            xtw.WriteStartElement("directory");
+            XmlSerializer xs = new XmlSerializer(typeof(Machine));
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            xs.Serialize(xtw, datItem.Machine, ns);
 
-                xtw.WriteStartElement("files");
+            xtw.WriteStartElement("files");
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        private bool WriteEndGame(XmlTextWriter xtw)
+        private void WriteEndGame(XmlTextWriter xtw)
         {
-            try
-            {
-                // End files
-                xtw.WriteEndElement();
+            // End files
+            xtw.WriteEndElement();
 
-                // End directory
-                xtw.WriteEndElement();
+            // End directory
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -387,67 +320,39 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(XmlTextWriter xtw, DatItem datItem)
+        private void WriteDatItem(XmlTextWriter xtw, DatItem datItem)
         {
-            try
-            {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
 
-                // Write the DatItem
-                XmlSerializer xs = new XmlSerializer(typeof(DatItem));
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                ns.Add("", "");
-                xs.Serialize(xtw, datItem, ns);
+            // Write the DatItem
+            XmlSerializer xs = new XmlSerializer(typeof(DatItem));
+            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
+            xs.Serialize(xtw, datItem, ns);
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out DAT footer using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(XmlTextWriter xtw)
+        private void WriteFooter(XmlTextWriter xtw)
         {
-            try
-            {
-                // End files
-                xtw.WriteEndElement();
+            // End files
+            xtw.WriteEndElement();
 
-                // End directory
-                xtw.WriteEndElement();
+            // End directory
+            xtw.WriteEndElement();
 
-                // End data
-                xtw.WriteEndElement();
+            // End data
+            xtw.WriteEndElement();
 
-                // End datafile
-                xtw.WriteEndElement();
+            // End datafile
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
     }
 }

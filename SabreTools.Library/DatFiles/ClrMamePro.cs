@@ -31,7 +31,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
@@ -412,8 +413,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -480,9 +482,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -493,41 +493,27 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(ClrMameProWriter cmpw)
+        private void WriteHeader(ClrMameProWriter cmpw)
         {
-            try
-            {
-                cmpw.WriteStartElement("clrmamepro");
+            cmpw.WriteStartElement("clrmamepro");
 
-                cmpw.WriteRequiredStandalone("name", Header.Name);
-                cmpw.WriteRequiredStandalone("description", Header.Description);
-                cmpw.WriteOptionalStandalone("category", Header.Category);
-                cmpw.WriteRequiredStandalone("version", Header.Version);
-                cmpw.WriteOptionalStandalone("date", Header.Date);
-                cmpw.WriteRequiredStandalone("author", Header.Author);
-                cmpw.WriteOptionalStandalone("email", Header.Email);
-                cmpw.WriteOptionalStandalone("homepage", Header.Homepage);
-                cmpw.WriteOptionalStandalone("url", Header.Url);
-                cmpw.WriteOptionalStandalone("comment", Header.Comment);
-                cmpw.WriteOptionalStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
-                cmpw.WriteOptionalStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
+            cmpw.WriteRequiredStandalone("name", Header.Name);
+            cmpw.WriteRequiredStandalone("description", Header.Description);
+            cmpw.WriteOptionalStandalone("category", Header.Category);
+            cmpw.WriteRequiredStandalone("version", Header.Version);
+            cmpw.WriteOptionalStandalone("date", Header.Date);
+            cmpw.WriteRequiredStandalone("author", Header.Author);
+            cmpw.WriteOptionalStandalone("email", Header.Email);
+            cmpw.WriteOptionalStandalone("homepage", Header.Homepage);
+            cmpw.WriteOptionalStandalone("url", Header.Url);
+            cmpw.WriteOptionalStandalone("comment", Header.Comment);
+            cmpw.WriteOptionalStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
+            cmpw.WriteOptionalStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
 
-                // End clrmamepro
-                cmpw.WriteEndElement();
+            // End clrmamepro
+            cmpw.WriteEndElement();
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
@@ -535,37 +521,23 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(ClrMameProWriter cmpw, DatItem datItem)
+        private void WriteStartGame(ClrMameProWriter cmpw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state
-                cmpw.WriteStartElement(datItem.Machine.MachineType == MachineType.Bios ? "resource" : "game");
+            // Build the state
+            cmpw.WriteStartElement(datItem.Machine.MachineType == MachineType.Bios ? "resource" : "game");
 
-                cmpw.WriteRequiredStandalone("name", datItem.Machine.Name);
-                cmpw.WriteOptionalStandalone("romof", datItem.Machine.RomOf);
-                cmpw.WriteOptionalStandalone("cloneof", datItem.Machine.CloneOf);
-                cmpw.WriteOptionalStandalone("description", datItem.Machine.Description ?? datItem.Machine.Name);
-                cmpw.WriteOptionalStandalone("year", datItem.Machine.Year);
-                cmpw.WriteOptionalStandalone("manufacturer", datItem.Machine.Manufacturer);
-                cmpw.WriteOptionalStandalone("category", datItem.Machine.Category);
+            cmpw.WriteRequiredStandalone("name", datItem.Machine.Name);
+            cmpw.WriteOptionalStandalone("romof", datItem.Machine.RomOf);
+            cmpw.WriteOptionalStandalone("cloneof", datItem.Machine.CloneOf);
+            cmpw.WriteOptionalStandalone("description", datItem.Machine.Description ?? datItem.Machine.Name);
+            cmpw.WriteOptionalStandalone("year", datItem.Machine.Year);
+            cmpw.WriteOptionalStandalone("manufacturer", datItem.Machine.Manufacturer);
+            cmpw.WriteOptionalStandalone("category", datItem.Machine.Category);
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
@@ -573,29 +545,15 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(ClrMameProWriter cmpw, DatItem datItem)
+        private void WriteEndGame(ClrMameProWriter cmpw, DatItem datItem)
         {
-            try
-            {
-                // Build the state
-                cmpw.WriteOptionalStandalone("sampleof", datItem.Machine.SampleOf);
+            // Build the state
+            cmpw.WriteOptionalStandalone("sampleof", datItem.Machine.SampleOf);
 
-                // End game
-                cmpw.WriteEndElement();
+            // End game
+            cmpw.WriteEndElement();
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
@@ -604,131 +562,103 @@ namespace SabreTools.Library.DatFiles
         /// <param name="datFile">DatFile to write out from</param>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(ClrMameProWriter cmpw, DatItem datItem)
+        private void WriteDatItem(ClrMameProWriter cmpw, DatItem datItem)
         {
-            try
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
+                case ItemType.Archive:
+                    var archive = datItem as Archive;
+                    cmpw.WriteStartElement("archive");
+                    cmpw.WriteRequiredAttributeString("name", archive.Name);
+                    cmpw.WriteEndElement();
+                    break;
 
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Archive:
-                        var archive = datItem as Archive;
-                        cmpw.WriteStartElement("archive");
-                        cmpw.WriteRequiredAttributeString("name", archive.Name);
-                        cmpw.WriteEndElement();
-                        break;
+                case ItemType.BiosSet:
+                    var biosSet = datItem as BiosSet;
+                    cmpw.WriteStartElement("biosset");
+                    cmpw.WriteRequiredAttributeString("name", biosSet.Name);
+                    cmpw.WriteOptionalAttributeString("description", biosSet.Description);
+                    cmpw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
+                    cmpw.WriteEndElement();
+                    break;
 
-                    case ItemType.BiosSet:
-                        var biosSet = datItem as BiosSet;
-                        cmpw.WriteStartElement("biosset");
-                        cmpw.WriteRequiredAttributeString("name", biosSet.Name);
-                        cmpw.WriteOptionalAttributeString("description", biosSet.Description);
-                        cmpw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
-                        cmpw.WriteEndElement();
-                        break;
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
+                    cmpw.WriteStartElement("disk");
+                    cmpw.WriteRequiredAttributeString("name", disk.Name);
+                    cmpw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("flags", disk.ItemStatus.FromItemStatus(false));
+                    cmpw.WriteEndElement();
+                    break;
 
-                    case ItemType.Disk:
-                        var disk = datItem as Disk;
-                        cmpw.WriteStartElement("disk");
-                        cmpw.WriteRequiredAttributeString("name", disk.Name);
-                        cmpw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("flags", disk.ItemStatus.FromItemStatus(false));
-                        cmpw.WriteEndElement();
-                        break;
+                case ItemType.Media:
+                    var media = datItem as Media;
+                    cmpw.WriteStartElement("media");
+                    cmpw.WriteRequiredAttributeString("name", media.Name);
+                    cmpw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("spamsum", media.SpamSum?.ToLowerInvariant());
+                    cmpw.WriteEndElement();
+                    break;
 
-                    case ItemType.Media:
-                        var media = datItem as Media;
-                        cmpw.WriteStartElement("media");
-                        cmpw.WriteRequiredAttributeString("name", media.Name);
-                        cmpw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("spamsum", media.SpamSum?.ToLowerInvariant());
-                        cmpw.WriteEndElement();
-                        break;
+                case ItemType.Release:
+                    var release = datItem as Release;
+                    cmpw.WriteStartElement("release");
+                    cmpw.WriteRequiredAttributeString("name", release.Name);
+                    cmpw.WriteOptionalAttributeString("region", release.Region);
+                    cmpw.WriteOptionalAttributeString("language", release.Language);
+                    cmpw.WriteOptionalAttributeString("date", release.Date);
+                    cmpw.WriteOptionalAttributeString("default", release.Default?.ToString().ToLowerInvariant());
+                    cmpw.WriteEndElement();
+                    break;
 
-                    case ItemType.Release:
-                        var release = datItem as Release;
-                        cmpw.WriteStartElement("release");
-                        cmpw.WriteRequiredAttributeString("name", release.Name);
-                        cmpw.WriteOptionalAttributeString("region", release.Region);
-                        cmpw.WriteOptionalAttributeString("language", release.Language);
-                        cmpw.WriteOptionalAttributeString("date", release.Date);
-                        cmpw.WriteOptionalAttributeString("default", release.Default?.ToString().ToLowerInvariant());
-                        cmpw.WriteEndElement();
-                        break;
-
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        cmpw.WriteStartElement("rom");
-                        cmpw.WriteRequiredAttributeString("name", rom.Name);
-                        cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
-                        cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    cmpw.WriteStartElement("rom");
+                    cmpw.WriteRequiredAttributeString("name", rom.Name);
+                    cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
+                    cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
 #if NET_FRAMEWORK
-                        cmpw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
 #endif
-                        cmpw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant());
-                        cmpw.WriteOptionalAttributeString("date", rom.Date);
-                        cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
-                        cmpw.WriteEndElement();
-                        break;
+                    cmpw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant());
+                    cmpw.WriteOptionalAttributeString("date", rom.Date);
+                    cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
+                    cmpw.WriteEndElement();
+                    break;
 
-                    case ItemType.Sample:
-                        var sample = datItem as Sample;
-                        cmpw.WriteStartElement("sample");
-                        cmpw.WriteRequiredAttributeString("name", sample.Name);
-                        cmpw.WriteEndElement();
-                        break;
-                }
-
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                case ItemType.Sample:
+                    var sample = datItem as Sample;
+                    cmpw.WriteStartElement("sample");
+                    cmpw.WriteRequiredAttributeString("name", sample.Name);
+                    cmpw.WriteEndElement();
+                    break;
             }
 
-            return true;
+            cmpw.Flush();
         }
 
         /// <summary>
         /// Write out DAT footer using the supplied StreamWriter
         /// </summary>
         /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(ClrMameProWriter cmpw)
+        private void WriteFooter(ClrMameProWriter cmpw)
         {
-            try
-            {
-                // End game
-                cmpw.WriteEndElement();
+            // End game
+            cmpw.WriteEndElement();
 
-                cmpw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            cmpw.Flush();
         }
     }
 }

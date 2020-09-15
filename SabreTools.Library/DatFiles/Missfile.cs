@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -30,7 +29,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // There is no consistent way to parse a missfile...
             throw new NotImplementedException();
@@ -41,8 +41,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -92,9 +93,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -107,37 +106,23 @@ namespace SabreTools.Library.DatFiles
         /// <param name="sw">StreamWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
         /// <param name="lastgame">The name of the last game to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(StreamWriter sw, DatItem datItem, string lastgame)
+        private void WriteDatItem(StreamWriter sw, DatItem datItem, string lastgame)
         {
-            try
+            // Process the item name
+            ProcessItemName(datItem, false, forceRomName: false);
+
+            // Romba mode automatically uses item name
+            if (Header.OutputDepot?.IsActive == true || Header.UseRomName)
             {
-                // Process the item name
-                ProcessItemName(datItem, false, forceRomName: false);
-
-                // Romba mode automatically uses item name
-                if (Header.OutputDepot?.IsActive == true || Header.UseRomName)
-                {
-                    sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-                }
-                else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
-                {
-                    sw.Write($"{datItem.Machine.Name}\n");
-                    lastgame = datItem.Machine.Name;
-                }
-
-                sw.Flush();
+                sw.Write($"{datItem.GetName() ?? string.Empty}\n");
             }
-            catch (Exception ex)
+            else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
             {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                sw.Write($"{datItem.Machine.Name}\n");
+                lastgame = datItem.Machine.Name;
             }
 
-            return true;
+            sw.Flush();
         }
     }
 }

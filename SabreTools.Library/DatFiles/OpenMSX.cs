@@ -32,7 +32,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        protected override void ParseFile(string filename, int indexId, bool keep)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = filename.GetXmlTextReader();
@@ -80,8 +81,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
+                if (throwOnError) throw ex;
 
                 // For XML errors, just skip the affected node
                 xtr?.Read();
@@ -513,8 +513,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outfile">Name of the file to write to</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public override bool WriteToFile(string outfile, bool ignoreblanks = false)
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
             {
@@ -583,9 +584,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -596,18 +595,15 @@ namespace SabreTools.Library.DatFiles
         /// Write out DAT header using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteHeader(XmlTextWriter xtw)
+        private void WriteHeader(XmlTextWriter xtw)
         {
-            try
-            {
-                xtw.WriteStartDocument();
-                xtw.WriteDocType("softwaredb", null, "softwaredb1.dtd", null);
+            xtw.WriteStartDocument();
+            xtw.WriteDocType("softwaredb", null, "softwaredb1.dtd", null);
 
-                xtw.WriteStartElement("softwaredb");
-                xtw.WriteRequiredAttributeString("timestamp", Header.Date);
+            xtw.WriteStartElement("softwaredb");
+            xtw.WriteRequiredAttributeString("timestamp", Header.Date);
 
-                //TODO: Figure out how to fix the issue with removed formatting after this point
+            //TODO: Figure out how to fix the issue with removed formatting after this point
 //                xtw.WriteComment("Credits");
 //                xtw.WriteCData(@"The softwaredb.xml file contains information about rom mapper types
 
@@ -621,18 +617,7 @@ namespace SabreTools.Library.DatFiles
 //- p_gimeno and diedel for their help adding and valdiating ROM additions
 //- GDX for additional ROM info and validations and corrections");
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -640,61 +625,33 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteStartGame(XmlTextWriter xtw, DatItem datItem)
+        private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
         {
-            try
-            {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
 
-                // Build the state
-                xtw.WriteStartElement("software");
-                xtw.WriteRequiredElementString("title", datItem.Machine.Name);
-                xtw.WriteRequiredElementString("genmsxid", datItem.Machine.GenMSXID);
-                xtw.WriteRequiredElementString("system", datItem.Machine.System);
-                xtw.WriteRequiredElementString("company", datItem.Machine.Manufacturer);
-                xtw.WriteRequiredElementString("year", datItem.Machine.Year);
-                xtw.WriteRequiredElementString("country", datItem.Machine.Country);
+            // Build the state
+            xtw.WriteStartElement("software");
+            xtw.WriteRequiredElementString("title", datItem.Machine.Name);
+            xtw.WriteRequiredElementString("genmsxid", datItem.Machine.GenMSXID);
+            xtw.WriteRequiredElementString("system", datItem.Machine.System);
+            xtw.WriteRequiredElementString("company", datItem.Machine.Manufacturer);
+            xtw.WriteRequiredElementString("year", datItem.Machine.Year);
+            xtw.WriteRequiredElementString("country", datItem.Machine.Country);
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteEndGame(XmlTextWriter xtw)
+        private void WriteEndGame(XmlTextWriter xtw)
         {
-            try
-            {
-                // End software
-                xtw.WriteEndElement();
+            // End software
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
@@ -702,106 +659,78 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(XmlTextWriter xtw, DatItem datItem)
+        private void WriteDatItem(XmlTextWriter xtw, DatItem datItem)
         {
-            try
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
+                    xtw.WriteStartElement("dump");
 
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-                        xtw.WriteStartElement("dump");
-
-                        if (rom.Original != null)
-                        {
-                            xtw.WriteStartElement("original");
-                            xtw.WriteAttributeString("value", rom.Original.Value == true ? "true" : "false");
-                            xtw.WriteString(rom.Original.Content);
-                            xtw.WriteEndElement();
-                        }
-
-                        switch (rom.OpenMSXSubType)
-                        {
-                            // Default to Rom for converting from other formats
-                            case OpenMSXSubType.Rom:
-                            case OpenMSXSubType.NULL:
-                                xtw.WriteStartElement(rom.OpenMSXSubType.FromOpenMSXSubType());
-                                xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
-                                xtw.WriteOptionalElementString("start", rom.Offset);
-                                xtw.WriteOptionalElementString("type", rom.OpenMSXType);
-                                xtw.WriteOptionalElementString("remark", rom.Remark);
-                                xtw.WriteEndElement();
-                                break;
-
-                            case OpenMSXSubType.MegaRom:
-                                xtw.WriteStartElement(rom.OpenMSXSubType.FromOpenMSXSubType());
-                                xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
-                                xtw.WriteOptionalElementString("start", rom.Offset);
-                                xtw.WriteOptionalElementString("type", rom.OpenMSXType);
-                                xtw.WriteOptionalElementString("remark", rom.Remark);
-                                xtw.WriteEndElement();
-                                break;
-
-                            case OpenMSXSubType.SCCPlusCart:
-                                xtw.WriteStartElement(rom.OpenMSXSubType.FromOpenMSXSubType());
-                                xtw.WriteOptionalElementString("boot", rom.Boot);
-                                xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
-                                xtw.WriteOptionalElementString("remark", rom.Remark);
-                                xtw.WriteEndElement();
-                                break;
-                        }
-
-                        // End dump
+                    if (rom.Original != null)
+                    {
+                        xtw.WriteStartElement("original");
+                        xtw.WriteAttributeString("value", rom.Original.Value == true ? "true" : "false");
+                        xtw.WriteString(rom.Original.Content);
                         xtw.WriteEndElement();
-                        break;
-                }
+                    }
 
-                xtw.Flush();
+                    switch (rom.OpenMSXSubType)
+                    {
+                        // Default to Rom for converting from other formats
+                        case OpenMSXSubType.Rom:
+                        case OpenMSXSubType.NULL:
+                            xtw.WriteStartElement(rom.OpenMSXSubType.FromOpenMSXSubType());
+                            xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
+                            xtw.WriteOptionalElementString("start", rom.Offset);
+                            xtw.WriteOptionalElementString("type", rom.OpenMSXType);
+                            xtw.WriteOptionalElementString("remark", rom.Remark);
+                            xtw.WriteEndElement();
+                            break;
+
+                        case OpenMSXSubType.MegaRom:
+                            xtw.WriteStartElement(rom.OpenMSXSubType.FromOpenMSXSubType());
+                            xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
+                            xtw.WriteOptionalElementString("start", rom.Offset);
+                            xtw.WriteOptionalElementString("type", rom.OpenMSXType);
+                            xtw.WriteOptionalElementString("remark", rom.Remark);
+                            xtw.WriteEndElement();
+                            break;
+
+                        case OpenMSXSubType.SCCPlusCart:
+                            xtw.WriteStartElement(rom.OpenMSXSubType.FromOpenMSXSubType());
+                            xtw.WriteOptionalElementString("boot", rom.Boot);
+                            xtw.WriteRequiredElementString("hash", rom.SHA1?.ToLowerInvariant());
+                            xtw.WriteOptionalElementString("remark", rom.Remark);
+                            xtw.WriteEndElement();
+                            break;
+                    }
+
+                    // End dump
+                    xtw.WriteEndElement();
+                    break;
             }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
 
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out DAT footer using the supplied StreamWriter
         /// </summary>
         /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteFooter(XmlTextWriter xtw)
+        private void WriteFooter(XmlTextWriter xtw)
         {
-            try
-            {
-                // End software
-                xtw.WriteEndElement();
+            // End software
+            xtw.WriteEndElement();
 
-                // End softwaredb
-                xtw.WriteEndElement();
+            // End softwaredb
+            xtw.WriteEndElement();
 
-                xtw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
-            }
-
-            return true;
+            xtw.Flush();
         }
     }
 }
