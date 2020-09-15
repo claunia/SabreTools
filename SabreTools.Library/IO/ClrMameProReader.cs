@@ -175,7 +175,8 @@ namespace SabreTools.Library.IO
                                 && linegc[i] != "size"
                                 && linegc[i] != "crc"
                                 && linegc[i] != "md5"
-                                && linegc[i] != "sha1")
+                                && linegc[i] != "sha1"
+                                && linegc[i] != "status")
                             {
                                 value += $" {linegc[i]}";
                             }
