@@ -144,9 +144,12 @@ namespace SabreTools.Library.IO
                         // If we have a name
                         if (key == "name")
                         {
-                            while (++i < linegc.Length && linegc[i] != "size" && linegc[i] != "date" && linegc[i] != "crc")
+                            while (++i < linegc.Length
+                                && linegc[i] != "size"
+                                && linegc[i] != "date"
+                                && linegc[i] != "crc")
                             {
-                                value += $"{linegc[i]}";
+                                value += $" {linegc[i]}";
                             }
 
                             value = value.Trim();
@@ -165,8 +168,23 @@ namespace SabreTools.Library.IO
                     }
                     else
                     {
+                        // Special case for non-quoted names (old DATs only)
+                        if (key == "name" && !linegc[i + 1].Contains("\""))
+                        {
+                            while (++i < linegc.Length
+                                && linegc[i] != "size"
+                                && linegc[i] != "crc"
+                                && linegc[i] != "md5"
+                                && linegc[i] != "sha1")
+                            {
+                                value += $" {linegc[i]}";
+                            }
+
+                            value = value.Trim();
+                            i--;
+                        }
                         // Special cases for standalone statuses
-                        if (key == "baddump" || key == "good" || key == "nodump" || key == "verified")
+                        else if (key == "baddump" || key == "good" || key == "nodump" || key == "verified")
                         {
                             value = key;
                             key = "status";
