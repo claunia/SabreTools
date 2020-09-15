@@ -707,8 +707,9 @@ namespace SabreTools.Library.DatFiles
         /// Apply cleaning methods to the DatFile
         /// </summary>
         /// <param name="cleaner">Cleaner to use</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if cleaning was successful, false on error</returns>
-        public bool ApplyCleaning(Cleaner cleaner)
+        public bool ApplyCleaning(Cleaner cleaner, bool throwOnError = false)
         {
             try
             {
@@ -751,9 +752,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -764,8 +763,9 @@ namespace SabreTools.Library.DatFiles
         /// Apply a set of Extra INIs on the DatFile
         /// </summary>
         /// <param name="extras">ExtrasIni to use</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the extras were applied, false on error</returns>
-        public bool ApplyExtras(ExtraIni extras)
+        public bool ApplyExtras(ExtraIni extras, bool throwOnError = false)
         {
             try
             {
@@ -817,9 +817,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -831,8 +829,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="filter">Filter to use</param>
         /// <param name="perMachine">True if entire machines are considered, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
-        public bool ApplyFilter(Filter filter, bool perMachine = false)
+        public bool ApplyFilter(Filter filter, bool perMachine = false, bool throwOnError = false)
         {
             // If we have a null filter, return false
             if (filter == null)
@@ -891,9 +890,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -905,8 +902,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="splitType">Split type to try</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DatFile was split, false on error</returns>
-        public bool ApplySplitting(MergingFlag splitType, bool useTags)
+        public bool ApplySplitting(MergingFlag splitType, bool useTags, bool throwOnError = false)
         {
             try
             {
@@ -940,9 +938,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -1011,7 +1007,8 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Use game descriptions as names in the DAT, updating cloneof/romof/sampleof
         /// </summary>
-        public void MachineDescriptionToName()
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public void MachineDescriptionToName(bool throwOnError = false)
         {
             try
             {
@@ -1062,8 +1059,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning(ex.ToString());
-                if (Globals.ThrowOnError)
-                    throw ex;
+                if (throwOnError) throw ex;
             }
         }
 
@@ -3527,8 +3523,7 @@ namespace SabreTools.Library.DatFiles
                     catch (Exception ex)
                     {
                         Globals.Logger.Error(ex, $"Datfile {outfile} could not be written out");
-                        if (Globals.ThrowOnError)
-                            throw ex;
+                        if (throwOnError) throw ex;
                     }
 
                 });
@@ -3536,9 +3531,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 

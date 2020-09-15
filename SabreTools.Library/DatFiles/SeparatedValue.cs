@@ -66,9 +66,7 @@ namespace SabreTools.Library.DatFiles
                 catch (InvalidDataException ex)
                 {
                     Globals.Logger.Warning($"Malformed line found in '{filename}' at line {svr.LineNumber}");
-                    if (Globals.ThrowOnError)
-                        throw ex;
-
+                    if (throwOnError) throw ex;
                     continue;
                 }
                 

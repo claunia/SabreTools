@@ -139,9 +139,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -153,50 +151,36 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="svw">SeparatedValueWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <returns>True if the data was written, false on error</returns>
-        private bool WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
+        private void WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
         {
-            try
+            // No game should start with a path separator
+            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+
+            // Pre-process the item name
+            ProcessItemName(datItem, true);
+
+            // Build the state
+            switch (datItem.ItemType)
             {
-                // No game should start with a path separator
-                datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+                case ItemType.Rom:
+                    var rom = datItem as Rom;
 
-                // Pre-process the item name
-                ProcessItemName(datItem, true);
-
-                // Build the state
-                switch (datItem.ItemType)
-                {
-                    case ItemType.Rom:
-                        var rom = datItem as Rom;
-
-                        string[] fields = new string[]
-                        {
+                    string[] fields = new string[]
+                    {
                             rom.SHA256 ?? string.Empty,
                             $"{rom.Machine.Name ?? string.Empty}/",
                             rom.Name ?? string.Empty,
                             rom.SHA1 ?? string.Empty,
                             rom.MD5 ?? string.Empty,
                             rom.CRC ?? string.Empty,
-                        };
+                    };
 
-                        svw.WriteValues(fields);
+                    svw.WriteValues(fields);
 
-                        break;
-                }
-
-                svw.Flush();
-            }
-            catch (Exception ex)
-            {
-                Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
-                return false;
+                    break;
             }
 
-            return true;
+            svw.Flush();
         }
     }
 }
