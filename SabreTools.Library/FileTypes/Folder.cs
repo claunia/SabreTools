@@ -126,7 +126,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -207,7 +207,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -249,7 +249,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -389,7 +389,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 

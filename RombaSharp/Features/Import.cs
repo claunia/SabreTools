@@ -44,7 +44,7 @@ namespace RombaSharp.Features
                 string line = sr.ReadLine();
                 if (line != "CRC,MD5,SHA-1") // ,Depot
                 {
-                    Globals.Logger.Error("{0} is not a valid export file");
+                    Globals.Logger.Error($"{input} is not a valid export file");
                     continue;
                 }
 

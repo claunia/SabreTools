@@ -91,7 +91,7 @@ namespace SabreTools.Library.IO
                 }
                 catch (Exception ex)
                 {
-                    Globals.Logger.Error($"An exception occurred getting the full path for '{input}': {ex}");
+                    Globals.Logger.Error(ex, $"An exception occurred getting the full path for '{input}'");
                     if (Globals.ThrowOnError)
                         throw ex;
 
@@ -115,7 +115,7 @@ namespace SabreTools.Library.IO
                         }
                         catch (Exception ex)
                         {
-                            Globals.Logger.Error($"An exception occurred processing '{dir}': {ex}");
+                            Globals.Logger.Error(ex, $"An exception occurred processing '{dir}'");
                             if (Globals.ThrowOnError)
                                 throw ex;
                         }
@@ -194,7 +194,7 @@ namespace SabreTools.Library.IO
                 }
                 catch (Exception ex)
                 {
-                    Globals.Logger.Error($"An exception occurred getting the full path for '{input}': {ex}");
+                    Globals.Logger.Error(ex, $"An exception occurred getting the full path for '{input}'");
                     if (Globals.ThrowOnError)
                         throw ex;
 
@@ -218,7 +218,7 @@ namespace SabreTools.Library.IO
                         }
                         catch (Exception ex)
                         {
-                            Globals.Logger.Error($"An exception occurred processing '{file}': {ex}");
+                            Globals.Logger.Error(ex, $"An exception occurred processing '{file}'");
                             if (Globals.ThrowOnError)
                                 throw ex;
                         }
@@ -238,7 +238,7 @@ namespace SabreTools.Library.IO
                     }
                     catch (Exception ex)
                     {
-                        Globals.Logger.Error($"An exception occurred processing '{input}': {ex}");
+                        Globals.Logger.Error(ex, $"An exception occurred processing '{input}'");
                         if (Globals.ThrowOnError)
                             throw ex;
                     }

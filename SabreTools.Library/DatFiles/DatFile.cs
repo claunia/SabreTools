@@ -750,7 +750,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -816,7 +816,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -890,7 +890,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -939,7 +939,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -2286,7 +2286,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (IOException ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 
@@ -3526,7 +3526,7 @@ namespace SabreTools.Library.DatFiles
                     }
                     catch (Exception ex)
                     {
-                        Globals.Logger.Error($"Datfile {outfile} could not be written out: {ex}");
+                        Globals.Logger.Error(ex, $"Datfile {outfile} could not be written out");
                         if (Globals.ThrowOnError)
                             throw ex;
                     }
@@ -3535,7 +3535,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (Globals.ThrowOnError)
                     throw ex;
 

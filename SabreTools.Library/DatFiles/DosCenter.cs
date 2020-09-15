@@ -322,7 +322,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex.ToString());
+                Globals.Logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }

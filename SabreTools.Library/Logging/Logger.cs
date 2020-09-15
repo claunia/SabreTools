@@ -248,6 +248,18 @@ namespace SabreTools.Library.Logging
         }
 
         /// <summary>
+        /// Write the given exception as a warning to the log output
+        /// </summary>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public bool Warning(Exception ex, string output = null, bool appendPrefix = true)
+        {
+            return Warning($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
+        }
+
+        /// <summary>
         /// Write the given string as a warning to the log output
         /// </summary>
         /// <param name="output">String to be written log</param>
@@ -257,6 +269,18 @@ namespace SabreTools.Library.Logging
         {
             _warnings = true;
             return Log(output, LogLevel.WARNING, appendPrefix);
+        }
+
+        /// <summary>
+        /// Writes the given exception as an error in the log
+        /// </summary>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public bool Error(Exception ex, string output = null, bool appendPrefix = true)
+        {
+            return Error($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
         /// <summary>
