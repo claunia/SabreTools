@@ -192,8 +192,11 @@ namespace SabreTools.Library.IO
                 loadBuffer.Dispose();
                 hashers.ForEach(h => h.Dispose());
             }
-            catch (IOException)
+            catch (IOException ex)
             {
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return new BaseFile();
             }
             finally
@@ -226,13 +229,17 @@ namespace SabreTools.Library.IO
 
                 return input.Position;
             }
-            catch (NotSupportedException)
+            catch (NotSupportedException ex)
             {
                 Globals.Logger.Verbose("Stream does not support seeking to starting offset. Stream position not changed");
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
-            catch (NotImplementedException)
+            catch (NotImplementedException ex)
             {
                 Globals.Logger.Warning("Stream does not support seeking to starting offset. Stream position not changed");
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
 
             return -1;

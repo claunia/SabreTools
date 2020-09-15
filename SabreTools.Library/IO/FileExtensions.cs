@@ -187,8 +187,11 @@ namespace SabreTools.Library.IO
                 else
                     return DatFormat.ClrMamePro;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return 0;
             }
         }
@@ -298,9 +301,11 @@ namespace SabreTools.Library.IO
                     outFileType = FileType.ZstdArchive;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Don't log file open errors
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
 
             return outFileType;

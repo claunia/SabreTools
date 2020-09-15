@@ -480,6 +480,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -518,6 +521,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -553,6 +559,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -580,6 +589,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -684,6 +696,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -707,6 +722,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 

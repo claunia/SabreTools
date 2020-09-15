@@ -68,17 +68,25 @@ namespace SabreTools.Library.FileTypes
                 encounteredErrors = false;
                 ra.Dispose();
             }
-            catch (EndOfStreamException)
+            catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 encounteredErrors = true;
             }
 
@@ -159,6 +167,9 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 ms = null;
                 realEntry = null;
             }
@@ -219,6 +230,9 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return null;
             }
 
@@ -260,6 +274,8 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
 
             return empties;

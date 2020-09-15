@@ -68,6 +68,11 @@ namespace SabreTools.Library.Data
         /// </summary>
         public static string TempDir { get; set; } = Path.GetTempPath();
 
+        /// <summary>
+        /// Whether to throw an exception from the library if an error is found
+        /// </summary>
+        public static bool ThrowOnError { get; set; } = false;
+
         #endregion
     }
 }

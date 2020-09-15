@@ -176,6 +176,9 @@ namespace SabreTools.Library.Logging
                 {
                     Console.WriteLine(ex);
                     Console.WriteLine("Could not write to log file!");
+                    if (Globals.ThrowOnError)
+                        throw ex;
+
                     return false;
                 }
             }

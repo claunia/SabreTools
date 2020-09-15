@@ -202,6 +202,9 @@ namespace SabreTools.Library.Skippers
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
             finally

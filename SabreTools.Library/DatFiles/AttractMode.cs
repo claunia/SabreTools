@@ -59,9 +59,12 @@ namespace SabreTools.Library.DatFiles
                     // Get the current line, split and parse
                     svr.ReadNextLine();
                 }
-                catch (InvalidDataException)
+                catch (InvalidDataException ex)
                 {
                     Globals.Logger.Warning($"Malformed line found in '{filename}' at line {svr.LineNumber}");
+                    if (Globals.ThrowOnError)
+                        throw ex;
+
                     continue;
                 }
 
@@ -167,6 +170,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -210,6 +216,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -267,6 +276,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 

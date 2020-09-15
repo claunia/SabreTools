@@ -751,6 +751,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -814,6 +817,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -885,6 +891,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -931,6 +940,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -1050,6 +1062,8 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
         }
 
@@ -1846,6 +1860,8 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error($"Error with file '{filename}': {ex}");
+                if (Globals.ThrowOnError)
+                    throw ex;
             }
         }
 
@@ -2259,6 +2275,9 @@ namespace SabreTools.Library.DatFiles
             catch (IOException ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return;
             }
         }
@@ -3490,6 +3509,8 @@ namespace SabreTools.Library.DatFiles
                     catch (Exception ex)
                     {
                         Globals.Logger.Error($"Datfile {outfile} could not be written out: {ex}");
+                        if (Globals.ThrowOnError)
+                            throw ex;
                     }
 
                 });
@@ -3497,6 +3518,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 

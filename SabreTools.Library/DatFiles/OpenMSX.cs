@@ -80,6 +80,8 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
+                if (Globals.ThrowOnError)
+                    throw ex;
 
                 // For XML errors, just skip the affected node
                 xtr?.Read();
@@ -581,6 +583,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -621,6 +626,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -654,6 +662,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -677,6 +688,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -752,6 +766,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 
@@ -778,6 +795,9 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex.ToString());
+                if (Globals.ThrowOnError)
+                    throw ex;
+
                 return false;
             }
 

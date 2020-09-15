@@ -422,6 +422,9 @@ Reset the internal state:           reset();";
                 catch (Exception ex)
                 {
                     Globals.Logger.Error($"There was an exception processing {path}: {ex}");
+                    if (Globals.ThrowOnError)
+                        throw ex;
+
                     continue;
                 }
             }

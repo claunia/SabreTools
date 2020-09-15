@@ -1114,8 +1114,11 @@ namespace SabreTools.Library.DatItems
 
                     return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : x.Source.Index - y.Source.Index);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    if (Globals.ThrowOnError)
+                        throw ex;
+
                     // Absorb the error
                     return 0;
                 }
