@@ -99,10 +99,7 @@ namespace SabreTools.Library.Filtering
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning($"Exception found while parsing '{ini}': {ex}");
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                Globals.Logger.Warning(ex, $"Exception found while parsing '{ini}'");
                 return false;
             }
 

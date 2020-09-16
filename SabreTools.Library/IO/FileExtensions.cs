@@ -189,9 +189,7 @@ namespace SabreTools.Library.IO
             }
             catch (Exception ex)
             {
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                Globals.Logger.Warning(ex, $"An exception occurred trying to figure out the format of '{filename}'");
                 return 0;
             }
         }
@@ -303,9 +301,7 @@ namespace SabreTools.Library.IO
             }
             catch (Exception ex)
             {
-                // Don't log file open errors
-                if (Globals.ThrowOnError)
-                    throw ex;
+                Globals.Logger.Warning(ex, $"An exception occurred determining file type of '{input}'");
             }
 
             return outFileType;

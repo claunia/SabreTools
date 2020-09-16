@@ -226,6 +226,21 @@ namespace SabreTools.Library.Logging
         }
 
         /// <summary>
+        /// Write the given exception as a verbose message to the log output
+        /// </summary>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public bool Verbose(Exception ex, string output = null, bool appendPrefix = true)
+        {
+            if (Globals.ThrowOnError)
+                throw ex;
+
+            return Verbose($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
+        }
+
+        /// <summary>
         /// Write the given string as a verbose message to the log output
         /// </summary>
         /// <param name="output">String to be written log</param>
@@ -234,6 +249,21 @@ namespace SabreTools.Library.Logging
         public bool Verbose(string output, bool appendPrefix = true)
         {
             return Log(output, LogLevel.VERBOSE, appendPrefix);
+        }
+
+        /// <summary>
+        /// Write the given exception as a user message to the log output
+        /// </summary>
+        /// <param name="ex">Exception to be written log</param>
+        /// <param name="output">String to be written log</param>
+        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
+        /// <returns>True if the output could be written, false otherwise</returns>
+        public bool User(Exception ex, string output = null, bool appendPrefix = true)
+        {
+            if (Globals.ThrowOnError)
+                throw ex;
+
+            return User($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
         /// <summary>
@@ -256,6 +286,9 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Warning(Exception ex, string output = null, bool appendPrefix = true)
         {
+            if (Globals.ThrowOnError)
+                throw ex;
+
             return Warning($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
@@ -280,6 +313,9 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Error(Exception ex, string output = null, bool appendPrefix = true)
         {
+            if (Globals.ThrowOnError)
+                throw ex;
+
             return Error($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 

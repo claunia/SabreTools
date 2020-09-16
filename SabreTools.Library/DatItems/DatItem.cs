@@ -1116,9 +1116,6 @@ namespace SabreTools.Library.DatItems
                 }
                 catch (Exception ex)
                 {
-                    if (Globals.ThrowOnError)
-                        throw ex;
-
                     // Absorb the error
                     return 0;
                 }

@@ -120,22 +120,16 @@ namespace SabreTools.Library.FileTypes
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                if (Globals.ThrowOnError)
-                    throw ex;
+                Globals.Logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                Globals.Logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
                 encounteredErrors = true;
             }
 
@@ -251,9 +245,6 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
                 ms = null;
                 realEntry = null;
             }
@@ -341,9 +332,6 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
                 return null;
             }
 
@@ -397,8 +385,6 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
             }
 
             return empties;
@@ -616,9 +602,6 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
                 success = false;
             }
             finally
@@ -848,9 +831,6 @@ namespace SabreTools.Library.FileTypes
             catch (Exception ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
                 success = false;
             }
 

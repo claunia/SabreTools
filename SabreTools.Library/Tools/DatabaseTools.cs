@@ -137,9 +137,7 @@ CREATE TABLE IF NOT EXISTS data (
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
+                Globals.Logger.Error(ex);
             }
             finally
             {

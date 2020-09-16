@@ -194,9 +194,7 @@ namespace SabreTools.Library.IO
             }
             catch (IOException ex)
             {
-                if (Globals.ThrowOnError)
-                    throw ex;
-
+                Globals.Logger.Warning(ex, "An exception occurred during hashing.");
                 return new BaseFile();
             }
             finally
@@ -231,15 +229,11 @@ namespace SabreTools.Library.IO
             }
             catch (NotSupportedException ex)
             {
-                Globals.Logger.Verbose("Stream does not support seeking to starting offset. Stream position not changed");
-                if (Globals.ThrowOnError)
-                    throw ex;
+                Globals.Logger.Verbose(ex, "Stream does not support seeking to starting offset. Stream position not changed");
             }
             catch (NotImplementedException ex)
             {
-                Globals.Logger.Warning("Stream does not support seeking to starting offset. Stream position not changed");
-                if (Globals.ThrowOnError)
-                    throw ex;
+                Globals.Logger.Warning(ex, "Stream does not support seeking to starting offset. Stream position not changed");
             }
 
             return -1;

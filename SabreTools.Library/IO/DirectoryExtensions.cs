@@ -92,9 +92,6 @@ namespace SabreTools.Library.IO
                 catch (Exception ex)
                 {
                     Globals.Logger.Error(ex, $"An exception occurred getting the full path for '{input}'");
-                    if (Globals.ThrowOnError)
-                        throw ex;
-
                     continue;
                 }
 
@@ -109,15 +106,11 @@ namespace SabreTools.Library.IO
                         }
                         catch (PathTooLongException ex)
                         {
-                            Globals.Logger.Warning($"The path for '{dir}' was too long");
-                            if (Globals.ThrowOnError)
-                                throw ex;
+                            Globals.Logger.Warning(ex, $"The path for '{dir}' was too long");
                         }
                         catch (Exception ex)
                         {
                             Globals.Logger.Error(ex, $"An exception occurred processing '{dir}'");
-                            if (Globals.ThrowOnError)
-                                throw ex;
                         }
                     }
                 }
@@ -195,9 +188,6 @@ namespace SabreTools.Library.IO
                 catch (Exception ex)
                 {
                     Globals.Logger.Error(ex, $"An exception occurred getting the full path for '{input}'");
-                    if (Globals.ThrowOnError)
-                        throw ex;
-
                     continue;
                 }
 
@@ -212,15 +202,11 @@ namespace SabreTools.Library.IO
                         }
                         catch (PathTooLongException ex)
                         {
-                            Globals.Logger.Warning($"The path for '{file}' was too long");
-                            if (Globals.ThrowOnError)
-                                throw ex;
+                            Globals.Logger.Warning(ex, $"The path for '{file}' was too long");
                         }
                         catch (Exception ex)
                         {
                             Globals.Logger.Error(ex, $"An exception occurred processing '{file}'");
-                            if (Globals.ThrowOnError)
-                                throw ex;
                         }
                     }
                 }
@@ -232,15 +218,11 @@ namespace SabreTools.Library.IO
                     }
                     catch (PathTooLongException ex)
                     {
-                        Globals.Logger.Warning($"The path for '{input}' was too long");
-                        if (Globals.ThrowOnError)
-                            throw ex;
+                        Globals.Logger.Warning(ex, $"The path for '{input}' was too long");
                     }
                     catch (Exception ex)
                     {
                         Globals.Logger.Error(ex, $"An exception occurred processing '{input}'");
-                        if (Globals.ThrowOnError)
-                            throw ex;
                     }
                 }
             }

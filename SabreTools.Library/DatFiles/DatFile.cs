@@ -2283,9 +2283,6 @@ namespace SabreTools.Library.DatFiles
             catch (IOException ex)
             {
                 Globals.Logger.Error(ex);
-                if (Globals.ThrowOnError)
-                    throw ex;
-
                 return;
             }
         }
