@@ -20,7 +20,7 @@ namespace SabreTools
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            Globals.Logger = new Logger(true, "sabretools.log");
+            Globals.Logger = new Logger("sabretools.log");
 
             // Create a new Help object for this program
             _help = RetrieveHelp();

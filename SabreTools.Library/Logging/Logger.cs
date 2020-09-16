@@ -12,49 +12,87 @@ namespace SabreTools.Library.Logging
     /// </summary>
     public class Logger
     {
-        // Private instance variables
-        private readonly bool _tofile;
-        private bool _warnings;
-        private bool _errors;
-        private readonly string _filename;
-        private readonly LogLevel _filter;
-        private DateTime _start;
-        private StreamWriter _log;
-        private readonly object _lock = new object(); // This is used during multithreaded logging
+        #region Fields
 
-        // Private required variables
-        private readonly string _basepath = Path.Combine(Globals.ExeDir, "logs") + Path.DirectorySeparatorChar;
+        /// <summary>
+        /// Optional output filename for logs
+        /// </summary>
+        public string Filename { get; set; } = null;
+
+        /// <summary>
+        /// Determines if we're logging to file or not
+        /// </summary>
+        public bool LogToFile { get { return !string.IsNullOrWhiteSpace(Filename); } }
+
+        /// <summary>
+        /// Optional output log directory
+        /// </summary>
+        /// TODO: Make this either passed in or optional
+        public string LogDirectory { get; set; } = Path.Combine(Globals.ExeDir, "logs") + Path.DirectorySeparatorChar;
+
+        /// <summary>
+        /// Determines the lowest log level to output
+        /// </summary>
+        public LogLevel LowestLogLevel { get; set; } = LogLevel.VERBOSE;
+
+        /// <summary>
+        /// Determines whether to throw if an exception is logged
+        /// </summary>
+        public bool ThrowOnError { get; set; } = false;
+
+        /// <summary>
+        /// Logging start time for metrics
+        /// </summary>
+        public DateTime StartTime { get; private set; }
+
+        /// <summary>
+        /// Determines if there were errors logged
+        /// </summary>
+        public bool LoggedErrors { get; private set; } = false;
+
+        /// <summary>
+        /// Determines if there were warnings logged
+        /// </summary>
+        public bool LoggedWarnings { get; private set; } = false;
+
+        #endregion
+
+        #region Private instance variables
+
+        /// <summary>
+        /// StreamWriter representing the output log file
+        /// </summary>
+        private StreamWriter _log;
+
+        /// <summary>
+        /// Object lock for multithreaded logging
+        /// </summary>
+        private readonly object _lock = new object();
+
+        #endregion
 
         /// <summary>
         /// Initialize a console-only logger object
         /// </summary>
         public Logger()
         {
-            _tofile = false;
-            _warnings = false;
-            _errors = false;
-            _filename = null;
-            _filter = LogLevel.VERBOSE;
-
             Start();
         }
 
         /// <summary>
         /// Initialize a Logger object with the given information
         /// </summary>
-        /// <param name="tofile">True if file should be written to instead of console</param>
         /// <param name="filename">Filename representing log location</param>
-        /// <param name="filter">Highest filtering level to be kept, default VERBOSE</param>
-        public Logger(bool tofile, string filename, LogLevel filter = LogLevel.VERBOSE)
+        /// <param name="addDate">True to add a date string to the filename (default), false otherwise</param>
+        public Logger(string filename, bool addDate = true)
         {
-            _tofile = tofile;
-            _warnings = false;
-            _errors = false;
-            _filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{PathExtensions.GetNormalizedExtension(filename)}";
-            _filter = filter;
+            if (addDate)
+                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{PathExtensions.GetNormalizedExtension(filename)}";
+            else
+                Filename = filename;
 
-            if (!Directory.Exists(_basepath))
-                Directory.CreateDirectory(_basepath);
+            if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
+                Directory.CreateDirectory(LogDirectory);
 
             Start();
         }
@@ -65,19 +103,19 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the logging was started correctly, false otherwise</returns>
         public bool Start()
         {
-            _start = DateTime.Now;
-            if (!_tofile)
+            StartTime = DateTime.Now;
+            if (!LogToFile)
                 return true;
 
             try
             {
-                FileStream logfile = FileExtensions.TryCreate(Path.Combine(_basepath, _filename));
+                FileStream logfile = FileExtensions.TryCreate(Path.Combine(LogDirectory, Filename));
                 _log = new StreamWriter(logfile, Encoding.UTF8, (int)(4 * Constants.KibiByte), true)
                 {
                     AutoFlush = true
                 };
 
-                _log.WriteLine($"Logging started {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+                _log.WriteLine($"Logging started {StartTime:yyyy-MM-dd HH:mm:ss}");
                 _log.WriteLine($"Command run: {Globals.CommandLineArgs}");
             }
             catch
@@ -97,13 +135,13 @@ namespace SabreTools.Library.Logging
         {
             if (!suppress)
             {
-                if (_warnings)
+                if (LoggedWarnings)
                     Console.WriteLine("There were warnings in the last run! Check the log for more details");
 
-                if (_errors)
+                if (LoggedErrors)
                     Console.WriteLine("There were errors in the last run! Check the log for more details");
 
-                TimeSpan span = DateTime.Now.Subtract(_start);
+                TimeSpan span = DateTime.Now.Subtract(StartTime);
 
                 // Special case for multi-day runs
                 string total;
@@ -112,7 +150,7 @@ namespace SabreTools.Library.Logging
                 else
                     total = span.ToString(@"hh\:mm\:ss");
 
-                if (!_tofile)
+                if (!LogToFile)
                 {
                     Console.WriteLine($"Total runtime: {total}");
                     return true;
@@ -155,7 +193,7 @@ namespace SabreTools.Library.Logging
         private bool Log(string output, LogLevel loglevel, bool appendPrefix)
         {
             // If the log level is less than the filter level, we skip it but claim we didn't
-            if (loglevel < _filter)
+            if (loglevel < LowestLogLevel)
                 return true;
 
             // USER and ERROR writes to console
@@ -163,7 +201,7 @@ namespace SabreTools.Library.Logging
                 Console.WriteLine((loglevel == LogLevel.ERROR && appendPrefix ? loglevel.ToString() + " " : string.Empty) + output);
 
             // If we're writing to file, use the existing stream
-            if (_tofile)
+            if (LogToFile)
             {
                 try
                 {
@@ -176,9 +214,7 @@ namespace SabreTools.Library.Logging
                 {
                     Console.WriteLine(ex);
                     Console.WriteLine("Could not write to log file!");
-                    if (Globals.ThrowOnError)
-                        throw ex;
-
+                    if (ThrowOnError) throw ex;
                     return false;
                 }
             }
@@ -206,7 +242,7 @@ namespace SabreTools.Library.Logging
             Console.Write(output);
 
             // If we're writing to file, use the existing stream
-            if (_tofile)
+            if (LogToFile)
             {
                 try
                 {
@@ -234,9 +270,7 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Verbose(Exception ex, string output = null, bool appendPrefix = true)
         {
-            if (Globals.ThrowOnError)
-                throw ex;
-
+            if (ThrowOnError) throw ex;
             return Verbose($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
@@ -260,9 +294,7 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool User(Exception ex, string output = null, bool appendPrefix = true)
         {
-            if (Globals.ThrowOnError)
-                throw ex;
-
+            if (ThrowOnError) throw ex;
             return User($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
@@ -286,9 +318,7 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Warning(Exception ex, string output = null, bool appendPrefix = true)
         {
-            if (Globals.ThrowOnError)
-                throw ex;
-
+            if (ThrowOnError) throw ex;
             return Warning($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
@@ -300,7 +330,7 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Warning(string output, bool appendPrefix = true)
         {
-            _warnings = true;
+            LoggedWarnings = true;
             return Log(output, LogLevel.WARNING, appendPrefix);
         }
 
@@ -313,9 +343,7 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Error(Exception ex, string output = null, bool appendPrefix = true)
         {
-            if (Globals.ThrowOnError)
-                throw ex;
-
+            if (ThrowOnError) throw ex;
             return Error($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
         }
 
@@ -327,7 +355,7 @@ namespace SabreTools.Library.Logging
         /// <returns>True if the output could be written, false otherwise</returns>
         public bool Error(string output, bool appendPrefix = true)
         {
-            _errors = true;
+            LoggedErrors = true;
             return Log(output, LogLevel.ERROR, appendPrefix);
         }
 
