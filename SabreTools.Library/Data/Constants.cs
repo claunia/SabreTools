@@ -79,6 +79,8 @@ namespace SabreTools.Library.Data
                                                               0x64, 0x3c, 0xe8, 0x0e,
                                                               0x2a, 0x9a, 0xc9, 0x4f,
                                                               0xa5, 0x4c, 0xa4, 0x9f };
+        public const string SpamSumZero = "QXX";
+        public static readonly byte[] SpamSumZeroBytes = { 0x51, 0x58, 0x58 };
 
         #endregion
 

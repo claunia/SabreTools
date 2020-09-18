@@ -1902,16 +1902,7 @@ namespace SabreTools.Library.DatFiles
                 Rom rom = item as Rom;
 
                 // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
-                if (rom.Size == null
-                    && string.IsNullOrWhiteSpace(rom.CRC)
-                    && string.IsNullOrWhiteSpace(rom.MD5)
-#if NET_FRAMEWORK
-                    && string.IsNullOrWhiteSpace(rom.RIPEMD160)
-#endif
-                    && !string.IsNullOrWhiteSpace(rom.SHA1)
-                    && string.IsNullOrWhiteSpace(rom.SHA256)
-                    && string.IsNullOrWhiteSpace(rom.SHA384)
-                    && string.IsNullOrWhiteSpace(rom.SHA512))
+                if (rom.Size == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
                     Globals.Logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.Name}'");
@@ -1919,15 +1910,7 @@ namespace SabreTools.Library.DatFiles
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
                 else if ((rom.Size == 0 || rom.Size == null)
-                    && ((rom.CRC == Constants.CRCZero || string.IsNullOrWhiteSpace(rom.CRC))
-                        || rom.MD5 == Constants.MD5Zero
-#if NET_FRAMEWORK
-                        || rom.RIPEMD160 == Constants.RIPEMD160Zero
-#endif
-                        || rom.SHA1 == Constants.SHA1Zero
-                        || rom.SHA256 == Constants.SHA256Zero
-                        || rom.SHA384 == Constants.SHA384Zero
-                        || rom.SHA512 == Constants.SHA512Zero))
+                    && (string.IsNullOrWhiteSpace(rom.CRC) || rom.HasZeroHash()))
                 {
                     // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                     rom.Size = Constants.SizeZero;
@@ -1940,6 +1923,7 @@ namespace SabreTools.Library.DatFiles
                     rom.SHA256 = null; // Constants.SHA256Zero;
                     rom.SHA384 = null; // Constants.SHA384Zero;
                     rom.SHA512 = null; // Constants.SHA512Zero;
+                    rom.SpamSum = null; // Constants.SpamSumZero;
                 }
 
                 // If the file has no size and it's not the above case, skip and log
@@ -1951,17 +1935,8 @@ namespace SabreTools.Library.DatFiles
 
                 // If the file has a size but aboslutely no hashes, skip and log
                 else if (rom.ItemStatus != ItemStatus.Nodump
-                    && rom.Size != null
-                    && rom.Size > 0
-                    && string.IsNullOrWhiteSpace(rom.CRC)
-                    && string.IsNullOrWhiteSpace(rom.MD5)
-#if NET_FRAMEWORK
-                    && string.IsNullOrWhiteSpace(rom.RIPEMD160)
-#endif
-                    && string.IsNullOrWhiteSpace(rom.SHA1)
-                    && string.IsNullOrWhiteSpace(rom.SHA256)
-                    && string.IsNullOrWhiteSpace(rom.SHA384)
-                    && string.IsNullOrWhiteSpace(rom.SHA512))
+                    && rom.Size != null && rom.Size > 0
+                    && !rom.HasHashes())
                 {
                     Globals.Logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
                     rom.ItemStatus = ItemStatus.Nodump;
@@ -3746,6 +3721,7 @@ namespace SabreTools.Library.DatFiles
                 rom.SHA256 = rom.SHA256 == "null" ? Constants.SHA256Zero : null;
                 rom.SHA384 = rom.SHA384 == "null" ? Constants.SHA384Zero : null;
                 rom.SHA512 = rom.SHA512 == "null" ? Constants.SHA512Zero : null;
+                rom.SpamSum = rom.SpamSum == "null" ? Constants.SpamSumZero : null;
             }
 
             return rom;

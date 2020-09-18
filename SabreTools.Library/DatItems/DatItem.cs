@@ -818,7 +818,7 @@ namespace SabreTools.Library.DatItems
                     break;
 
                 case Field.DatItem_SpamSum:
-                    key = null;
+                    key = Constants.SpamSumZero;
                     break;
             }
 

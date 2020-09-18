@@ -109,7 +109,12 @@ namespace Aaru.Checksums
 
         /// <inheritdoc />
         /// <summary>Returns a byte array of the hash value.</summary>
-        public byte[] Final() => throw new NotImplementedException("SpamSum does not have a binary representation.");
+        public byte[] Final()
+        {
+            FuzzyDigest(out byte[] result);
+
+            return CToArray(result);
+        }
 
         /// <inheritdoc />
         /// <summary>Returns a base64 representation of the hash value.</summary>
@@ -483,6 +488,25 @@ namespace Aaru.Checksums
             }
 
             return Encoding.ASCII.GetString(cString, 0, count);
+        }
+
+        // Converts an ASCII null-terminated string to .NET string
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static byte[] CToArray(byte[] cString)
+        {
+            int count = 0;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            // LINQ is six times slower
+            foreach (byte c in cString)
+            {
+                if (c == 0)
+                    break;
+
+                count++;
+            }
+
+            return new ReadOnlySpan<byte>(cString, 0, count).ToArray();
         }
 
         public void Dispose()

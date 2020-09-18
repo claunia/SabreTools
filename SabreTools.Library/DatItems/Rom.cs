@@ -686,6 +686,42 @@ namespace SabreTools.Library.DatItems
         }
 
         /// <summary>
+        /// Returns if the Rom contains any hashes
+        /// </summary>
+        /// <returns>True if any hash exists, false otherwise</returns>
+        public bool HasHashes()
+        {
+            return !_crc.IsNullOrEmpty()
+                || !_md5.IsNullOrEmpty()
+#if NET_FRAMEWORK
+                || !_ripemd160.IsNullOrEmpty()
+#endif
+                || !_sha1.IsNullOrEmpty()
+                || !_sha256.IsNullOrEmpty()
+                || !_sha384.IsNullOrEmpty()
+                || !_sha512.IsNullOrEmpty()
+                || !_spamsum.IsNullOrEmpty();
+        }
+
+        /// <summary>
+        /// Returns if all of the hashes are set to their 0-byte values
+        /// </summary>
+        /// <returns>True if any hash matches the 0-byte value, false otherwise</returns>
+        public bool HasZeroHash()
+        {
+            return (_crc != null && _crc.SequenceEqual(Constants.CRCZeroBytes))
+                || (_md5 != null && _md5.SequenceEqual(Constants.MD5ZeroBytes))
+#if NET_FRAMEWORK
+                || (_ripemd160 != null && _ripemd160.SequenceEqual(Constants.RIPEMD160ZeroBytes))
+#endif
+                || (_sha1 != null && _sha1.SequenceEqual(Constants.SHA1ZeroBytes))
+                || (_sha256 != null && _sha256.SequenceEqual(Constants.SHA256ZeroBytes))
+                || (_sha384 != null && _sha384.SequenceEqual(Constants.SHA384ZeroBytes))
+                || (_sha512 != null && _sha512.SequenceEqual(Constants.SHA512ZeroBytes))
+                || (_spamsum != null && _spamsum.SequenceEqual(Constants.SpamSumZeroBytes));
+        }
+
+        /// <summary>
         /// Returns if there are no, non-empty hashes in common with another Rom
         /// </summary>
         /// <param name="other">Rom to compare against</param>
@@ -702,24 +738,6 @@ namespace SabreTools.Library.DatItems
                 || !(_sha384.IsNullOrEmpty() ^ other._sha384.IsNullOrEmpty())
                 || !(_sha512.IsNullOrEmpty() ^ other._sha512.IsNullOrEmpty())
                 || !(_spamsum.IsNullOrEmpty() ^ other._spamsum.IsNullOrEmpty());
-        }
-
-        /// <summary>
-        /// Returns if the Rom contains any hashes
-        /// </summary>
-        /// <returns>True if any hash exists, false otherwise</returns>
-        private bool HasHashes()
-        {
-            return !_crc.IsNullOrEmpty()
-                || !_md5.IsNullOrEmpty()
-#if NET_FRAMEWORK
-                || !_ripemd160.IsNullOrEmpty()
-#endif
-                || !_sha1.IsNullOrEmpty()
-                || !_sha256.IsNullOrEmpty()
-                || !_sha384.IsNullOrEmpty()
-                || !_sha512.IsNullOrEmpty()
-                || !_spamsum.IsNullOrEmpty();
         }
 
         /// <summary>
