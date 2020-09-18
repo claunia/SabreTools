@@ -66,11 +66,13 @@ namespace SabreTools.Features
             var skipFileType = GetSkipFileType(features);
             var splitType = GetSplitType(features);
 
-            // Apply the omit from scan values to the cleaner
+            // Apply the specialized field removals to the cleaner
             if (Cleaner.ExcludeFields == null)
                 Cleaner.ExcludeFields = new List<Field>();
 
             Cleaner.ExcludeFields.AddRange(omitFromScan.AsFields());
+            if (!addFileDates)
+                Cleaner.ExcludeFields.Add(Field.DatItem_Date);
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header);
@@ -94,7 +96,6 @@ namespace SabreTools.Features
                         asFiles,
                         skipFileType,
                         addBlankFiles,
-                        addFileDates,
                         quickScan: omitFromScan == Hash.SecureHashes);
 
                     if (success)

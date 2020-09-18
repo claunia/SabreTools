@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -189,10 +188,8 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
-        /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override List<BaseFile> GetChildren(bool date = false)
+        public override List<BaseFile> GetChildren()
         {
             if (_children == null || _children.Count == 0)
             {
@@ -235,7 +232,7 @@ namespace SabreTools.Library.FileTypes
                             BaseFile gzipEntryRom = gzstream.GetInfo();
                             gzipEntryRom.Filename = gz.Filename(0);
                             gzipEntryRom.Parent = gamename;
-                            gzipEntryRom.Date = (date && gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
+                            gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
                             _children.Add(gzipEntryRom);
                             gzstream.Dispose();
                         }

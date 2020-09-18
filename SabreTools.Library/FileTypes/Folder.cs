@@ -256,16 +256,15 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of immediate children from the current folder
         /// </summary>
-        /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of BaseFile objects representing the found data</returns>
-        public virtual List<BaseFile> GetChildren(bool date = false)
+        public virtual List<BaseFile> GetChildren()
         {
             if (_children == null || _children.Count == 0)
             {
                 _children = new List<BaseFile>();
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
                 {
-                    BaseFile nf = FileExtensions.GetInfo(file, date: date);
+                    BaseFile nf = FileExtensions.GetInfo(file);
                     _children.Add(nf);
                 }
 

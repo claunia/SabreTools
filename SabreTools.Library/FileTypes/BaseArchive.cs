@@ -153,10 +153,8 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
-        /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override abstract List<BaseFile> GetChildren(bool date = false);
+        public override abstract List<BaseFile> GetChildren();
 
         /// <summary>
         /// Generate a list of empty folders in an archive

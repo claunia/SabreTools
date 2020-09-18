@@ -1973,7 +1973,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
-        /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="outDir">Output directory to </param>
         /// <param name="quickScan">True if archive header should be used, false otherwise</param>
         public bool PopulateFromDir(
@@ -1981,7 +1980,6 @@ namespace SabreTools.Library.DatFiles
             TreatAsFile asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
             bool addBlanks = false,
-            bool addDate = false,
             bool quickScan = false)
         {
             // Clean the temp directory path
@@ -1996,7 +1994,7 @@ namespace SabreTools.Library.DatFiles
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
-                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, addDate, quickScan);
+                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, quickScan);
                 });
 
                 // Now find all folders that are empty, if we are supposed to
@@ -2043,7 +2041,6 @@ namespace SabreTools.Library.DatFiles
                     asFiles,
                     skipFileType,
                     addBlanks,
-                    addDate,
                     quickScan);
             }
 
@@ -2064,7 +2061,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
-        /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="quickScan">True if archive header should be used, false otherwise</param>
         private void CheckFileForHashes(
             string item,
@@ -2072,7 +2068,6 @@ namespace SabreTools.Library.DatFiles
             TreatAsFile asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
-            bool addDate,
             bool quickScan)
         {
             // If we're in depot mode, process it separately
@@ -2085,7 +2080,7 @@ namespace SabreTools.Library.DatFiles
 
             // If we have an archive and we're supposed to scan it
             if (archive != null && !asFiles.HasFlag(TreatAsFile.Archive))
-                extracted = archive.GetChildren(date: addDate);
+                extracted = archive.GetChildren();
 
             // If the file should be skipped based on type, do so now
             if ((extracted != null && skipFileType == SkipFileType.Archive)
@@ -2096,7 +2091,7 @@ namespace SabreTools.Library.DatFiles
 
             // If the extracted list is null, just scan the item itself
             if (extracted == null)
-                ProcessFile(item, basePath, addDate, asFiles);
+                ProcessFile(item, basePath, asFiles);
 
             // Otherwise, add all of the found items
             else
@@ -2179,12 +2174,11 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private void ProcessFile(string item, string basePath, bool addDate, TreatAsFile asFiles)
+        private void ProcessFile(string item, string basePath, TreatAsFile asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = FileExtensions.GetInfo(item, addDate, Header.HeaderSkipper, asFiles);
+            BaseFile baseFile = FileExtensions.GetInfo(item, date: true, header: Header.HeaderSkipper, asFiles: asFiles);
             DatItem datItem = DatItem.Create(baseFile);
             ProcessFileHelper(item, datItem, basePath, string.Empty);
         }
@@ -2576,7 +2570,7 @@ namespace SabreTools.Library.DatFiles
 
             // Now get all extracted items from the archive
             if (archive != null)
-                entries = archive.GetChildren(date: date);
+                entries = archive.GetChildren();
 
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && File.Exists(file))

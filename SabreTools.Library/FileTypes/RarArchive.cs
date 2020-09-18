@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SharpCompress.Archives;
@@ -175,10 +174,8 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
-        /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override List<BaseFile> GetChildren(bool date = false)
+        public override List<BaseFile> GetChildren()
         {
             List<BaseFile> found = new List<BaseFile>();
             string gamename = Path.GetFileNameWithoutExtension(this.Filename);
@@ -196,7 +193,7 @@ namespace SabreTools.Library.FileTypes
                             Filename = entry.Key,
                             Size = entry.Size,
                             CRC = BitConverter.GetBytes(entry.Crc),
-                            Date = (date && entry.LastModifiedTime != null ? entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss") : null),
+                            Date = (entry.LastModifiedTime != null ? entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss") : null),
 
                             Parent = gamename,
                         });

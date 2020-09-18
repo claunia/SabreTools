@@ -339,11 +339,10 @@ namespace SabreTools.Library.IO
         /// Retrieve file information for a single file
         /// </summary>
         /// <param name="input">Filename to get information from</param>
-        /// <param name="date">True if the file Date should be included, false otherwise (default)</param>
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(string input, bool date = false, string header = null, TreatAsFile asFiles = 0x00)
+        public static BaseFile GetInfo(string input, string header = null, TreatAsFile asFiles = 0x00)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
@@ -384,7 +383,7 @@ namespace SabreTools.Library.IO
 
             // Add unique data from the file
             baseFile.Filename = Path.GetFileName(input);
-            baseFile.Date = (date ? new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss") : string.Empty);
+            baseFile.Date = new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss");
 
             return baseFile;
         }

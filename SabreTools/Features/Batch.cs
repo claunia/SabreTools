@@ -157,7 +157,10 @@ Reset the internal state:           reset();";
                                 }
 
                                 // TODO: We might not want to remove higher order hashes in the future
-                                datFile.ApplyCleaning(new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
+                                // TODO: We might not want to remove dates in the future
+                                Cleaner dfdCleaner = new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() };
+                                dfdCleaner.ExcludeFields.Add(Field.DatItem_Date);
+                                datFile.ApplyCleaning(dfdCleaner);
 
                                 break;
 
