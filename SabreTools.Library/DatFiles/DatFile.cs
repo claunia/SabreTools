@@ -1867,7 +1867,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error($"Error with file '{filename}': {ex}");
+                Globals.Logger.Error(ex, $"Error with file '{filename}'");
                 if (throwOnError) throw ex;
             }
         }

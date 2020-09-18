@@ -45,11 +45,10 @@ namespace SabreTools.Library.IO
         /// <param name="size">Size of the input stream</param>
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated (defaults to none)</param>
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(this Stream input, long size = -1, Hash omitFromScan = 0x0, bool keepReadOpen = false, TreatAsFiles asFiles = 0x00)
+        public static BaseFile GetInfo(this Stream input, long size = -1, bool keepReadOpen = false)
         {
-            return GetInfoAsync(input, size, omitFromScan, keepReadOpen, asFiles).ConfigureAwait(false).GetAwaiter().GetResult();
+            return GetInfoAsync(input, size, keepReadOpen).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -57,52 +56,13 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="input">Filename to get information from</param>
         /// <param name="size">Size of the input stream</param>
-        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated (defaults to none)</param>
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
-        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static async Task<BaseFile> GetInfoAsync(Stream input, long size = -1, Hash omitFromScan = 0x0, bool keepReadOpen = false, TreatAsFiles asFiles = 0x00)
+        public static async Task<BaseFile> GetInfoAsync(Stream input, long size = -1, bool keepReadOpen = false)
         {
             // If we want to automatically set the size
             if (size == -1)
                 size = input.Length;
-
-            // We first check to see if it's an AaruFormat if we have to
-            if (!asFiles.HasFlag(TreatAsFiles.AaruFormats))
-            {
-                var aaruFormat = AaruFormat.Create(input);
-                input.SeekIfPossible();
-
-                // If we found a valid AaruFormat
-                if (aaruFormat != null)
-                {
-                    if (!keepReadOpen)
-                        input.Dispose();
-
-                    return aaruFormat;
-                }
-            }
-
-            // Then, we first check to see if it's a CHD if we have to
-            if (!asFiles.HasFlag(TreatAsFiles.CHDs))
-            {
-                var chd = CHDFile.Create(input);
-                input.SeekIfPossible();
-
-                // If we found a valid CHD
-                if (chd != null)
-                {
-                    if (!keepReadOpen)
-                        input.Dispose();
-
-                    return chd;
-                }
-            }
-
-            BaseFile rom = new BaseFile()
-            {
-                Size = size,
-            };
 
             try
             {
@@ -169,28 +129,26 @@ namespace SabreTools.Library.IO
                 await Task.WhenAll(hashers.Select(h => h.Finalize()));
 
                 // Get the results
-                if (!omitFromScan.HasFlag(Hash.CRC))
-                    rom.CRC = hashers.First(h => h.HashType == Hash.CRC).GetHash();
-                if (!omitFromScan.HasFlag(Hash.MD5))
-                    rom.MD5 = hashers.First(h => h.HashType == Hash.MD5).GetHash();
+                BaseFile baseFile = new BaseFile()
+                {
+                    Size = size,
+                    CRC = hashers.First(h => h.HashType == Hash.CRC).GetHash(),
+                    MD5 = hashers.First(h => h.HashType == Hash.MD5).GetHash(),
 #if NET_FRAMEWORK
-                if (!omitFromScan.HasFlag(Hash.RIPEMD160))
-                    rom.RIPEMD160 = hashers.First(h => h.HashType == Hash.RIPEMD160).GetHash();
+                    RIPEMD160 = hashers.First(h => h.HashType == Hash.RIPEMD160).GetHash(),
 #endif
-                if (!omitFromScan.HasFlag(Hash.SHA1))
-                    rom.SHA1 = hashers.First(h => h.HashType == Hash.SHA1).GetHash();
-                if (!omitFromScan.HasFlag(Hash.SHA256))
-                    rom.SHA256 = hashers.First(h => h.HashType == Hash.SHA256).GetHash();
-                if (!omitFromScan.HasFlag(Hash.SHA384))
-                    rom.SHA384 = hashers.First(h => h.HashType == Hash.SHA384).GetHash();
-                if (!omitFromScan.HasFlag(Hash.SHA512))
-                    rom.SHA512 = hashers.First(h => h.HashType == Hash.SHA512).GetHash();
-                if (!omitFromScan.HasFlag(Hash.SpamSum))
-                    rom.SpamSum = hashers.First(h => h.HashType == Hash.SpamSum).GetHash();
+                    SHA1 = hashers.First(h => h.HashType == Hash.SHA1).GetHash(),
+                    SHA256 = hashers.First(h => h.HashType == Hash.SHA256).GetHash(),
+                    SHA384 = hashers.First(h => h.HashType == Hash.SHA384).GetHash(),
+                    SHA512 = hashers.First(h => h.HashType == Hash.SHA512).GetHash(),
+                    SpamSum = hashers.First(h => h.HashType == Hash.SpamSum).GetHash(),
+                };
 
                 // Dispose of the hashers
                 loadBuffer.Dispose();
                 hashers.ForEach(h => h.Dispose());
+
+                return baseFile;
             }
             catch (IOException ex)
             {
@@ -204,8 +162,6 @@ namespace SabreTools.Library.IO
                 else
                     input.SeekIfPossible();
             }
-
-            return rom;
         }
 
         /// <summary>

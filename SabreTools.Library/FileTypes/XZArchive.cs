@@ -223,7 +223,8 @@ namespace SabreTools.Library.FileTypes
                         else
                         {
                             var xzStream = new XZStream(File.OpenRead(this.Filename));
-                            BaseFile xzEntryRom = xzStream.GetInfo(omitFromScan: omitFromScan, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
+                            BaseFile xzEntryRom = xzStream.GetInfo();
+                            xzEntryRom.RemoveHashes(omitFromScan);
                             xzEntryRom.Filename = gamename;
                             xzEntryRom.Parent = gamename;
                             _children.Add(xzEntryRom);

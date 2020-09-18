@@ -206,7 +206,8 @@ namespace SabreTools.Library.FileTypes
                     else
                     {
                         Stream entryStream = entry.OpenEntryStream();
-                        BaseFile rarEntryRom = entryStream.GetInfo(size: entry.Size, omitFromScan: omitFromScan, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
+                        BaseFile rarEntryRom = entryStream.GetInfo(size: entry.Size);
+                        rarEntryRom.RemoveHashes(omitFromScan);
                         rarEntryRom.Filename = entry.Key;
                         rarEntryRom.Parent = gamename;
                         rarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");

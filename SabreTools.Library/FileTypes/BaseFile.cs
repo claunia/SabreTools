@@ -1,5 +1,5 @@
 ﻿using System.IO;
-
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.IO;
 
 namespace SabreTools.Library.FileTypes
@@ -96,6 +96,36 @@ namespace SabreTools.Library.FileTypes
                 }
             }
 
+        }
+
+        #endregion
+
+        #region Manipulation
+
+        /// <summary>
+        /// Remove hashes from the metadata
+        /// </summary>
+        /// <param name="remove">Hash representing hashes to remove</param>
+        public void RemoveHashes(Hash remove)
+        {
+            if (remove.HasFlag(Hash.CRC))
+                CRC = null;
+            if (remove.HasFlag(Hash.MD5))
+                MD5 = null;
+#if NET_FRAMEWORK
+            if (remove.HasFlag(Hash.RIPEMD160))
+                RIPEMD160 = null;
+#endif
+            if (remove.HasFlag(Hash.SHA1))
+                SHA1 = null;
+            if (remove.HasFlag(Hash.SHA256))
+                SHA256 = null;
+            if (remove.HasFlag(Hash.SHA384))
+                SHA384 = null;
+            if (remove.HasFlag(Hash.SHA512))
+                SHA512 = null;
+            if (remove.HasFlag(Hash.SpamSum))
+                SpamSum = null;
         }
 
         #endregion

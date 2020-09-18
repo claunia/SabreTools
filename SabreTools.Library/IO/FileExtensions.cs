@@ -350,6 +350,10 @@ namespace SabreTools.Library.IO
             if (!File.Exists(input))
                 return null;
 
+            // Get input information
+            var fileType = input.GetFileType();
+            var inputStream = TryOpenRead(input);
+
             // Get the information from the file stream
             BaseFile baseFile;
             if (header != null)
@@ -359,30 +363,49 @@ namespace SabreTools.Library.IO
                 // If there's a match, get the new information from the stream
                 if (rule.Tests != null && rule.Tests.Count != 0)
                 {
-                    // Create the input and output streams
+                    // Create the output stream
                     MemoryStream outputStream = new MemoryStream();
-                    FileStream inputStream = TryOpenRead(input);
-
+                    
                     // Transform the stream and get the information from it
                     rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
-                    baseFile = outputStream.GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, asFiles: asFiles);
 
-                    // Dispose of the streams
+                    if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFiles.AaruFormats))
+                        baseFile = AaruFormat.Create(outputStream);
+                    else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFiles.CHDs))
+                        baseFile = CHDFile.Create(outputStream);
+                    else
+                        baseFile = outputStream.GetInfo(keepReadOpen: false);
+
+                    // Dispose of the output stream
                     outputStream.Dispose();
-                    inputStream.Dispose();
+                    
                 }
                 // Otherwise, just get the info
                 else
                 {
-                    baseFile = TryOpenRead(input).GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, asFiles: asFiles);
+                    if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFiles.AaruFormats))
+                        baseFile = AaruFormat.Create(inputStream);
+                    else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFiles.CHDs))
+                        baseFile = CHDFile.Create(inputStream);
+                    else
+                        baseFile = inputStream.GetInfo(keepReadOpen: false);
                 }
             }
             else
             {
-                baseFile = TryOpenRead(input).GetInfo(omitFromScan: omitFromScan, keepReadOpen: false, asFiles: asFiles);
+                if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFiles.AaruFormats))
+                    baseFile = AaruFormat.Create(inputStream);
+                else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFiles.CHDs))
+                    baseFile = CHDFile.Create(inputStream);
+                else
+                    baseFile = inputStream.GetInfo(keepReadOpen: false);
             }
 
+            // Dispose of the input stream
+            inputStream.Dispose();
+
             // Add unique data from the file
+            baseFile.RemoveHashes(omitFromScan);
             baseFile.Filename = Path.GetFileName(input);
             baseFile.Date = (date ? new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss") : string.Empty);
 
