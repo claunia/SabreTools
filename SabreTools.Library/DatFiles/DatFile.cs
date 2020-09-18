@@ -2136,28 +2136,6 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Copy a file to the temp directory if needed and return the new paths
-        /// </summary>
-        /// <param name="item">Filename of the item to be checked</param>
-        /// <param name="basePath">Base folder to be used in creating the DAT</param>
-        /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
-        /// <returns>New item and base path strings</returns>
-        private static (string item, string basePath) CopyIfNeeded(string item, string basePath, bool copyFiles)
-        {
-            string newItem = item;
-            string newBasePath = basePath;
-            if (copyFiles)
-            {
-                newBasePath = Path.Combine(Globals.TempDir, Guid.NewGuid().ToString());
-                newItem = Path.GetFullPath(Path.Combine(newBasePath, Path.GetFullPath(item).Remove(0, basePath.Length + 1)));
-                DirectoryExtensions.TryCreateDirectory(Path.GetDirectoryName(newItem));
-                File.Copy(item, newItem, true);
-            }
-
-            return (newItem, newBasePath);
-        }
-
-        /// <summary>
         /// Process a single file as an archive
         /// </summary>
         /// <param name="item">File to be added</param>
