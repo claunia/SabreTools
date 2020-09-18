@@ -156,6 +156,9 @@ Reset the internal state:           reset();";
                                     datFile.PopulateFromDir(input);
                                 }
 
+                                // TODO: We might not want to remove higher order hashes in the future
+                                datFile.ApplyCleaning(new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
+
                                 break;
 
                             // Apply a filter

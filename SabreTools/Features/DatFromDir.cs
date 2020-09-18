@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
+using SabreTools.Library.DatItems;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -16,9 +17,9 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-d", "--d2d", "--dfd" };
             Description = "Create DAT(s) from an input directory";
-            _featureType = FeatureType.Flag;
+            _featureType = Library.Help.FeatureType.Flag;
             LongDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
-            Features = new Dictionary<string, Feature>();
+            Features = new Dictionary<string, Library.Help.Feature>();
 
             // Hash Features
             AddFeature(SkipMd5Flag);
@@ -53,7 +54,7 @@ namespace SabreTools.Features
             AddFeature(ThreadsInt32Input);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
 
@@ -66,6 +67,12 @@ namespace SabreTools.Features
             var omitFromScan = GetOmitFromScan(features);
             var skipFileType = GetSkipFileType(features);
             var splitType = GetSplitType(features);
+
+            // Apply the omit from scan values to the cleaner
+            if (Cleaner.ExcludeFields == null)
+                Cleaner.ExcludeFields = new List<Field>();
+
+            Cleaner.ExcludeFields.AddRange(omitFromScan.AsFields());
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header);
@@ -86,12 +93,12 @@ namespace SabreTools.Features
                     // Now populate from the path
                     bool success = datdata.PopulateFromDir(
                         basePath,
-                        omitFromScan,
                         asFiles,
                         skipFileType,
                         addBlankFiles,
                         addFileDates,
-                        copyFiles);
+                        copyFiles,
+                        quickScan: omitFromScan == Hash.SecureHashes);
 
                     if (success)
                     {

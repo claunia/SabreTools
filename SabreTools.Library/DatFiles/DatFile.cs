@@ -1970,23 +1970,22 @@ namespace SabreTools.Library.DatFiles
         /// Create a new Dat from a directory
         /// </summary>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
-        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="outDir">Output directory to </param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
-        /// TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+        /// <param name="quickScan">True if archive header should be used, false otherwise</param>
         /// TODO: Look into removing "copyFiles". I don't think it's useful anymore
         public bool PopulateFromDir(
             string basePath,
-            Hash omitFromScan = Hash.DeepHashes,
             TreatAsFile asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
             bool addBlanks = false,
             bool addDate = false,
-            bool copyFiles = false)
+            bool copyFiles = false,
+            bool quickScan = false)
         {
             // Clean the temp directory path
             Globals.TempDir = DirectoryExtensions.Ensure(Globals.TempDir, temp: true);
@@ -2000,7 +1999,7 @@ namespace SabreTools.Library.DatFiles
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
-                    CheckFileForHashes(item, basePath, omitFromScan, asFiles, skipFileType, addBlanks, addDate, copyFiles);
+                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, addDate, copyFiles, quickScan);
                 });
 
                 // Now find all folders that are empty, if we are supposed to
@@ -2044,12 +2043,12 @@ namespace SabreTools.Library.DatFiles
                 CheckFileForHashes(
                     basePath,
                     Path.GetDirectoryName(Path.GetDirectoryName(basePath)),
-                    omitFromScan,
                     asFiles,
                     skipFileType,
                     addBlanks,
                     addDate,
-                    copyFiles);
+                    copyFiles,
+                    quickScan);
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
@@ -2071,15 +2070,16 @@ namespace SabreTools.Library.DatFiles
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
+        /// <param name="quickScan">True if archive header should be used, false otherwise</param>
         private void CheckFileForHashes(
             string item,
             string basePath,
-            Hash omitFromScan,
             TreatAsFile asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
-            bool copyFiles)
+            bool copyFiles,
+            bool quickScan)
         {
             // If we're in depot mode, process it separately
             if (CheckDepotFile(item))
@@ -2089,7 +2089,7 @@ namespace SabreTools.Library.DatFiles
             (string newItem, string newBasePath) = CopyIfNeeded(item, basePath, copyFiles);
 
             // Initialize possible archive variables
-            BaseArchive archive = BaseArchive.Create(newItem);
+            BaseArchive archive = BaseArchive.Create(newItem, quickScan);
             List<BaseFile> extracted = null;
 
             // If we have an archive and we're supposed to scan it
@@ -2105,11 +2105,11 @@ namespace SabreTools.Library.DatFiles
 
             // If the extracted list is null, just scan the item itself
             if (extracted == null)
-                ProcessFile(newItem, newBasePath, omitFromScan, addDate, asFiles);
+                ProcessFile(newItem, newBasePath, addDate, asFiles);
 
             // Otherwise, add all of the found items
             else
-                ProcessArchive(newItem, newBasePath, addBlanks, archive, extracted, omitFromScan);
+                ProcessArchive(newItem, newBasePath, addBlanks, archive, extracted);
 
             // Cue to delete the file if it's a copy
             if (copyFiles && item != newItem)
@@ -2178,8 +2178,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="archive">BaseArchive to get blank folders from, if necessary</param>
         /// <param name="extracted">List of BaseFiles representing the internal files</param>
-        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
-        private void ProcessArchive(string item, string basePath, bool addBlanks, BaseArchive archive, List<BaseFile> extracted, Hash omitFromScan)
+        /// <param name="quickScan">True if only information from file headers should be used, false otherwise</param>
+        private void ProcessArchive(string item, string basePath, bool addBlanks, BaseArchive archive, List<BaseFile> extracted)
         {
             // Get the parent path for all items
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
@@ -2188,7 +2188,6 @@ namespace SabreTools.Library.DatFiles
             Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
             {
                 DatItem datItem = DatItem.Create(baseFile);
-                datItem.RemoveFields(omitFromScan.AsFields());
                 ProcessFileHelper(item, datItem, basePath, parent);
             });
 
@@ -2215,15 +2214,13 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private void ProcessFile(string item, string basePath, Hash omitFromScan, bool addDate, TreatAsFile asFiles)
+        private void ProcessFile(string item, string basePath, bool addDate, TreatAsFile asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = FileExtensions.GetInfo(item, addDate, Header.HeaderSkipper, asFiles);
             DatItem datItem = DatItem.Create(baseFile);
-            datItem.RemoveFields(omitFromScan.AsFields());
             ProcessFileHelper(item, datItem, basePath, string.Empty);
         }
 
@@ -3004,8 +3001,7 @@ namespace SabreTools.Library.DatFiles
             Globals.Logger.User("Processing files:\n");
             foreach (string input in inputs)
             {
-                // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                PopulateFromDir(input, quickScan ? Hash.SecureHashes : Hash.DeepHashes, asFiles: asFiles);
+                PopulateFromDir(input, asFiles: asFiles, quickScan: quickScan);
             }
 
             // Force bucketing according to the flags

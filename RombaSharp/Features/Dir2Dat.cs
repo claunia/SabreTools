@@ -3,8 +3,10 @@ using System.IO;
 
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
+using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
+using SabreTools.Library.Tools;
 
 namespace RombaSharp.Features
 {
@@ -52,6 +54,7 @@ namespace RombaSharp.Features
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
             datfile.PopulateFromDir(source, asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
+            datfile.ApplyCleaning(new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
             datfile.Write(outDir: outdat);
         }
     }
