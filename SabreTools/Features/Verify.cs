@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
@@ -57,7 +58,7 @@ namespace SabreTools.Features
                 {
                     // Parse in from the file
                     DatFile datdata = DatFile.Create();
-                    datdata.Parse(datfile, 99, keep: true);
+                    datdata.Parse(datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
                     datdata.ApplyExtras(Extras);
@@ -74,9 +75,20 @@ namespace SabreTools.Features
 
                     // If we have the depot flag, respect it
                     if (Header.InputDepot?.IsActive ?? false)
+                    {
                         datdata.VerifyDepot(Inputs);
+                    }
                     else
-                        datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles);
+                    {
+                        // Loop through and add the inputs to check against
+                        Globals.Logger.User("Processing files:\n");
+                        foreach (string input in Inputs)
+                        {
+                            datdata.PopulateFromDir(input, asFiles: asFiles, quickScan: quickScan);
+                        }
+
+                        datdata.VerifyGeneric(hashOnly);
+                    }
 
                     // Now write out if there are any items left
                     datdata.WriteStatsToConsole();
@@ -92,7 +104,7 @@ namespace SabreTools.Features
                 DatFile datdata = DatFile.Create();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    datdata.Parse(datfile, 99, keep: true);
+                    datdata.Parse(datfile, int.MaxValue, keep: true);
                 }
 
                 // Perform additional processing steps
@@ -112,9 +124,20 @@ namespace SabreTools.Features
 
                 // If we have the depot flag, respect it
                 if (Header.InputDepot?.IsActive ?? false)
+                {
                     datdata.VerifyDepot(Inputs);
+                }
                 else
-                    datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles);
+                {
+                    // Loop through and add the inputs to check against
+                    Globals.Logger.User("Processing files:\n");
+                    foreach (string input in Inputs)
+                    {
+                        datdata.PopulateFromDir(input, asFiles: asFiles, quickScan: quickScan);
+                    }
+
+                    datdata.VerifyGeneric(hashOnly);
+                }
 
                 // Now write out if there are any items left
                 datdata.WriteStatsToConsole();

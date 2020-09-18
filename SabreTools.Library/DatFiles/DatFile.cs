@@ -2178,7 +2178,7 @@ namespace SabreTools.Library.DatFiles
         private void ProcessFile(string item, string basePath, TreatAsFile asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = FileExtensions.GetInfo(item, date: true, header: Header.HeaderSkipper, asFiles: asFiles);
+            BaseFile baseFile = FileExtensions.GetInfo(item, header: Header.HeaderSkipper, asFiles: asFiles);
             DatItem datItem = DatItem.Create(baseFile);
             ProcessFileHelper(item, datItem, basePath, string.Empty);
         }
@@ -2508,7 +2508,11 @@ namespace SabreTools.Library.DatFiles
                 if (File.Exists(input))
                 {
                     Globals.Logger.User($"Checking file: {input}");
-                    RebuildGenericHelper(input, outDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+                    bool rebuilt = RebuildGenericHelper(input, outDir, quickScan, date, inverse, outputFormat, asFiles);
+
+                    // If we are supposed to delete the file, do so
+                    if (delete && rebuilt)
+                        FileExtensions.TryDelete(input);
                 }
 
                 // If the input is a directory
@@ -2518,7 +2522,11 @@ namespace SabreTools.Library.DatFiles
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
                     {
                         Globals.Logger.User($"Checking file: {file}");
-                        RebuildGenericHelper(file, outDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+                        bool rebuilt = RebuildGenericHelper(file, outDir, quickScan, date, inverse, outputFormat, asFiles);
+
+                        // If we are supposed to delete the file, do so
+                        if (delete && rebuilt)
+                            FileExtensions.TryDelete(input);
                     }
                 }
             }
@@ -2537,23 +2545,22 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Output directory to use to build to</param>
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
-        /// <param name="delete">True if input files should be deleted, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
-        private void RebuildGenericHelper(
+        /// <returns>True if the file was used to rebuild, false otherwise</returns>
+        private bool RebuildGenericHelper(
             string file,
             string outDir,
             bool quickScan,
             bool date,
-            bool delete,
             bool inverse,
             OutputFormat outputFormat,
             TreatAsFile asFiles)
         {
             // If we somehow have a null filename, return
             if (file == null)
-                return;
+                return false;
 
             // Set the deletion variables
             bool usedExternally = false, usedInternally = false;
@@ -2598,9 +2605,7 @@ namespace SabreTools.Library.DatFiles
                 }
             }
 
-            // If we are supposed to delete the file, do so
-            if (delete && (usedExternally || usedInternally))
-                FileExtensions.TryDelete(file);
+            return usedExternally || usedInternally;
         }
 
         /// <summary>
@@ -2947,21 +2952,11 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Verify a DatFile against a set of inputs, leaving only missing files
         /// </summary>
-        /// <param name="inputs">List of input directories to compare against</param>
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
-        /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
-        /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(List<string> inputs, bool hashOnly, bool quickScan, TreatAsFile asFiles = 0x00)
+        public bool VerifyGeneric(bool hashOnly)
         {
             bool success = true;
-
-            // Loop through and check each of the inputs
-            Globals.Logger.User("Processing files:\n");
-            foreach (string input in inputs)
-            {
-                PopulateFromDir(input, asFiles: asFiles, quickScan: quickScan);
-            }
 
             // Force bucketing according to the flags
             Items.SetBucketedBy(Field.NULL);
@@ -2977,8 +2972,8 @@ namespace SabreTools.Library.DatFiles
                 List<DatItem> items = Items[key];
                 for (int i = 0; i < items.Count; i++)
                 {
-                    // Unmatched items will have a source ID of 99, remove all others
-                    if (items[i].Source.Index != 99)
+                    // Unmatched items will have a source ID of int.MaxValue, remove all others
+                    if (items[i].Source.Index != int.MaxValue)
                         items[i].Remove = true;
                 }
 

@@ -90,7 +90,7 @@ namespace SabreTools.Features
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     DatFile datdata = DatFile.Create();
-                    datdata.Parse(datfile, 99, keep: true);
+                    datdata.Parse(datfile, int.MaxValue, keep: true);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -128,7 +128,7 @@ namespace SabreTools.Features
                 DatFile datdata = DatFile.Create();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    datdata.Parse(datfile, 99, keep: true);
+                    datdata.Parse(datfile, int.MaxValue, keep: true);
                 }
 
                 // Set depot information
