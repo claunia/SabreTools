@@ -283,5 +283,8 @@ namespace SabreTools.Library.DatFiles
         CHD = 1 << 0,
         Archive = 1 << 1,
         AaruFormat = 1 << 2,
+
+        NonArchive = CHD | AaruFormat,
+        All = CHD | Archive | AaruFormat,
     }
 }

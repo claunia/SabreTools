@@ -53,7 +53,7 @@ namespace RombaSharp.Features
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
-            datfile.PopulateFromDir(source, asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
+            datfile.PopulateFromDir(source, asFiles: TreatAsFile.NonArchive);
             datfile.ApplyCleaning(new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
             datfile.Write(outdat);
         }
