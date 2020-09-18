@@ -2219,7 +2219,8 @@ namespace SabreTools.Library.DatFiles
         private void ProcessFile(string item, string basePath, Hash omitFromScan, bool addDate, TreatAsFiles asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = FileExtensions.GetInfo(item, omitFromScan, addDate, Header.HeaderSkipper, asFiles);
+            BaseFile baseFile = FileExtensions.GetInfo(item, addDate, Header.HeaderSkipper, asFiles);
+            baseFile.RemoveHashes(omitFromScan);
             ProcessFileHelper(item, DatItem.Create(baseFile), basePath, string.Empty);
         }
 
@@ -2619,10 +2620,8 @@ namespace SabreTools.Library.DatFiles
             if (entries == null && File.Exists(file))
             {
                 // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                BaseFile internalFileInfo = FileExtensions.GetInfo(
-                    file,
-                    omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes),
-                    asFiles: asFiles);
+                BaseFile internalFileInfo = FileExtensions.GetInfo(file, asFiles: asFiles);
+                internalFileInfo.RemoveHashes(quickScan ? Hash.SecureHashes : Hash.DeepHashes);
 
                 DatItem internalDatItem = null;
                 if (internalFileInfo.Type == FileType.AaruFormat)
