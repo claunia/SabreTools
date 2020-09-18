@@ -2094,7 +2094,7 @@ namespace SabreTools.Library.DatFiles
 
             // If we have an archive and we're supposed to scan it
             if (archive != null && !asFiles.HasFlag(TreatAsFile.Archive))
-                extracted = archive.GetChildren(omitFromScan: omitFromScan, date: addDate);
+                extracted = archive.GetChildren(date: addDate);
 
             // If the file should be skipped based on type, do so now
             if ((extracted != null && skipFileType == SkipFileType.Archive)
@@ -2109,7 +2109,7 @@ namespace SabreTools.Library.DatFiles
 
             // Otherwise, add all of the found items
             else
-                ProcessArchive(newItem, newBasePath, addBlanks, archive, extracted);
+                ProcessArchive(newItem, newBasePath, addBlanks, archive, extracted, omitFromScan);
 
             // Cue to delete the file if it's a copy
             if (copyFiles && item != newItem)
@@ -2178,7 +2178,8 @@ namespace SabreTools.Library.DatFiles
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="archive">BaseArchive to get blank folders from, if necessary</param>
         /// <param name="extracted">List of BaseFiles representing the internal files</param>
-        private void ProcessArchive(string item, string basePath, bool addBlanks, BaseArchive archive, List<BaseFile> extracted)
+        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
+        private void ProcessArchive(string item, string basePath, bool addBlanks, BaseArchive archive, List<BaseFile> extracted, Hash omitFromScan)
         {
             // Get the parent path for all items
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
@@ -2187,6 +2188,7 @@ namespace SabreTools.Library.DatFiles
             Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
             {
                 DatItem datItem = DatItem.Create(baseFile);
+                datItem.RemoveFields(omitFromScan.AsFields());
                 ProcessFileHelper(item, datItem, basePath, parent);
             });
 
@@ -2220,8 +2222,9 @@ namespace SabreTools.Library.DatFiles
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = FileExtensions.GetInfo(item, addDate, Header.HeaderSkipper, asFiles);
-            baseFile.RemoveHashes(omitFromScan);
-            ProcessFileHelper(item, DatItem.Create(baseFile), basePath, string.Empty);
+            DatItem datItem = DatItem.Create(baseFile);
+            datItem.RemoveFields(omitFromScan.AsFields());
+            ProcessFileHelper(item, datItem, basePath, string.Empty);
         }
 
         /// <summary>
@@ -2607,21 +2610,16 @@ namespace SabreTools.Library.DatFiles
             bool isTorrentGzip = tgz.IsTorrent();
 
             // Get the base archive first
-            BaseArchive archive = BaseArchive.Create(file);
+            BaseArchive archive = BaseArchive.Create(file, quickScan);
 
             // Now get all extracted items from the archive
             if (archive != null)
-            {
-                // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                entries = archive.GetChildren(omitFromScan: (quickScan ? Hash.SecureHashes : Hash.DeepHashes), date: date);
-            }
+                entries = archive.GetChildren(date: date);
 
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && File.Exists(file))
             {
-                // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
                 BaseFile internalFileInfo = FileExtensions.GetInfo(file, asFiles: asFiles);
-                internalFileInfo.RemoveHashes(quickScan ? Hash.SecureHashes : Hash.DeepHashes);
 
                 // Create the correct DatItem
                 DatItem internalDatItem;

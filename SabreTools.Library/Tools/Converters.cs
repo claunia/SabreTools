@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
@@ -40,6 +41,35 @@ namespace SabreTools.Library.Tools
                 default:
                     return Field.NULL;
             }
+        }
+
+        /// <summary>
+        /// Get the fields associated with each hash type
+        /// </summary>
+        public static List<Field> AsFields(this Hash hash)
+        {
+            List<Field> fields = new List<Field>();
+
+            if (hash.HasFlag(Hash.CRC))
+                fields.Add(Field.DatItem_CRC);
+            if (hash.HasFlag(Hash.MD5))
+                fields.Add(Field.DatItem_MD5);
+#if NET_FRAMEWORK
+            if (hash.HasFlag(Hash.RIPEMD160))
+                fields.Add(Field.DatItem_RIPEMD160);
+#endif
+            if (hash.HasFlag(Hash.SHA1))
+                fields.Add(Field.DatItem_SHA1);
+            if (hash.HasFlag(Hash.SHA256))
+                fields.Add(Field.DatItem_SHA256);
+            if (hash.HasFlag(Hash.SHA384))
+                fields.Add(Field.DatItem_SHA384);
+            if (hash.HasFlag(Hash.SHA512))
+                fields.Add(Field.DatItem_SHA512);
+            if (hash.HasFlag(Hash.SpamSum))
+                fields.Add(Field.DatItem_SpamSum);
+
+            return fields;
         }
 
         /// <summary>

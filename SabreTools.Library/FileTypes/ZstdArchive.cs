@@ -79,11 +79,10 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="omitFromScan">Hash representing the hashes that should be skipped</param>
         /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
         /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override List<BaseFile> GetChildren(Hash omitFromScan = Hash.DeepHashes, bool date = false)
+        public override List<BaseFile> GetChildren(bool date = false)
         {
             throw new NotImplementedException();
         }

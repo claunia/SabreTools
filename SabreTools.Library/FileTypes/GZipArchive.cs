@@ -189,11 +189,10 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="omitFromScan">Hash representing the hashes that should be skipped</param>
         /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
         /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override List<BaseFile> GetChildren(Hash omitFromScan = Hash.DeepHashes, bool date = false)
+        public override List<BaseFile> GetChildren(bool date = false)
         {
             if (_children == null || _children.Count == 0)
             {
@@ -212,8 +211,8 @@ namespace SabreTools.Library.FileTypes
                 {
                     try
                     {
-                        // If secure hashes are disabled, do a quickscan
-                        if (omitFromScan == Hash.SecureHashes)
+                        // Perform a quickscan, if flagged to
+                        if (QuickScan)
                         {
                             BaseFile tempRom = new BaseFile()
                             {
@@ -234,7 +233,6 @@ namespace SabreTools.Library.FileTypes
                             ZipReturn ret = gz.ZipFileOpen(this.Filename);
                             ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
                             BaseFile gzipEntryRom = gzstream.GetInfo();
-                            gzipEntryRom.RemoveHashes(omitFromScan);
                             gzipEntryRom.Filename = gz.Filename(0);
                             gzipEntryRom.Parent = gamename;
                             gzipEntryRom.Date = (date && gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);

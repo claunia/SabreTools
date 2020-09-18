@@ -2,7 +2,6 @@
 using System.IO;
 
 using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 
@@ -11,6 +10,8 @@ namespace SabreTools.Library.FileTypes
     public abstract class BaseArchive : Folder
     {
         #region Protected instance variables
+
+        protected bool QuickScan { get; set; } = false;
 
         // Buffer size used by archives
         protected const int _bufferSize = 4096 * 128;
@@ -40,8 +41,9 @@ namespace SabreTools.Library.FileTypes
         /// Create an archive object from a filename, if possible
         /// </summary>
         /// <param name="input">Name of the file to create the archive from</param>
+        /// <param name="quickScan">True to use archive header values, false otherwise</param>
         /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive Create(string input)
+        public static BaseArchive Create(string input, bool quickScan = false)
         {
             BaseArchive archive = null;
 
@@ -80,6 +82,10 @@ namespace SabreTools.Library.FileTypes
                     // We ignore all other types for now
                     break;
             }
+
+            // Set the quickscan flag
+            if (archive != null)
+                archive.QuickScan = quickScan;
 
             return archive;
         }
@@ -147,11 +153,10 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="omitFromScan">Hash representing the hashes that should be skipped</param>
         /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
         /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override abstract List<BaseFile> GetChildren(Hash omitFromScan = Hash.DeepHashes, bool date = false);
+        public override abstract List<BaseFile> GetChildren(bool date = false);
 
         /// <summary>
         /// Generate a list of empty folders in an archive

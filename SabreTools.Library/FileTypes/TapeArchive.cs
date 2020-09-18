@@ -180,11 +180,10 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Generate a list of DatItem objects from the header values in an archive
         /// </summary>
-        /// <param name="omitFromScan">Hash representing the hashes that should be skipped</param>
         /// <param name="date">True if entry dates should be included, false otherwise (default)</param>
         /// <returns>List of DatItem objects representing the found data</returns>
         /// <remarks>TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually</remarks>
-        public override List<BaseFile> GetChildren(Hash omitFromScan = Hash.DeepHashes, bool date = false)
+        public override List<BaseFile> GetChildren(bool date = false)
         {
             List<BaseFile> found = new List<BaseFile>();
             string gamename = Path.GetFileNameWithoutExtension(this.Filename);
@@ -194,8 +193,8 @@ namespace SabreTools.Library.FileTypes
                 TarArchive ta = TarArchive.Open(FileExtensions.TryOpenRead(this.Filename));
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
-                    // If secure hashes are disabled, do a quickscan
-                    if (omitFromScan == Hash.SecureHashes)
+                    // Perform a quickscan, if flagged to
+                    if (QuickScan)
                     {
                         found.Add(new BaseFile
                         {
@@ -212,7 +211,6 @@ namespace SabreTools.Library.FileTypes
                     {
                         Stream entryStream = entry.OpenEntryStream();
                         BaseFile tarEntryRom = entryStream.GetInfo(size: entry.Size);
-                        tarEntryRom.RemoveHashes(omitFromScan);
                         tarEntryRom.Filename = entry.Key;
                         tarEntryRom.Parent = gamename;
                         tarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");
