@@ -3423,17 +3423,11 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="outDir">Set the output directory (current directory on null)</param>
         /// <param name="norename">True if games should only be compared on game and file name (default), false if system and source are counted</param>
-        /// <param name="stats">True if DAT statistics should be output on write, false otherwise (default)</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <param name="overwrite">True if files should be overwritten (default), false if they should be renamed instead</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public bool Write(string outDir,
-            bool norename = true,
-            bool stats = false,
-            bool ignoreblanks = false,
-            bool overwrite = true,
-            bool throwOnError = false)
+        public bool Write(string outDir, bool norename = true, bool ignoreblanks = false, bool overwrite = true, bool throwOnError = false)
         {
             // If we have nothing writable, abort
             if (!HasWritable())
@@ -3454,18 +3448,6 @@ namespace SabreTools.Library.DatFiles
 
             // Make sure that the three essential fields are filled in
             EnsureHeaderFields();
-
-            // Output initial statistics, for kicks
-            if (stats)
-            {
-                if (Items.RomCount + Items.DiskCount == 0)
-                    Items.RecalculateStats();
-
-                Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
-
-                var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
-                consoleOutput.ReplaceStatistics(Header.FileName, Items.Keys.Count(), Items);
-            }
 
             // Bucket roms by game name, if not already
             Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: norename);
@@ -3502,6 +3484,20 @@ namespace SabreTools.Library.DatFiles
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Write the stats out to console for the current DatFile
+        /// </summary>
+        public void WriteStatsToConsole()
+        {
+            if (Items.RomCount + Items.DiskCount == 0)
+                Items.RecalculateStats();
+
+            Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
+
+            var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
+            consoleOutput.ReplaceStatistics(Header.FileName, Items.Keys.Count(), Items);
         }
 
         /// <summary>

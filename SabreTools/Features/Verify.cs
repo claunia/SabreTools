@@ -79,7 +79,8 @@ namespace SabreTools.Features
                         datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles);
 
                     // Now write out if there are any items left
-                    datdata.Write(OutputDir, stats: true);
+                    datdata.WriteStatsToConsole();
+                    datdata.Write(OutputDir);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -116,7 +117,8 @@ namespace SabreTools.Features
                     datdata.VerifyGeneric(Inputs, hashOnly, quickScan, asFiles);
 
                 // Now write out if there are any items left
-                datdata.Write(OutputDir, stats: true);
+                datdata.WriteStatsToConsole();
+                datdata.Write(OutputDir);
             }
         }
     }
