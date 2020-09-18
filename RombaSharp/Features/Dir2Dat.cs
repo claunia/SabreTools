@@ -55,7 +55,7 @@ namespace RombaSharp.Features
             datfile.Header.Description = description;
             datfile.PopulateFromDir(source, asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
             datfile.ApplyCleaning(new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
-            datfile.Write(outDir: outdat);
+            datfile.Write(outdat);
         }
     }
 }

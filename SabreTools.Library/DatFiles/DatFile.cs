@@ -3422,11 +3422,11 @@ namespace SabreTools.Library.DatFiles
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>
         /// <param name="outDir">Set the output directory (current directory on null)</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <param name="overwrite">True if files should be overwritten (default), false if they should be renamed instead</param>
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public bool Write(string outDir, bool ignoreblanks = false, bool overwrite = true, bool throwOnError = false)
+        public bool Write(string outDir, bool overwrite = true, bool ignoreblanks = false, bool throwOnError = false)
         {
             // If we have nothing writable, abort
             if (!HasWritable())
