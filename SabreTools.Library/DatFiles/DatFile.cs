@@ -1973,7 +1973,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
-        /// <param name="outDir">Output directory to </param>
         /// <param name="quickScan">True if archive header should be used, false otherwise</param>
         public bool PopulateFromDir(
             string basePath,
@@ -1999,7 +1998,7 @@ namespace SabreTools.Library.DatFiles
 
                 // Now find all folders that are empty, if we are supposed to
                 if (addBlanks)
-                    ProcessBlanks(basePath);
+                    ProcessDirectoryBlanks(basePath);
             }
             else if (File.Exists(basePath))
             {
@@ -2052,7 +2051,11 @@ namespace SabreTools.Library.DatFiles
                 else if (!asFiles.HasFlag(TreatAsFile.Archive))
                 {
                     var extracted = archive.GetChildren();
-                    ProcessArchive(item, basePath, addBlanks, archive, extracted);
+                    ProcessArchive(item, basePath, extracted);
+
+                    // Now find all folders that are empty, if we are supposed to
+                    if (addBlanks)
+                        ProcessArchiveBlanks(item, basePath, archive);
                 }
 
                 // Process as file if we're treating archives as files
@@ -2112,11 +2115,8 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
-        /// <param name="archive">BaseArchive to get blank folders from, if necessary</param>
         /// <param name="extracted">List of BaseFiles representing the internal files</param>
-        /// <param name="quickScan">True if only information from file headers should be used, false otherwise</param>
-        private void ProcessArchive(string item, string basePath, bool addBlanks, BaseArchive archive, List<BaseFile> extracted)
+        private void ProcessArchive(string item, string basePath, List<BaseFile> extracted)
         {
             // Get the parent path for all items
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
@@ -2127,30 +2127,38 @@ namespace SabreTools.Library.DatFiles
                 DatItem datItem = DatItem.Create(baseFile);
                 ProcessFileHelper(item, datItem, basePath, parent);
             });
-
-            // Then, if we're looking for blanks, get all of the blank folders and add them
-            if (addBlanks)
-            {
-                List<string> empties = new List<string>();
-
-                // Now get all blank folders from the archive
-                if (archive != null)
-                    empties = archive.GetEmptyFolders();
-
-                // Add add all of the found empties to the DAT
-                Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
-                {
-                    Rom emptyRom = new Rom(Path.Combine(empty, "_"), item);
-                    ProcessFileHelper(item, emptyRom, basePath, parent);
-                });
-            }
         }
 
         /// <summary>
-        /// Process blank folders
+        /// Process blank folders in an archive
+        /// </summary>
+        /// <param name="item">File containing the blanks</param>
+        /// <param name="basePath">Path the represents the parent directory</param>
+        /// <param name="archive">BaseArchive to get blanks from</param>
+        private void ProcessArchiveBlanks(string item, string basePath, BaseArchive archive)
+        {
+            List<string> empties = new List<string>();
+
+            // Get the parent path for all items
+            string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
+
+            // Now get all blank folders from the archive
+            if (archive != null)
+                empties = archive.GetEmptyFolders();
+
+            // Add add all of the found empties to the DAT
+            Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
+            {
+                Rom emptyRom = new Rom(Path.Combine(empty, "_"), item);
+                ProcessFileHelper(item, emptyRom, basePath, parent);
+            });
+        }
+
+        /// <summary>
+        /// Process blank folders in a directory
         /// </summary>
         /// <param name="basePath">Path the represents the parent directory</param>
-        private void ProcessBlanks(string basePath)
+        private void ProcessDirectoryBlanks(string basePath)
         {
             // If we're in depot mode, we don't process blanks
             if (Header.OutputDepot?.IsActive == true)
