@@ -1998,50 +1998,13 @@ namespace SabreTools.Library.DatFiles
                 });
 
                 // Now find all folders that are empty, if we are supposed to
-                if (Header.OutputDepot?.IsActive != true && addBlanks)
-                {
-                    List<string> empties = DirectoryExtensions.ListEmpty(basePath);
-                    Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
-                    {
-                        // Get the full path for the directory
-                        string fulldir = Path.GetFullPath(dir);
-
-                        // Set the temporary variables
-                        string gamename = string.Empty;
-                        string romname = string.Empty;
-
-                        // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
-                        if (Header.Type == "SuperDAT")
-                        {
-                            gamename = fulldir.Remove(0, basePath.Length + 1);
-                            romname = "_";
-                        }
-
-                        // Otherwise, we want just the top level folder as the game, and the file as everything else
-                        else
-                        {
-                            gamename = fulldir.Remove(0, basePath.Length + 1).Split(Path.DirectorySeparatorChar)[0];
-                            romname = Path.Combine(fulldir.Remove(0, basePath.Length + 1 + gamename.Length), "_");
-                        }
-
-                        // Sanitize the names
-                        gamename = gamename.Trim(Path.DirectorySeparatorChar);
-                        romname = romname.Trim(Path.DirectorySeparatorChar);
-
-                        Globals.Logger.Verbose($"Adding blank empty folder: {gamename}");
-                        Items["null"].Add(new Rom(romname, gamename));
-                    });
-                }
+                if (addBlanks)
+                    ProcessBlanks(basePath);
             }
             else if (File.Exists(basePath))
             {
-                CheckFileForHashes(
-                    basePath,
-                    Path.GetDirectoryName(Path.GetDirectoryName(basePath)),
-                    asFiles,
-                    skipFileType,
-                    addBlanks,
-                    quickScan);
+                string parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
+                CheckFileForHashes(basePath, parentPath, asFiles, skipFileType, addBlanks, quickScan);
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
@@ -2057,18 +2020,11 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="item">Filename of the item to be checked</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
-        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="quickScan">True if archive header should be used, false otherwise</param>
-        private void CheckFileForHashes(
-            string item,
-            string basePath,
-            TreatAsFile asFiles,
-            SkipFileType skipFileType,
-            bool addBlanks,
-            bool quickScan)
+        private void CheckFileForHashes(string item, string basePath, TreatAsFile asFiles, SkipFileType skipFileType, bool addBlanks, bool quickScan)
         {
             // If we're in depot mode, process it separately
             if (CheckDepotFile(item))
@@ -2076,26 +2032,47 @@ namespace SabreTools.Library.DatFiles
 
             // Initialize possible archive variables
             BaseArchive archive = BaseArchive.Create(item, quickScan);
-            List<BaseFile> extracted = null;
 
-            // If we have an archive and we're supposed to scan it
-            if (archive != null && !asFiles.HasFlag(TreatAsFile.Archive))
-                extracted = archive.GetChildren();
-
-            // If the file should be skipped based on type, do so now
-            if ((extracted != null && skipFileType == SkipFileType.Archive)
-                || (extracted == null && skipFileType == SkipFileType.File))
+            // Process archives according to flags
+            if (archive != null)
             {
-                return;
+                // Skip if we're treating archives as files and skipping files
+                if (asFiles.HasFlag(TreatAsFile.Archive) && skipFileType == SkipFileType.File)
+                {
+                    return;
+                }
+
+                // Skip if we're skipping archives
+                else if (skipFileType == SkipFileType.Archive)
+                {
+                    return;
+                }
+
+                // Process as archive if we're not treating archives as files
+                else if (!asFiles.HasFlag(TreatAsFile.Archive))
+                {
+                    var extracted = archive.GetChildren();
+                    ProcessArchive(item, basePath, addBlanks, archive, extracted);
+                }
+
+                // Process as file if we're treating archives as files
+                else
+                {
+                    ProcessFile(item, basePath, asFiles);
+                }
             }
 
-            // If the extracted list is null, just scan the item itself
-            if (extracted == null)
-                ProcessFile(item, basePath, asFiles);
-
-            // Otherwise, add all of the found items
+            // Process non-archives according to flags
             else
-                ProcessArchive(item, basePath, addBlanks, archive, extracted);
+            {
+                // Skip if we're skipping files
+                if (skipFileType == SkipFileType.File)
+                    return;
+
+                // Process as file
+                else
+                    ProcessFile(item, basePath, asFiles);
+            }
         }
 
         /// <summary>
@@ -2167,6 +2144,49 @@ namespace SabreTools.Library.DatFiles
                     ProcessFileHelper(item, emptyRom, basePath, parent);
                 });
             }
+        }
+
+        /// <summary>
+        /// Process blank folders
+        /// </summary>
+        /// <param name="basePath">Path the represents the parent directory</param>
+        private void ProcessBlanks(string basePath)
+        {
+            // If we're in depot mode, we don't process blanks
+            if (Header.OutputDepot?.IsActive == true)
+                return;
+
+            List<string> empties = DirectoryExtensions.ListEmpty(basePath);
+            Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
+            {
+                // Get the full path for the directory
+                string fulldir = Path.GetFullPath(dir);
+
+                // Set the temporary variables
+                string gamename = string.Empty;
+                string romname = string.Empty;
+
+                // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
+                if (Header.Type == "SuperDAT")
+                {
+                    gamename = fulldir.Remove(0, basePath.Length + 1);
+                    romname = "_";
+                }
+
+                // Otherwise, we want just the top level folder as the game, and the file as everything else
+                else
+                {
+                    gamename = fulldir.Remove(0, basePath.Length + 1).Split(Path.DirectorySeparatorChar)[0];
+                    romname = Path.Combine(fulldir.Remove(0, basePath.Length + 1 + gamename.Length), "_");
+                }
+
+                // Sanitize the names
+                gamename = gamename.Trim(Path.DirectorySeparatorChar);
+                romname = romname.Trim(Path.DirectorySeparatorChar);
+
+                Globals.Logger.Verbose($"Adding blank empty folder: {gamename}");
+                Items["null"].Add(new Rom(romname, gamename));
+            });
         }
 
         /// <summary>
