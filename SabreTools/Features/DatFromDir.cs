@@ -60,7 +60,7 @@ namespace SabreTools.Features
             // Get feature flags
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
             bool addFileDates = GetBoolean(features, AddDateValue);
-            TreatAsFiles asFiles = GetTreatAsFiles(features);
+            TreatAsFile asFiles = GetTreatAsFiles(features);
             bool copyFiles = GetBoolean(features, CopyFilesValue);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var omitFromScan = GetOmitFromScan(features);

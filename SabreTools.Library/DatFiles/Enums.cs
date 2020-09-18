@@ -276,11 +276,12 @@ namespace SabreTools.Library.DatFiles
     /// <summary>
     /// Determines what sort of files get externally hashed
     /// </summary>
+    /// TODO: Can FileType be used instead?
     [Flags]
-    public enum TreatAsFiles
+    public enum TreatAsFile
     {
-        CHDs = 1 << 0,
-        Archives = 1 << 1,
-        AaruFormats = 1 << 2,
+        CHD = 1 << 0,
+        Archive = 1 << 1,
+        AaruFormat = 1 << 2,
     }
 }

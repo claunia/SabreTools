@@ -343,7 +343,7 @@ namespace SabreTools.Library.IO
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(string input, bool date = false, string header = null, TreatAsFiles asFiles = 0x00)
+        public static BaseFile GetInfo(string input, bool date = false, string header = null, TreatAsFile asFiles = 0x00)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
@@ -351,57 +351,36 @@ namespace SabreTools.Library.IO
 
             // Get input information
             var fileType = input.GetFileType();
-            var inputStream = TryOpenRead(input);
+            Stream inputStream = TryOpenRead(input);
 
-            // Get the information from the file stream
-            BaseFile baseFile;
+            // Try to match the supplied header skipper
             if (header != null)
             {
                 SkipperRule rule = Transform.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
 
-                // If there's a match, get the new information from the stream
+                // If there's a match, transform the stream before getting info
                 if (rule.Tests != null && rule.Tests.Count != 0)
                 {
                     // Create the output stream
                     MemoryStream outputStream = new MemoryStream();
-                    
+
                     // Transform the stream and get the information from it
                     rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
-
-                    if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFiles.AaruFormats))
-                        baseFile = AaruFormat.Create(outputStream);
-                    else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFiles.CHDs))
-                        baseFile = CHDFile.Create(outputStream);
-                    else
-                        baseFile = outputStream.GetInfo(keepReadOpen: false);
-
-                    // Dispose of the output stream
-                    outputStream.Dispose();
-                    
-                }
-                // Otherwise, just get the info
-                else
-                {
-                    if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFiles.AaruFormats))
-                        baseFile = AaruFormat.Create(inputStream);
-                    else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFiles.CHDs))
-                        baseFile = CHDFile.Create(inputStream);
-                    else
-                        baseFile = inputStream.GetInfo(keepReadOpen: false);
+                    inputStream = outputStream;
                 }
             }
+
+            // Get the info in the proper manner
+            BaseFile baseFile;
+            if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                baseFile = AaruFormat.Create(inputStream);
+            else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
+                baseFile = CHDFile.Create(inputStream);
             else
-            {
-                if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFiles.AaruFormats))
-                    baseFile = AaruFormat.Create(inputStream);
-                else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFiles.CHDs))
-                    baseFile = CHDFile.Create(inputStream);
-                else
-                    baseFile = inputStream.GetInfo(keepReadOpen: false);
-            }
+                baseFile = inputStream.GetInfo(keepReadOpen: false);
 
             // Dispose of the input stream
-            inputStream.Dispose();
+            inputStream?.Dispose();
 
             // Add unique data from the file
             baseFile.Filename = Path.GetFileName(input);

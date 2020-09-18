@@ -63,7 +63,7 @@ namespace RombaSharp.Features
 
                 // Now rescan the depot itself
                 DatFile depot = DatFile.Create();
-                depot.PopulateFromDir(depotname, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
+                depot.PopulateFromDir(depotname, asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
                 depot.Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
 
                 // Set the base queries to use

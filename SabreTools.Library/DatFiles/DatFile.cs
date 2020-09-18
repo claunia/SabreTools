@@ -1982,7 +1982,7 @@ namespace SabreTools.Library.DatFiles
         public bool PopulateFromDir(
             string basePath,
             Hash omitFromScan = Hash.DeepHashes,
-            TreatAsFiles asFiles = 0x00,
+            TreatAsFile asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
             bool addBlanks = false,
             bool addDate = false,
@@ -2075,7 +2075,7 @@ namespace SabreTools.Library.DatFiles
             string item,
             string basePath,
             Hash omitFromScan,
-            TreatAsFiles asFiles,
+            TreatAsFile asFiles,
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
@@ -2093,7 +2093,7 @@ namespace SabreTools.Library.DatFiles
             List<BaseFile> extracted = null;
 
             // If we have an archive and we're supposed to scan it
-            if (archive != null && !asFiles.HasFlag(TreatAsFiles.Archives))
+            if (archive != null && !asFiles.HasFlag(TreatAsFile.Archive))
                 extracted = archive.GetChildren(omitFromScan: omitFromScan, date: addDate);
 
             // If the file should be skipped based on type, do so now
@@ -2216,7 +2216,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private void ProcessFile(string item, string basePath, Hash omitFromScan, bool addDate, TreatAsFiles asFiles)
+        private void ProcessFile(string item, string basePath, Hash omitFromScan, bool addDate, TreatAsFile asFiles)
         {
             Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = FileExtensions.GetInfo(item, addDate, Header.HeaderSkipper, asFiles);
@@ -2508,7 +2508,7 @@ namespace SabreTools.Library.DatFiles
             bool delete = false,
             bool inverse = false,
             OutputFormat outputFormat = OutputFormat.Folder,
-            TreatAsFiles asFiles = 0x00)
+            TreatAsFile asFiles = 0x00)
         {
             #region Perform setup
 
@@ -2590,7 +2590,7 @@ namespace SabreTools.Library.DatFiles
             bool delete,
             bool inverse,
             OutputFormat outputFormat,
-            TreatAsFiles asFiles)
+            TreatAsFile asFiles)
         {
             // If we somehow have a null filename, return
             if (file == null)
@@ -2997,7 +2997,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="quickScan">True to enable external scanning of archives, false otherwise</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(List<string> inputs, bool hashOnly, bool quickScan, TreatAsFiles asFiles = 0x00)
+        public bool VerifyGeneric(List<string> inputs, bool hashOnly, bool quickScan, TreatAsFile asFiles = 0x00)
         {
             bool success = true;
 

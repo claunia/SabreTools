@@ -45,7 +45,7 @@ namespace SabreTools.Features
             var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
             // Get feature flags
-            TreatAsFiles asFiles = GetTreatAsFiles(features);
+            TreatAsFile asFiles = GetTreatAsFiles(features);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
             var splitType = GetSplitType(features);

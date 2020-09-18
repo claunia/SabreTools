@@ -51,7 +51,7 @@ namespace RombaSharp.Features
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
-            datfile.PopulateFromDir(source, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
+            datfile.PopulateFromDir(source, asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
             datfile.Write(outDir: outdat);
         }
     }

@@ -64,8 +64,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                df.PopulateFromDir(dir, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
-                df.PopulateFromDir(dir, asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.Archives | TreatAsFiles.CHDs);
+                df.PopulateFromDir(dir, asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
+                df.PopulateFromDir(dir, asFiles: TreatAsFile.AaruFormat | TreatAsFile.Archive | TreatAsFile.CHD);
             }
 
             // Create an empty Dat for files that need to be rebuilt
@@ -192,7 +192,7 @@ have a current entry in the DAT index.";
                 onlyDirs,
                 outDir: _depots.Keys.ToList()[0],
                 outputFormat: OutputFormat.TorrentGzipRomba,
-                asFiles: TreatAsFiles.AaruFormats | TreatAsFiles.CHDs);
+                asFiles: TreatAsFile.AaruFormat | TreatAsFile.CHD);
         }
     }
 }

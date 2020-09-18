@@ -2584,15 +2584,15 @@ Some special strings that can be used:
         /// <summary>
         /// Get TreatAsFiles from feature list
         /// </summary>
-        protected TreatAsFiles GetTreatAsFiles(Dictionary<string, Library.Help.Feature> features)
+        protected TreatAsFile GetTreatAsFiles(Dictionary<string, Library.Help.Feature> features)
         {
-            TreatAsFiles asFiles = 0x00;
+            TreatAsFile asFiles = 0x00;
             if (GetBoolean(features, AaruFormatsAsFilesValue))
-                asFiles |= TreatAsFiles.AaruFormats;
+                asFiles |= TreatAsFile.AaruFormat;
             if (GetBoolean(features, ArchivesAsFilesValue))
-                asFiles |= TreatAsFiles.Archives;
+                asFiles |= TreatAsFile.Archive;
             if (GetBoolean(features, ChdsAsFilesValue))
-                asFiles |= TreatAsFiles.CHDs;
+                asFiles |= TreatAsFile.CHD;
 
             return asFiles;
         }

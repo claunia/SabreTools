@@ -60,7 +60,7 @@ namespace SabreTools.Features
             base.ProcessFeatures(features);
 
             // Get feature flags
-            TreatAsFiles asFiles = GetTreatAsFiles(features);
+            TreatAsFile asFiles = GetTreatAsFiles(features);
             bool date = GetBoolean(features, AddDateValue);
             bool delete = GetBoolean(features, DeleteValue);
             bool inverse = GetBoolean(features, InverseValue);
