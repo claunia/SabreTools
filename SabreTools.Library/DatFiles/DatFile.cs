@@ -2595,9 +2595,10 @@ namespace SabreTools.Library.DatFiles
             // Create an empty list of BaseFile for archive entries
             List<BaseFile> entries = null;
 
-            // Get the TGZ status for later
+            // Get the TGZ and TXZ status for later
             GZipArchive tgz = new GZipArchive(file);
-            bool isTorrentGzip = tgz.IsTorrent();
+            XZArchive txz = new XZArchive(file);
+            bool isSingleTorrent = tgz.IsTorrent() || txz.IsTorrent();
 
             // Get the base archive first
             BaseArchive archive = BaseArchive.Create(file, quickScan);
@@ -2620,7 +2621,7 @@ namespace SabreTools.Library.DatFiles
                 else
                     internalDatItem = new Rom(internalFileInfo);
 
-                usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, null /* isZip */);
+                usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat);
             }
             // Otherwise, loop through the entries and try to match
             else
@@ -2628,7 +2629,7 @@ namespace SabreTools.Library.DatFiles
                 foreach (BaseFile entry in entries)
                 {
                     DatItem internalDatItem = DatItem.Create(entry);
-                    usedInternally |= RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, !isTorrentGzip /* isZip */);
+                    usedInternally |= RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, !isSingleTorrent /* isZip */);
                 }
             }
 
@@ -2644,7 +2645,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
-        /// <param name="isZip">True if the input file is an archive, false if the file is TGZ, null otherwise</param>
+        /// <param name="isZip">True if the input file is an archive, false if the file is TGZ/TXZ, null otherwise</param>
         /// <returns>True if the file was able to be rebuilt, false otherwise</returns>
         private bool RebuildIndividualFile(
             DatItem datItem,
@@ -2653,7 +2654,7 @@ namespace SabreTools.Library.DatFiles
             bool date,
             bool inverse,
             OutputFormat outputFormat,
-            bool? isZip)
+            bool? isZip = null)
         {
             // Set the initial output value
             bool rebuilt = false;
@@ -2669,119 +2670,26 @@ namespace SabreTools.Library.DatFiles
             // If we have a Disk or Media, change it into a Rom for later use
             if (datItem.ItemType == ItemType.Disk)
                 datItem = (datItem as Disk).ConvertToRom();
-            if (datItem.ItemType == ItemType.Media)
+            else if (datItem.ItemType == ItemType.Media)
                 datItem = (datItem as Media).ConvertToRom();
 
-            // Prepopluate a few key strings
+            // Prepopluate a key string
             string crc = (datItem as Rom).CRC ?? string.Empty;
-            string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
 
-            // Find if the file has duplicates in the DAT
-            List<DatItem> dupes = Items.GetDuplicates(datItem);
-            bool hasDuplicates = dupes.Count > 0;
+            // Try to get the stream for the file
+            if (!GetFileStream(datItem, file, isZip, out Stream fileStream))
+                return false;
 
             // If either we have duplicates or we're filtering
-            if (hasDuplicates ^ inverse)
+            if (ShouldRebuild(datItem, fileStream, inverse, out List<DatItem> dupes))
             {
                 // If we have a very specific TGZ->TGZ case, just copy it accordingly
-                GZipArchive tgz = new GZipArchive(file);
-                BaseFile tgzRom = tgz.GetTorrentGZFileInfo();
-                if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
-                {
-                    Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
-
-                    // Get the proper output path
-                    if (outputFormat == OutputFormat.TorrentGzipRomba)
-                        outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, Header.OutputDepot.Depth));
-                    else
-                        outDir = Path.Combine(outDir, sha1 + ".gz");
-
-                    // Make sure the output folder is created
-                    Directory.CreateDirectory(Path.GetDirectoryName(outDir));
-
-                    // Now copy the file over
-                    try
-                    {
-                        File.Copy(file, outDir);
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
+                if (RebuildTorrentGzip(datItem, file, outDir, outputFormat, isZip))
+                    return true;
 
                 // If we have a very specific TXZ->TXZ case, just copy it accordingly
-                XZArchive txz = new XZArchive(file);
-                BaseFile txzRom = txz.GetTorrentXZFileInfo();
-                if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
-                {
-                    Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
-
-                    // Get the proper output path
-                    if (outputFormat == OutputFormat.TorrentXZRomba)
-                        outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, Header.OutputDepot.Depth));
-                    else
-                        outDir = Path.Combine(outDir, sha1 + ".xz");
-
-                    // Make sure the output folder is created
-                    Directory.CreateDirectory(Path.GetDirectoryName(outDir));
-
-                    // Now copy the file over
-                    try
-                    {
-                        File.Copy(file, outDir);
-                        return true;
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
-
-                // Get a generic stream for the file
-                Stream fileStream = null;
-
-                // If we have a zipfile, extract the stream to memory
-                if (isZip != null)
-                {
-                    BaseArchive archive = BaseArchive.Create(file);
-                    if (archive != null)
-                        (fileStream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
-                }
-                // Otherwise, just open the filestream
-                else
-                {
-                    fileStream = FileExtensions.TryOpenRead(file);
-                }
-
-                // If the stream is null, then continue
-                if (fileStream == null)
-                    return false;
-
-                // Seek to the beginning of the stream
-                if (fileStream.CanSeek)
-                    fileStream.Seek(0, SeekOrigin.Begin);
-
-                // If we are inverse, create an output to rebuild to
-                if (inverse)
-                {
-                    string machinename = null;
-
-                    // Get the item from the current file
-                    Rom item = new Rom(fileStream.GetInfo(keepReadOpen: true));
-                    item.Machine.Name = Path.GetFileNameWithoutExtension(item.Name);
-                    item.Machine.Description = Path.GetFileNameWithoutExtension(item.Name);
-
-                    // If we are coming from an archive, set the correct machine name
-                    if (machinename != null)
-                    {
-                        item.Machine.Name = machinename;
-                        item.Machine.Description = machinename;
-                    }
-
-                    dupes.Add(item);
-                }
+                if (RebuildTorrentXz(datItem, file, outDir, outputFormat, isZip))
+                    return true;
 
                 Globals.Logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
                 rebuilt = true;
@@ -2804,15 +2712,7 @@ namespace SabreTools.Library.DatFiles
                         outputFormat = OutputFormat.ParentFolder;
 
                     // Get the output archive, if possible
-                    Folder outputArchive = Folder.Create(outputFormat);
-                    if (outputArchive is BaseArchive baseArchive && date)
-                        baseArchive.UseDates = date;
-
-                    // Set the depth fields where appropriate
-                    if (outputArchive is GZipArchive gzipArchive)
-                        gzipArchive.Depth = Header.OutputDepot.Depth;
-                    else if (outputArchive is XZArchive xzArchive)
-                        xzArchive.Depth = Header.OutputDepot.Depth;
+                    Folder outputArchive = GetPreconfiguredFolder(date, outputFormat);
 
                     // Now rebuild to the output file
                     outputArchive.Write(fileStream, outDir, item as Rom);
@@ -2825,26 +2725,6 @@ namespace SabreTools.Library.DatFiles
             // Now we want to take care of headers, if applicable
             if (Header.HeaderSkipper != null)
             {
-                // Get a generic stream for the file
-                Stream fileStream = new MemoryStream();
-
-                // If we have a zipfile, extract the stream to memory
-                if (isZip != null)
-                {
-                    BaseArchive archive = BaseArchive.Create(file);
-                    if (archive != null)
-                        (fileStream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
-                }
-                // Otherwise, just open the filestream
-                else
-                {
-                    fileStream = FileExtensions.TryOpenRead(file);
-                }
-
-                // If the stream is null, then continue
-                if (fileStream == null)
-                    return false;
-
                 // Check to see if we have a matching header first
                 SkipperRule rule = Transform.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(Header.HeaderSkipper));
 
@@ -2858,12 +2738,8 @@ namespace SabreTools.Library.DatFiles
                         // Get the file informations that we will be using
                         Rom headerless = new Rom(transformStream.GetInfo(keepReadOpen: true));
 
-                        // Find if the file has duplicates in the DAT
-                        dupes = Items.GetDuplicates(headerless);
-                        hasDuplicates = dupes.Count > 0;
-
-                        // If it has duplicates and we're not filtering, rebuild it
-                        if (hasDuplicates && !inverse)
+                        // If we have duplicates and we're not filtering
+                        if (ShouldRebuild(headerless, transformStream, false, out dupes))
                         {
                             Globals.Logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
                             rebuilt = true;
@@ -2873,23 +2749,13 @@ namespace SabreTools.Library.DatFiles
                             {
                                 // Create a headered item to use as well
                                 datItem.CopyMachineInformation(item);
-                                datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{datItem.GetName()}_{crc}" } );
-
-                                // If either copy succeeds, then we want to set rebuilt to true
-                                bool eitherSuccess = false;
+                                datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{datItem.GetName()}_{crc}" });
 
                                 // Get the output archive, if possible
-                                Folder outputArchive = Folder.Create(outputFormat);
-                                if (outputArchive is BaseArchive baseArchive && date)
-                                    baseArchive.UseDates = date;
-
-                                // Set the depth fields where appropriate
-                                if (outputArchive is GZipArchive gzipArchive)
-                                    gzipArchive.Depth = Header.OutputDepot.Depth;
-                                else if (outputArchive is XZArchive xzArchive)
-                                    xzArchive.Depth = Header.OutputDepot.Depth;
+                                Folder outputArchive = GetPreconfiguredFolder(date, outputFormat);
 
                                 // Now rebuild to the output file
+                                bool eitherSuccess = false;
                                 eitherSuccess |= outputArchive.Write(transformStream, outDir, item as Rom);
                                 eitherSuccess |= outputArchive.Write(fileStream, outDir, datItem as Rom);
 
@@ -2908,6 +2774,204 @@ namespace SabreTools.Library.DatFiles
             }
 
             return rebuilt;
+        }
+
+        /// <summary>
+        /// Get the rebuild state for a given item
+        /// </summary>
+        /// <param name="datItem">Information for the current file to rebuild from</param>
+        /// <param name="stream">Stream representing the input file</param>
+        /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
+        /// <param name="dupes">Output list of duplicate items to rebuild to</param>
+        /// <returns>True if the item should be rebuilt, false otherwise</returns>
+        private bool ShouldRebuild(DatItem datItem, Stream stream, bool inverse, out List<DatItem> dupes)
+        {
+            // Find if the file has duplicates in the DAT
+            dupes = Items.GetDuplicates(datItem);
+            bool hasDuplicates = dupes.Count > 0;
+
+            // If we have duplicates but we're filtering
+            if (hasDuplicates && inverse)
+            {
+                return false;
+            }
+
+            // If we have duplicates without filtering
+            else if (hasDuplicates && !inverse)
+            {
+                return true;
+            }
+
+            // If we have no duplicates and we're filtering
+            else if (!hasDuplicates && inverse)
+            {
+                string machinename = null;
+
+                // Get the item from the current file
+                Rom item = new Rom(stream.GetInfo(keepReadOpen: true));
+                item.Machine.Name = Path.GetFileNameWithoutExtension(item.Name);
+                item.Machine.Description = Path.GetFileNameWithoutExtension(item.Name);
+
+                // If we are coming from an archive, set the correct machine name
+                if (machinename != null)
+                {
+                    item.Machine.Name = machinename;
+                    item.Machine.Description = machinename;
+                }
+
+                dupes.Add(item);
+                return true;
+            }
+
+            // If we have no duplicates and we're not filtering
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Rebuild from TorrentGzip to TorrentGzip
+        /// </summary>
+        /// <param name="datItem">Information for the current file to rebuild from</param>
+        /// <param name="file">Name of the file to process</param>
+        /// <param name="outDir">Output directory to use to build to</param>
+        /// <param name="outputFormat">Output format that files should be written to</param>
+        /// <param name="isZip">True if the input file is an archive, false if the file is TGZ, null otherwise</param>
+        /// <returns>True if rebuilt properly, false otherwise</returns>
+        private bool RebuildTorrentGzip(DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
+        {
+            // If we have a very specific TGZ->TGZ case, just copy it accordingly
+            GZipArchive tgz = new GZipArchive(file);
+            BaseFile tgzRom = tgz.GetTorrentGZFileInfo();
+            if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
+            {
+                Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
+
+                // Get the proper output path
+                string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
+                if (outputFormat == OutputFormat.TorrentGzipRomba)
+                    outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, Header.OutputDepot.Depth));
+                else
+                    outDir = Path.Combine(outDir, sha1 + ".gz");
+
+                // Make sure the output folder is created
+                Directory.CreateDirectory(Path.GetDirectoryName(outDir));
+
+                // Now copy the file over
+                try
+                {
+                    File.Copy(file, outDir);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Rebuild from TorrentXz to TorrentXz
+        /// </summary>
+        /// <param name="datItem">Information for the current file to rebuild from</param>
+        /// <param name="file">Name of the file to process</param>
+        /// <param name="outDir">Output directory to use to build to</param>
+        /// <param name="outputFormat">Output format that files should be written to</param>
+        /// <param name="isZip">True if the input file is an archive, false if the file is TXZ, null otherwise</param>
+        /// <returns>True if rebuilt properly, false otherwise</returns>
+        private bool RebuildTorrentXz(DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
+        {
+            // If we have a very specific TGZ->TGZ case, just copy it accordingly
+            XZArchive txz = new XZArchive(file);
+            BaseFile txzRom = txz.GetTorrentXZFileInfo();
+            if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
+            {
+                Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
+
+                // Get the proper output path
+                string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
+                if (outputFormat == OutputFormat.TorrentXZRomba)
+                    outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, Header.OutputDepot.Depth)).Replace(".gz", ".xz");
+                else
+                    outDir = Path.Combine(outDir, sha1 + ".xz");
+
+                // Make sure the output folder is created
+                Directory.CreateDirectory(Path.GetDirectoryName(outDir));
+
+                // Now copy the file over
+                try
+                {
+                    File.Copy(file, outDir);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the Stream related to a file
+        /// </summary>
+        /// <param name="datItem">Information for the current file to rebuild from</param>
+        /// <param name="file">Name of the file to process</param>
+        /// <param name="isZip">Non-null if the input file is an archive</param>
+        /// <param name="stream">Output stream representing the opened file</param>
+        /// <returns>True if the stream opening succeeded, false otherwise</returns>
+        private bool GetFileStream(DatItem datItem, string file, bool? isZip, out Stream stream)
+        {
+            // Get a generic stream for the file
+            stream = null;
+
+            // If we have a zipfile, extract the stream to memory
+            if (isZip != null)
+            {
+                BaseArchive archive = BaseArchive.Create(file);
+                if (archive != null)
+                    (stream, _) = archive.CopyToStream(datItem.GetName() ?? datItem.ItemType.ToString());
+            }
+            // Otherwise, just open the filestream
+            else
+            {
+                stream = FileExtensions.TryOpenRead(file);
+            }
+
+            // If the stream is null, then continue
+            if (stream == null)
+                return false;
+
+            // Seek to the beginning of the stream
+            if (stream.CanSeek)
+                stream.Seek(0, SeekOrigin.Begin);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get preconfigured Folder for rebuilding
+        /// </summary>
+        /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
+        /// <param name="outputFormat">Output format that files should be written to</param>
+        /// <returns>Folder configured with proper flags</returns>
+        private Folder GetPreconfiguredFolder(bool date, OutputFormat outputFormat)
+        {
+            Folder outputArchive = Folder.Create(outputFormat);
+            if (outputArchive is BaseArchive baseArchive && date)
+                baseArchive.UseDates = date;
+
+            // Set the depth fields where appropriate
+            if (outputArchive is GZipArchive gzipArchive)
+                gzipArchive.Depth = Header.OutputDepot.Depth;
+            else if (outputArchive is XZArchive xzArchive)
+                xzArchive.Depth = Header.OutputDepot.Depth;
+
+            return outputArchive;
         }
 
         /// <summary>
