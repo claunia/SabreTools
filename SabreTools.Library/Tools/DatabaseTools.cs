@@ -51,6 +51,7 @@ namespace SabreTools.Library.Tools
         /// <param name="type">Schema type to use</param>
         /// <param name="db">Name of the databse</param>
         /// <param name="connectionString">Connection string for SQLite</param>
+        /// TODO: Re-evaluate why this method needs to exist
         public static void EnsureDatabase(string type, string db, string connectionString)
         {
             // Set the type to lowercase
