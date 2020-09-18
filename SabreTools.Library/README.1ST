@@ -390,12 +390,6 @@ Options:
 		  information in the output DAT. The output format is standardized as
 		  "yyyy/MM/dd HH:mm:ss".
 
-	  -cf, --copy-files		   Copy files to the temp directory before parsing
-		  If this flag is set, then all files that are going to be parsed are
-		  moved to the temporary directory before being hashed. This can be
-		  helpful in cases where the temp folder is located on an SSD and the
-		  user wants to take advantage of this.
-
 	  -h=, --header=			  Set a header skipper to use, blank means all
 		  Set the header special field for the output DAT(s). In file
 		  rebuilding, this flag allows for either all copier headers (using "")

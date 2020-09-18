@@ -45,7 +45,6 @@ namespace SabreTools.Features
             AddHeaderFeatures();
             AddFeature(AddBlankFilesFlag);
             AddFeature(AddDateFlag);
-            AddFeature(CopyFilesFlag);
             AddFeature(HeaderStringInput);
             AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
@@ -62,7 +61,6 @@ namespace SabreTools.Features
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
             bool addFileDates = GetBoolean(features, AddDateValue);
             TreatAsFile asFiles = GetTreatAsFiles(features);
-            bool copyFiles = GetBoolean(features, CopyFilesValue);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var omitFromScan = GetOmitFromScan(features);
             var skipFileType = GetSkipFileType(features);
@@ -97,7 +95,6 @@ namespace SabreTools.Features
                         skipFileType,
                         addBlankFiles,
                         addFileDates,
-                        copyFiles,
                         quickScan: omitFromScan == Hash.SecureHashes);
 
                     if (success)

@@ -156,6 +156,12 @@ Below are originally from SabreTools / DATabase -
 		-clean			Clean game names according to WoD standards
 		-out=			Output directory
 		out=			Output directory
+
+	-cf, --copy-files		   Copy files to the temp directory before parsing
+		If this flag is set, then all files that are going to be parsed are
+		moved to the temporary directory before being hashed. This can be
+		helpful in cases where the temp folder is located on an SSD and the
+		user wants to take advantage of this.
 		
 	-cv, --convert		Enable conversion of input files to unarchived folders
 		Using a folder or set of folders, rebuild to another folder.

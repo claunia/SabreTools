@@ -1975,16 +1975,13 @@ namespace SabreTools.Library.DatFiles
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
         /// <param name="outDir">Output directory to </param>
-        /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// <param name="quickScan">True if archive header should be used, false otherwise</param>
-        /// TODO: Look into removing "copyFiles". I don't think it's useful anymore
         public bool PopulateFromDir(
             string basePath,
             TreatAsFile asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
             bool addBlanks = false,
             bool addDate = false,
-            bool copyFiles = false,
             bool quickScan = false)
         {
             // Clean the temp directory path
@@ -1999,7 +1996,7 @@ namespace SabreTools.Library.DatFiles
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
-                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, addDate, copyFiles, quickScan);
+                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, addDate, quickScan);
                 });
 
                 // Now find all folders that are empty, if we are supposed to
@@ -2047,7 +2044,6 @@ namespace SabreTools.Library.DatFiles
                     skipFileType,
                     addBlanks,
                     addDate,
-                    copyFiles,
                     quickScan);
             }
 
@@ -2069,7 +2065,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="addDate">True if dates should be archived for all files, false otherwise</param>
-        /// <param name="copyFiles">True if files should be copied to the temp directory before hashing, false otherwise</param>
         /// <param name="quickScan">True if archive header should be used, false otherwise</param>
         private void CheckFileForHashes(
             string item,
@@ -2078,18 +2073,14 @@ namespace SabreTools.Library.DatFiles
             SkipFileType skipFileType,
             bool addBlanks,
             bool addDate,
-            bool copyFiles,
             bool quickScan)
         {
             // If we're in depot mode, process it separately
             if (CheckDepotFile(item))
                 return;
 
-            // If we're copying files, copy it first and get the new filename
-            (string newItem, string newBasePath) = CopyIfNeeded(item, basePath, copyFiles);
-
             // Initialize possible archive variables
-            BaseArchive archive = BaseArchive.Create(newItem, quickScan);
+            BaseArchive archive = BaseArchive.Create(item, quickScan);
             List<BaseFile> extracted = null;
 
             // If we have an archive and we're supposed to scan it
@@ -2105,15 +2096,11 @@ namespace SabreTools.Library.DatFiles
 
             // If the extracted list is null, just scan the item itself
             if (extracted == null)
-                ProcessFile(newItem, newBasePath, addDate, asFiles);
+                ProcessFile(item, basePath, addDate, asFiles);
 
             // Otherwise, add all of the found items
             else
-                ProcessArchive(newItem, newBasePath, addBlanks, archive, extracted);
-
-            // Cue to delete the file if it's a copy
-            if (copyFiles && item != newItem)
-                DirectoryExtensions.TryDelete(newBasePath);
+                ProcessArchive(item, basePath, addBlanks, archive, extracted);
         }
 
         /// <summary>

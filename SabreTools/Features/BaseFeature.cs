@@ -206,20 +206,6 @@ namespace SabreTools.Features
             }
         }
 
-        internal const string CopyFilesValue = "copy-files";
-        internal static Library.Help.Feature CopyFilesFlag
-        {
-            get
-            {
-                return new Library.Help.Feature(
-                    CopyFilesValue,
-                    new List<string>() { "-cf", "--copy-files" },
-                    "Copy files to the temp directory before parsing",
-                    Library.Help.FeatureType.Flag,
-                    longDescription: "If this flag is set, then all files that are going to be parsed are moved to the temporary directory before being hashed. This can be helpful in cases where the temp folder is located on an SSD and the user wants to take advantage of this.");
-            }
-        }
-
         internal const string DatDeviceNonMergedValue = "dat-device-non-merged";
         internal static Library.Help.Feature DatDeviceNonMergedFlag
         {
