@@ -2623,12 +2623,13 @@ namespace SabreTools.Library.DatFiles
                 BaseFile internalFileInfo = FileExtensions.GetInfo(file, asFiles: asFiles);
                 internalFileInfo.RemoveHashes(quickScan ? Hash.SecureHashes : Hash.DeepHashes);
 
-                DatItem internalDatItem = null;
-                if (internalFileInfo.Type == FileType.AaruFormat)
+                // Create the correct DatItem
+                DatItem internalDatItem;
+                if (internalFileInfo.Type == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
                     internalDatItem = new Media(internalFileInfo);
-                else if (internalFileInfo.Type == FileType.CHD)
+                else if (internalFileInfo.Type == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
                     internalDatItem = new Disk(internalFileInfo);
-                else if (internalFileInfo.Type == FileType.None)
+                else
                     internalDatItem = new Rom(internalFileInfo);
 
                 usedExternally = RebuildIndividualFile(internalDatItem, file, outDir, date, inverse, outputFormat, null /* isZip */);
