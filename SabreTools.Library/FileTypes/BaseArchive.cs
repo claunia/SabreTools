@@ -9,11 +9,25 @@ namespace SabreTools.Library.FileTypes
 {
     public abstract class BaseArchive : Folder
     {
+        #region Fields
+
+        /// <summary>
+        /// Determines if archives pull information from headers alone
+        /// </summary>
+        public bool QuickScan { get; set; } = false;
+
+        /// <summary>
+        /// Determines if dates are read or written
+        /// </summary>
+        public bool UseDates { get; set; } = false;
+
+        #endregion
+
         #region Protected instance variables
 
-        protected bool QuickScan { get; set; } = false;
-
-        // Buffer size used by archives
+        /// <summary>
+        /// Buffer size used by archives
+        /// </summary>
         protected const int _bufferSize = 4096 * 128;
 
         #endregion
@@ -42,8 +56,9 @@ namespace SabreTools.Library.FileTypes
         /// </summary>
         /// <param name="input">Name of the file to create the archive from</param>
         /// <param name="quickScan">True to use archive header values, false otherwise</param>
+        /// <param name="useDates">True to use dates for read and write, false otherwise</param>
         /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive Create(string input, bool quickScan = false)
+        public static BaseArchive Create(string input, bool quickScan = false, bool useDates = false)
         {
             BaseArchive archive = null;
 
@@ -178,10 +193,8 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputFile">Input filename to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override abstract bool Write(string inputFile, string outDir, Rom rom, bool date = false, int depth = 4);
+        public override abstract bool Write(string inputFile, string outDir, Rom rom);
 
         /// <summary>
         /// Write an input stream to an archive
@@ -189,10 +202,8 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputStream">Input stream to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override abstract bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, int depth = 4);
+        public override abstract bool Write(Stream inputStream, string outDir, Rom rom);
 
         /// <summary>
         /// Write a set of input files to an archive (assuming the same output archive name)
@@ -200,10 +211,8 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputFiles">Input files to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override abstract bool Write(List<string> inputFiles, string outDir, List<Rom> roms, bool date = false, bool romba = false);
+        public override abstract bool Write(List<string> inputFiles, string outDir, List<Rom> roms);
 
         #endregion
     }

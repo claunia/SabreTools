@@ -39,6 +39,11 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         private ConcurrentDictionary<string, List<DatItem>> items;
 
+        /// <summary>
+        /// Lock for statistics calculation
+        /// </summary>
+        private object statsLock = new object();
+
         #endregion
 
         #region Publically available fields
@@ -149,7 +154,7 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Number of Disk items
         /// </summary>
-        [JsonIgnore]
+        [JsonIgnore, XmlIgnore]
         public long DiskCount { get; private set; } = 0;
 
         /// <summary>
@@ -515,18 +520,22 @@ namespace SabreTools.Library.DatFiles
         /// <param name="key">Key in the dictionary to remove</param>
         public bool Remove(string key)
         {
-            // If the key doesn't exist, return
-            if (!ContainsKey(key))
-                return false;
-
-            // Remove the statistics first
-            foreach (DatItem item in items[key])
+            // Explicit lock for some weird corner cases
+            lock (key)
             {
-                RemoveItemStatistics(item);
-            }
+                // If the key doesn't exist, return
+                if (!ContainsKey(key))
+                    return false;
 
-            // Remove the key from the dictionary
-            return items.TryRemove(key, out _);
+                // Remove the statistics first
+                foreach (DatItem item in items[key])
+                {
+                    RemoveItemStatistics(item);
+                }
+
+                // Remove the key from the dictionary
+                return items.TryRemove(key, out _);
+            }
         }
 
         /// <summary>
@@ -536,14 +545,18 @@ namespace SabreTools.Library.DatFiles
         /// <param name="value">Value to remove from the dictionary</param>
         public bool Remove(string key, DatItem value)
         {
-            // If the key and value doesn't exist, return
-            if (!Contains(key, value))
-                return false;
+            // Explicit lock for some weird corner cases
+            lock (key)
+            {
+                // If the key and value doesn't exist, return
+                if (!Contains(key, value))
+                    return false;
 
-            // Remove the statistics first
-            RemoveItemStatistics(value);
+                // Remove the statistics first
+                RemoveItemStatistics(value);
 
-            return items[key].Remove(value);
+                return items[key].Remove(value);
+            }
         }
 
         /// <summary>
@@ -582,139 +595,142 @@ namespace SabreTools.Library.DatFiles
         /// <param name="item">Item to add info from</param>
         private void AddItemStatistics(DatItem item)
         {
-            // No matter what the item is, we increment the count
-            TotalCount++;
-
-            // Increment removal count
-            if (item.Remove)
-                RemovedCount++;
-
-            // Now we do different things for each item type
-            switch (item.ItemType)
+            lock (statsLock)
             {
-                case ItemType.Adjuster:
-                    AdjusterCount++;
-                    break;
-                case ItemType.Analog:
-                    AnalogCount++;
-                    break;
-                case ItemType.Archive:
-                    ArchiveCount++;
-                    break;
-                case ItemType.BiosSet:
-                    BiosSetCount++;
-                    break;
-                case ItemType.Chip:
-                    ChipCount++;
-                    break;
-                case ItemType.Condition:
-                    ConditionCount++;
-                    break;
-                case ItemType.Configuration:
-                    ConfigurationCount++;
-                    break;
-                case ItemType.DataArea:
-                    DataAreaCount++;
-                    break;
-                case ItemType.Device:
-                    DeviceCount++;
-                    break;
-                case ItemType.DeviceReference:
-                    DeviceReferenceCount++;
-                    break;
-                case ItemType.DipSwitch:
-                    DipSwitchCount++;
-                    break;
-                case ItemType.Disk:
-                    DiskCount++;
-                    if ((item as Disk).ItemStatus != ItemStatus.Nodump)
-                    {
-                        MD5Count += (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
-                        SHA1Count += (string.IsNullOrWhiteSpace((item as Disk).SHA1) ? 0 : 1);
-                    }
+                // No matter what the item is, we increment the count
+                TotalCount++;
 
-                    BaddumpCount += ((item as Disk).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                    GoodCount += ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
-                    NodumpCount += ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                    VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
-                    break;
-                case ItemType.DiskArea:
-                    DiskAreaCount++;
-                    break;
-                case ItemType.Display:
-                    DisplayCount++;
-                    break;
-                case ItemType.Driver:
-                    DriverCount++;
-                    break;
-                case ItemType.Feature:
-                    FeatureCount++;
-                    break;
-                case ItemType.Info:
-                    InfoCount++;
-                    break;
-                case ItemType.Input:
-                    InputCount++;
-                    break;
-                case ItemType.Media:
-                    MediaCount++;
-                    MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
-                    SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
-                    SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
-                    SpamSumCount += (string.IsNullOrWhiteSpace((item as Media).SpamSum) ? 0 : 1);
-                    break;
-                case ItemType.Part:
-                    PartCount++;
-                    break;
-                case ItemType.PartFeature:
-                    PartFeatureCount++;
-                    break;
-                case ItemType.Port:
-                    PortCount++;
-                    break;
-                case ItemType.RamOption:
-                    RamOptionCount++;
-                    break;
-                case ItemType.Release:
-                    ReleaseCount++;
-                    break;
-                case ItemType.Rom:
-                    RomCount++;
-                    if ((item as Rom).ItemStatus != ItemStatus.Nodump)
-                    {
-                        TotalSize += (item as Rom).Size ?? 0;
-                        CRCCount += (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
-                        MD5Count += (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
+                // Increment removal count
+                if (item.Remove)
+                    RemovedCount++;
+
+                // Now we do different things for each item type
+                switch (item.ItemType)
+                {
+                    case ItemType.Adjuster:
+                        AdjusterCount++;
+                        break;
+                    case ItemType.Analog:
+                        AnalogCount++;
+                        break;
+                    case ItemType.Archive:
+                        ArchiveCount++;
+                        break;
+                    case ItemType.BiosSet:
+                        BiosSetCount++;
+                        break;
+                    case ItemType.Chip:
+                        ChipCount++;
+                        break;
+                    case ItemType.Condition:
+                        ConditionCount++;
+                        break;
+                    case ItemType.Configuration:
+                        ConfigurationCount++;
+                        break;
+                    case ItemType.DataArea:
+                        DataAreaCount++;
+                        break;
+                    case ItemType.Device:
+                        DeviceCount++;
+                        break;
+                    case ItemType.DeviceReference:
+                        DeviceReferenceCount++;
+                        break;
+                    case ItemType.DipSwitch:
+                        DipSwitchCount++;
+                        break;
+                    case ItemType.Disk:
+                        DiskCount++;
+                        if ((item as Disk).ItemStatus != ItemStatus.Nodump)
+                        {
+                            MD5Count += (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
+                            SHA1Count += (string.IsNullOrWhiteSpace((item as Disk).SHA1) ? 0 : 1);
+                        }
+
+                        BaddumpCount += ((item as Disk).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount += ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount += ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount += ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        break;
+                    case ItemType.DiskArea:
+                        DiskAreaCount++;
+                        break;
+                    case ItemType.Display:
+                        DisplayCount++;
+                        break;
+                    case ItemType.Driver:
+                        DriverCount++;
+                        break;
+                    case ItemType.Feature:
+                        FeatureCount++;
+                        break;
+                    case ItemType.Info:
+                        InfoCount++;
+                        break;
+                    case ItemType.Input:
+                        InputCount++;
+                        break;
+                    case ItemType.Media:
+                        MediaCount++;
+                        MD5Count += (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
+                        SHA1Count += (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
+                        SHA256Count += (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                        SpamSumCount += (string.IsNullOrWhiteSpace((item as Media).SpamSum) ? 0 : 1);
+                        break;
+                    case ItemType.Part:
+                        PartCount++;
+                        break;
+                    case ItemType.PartFeature:
+                        PartFeatureCount++;
+                        break;
+                    case ItemType.Port:
+                        PortCount++;
+                        break;
+                    case ItemType.RamOption:
+                        RamOptionCount++;
+                        break;
+                    case ItemType.Release:
+                        ReleaseCount++;
+                        break;
+                    case ItemType.Rom:
+                        RomCount++;
+                        if ((item as Rom).ItemStatus != ItemStatus.Nodump)
+                        {
+                            TotalSize += (item as Rom).Size ?? 0;
+                            CRCCount += (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
+                            MD5Count += (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
 #if NET_FRAMEWORK
-                        RIPEMD160Count += (string.IsNullOrWhiteSpace((item as Rom).RIPEMD160) ? 0 : 1);
+                            RIPEMD160Count += (string.IsNullOrWhiteSpace((item as Rom).RIPEMD160) ? 0 : 1);
 #endif
-                        SHA1Count += (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
-                        SHA256Count += (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
-                        SHA384Count += (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
-                        SHA512Count += (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
-                        SpamSumCount += (string.IsNullOrWhiteSpace((item as Rom).SpamSum) ? 0 : 1);
-                    }
+                            SHA1Count += (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
+                            SHA256Count += (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
+                            SHA384Count += (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
+                            SHA512Count += (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
+                            SpamSumCount += (string.IsNullOrWhiteSpace((item as Rom).SpamSum) ? 0 : 1);
+                        }
 
-                    BaddumpCount += ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                    GoodCount += ((item as Rom).ItemStatus == ItemStatus.Good ? 1 : 0);
-                    NodumpCount += ((item as Rom).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                    VerifiedCount += ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
-                    break;
-                case ItemType.Sample:
-                    SampleCount++;
-                    break;
-                case ItemType.SharedFeature:
-                    SharedFeatureCount++;
-                    break;
-                case ItemType.Slot:
-                    SlotCount++;
-                    break;
-                case ItemType.SoftwareList:
-                    SoftwareListCount++;
-                    break;
-                case ItemType.Sound:
-                    SoundCount++;
-                    break;
+                        BaddumpCount += ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount += ((item as Rom).ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount += ((item as Rom).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount += ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        break;
+                    case ItemType.Sample:
+                        SampleCount++;
+                        break;
+                    case ItemType.SharedFeature:
+                        SharedFeatureCount++;
+                        break;
+                    case ItemType.Slot:
+                        SlotCount++;
+                        break;
+                    case ItemType.SoftwareList:
+                        SoftwareListCount++;
+                        break;
+                    case ItemType.Sound:
+                        SoundCount++;
+                        break;
+                }
             }
         }
 
@@ -749,6 +765,7 @@ namespace SabreTools.Library.DatFiles
             SHA256Count += stats.SHA256Count;
             SHA384Count += stats.SHA384Count;
             SHA512Count += stats.SHA512Count;
+            SpamSumCount += stats.SpamSumCount;
 
             // Individual status counts
             BaddumpCount += stats.BaddumpCount;
@@ -779,137 +796,140 @@ namespace SabreTools.Library.DatFiles
             if (item == null)
                 return;
 
-            // No matter what the item is, we decrease the count
-            TotalCount--;
-
-            // Decrement removal count
-            if (item.Remove)
-                RemovedCount--;
-
-            // Now we do different things for each item type
-            switch (item.ItemType)
+            lock (statsLock)
             {
-                case ItemType.Adjuster:
-                    AdjusterCount--;
-                    break;
-                case ItemType.Analog:
-                    AnalogCount--;
-                    break;
-                case ItemType.Archive:
-                    ArchiveCount--;
-                    break;
-                case ItemType.BiosSet:
-                    BiosSetCount--;
-                    break;
-                case ItemType.Chip:
-                    ChipCount--;
-                    break;
-                case ItemType.Condition:
-                    ConditionCount--;
-                    break;
-                case ItemType.Configuration:
-                    ConfigurationCount--;
-                    break;
-                case ItemType.DataArea:
-                    DataAreaCount--;
-                    break;
-                case ItemType.Device:
-                    DeviceCount--;
-                    break;
-                case ItemType.DeviceReference:
-                    DeviceReferenceCount--;
-                    break;
-                case ItemType.DipSwitch:
-                    DipSwitchCount--;
-                    break;
-                case ItemType.Disk:
-                    DiskCount--;
-                    if ((item as Disk).ItemStatus != ItemStatus.Nodump)
-                    {
-                        MD5Count -= (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
-                        SHA1Count -= (string.IsNullOrWhiteSpace((item as Disk).SHA1) ? 0 : 1);
-                    }
+                // No matter what the item is, we decrease the count
+                TotalCount--;
 
-                    BaddumpCount -= ((item as Disk).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                    GoodCount -= ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
-                    NodumpCount -= ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                    VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
-                    break;
-                case ItemType.DiskArea:
-                    DiskAreaCount--;
-                    break;
-                case ItemType.Display:
-                    DisplayCount--;
-                    break;
-                case ItemType.Driver:
-                    DriverCount--;
-                    break;
-                case ItemType.Feature:
-                    FeatureCount--;
-                    break;
-                case ItemType.Info:
-                    InfoCount--;
-                    break;
-                case ItemType.Input:
-                    InputCount--;
-                    break;
-                case ItemType.Media:
-                    MediaCount--;
-                    MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
-                    SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
-                    SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
-                    break;
-                case ItemType.Part:
-                    PartCount--;
-                    break;
-                case ItemType.PartFeature:
-                    PartFeatureCount--;
-                    break;
-                case ItemType.Port:
-                    PortCount--;
-                    break;
-                case ItemType.RamOption:
-                    RamOptionCount--;
-                    break;
-                case ItemType.Release:
-                    ReleaseCount--;
-                    break;
-                case ItemType.Rom:
-                    RomCount--;
-                    if ((item as Rom).ItemStatus != ItemStatus.Nodump)
-                    {
-                        TotalSize -= (item as Rom).Size ?? 0;
-                        CRCCount -= (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
-                        MD5Count -= (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
+                // Decrement removal count
+                if (item.Remove)
+                    RemovedCount--;
+
+                // Now we do different things for each item type
+                switch (item.ItemType)
+                {
+                    case ItemType.Adjuster:
+                        AdjusterCount--;
+                        break;
+                    case ItemType.Analog:
+                        AnalogCount--;
+                        break;
+                    case ItemType.Archive:
+                        ArchiveCount--;
+                        break;
+                    case ItemType.BiosSet:
+                        BiosSetCount--;
+                        break;
+                    case ItemType.Chip:
+                        ChipCount--;
+                        break;
+                    case ItemType.Condition:
+                        ConditionCount--;
+                        break;
+                    case ItemType.Configuration:
+                        ConfigurationCount--;
+                        break;
+                    case ItemType.DataArea:
+                        DataAreaCount--;
+                        break;
+                    case ItemType.Device:
+                        DeviceCount--;
+                        break;
+                    case ItemType.DeviceReference:
+                        DeviceReferenceCount--;
+                        break;
+                    case ItemType.DipSwitch:
+                        DipSwitchCount--;
+                        break;
+                    case ItemType.Disk:
+                        DiskCount--;
+                        if ((item as Disk).ItemStatus != ItemStatus.Nodump)
+                        {
+                            MD5Count -= (string.IsNullOrWhiteSpace((item as Disk).MD5) ? 0 : 1);
+                            SHA1Count -= (string.IsNullOrWhiteSpace((item as Disk).SHA1) ? 0 : 1);
+                        }
+
+                        BaddumpCount -= ((item as Disk).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount -= ((item as Disk).ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount -= ((item as Disk).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount -= ((item as Disk).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        break;
+                    case ItemType.DiskArea:
+                        DiskAreaCount--;
+                        break;
+                    case ItemType.Display:
+                        DisplayCount--;
+                        break;
+                    case ItemType.Driver:
+                        DriverCount--;
+                        break;
+                    case ItemType.Feature:
+                        FeatureCount--;
+                        break;
+                    case ItemType.Info:
+                        InfoCount--;
+                        break;
+                    case ItemType.Input:
+                        InputCount--;
+                        break;
+                    case ItemType.Media:
+                        MediaCount--;
+                        MD5Count -= (string.IsNullOrWhiteSpace((item as Media).MD5) ? 0 : 1);
+                        SHA1Count -= (string.IsNullOrWhiteSpace((item as Media).SHA1) ? 0 : 1);
+                        SHA256Count -= (string.IsNullOrWhiteSpace((item as Media).SHA256) ? 0 : 1);
+                        break;
+                    case ItemType.Part:
+                        PartCount--;
+                        break;
+                    case ItemType.PartFeature:
+                        PartFeatureCount--;
+                        break;
+                    case ItemType.Port:
+                        PortCount--;
+                        break;
+                    case ItemType.RamOption:
+                        RamOptionCount--;
+                        break;
+                    case ItemType.Release:
+                        ReleaseCount--;
+                        break;
+                    case ItemType.Rom:
+                        RomCount--;
+                        if ((item as Rom).ItemStatus != ItemStatus.Nodump)
+                        {
+                            TotalSize -= (item as Rom).Size ?? 0;
+                            CRCCount -= (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
+                            MD5Count -= (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
 #if NET_FRAMEWORK
                         RIPEMD160Count -= (string.IsNullOrWhiteSpace((item as Rom).RIPEMD160) ? 0 : 1);
 #endif
-                        SHA1Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
-                        SHA256Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
-                        SHA384Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
-                        SHA512Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
-                    }
+                            SHA1Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
+                            SHA256Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
+                            SHA384Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
+                            SHA512Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA512) ? 0 : 1);
+                        }
 
-                    BaddumpCount -= ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
-                    GoodCount -= ((item as Rom).ItemStatus == ItemStatus.Good ? 1 : 0);
-                    NodumpCount -= ((item as Rom).ItemStatus == ItemStatus.Nodump ? 1 : 0);
-                    VerifiedCount -= ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
-                    break;
-                case ItemType.Sample:
-                    SampleCount--;
-                    break;
-                case ItemType.SharedFeature:
-                    SharedFeatureCount--;
-                    break;
-                case ItemType.Slot:
-                    SlotCount--;
-                    break;
-                case ItemType.SoftwareList:
-                    SoftwareListCount--;
-                    break;
-                case ItemType.Sound:
-                    SoundCount--;
-                    break;
+                        BaddumpCount -= ((item as Rom).ItemStatus == ItemStatus.BadDump ? 1 : 0);
+                        GoodCount -= ((item as Rom).ItemStatus == ItemStatus.Good ? 1 : 0);
+                        NodumpCount -= ((item as Rom).ItemStatus == ItemStatus.Nodump ? 1 : 0);
+                        VerifiedCount -= ((item as Rom).ItemStatus == ItemStatus.Verified ? 1 : 0);
+                        break;
+                    case ItemType.Sample:
+                        SampleCount--;
+                        break;
+                    case ItemType.SharedFeature:
+                        SharedFeatureCount--;
+                        break;
+                    case ItemType.Slot:
+                        SlotCount--;
+                        break;
+                    case ItemType.SoftwareList:
+                        SoftwareListCount--;
+                        break;
+                    case ItemType.Sound:
+                        SoundCount--;
+                        break;
+                }
             }
         }
 
@@ -1226,6 +1246,7 @@ namespace SabreTools.Library.DatFiles
             SHA256Count = 0;
             SHA384Count = 0;
             SHA512Count = 0;
+            SpamSumCount = 0;
 
             BaddumpCount = 0;
             GoodCount = 0;

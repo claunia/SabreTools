@@ -2438,9 +2438,8 @@ namespace SabreTools.Library.DatFiles
                 if (fileinfo == null)
                     continue;
 
-                // If we have partial, just ensure we are sorted correctly
-                if (outputFormat == OutputFormat.Folder && Header.ForcePacking == PackingFlag.Partial)
-                    Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
+                // Ensure we are sorted correctly (some other calls can change this)
+                Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
 
                 // If there are no items in the hash, we continue
                 if (Items[hash] == null || Items[hash].Count == 0)
@@ -2798,9 +2797,17 @@ namespace SabreTools.Library.DatFiles
 
                     // Get the output archive, if possible
                     Folder outputArchive = Folder.Create(outputFormat);
+                    if (outputArchive is BaseArchive baseArchive && date)
+                        baseArchive.UseDates = date;
+
+                    // Set the depth fields where appropriate
+                    if (outputArchive is GZipArchive gzipArchive)
+                        gzipArchive.Depth = Header.OutputDepot.Depth;
+                    else if (outputArchive is XZArchive xzArchive)
+                        xzArchive.Depth = Header.OutputDepot.Depth;
 
                     // Now rebuild to the output file
-                    outputArchive.Write(fileStream, outDir, item as Rom, date: date, depth: Header.OutputDepot.Depth);
+                    outputArchive.Write(fileStream, outDir, item as Rom);
                 }
 
                 // Close the input stream
@@ -2865,10 +2872,18 @@ namespace SabreTools.Library.DatFiles
 
                                 // Get the output archive, if possible
                                 Folder outputArchive = Folder.Create(outputFormat);
+                                if (outputArchive is BaseArchive baseArchive && date)
+                                    baseArchive.UseDates = date;
+
+                                // Set the depth fields where appropriate
+                                if (outputArchive is GZipArchive gzipArchive)
+                                    gzipArchive.Depth = Header.OutputDepot.Depth;
+                                else if (outputArchive is XZArchive xzArchive)
+                                    xzArchive.Depth = Header.OutputDepot.Depth;
 
                                 // Now rebuild to the output file
-                                eitherSuccess |= outputArchive.Write(transformStream, outDir, item as Rom, date: date, depth: Header.OutputDepot.Depth);
-                                eitherSuccess |= outputArchive.Write(fileStream, outDir, datItem as Rom, date: date, depth: Header.OutputDepot.Depth);
+                                eitherSuccess |= outputArchive.Write(transformStream, outDir, item as Rom);
+                                eitherSuccess |= outputArchive.Write(fileStream, outDir, datItem as Rom);
 
                                 // Now add the success of either rebuild
                                 rebuilt &= eitherSuccess;

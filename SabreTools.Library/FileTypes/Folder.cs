@@ -298,14 +298,12 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputFile">Input filename to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(string inputFile, string outDir, Rom rom, bool date = false, int depth = 4)
+        public virtual bool Write(string inputFile, string outDir, Rom rom)
         {
             FileStream fs = FileExtensions.TryOpenRead(inputFile);
-            return Write(fs, outDir, rom, date, depth);
+            return Write(fs, outDir, rom);
         }
 
         /// <summary>
@@ -314,11 +312,9 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputStream">Input stream to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, int depth = 4)
+        public virtual bool Write(Stream inputStream, string outDir, Rom rom)
         {
             bool success = false;
 
@@ -367,8 +363,8 @@ namespace SabreTools.Library.FileTypes
 
                     if (rom.ItemType == ItemType.Rom)
                     {
-                        if (date && !string.IsNullOrWhiteSpace((rom as Rom).Date))
-                            File.SetCreationTime(fileName, DateTime.Parse((rom as Rom).Date));
+                        if (!string.IsNullOrWhiteSpace(rom.Date))
+                            File.SetCreationTime(fileName, DateTime.Parse(rom.Date));
                     }
 
                     success = true;
@@ -393,10 +389,8 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputFiles">Input files to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public virtual bool Write(List<string> inputFiles, string outDir, List<Rom> roms, bool date = false, bool romba = false)
+        public virtual bool Write(List<string> inputFiles, string outDir, List<Rom> roms)
         {
             throw new NotImplementedException();
         }

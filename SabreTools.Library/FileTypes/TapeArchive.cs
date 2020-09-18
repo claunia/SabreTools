@@ -286,13 +286,11 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputFile">Input filename to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(string inputFile, string outDir, Rom rom, bool date = false, int depth = 4)
+        public override bool Write(string inputFile, string outDir, Rom rom)
         {
             // Get the file stream for the file and write out
-            return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom, date: date);
+            return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom);
         }
 
         /// <summary>
@@ -301,10 +299,8 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputStream">Input stream to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="depth">Positive value for depth of the output depot, defaults to 4</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(Stream inputStream, string outDir, Rom rom, bool date = false, int depth = 4)
+        public override bool Write(Stream inputStream, string outDir, Rom rom)
         {
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
@@ -335,7 +331,7 @@ namespace SabreTools.Library.FileTypes
                 {
                     // Get temporary date-time if possible
                     DateTime? usableDate = null;
-                    if (date && !string.IsNullOrWhiteSpace(rom.Date) && DateTime.TryParse(rom.Date.Replace('\\', '/'), out DateTime dt))
+                    if (UseDates && !string.IsNullOrWhiteSpace(rom.Date) && DateTime.TryParse(rom.Date.Replace('\\', '/'), out DateTime dt))
                         usableDate = dt;
 
                     // Copy the input stream to the output
@@ -384,7 +380,7 @@ namespace SabreTools.Library.FileTypes
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (date && !string.IsNullOrWhiteSpace(rom.Date) && DateTime.TryParse(rom.Date.Replace('\\', '/'), out DateTime dt))
+                        if (UseDates && !string.IsNullOrWhiteSpace(rom.Date) && DateTime.TryParse(rom.Date.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
 
                         // If we have the input file, add it now
@@ -440,10 +436,8 @@ namespace SabreTools.Library.FileTypes
         /// <param name="inputFiles">Input files to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
         /// <param name="rom">DatItem representing the new information</param>
-        /// <param name="date">True if the date from the DAT should be used if available, false otherwise (default)</param>
-        /// <param name="romba">True if files should be output in Romba depot folders, false otherwise</param>
         /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(List<string> inputFiles, string outDir, List<Rom> roms, bool date = false, bool romba = false)
+        public override bool Write(List<string> inputFiles, string outDir, List<Rom> roms)
         {
             bool success = false;
             string tempFile = Path.Combine(outDir, $"tmp{Guid.NewGuid()}");
@@ -506,10 +500,8 @@ namespace SabreTools.Library.FileTypes
 
                         // Get temporary date-time if possible
                         DateTime? usableDate = null;
-                        if (date && !string.IsNullOrWhiteSpace(roms[index].Date) && DateTime.TryParse(roms[index].Date.Replace('\\', '/'), out DateTime dt))
-                        {
+                        if (UseDates && !string.IsNullOrWhiteSpace(roms[index].Date) && DateTime.TryParse(roms[index].Date.Replace('\\', '/'), out DateTime dt))
                             usableDate = dt;
-                        }
 
                         // Copy the input stream to the output
                         tarFile.AddEntry(roms[index].Name, FileExtensions.TryOpenRead(inputFiles[index]), size: roms[index].Size ?? 0, modified: usableDate);
@@ -566,10 +558,8 @@ namespace SabreTools.Library.FileTypes
                         {
                             // Get temporary date-time if possible
                             DateTime? usableDate = null;
-                            if (date && !string.IsNullOrWhiteSpace(roms[-index - 1].Date) && DateTime.TryParse(roms[-index - 1].Date.Replace('\\', '/'), out DateTime dt))
-                            {
+                            if (UseDates && !string.IsNullOrWhiteSpace(roms[-index - 1].Date) && DateTime.TryParse(roms[-index - 1].Date.Replace('\\', '/'), out DateTime dt))
                                 usableDate = dt;
-                            }
 
                             // Copy the input file to the output
                             tarFile.AddEntry(roms[-index - 1].Name, FileExtensions.TryOpenRead(inputFiles[-index - 1]), size: roms[-index - 1].Size ?? 0, modified: usableDate);
