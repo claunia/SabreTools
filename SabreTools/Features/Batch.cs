@@ -177,10 +177,10 @@ Reset the internal state:           reset();";
                                 Field filterField = command.Arguments[0].AsField();
                                 string filterValue = command.Arguments[1];
                                 bool? filterRemove = false;
-                                if (command.Arguments.Count == 3)
+                                if (command.Arguments.Count >= 3)
                                     filterRemove = command.Arguments[2].AsYesNo();
                                 bool? filterPerMachine = false;
-                                if (command.Arguments.Count == 4)
+                                if (command.Arguments.Count >= 4)
                                     filterPerMachine = command.Arguments[3].AsYesNo();
 
                                 // If we had an invalid input, log and continue
