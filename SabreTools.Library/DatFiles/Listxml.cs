@@ -1126,6 +1126,34 @@ namespace SabreTools.Library.DatFiles
             }
         }
 
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return new ItemType[]
+            {
+                ItemType.Adjuster,
+                ItemType.BiosSet,
+                ItemType.Chip,
+                ItemType.Condition,
+                ItemType.Configuration,
+                ItemType.Device,
+                ItemType.DeviceReference,
+                ItemType.DipSwitch,
+                ItemType.Disk,
+                ItemType.Display,
+                ItemType.Driver,
+                ItemType.Feature,
+                ItemType.Input,
+                ItemType.Port,
+                ItemType.RamOption,
+                ItemType.Rom,
+                ItemType.Sample,
+                ItemType.Slot,
+                ItemType.SoftwareList,
+                ItemType.Sound,
+            };
+        }
+
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>

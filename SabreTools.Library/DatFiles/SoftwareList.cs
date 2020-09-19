@@ -500,6 +500,19 @@ namespace SabreTools.Library.DatFiles
             }
         }
 
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return new ItemType[]
+            {
+                ItemType.DipSwitch,
+                ItemType.Disk,
+                ItemType.Info,
+                ItemType.Rom,
+                ItemType.SharedFeature,
+            };
+        }
+
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>

@@ -407,6 +407,21 @@ namespace SabreTools.Library.DatFiles
             }
         }
 
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return new ItemType[]
+            {
+                ItemType.Archive,
+                ItemType.BiosSet,
+                ItemType.Disk,
+                ItemType.Media,
+                ItemType.Release,
+                ItemType.Rom,
+                ItemType.Sample,
+            };
+        }
+
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>

@@ -2339,7 +2339,6 @@ namespace SabreTools.Library.DatFiles
 
         #endregion
 
-        // TODO: See if any of the helper methods can be broken up a bit more neatly
         #region Rebuilding and Verifying
 
         /// <summary>
@@ -3778,6 +3777,15 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
+        /// Get supported types for write
+        /// </summary>
+        /// <returns>List of supported types for writing</returns>
+        protected virtual ItemType[] GetSupportedTypes()
+        {
+            return Enum.GetValues(typeof(ItemType)) as ItemType[];
+        }
+
+        /// <summary>
         /// Get if an item should be ignored on write
         /// </summary>
         /// <param name="datItem">DatItem to check</param>
@@ -3802,6 +3810,10 @@ namespace SabreTools.Library.DatFiles
                 if (rom.Size == 0 || rom.Size == null)
                     return true;
             }
+
+            // If we have an item type not in the list of supported values
+            if (!GetSupportedTypes().Contains(datItem.ItemType))
+                return true;
 
             return false;
         }

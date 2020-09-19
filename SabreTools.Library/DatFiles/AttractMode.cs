@@ -111,6 +111,12 @@ namespace SabreTools.Library.DatFiles
             svr.Dispose();
         }
 
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return new ItemType[] { ItemType.Rom };
+        }
+
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>
