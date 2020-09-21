@@ -784,10 +784,6 @@ namespace SabreTools.Library.DatFiles
                         string key = mapping.Key;
                         List<string> machineNames = mapping.Value;
 
-                        // If we have the root folder, assume boolean
-                        if (string.Equals(key, "ROOT_FOLDER"))
-                            key = "true";
-
                         // Loop through the machines and add the new mappings
                         foreach (string machine in machineNames)
                         {

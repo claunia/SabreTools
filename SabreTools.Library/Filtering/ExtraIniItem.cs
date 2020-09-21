@@ -76,6 +76,12 @@ namespace SabreTools.Library.Filtering
                         string key = ir.Section;
                         string value = ir.Line.Trim();
 
+                        // If the section is "ROOT_FOLDER", then we use the value "true" instead.
+                        // This is done because some INI files use the name of the file as the
+                        // category to be assigned to the items included.
+                        if (key == "ROOT_FOLDER")
+                            key = "true";
+
                         // Ensure the key exists
                         if (!Mappings.ContainsKey(key))
                             Mappings[key] = new List<string>();
