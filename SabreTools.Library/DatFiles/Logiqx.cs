@@ -107,8 +107,12 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (throwOnError) throw ex;
+                Globals.Logger.Warning(ex, $"Exception found while parsing '{filename}'");
+                if (throwOnError)
+                {
+                    xtr.Dispose();
+                    throw ex;
+                }
 
                 // For XML errors, just skip the affected node
                 xtr?.Read();

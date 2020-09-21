@@ -84,8 +84,13 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (throwOnError) throw ex;
+                string message = $"'{filename}' - There was an error parsing line {ir.LineNumber} '{ir.CurrentLine}'";
+                Globals.Logger.Error(ex, message);
+                if (throwOnError)
+                {
+                    ir.Dispose();
+                    throw new Exception(message, ex);
+                }
             }
 
             ir.Dispose();
@@ -304,7 +309,7 @@ namespace SabreTools.Library.DatFiles
                 }
 
                 // Roms are not valid row formats, usually
-                string line = reader.Line;
+                string line = reader.CurrentLine;
 
                 // If we don't have a valid game, keep reading
                 if (!line.StartsWith("¬"))

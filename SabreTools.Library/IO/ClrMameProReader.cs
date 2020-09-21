@@ -17,6 +17,16 @@ namespace SabreTools.Library.IO
         private StreamReader sr;
 
         /// <summary>
+        /// Contents of the current line, unprocessed
+        /// </summary>
+        public string CurrentLine { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Get the current line number
+        /// </summary>
+        public long LineNumber { get; private set; } = 0;
+
+        /// <summary>
         /// Get if at end of stream
         /// </summary>
         public bool EndOfStream
@@ -74,7 +84,6 @@ namespace SabreTools.Library.IO
         public ClrMameProReader(string filename)
         {
             sr = new StreamReader(filename);
-            DosCenter = true;
         }
 
         /// <summary>
@@ -83,7 +92,6 @@ namespace SabreTools.Library.IO
         public ClrMameProReader(Stream stream, Encoding encoding)
         {
             sr = new StreamReader(stream, encoding);
-            DosCenter = true;
         }
 
         /// <summary>
@@ -94,8 +102,11 @@ namespace SabreTools.Library.IO
             if (!(sr.BaseStream?.CanRead ?? false) || sr.EndOfStream)
                 return false;
 
-            string line = sr.ReadLine().Trim();
-            ProcessLine(line);
+            CurrentLine = sr.ReadLine().Trim();
+            LineNumber++;
+
+            // TODO: Act like IniReader here
+            ProcessLine(CurrentLine);
             return true;
         }
 

@@ -54,33 +54,46 @@ namespace SabreTools.Library.DatFiles
 
             while (!cmpr.EndOfStream)
             {
-                cmpr.ReadNextLine();
-
-                // Ignore everything not top-level
-                if (cmpr.RowType != CmpRowType.TopLevel)
-                    continue;
-
-                // Switch on the top-level name
-                switch (cmpr.TopLevel.ToLowerInvariant())
+                try
                 {
-                    // Header values
-                    case "clrmamepro":
-                    case "romvault":
-                        ReadHeader(cmpr, keep);
-                        break;
+                    cmpr.ReadNextLine();
 
-                    // Sets
-                    case "set":         // Used by the most ancient DATs
-                    case "game":        // Used by most CMP DATs
-                    case "machine":     // Possibly used by MAME CMP DATs
-                        ReadSet(cmpr, false, filename, indexId);
-                        break;
-                    case "resource":    // Used by some other DATs to denote a BIOS set
-                        ReadSet(cmpr, true, filename, indexId);
-                        break;
+                    // Ignore everything not top-level
+                    if (cmpr.RowType != CmpRowType.TopLevel)
+                        continue;
 
-                    default:
-                        break;
+                    // Switch on the top-level name
+                    switch (cmpr.TopLevel.ToLowerInvariant())
+                    {
+                        // Header values
+                        case "clrmamepro":
+                        case "romvault":
+                            ReadHeader(cmpr, keep);
+                            break;
+
+                        // Sets
+                        case "set":         // Used by the most ancient DATs
+                        case "game":        // Used by most CMP DATs
+                        case "machine":     // Possibly used by MAME CMP DATs
+                            ReadSet(cmpr, false, filename, indexId);
+                            break;
+                        case "resource":    // Used by some other DATs to denote a BIOS set
+                            ReadSet(cmpr, true, filename, indexId);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string message = $"'{filename}' - There was an error parsing line {cmpr.LineNumber} '{cmpr.CurrentLine}'";
+                    Globals.Logger.Error(ex, message);
+                    if (throwOnError)
+                    {
+                        cmpr.Dispose();
+                        throw new Exception(message, ex);
+                    }
                 }
             }
 

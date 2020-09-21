@@ -1410,13 +1410,13 @@ namespace SabreTools.Library.DatFiles
                     dirStats.ResetStatistics();
                 }
 
-                Globals.Logger.Verbose($"Beginning stat collection for '{file}'", false);
+                Globals.Logger.Verbose($"Beginning stat collection for '{file.CurrentPath}'", false);
                 List<string> games = new List<string>();
                 DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
                 datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
-                Globals.Logger.User($"Adding stats for file '{file}'\n", false);
+                Globals.Logger.User($"Adding stats for file '{file.CurrentPath}'\n", false);
                 if (single)
                 {
                     reports.ForEach(report => report.ReplaceStatistics(datdata.Header.FileName, datdata.Items.Keys.Count, datdata.Items));

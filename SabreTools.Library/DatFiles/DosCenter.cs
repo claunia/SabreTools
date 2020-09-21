@@ -43,27 +43,40 @@ namespace SabreTools.Library.DatFiles
 
             while (!cmpr.EndOfStream)
             {
-                cmpr.ReadNextLine();
-
-                // Ignore everything not top-level
-                if (cmpr.RowType != CmpRowType.TopLevel)
-                    continue;
-
-                // Switch on the top-level name
-                switch (cmpr.TopLevel.ToLowerInvariant())
+                try
                 {
-                    // Header values
-                    case "doscenter":
-                        ReadHeader(cmpr);
-                        break;
+                    cmpr.ReadNextLine();
 
-                    // Sets
-                    case "game":
-                        ReadGame(cmpr, filename, indexId);
-                        break;
+                    // Ignore everything not top-level
+                    if (cmpr.RowType != CmpRowType.TopLevel)
+                        continue;
 
-                    default:
-                        break;
+                    // Switch on the top-level name
+                    switch (cmpr.TopLevel.ToLowerInvariant())
+                    {
+                        // Header values
+                        case "doscenter":
+                            ReadHeader(cmpr);
+                            break;
+
+                        // Sets
+                        case "game":
+                            ReadGame(cmpr, filename, indexId);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string message = $"'{filename}' - There was an error parsing line {cmpr.LineNumber} '{cmpr.CurrentLine}'";
+                    Globals.Logger.Error(ex, message);
+                    if (throwOnError)
+                    {
+                        cmpr.Dispose();
+                        throw new Exception(message, ex);
+                    }
                 }
             }
 

@@ -31,6 +31,16 @@ namespace SabreTools.Library.IO
         }
 
         /// <summary>
+        /// Contents of the current line, unprocessed
+        /// </summary>
+        public string CurrentLine { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Get the current line number
+        /// </summary>
+        public long LineNumber { get; private set; } = 0;
+
+        /// <summary>
         /// Assume the first row is a header
         /// </summary>
         public bool Header { get; set; } = true;
@@ -44,11 +54,6 @@ namespace SabreTools.Library.IO
         /// Get the current line values
         /// </summary>
         public List<string> Line { get; private set; } = null;
-
-        /// <summary>
-        /// Get the current line number
-        /// </summary>
-        public long LineNumber { get; private set; } = -1;
 
         /// <summary>
         /// Assume that values are wrapped in quotes
@@ -104,6 +109,7 @@ namespace SabreTools.Library.IO
                 return false;
 
             string fullLine = sr.ReadLine();
+            CurrentLine = fullLine;
             LineNumber++;
 
             // If we have quotes, we need to split specially

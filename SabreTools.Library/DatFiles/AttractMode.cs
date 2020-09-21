@@ -59,53 +59,57 @@ namespace SabreTools.Library.DatFiles
                 {
                     // Get the current line, split and parse
                     svr.ReadNextLine();
-                }
-                catch (InvalidDataException ex)
-                {
-                    Globals.Logger.Error(ex, $"Malformed line found in '{filename}' at line {svr.LineNumber}");
-                    if (throwOnError) throw ex;
-                    continue;
-                }
 
-                Rom rom = new Rom
-                {
-                    Name = "-",
-                    Size = Constants.SizeZero,
-                    CRC = Constants.CRCZero,
-                    MD5 = Constants.MD5Zero,
-                    SHA1 = Constants.SHA1Zero,
-                    ItemStatus = ItemStatus.None,
-
-                    Machine = new Machine
+                    Rom rom = new Rom
                     {
-                        Name = svr.Line[0], // #Name
-                        Description = svr.Line[1], // Title
-                        CloneOf = svr.Line[3], // CloneOf
-                        Year = svr.Line[4], // Year
-                        Manufacturer = svr.Line[5], // Manufacturer
-                        Category = svr.Line[6], // Category
-                        Players = svr.Line[7], // Players
-                        Rotation = svr.Line[8], // Rotation
-                        Control = svr.Line[9], // Control
-                        Status = svr.Line[10], // Status
-                        DisplayCount = svr.Line[11], // DisplayCount
-                        DisplayType = svr.Line[12], // DisplayType
-                        Comment = svr.Line[15], // Extra
-                        Buttons = svr.Line[16], // Buttons
-                    },
+                        Name = "-",
+                        Size = Constants.SizeZero,
+                        CRC = Constants.CRCZero,
+                        MD5 = Constants.MD5Zero,
+                        SHA1 = Constants.SHA1Zero,
+                        ItemStatus = ItemStatus.None,
 
-                    AltName = svr.Line[13], // AltRomname
-                    AltTitle = svr.Line[14], // AltTitle
+                        Machine = new Machine
+                        {
+                            Name = svr.Line[0], // #Name
+                            Description = svr.Line[1], // Title
+                            CloneOf = svr.Line[3], // CloneOf
+                            Year = svr.Line[4], // Year
+                            Manufacturer = svr.Line[5], // Manufacturer
+                            Category = svr.Line[6], // Category
+                            Players = svr.Line[7], // Players
+                            Rotation = svr.Line[8], // Rotation
+                            Control = svr.Line[9], // Control
+                            Status = svr.Line[10], // Status
+                            DisplayCount = svr.Line[11], // DisplayCount
+                            DisplayType = svr.Line[12], // DisplayType
+                            Comment = svr.Line[15], // Extra
+                            Buttons = svr.Line[16], // Buttons
+                        },
 
-                    Source = new Source
+                        AltName = svr.Line[13], // AltRomname
+                        AltTitle = svr.Line[14], // AltTitle
+
+                        Source = new Source
+                        {
+                            Index = indexId,
+                            Name = filename,
+                        },
+                    };
+
+                    // Now process and add the rom
+                    ParseAddHelper(rom);
+                }
+                catch (Exception ex)
+                {
+                    string message = $"'{filename}' - There was an error parsing line {svr.LineNumber} '{svr.CurrentLine}'";
+                    Globals.Logger.Error(ex, message);
+                    if (throwOnError)
                     {
-                        Index = indexId,
-                        Name = filename,
-                    },                    
-                };
-
-                // Now process and add the rom
-                ParseAddHelper(rom);
+                        svr.Dispose();
+                        throw new Exception(message, ex);
+                    }
+                }
             }
 
             svr.Dispose();

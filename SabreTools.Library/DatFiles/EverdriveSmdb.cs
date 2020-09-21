@@ -33,51 +33,65 @@ namespace SabreTools.Library.DatFiles
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
+            // TODO: Use SeparatedValueReader
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
             StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
 
             while (!sr.EndOfStream)
             {
-                string line = sr.ReadLine();
-
-                /*
-                The gameinfo order is as follows
-                0 - SHA-256
-                1 - Machine Name/Filename
-                2 - SHA-1
-                3 - MD5
-                4 - CRC32
-                */
-
-                string[] gameinfo = line.Split('\t');
-                string[] fullname = gameinfo[1].Split('/');
-
-                Rom rom = new Rom
+                try
                 {
-                    Name = gameinfo[1].Substring(fullname[0].Length + 1),
-                    Size = null, // No size provided, but we don't want the size being 0
-                    CRC = gameinfo[4],
-                    MD5 = gameinfo[3],
-                    SHA1 = gameinfo[2],
-                    SHA256 = gameinfo[0],
-                    ItemStatus = ItemStatus.None,
+                    string line = sr.ReadLine();
 
-                    Machine = new Machine
+                    /*
+                    The gameinfo order is as follows
+                    0 - SHA-256
+                    1 - Machine Name/Filename
+                    2 - SHA-1
+                    3 - MD5
+                    4 - CRC32
+                    */
+
+                    string[] gameinfo = line.Split('\t');
+                    string[] fullname = gameinfo[1].Split('/');
+
+                    Rom rom = new Rom
                     {
-                        Name = fullname[0],
-                        Description = fullname[0],
-                    },
+                        Name = gameinfo[1].Substring(fullname[0].Length + 1),
+                        Size = null, // No size provided, but we don't want the size being 0
+                        CRC = gameinfo[4],
+                        MD5 = gameinfo[3],
+                        SHA1 = gameinfo[2],
+                        SHA256 = gameinfo[0],
+                        ItemStatus = ItemStatus.None,
 
-                    Source = new Source
+                        Machine = new Machine
+                        {
+                            Name = fullname[0],
+                            Description = fullname[0],
+                        },
+
+                        Source = new Source
+                        {
+                            Index = indexId,
+                            Name = filename,
+                        },
+                    };
+
+                    // Now process and add the rom
+                    ParseAddHelper(rom);
+                }
+                catch (Exception ex)
+                {
+                    string message = $"'{filename}' - There was an error parsing at position {sr.BaseStream.Position}";
+                    Globals.Logger.Error(ex, message);
+                    if (throwOnError)
                     {
-                        Index = indexId,
-                        Name = filename,
-                    },
-                };
-
-                // Now process and add the rom
-                ParseAddHelper(rom);
+                        sr.Dispose();
+                        throw new Exception(message, ex);
+                    }
+                }
             }
 
             sr.Dispose();

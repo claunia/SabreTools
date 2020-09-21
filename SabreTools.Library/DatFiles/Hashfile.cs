@@ -43,56 +43,69 @@ namespace SabreTools.Library.DatFiles
 
             while (!sr.EndOfStream)
             {
-                string line = sr.ReadLine();
-
-                // Split the line and get the name and hash
-                string[] split = line.Split(' ');
-                string name = string.Empty;
-                string hash = string.Empty;
-
-                // If we have CRC, then it's an SFV file and the name is first are
-                if (_hash.HasFlag(Hash.CRC))
+                try
                 {
-                    name = split[0].Replace("*", String.Empty);
-                    hash = split[1];
-                }
-                // Otherwise, the name is second
-                else
-                {
-                    name = split[1].Replace("*", String.Empty);
-                    hash = split[0];
-                }
+                    string line = sr.ReadLine();
 
-                Rom rom = new Rom
-                {
-                    Name = name,
-                    Size = null,
-                    CRC = (_hash.HasFlag(Hash.CRC) ? hash : null),
-                    MD5 = (_hash.HasFlag(Hash.MD5) ? hash : null),
+                    // Split the line and get the name and hash
+                    string[] split = line.Split(' ');
+                    string name = string.Empty;
+                    string hash = string.Empty;
+
+                    // If we have CRC, then it's an SFV file and the name is first are
+                    if (_hash.HasFlag(Hash.CRC))
+                    {
+                        name = split[0].Replace("*", String.Empty);
+                        hash = split[1];
+                    }
+                    // Otherwise, the name is second
+                    else
+                    {
+                        name = split[1].Replace("*", String.Empty);
+                        hash = split[0];
+                    }
+
+                    Rom rom = new Rom
+                    {
+                        Name = name,
+                        Size = null,
+                        CRC = (_hash.HasFlag(Hash.CRC) ? hash : null),
+                        MD5 = (_hash.HasFlag(Hash.MD5) ? hash : null),
 #if NET_FRAMEWORK
-                    RIPEMD160 = (_hash.HasFlag(Hash.RIPEMD160) ? hash : null),
+                        RIPEMD160 = (_hash.HasFlag(Hash.RIPEMD160) ? hash : null),
 #endif
-                    SHA1 = (_hash.HasFlag(Hash.SHA1) ? hash : null),
-                    SHA256 = (_hash.HasFlag(Hash.SHA256) ? hash : null),
-                    SHA384 = (_hash.HasFlag(Hash.SHA384) ? hash : null),
-                    SHA512 = (_hash.HasFlag(Hash.SHA512) ? hash : null),
-                    SpamSum = (_hash.HasFlag(Hash.SpamSum) ? hash : null),
-                    ItemStatus = ItemStatus.None,
+                        SHA1 = (_hash.HasFlag(Hash.SHA1) ? hash : null),
+                        SHA256 = (_hash.HasFlag(Hash.SHA256) ? hash : null),
+                        SHA384 = (_hash.HasFlag(Hash.SHA384) ? hash : null),
+                        SHA512 = (_hash.HasFlag(Hash.SHA512) ? hash : null),
+                        SpamSum = (_hash.HasFlag(Hash.SpamSum) ? hash : null),
+                        ItemStatus = ItemStatus.None,
 
-                    Machine = new Machine
+                        Machine = new Machine
+                        {
+                            Name = Path.GetFileNameWithoutExtension(filename),
+                        },
+
+                        Source = new Source
+                        {
+                            Index = indexId,
+                            Name = filename,
+                        },
+                    };
+
+                    // Now process and add the rom
+                    ParseAddHelper(rom);
+                }
+                catch (Exception ex)
+                {
+                    string message = $"'{filename}' - There was an error parsing at position {sr.BaseStream.Position}";
+                    Globals.Logger.Error(ex, message);
+                    if (throwOnError)
                     {
-                        Name = Path.GetFileNameWithoutExtension(filename),
-                    },
-
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
-                };
-
-                // Now process and add the rom
-                ParseAddHelper(rom);
+                        sr.Dispose();
+                        throw new Exception(message, ex);
+                    }
+                }
             }
 
             sr.Dispose();

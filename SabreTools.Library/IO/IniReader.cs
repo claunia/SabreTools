@@ -30,9 +30,14 @@ namespace SabreTools.Library.IO
         public KeyValuePair<string, string>? KeyValuePair { get; private set; } = null;
 
         /// <summary>
-        /// Contents of the currently read line
+        /// Contents of the current line, unprocessed
         /// </summary>
-        public string Line { get; private set; } = string.Empty;
+        public string CurrentLine { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// Get the current line number
+        /// </summary>
+        public long LineNumber { get; private set; } = 0;
 
         /// <summary>
         /// Current row type
@@ -73,7 +78,8 @@ namespace SabreTools.Library.IO
             if (!(sr.BaseStream?.CanRead ?? false) || sr.EndOfStream)
                 return false;
 
-            Line = sr.ReadLine().Trim();
+            CurrentLine = sr.ReadLine().Trim();
+            LineNumber++;
             ProcessLine();
             return true;
         }
@@ -84,25 +90,25 @@ namespace SabreTools.Library.IO
         private void ProcessLine()
         {
             // Comment
-            if (Line.StartsWith(";"))
+            if (CurrentLine.StartsWith(";"))
             {
                 KeyValuePair = null;
                 RowType = IniRowType.Comment;
             }
 
             // Section
-            else if (Line.StartsWith("[") && Line.EndsWith("]"))
+            else if (CurrentLine.StartsWith("[") && CurrentLine.EndsWith("]"))
             {
                 KeyValuePair = null;
                 RowType = IniRowType.SectionHeader;
-                Section = Line.TrimStart('[').TrimEnd(']');
+                Section = CurrentLine.TrimStart('[').TrimEnd(']');
             }
 
             // KeyValuePair
-            else if (Line.Contains("="))
+            else if (CurrentLine.Contains("="))
             {
                 // Split the line by '=' for key-value pairs
-                string[] data = Line.Split('=');
+                string[] data = CurrentLine.Split('=');
 
                 // If the value field contains an '=', we need to put them back in
                 string key = data[0].Trim();
@@ -113,10 +119,10 @@ namespace SabreTools.Library.IO
             }
 
             // Empty
-            else if (string.IsNullOrEmpty(Line))
+            else if (string.IsNullOrEmpty(CurrentLine))
             {
                 KeyValuePair = null;
-                Line = string.Empty;
+                CurrentLine = string.Empty;
                 RowType = IniRowType.None;
             }
 
@@ -127,7 +133,7 @@ namespace SabreTools.Library.IO
                 RowType = IniRowType.Invalid;
 
                 if (ValidateRows)
-                    throw new InvalidDataException($"Invalid INI row found, cannot continue: {Line}");
+                    throw new InvalidDataException($"Invalid INI row found, cannot continue: {CurrentLine}");
             }
         }
 

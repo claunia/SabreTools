@@ -74,7 +74,7 @@ namespace SabreTools.Library.Filtering
                     {
                         // Get the key and value
                         string key = ir.Section;
-                        string value = ir.Line.Trim();
+                        string value = ir.CurrentLine.Trim();
 
                         // If the section is "ROOT_FOLDER", then we use the value "true" instead.
                         // This is done because some INI files use the name of the file as the

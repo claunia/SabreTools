@@ -50,201 +50,214 @@ namespace SabreTools.Library.DatFiles
             string gamename = string.Empty;
             while (!sr.EndOfStream)
             {
-                string line = sr.ReadLine().Trim();
-
-                // If we have a blank line, we just skip it
-                if (string.IsNullOrWhiteSpace(line))
+                try
                 {
-                    continue;
-                }
+                    string line = sr.ReadLine().Trim();
 
-                // If we have the descriptor line, ignore it
-                else if (line == "Name                                   Size Checksum")
-                {
-                    continue;
-                }
-
-                // If we have the beginning of a game, set the name of the game
-                else if (line.StartsWith("ROMs required for"))
-                {
-                    gamename = Regex.Match(line, @"^ROMs required for \S*? string.Empty(.*?)string.Empty\.").Groups[1].Value;
-                }
-
-                // If we have a machine with no required roms (usually internal devices), skip it
-                else if (line.StartsWith("No ROMs required for"))
-                {
-                    continue;
-                }
-
-                // Otherwise, we assume we have a rom that we need to add
-                else
-                {
-                    // First, we preprocess the line so that the rom name is consistently correct
-                    string[] split = line.Split(new string[] { "    " }, StringSplitOptions.RemoveEmptyEntries);
-
-                    // If the line doesn't have the 4 spaces of padding, check for 3
-                    if (split.Length == 1)
-                        split = line.Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
-
-                    // If the split is still unsuccessful, log it and skip
-                    if (split.Length == 1)
-                        Globals.Logger.Warning($"Possibly malformed line: '{line}'");
-
-                    string romname = split[0];
-                    line = line.Substring(romname.Length);
-
-                    // Next we separate the ROM into pieces
-                    split = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
-
-                    // Standard Disks have 2 pieces (name, sha1)
-                    if (split.Length == 1)
+                    // If we have a blank line, we just skip it
+                    if (string.IsNullOrWhiteSpace(line))
                     {
-                        Disk disk = new Disk()
-                        {
-                            Name = romname,
-                            SHA1 = Sanitizer.CleanListromHashData(split[0]),
-
-                            Machine = new Machine
-                            {
-                                Name = gamename,
-                            },
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        ParseAddHelper(disk);
+                        continue;
                     }
 
-                    // Baddump Disks have 4 pieces (name, BAD, sha1, BAD_DUMP)
-                    else if (split.Length == 3 && line.EndsWith("BAD_DUMP"))
+                    // If we have the descriptor line, ignore it
+                    else if (line == "Name                                   Size Checksum")
                     {
-                        Disk disk = new Disk()
-                        {
-                            Name = romname,
-                            SHA1 = Sanitizer.CleanListromHashData(split[1]),
-                            ItemStatus = ItemStatus.BadDump,
-
-                            Machine = new Machine
-                            {
-                                Name = gamename,
-                            },
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        ParseAddHelper(disk);
+                        continue;
                     }
 
-                    // Standard ROMs have 4 pieces (name, size, crc, sha1)
-                    else if (split.Length == 3)
+                    // If we have the beginning of a game, set the name of the game
+                    else if (line.StartsWith("ROMs required for"))
                     {
-                        Rom rom = new Rom()
-                        {
-                            Name = romname,
-                            Size = Sanitizer.CleanLong(split[0]),
-                            CRC = Sanitizer.CleanListromHashData(split[1]),
-                            SHA1 = Sanitizer.CleanListromHashData(split[2]),
-
-                            Machine = new Machine
-                            {
-                                Name = gamename,
-                            },
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        ParseAddHelper(rom);
+                        gamename = Regex.Match(line, @"^ROMs required for \S*? string.Empty(.*?)string.Empty\.").Groups[1].Value;
                     }
 
-                    // Nodump Disks have 5 pieces (name, NO, GOOD, DUMP, KNOWN)
-                    else if (split.Length == 4 && line.EndsWith("NO GOOD DUMP KNOWN"))
+                    // If we have a machine with no required roms (usually internal devices), skip it
+                    else if (line.StartsWith("No ROMs required for"))
                     {
-                        Disk disk = new Disk()
-                        {
-                            Name = romname,
-                            ItemStatus = ItemStatus.Nodump,
-
-                            Machine = new Machine
-                            {
-                                Name = gamename,
-                            },
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        ParseAddHelper(disk);
+                        continue;
                     }
 
-                    // Baddump ROMs have 6 pieces (name, size, BAD, crc, sha1, BAD_DUMP)
-                    else if (split.Length == 5 && line.EndsWith("BAD_DUMP"))
-                    {
-                        Rom rom = new Rom()
-                        {
-                            Name = romname,
-                            Size = Sanitizer.CleanLong(split[0]),
-                            CRC = Sanitizer.CleanListromHashData(split[2]),
-                            SHA1 = Sanitizer.CleanListromHashData(split[3]),
-                            ItemStatus = ItemStatus.BadDump,
-
-                            Machine = new Machine
-                            {
-                                Name = gamename,
-                            },
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        ParseAddHelper(rom);
-                    }
-
-                    // Nodump ROMs have 6 pieces (name, size, NO, GOOD, DUMP, KNOWN)
-                    else if (split.Length == 5 && line.EndsWith("NO GOOD DUMP KNOWN"))
-                    {
-                        Rom rom = new Rom()
-                        {
-                            Name = romname,
-                            Size = Sanitizer.CleanLong(split[0]),
-                            ItemStatus = ItemStatus.Nodump,
-
-                            Machine = new Machine
-                            {
-                                Name = gamename,
-                            },
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        ParseAddHelper(rom);
-                    }
-
-                    // If we have something else, it's invalid
+                    // Otherwise, we assume we have a rom that we need to add
                     else
                     {
-                        Globals.Logger.Warning($"Invalid line detected: '{romname} {line}'");
+                        // First, we preprocess the line so that the rom name is consistently correct
+                        string[] split = line.Split(new string[] { "    " }, StringSplitOptions.RemoveEmptyEntries);
+
+                        // If the line doesn't have the 4 spaces of padding, check for 3
+                        if (split.Length == 1)
+                            split = line.Split(new string[] { "   " }, StringSplitOptions.RemoveEmptyEntries);
+
+                        // If the split is still unsuccessful, log it and skip
+                        if (split.Length == 1)
+                            Globals.Logger.Warning($"Possibly malformed line: '{line}'");
+
+                        string romname = split[0];
+                        line = line.Substring(romname.Length);
+
+                        // Next we separate the ROM into pieces
+                        split = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+
+                        // Standard Disks have 2 pieces (name, sha1)
+                        if (split.Length == 1)
+                        {
+                            Disk disk = new Disk()
+                            {
+                                Name = romname,
+                                SHA1 = Sanitizer.CleanListromHashData(split[0]),
+
+                                Machine = new Machine
+                                {
+                                    Name = gamename,
+                                },
+
+                                Source = new Source
+                                {
+                                    Index = indexId,
+                                    Name = filename,
+                                },
+                            };
+
+                            ParseAddHelper(disk);
+                        }
+
+                        // Baddump Disks have 4 pieces (name, BAD, sha1, BAD_DUMP)
+                        else if (split.Length == 3 && line.EndsWith("BAD_DUMP"))
+                        {
+                            Disk disk = new Disk()
+                            {
+                                Name = romname,
+                                SHA1 = Sanitizer.CleanListromHashData(split[1]),
+                                ItemStatus = ItemStatus.BadDump,
+
+                                Machine = new Machine
+                                {
+                                    Name = gamename,
+                                },
+
+                                Source = new Source
+                                {
+                                    Index = indexId,
+                                    Name = filename,
+                                },
+                            };
+
+                            ParseAddHelper(disk);
+                        }
+
+                        // Standard ROMs have 4 pieces (name, size, crc, sha1)
+                        else if (split.Length == 3)
+                        {
+                            Rom rom = new Rom()
+                            {
+                                Name = romname,
+                                Size = Sanitizer.CleanLong(split[0]),
+                                CRC = Sanitizer.CleanListromHashData(split[1]),
+                                SHA1 = Sanitizer.CleanListromHashData(split[2]),
+
+                                Machine = new Machine
+                                {
+                                    Name = gamename,
+                                },
+
+                                Source = new Source
+                                {
+                                    Index = indexId,
+                                    Name = filename,
+                                },
+                            };
+
+                            ParseAddHelper(rom);
+                        }
+
+                        // Nodump Disks have 5 pieces (name, NO, GOOD, DUMP, KNOWN)
+                        else if (split.Length == 4 && line.EndsWith("NO GOOD DUMP KNOWN"))
+                        {
+                            Disk disk = new Disk()
+                            {
+                                Name = romname,
+                                ItemStatus = ItemStatus.Nodump,
+
+                                Machine = new Machine
+                                {
+                                    Name = gamename,
+                                },
+
+                                Source = new Source
+                                {
+                                    Index = indexId,
+                                    Name = filename,
+                                },
+                            };
+
+                            ParseAddHelper(disk);
+                        }
+
+                        // Baddump ROMs have 6 pieces (name, size, BAD, crc, sha1, BAD_DUMP)
+                        else if (split.Length == 5 && line.EndsWith("BAD_DUMP"))
+                        {
+                            Rom rom = new Rom()
+                            {
+                                Name = romname,
+                                Size = Sanitizer.CleanLong(split[0]),
+                                CRC = Sanitizer.CleanListromHashData(split[2]),
+                                SHA1 = Sanitizer.CleanListromHashData(split[3]),
+                                ItemStatus = ItemStatus.BadDump,
+
+                                Machine = new Machine
+                                {
+                                    Name = gamename,
+                                },
+
+                                Source = new Source
+                                {
+                                    Index = indexId,
+                                    Name = filename,
+                                },
+                            };
+
+                            ParseAddHelper(rom);
+                        }
+
+                        // Nodump ROMs have 6 pieces (name, size, NO, GOOD, DUMP, KNOWN)
+                        else if (split.Length == 5 && line.EndsWith("NO GOOD DUMP KNOWN"))
+                        {
+                            Rom rom = new Rom()
+                            {
+                                Name = romname,
+                                Size = Sanitizer.CleanLong(split[0]),
+                                ItemStatus = ItemStatus.Nodump,
+
+                                Machine = new Machine
+                                {
+                                    Name = gamename,
+                                },
+
+                                Source = new Source
+                                {
+                                    Index = indexId,
+                                    Name = filename,
+                                },
+                            };
+
+                            ParseAddHelper(rom);
+                        }
+
+                        // If we have something else, it's invalid
+                        else
+                        {
+                            Globals.Logger.Warning($"Invalid line detected: '{romname} {line}'");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string message = $"'{filename}' - There was an error parsing at position {sr.BaseStream.Position}";
+                    Globals.Logger.Error(ex, message);
+                    if (throwOnError)
+                    {
+                        sr.Dispose();
+                        throw new Exception(message, ex);
                     }
                 }
             }

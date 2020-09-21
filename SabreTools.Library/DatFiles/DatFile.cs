@@ -1802,10 +1802,11 @@ namespace SabreTools.Library.DatFiles
         /// Create a DatFile and parse a file into it
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
-        public static DatFile CreateAndParse(string filename)
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public static DatFile CreateAndParse(string filename, bool throwOnError = false)
         {
             DatFile datFile = Create();
-            datFile.Parse(new ParentablePath(filename));
+            datFile.Parse(new ParentablePath(filename), throwOnError: throwOnError);
             return datFile;
         }
 
@@ -1833,22 +1834,22 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Parse a DAT and return all found games and roms within
         /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="input">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         public void Parse(
-            ParentablePath filename,
+            ParentablePath input,
             int indexId = 0,
             bool keep = false,
             bool keepext = false,
             bool quotes = true,
-            bool throwOnError = false)
+            bool throwOnError = true)
         {
             // Get the current path from the filename
-            string currentPath = filename.CurrentPath;
+            string currentPath = input.CurrentPath;
 
             // Check the file extension first as a safeguard
             if (!PathExtensions.HasValidDatExtension(currentPath))
@@ -1868,7 +1869,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex, $"Error with file '{filename}'");
+                Globals.Logger.Error(ex, $"Error with file '{currentPath}'");
                 if (throwOnError) throw ex;
             }
         }
