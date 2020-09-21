@@ -12,7 +12,7 @@ namespace SabreTools.Library.IO
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
-        private StreamReader sr;
+        private readonly StreamReader sr;
 
         /// <summary>
         /// Internal value to say how many fields should be written

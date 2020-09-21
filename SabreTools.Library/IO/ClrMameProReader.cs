@@ -14,7 +14,7 @@ namespace SabreTools.Library.IO
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
-        private StreamReader sr;
+        private readonly StreamReader sr;
 
         /// <summary>
         /// Contents of the current line, unprocessed
@@ -104,26 +104,24 @@ namespace SabreTools.Library.IO
 
             CurrentLine = sr.ReadLine().Trim();
             LineNumber++;
-
-            // TODO: Act like IniReader here
-            ProcessLine(CurrentLine);
+            ProcessLine();
             return true;
         }
 
         /// <summary>
         /// Process the current line and extract out values
         /// </summary>
-        private void ProcessLine(string line)
+        private void ProcessLine()
         {
             // Standalone (special case for DC dats)
-            if (line.StartsWith("Name:"))
+            if (CurrentLine.StartsWith("Name:"))
             {
-                string temp = line.Substring("Name:".Length).Trim();
-                line = $"Name: {temp}";
+                string temp = CurrentLine.Substring("Name:".Length).Trim();
+                CurrentLine = $"Name: {temp}";
             }
 
             // Comment
-            if (line.StartsWith("#"))
+            if (CurrentLine.StartsWith("#"))
             {
                 Internal = null;
                 InternalName = null;
@@ -132,9 +130,9 @@ namespace SabreTools.Library.IO
             }
 
             // Top-level
-            else if (Regex.IsMatch(line, Constants.HeaderPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, Constants.HeaderPatternCMP))
             {
-                GroupCollection gc = Regex.Match(line, Constants.HeaderPatternCMP).Groups;
+                GroupCollection gc = Regex.Match(CurrentLine, Constants.HeaderPatternCMP).Groups;
                 string normalizedValue = gc[1].Value.ToLowerInvariant();
 
                 Internal = null;
@@ -145,9 +143,9 @@ namespace SabreTools.Library.IO
             }
 
             // Internal
-            else if (Regex.IsMatch(line, Constants.InternalPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, Constants.InternalPatternCMP))
             {
-                GroupCollection gc = Regex.Match(line, Constants.InternalPatternCMP).Groups;
+                GroupCollection gc = Regex.Match(CurrentLine, Constants.InternalPatternCMP).Groups;
                 string normalizedValue = gc[1].Value.ToLowerInvariant();
                 string[] linegc = SplitLineAsCMP(gc[2].Value);
 
@@ -234,9 +232,9 @@ namespace SabreTools.Library.IO
             }
 
             // Standalone
-            else if (Regex.IsMatch(line, Constants.ItemPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, Constants.ItemPatternCMP))
             {
-                GroupCollection gc = Regex.Match(line, Constants.ItemPatternCMP).Groups;
+                GroupCollection gc = Regex.Match(CurrentLine, Constants.ItemPatternCMP).Groups;
                 string itemval = gc[2].Value.Replace("\"", string.Empty);
 
                 Internal = null;
@@ -246,7 +244,7 @@ namespace SabreTools.Library.IO
             }
 
             // End section
-            else if (Regex.IsMatch(line, Constants.EndPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, Constants.EndPatternCMP))
             {
                 Internal = null;
                 InternalName = null;

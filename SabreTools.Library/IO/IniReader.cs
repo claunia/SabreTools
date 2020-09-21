@@ -11,7 +11,7 @@ namespace SabreTools.Library.IO
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
-        private StreamReader sr;
+        private readonly StreamReader sr;
 
         /// <summary>
         /// Get if at end of stream
