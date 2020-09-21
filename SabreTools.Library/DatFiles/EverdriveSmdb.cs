@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 using SabreTools.Library.Data;
@@ -33,17 +32,20 @@ namespace SabreTools.Library.DatFiles
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
-            // TODO: Use SeparatedValueReader
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
-            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), enc);
+            SeparatedValueReader svr = new SeparatedValueReader(FileExtensions.TryOpenRead(filename), enc)
+            {
+                Header = false,
+                Quotes = false,
+                Separator = '\t',
+                VerifyFieldCount = false,
+            };
 
-            while (!sr.EndOfStream)
+            while (!svr.EndOfStream)
             {
                 try
                 {
-                    string line = sr.ReadLine();
-
                     /*
                     The gameinfo order is as follows
                     0 - SHA-256
@@ -52,18 +54,17 @@ namespace SabreTools.Library.DatFiles
                     3 - MD5
                     4 - CRC32
                     */
-
-                    string[] gameinfo = line.Split('\t');
-                    string[] fullname = gameinfo[1].Split('/');
+                    
+                    string[] fullname = svr.Line[1].Split('/');
 
                     Rom rom = new Rom
                     {
-                        Name = gameinfo[1].Substring(fullname[0].Length + 1),
+                        Name = svr.Line[1].Substring(fullname[0].Length + 1),
                         Size = null, // No size provided, but we don't want the size being 0
-                        CRC = gameinfo[4],
-                        MD5 = gameinfo[3],
-                        SHA1 = gameinfo[2],
-                        SHA256 = gameinfo[0],
+                        CRC = svr.Line[4],
+                        MD5 = svr.Line[3],
+                        SHA1 = svr.Line[2],
+                        SHA256 = svr.Line[0],
                         ItemStatus = ItemStatus.None,
 
                         Machine = new Machine
@@ -84,17 +85,17 @@ namespace SabreTools.Library.DatFiles
                 }
                 catch (Exception ex)
                 {
-                    string message = $"'{filename}' - There was an error parsing at position {sr.BaseStream.Position}";
+                    string message = $"'{filename}' - There was an error parsing line {svr.LineNumber} '{svr.CurrentLine}'";
                     Globals.Logger.Error(ex, message);
                     if (throwOnError)
                     {
-                        sr.Dispose();
+                        svr.Dispose();
                         throw new Exception(message, ex);
                     }
                 }
             }
 
-            sr.Dispose();
+            svr.Dispose();
         }
 
         /// <inheritdoc/>

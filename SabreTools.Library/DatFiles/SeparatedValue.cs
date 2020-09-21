@@ -45,7 +45,7 @@ namespace SabreTools.Library.DatFiles
                 Header = true,
                 Quotes = true,
                 Separator = _delim,
-                VerifyFieldCount = true
+                VerifyFieldCount = true,
             };
 
             // If we're somehow at the end of the stream already, we can't do anything
@@ -62,8 +62,33 @@ namespace SabreTools.Library.DatFiles
                 {
                     // Get the current line, split and parse
                     svr.ReadNextLine();
+
+                    // Create mapping dictionary
+                    var mappings = new Dictionary<Field, string>();
+
+                    // Now we loop through and get values for everything
+                    for (int i = 0; i < svr.HeaderValues.Count; i++)
+                    {
+                        Field key = svr.HeaderValues[i].AsField();
+                        string value = svr.Line[i];
+                        mappings[key] = value;
+                    }
+
+                    // Set DatHeader fields
+                    DatHeader header = new DatHeader();
+                    header.SetFields(mappings);
+                    Header.ConditionalCopy(header);
+
+                    // Set Machine and DatItem fields
+                    if (mappings.ContainsKey(Field.DatItem_Type))
+                    {
+                        DatItem datItem = DatItem.Create(mappings[Field.DatItem_Type].AsItemType());
+                        datItem.SetFields(mappings);
+                        datItem.Source = new Source(indexId, filename);
+                        ParseAddHelper(datItem);
+                    }
                 }
-                catch (InvalidDataException ex)
+                catch (Exception ex)
                 {
                     string message = $"'{filename}' - There was an error parsing line {svr.LineNumber} '{svr.CurrentLine}'";
                     Globals.Logger.Error(ex, message);
@@ -72,33 +97,6 @@ namespace SabreTools.Library.DatFiles
                         svr.Dispose();
                         throw new Exception(message, ex);
                     }
-
-                    continue;
-                }
-                
-                // Create mapping dictionary
-                var mappings = new Dictionary<Field, string>();
-
-                // Now we loop through and get values for everything
-                for (int i = 0; i < svr.HeaderValues.Count; i++)
-                {
-                    Field key = svr.HeaderValues[i].AsField();
-                    string value = svr.Line[i];
-                    mappings[key] = value;
-                }
-
-                // Set DatHeader fields
-                DatHeader header = new DatHeader();
-                header.SetFields(mappings);
-                Header.ConditionalCopy(header);
-
-                // Set Machine and DatItem fields
-                if (mappings.ContainsKey(Field.DatItem_Type))
-                {
-                    DatItem datItem = DatItem.Create(mappings[Field.DatItem_Type].AsItemType());
-                    datItem.SetFields(mappings);
-                    datItem.Source = new Source(indexId, filename);
-                    ParseAddHelper(datItem);
                 }
             }
 
