@@ -15,13 +15,24 @@ namespace SabreTools.Library.DatFiles
     /// </summary>
     internal class ClrMamePro : DatFile
     {
+        #region Fields
+
+        /// <summary>
+        /// Get whether to assume quote usage on read and write or not
+        /// </summary>
+        public bool Quotes { get; set; } = true;
+
+        #endregion
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public ClrMamePro(DatFile datFile)
+        /// <param name="quotes">Enable quotes on read and write, false otherwise</param>
+        public ClrMamePro(DatFile datFile, bool quotes)
             : base(datFile)
         {
+            Quotes = quotes;
         }
 
         /// <summary>
@@ -37,7 +48,8 @@ namespace SabreTools.Library.DatFiles
             Encoding enc = FileExtensions.GetEncoding(filename);
             ClrMameProReader cmpr = new ClrMameProReader(FileExtensions.TryOpenRead(filename), enc)
             {
-                DosCenter = false
+                DosCenter = false,
+                Quotes = Quotes,
             };
 
             while (!cmpr.EndOfStream)
@@ -445,7 +457,7 @@ namespace SabreTools.Library.DatFiles
 
                 ClrMameProWriter cmpw = new ClrMameProWriter(fs, new UTF8Encoding(false))
                 {
-                    Quotes = true
+                    Quotes = Quotes
                 };
 
                 // Write out the header

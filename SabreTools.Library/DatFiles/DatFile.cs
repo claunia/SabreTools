@@ -65,8 +65,9 @@ namespace SabreTools.Library.DatFiles
         /// </summary>
         /// <param name="datFormat">Format of the DAT to be created</param>
         /// <param name="baseDat">DatFile containing the information to use in specific operations</param>
+        /// <param name="quotes">For relevant types, assume the usage of quotes</param>
         /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
-        public static DatFile Create(DatFormat? datFormat = null, DatFile baseDat = null)
+        public static DatFile Create(DatFormat? datFormat = null, DatFile baseDat = null, bool quotes = true)
         {
             switch (datFormat)
             {
@@ -74,7 +75,7 @@ namespace SabreTools.Library.DatFiles
                     return new AttractMode(baseDat);
 
                 case DatFormat.ClrMamePro:
-                    return new ClrMamePro(baseDat);
+                    return new ClrMamePro(baseDat, quotes);
 
                 case DatFormat.CSV:
                     return new SeparatedValue(baseDat, ',');
@@ -1819,16 +1820,18 @@ namespace SabreTools.Library.DatFiles
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
+        /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         public void Parse(
             string filename,
             int indexId = 0,
             bool keep = false,
             bool keepext = false,
+            bool quotes = true,
             bool throwOnError = false)
         {
             ParentablePath path = new ParentablePath(filename.Trim('"'));
-            Parse(path, indexId, keep, keepext, throwOnError);
+            Parse(path, indexId, keep, keepext, quotes, throwOnError);
         }
 
         /// <summary>
@@ -1838,12 +1841,14 @@ namespace SabreTools.Library.DatFiles
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
+        /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         public void Parse(
             ParentablePath filename,
             int indexId = 0,
             bool keep = false,
             bool keepext = false,
+            bool quotes = true,
             bool throwOnError = false)
         {
             // Get the current path from the filename
@@ -1863,7 +1868,7 @@ namespace SabreTools.Library.DatFiles
             // Now parse the correct type of DAT
             try
             {
-                Create(currentPath.GetDatFormat(), this)?.ParseFile(currentPath, indexId, keep, throwOnError);
+                Create(currentPath.GetDatFormat(), this, quotes)?.ParseFile(currentPath, indexId, keep, throwOnError);
             }
             catch (Exception ex)
             {
@@ -3484,9 +3489,15 @@ namespace SabreTools.Library.DatFiles
         /// <param name="outDir">Set the output directory (current directory on null)</param>
         /// <param name="overwrite">True if files should be overwritten (default), false if they should be renamed instead</param>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
+        /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public bool Write(string outDir, bool overwrite = true, bool ignoreblanks = false, bool throwOnError = false)
+        public bool Write(
+            string outDir,
+            bool overwrite = true,
+            bool ignoreblanks = false,
+            bool quotes = true,
+            bool throwOnError = false)
         {
             // If we have nothing writable, abort
             if (!HasWritable())
@@ -3525,7 +3536,7 @@ namespace SabreTools.Library.DatFiles
                     string outfile = outfiles[datFormat];
                     try
                     {
-                        Create(datFormat, this)?.WriteToFile(outfile, ignoreblanks, throwOnError);
+                        Create(datFormat, this, quotes)?.WriteToFile(outfile, ignoreblanks, throwOnError);
                     }
                     catch (Exception ex)
                     {

@@ -526,7 +526,7 @@ namespace SabreTools.Library.Data
 
         public const string XmlPattern = @"<(.*?)>(.*?)</(.*?)>";
         public const string HeaderPatternCMP = @"(^.*?) \($";
-        public const string InternalPatternCMP = @"(^.*?) (\(.+\))$";
+        public const string InternalPatternCMP = @"(^\S*?) (\(.+\))$";
         public const string InternalPatternAttributesCMP = @"[^\s""]+|""[^""]*""";
         //public const string InternalPatternAttributesCMP = @"([^\s]*""[^""]+""[^\s]*)|[^""]?\w+[^""]?";
         public const string ItemPatternCMP = @"^\s*(\S*?) (.*)";

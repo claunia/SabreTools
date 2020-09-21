@@ -43,6 +43,17 @@ namespace SabreTools.Library.IO
         public bool DosCenter { get; set; } = false;
 
         /// <summary>
+        /// Get if quotes should surround attribute values
+        /// </summary>
+        /// <remarks>
+        /// If this is disabled, then a special bit of code will be
+        /// invoked to deal with unquoted, multi-part names. This can
+        /// backfire in a lot of circumstances, so don't disable this
+        /// unless you know what you're doing
+        /// </remarks>
+        public bool Quotes { get; set; } = true;
+
+        /// <summary>
         /// Current row type
         /// </summary>
         public CmpRowType RowType { get; private set; } = CmpRowType.None;
@@ -165,6 +176,22 @@ namespace SabreTools.Library.IO
                         {
                             value = linegc[++i].Replace("\"", string.Empty);
                         }
+                    }
+                    // Special case for assumed unquoted values (only affects `name`)
+                    else if (!Quotes && key == "name")
+                    {
+                        while (++i < linegc.Length
+                                && linegc[i] != "merge"
+                                && linegc[i] != "size"
+                                && linegc[i] != "crc"
+                                && linegc[i] != "md5"
+                                && linegc[i] != "sha1")
+                        {
+                            value += $" {linegc[i]}";
+                        }
+
+                        value = value.Trim();
+                        i--;
                     }
                     else
                     {
