@@ -50,21 +50,18 @@ namespace SabreTools.Library.Filtering
             // Otherwise, read the file to the end
             try
             {
-                ir.ReadNextLine();
                 while (!ir.EndOfStream)
                 {
+                    // Read in the next line and process
+                    ir.ReadNextLine();
+
                     // We don't care about whitespace or comments
                     if (ir.RowType == IniRowType.None || ir.RowType == IniRowType.Comment)
-                    {
-                        ir.ReadNextLine();
                         continue;
-                    }
 
                     // If we have a section, just read it in
                     if (ir.RowType == IniRowType.SectionHeader)
                     {
-                        ir.ReadNextLine();
-
                         // If we've found the start of the extras, set the flag
                         if (string.Equals(ir.Section, "ROOT_FOLDER", StringComparison.OrdinalIgnoreCase))
                             foundRootFolder = true;
@@ -85,15 +82,6 @@ namespace SabreTools.Library.Filtering
 
                         // Add the new mapping
                         Mappings[key].Add(value);
-
-                        // Read the next line in
-                        ir.ReadNextLine();
-                    }
-
-                    // Otherwise, just read the next line
-                    else
-                    {
-                        ir.ReadNextLine();
                     }
                 }
             }
