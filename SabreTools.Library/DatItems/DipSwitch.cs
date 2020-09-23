@@ -350,7 +350,7 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             // Filter on Part
-            if (Part != null)
+            if (PartSpecified)
             {
                 if (!Part.PassesFilter(filter))
                     return false;

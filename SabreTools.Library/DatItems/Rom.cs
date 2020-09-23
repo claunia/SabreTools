@@ -941,14 +941,14 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on DataArea
-            if (DataArea != null)
+            if (DataAreaSpecified)
             {
                 if (!DataArea.PassesFilter(filter))
                     return false;
             }
 
             // Filter on Part
-            if (Part != null)
+            if (PartSpecified)
             {
                 if (!Part.PassesFilter(filter))
                     return false;

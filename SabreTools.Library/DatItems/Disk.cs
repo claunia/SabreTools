@@ -491,14 +491,14 @@ namespace SabreTools.Library.DatItems
             #region SoftwareList
 
             // Filter on DiskArea
-            if (DiskArea != null)
+            if (DiskAreaSpecified)
             {
                 if (!DiskArea.PassesFilter(filter))
                     return false;
             }
 
             // Filter on Part
-            if (Part != null)
+            if (PartSpecified)
             {
                 if (!Part.PassesFilter(filter))
                     return false;
