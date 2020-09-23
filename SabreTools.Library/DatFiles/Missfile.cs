@@ -77,8 +77,8 @@ namespace SabreTools.Library.DatFiles
                         // Check for a "null" item
                         datItem = ProcessNullifiedItem(datItem);
 
-                        // Write out the item if we're not ignoring
-                        if (!ShouldIgnore(datItem, ignoreblanks))
+                        // Write out the item if we're using machine names or we're not ignoring
+                        if (!Header.UseRomName || !ShouldIgnore(datItem, ignoreblanks))
                             WriteDatItem(sw, datItem, lastgame);
 
                         // Set the new data to compare against
@@ -113,14 +113,9 @@ namespace SabreTools.Library.DatFiles
 
             // Romba mode automatically uses item name
             if (Header.OutputDepot?.IsActive == true || Header.UseRomName)
-            {
                 sw.Write($"{datItem.GetName() ?? string.Empty}\n");
-            }
             else if (!Header.UseRomName && datItem.Machine.Name != lastgame)
-            {
                 sw.Write($"{datItem.Machine.Name}\n");
-                lastgame = datItem.Machine.Name;
-            }
 
             sw.Flush();
         }
