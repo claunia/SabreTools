@@ -295,9 +295,9 @@ namespace SabreTools.Library.DatItems
             {
                 return DataArea != null
                     && (!string.IsNullOrEmpty(DataArea.Name)
-                        || (DataArea.Size != null)
-                        || (DataArea.Width != null)
-                        || (DataArea.Endianness != Endianness.NULL));
+                        || DataArea.SizeSpecified
+                        || DataArea.WidthSpecified
+                        || DataArea.EndiannessSpecified);
             }
         }
 
