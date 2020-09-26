@@ -407,6 +407,10 @@ namespace SabreTools.Library.DatFiles
                 {
                     List<DatItem> datItems = Items.FilteredItems(key);
 
+                    // If this machine doesn't contain any writable items, skip
+                    if (!ContainsWritable(datItems))
+                        continue;
+
                     // Resolve the names in the block
                     datItems = DatItem.ResolveNames(datItems);
 
