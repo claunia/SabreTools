@@ -206,7 +206,11 @@ Reset the internal state:           reset();";
 
                                 // Apply the filter blindly
                                 datFile.ApplyFilter(filter, filterPerMachine.Value);
-                                datFile.Items.ClearMarked(); // TODO: We might not want to remove immediately
+
+                                // Cleanup after the filter
+                                // TODO: We might not want to remove immediately
+                                datFile.Items.ClearMarked(); 
+                                datFile.Items.ClearEmpty();
 
                                 break;
 
