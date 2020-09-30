@@ -316,6 +316,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Loop over all of the items, if they exist
+            string key = string.Empty;
             foreach (DatItem item in items)
             {
                 // Add all missing information
@@ -329,6 +330,26 @@ namespace SabreTools.Library.DatFiles
                         break;
                     case ItemType.Rom:
                         (item as Rom).Part = part;
+
+                        // If the rom is continue or ignore, add the size to the previous rom
+                        // TODO: Can this be done on write? We technically lose information this way.
+                        // Order is not guaranteed, and since these don't tend to have any way
+                        // of determining what the "previous" item was after this, that info would
+                        // have to be stored *with* the item somehow
+                        if ((item as Rom).LoadFlag == LoadFlag.Continue || (item as Rom).LoadFlag == LoadFlag.Ignore)
+                        {
+                            int index = Items[key].Count - 1;
+                            DatItem lastrom = Items[key][index];
+                            if (lastrom.ItemType == ItemType.Rom)
+                            {
+                                (lastrom as Rom).Size += (item as Rom).Size;
+                                Items[key].RemoveAt(index);
+                                Items[key].Add(lastrom);
+                            }
+
+                            continue;
+                        }
+
                         break;
                 }
 
@@ -336,7 +357,7 @@ namespace SabreTools.Library.DatFiles
                 item.CopyMachineInformation(machine);
 
                 // Finally add each item
-                ParseAddHelper(item);
+                key = ParseAddHelper(item);
             }
 
             return items.Any();
@@ -349,7 +370,6 @@ namespace SabreTools.Library.DatFiles
         /// <param name="dataArea">DataArea representing the enclosing area</param>
         private List<DatItem> ReadDataArea(XmlReader reader, DataArea dataArea)
         {
-            string key = string.Empty;
             List<DatItem> items = new List<DatItem>();
 
             while (!reader.EOF)
@@ -378,24 +398,6 @@ namespace SabreTools.Library.DatFiles
 
                             DataArea = dataArea,
                         };
-
-                        // If the rom is continue or ignore, add the size to the previous rom
-                        // TODO: Can this be done on write? We technically lose information this way.
-                        // Order is not guaranteed, and since these don't tend to have any way
-                        // of determining what the "previous" item was after this, that info would
-                        // have to be stored *with* the item somehow
-                        if (rom.LoadFlag == LoadFlag.Continue || rom.LoadFlag == LoadFlag.Ignore)
-                        {
-                            int index = Items[key].Count - 1;
-                            DatItem lastrom = Items[key][index];
-                            if (lastrom.ItemType == ItemType.Rom)
-                                (lastrom as Rom).Size += rom.Size;
-
-                            Items[key].RemoveAt(index);
-                            Items[key].Add(lastrom);
-                            reader.Read();
-                            continue;
-                        }
 
                         items.Add(rom);
                         reader.Read();
