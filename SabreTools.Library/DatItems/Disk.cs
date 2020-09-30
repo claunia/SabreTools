@@ -493,14 +493,14 @@ namespace SabreTools.Library.DatItems
             // Filter on DiskArea
             if (DiskAreaSpecified)
             {
-                if (!DiskArea.PassesFilter(filter))
+                if (!DiskArea.PassesFilter(filter, true))
                     return false;
             }
 
             // Filter on Part
             if (PartSpecified)
             {
-                if (!Part.PassesFilter(filter))
+                if (!Part.PassesFilter(filter, true))
                     return false;
             }
 
@@ -553,10 +553,10 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (DiskArea != null)
+            if (DiskAreaSpecified)
                 DiskArea.RemoveFields(fields);
 
-            if (Part != null)
+            if (PartSpecified)
                 Part.RemoveFields(fields);
 
             #endregion
@@ -669,10 +669,10 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (DiskArea != null && newItem.DiskArea != null)
+            if (DiskAreaSpecified && newItem.DiskAreaSpecified)
                 DiskArea.ReplaceFields(newItem.DiskArea, fields);
 
-            if (Part != null && newItem.Part != null)
+            if (PartSpecified && newItem.PartSpecified)
                 Part.ReplaceFields(newItem.Part, fields);
 
             #endregion

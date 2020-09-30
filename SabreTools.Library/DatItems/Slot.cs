@@ -60,7 +60,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Name))
                 Name = mappings[Field.DatItem_Name];
 
-            if (SlotOptions != null)
+            if (SlotOptionsSpecified)
             {
                 foreach (SlotOption slotOption in SlotOptions)
                 {
@@ -121,7 +121,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the slot options match
-            if (SlotOptions != null)
+            if (SlotOptionsSpecified)
             {
                 foreach (SlotOption slotOption in SlotOptions)
                 {
@@ -179,11 +179,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual slot options
-            if (SlotOptions != null)
+            if (SlotOptionsSpecified)
             {
                 foreach (SlotOption slotOption in SlotOptions)
                 {
-                    if (!slotOption.PassesFilter(filter))
+                    if (!slotOption.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -204,7 +204,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Name))
                 Name = null;
 
-            if (SlotOptions != null)
+            if (SlotOptionsSpecified)
             {
                 foreach (SlotOption slotOption in SlotOptions)
                 {

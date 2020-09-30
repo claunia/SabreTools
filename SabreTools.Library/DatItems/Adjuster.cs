@@ -74,7 +74,7 @@ namespace SabreTools.Library.DatItems
                 Default = mappings[Field.DatItem_Default].AsYesNo();
 
             // Field.DatItem_Conditions does not apply here
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -136,7 +136,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the conditions match
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -198,7 +198,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual conditions
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -226,7 +226,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Default))
                 Default = null;
 
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {

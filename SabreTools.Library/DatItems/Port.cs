@@ -49,7 +49,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Tag))
                 Tag = mappings[Field.DatItem_Tag];
 
-            if (Analogs != null)
+            if (AnalogsSpecified)
             {
                 foreach (Analog analog in Analogs)
                 {
@@ -109,7 +109,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the analogs match
-            if (Analogs != null)
+            if (AnalogsSpecified)
             {
                 foreach (Analog analog in Analogs)
                 {
@@ -140,11 +140,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual analogs
-            if (Analogs != null)
+            if (AnalogsSpecified)
             {
                 foreach (Analog analog in Analogs)
                 {
-                    if (!analog.PassesFilter(filter))
+                    if (!analog.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -165,7 +165,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Tag))
                 Tag = null;
 
-            if (Analogs != null)
+            if (AnalogsSpecified)
             {
                 foreach (Analog analog in Analogs)
                 {

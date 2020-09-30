@@ -93,7 +93,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Coins))
                 Coins = Sanitizer.CleanLong(mappings[Field.DatItem_Coins]);
 
-            if (Controls != null)
+            if (ControlsSpecified)
             {
                 foreach (Control control in Controls)
                 {
@@ -159,7 +159,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the controls match
-            if (Controls != null)
+            if (ControlsSpecified)
             {
                 foreach (Control control in Controls)
                 {
@@ -202,11 +202,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual controls
-            if (Controls != null)
+            if (ControlsSpecified)
             {
                 foreach (Control control in Controls)
                 {
-                    if (!control.PassesFilter(filter))
+                    if (!control.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -236,7 +236,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Coins))
                 Coins = null;
 
-            if (Controls != null)
+            if (ControlsSpecified)
             {
                 foreach (Control control in Controls)
                 {

@@ -64,7 +64,7 @@ namespace SabreTools.Library.DatItems
                 Interface = mappings[Field.DatItem_Part_Interface];
 
             // Handle Feature-specific fields
-            if (Features != null)
+            if (FeaturesSpecified)
             {
                 foreach (PartFeature partFeature in Features)
                 {
@@ -127,7 +127,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the features match
-            if (Features != null)
+            if (FeaturesSpecified)
             {
                 foreach (PartFeature partFeature in Features)
                 {
@@ -176,9 +176,24 @@ namespace SabreTools.Library.DatItems
         /// <returns>True if the item passed the filter, false otherwise</returns>
         public override bool PassesFilter(Filter filter)
         {
-            // Check common fields first
-            if (!base.PassesFilter(filter))
-                return false;
+            return PassesFilter(filter, false);
+        }
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filter
+        /// </summary>
+        /// <param name="filter">Filter to check against</param>
+        /// <param name="sub">True if this is a subitem, false otherwise</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        public bool PassesFilter(Filter filter, bool sub)
+        {
+            // If we're a top-level item, check common fields
+            if (!sub)
+            {
+                // Check common fields first
+                if (!base.PassesFilter(filter))
+                    return false;
+            }
 
             // Filter on part name
             if (!filter.PassStringFilter(filter.DatItem_Part_Name, Name))
@@ -189,11 +204,11 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on features
-            if (Features != null)
+            if (FeaturesSpecified)
             {
                 foreach (PartFeature partFeature in Features)
                 {
-                    if (!partFeature.PassesFilter(filter))
+                    if (!partFeature.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -217,7 +232,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Part_Interface))
                 Interface = null;
 
-            if (Features != null)
+            if (FeaturesSpecified)
             {
                 foreach (PartFeature partFeature in Features)
                 {

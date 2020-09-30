@@ -109,7 +109,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Interface))
                 Interface = mappings[Field.DatItem_Interface];
 
-            if (Instances != null)
+            if (InstancesSpecified)
             {
                 foreach (Instance instance in Instances)
                 {
@@ -117,7 +117,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Extensions != null)
+            if (ExtensionsSpecified)
             {
                 foreach (Extension extension in Extensions)
                 {
@@ -186,7 +186,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the instances match
-            if (Instances != null)
+            if (InstancesSpecified)
             {
                 foreach (Instance instance in Instances)
                 {
@@ -195,7 +195,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // If the extensions match
-            if (Extensions != null)
+            if (ExtensionsSpecified)
             {
                 foreach (Extension extension in Extensions)
                 {
@@ -244,21 +244,21 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual instances
-            if (Instances != null)
+            if (InstancesSpecified)
             {
                 foreach (Instance instance in Instances)
                 {
-                    if (!instance.PassesFilter(filter))
+                    if (!instance.PassesFilter(filter, true))
                         return false;
                 }
             }
 
             // Filter on individual extensions
-            if (Extensions != null)
+            if (ExtensionsSpecified)
             {
                 foreach (Extension extension in Extensions)
                 {
-                    if (!extension.PassesFilter(filter))
+                    if (!extension.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -291,7 +291,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Interface))
                 Interface = null;
 
-            if (Instances != null)
+            if (InstancesSpecified)
             {
                 foreach (Instance instance in Instances)
                 {
@@ -299,7 +299,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Extensions != null)
+            if (ExtensionsSpecified)
             {
                 foreach (Extension extension in Extensions)
                 {

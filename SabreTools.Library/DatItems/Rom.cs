@@ -943,14 +943,14 @@ namespace SabreTools.Library.DatItems
             // Filter on DataArea
             if (DataAreaSpecified)
             {
-                if (!DataArea.PassesFilter(filter))
+                if (!DataArea.PassesFilter(filter, true))
                     return false;
             }
 
             // Filter on Part
             if (PartSpecified)
             {
-                if (!Part.PassesFilter(filter))
+                if (!Part.PassesFilter(filter, true))
                     return false;
             }
 
@@ -1067,10 +1067,10 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Value))
                 Value = null;
 
-            if (DataArea != null)
+            if (DataAreaSpecified)
                 DataArea.RemoveFields(fields);
 
-            if (Part != null)
+            if (PartSpecified)
                 Part.RemoveFields(fields);
 
             #endregion
@@ -1291,10 +1291,10 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Value))
                 Value = newItem.Value;
 
-            if (DataArea != null && newItem.DataArea != null)
+            if (DataAreaSpecified && newItem.DataAreaSpecified)
                 DataArea.ReplaceFields(newItem.DataArea, fields);
 
-            if (Part != null && newItem.Part != null)
+            if (PartSpecified && newItem.PartSpecified)
                 Part.ReplaceFields(newItem.Part, fields);
 
             #endregion

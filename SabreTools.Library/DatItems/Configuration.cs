@@ -100,7 +100,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Mask))
                 Mask = mappings[Field.DatItem_Mask];
 
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -108,7 +108,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
@@ -116,7 +116,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Settings != null)
+            if (SettingsSpecified)
             {
                 foreach (Setting setting in Settings)
                 {
@@ -183,7 +183,7 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the conditions match
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -192,7 +192,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // If the locations match
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
@@ -201,7 +201,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // If the settings match
-            if (Settings != null)
+            if (SettingsSpecified)
             {
                 foreach (Setting setting in Settings)
                 {
@@ -267,7 +267,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual conditions
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -277,21 +277,21 @@ namespace SabreTools.Library.DatItems
             }
 
             // Filter on individual locations
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
-                    if (!location.PassesFilter(filter))
+                    if (!location.PassesFilter(filter, true))
                         return false;
                 }
             }
 
             // Filter on individual conditions
-            if (Settings != null)
+            if (SettingsSpecified)
             {
                 foreach (Setting setting in Settings)
                 {
-                    if (!setting.PassesFilter(filter))
+                    if (!setting.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -318,7 +318,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = null;
 
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -326,7 +326,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
@@ -334,7 +334,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Settings != null)
+            if (SettingsSpecified)
             {
                 foreach (Setting setting in Settings)
                 {

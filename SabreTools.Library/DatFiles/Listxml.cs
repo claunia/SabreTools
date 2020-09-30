@@ -1330,7 +1330,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteStartElement("adjuster");
                     xtw.WriteRequiredAttributeString("name", adjuster.Name);
                     xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
-                    if (adjuster.Conditions != null)
+                    if (adjuster.ConditionsSpecified)
                     {
                         foreach (var adjusterCondition in adjuster.Conditions)
                         {
@@ -1381,7 +1381,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteOptionalAttributeString("tag", configuration.Tag);
                     xtw.WriteOptionalAttributeString("mask", configuration.Mask);
 
-                    if (configuration.Conditions != null)
+                    if (configuration.ConditionsSpecified)
                     {
                         foreach (var configurationCondition in configuration.Conditions)
                         {
@@ -1393,7 +1393,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                         }
                     }
-                    if (configuration.Locations != null)
+                    if (configuration.LocationsSpecified)
                     {
                         foreach (var location in configuration.Locations)
                         {
@@ -1404,7 +1404,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                         }
                     }
-                    if (configuration.Settings != null)
+                    if (configuration.SettingsSpecified)
                     {
                         foreach (var setting in configuration.Settings)
                         {
@@ -1426,7 +1426,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
                     xtw.WriteOptionalAttributeString("mandatory", device.Mandatory?.ToString());
                     xtw.WriteOptionalAttributeString("interface", device.Interface);
-                    if (device.Instances != null)
+                    if (device.InstancesSpecified)
                     {
                         foreach (var instance in device.Instances)
                         {
@@ -1436,7 +1436,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                         }
                     }
-                    if (device.Extensions != null)
+                    if (device.ExtensionsSpecified)
                     {
                         foreach (var extension in device.Extensions)
                         {
@@ -1461,7 +1461,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
                     xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
                     xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
-                    if (dipSwitch.Conditions != null)
+                    if (dipSwitch.ConditionsSpecified)
                     {
                         foreach (var dipSwitchCondition in dipSwitch.Conditions)
                         {
@@ -1473,7 +1473,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                         }
                     }
-                    if (dipSwitch.Locations != null)
+                    if (dipSwitch.LocationsSpecified)
                     {
                         foreach (var location in dipSwitch.Locations)
                         {
@@ -1484,7 +1484,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteEndElement();
                         }
                     }
-                    if (dipSwitch.Values != null)
+                    if (dipSwitch.ValuesSpecified)
                     {
                         foreach (var value in dipSwitch.Values)
                         {
@@ -1492,7 +1492,7 @@ namespace SabreTools.Library.DatFiles
                             xtw.WriteOptionalAttributeString("name", value.Name);
                             xtw.WriteOptionalAttributeString("value", value.Value);
                             xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
-                            if (value.Conditions != null)
+                            if (value.ConditionsSpecified)
                             {
                                 foreach (var dipValueCondition in value.Conditions)
                                 {
@@ -1570,7 +1570,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
                     xtw.WriteOptionalAttributeString("players", input.Players?.ToString());
                     xtw.WriteOptionalAttributeString("coins", input.Coins?.ToString());
-                    if (input.Controls != null)
+                    if (input.ControlsSpecified)
                     {
                         foreach (var control in input.Controls)
                         {
@@ -1597,7 +1597,7 @@ namespace SabreTools.Library.DatFiles
                     var port = datItem as Port;
                     xtw.WriteStartElement("port");
                     xtw.WriteOptionalAttributeString("tag", port.Tag);
-                    if (port.Analogs != null)
+                    if (port.AnalogsSpecified)
                     {
                         foreach (var analog in port.Analogs)
                         {
@@ -1645,7 +1645,7 @@ namespace SabreTools.Library.DatFiles
                     var slot = datItem as Slot;
                     xtw.WriteStartElement("slot");
                     xtw.WriteOptionalAttributeString("name", slot.Name);
-                    if (slot.SlotOptions != null)
+                    if (slot.SlotOptionsSpecified)
                     {
                         foreach (var slotOption in slot.SlotOptions)
                         {

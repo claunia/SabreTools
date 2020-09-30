@@ -677,7 +677,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteRequiredAttributeString("name", dipSwitch.Name);
                     xtw.WriteRequiredAttributeString("tag", dipSwitch.Tag);
                     xtw.WriteRequiredAttributeString("mask", dipSwitch.Mask);
-                    if (dipSwitch.Values != null)
+                    if (dipSwitch.ValuesSpecified)
                     {
                         foreach (Setting dipValue in dipSwitch.Values)
                         {
@@ -701,7 +701,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteRequiredAttributeString("name", disk.Part?.Name);
                     xtw.WriteRequiredAttributeString("interface", disk.Part?.Interface);
 
-                    if (disk.Part?.Features != null && disk.Part?.Features.Count > 0)
+                    if (disk.Part?.FeaturesSpecified == true)
                     {
                         foreach (PartFeature partFeature in disk.Part.Features)
                         {
@@ -748,7 +748,7 @@ namespace SabreTools.Library.DatFiles
                     xtw.WriteRequiredAttributeString("name", rom.Part?.Name);
                     xtw.WriteRequiredAttributeString("interface", rom.Part?.Interface);
 
-                    if (rom.Part?.Features != null && rom.Part?.Features.Count > 0)
+                    if (rom.Part?.FeaturesSpecified == true)
                     {
                         foreach (PartFeature kvp in rom.Part.Features)
                         {

@@ -129,7 +129,7 @@ namespace SabreTools.Library.DatItems
             if (mappings.Keys.Contains(Field.DatItem_Mask))
                 Mask = mappings[Field.DatItem_Mask];
 
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -137,7 +137,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
@@ -145,7 +145,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Values != null)
+            if (ValuesSpecified)
             {
                 foreach (Setting value in Values)
                 {
@@ -226,11 +226,11 @@ namespace SabreTools.Library.DatItems
                 return match;
 
             // If the part matches
-            if (Part != null)
+            if (PartSpecified)
                 match &= (Part == newOther.Part);
 
             // If the conditions match
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -239,7 +239,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // If the locations match
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
@@ -248,7 +248,7 @@ namespace SabreTools.Library.DatItems
             }
 
             // If the values match
-            if (Values != null)
+            if (ValuesSpecified)
             {
                 foreach (Setting value in Values)
                 {
@@ -316,7 +316,7 @@ namespace SabreTools.Library.DatItems
                 return false;
 
             // Filter on individual conditions
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -326,21 +326,21 @@ namespace SabreTools.Library.DatItems
             }
 
             // Filter on individual locations
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
-                    if (!location.PassesFilter(filter))
+                    if (!location.PassesFilter(filter, true))
                         return false;
                 }
             }
 
             // Filter on individual conditions
-            if (Values != null)
+            if (ValuesSpecified)
             {
                 foreach (Setting value in Values)
                 {
-                    if (!value.PassesFilter(filter))
+                    if (!value.PassesFilter(filter, true))
                         return false;
                 }
             }
@@ -352,7 +352,7 @@ namespace SabreTools.Library.DatItems
             // Filter on Part
             if (PartSpecified)
             {
-                if (!Part.PassesFilter(filter))
+                if (!Part.PassesFilter(filter, true))
                     return false;
             }
 
@@ -383,7 +383,7 @@ namespace SabreTools.Library.DatItems
             if (fields.Contains(Field.DatItem_Mask))
                 Mask = null;
 
-            if (Conditions != null)
+            if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
@@ -391,7 +391,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Locations != null)
+            if (LocationsSpecified)
             {
                 foreach (Location location in Locations)
                 {
@@ -399,7 +399,7 @@ namespace SabreTools.Library.DatItems
                 }
             }
 
-            if (Values != null)
+            if (ValuesSpecified)
             {
                 foreach (Setting value in Values)
                 {
@@ -411,7 +411,7 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (Part != null)
+            if (PartSpecified)
                 Part.RemoveFields(fields);
 
             #endregion
@@ -477,7 +477,7 @@ namespace SabreTools.Library.DatItems
 
             #region SoftwareList
 
-            if (Part != null && newItem.Part != null)
+            if (PartSpecified && newItem.PartSpecified)
                 Part.ReplaceFields(newItem.Part, fields);
 
             #endregion

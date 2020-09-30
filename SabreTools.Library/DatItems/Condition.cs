@@ -179,10 +179,6 @@ namespace SabreTools.Library.DatItems
         /// <returns>True if the item passed the filter, false otherwise</returns>
         public bool PassesFilter(Filter filter, bool sub)
         {
-            // Check common fields first
-            if (!base.PassesFilter(filter))
-                return false;
-
             if (sub)
             {
                 // Filter on tag
@@ -205,6 +201,10 @@ namespace SabreTools.Library.DatItems
             }
             else
             {
+                // Check common fields first
+                if (!base.PassesFilter(filter))
+                    return false;
+
                 // Filter on tag
                 if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
                     return false;

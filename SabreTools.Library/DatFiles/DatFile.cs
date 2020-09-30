@@ -1409,7 +1409,7 @@ namespace SabreTools.Library.DatFiles
                 List<string> slotOptions = Items[machine]
                     .Where(i => i.ItemType == ItemType.Slot)
                     .Select(i => i as Slot)
-                    .Where(s => s.SlotOptions != null && s.SlotOptions.Count != 0)
+                    .Where(s => s.SlotOptionsSpecified)
                     .SelectMany(s => s.SlotOptions)
                     .Select(so => so.DeviceName)
                     .Distinct()
@@ -1473,8 +1473,7 @@ namespace SabreTools.Library.DatFiles
                         List<DatItem> slotItems = Items[slotOption];
                         newSlotOptions.AddRange(slotItems
                             .Where(i => i.ItemType == ItemType.Slot)
-                            .Where(s => (s as Slot).SlotOptions != null)
-                            .Where(s => (s as Slot).SlotOptions.Count != 0)
+                            .Where(s => (s as Slot).SlotOptionsSpecified)
                             .SelectMany(s => (s as Slot).SlotOptions)
                             .Select(o => o.DeviceName));
 
