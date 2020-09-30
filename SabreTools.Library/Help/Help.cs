@@ -178,6 +178,13 @@ namespace SabreTools.Library.Help
             // Start building the output list
             List<string> output = new List<string>();
 
+            // If the feature name is null, empty, or just consisting of `-` characters, just show everything
+            if (string.IsNullOrEmpty(featurename?.TrimStart('-')))
+            {
+                OutputGenericHelp();
+                return;
+            }
+
             // Now try to find the feature that has the name included
             string realname = null;
             List<string> startsWith = new List<string>();
