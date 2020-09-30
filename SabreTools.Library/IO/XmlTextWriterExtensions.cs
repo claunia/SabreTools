@@ -27,7 +27,10 @@ namespace SabreTools.Library.IO
         public static void WriteRequiredElementString(this XmlTextWriter writer, string localName, string value)
         {
             writer.WriteStartElement(localName);
-            writer.WriteRaw(value ?? string.Empty);
+            if (value == null)
+                writer.WriteRaw(string.Empty);
+            else
+                writer.WriteString(value);
             writer.WriteFullEndElement();
         }
 
