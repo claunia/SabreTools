@@ -259,27 +259,13 @@ namespace SabreTools.Library.DatItems
         /// Check to see if a DatItem passes the filter
         /// </summary>
         /// <param name="filter">Filter to check against</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter)
-        {
-            return PassesFilter(filter, false);
-        }
-
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
         /// <param name="sub">True if this is a subitem, false otherwise</param>
         /// <returns>True if the item passed the filter, false otherwise</returns>
-        public bool PassesFilter(Filter filter, bool sub)
+        public override bool PassesFilter(Filter filter, bool sub = false)
         {
-            // If we're a top-level item, check common fields
-            if (!sub)
-            {
-                // Check common fields first
-                if (!base.PassesFilter(filter))
-                    return false;
-            }
+            // Check common fields first
+            if (!base.PassesFilter(filter, sub))
+                return false;
 
             // Filter on control type
             if (filter.DatItem_Control_Type.MatchesPositive(ControlType.NULL, ControlType) == false)

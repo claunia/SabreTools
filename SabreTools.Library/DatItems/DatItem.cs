@@ -721,16 +721,21 @@ namespace SabreTools.Library.DatItems
         /// Check to see if a DatItem passes the filter
         /// </summary>
         /// <param name="filter">Filter to check against</param>
+        /// <param name="sub">True if this is a subitem, false otherwise</param>
         /// <returns>True if the item passed the filter, false otherwise</returns>
-        public virtual bool PassesFilter(Filter filter)
+        public virtual bool PassesFilter(Filter filter, bool sub = false)
         {
             // Filter on machine fields
             if (!Machine.PassesFilter(filter))
                 return false;
 
-            // Filter on item type
-            if (!filter.PassStringFilter(filter.DatItem_Type, ItemType.ToString()))
-                return false;
+            // Filters for if we're a top-level item
+            if (!sub)
+            {
+                // Filter on item type
+                if (!filter.PassStringFilter(filter.DatItem_Type, ItemType.ToString()))
+                    return false;
+            }
 
             return true;
         }
