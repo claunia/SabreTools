@@ -137,6 +137,10 @@ namespace SabreTools.Library.IO
         {
             try
             {
+                // If we're writing quotes, don't write out quote characters internally
+                if (Quotes)
+                    name = name.Replace("\"", "''");
+
                 AutoComplete(Token.StartElement);
                 PushStack();
                 stack[top].Name = name;
@@ -200,6 +204,10 @@ namespace SabreTools.Library.IO
         {
             try
             {
+                // If we're writing quotes, don't write out quote characters internally
+                if (Quotes)
+                    name = name.Replace("\"", "''");
+
                 AutoComplete(Token.StartAttribute);
                 sw.Write(name);
                 sw.Write(" ");
@@ -266,6 +274,14 @@ namespace SabreTools.Library.IO
                 if (string.IsNullOrEmpty(name))
                     throw new ArgumentException();
 
+                // If we're writing quotes, don't write out quote characters internally
+                if ((quoteOverride == null && Quotes)
+                    || (quoteOverride == true))
+                {
+                    name = name.Replace("\"", "''");
+                    value = value.Replace("\"", "''");
+                }
+
                 AutoComplete(Token.Standalone);
                 sw.Write(name);
                 sw.Write(" ");
@@ -315,6 +331,11 @@ namespace SabreTools.Library.IO
                 if (!string.IsNullOrEmpty(value))
                 {
                     AutoComplete(Token.Content);
+
+                    // If we're writing quotes, don't write out quote characters internally
+                    if (Quotes)
+                        value = value.Replace("\"", "''");
+
                     sw.Write(value);
                 }
             }
