@@ -96,16 +96,17 @@ namespace SabreTools.Library.IO
                 */
 
                 // Pre load the first buffer
-                int next = size > buffersize ? buffersize : (int)size;
+                long refsize = size;
+                int next = refsize > buffersize ? buffersize : (int)refsize;
                 input.Read(buffer0, 0, next);
                 int current = next;
-                size -= next;
+                refsize -= next;
                 bool bufferSelect = true;
 
                 while (current > 0)
                 {
                     // Trigger the buffer load on the second buffer
-                    next = size > buffersize ? buffersize : (int)size;
+                    next = refsize > buffersize ? buffersize : (int)refsize;
                     if (next > 0)
                         loadBuffer.Trigger(bufferSelect ? buffer1 : buffer0, next);
 
@@ -120,7 +121,7 @@ namespace SabreTools.Library.IO
 
                     // Setup for the next hashing step
                     current = next;
-                    size -= next;
+                    refsize -= next;
                     bufferSelect = !bufferSelect;
                 }
 
