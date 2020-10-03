@@ -2052,7 +2052,10 @@ namespace SabreTools.Library.DatFiles
                 else if (!asFiles.HasFlag(TreatAsFile.Archive))
                 {
                     var extracted = archive.GetChildren();
-                    ProcessArchive(item, basePath, extracted);
+
+                    // If we have internal items to process, do so
+                    if (extracted != null)
+                        ProcessArchive(item, basePath, extracted);
 
                     // Now find all folders that are empty, if we are supposed to
                     if (addBlanks)
