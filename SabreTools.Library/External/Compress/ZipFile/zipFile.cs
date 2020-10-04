@@ -1129,21 +1129,28 @@ namespace Compress.ZipFile
             {
                 get
                 {
-                    if (_lastModFileDateTime == null)
+                    try
                     {
-                        int second = (_lastModFileTime & 0x1f) * 2;
-                        int minute = (_lastModFileTime >> 5) & 0x3f;
-                        int hour = (_lastModFileTime >> 11) & 0x1f;
+                        if (_lastModFileDateTime == null)
+                        {
+                            int second = (_lastModFileTime & 0x1f) * 2;
+                            int minute = (_lastModFileTime >> 5) & 0x3f;
+                            int hour = (_lastModFileTime >> 11) & 0x1f;
 
-                        int day = _lastModFileDate & 0x1f;
-                        int month = (_lastModFileDate >> 5) & 0x0f;
-                        int year = ((_lastModFileDate >> 9) & 0x7f) + 1980;
+                            int day = _lastModFileDate & 0x1f;
+                            int month = (_lastModFileDate >> 5) & 0x0f;
+                            int year = ((_lastModFileDate >> 9) & 0x7f) + 1980;
 
-                        return new DateTime(year, month, day, hour, minute, second);
+                            return new DateTime(year, month, day, hour, minute, second);
+                        }
+                        else
+                        {
+                            return SabreTools.Library.Tools.Utilities.ConvertMsDosTimeFormatToDateTime(_lastModFileDateTime.Value);
+                        }
                     }
-                    else
+                    catch
                     {
-                        return SabreTools.Library.Tools.Utilities.ConvertMsDosTimeFormatToDateTime(_lastModFileDateTime.Value);
+                        return DateTime.MinValue;
                     }
                 }
             }
