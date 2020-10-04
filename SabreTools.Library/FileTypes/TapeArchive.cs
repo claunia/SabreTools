@@ -190,30 +190,29 @@ namespace SabreTools.Library.FileTypes
                 TarArchive ta = TarArchive.Open(FileExtensions.TryOpenRead(this.Filename));
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
+                    // Create a blank item for the entry
+                    BaseFile tarEntryRom = new BaseFile();
+
                     // Perform a quickscan, if flagged to
                     if (QuickScan)
                     {
-                        found.Add(new BaseFile
-                        {
-                            Filename = entry.Key,
-                            Size = entry.Size,
-                            CRC = BitConverter.GetBytes(entry.Crc),
-                            Date = (entry.LastModifiedTime != null ? entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss") : null),
-
-                            Parent = gamename,
-                        });
+                        tarEntryRom.Size = entry.Size;
+                        tarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
                     }
                     // Otherwise, use the stream directly
                     else
                     {
-                        Stream entryStream = entry.OpenEntryStream();
-                        BaseFile tarEntryRom = entryStream.GetInfo(size: entry.Size);
-                        tarEntryRom.Filename = entry.Key;
-                        tarEntryRom.Parent = gamename;
-                        tarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");
-                        found.Add(tarEntryRom);
-                        entryStream.Dispose();
+                        using (Stream entryStream = entry.OpenEntryStream())
+                        {
+                            tarEntryRom = entryStream.GetInfo(size: entry.Size);
+                        }
                     }
+
+                    // Fill in comon details and add to the list
+                    tarEntryRom.Filename = entry.Key;
+                    tarEntryRom.Parent = gamename;
+                    tarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");
+                    found.Add(tarEntryRom);
                 }
 
                 // Dispose of the archive

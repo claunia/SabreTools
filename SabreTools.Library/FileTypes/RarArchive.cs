@@ -185,30 +185,29 @@ namespace SabreTools.Library.FileTypes
                 SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(FileExtensions.TryOpenRead(this.Filename));
                 foreach (RarArchiveEntry entry in ra.Entries.Where(e => e != null && !e.IsDirectory))
                 {
+                    // Create a blank item for the entry
+                    BaseFile rarEntryRom = new BaseFile();
+
                     // Perform a quickscan, if flagged to
                     if (QuickScan)
                     {
-                        found.Add(new BaseFile
-                        {
-                            Filename = entry.Key,
-                            Size = entry.Size,
-                            CRC = BitConverter.GetBytes(entry.Crc),
-                            Date = (entry.LastModifiedTime != null ? entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss") : null),
-
-                            Parent = gamename,
-                        });
+                        rarEntryRom.Size = entry.Size;
+                        rarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);
                     }
                     // Otherwise, use the stream directly
                     else
                     {
-                        Stream entryStream = entry.OpenEntryStream();
-                        BaseFile rarEntryRom = entryStream.GetInfo(size: entry.Size);
-                        rarEntryRom.Filename = entry.Key;
-                        rarEntryRom.Parent = gamename;
-                        rarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");
-                        found.Add(rarEntryRom);
-                        entryStream.Dispose();
+                        using (Stream entryStream = entry.OpenEntryStream())
+                        {
+                            rarEntryRom = entryStream.GetInfo(size: entry.Size);
+                        }
                     }
+
+                    // Fill in comon details and add to the list
+                    rarEntryRom.Filename = entry.Key;
+                    rarEntryRom.Parent = gamename;
+                    rarEntryRom.Date = entry.LastModifiedTime?.ToString("yyyy/MM/dd hh:mm:ss");
+                    found.Add(rarEntryRom);
                 }
 
                 // Dispose of the archive

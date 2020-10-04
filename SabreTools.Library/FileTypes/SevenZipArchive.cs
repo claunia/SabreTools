@@ -295,30 +295,25 @@ namespace SabreTools.Library.FileTypes
                         continue;
                     }
 
+                    // Create a blank item for the entry
+                    BaseFile zipEntryRom = new BaseFile();
+
                     // Perform a quickscan, if flagged to
                     if (QuickScan)
                     {
-                        string newname = zf.Filename(i);
-                        long newsize = (long)zf.UncompressedSize(i);
-                        byte[] newcrc = zf.CRC32(i);
-
-                        found.Add(new BaseFile
-                        {
-                            Filename = newname,
-                            Size = newsize,
-                            CRC = newcrc,
-
-                            Parent = gamename,
-                        });
+                        zipEntryRom.Size = (long)zf.UncompressedSize(i);
+                        zipEntryRom.CRC = zf.CRC32(i);
                     }
                     // Otherwise, use the stream directly
                     else
                     {
-                        BaseFile zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), keepReadOpen: true);
-                        zipEntryRom.Filename = zf.Filename(i);
-                        zipEntryRom.Parent = gamename;
-                        found.Add(zipEntryRom);
+                        zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), keepReadOpen: true);
                     }
+
+                    // Fill in comon details and add to the list
+                    zipEntryRom.Filename = zf.Filename(i);
+                    zipEntryRom.Parent = gamename;
+                    found.Add(zipEntryRom);
                 }
 
                 // Dispose of the archive
