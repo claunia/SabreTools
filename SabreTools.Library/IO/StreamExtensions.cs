@@ -67,19 +67,18 @@ namespace SabreTools.Library.IO
             try
             {
                 // Get a list of hashers to run over the buffer
-                List<Hasher> hashers = new List<Hasher>()
-                {
-                    new Hasher(Hash.CRC),
-                    new Hasher(Hash.MD5),
+                List<Hasher> hashers = new List<Hasher>();
+
+                hashers.Add(new Hasher(Hash.CRC));
+                hashers.Add(new Hasher(Hash.MD5));
 #if NET_FRAMEWORK
-                    new Hasher(Hash.RIPEMD160),
+                hashers.Add(new Hasher(Hash.RIPEMD160));
 #endif
-                    new Hasher(Hash.SHA1),
-                    new Hasher(Hash.SHA256),
-                    new Hasher(Hash.SHA384),
-                    new Hasher(Hash.SHA512),
-                    new Hasher(Hash.SpamSum),
-                };
+                hashers.Add(new Hasher(Hash.SHA1));
+                hashers.Add(new Hasher(Hash.SHA256));
+                hashers.Add(new Hasher(Hash.SHA384));
+                hashers.Add(new Hasher(Hash.SHA512));
+                hashers.Add(new Hasher(Hash.SpamSum));
 
                 // Initialize the hashing helpers
                 var loadBuffer = new ThreadLoadBuffer(input);
@@ -113,7 +112,7 @@ namespace SabreTools.Library.IO
                     byte[] buffer = bufferSelect ? buffer0 : buffer1;
 
                     // Run hashes in parallel
-                    await Task.WhenAll(hashers.Select(h => h.Process(buffer, current)));
+                    Parallel.ForEach(hashers, Globals.ParallelOptions, async h => await h.Process(buffer, current));
 
                     // Wait for the load buffer worker, if needed
                     if (next > 0)
