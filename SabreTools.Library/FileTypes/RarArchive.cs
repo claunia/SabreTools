@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SharpCompress.Archives;
@@ -189,7 +190,7 @@ namespace SabreTools.Library.FileTypes
                     BaseFile rarEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (QuickScan)
+                    if (this.AvailableHashes == Hash.CRC)
                     {
                         rarEntryRom.Size = entry.Size;
                         rarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);

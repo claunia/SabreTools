@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -194,7 +195,7 @@ namespace SabreTools.Library.FileTypes
                     BaseFile tarEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (QuickScan)
+                    if (this.AvailableHashes == Hash.CRC)
                     {
                         tarEntryRom.Size = entry.Size;
                         tarEntryRom.CRC = BitConverter.GetBytes(entry.Crc);

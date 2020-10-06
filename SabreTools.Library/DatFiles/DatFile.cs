@@ -2038,7 +2038,6 @@ namespace SabreTools.Library.DatFiles
             {
                 // Set the archive flags
                 archive.AvailableHashes = hashes;
-                archive.QuickScan = hashes == Hash.CRC;
 
                 // Skip if we're treating archives as files and skipping files
                 if (asFiles.HasFlag(TreatAsFile.Archive) && skipFileType == SkipFileType.File)
@@ -2614,7 +2613,7 @@ namespace SabreTools.Library.DatFiles
             // Now get all extracted items from the archive
             if (archive != null)
             {
-                archive.QuickScan = quickScan;
+                archive.AvailableHashes = quickScan ? Hash.CRC : Hash.Standard;
                 entries = archive.GetChildren();
             }
 

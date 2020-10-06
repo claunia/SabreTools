@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -300,7 +301,7 @@ namespace SabreTools.Library.FileTypes
                     BaseFile zipEntryRom = new BaseFile();
 
                     // Perform a quickscan, if flagged to
-                    if (QuickScan)
+                    if (this.AvailableHashes == Hash.CRC)
                     {
                         zipEntryRom.Size = (long)zf.UncompressedSize(i);
                         zipEntryRom.CRC = zf.CRC32(i);

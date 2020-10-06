@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -221,7 +222,7 @@ namespace SabreTools.Library.FileTypes
                         BaseFile gzipEntryRom = new BaseFile();
 
                         // Perform a quickscan, if flagged to
-                        if (QuickScan)
+                        if (this.AvailableHashes == Hash.CRC)
                         {
                             gzipEntryRom.Filename = gamename;
                             using (BinaryReader br = new BinaryReader(FileExtensions.TryOpenRead(this.Filename)))

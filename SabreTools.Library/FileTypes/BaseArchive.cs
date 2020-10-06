@@ -12,11 +12,6 @@ namespace SabreTools.Library.FileTypes
         #region Fields
 
         /// <summary>
-        /// Determines if archives pull information from headers alone
-        /// </summary>
-        public bool QuickScan { get; set; } = false;
-
-        /// <summary>
         /// Determines if dates are read or written
         /// </summary>
         public bool UseDates { get; set; } = false;

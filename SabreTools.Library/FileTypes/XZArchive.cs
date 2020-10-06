@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -209,31 +210,32 @@ namespace SabreTools.Library.FileTypes
                 {
                     try
                     {
-                        // Perform a quickscan, if flagged to
-                        if (QuickScan)
-                        {
-                            BaseFile tempRom = new BaseFile()
-                            {
-                                Filename = gamename,
-                            };
-                            BinaryReader br = new BinaryReader(FileExtensions.TryOpenRead(this.Filename));
-                            br.BaseStream.Seek(-8, SeekOrigin.End);
-                            tempRom.CRC = br.ReadBytesBigEndian(4);
-                            tempRom.Size = br.ReadInt32BigEndian();
-                            br.Dispose();
+                        // Create a blank item for the entry
+                        BaseFile xzEntryRom = new BaseFile();
 
-                            _children.Add(tempRom);
+                        // Perform a quickscan, if flagged to
+                        if (this.AvailableHashes == Hash.CRC)
+                        {
+                            xzEntryRom.Filename = gamename;
+                            using (BinaryReader br = new BinaryReader(FileExtensions.TryOpenRead(this.Filename)))
+                            {
+                                br.BaseStream.Seek(-8, SeekOrigin.End);
+                                xzEntryRom.CRC = br.ReadBytesBigEndian(4);
+                                xzEntryRom.Size = br.ReadInt32BigEndian();
+                            }
                         }
                         // Otherwise, use the stream directly
                         else
                         {
                             var xzStream = new XZStream(File.OpenRead(this.Filename));
-                            BaseFile xzEntryRom = xzStream.GetInfo(hashes: this.AvailableHashes);
+                            xzEntryRom = xzStream.GetInfo(hashes: this.AvailableHashes);
                             xzEntryRom.Filename = gamename;
-                            xzEntryRom.Parent = gamename;
-                            _children.Add(xzEntryRom);
                             xzStream.Dispose();
                         }
+
+                        // Fill in comon details and add to the list
+                        xzEntryRom.Parent = gamename;
+                        _children.Add(xzEntryRom);
                     }
                     catch (Exception ex)
                     {
