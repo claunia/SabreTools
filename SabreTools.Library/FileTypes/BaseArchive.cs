@@ -55,10 +55,8 @@ namespace SabreTools.Library.FileTypes
         /// Create an archive object from a filename, if possible
         /// </summary>
         /// <param name="input">Name of the file to create the archive from</param>
-        /// <param name="quickScan">True to use archive header values, false otherwise</param>
-        /// <param name="useDates">True to use dates for read and write, false otherwise</param>
         /// <returns>Archive object representing the inputs</returns>
-        public static BaseArchive Create(string input, bool quickScan = false, bool useDates = false)
+        public static BaseArchive Create(string input)
         {
             BaseArchive archive = null;
 
@@ -97,10 +95,6 @@ namespace SabreTools.Library.FileTypes
                     // We ignore all other types for now
                     break;
             }
-
-            // Set the quickscan flag
-            if (archive != null)
-                archive.QuickScan = quickScan;
 
             return archive;
         }

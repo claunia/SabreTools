@@ -73,12 +73,12 @@ namespace SabreTools.Library.Tools
         /// <summary>
         /// Process a buffer of some length with the internal hash algorithm
         /// </summary>
-        public async Task Process(byte[] buffer, int size)
+        public void Process(byte[] buffer, int size)
         {
             switch (HashType)
             {
                 case Hash.CRC:
-                    await Task.Run(() => (_hasher as OptimizedCRC).Update(buffer, 0, size));
+                    (_hasher as OptimizedCRC).Update(buffer, 0, size);
                     break;
 
                 case Hash.MD5:
@@ -89,11 +89,11 @@ namespace SabreTools.Library.Tools
                 case Hash.SHA256:
                 case Hash.SHA384:
                 case Hash.SHA512:
-                    await Task.Run(() => (_hasher as HashAlgorithm).TransformBlock(buffer, 0, size, null, 0));
+                    (_hasher as HashAlgorithm).TransformBlock(buffer, 0, size, null, 0);
                     break;
 
                 case Hash.SpamSum:
-                    await Task.Run(() => (_hasher as SpamSumContext).Update(buffer));
+                    (_hasher as SpamSumContext).Update(buffer);
                     break;
             }
         }
@@ -101,13 +101,13 @@ namespace SabreTools.Library.Tools
         /// <summary>
         /// Finalize the internal hash algorigthm
         /// </summary>
-        public async Task Finalize()
+        public void Finalize()
         {
             byte[] emptyBuffer = new byte[0];
             switch (HashType)
             {
                 case Hash.CRC:
-                    await Task.Run(() => (_hasher as OptimizedCRC).Update(emptyBuffer, 0, 0));
+                    (_hasher as OptimizedCRC).Update(emptyBuffer, 0, 0);
                     break;
 
                 case Hash.MD5:
@@ -118,7 +118,7 @@ namespace SabreTools.Library.Tools
                 case Hash.SHA256:
                 case Hash.SHA384:
                 case Hash.SHA512:
-                    await Task.Run(() => (_hasher as HashAlgorithm).TransformFinalBlock(emptyBuffer, 0, 0));
+                    (_hasher as HashAlgorithm).TransformFinalBlock(emptyBuffer, 0, 0);
                     break;
 
                 case Hash.SpamSum:

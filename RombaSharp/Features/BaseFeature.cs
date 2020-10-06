@@ -394,7 +394,7 @@ namespace RombaSharp.Features
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = Utilities.ByteArrayToString(FileExtensions.GetInfo(fullpath).SHA1);
+                    string sha1 = Utilities.ByteArrayToString(FileExtensions.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
                     foundDats.Add(sha1, fullpath);
                 }
                 else

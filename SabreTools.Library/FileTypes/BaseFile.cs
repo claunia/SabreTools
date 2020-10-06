@@ -1,4 +1,5 @@
 ﻿using System.IO;
+
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.IO;
 
@@ -6,24 +7,80 @@ namespace SabreTools.Library.FileTypes
 {
     public class BaseFile
     {
-        #region Publicly facing variables
-
         // TODO: Get all of these values automatically so there is no public "set"
+        #region Fields
+
+        /// <summary>
+        /// Internal type of the represented file
+        /// </summary>
         public FileType Type { get; protected set; }
+
+        /// <summary>
+        /// Filename or path to the file
+        /// </summary>
         public string Filename { get; set; }
+
+        /// <summary>
+        /// Direct parent of the file
+        /// </summary>
         public string Parent { get; set; }
+
+        /// <summary>
+        /// Date stamp of the file
+        /// </summary>
         public string Date { get; set; }
+
+        /// <summary>
+        /// Optional size of the file
+        /// </summary>
         public long? Size { get; set; }
-        public byte[] CRC { get; set; }
-        public byte[] MD5 { get; set; }
+
+        /// <summary>
+        /// Hashes that are available for the file
+        /// </summary>
+        public Hash AvailableHashes { get; set; } = Hash.Standard;
+
+        /// <summary>
+        /// CRC32 hash of the file
+        /// </summary>
+        public byte[] CRC { get; set; } = null;
+
+        /// <summary>
+        /// MD5 hash of the file
+        /// </summary>
+        public byte[] MD5 { get; set; } = null;
+
 #if NET_FRAMEWORK
-        public byte[] RIPEMD160 { get; set; }
+        /// <summary>
+        /// RIPEMD160 hash of the file
+        /// </summary>
+        public byte[] RIPEMD160 { get; set; } = null;
 #endif
-        public byte[] SHA1 { get; set; }
-        public byte[] SHA256 { get; set; }
-        public byte[] SHA384 { get; set; }
-        public byte[] SHA512 { get; set; }
-        public byte[] SpamSum { get; set; }
+
+        /// <summary>
+        /// SHA-1 hash of the file
+        /// </summary>
+        public byte[] SHA1 { get; set; } = null;
+
+        /// <summary>
+        /// SHA-256 hash of the file
+        /// </summary>
+        public byte[] SHA256 { get; set; } = null;
+
+        /// <summary>
+        /// SHA-384 hash of the file
+        /// </summary>
+        public byte[] SHA384 { get; set; } = null;
+
+        /// <summary>
+        /// SHA-512 hash of the file
+        /// </summary>
+        public byte[] SHA512 { get; set; } = null;
+
+        /// <summary>
+        /// SpamSum fuzzy hash of the file
+        /// </summary>
+        public byte[] SpamSum { get; set; } = null;
 
         #endregion
 
@@ -47,7 +104,7 @@ namespace SabreTools.Library.FileTypes
 
             if (getHashes)
             {
-                BaseFile temp = FileExtensions.GetInfo(this.Filename);
+                BaseFile temp = FileExtensions.GetInfo(this.Filename, hashes: this.AvailableHashes);
                 if (temp != null)
                 {
                     this.Parent = temp.Parent;
@@ -78,7 +135,7 @@ namespace SabreTools.Library.FileTypes
 
             if (getHashes)
             {
-                BaseFile temp = stream.GetInfo();
+                BaseFile temp = stream.GetInfo(hashes: this.AvailableHashes);
                 if (temp != null)
                 {
                     this.Parent = temp.Parent;

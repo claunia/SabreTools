@@ -307,7 +307,7 @@ namespace SabreTools.Library.FileTypes
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), keepReadOpen: true);
+                        zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), hashes: this.AvailableHashes, keepReadOpen: true);
                     }
 
                     // Fill in comon details and add to the list

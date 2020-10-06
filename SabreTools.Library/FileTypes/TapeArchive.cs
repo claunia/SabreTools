@@ -204,7 +204,7 @@ namespace SabreTools.Library.FileTypes
                     {
                         using (Stream entryStream = entry.OpenEntryStream())
                         {
-                            tarEntryRom = entryStream.GetInfo(size: entry.Size);
+                            tarEntryRom = entryStream.GetInfo(size: entry.Size, hashes: this.AvailableHashes);
                         }
                     }
 

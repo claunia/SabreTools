@@ -264,7 +264,7 @@ namespace SabreTools.Library.FileTypes
                 _children = new List<BaseFile>();
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
                 {
-                    BaseFile nf = FileExtensions.GetInfo(file);
+                    BaseFile nf = FileExtensions.GetInfo(file, hashes: this.AvailableHashes);
                     _children.Add(nf);
                 }
 

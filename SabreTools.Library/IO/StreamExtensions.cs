@@ -43,12 +43,12 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="input">Filename to get information from</param>
         /// <param name="size">Size of the input stream</param>
-        /// <param name="omitFromScan">Hash flag saying what hashes should not be calculated (defaults to none)</param>
+        /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(this Stream input, long size = -1, bool keepReadOpen = false)
+        public static BaseFile GetInfo(this Stream input, long size = -1, Hash hashes = Hash.Standard, bool keepReadOpen = false)
         {
-            return GetInfoAsync(input, size, keepReadOpen).ConfigureAwait(false).GetAwaiter().GetResult();
+            return GetInfoAsync(input, size, hashes, keepReadOpen).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -56,9 +56,10 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="input">Filename to get information from</param>
         /// <param name="size">Size of the input stream</param>
+        /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="keepReadOpen">True if the underlying read stream should be kept open, false otherwise</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static async Task<BaseFile> GetInfoAsync(Stream input, long size = -1, bool keepReadOpen = false)
+        public static async Task<BaseFile> GetInfoAsync(Stream input, long size = -1, Hash hashes = Hash.Standard, bool keepReadOpen = false)
         {
             // If we want to automatically set the size
             if (size == -1)
@@ -69,16 +70,24 @@ namespace SabreTools.Library.IO
                 // Get a list of hashers to run over the buffer
                 List<Hasher> hashers = new List<Hasher>();
 
-                hashers.Add(new Hasher(Hash.CRC));
-                hashers.Add(new Hasher(Hash.MD5));
+                if (hashes.HasFlag(Hash.CRC))
+                    hashers.Add(new Hasher(Hash.CRC));
+                if (hashes.HasFlag(Hash.MD5))
+                    hashers.Add(new Hasher(Hash.MD5));
 #if NET_FRAMEWORK
-                hashers.Add(new Hasher(Hash.RIPEMD160));
+                if (hashes.HasFlag(Hash.RIPEMD160))
+                    hashers.Add(new Hasher(Hash.RIPEMD160));
 #endif
-                hashers.Add(new Hasher(Hash.SHA1));
-                hashers.Add(new Hasher(Hash.SHA256));
-                hashers.Add(new Hasher(Hash.SHA384));
-                hashers.Add(new Hasher(Hash.SHA512));
-                hashers.Add(new Hasher(Hash.SpamSum));
+                if (hashes.HasFlag(Hash.SHA1))
+                    hashers.Add(new Hasher(Hash.SHA1));
+                if (hashes.HasFlag(Hash.SHA256))
+                    hashers.Add(new Hasher(Hash.SHA256));
+                if (hashes.HasFlag(Hash.SHA384))
+                    hashers.Add(new Hasher(Hash.SHA384));
+                if (hashes.HasFlag(Hash.SHA512))
+                    hashers.Add(new Hasher(Hash.SHA512));
+                if (hashes.HasFlag(Hash.SpamSum))
+                    hashers.Add(new Hasher(Hash.SpamSum));
 
                 // Initialize the hashing helpers
                 var loadBuffer = new ThreadLoadBuffer(input);
@@ -112,7 +121,7 @@ namespace SabreTools.Library.IO
                     byte[] buffer = bufferSelect ? buffer0 : buffer1;
 
                     // Run hashes in parallel
-                    Parallel.ForEach(hashers, Globals.ParallelOptions, async h => await h.Process(buffer, current));
+                    Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Process(buffer, current));
 
                     // Wait for the load buffer worker, if needed
                     if (next > 0)
@@ -126,22 +135,22 @@ namespace SabreTools.Library.IO
 
                 // Finalize all hashing helpers
                 loadBuffer.Finish();
-                await Task.WhenAll(hashers.Select(h => h.Finalize()));
+                Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Finalize());
 
                 // Get the results
                 BaseFile baseFile = new BaseFile()
                 {
                     Size = size,
-                    CRC = hashers.First(h => h.HashType == Hash.CRC).GetHash(),
-                    MD5 = hashers.First(h => h.HashType == Hash.MD5).GetHash(),
+                    CRC = hashes.HasFlag(Hash.CRC) ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
+                    MD5 = hashes.HasFlag(Hash.MD5) ? hashers.First(h => h.HashType == Hash.MD5).GetHash() : null,
 #if NET_FRAMEWORK
-                    RIPEMD160 = hashers.First(h => h.HashType == Hash.RIPEMD160).GetHash(),
+                    RIPEMD160 = hashes.HasFlag(Hash.RIPEMD160) ? hashers.First(h => h.HashType == Hash.RIPEMD160).GetHash() : null,
 #endif
-                    SHA1 = hashers.First(h => h.HashType == Hash.SHA1).GetHash(),
-                    SHA256 = hashers.First(h => h.HashType == Hash.SHA256).GetHash(),
-                    SHA384 = hashers.First(h => h.HashType == Hash.SHA384).GetHash(),
-                    SHA512 = hashers.First(h => h.HashType == Hash.SHA512).GetHash(),
-                    SpamSum = hashers.First(h => h.HashType == Hash.SpamSum).GetHash(),
+                    SHA1 = hashes.HasFlag(Hash.SHA1) ? hashers.First(h => h.HashType == Hash.SHA1).GetHash() : null,
+                    SHA256 = hashes.HasFlag(Hash.SHA256) ? hashers.First(h => h.HashType == Hash.SHA256).GetHash() : null,
+                    SHA384 = hashes.HasFlag(Hash.SHA384) ? hashers.First(h => h.HashType == Hash.SHA384).GetHash() : null,
+                    SHA512 = hashes.HasFlag(Hash.SHA512) ? hashers.First(h => h.HashType == Hash.SHA512).GetHash() : null,
+                    SpamSum = hashes.HasFlag(Hash.SpamSum) ? hashers.First(h => h.HashType == Hash.SpamSum).GetHash() : null,
                 };
 
                 // Dispose of the hashers

@@ -199,7 +199,7 @@ namespace SabreTools.Library.FileTypes
                     {
                         using (Stream entryStream = entry.OpenEntryStream())
                         {
-                            rarEntryRom = entryStream.GetInfo(size: entry.Size);
+                            rarEntryRom = entryStream.GetInfo(size: entry.Size, hashes: this.AvailableHashes);
                         }
                     }
 

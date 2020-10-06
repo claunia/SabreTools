@@ -2443,30 +2443,30 @@ Some special strings that can be used:
         #region Protected Specific Extraction
 
         /// <summary>
-        /// Get omit from scan from feature list
+        /// Get include from scan from feature list
         /// </summary>
-        protected Hash GetOmitFromScan(Dictionary<string, Library.Help.Feature> features)
+        protected Hash GetIncludeInScan(Dictionary<string, Library.Help.Feature> features)
         {
-            Hash omitFromScan = Hash.DeepHashes; // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+            Hash includeInScan = Hash.Standard; // TODO: This should be All eventually
 
             if (GetBoolean(features, SkipMd5Value))
-                omitFromScan |= Hash.MD5;
+                includeInScan &= ~Hash.MD5;
 #if NET_FRAMEWORK
             if (GetBoolean(features, SkipRipeMd160Value))
-                omitFromScan &= ~Hash.RIPEMD160; // TODO: This needs to be inverted later
+                includeInScan |= Hash.RIPEMD160; // TODO: This needs to be inverted later
 #endif
             if (GetBoolean(features, SkipSha1Value))
-                omitFromScan |= Hash.SHA1;
+                includeInScan &= ~Hash.SHA1;
             if (GetBoolean(features, SkipSha256Value))
-                omitFromScan &= ~Hash.SHA256; // TODO: This needs to be inverted later
+                includeInScan |= Hash.SHA256; // TODO: This needs to be inverted later
             if (GetBoolean(features, SkipSha384Value))
-                omitFromScan &= ~Hash.SHA384; // TODO: This needs to be inverted later
+                includeInScan |= Hash.SHA384; // TODO: This needs to be inverted later
             if (GetBoolean(features, SkipSha512Value))
-                omitFromScan &= ~Hash.SHA512; // TODO: This needs to be inverted later
+                includeInScan |= Hash.SHA512; // TODO: This needs to be inverted later
             if (GetBoolean(features, SkipSpamSumValue))
-                omitFromScan &= ~Hash.SpamSum; // TODO: This needs to be inverted later
+                includeInScan |= Hash.SpamSum; // TODO: This needs to be inverted later
 
-            return omitFromScan;
+            return includeInScan;
         }
 
         /// <summary>

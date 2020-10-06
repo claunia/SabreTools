@@ -340,9 +340,10 @@ namespace SabreTools.Library.IO
         /// </summary>
         /// <param name="input">Filename to get information from</param>
         /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
+        /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>Populated BaseFile object if success, empty one on error</returns>
-        public static BaseFile GetInfo(string input, string header = null, TreatAsFile asFiles = 0x00)
+        public static BaseFile GetInfo(string input, string header = null, Hash hashes = Hash.Standard, TreatAsFile asFiles = 0x00)
         {
             // Add safeguard if file doesn't exist
             if (!File.Exists(input))
@@ -376,7 +377,7 @@ namespace SabreTools.Library.IO
             else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
                 baseFile = CHDFile.Create(inputStream);
             else
-                baseFile = inputStream.GetInfo(keepReadOpen: false);
+                baseFile = inputStream.GetInfo(hashes: hashes, keepReadOpen: false);
 
             // Dispose of the input stream
             inputStream?.Dispose();

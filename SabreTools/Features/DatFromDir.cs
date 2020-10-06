@@ -4,7 +4,6 @@ using System.IO;
 
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -62,7 +61,7 @@ namespace SabreTools.Features
             bool addFileDates = GetBoolean(features, AddDateValue);
             TreatAsFile asFiles = GetTreatAsFiles(features);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
-            var omitFromScan = GetOmitFromScan(features);
+            var includeInScan = GetIncludeInScan(features);
             var skipFileType = GetSkipFileType(features);
             var splitType = GetSplitType(features);
 
@@ -70,7 +69,6 @@ namespace SabreTools.Features
             if (Cleaner.ExcludeFields == null)
                 Cleaner.ExcludeFields = new List<Field>();
 
-            Cleaner.ExcludeFields.AddRange(omitFromScan.AsFields());
             if (!addFileDates)
                 Cleaner.ExcludeFields.Add(Field.DatItem_Date);
 
@@ -96,7 +94,7 @@ namespace SabreTools.Features
                         asFiles,
                         skipFileType,
                         addBlankFiles,
-                        quickScan: omitFromScan == Hash.SecureHashes);
+                        hashes: includeInScan);
 
                     if (success)
                     {

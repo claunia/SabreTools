@@ -217,20 +217,19 @@ namespace SabreTools.Library.FileTypes
                 {
                     try
                     {
+                        // Create a blank item for the entry
+                        BaseFile gzipEntryRom = new BaseFile();
+
                         // Perform a quickscan, if flagged to
                         if (QuickScan)
                         {
-                            BaseFile tempRom = new BaseFile()
+                            gzipEntryRom.Filename = gamename;
+                            using (BinaryReader br = new BinaryReader(FileExtensions.TryOpenRead(this.Filename)))
                             {
-                                Filename = gamename,
-                            };
-                            BinaryReader br = new BinaryReader(FileExtensions.TryOpenRead(this.Filename));
-                            br.BaseStream.Seek(-8, SeekOrigin.End);
-                            tempRom.CRC = br.ReadBytesBigEndian(4);
-                            tempRom.Size = br.ReadInt32BigEndian();
-                            br.Dispose();
-
-                            _children.Add(tempRom);
+                                br.BaseStream.Seek(-8, SeekOrigin.End);
+                                gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
+                                gzipEntryRom.Size = br.ReadInt32BigEndian();
+                            }
                         }
                         // Otherwise, use the stream directly
                         else
@@ -238,13 +237,16 @@ namespace SabreTools.Library.FileTypes
                             var gz = new gZip();
                             ZipReturn ret = gz.ZipFileOpen(this.Filename);
                             ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
-                            BaseFile gzipEntryRom = gzstream.GetInfo();
+                            gzipEntryRom = gzstream.GetInfo(hashes: this.AvailableHashes);
                             gzipEntryRom.Filename = gz.Filename(0);
                             gzipEntryRom.Parent = gamename;
                             gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
-                            _children.Add(gzipEntryRom);
                             gzstream.Dispose();
                         }
+
+                        // Fill in comon details and add to the list
+                        gzipEntryRom.Parent = gamename;
+                        _children.Add(gzipEntryRom);
                     }
                     catch (Exception ex)
                     {
