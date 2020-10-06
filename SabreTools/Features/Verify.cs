@@ -84,7 +84,7 @@ namespace SabreTools.Features
                         Globals.Logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
-                            datdata.PopulateFromDir(input, asFiles: asFiles, quickScan: quickScan);
+                            datdata.PopulateFromDir(input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                         }
 
                         datdata.VerifyGeneric(hashOnly);
@@ -133,7 +133,7 @@ namespace SabreTools.Features
                     Globals.Logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
-                        datdata.PopulateFromDir(input, asFiles: asFiles, quickScan: quickScan);
+                        datdata.PopulateFromDir(input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                     }
 
                     datdata.VerifyGeneric(hashOnly);
