@@ -239,12 +239,11 @@ namespace SabreTools.Library.Logging
         /// </summary>
         /// <param name="output">String to be written log</param>
         /// <param name="loglevel">Severity of the information being logged</param>
-        /// <returns>True if the output could be written, false otherwise</returns>
-        public static bool Log(string output, LogLevel loglevel)
+        private static void Log(string output, LogLevel loglevel)
         {
             // If the log level is less than the filter level, we skip it but claim we didn't
             if (loglevel < LowestLogLevel)
-                return true;
+                return;
 
             // USER and ERROR writes to console
             if (loglevel == LogLevel.USER || loglevel == LogLevel.ERROR)
@@ -265,11 +264,11 @@ namespace SabreTools.Library.Logging
                     Console.WriteLine(ex);
                     Console.WriteLine("Could not write to log file!");
                     if (ThrowOnError) throw ex;
-                    return false;
+                    return;
                 }
             }
 
-            return true;
+            return;
         }
 
         #endregion
