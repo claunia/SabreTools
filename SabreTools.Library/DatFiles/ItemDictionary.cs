@@ -44,12 +44,12 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Lock for statistics calculation
         /// </summary>
-        private object statsLock = new object();
+        private readonly object statsLock = new object();
 
         /// <summary>
         /// Logging object
         /// </summary>
-        private static Logger logger = new Logger();
+        private readonly static Logger logger = new Logger();
 
         #endregion
 

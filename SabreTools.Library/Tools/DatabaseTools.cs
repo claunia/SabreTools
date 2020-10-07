@@ -18,7 +18,7 @@ namespace SabreTools.Library.Tools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static Logger logger = new Logger();
+        private static readonly Logger logger = new Logger();
 
         #endregion
 

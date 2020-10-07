@@ -11,7 +11,7 @@ namespace SabreTools.Library.Logging
         /// Instance associated with this logger
         /// </summary>
         /// TODO: Derive class name for this object, if possible
-        private object instance;
+        private readonly object instance;
         
         /// <summary>
         /// Constructor

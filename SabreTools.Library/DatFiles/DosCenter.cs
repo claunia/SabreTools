@@ -116,25 +116,25 @@ namespace SabreTools.Library.DatFiles
                 switch (itemKey)
                 {
                     case "name":
-                        Header.Name = (Header.Name == null ? itemVal : Header.Name);
+                        Header.Name = Header.Name ?? itemVal;
                         break;
                     case "description":
-                        Header.Description = (Header.Description == null ? itemVal : Header.Description);
+                        Header.Description = Header.Description ?? itemVal;
                         break;
                     case "dersion":
-                        Header.Version = (Header.Version == null ? itemVal : Header.Version);
+                        Header.Version = Header.Version ?? itemVal;
                         break;
                     case "date":
-                        Header.Date = (Header.Date == null ? itemVal : Header.Date);
+                        Header.Date = Header.Date ?? itemVal;
                         break;
                     case "author":
-                        Header.Author = (Header.Author == null ? itemVal : Header.Author);
+                        Header.Author = Header.Author ?? itemVal;
                         break;
                     case "homepage":
-                        Header.Homepage = (Header.Homepage == null ? itemVal : Header.Homepage);
+                        Header.Homepage = Header.Homepage ?? itemVal;
                         break;
                     case "comment":
-                        Header.Comment = (Header.Comment == null ? itemVal : Header.Comment);
+                        Header.Comment = Header.Comment ?? itemVal;
                         break;
                 }
             }

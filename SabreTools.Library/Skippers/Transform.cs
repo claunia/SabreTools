@@ -37,7 +37,7 @@ namespace SabreTools.Library.Skippers
         /// <summary>
         /// Logging object
         /// </summary>
-        private static Logger logger = new Logger();
+        private static readonly Logger logger = new Logger();
 
         #endregion
 

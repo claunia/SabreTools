@@ -291,7 +291,7 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Logging object
         /// </summary>
-        private Logger logger = new Logger();
+        private readonly Logger logger = new Logger();
 
         #endregion
 

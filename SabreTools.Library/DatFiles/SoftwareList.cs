@@ -58,8 +58,8 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "softwarelist":
-                            Header.Name = (Header.Name == null ? xtr.GetAttribute("name") ?? string.Empty : Header.Name);
-                            Header.Description = (Header.Description == null ? xtr.GetAttribute("description") ?? string.Empty : Header.Description);
+                            Header.Name = Header.Name ?? xtr.GetAttribute("name") ?? string.Empty;
+                            Header.Description = Header.Description ?? xtr.GetAttribute("description") ?? string.Empty;
 
                             xtr.Read();
                             break;

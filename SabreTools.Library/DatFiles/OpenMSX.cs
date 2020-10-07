@@ -56,9 +56,9 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "softwaredb":
-                            Header.Name = (Header.Name == null ? "openMSX Software List" : Header.Name);
-                            Header.Description = (Header.Description == null ? Header.Name : Header.Description);
-                            Header.Date = (Header.Date == null ? xtr.GetAttribute("timestamp") : Header.Date);
+                            Header.Name = Header.Name ?? "openMSX Software List";
+                            Header.Description = Header.Description ?? Header.Name;
+                            Header.Date = Header.Date ?? xtr.GetAttribute("timestamp");
                             xtr.Read();
                             break;
 
@@ -242,9 +242,11 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "original":
-                        original = new Original();
-                        original.Value = reader.GetAttribute("value").AsYesNo();
-                        original.Content = reader.ReadElementContentAsString();
+                        original = new Original
+                        {
+                            Value = reader.GetAttribute("value").AsYesNo(),
+                            Content = reader.ReadElementContentAsString()
+                        };
                         break;
 
                     default:

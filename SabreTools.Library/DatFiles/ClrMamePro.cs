@@ -136,48 +136,48 @@ namespace SabreTools.Library.DatFiles
                 switch (itemKey)
                 {
                     case "name":
-                        Header.Name = (Header.Name == null ? itemVal : Header.Name);
+                        Header.Name = Header.Name ?? itemVal;
                         superdat = superdat || itemVal.Contains(" - SuperDAT");
 
                         if (keep && superdat)
-                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
+                            Header.Type = Header.Type ?? "SuperDAT";
 
                         break;
                     case "description":
-                        Header.Description = (Header.Description == null ? itemVal : Header.Description);
+                        Header.Description = Header.Description ?? itemVal;
                         break;
                     case "rootdir":
-                        Header.RootDir = (Header.RootDir == null ? itemVal : Header.RootDir);
+                        Header.RootDir = Header.RootDir ?? itemVal;
                         break;
                     case "category":
-                        Header.Category = (Header.Category == null ? itemVal : Header.Category);
+                        Header.Category = Header.Category ?? itemVal;
                         break;
                     case "version":
-                        Header.Version = (Header.Version == null ? itemVal : Header.Version);
+                        Header.Version = Header.Version ?? itemVal;
                         break;
                     case "date":
-                        Header.Date = (Header.Date == null ? itemVal : Header.Date);
+                        Header.Date = Header.Date ?? itemVal;
                         break;
                     case "author":
-                        Header.Author = (Header.Author == null ? itemVal : Header.Author);
+                        Header.Author = Header.Author ?? itemVal;
                         break;
                     case "email":
-                        Header.Email = (Header.Email == null ? itemVal : Header.Email);
+                        Header.Email = Header.Email ?? itemVal;
                         break;
                     case "homepage":
-                        Header.Homepage = (Header.Homepage == null ? itemVal : Header.Homepage);
+                        Header.Homepage = Header.Homepage ?? itemVal;
                         break;
                     case "url":
-                        Header.Url = (Header.Url == null ? itemVal : Header.Url);
+                        Header.Url = Header.Url ?? itemVal;
                         break;
                     case "comment":
-                        Header.Comment = (Header.Comment == null ? itemVal : Header.Comment);
+                        Header.Comment = Header.Comment ?? itemVal;
                         break;
                     case "header":
-                        Header.HeaderSkipper = (Header.HeaderSkipper == null ? itemVal : Header.HeaderSkipper);
+                        Header.HeaderSkipper = Header.HeaderSkipper ?? itemVal;
                         break;
                     case "type":
-                        Header.Type = (Header.Type == null ? itemVal : Header.Type);
+                        Header.Type = Header.Type ?? itemVal;
                         superdat = superdat || itemVal.Contains("SuperDAT");
                         break;
                     case "forcemerging":

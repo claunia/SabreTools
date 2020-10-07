@@ -57,18 +57,18 @@ namespace SabreTools.Library.DatFiles
                     switch (xtr.Name)
                     {
                         case "mame":
-                            Header.Name = (Header.Name == null ? xtr.GetAttribute("build") : Header.Name);
-                            Header.Description = (Header.Description == null ? Header.Name : Header.Description);
-                            Header.Debug = (Header.Debug == null ? xtr.GetAttribute("debug").AsYesNo() : Header.Debug);
-                            Header.MameConfig = (Header.MameConfig == null ? xtr.GetAttribute("mameconfig") : Header.MameConfig);
+                            Header.Name = Header.Name ?? xtr.GetAttribute("build");
+                            Header.Description = Header.Description ?? Header.Name;
+                            Header.Debug = Header.Debug ?? xtr.GetAttribute("debug").AsYesNo();
+                            Header.MameConfig = Header.MameConfig ?? xtr.GetAttribute("mameconfig");
                             xtr.Read();
                             break;
 
                         // Handle M1 DATs since they're 99% the same as a SL DAT
                         case "m1":
-                            Header.Name = (Header.Name == null ? "M1" : Header.Name);
-                            Header.Description = (Header.Description == null ? "M1" : Header.Description);
-                            Header.Version = (Header.Version == null ? xtr.GetAttribute("version") ?? string.Empty : Header.Version);
+                            Header.Name = Header.Name ?? "M1";
+                            Header.Description = Header.Description ?? "M1";
+                            Header.Version = Header.Version ?? xtr.GetAttribute("version") ?? string.Empty;
                             xtr.Read();
                             break;
 
@@ -653,10 +653,12 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "slotoption":
-                        var slotOption = new SlotOption();
-                        slotOption.Name = reader.GetAttribute("name");
-                        slotOption.DeviceName = reader.GetAttribute("devname");
-                        slotOption.Default = reader.GetAttribute("default").AsYesNo();
+                        var slotOption = new SlotOption
+                        {
+                            Name = reader.GetAttribute("name"),
+                            DeviceName = reader.GetAttribute("devname"),
+                            Default = reader.GetAttribute("default").AsYesNo()
+                        };
 
                         slot.SlotOptions.Add(slotOption);
 
@@ -760,11 +762,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new Condition();
-                        condition.Tag = reader.GetAttribute("tag");
-                        condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation").AsRelation();
-                        condition.Value = reader.GetAttribute("value");
+                        var condition = new Condition
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Relation = reader.GetAttribute("relation").AsRelation(),
+                            Value = reader.GetAttribute("value")
+                        };
 
                         dipSwitch.Conditions.Add(condition);
 
@@ -772,10 +776,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "diplocation":
-                        var dipLocation = new Location();
-                        dipLocation.Name = reader.GetAttribute("name");
-                        dipLocation.Number = Sanitizer.CleanLong(reader.GetAttribute("number"));
-                        dipLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
+                        var dipLocation = new Location
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Number = Sanitizer.CleanLong(reader.GetAttribute("number")),
+                            Inverted = reader.GetAttribute("inverted").AsYesNo()
+                        };
 
                         dipSwitch.Locations.Add(dipLocation);
 
@@ -783,10 +789,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "dipvalue":
-                        var dipValue = new Setting();
-                        dipValue.Name = reader.GetAttribute("name");
-                        dipValue.Value = reader.GetAttribute("value");
-                        dipValue.Default = reader.GetAttribute("default").AsYesNo();
+                        var dipValue = new Setting
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Value = reader.GetAttribute("value"),
+                            Default = reader.GetAttribute("default").AsYesNo()
+                        };
 
                         // Now read the internal tags
                         ReadDipValue(reader, dipValue);
@@ -834,11 +842,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new Condition();
-                        condition.Tag = reader.GetAttribute("tag");
-                        condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation").AsRelation();
-                        condition.Value = reader.GetAttribute("value");
+                        var condition = new Condition
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Relation = reader.GetAttribute("relation").AsRelation(),
+                            Value = reader.GetAttribute("value")
+                        };
 
                         dipValue.Conditions.Add(condition);
 
@@ -884,11 +894,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new Condition();
-                        condition.Tag = reader.GetAttribute("tag");
-                        condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation").AsRelation();
-                        condition.Value = reader.GetAttribute("value");
+                        var condition = new Condition
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Relation = reader.GetAttribute("relation").AsRelation(),
+                            Value = reader.GetAttribute("value")
+                        };
 
                         configuration.Conditions.Add(condition);
 
@@ -896,10 +908,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "conflocation":
-                        var confLocation = new Location();
-                        confLocation.Name = reader.GetAttribute("name");
-                        confLocation.Number = Sanitizer.CleanLong(reader.GetAttribute("number"));
-                        confLocation.Inverted = reader.GetAttribute("inverted").AsYesNo();
+                        var confLocation = new Location
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Number = Sanitizer.CleanLong(reader.GetAttribute("number")),
+                            Inverted = reader.GetAttribute("inverted").AsYesNo()
+                        };
 
                         configuration.Locations.Add(confLocation);
 
@@ -907,10 +921,12 @@ namespace SabreTools.Library.DatFiles
                         break;
 
                     case "confsetting":
-                        var confSetting = new Setting();
-                        confSetting.Name = reader.GetAttribute("name");
-                        confSetting.Value = reader.GetAttribute("value");
-                        confSetting.Default = reader.GetAttribute("default").AsYesNo();
+                        var confSetting = new Setting
+                        {
+                            Name = reader.GetAttribute("name"),
+                            Value = reader.GetAttribute("value"),
+                            Default = reader.GetAttribute("default").AsYesNo()
+                        };
 
                         // Now read the internal tags
                         ReadConfSetting(reader, confSetting);
@@ -958,11 +974,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new Condition();
-                        condition.Tag = reader.GetAttribute("tag");
-                        condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation").AsRelation();
-                        condition.Value = reader.GetAttribute("value");
+                        var condition = new Condition
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Relation = reader.GetAttribute("relation").AsRelation(),
+                            Value = reader.GetAttribute("value")
+                        };
 
                         confSetting.Conditions.Add(condition);
 
@@ -1006,8 +1024,10 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "analog":
-                        var analog = new Analog();
-                        analog.Mask = reader.GetAttribute("mask");
+                        var analog = new Analog
+                        {
+                            Mask = reader.GetAttribute("mask")
+                        };
 
                         port.Analogs.Add(analog);
 
@@ -1051,11 +1071,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "condition":
-                        var condition = new Condition();
-                        condition.Tag = reader.GetAttribute("tag");
-                        condition.Mask = reader.GetAttribute("mask");
-                        condition.Relation = reader.GetAttribute("relation").AsRelation();
-                        condition.Value = reader.GetAttribute("value");
+                        var condition = new Condition
+                        {
+                            Tag = reader.GetAttribute("tag"),
+                            Mask = reader.GetAttribute("mask"),
+                            Relation = reader.GetAttribute("relation").AsRelation(),
+                            Value = reader.GetAttribute("value")
+                        };
 
                         adjuster.Conditions.Add(condition);
 

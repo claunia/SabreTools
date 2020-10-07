@@ -203,12 +203,12 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "version":
-                        Header.RomCenterVersion = Header.RomCenterVersion ?? (kvp?.Value);
+                        Header.RomCenterVersion = Header.RomCenterVersion ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "plugin":
-                        Header.System = (Header.System == null ? kvp?.Value : Header.System);
+                        Header.System = Header.System ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
@@ -267,12 +267,12 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "refname":
-                        Header.Name = Header.Name == null ? kvp?.Value : Header.Name;
+                        Header.Name = Header.Name ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Header.Description = Header.Description == null ? kvp?.Value : Header.Description;
+                        Header.Description = Header.Description ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 

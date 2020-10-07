@@ -150,68 +150,68 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name)
                 {
                     case "name":
-                        content = reader.ReadElementContentAsString(); ;
-                        Header.Name = (Header.Name == null ? content : Header.Name);
+                        content = reader.ReadElementContentAsString();
+                        Header.Name = Header.Name ?? content;
                         superdat = superdat || content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
+                            Header.Type = Header.Type ?? "SuperDAT";
                         }
                         break;
 
                     case "description":
                         content = reader.ReadElementContentAsString();
-                        Header.Description = (Header.Description == null ? content : Header.Description);
+                        Header.Description = Header.Description ?? content;
                         break;
 
                     case "rootdir": // This is exclusive to TruRip XML
                         content = reader.ReadElementContentAsString();
-                        Header.RootDir = (Header.RootDir == null ? content : Header.RootDir);
+                        Header.RootDir = Header.RootDir ?? content;
                         break;
 
                     case "category":
                         content = reader.ReadElementContentAsString();
-                        Header.Category = (Header.Category == null ? content : Header.Category);
+                        Header.Category = Header.Category ?? content;
                         break;
 
                     case "version":
                         content = reader.ReadElementContentAsString();
-                        Header.Version = (Header.Version == null ? content : Header.Version);
+                        Header.Version = Header.Version ?? content;
                         break;
 
                     case "date":
                         content = reader.ReadElementContentAsString();
-                        Header.Date = (Header.Date == null ? content.Replace(".", "/") : Header.Date);
+                        Header.Date = Header.Date ?? content.Replace(".", "/");
                         break;
 
                     case "author":
                         content = reader.ReadElementContentAsString();
-                        Header.Author = (Header.Author == null ? content : Header.Author);
+                        Header.Author = Header.Author ?? content;
                         break;
 
                     case "email":
                         content = reader.ReadElementContentAsString();
-                        Header.Email = (Header.Email == null ? content : Header.Email);
+                        Header.Email = Header.Email ?? content;
                         break;
 
                     case "homepage":
                         content = reader.ReadElementContentAsString();
-                        Header.Homepage = (Header.Homepage == null ? content : Header.Homepage);
+                        Header.Homepage = Header.Homepage ?? content;
                         break;
 
                     case "url":
                         content = reader.ReadElementContentAsString();
-                        Header.Url = (Header.Url == null ? content : Header.Url);
+                        Header.Url = Header.Url ?? content;
                         break;
 
                     case "comment":
                         content = reader.ReadElementContentAsString();
-                        Header.Comment = (Header.Comment == null ? content : Header.Comment);
+                        Header.Comment = (Header.Comment ?? content);
                         break;
 
                     case "type": // This is exclusive to TruRip XML
                         content = reader.ReadElementContentAsString();
-                        Header.Type = (Header.Type == null ? content : Header.Type);
+                        Header.Type = Header.Type ?? content;
                         superdat = superdat || content.Contains("SuperDAT");
                         break;
 

@@ -122,34 +122,34 @@ namespace SabreTools.Library.DatFiles
                 {
                     case "datname":
                         content = reader.ReadElementContentAsString();
-                        Header.Name = (Header.Name == null ? content : Header.Name);
+                        Header.Name = Header.Name ?? content;
                         superdat = superdat || content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = (Header.Type == null ? "SuperDAT" : Header.Type);
+                            Header.Type = Header.Type ?? "SuperDAT";
                         }
                         break;
 
                     case "datversion":
                         content = reader.ReadElementContentAsString();
-                        Header.Version = (Header.Version == null ? content : Header.Version);
+                        Header.Version = Header.Version ?? content;
                         break;
 
                     case "system":
                         content = reader.ReadElementContentAsString();
-                        Header.System = (Header.System == null ? content : Header.System);
+                        Header.System = Header.System ?? content;
                         break;
 
                     // TODO: Int32?
                     case "screenshotswidth":
                         content = reader.ReadElementContentAsString();
-                        Header.ScreenshotsWidth = (Header.ScreenshotsWidth == null ? content : Header.ScreenshotsWidth);
+                        Header.ScreenshotsWidth = Header.ScreenshotsWidth ?? content;
                         break;
 
                     // TODO: Int32?
                     case "screenshotsheight":
                         content = reader.ReadElementContentAsString();
-                        Header.ScreenshotsHeight = (Header.ScreenshotsHeight == null ? content : Header.ScreenshotsHeight);
+                        Header.ScreenshotsHeight = Header.ScreenshotsHeight ?? content;
                         break;
 
                     case "infos":
@@ -184,7 +184,7 @@ namespace SabreTools.Library.DatFiles
 
                     case "romtitle":
                         content = reader.ReadElementContentAsString();
-                        Header.RomTitle = (Header.RomTitle == null ? content : Header.RomTitle);
+                        Header.RomTitle = Header.RomTitle ?? content;
                         break;
 
                     default:
@@ -224,11 +224,13 @@ namespace SabreTools.Library.DatFiles
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "info":
-                        var info = new OfflineListInfo();
-                        info.Name = reader.Name.ToLowerInvariant();
-                        info.Visible = reader.GetAttribute("visible").AsYesNo();
-                        info.InNamingOption = reader.GetAttribute("inNamingOption").AsYesNo();
-                        info.Default = reader.GetAttribute("default").AsYesNo();
+                        var info = new OfflineListInfo
+                        {
+                            Name = reader.Name.ToLowerInvariant(),
+                            Visible = reader.GetAttribute("visible").AsYesNo(),
+                            InNamingOption = reader.GetAttribute("inNamingOption").AsYesNo(),
+                            Default = reader.GetAttribute("default").AsYesNo()
+                        };
 
                         Header.Infos.Add(info);
 
