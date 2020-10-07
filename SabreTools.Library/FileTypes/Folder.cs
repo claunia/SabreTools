@@ -22,7 +22,12 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Logging object
         /// </summary>
-        protected static Logger logger = new Logger();
+        protected Logger logger;
+
+        /// <summary>
+        /// Static logger for static methods
+        /// </summary>
+        protected static Logger staticLogger = new Logger();
 
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
@@ -42,6 +47,7 @@ namespace SabreTools.Library.FileTypes
         {
             this.Type = FileType.Folder;
             this.writeToParent = writeToParent;
+            logger = new Logger(this);
         }
 
         /// <summary>
@@ -54,6 +60,7 @@ namespace SabreTools.Library.FileTypes
             : base(filename, getHashes)
         {
             this.Type = FileType.Folder;
+            logger = new Logger(this);
         }
 
         /// <summary>

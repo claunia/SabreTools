@@ -11,7 +11,7 @@ namespace SabreTools.Library.Tools
     {
         private string _subject;
         private DateTime _startTime;
-        private readonly Logger _logger = new Logger();
+        private readonly Logger _logger;
 
         /// <summary>
         /// Constructor that initalizes the stopwatch
@@ -19,6 +19,7 @@ namespace SabreTools.Library.Tools
         public InternalStopwatch()
         {
             _subject = string.Empty;
+            _logger = new Logger(this);
         }
 
         /// <summary>
@@ -28,6 +29,7 @@ namespace SabreTools.Library.Tools
         public InternalStopwatch(string subject)
         {
             _subject = subject;
+            _logger = new Logger(this);
             Start();
         }
 

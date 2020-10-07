@@ -291,11 +291,23 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger = new Logger();
+        private readonly Logger logger;
 
         #endregion
 
         #region Instance methods
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Filter()
+        {
+            logger = new Logger(this);
+        }
+
+        #endregion
 
         #region Filter Population
 

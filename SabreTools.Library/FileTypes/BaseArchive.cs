@@ -63,7 +63,7 @@ namespace SabreTools.Library.FileTypes
                 return archive;
 
             // Create the archive based on the type
-            logger.Verbose($"Found archive of type: {at}");
+            staticLogger.Verbose($"Found archive of type: {at}");
             switch (at)
             {
                 case FileType.GZipArchive:

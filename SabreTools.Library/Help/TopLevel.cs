@@ -11,16 +11,37 @@ namespace SabreTools.Library.Help
     /// </summary>
     public abstract class TopLevel : Feature
     {
+        #region Fields
+
+        /// <summary>
+        /// List of files, directories, and potential wildcard paths
+        /// </summary>
         public List<string> Inputs = new List<string>();
+
+        #endregion
 
         #region Logging
 
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger = new Logger();
+        private readonly Logger logger;
 
         #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public TopLevel()
+        {
+            logger = new Logger(this);
+        }
+
+        #endregion
+
+        #region Processing
 
         /// <summary>
         /// Process args list based on current feature
@@ -62,6 +83,8 @@ namespace SabreTools.Library.Help
         /// Process and extract variables based on current feature
         /// </summary>
         public virtual void ProcessFeatures(Dictionary<string, Feature> features) { }
+
+        #endregion
 
         #region Generic Extraction
 

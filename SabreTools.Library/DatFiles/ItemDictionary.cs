@@ -49,7 +49,12 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly static Logger logger = new Logger();
+        private Logger logger;
+
+        /// <summary>
+        /// Static logger for static methods
+        /// </summary>
+        private static Logger staticLogger = new Logger();
 
         #endregion
 
@@ -952,6 +957,7 @@ namespace SabreTools.Library.DatFiles
             bucketedBy = Field.NULL;
             mergedBy = DedupeType.None;
             items = new ConcurrentDictionary<string, List<DatItem>>();
+            logger = new Logger(this);
         }
 
         #endregion
@@ -1417,13 +1423,13 @@ namespace SabreTools.Library.DatFiles
                     dirStats.ResetStatistics();
                 }
 
-                logger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
+                staticLogger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
                 List<string> games = new List<string>();
                 DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
                 datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
-                logger.User($"Adding stats for file '{file.CurrentPath}'\n");
+                staticLogger.User($"Adding stats for file '{file.CurrentPath}'\n");
                 if (single)
                 {
                     reports.ForEach(report => report.ReplaceStatistics(datdata.Header.FileName, datdata.Items.Keys.Count, datdata.Items));
@@ -1467,7 +1473,7 @@ namespace SabreTools.Library.DatFiles
             // Output footer if needed
             reports.ForEach(report => report.WriteFooter());
 
-            logger.User($"{Environment.NewLine}Please check the log folder if the stats scrolled offscreen");
+            staticLogger.User($"{Environment.NewLine}Please check the log folder if the stats scrolled offscreen");
         }
 
         /// <summary>

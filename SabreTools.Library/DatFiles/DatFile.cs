@@ -50,7 +50,7 @@ namespace SabreTools.Library.DatFiles
         /// Logging object
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected Logger logger = new Logger();
+        protected Logger logger;
 
         #endregion
 
@@ -62,6 +62,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="datFile">DatFile to get the values from</param>
         public DatFile(DatFile datFile)
         {
+            logger = new Logger(this);
             if (datFile != null)
             {
                 Header = datFile.Header;

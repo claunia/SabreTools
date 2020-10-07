@@ -380,7 +380,13 @@ namespace SabreTools.Library.DatItems
         /// Logging object
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected static Logger logger = new Logger();
+        protected Logger logger;
+
+        /// <summary>
+        /// Static logger for static methods
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        protected static Logger staticLogger = new Logger();
 
         #endregion
 
@@ -413,6 +419,14 @@ namespace SabreTools.Library.DatItems
         #endregion
 
         #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public DatItem()
+        {
+            logger = new Logger(this);
+        }
 
         /// <summary>
         /// Create a specific type of DatItem to be used based on an ItemType
@@ -1027,14 +1041,14 @@ namespace SabreTools.Library.DatItems
                 // If the current item exactly matches the last item, then we don't add it
                 if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
                 {
-                    logger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    staticLogger.Verbose($"Exact duplicate found for '{datItemName}'");
                     continue;
                 }
 
                 // If the current name matches the previous name, rename the current item
                 else if (datItemName == lastItemName)
                 {
-                    logger.Verbose($"Name duplicate found for '{datItemName}'");
+                    staticLogger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
                     {

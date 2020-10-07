@@ -21,7 +21,19 @@ namespace SabreTools.Library.Filtering
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger = new Logger();
+        private readonly Logger logger;
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ExtraIni()
+        {
+            logger = new Logger(this);
+        }
 
         #endregion
 
