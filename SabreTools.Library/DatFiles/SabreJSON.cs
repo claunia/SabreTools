@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -78,7 +77,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning($"Exception found while parsing '{filename}': {ex}");
+                logger.Warning($"Exception found while parsing '{filename}': {ex}");
                 if (throwOnError) throw ex;
             }
 
@@ -342,13 +341,13 @@ namespace SabreTools.Library.DatFiles
         {
             try
             {
-                Globals.Logger.User($"Opening file for writing: {outfile}");
+                logger.User($"Opening file for writing: {outfile}");
                 FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
                 {
-                    Globals.Logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -405,13 +404,13 @@ namespace SabreTools.Library.DatFiles
                 // Write the file footer out
                 WriteFooter(jtw);
 
-                Globals.Logger.Verbose("File written!" + Environment.NewLine);
+                logger.Verbose("File written!" + Environment.NewLine);
                 jtw.Close();
                 fs.Dispose();
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }

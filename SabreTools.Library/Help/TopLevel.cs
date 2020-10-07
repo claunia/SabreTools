@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Data;
+using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.Help
 {
@@ -12,6 +12,15 @@ namespace SabreTools.Library.Help
     public abstract class TopLevel : Feature
     {
         public List<string> Inputs = new List<string>();
+
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private Logger logger = new Logger();
+
+        #endregion
 
         /// <summary>
         /// Process args list based on current feature
@@ -38,9 +47,9 @@ namespace SabreTools.Library.Help
                     // Everything else isn't a file
                     else
                     {
-                        Globals.Logger.Error($"Invalid input detected: {args[i]}");
+                        logger.Error($"Invalid input detected: {args[i]}");
                         help.OutputIndividualFeature(this.Name);
-                        Globals.Logger.Close();
+                        LoggerImpl.Close();
                         return false;
                     }
                 }

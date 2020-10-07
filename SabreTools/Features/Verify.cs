@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
@@ -81,7 +80,7 @@ namespace SabreTools.Features
                     else
                     {
                         // Loop through and add the inputs to check against
-                        Globals.Logger.User("Processing files:\n");
+                        logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
                             datdata.PopulateFromDir(input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
@@ -130,7 +129,7 @@ namespace SabreTools.Features
                 else
                 {
                     // Loop through and add the inputs to check against
-                    Globals.Logger.User("Processing files:\n");
+                    logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
                         datdata.PopulateFromDir(input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);

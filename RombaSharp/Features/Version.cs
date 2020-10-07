@@ -22,7 +22,7 @@ namespace RombaSharp.Features
         public override void ProcessFeatures(Dictionary<string, Feature> features)
         {
             base.ProcessFeatures(features);
-            Globals.Logger.User($"RombaSharp version: {Constants.Version}");
+            logger.User($"RombaSharp version: {Constants.Version}");
         }
     }
 }

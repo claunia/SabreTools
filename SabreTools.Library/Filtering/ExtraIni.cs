@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Filtering
@@ -13,6 +13,15 @@ namespace SabreTools.Library.Filtering
         /// List of extras to apply
         /// </summary>
         public List<ExtraIniItem> Items { get; set; } = new List<ExtraIniItem>();
+
+        #endregion
+
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private Logger logger = new Logger();
 
         #endregion
 
@@ -31,7 +40,7 @@ namespace SabreTools.Library.Filtering
                 // If we don't even have a possible field and file combination
                 if (!input.Contains(":"))
                 {
-                    Globals.Logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                    logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
                     return;
                 }
 

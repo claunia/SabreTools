@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 
 namespace RombaSharp.Features
@@ -22,7 +21,7 @@ namespace RombaSharp.Features
         public override void ProcessFeatures(Dictionary<string, Feature> features)
         {
             base.ProcessFeatures(features);
-            Globals.Logger.User("This feature is not yet implemented: cancel");
+            logger.User("This feature is not yet implemented: cancel");
         }
     }
 }

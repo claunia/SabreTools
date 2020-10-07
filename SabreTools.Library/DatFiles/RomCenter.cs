@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -85,7 +84,7 @@ namespace SabreTools.Library.DatFiles
             catch (Exception ex)
             {
                 string message = $"'{filename}' - There was an error parsing line {ir.LineNumber} '{ir.CurrentLine}'";
-                Globals.Logger.Error(ex, message);
+                logger.Error(ex, message);
                 if (throwOnError)
                 {
                     ir.Dispose();
@@ -129,37 +128,37 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "author":
-                        Header.Author = Header.Author == null ? kvp?.Value : Header.Author;
+                        Header.Author = Header.Author ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Header.Version = Header.Version == null ? kvp?.Value : Header.Version;
+                        Header.Version = Header.Version ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "email":
-                        Header.Email = Header.Email == null ? kvp?.Value : Header.Email;
+                        Header.Email = Header.Email ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "homepage":
-                        Header.Homepage = Header.Homepage == null ? kvp?.Value : Header.Homepage;
+                        Header.Homepage = Header.Homepage ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "url":
-                        Header.Url = Header.Url == null ? kvp?.Value : Header.Url;
+                        Header.Url = Header.Url ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "date":
-                        Header.Date = Header.Date == null ? kvp?.Value : Header.Date;
+                        Header.Date = Header.Date ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "comment":
-                        Header.Comment = Header.Comment == null ? kvp?.Value : Header.Comment;
+                        Header.Comment = Header.Comment ?? kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
@@ -204,7 +203,7 @@ namespace SabreTools.Library.DatFiles
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "version":
-                        Header.RomCenterVersion = (Header.RomCenterVersion == null ? kvp?.Value : Header.RomCenterVersion);
+                        Header.RomCenterVersion = Header.RomCenterVersion ?? (kvp?.Value);
                         reader.ReadNextLine();
                         break;
 
@@ -383,13 +382,13 @@ namespace SabreTools.Library.DatFiles
         {
             try
             {
-                Globals.Logger.User($"Opening file for writing: {outfile}");
+                logger.User($"Opening file for writing: {outfile}");
                 FileStream fs = FileExtensions.TryCreate(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)
                 {
-                    Globals.Logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
                     return false;
                 }
 
@@ -430,13 +429,13 @@ namespace SabreTools.Library.DatFiles
                     }
                 }
 
-                Globals.Logger.Verbose("File written!" + Environment.NewLine);
+                logger.Verbose("File written!" + Environment.NewLine);
                 iw.Dispose();
                 fs.Dispose();
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }

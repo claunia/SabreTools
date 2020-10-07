@@ -5,6 +5,7 @@ using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Skippers
@@ -30,6 +31,15 @@ namespace SabreTools.Library.Skippers
         /// Header skippers represented by a list of skipper objects
         /// </summary>
         private static List<SkipperFile> List;
+
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
+
+        #endregion
 
         /// <summary>
         /// Local paths
@@ -74,7 +84,7 @@ namespace SabreTools.Library.Skippers
             // Create the output directory if it doesn't exist
             DirectoryExtensions.Ensure(outDir, create: true);
 
-            Globals.Logger.User($"\nGetting skipper information for '{file}'");
+            logger.User($"\nGetting skipper information for '{file}'");
 
             // Get the skipper rule that matches the file, if any
             SkipperRule rule = GetMatchingRule(file, string.Empty);
@@ -83,7 +93,7 @@ namespace SabreTools.Library.Skippers
             if (rule.Tests == null || rule.Tests.Count == 0 || rule.Operation != HeaderSkipOperation.None)
                 return false;
 
-            Globals.Logger.User("File has a valid copier header");
+            logger.User("File has a valid copier header");
 
             // Get the header bytes from the file first
             string hstr;
@@ -152,9 +162,9 @@ namespace SabreTools.Library.Skippers
             for (int i = 0; i < headers.Count; i++)
             {
                 string outputFile = (string.IsNullOrWhiteSpace(outDir) ? $"{Path.GetFullPath(file)}.new" : Path.Combine(outDir, Path.GetFileName(file))) + i;
-                Globals.Logger.User($"Creating reheadered file: {outputFile}");
+                logger.User($"Creating reheadered file: {outputFile}");
                 FileExtensions.AppendBytes(file, outputFile, Utilities.StringToByteArray(headers[i]), null);
-                Globals.Logger.User("Reheadered file created!");
+                logger.User("Reheadered file created!");
             }
 
             return true;
@@ -172,7 +182,7 @@ namespace SabreTools.Library.Skippers
             // If the file doesn't exist, return a blank skipper rule
             if (!File.Exists(input))
             {
-                Globals.Logger.Error($"The file '{input}' does not exist so it cannot be tested");
+                logger.Error($"The file '{input}' does not exist so it cannot be tested");
                 return new SkipperRule();
             }
 
@@ -195,7 +205,7 @@ namespace SabreTools.Library.Skippers
                 return skipperRule;
 
             // Loop through and find a Skipper that has the right name
-            Globals.Logger.Verbose("Beginning search for matching header skip rules");
+            logger.Verbose("Beginning search for matching header skip rules");
             List<SkipperFile> tempList = new List<SkipperFile>();
             tempList.AddRange(List);
 
@@ -217,9 +227,9 @@ namespace SabreTools.Library.Skippers
 
             // If we have a blank rule, inform the user
             if (skipperRule.Tests == null)
-                Globals.Logger.Verbose("No matching rule found!");
+                logger.Verbose("No matching rule found!");
             else
-                Globals.Logger.User("Matching rule found!");
+                logger.User("Matching rule found!");
 
             return skipperRule;
         }

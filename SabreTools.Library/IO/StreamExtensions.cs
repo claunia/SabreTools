@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 using Compress.ThreadReaders;
 
@@ -161,7 +162,7 @@ namespace SabreTools.Library.IO
             }
             catch (IOException ex)
             {
-                Globals.Logger.Warning(ex, "An exception occurred during hashing.");
+                LoggerImpl.Warning(ex, "An exception occurred during hashing.");
                 return new BaseFile();
             }
             finally
@@ -194,11 +195,11 @@ namespace SabreTools.Library.IO
             }
             catch (NotSupportedException ex)
             {
-                Globals.Logger.Verbose(ex, "Stream does not support seeking to starting offset. Stream position not changed");
+                LoggerImpl.Verbose(ex, "Stream does not support seeking to starting offset. Stream position not changed");
             }
             catch (NotImplementedException ex)
             {
-                Globals.Logger.Warning(ex, "Stream does not support seeking to starting offset. Stream position not changed");
+                LoggerImpl.Warning(ex, "Stream does not support seeking to starting offset. Stream position not changed");
             }
 
             return -1;

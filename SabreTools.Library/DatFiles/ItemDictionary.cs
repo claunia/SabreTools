@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Reports;
 using NaturalSort;
 using Newtonsoft.Json;
@@ -44,6 +45,11 @@ namespace SabreTools.Library.DatFiles
         /// Lock for statistics calculation
         /// </summary>
         private object statsLock = new object();
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
 
         #endregion
 
@@ -968,7 +974,7 @@ namespace SabreTools.Library.DatFiles
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
             if (bucketedBy != bucketBy)
             {
-                Globals.Logger.User($"Organizing roms by {bucketBy}");
+                logger.User($"Organizing roms by {bucketBy}");
 
                 // Set the sorted type
                 bucketedBy = bucketBy;
@@ -1010,7 +1016,7 @@ namespace SabreTools.Library.DatFiles
             // If the merge type isn't the same, we want to merge the dictionary accordingly
             if (mergedBy != dedupeType)
             {
-                Globals.Logger.User($"Deduping roms by {dedupeType}");
+                logger.User($"Deduping roms by {dedupeType}");
 
                 // Set the sorted type
                 mergedBy = dedupeType;
@@ -1411,13 +1417,13 @@ namespace SabreTools.Library.DatFiles
                     dirStats.ResetStatistics();
                 }
 
-                Globals.Logger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
+                logger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
                 List<string> games = new List<string>();
                 DatFile datdata = DatFile.CreateAndParse(file.CurrentPath);
                 datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
-                Globals.Logger.User($"Adding stats for file '{file.CurrentPath}'\n");
+                logger.User($"Adding stats for file '{file.CurrentPath}'\n");
                 if (single)
                 {
                     reports.ForEach(report => report.ReplaceStatistics(datdata.Header.FileName, datdata.Items.Keys.Count, datdata.Items));
@@ -1461,7 +1467,7 @@ namespace SabreTools.Library.DatFiles
             // Output footer if needed
             reports.ForEach(report => report.WriteFooter());
 
-            Globals.Logger.User($"{Environment.NewLine}Please check the log folder if the stats scrolled offscreen");
+            logger.User($"{Environment.NewLine}Please check the log folder if the stats scrolled offscreen");
         }
 
         /// <summary>

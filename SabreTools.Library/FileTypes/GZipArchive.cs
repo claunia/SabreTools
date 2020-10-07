@@ -87,16 +87,16 @@ namespace SabreTools.Library.FileTypes
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                Globals.Logger.Verbose(ex);
+                logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                Globals.Logger.Warning(ex);
+                logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 encounteredErrors = true;
             }
             
@@ -183,7 +183,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 ms = null;
                 realEntry = null;
             }
@@ -251,7 +251,7 @@ namespace SabreTools.Library.FileTypes
                     }
                     catch (Exception ex)
                     {
-                        Globals.Logger.Error(ex);
+                        logger.Error(ex);
                         return null;
                     }
                 }
@@ -286,21 +286,21 @@ namespace SabreTools.Library.FileTypes
             // If we have the romba depot files, just skip them gracefully
             if (datum == ".romba_size" || datum == ".romba_size.backup")
             {
-                Globals.Logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
+                logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
                 return false;
             }
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
-                Globals.Logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
+                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
                 return false;
             }
 
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                Globals.Logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {Utilities.GetBytesReadable(filesize)}");
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {Utilities.GetBytesReadable(filesize)}");
                 return false;
             }
 
@@ -347,21 +347,21 @@ namespace SabreTools.Library.FileTypes
             // If we have the romba depot files, just skip them gracefully
             if (datum == ".romba_size" || datum == ".romba_size.backup")
             {
-                Globals.Logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
+                logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
                 return null;
             }
 
             // Check if the name is the right length
             if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
-                Globals.Logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
+                logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
                 return null;
             }
 
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                Globals.Logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {Utilities.GetBytesReadable(filesize)}");
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {Utilities.GetBytesReadable(filesize)}");
                 return null;
             }
 
@@ -427,7 +427,7 @@ namespace SabreTools.Library.FileTypes
             // Check that the input file exists
             if (!File.Exists(inputFile))
             {
-                Globals.Logger.Warning($"File '{inputFile}' does not exist!");
+                logger.Warning($"File '{inputFile}' does not exist!");
                 return false;
             }
 

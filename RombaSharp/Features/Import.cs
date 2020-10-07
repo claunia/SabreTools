@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -27,7 +27,7 @@ namespace RombaSharp.Features
         public override void ProcessFeatures(Dictionary<string, Feature> features)
         {
             base.ProcessFeatures(features);
-            Globals.Logger.Error("This feature is not yet implemented: import");
+            logger.Error("This feature is not yet implemented: import");
 
             // First ensure the inputs and database connection
             Inputs = DirectoryExtensions.GetFilesOnly(Inputs).Select(p => p.CurrentPath).ToList();
@@ -44,7 +44,7 @@ namespace RombaSharp.Features
                 string line = sr.ReadLine();
                 if (line != "CRC,MD5,SHA-1") // ,Depot
                 {
-                    Globals.Logger.Error($"{input} is not a valid export file");
+                    logger.Error($"{input} is not a valid export file");
                     continue;
                 }
 

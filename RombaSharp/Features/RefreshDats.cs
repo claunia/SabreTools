@@ -46,7 +46,7 @@ contents of any changed dats.";
 
             // Make sure the file exists
             if (!File.Exists(_db))
-                DatabaseTools.EnsureDatabase(_dbSchema, _db, _connectionString);
+                EnsureDatabase(_db, _connectionString);
 
             // Make sure the dats dir is set
             if (string.IsNullOrWhiteSpace(_dats))

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using Microsoft.Data.Sqlite;
@@ -26,21 +25,21 @@ namespace RombaSharp.Features
         public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
         {
             base.ProcessFeatures(features);
-            Globals.Logger.Error("This feature is not yet implemented: rescan-depots");
+            logger.Error("This feature is not yet implemented: rescan-depots");
 
             foreach (string depotname in Inputs)
             {
                 // Check that it's a valid depot first
                 if (!_depots.ContainsKey(depotname))
                 {
-                    Globals.Logger.User($"'{depotname}' is not a recognized depot. Please add it to your configuration file and try again");
+                    logger.User($"'{depotname}' is not a recognized depot. Please add it to your configuration file and try again");
                     return;
                 }
 
                 // Then check that the depot is online
                 if (!Directory.Exists(depotname))
                 {
-                    Globals.Logger.User($"'{depotname}' does not appear to be online. Please check its status and try again");
+                    logger.User($"'{depotname}' does not appear to be online. Please check its status and try again");
                     return;
                 }
 

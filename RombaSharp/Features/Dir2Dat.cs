@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
@@ -45,7 +44,7 @@ namespace RombaSharp.Features
             // Check that all required directories exist
             if (!Directory.Exists(source))
             {
-                Globals.Logger.Error($"File '{source}' does not exist!");
+                logger.Error($"File '{source}' does not exist!");
                 return;
             }
 

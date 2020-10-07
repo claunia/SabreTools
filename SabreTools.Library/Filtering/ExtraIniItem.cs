@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.Filtering
 {
@@ -93,7 +93,7 @@ namespace SabreTools.Library.Filtering
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning(ex, $"Exception found while parsing '{ini}'");
+                LoggerImpl.Warning(ex, $"Exception found while parsing '{ini}'");
                 return false;
             }
 

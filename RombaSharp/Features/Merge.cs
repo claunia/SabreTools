@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 
@@ -38,7 +37,7 @@ namespace RombaSharp.Features
             int workers = GetInt32(features, WorkersInt32Value);
             string resume = GetString(features, ResumeStringValue);
 
-            Globals.Logger.Error("This feature is not yet implemented: merge");
+            logger.Error("This feature is not yet implemented: merge");
 
             // Verify that the inputs are valid directories
             Inputs = DirectoryExtensions.GetDirectoriesOnly(Inputs).Select(p => p.CurrentPath).ToList();

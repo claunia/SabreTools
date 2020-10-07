@@ -43,7 +43,7 @@ namespace RombaSharp.Features
                 /* ended here */
             }
 
-            Globals.Logger.Error("This feature is not yet implemented: miss");
+            logger.Error("This feature is not yet implemented: miss");
         }
     }
 }

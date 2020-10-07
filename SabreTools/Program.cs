@@ -10,8 +10,19 @@ namespace SabreTools
 {
     public class Program
     {
-        // Private required variables
+        #region Static Variables
+
+        /// <summary>
+        /// Help object that determines available functionality
+        /// </summary>
         private static Help _help;
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
+
+        #endregion
 
         /// <summary>
         /// Entry point for the SabreTools application
@@ -20,12 +31,11 @@ namespace SabreTools
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            Globals.Logger = new Logger("sabretools.log")
-            {
-                AppendPrefix = true,
-                LowestLogLevel = LogLevel.VERBOSE,
-                ThrowOnError = false,
-            };
+            LoggerImpl.SetFilename("sabretools.log", true);
+            LoggerImpl.AppendPrefix = true;
+            LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
+            LoggerImpl.ThrowOnError = false;
+            LoggerImpl.Start();
 
             // Create a new Help object for this program
             _help = RetrieveHelp();
@@ -52,7 +62,7 @@ namespace SabreTools
             if ((new List<string>(args)).Contains("--credits"))
             {
                 _help.OutputCredits();
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -60,7 +70,7 @@ namespace SabreTools
             if (args.Length == 0)
             {
                 _help.OutputGenericHelp();
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -70,9 +80,9 @@ namespace SabreTools
             // Verify that the flag is valid
             if (!_help.TopLevelFlag(featureName))
             {
-                Globals.Logger.User($"'{featureName}' is not valid feature flag");
+                logger.User($"'{featureName}' is not valid feature flag");
                 _help.OutputIndividualFeature(featureName);
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -86,14 +96,14 @@ namespace SabreTools
             if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
             {
                 feature.ProcessArgs(args, _help);
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
             // Now verify that all other flags are valid
             if (!feature.ProcessArgs(args, _help))
             {
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -131,7 +141,7 @@ namespace SabreTools
                     break;
             }
 
-            Globals.Logger.Close();
+            LoggerImpl.Close();
             return;
         }
 
@@ -180,7 +190,7 @@ namespace SabreTools
         {
             if (inputs.Count == 0)
             {
-                Globals.Logger.Error("This feature requires at least one input");
+                logger.Error("This feature requires at least one input");
                 _help.OutputIndividualFeature(feature);
                 Environment.Exit(0);
             }

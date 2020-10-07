@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Filtering;
@@ -55,7 +54,7 @@ Reset the internal state:           reset();";
                 // If the file doesn't exist, warn but continue
                 if (!File.Exists(path))
                 {
-                    Globals.Logger.User($"{path} does not exist. Skipping...");
+                    logger.User($"{path} does not exist. Skipping...");
                     continue;
                 }
 
@@ -85,20 +84,20 @@ Reset the internal state:           reset();";
                         var command = BatchCommand.Create(line);
                         if (command == null)
                         {
-                            Globals.Logger.User($"Could not process {path} due to the following line: {line}");
+                            logger.User($"Could not process {path} due to the following line: {line}");
                             break;
                         }
 
                         // Now switch on the command
-                        Globals.Logger.User($"Attempting to invoke {command.Name} with {(command.Arguments.Count == 0 ? "no arguments" : "the following argument(s): " + string.Join(", ", command.Arguments))}");
+                        logger.User($"Attempting to invoke {command.Name} with {(command.Arguments.Count == 0 ? "no arguments" : "the following argument(s): " + string.Join(", ", command.Arguments))}");
                         switch (command.Name.ToLowerInvariant())
                         {
                             // Set a header field
                             case "set":
                                 if (command.Arguments.Count != 2)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
-                                    Globals.Logger.User("Usage: set(header.field, value);");
+                                    logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    logger.User("Usage: set(header.field, value);");
                                     continue;
                                 }
 
@@ -109,7 +108,7 @@ Reset the internal state:           reset();";
                                 // If we had an invalid input, log and continue
                                 if (field == Field.NULL)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
+                                    logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
                                 }
 
@@ -122,8 +121,8 @@ Reset the internal state:           reset();";
                             case "input":
                                 if (command.Arguments.Count == 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
-                                    Globals.Logger.User("Usage: input(datpath, ...);");
+                                    logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    logger.User("Usage: input(datpath, ...);");
                                     continue;
                                 }
 
@@ -143,8 +142,8 @@ Reset the internal state:           reset();";
                             case "dfd":
                                 if (command.Arguments.Count == 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
-                                    Globals.Logger.User("Usage: d2d(path, ...);");
+                                    logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    logger.User("Usage: d2d(path, ...);");
                                     continue;
                                 }
 
@@ -168,8 +167,8 @@ Reset the internal state:           reset();";
                             case "filter":
                                 if (command.Arguments.Count < 2 || command.Arguments.Count > 4)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected between 2-4 arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: filter(field, value, [remove = false, [perMachine = false]]);");
+                                    logger.User($"Invoked {command.Name} and expected between 2-4 arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: filter(field, value, [remove = false, [perMachine = false]]);");
                                     continue;
                                 }
 
@@ -186,17 +185,17 @@ Reset the internal state:           reset();";
                                 // If we had an invalid input, log and continue
                                 if (filterField == Field.NULL)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
+                                    logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
                                 }
                                 if (filterRemove == null)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[2]} was an invalid true/false value");
+                                    logger.User($"{command.Arguments[2]} was an invalid true/false value");
                                     continue;
                                 }
                                 if (filterPerMachine == null)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[3]} was an invalid true/false value");
+                                    logger.User($"{command.Arguments[3]} was an invalid true/false value");
                                     continue;
                                 }
 
@@ -218,8 +217,8 @@ Reset the internal state:           reset();";
                             case "extra":
                                 if (command.Arguments.Count != 2)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected 2 arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: extra(field, inipath);");
+                                    logger.User($"Invoked {command.Name} and expected 2 arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: extra(field, inipath);");
                                     continue;
                                 }
 
@@ -230,12 +229,12 @@ Reset the internal state:           reset();";
                                 // If we had an invalid input, log and continue
                                 if (extraField == Field.NULL)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid field name");
+                                    logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
                                 }
                                 if (!File.Exists(command.Arguments[1]))
                                 {
-                                    Globals.Logger.User($"{command.Arguments[1]} was an invalid file name");
+                                    logger.User($"{command.Arguments[1]} was an invalid file name");
                                     continue;
                                 }
 
@@ -255,8 +254,8 @@ Reset the internal state:           reset();";
                             case "merge":
                                 if (command.Arguments.Count != 1)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected 1 argument, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: merge(split|merged|nonmerged|full|device);");
+                                    logger.User($"Invoked {command.Name} and expected 1 argument, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: merge(split|merged|nonmerged|full|device);");
                                     continue;
                                 }
 
@@ -266,7 +265,7 @@ Reset the internal state:           reset();";
                                 // If we had an invalid input, log and continue
                                 if (mergingFlag == MergingFlag.None)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid merging flag");
+                                    logger.User($"{command.Arguments[0]} was an invalid merging flag");
                                     continue;
                                 }
 
@@ -279,8 +278,8 @@ Reset the internal state:           reset();";
                             case "descname":
                                 if (command.Arguments.Count != 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: descname();");
+                                    logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: descname();");
                                     continue;
                                 }
 
@@ -293,8 +292,8 @@ Reset the internal state:           reset();";
                             case "1g1r":
                                 if (command.Arguments.Count == 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
-                                    Globals.Logger.User("Usage: 1g1r(region, ...);");
+                                    logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    logger.User("Usage: 1g1r(region, ...);");
                                     continue;
                                 }
 
@@ -307,8 +306,8 @@ Reset the internal state:           reset();";
                             case "orpg":
                                 if (command.Arguments.Count != 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: orpg();");
+                                    logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: orpg();");
                                     continue;
                                 }
 
@@ -321,8 +320,8 @@ Reset the internal state:           reset();";
                             case "remove":
                                 if (command.Arguments.Count == 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
-                                    Globals.Logger.User("Usage: remove(field, ...);");
+                                    logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    logger.User("Usage: remove(field, ...);");
                                     continue;
                                 }
 
@@ -335,8 +334,8 @@ Reset the internal state:           reset();";
                             case "sds":
                                 if (command.Arguments.Count != 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: sds();");
+                                    logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: sds();");
                                     continue;
                                 }
 
@@ -349,8 +348,8 @@ Reset the internal state:           reset();";
                             case "format":
                                 if (command.Arguments.Count == 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} but no arguments were provided");
-                                    Globals.Logger.User("Usage: format(datformat, ...);");
+                                    logger.User($"Invoked {command.Name} but no arguments were provided");
+                                    logger.User("Usage: format(datformat, ...);");
                                     continue;
                                 }
 
@@ -364,7 +363,7 @@ Reset the internal state:           reset();";
                                 // If we had an invalid input, log and continue
                                 if (datFile.Header.DatFormat == 0x00)
                                 {
-                                    Globals.Logger.User($"No valid output format found");
+                                    logger.User($"No valid output format found");
                                     continue;
                                 }
 
@@ -374,8 +373,8 @@ Reset the internal state:           reset();";
                             case "output":
                                 if (command.Arguments.Count != 1)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected exactly 1 argument, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: output(outdir);");
+                                    logger.User($"Invoked {command.Name} and expected exactly 1 argument, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: output(outdir);");
                                     continue;
                                 }
 
@@ -387,8 +386,8 @@ Reset the internal state:           reset();";
                             case "write":
                                 if (command.Arguments.Count > 1)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected 0-1 arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: write([overwrite = true]);");
+                                    logger.User($"Invoked {command.Name} and expected 0-1 arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: write([overwrite = true]);");
                                     continue;
                                 }
 
@@ -400,7 +399,7 @@ Reset the internal state:           reset();";
                                 // If we had an invalid input, log and continue
                                 if (overwrite == null)
                                 {
-                                    Globals.Logger.User($"{command.Arguments[0]} was an invalid true/false value");
+                                    logger.User($"{command.Arguments[0]} was an invalid true/false value");
                                     continue;
                                 }
 
@@ -412,8 +411,8 @@ Reset the internal state:           reset();";
                             case "reset":
                                 if (command.Arguments.Count != 0)
                                 {
-                                    Globals.Logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
-                                    Globals.Logger.User("Usage: reset();");
+                                    logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
+                                    logger.User("Usage: reset();");
                                     continue;
                                 }
 
@@ -424,14 +423,14 @@ Reset the internal state:           reset();";
                                 break;
 
                             default:
-                                Globals.Logger.User($"Could not find a match for '{command.Name}'. Please see the help text for more details.");
+                                logger.User($"Could not find a match for '{command.Name}'. Please see the help text for more details.");
                                 break;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Globals.Logger.Error(ex, $"There was an exception processing {path}");
+                    logger.Error(ex, $"There was an exception processing {path}");
                     continue;
                 }
             }

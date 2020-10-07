@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.Help;
+using SabreTools.Library.Logging;
 
 namespace RombaSharp.Features
 {
@@ -35,7 +35,7 @@ namespace RombaSharp.Features
             int workers = GetInt32(features, WorkersInt32Value);
             string outdat = GetString(features, OutStringValue);
 
-            Globals.Logger.Error("This feature is not yet implemented: fixdat");
+            logger.Error("This feature is not yet implemented: fixdat");
         }
     }
 }

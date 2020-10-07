@@ -1,6 +1,6 @@
 ﻿using System;
 
-using SabreTools.Library.Data;
+using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.Tools
 {
@@ -11,6 +11,7 @@ namespace SabreTools.Library.Tools
     {
         private string _subject;
         private DateTime _startTime;
+        private Logger _logger = new Logger();
 
         /// <summary>
         /// Constructor that initalizes the stopwatch
@@ -36,7 +37,7 @@ namespace SabreTools.Library.Tools
         public void Start()
         {
             _startTime = DateTime.Now;
-            Globals.Logger.User($"{_subject}...");
+            _logger.User($"{_subject}...");
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace SabreTools.Library.Tools
         /// </summary>
         public void Stop()
         {
-            Globals.Logger.User($"{_subject} completed in {DateTime.Now.Subtract(_startTime):G}");
+            _logger.User($"{_subject} completed in {DateTime.Now.Subtract(_startTime):G}");
         }
     }
 }

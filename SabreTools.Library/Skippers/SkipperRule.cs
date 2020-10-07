@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.Skippers
 {
@@ -38,6 +38,15 @@ namespace SabreTools.Library.Skippers
 
         #endregion
 
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Check if a Stream passes all tests in the SkipperRule
         /// </summary>
@@ -66,14 +75,14 @@ namespace SabreTools.Library.Skippers
             // If the input file doesn't exist, fail
             if (!File.Exists(input))
             {
-                Globals.Logger.Error($"I'm sorry but '{input}' doesn't exist!");
+                logger.Error($"I'm sorry but '{input}' doesn't exist!");
                 return false;
             }
 
             // Create the output directory if it doesn't already
             DirectoryExtensions.Ensure(Path.GetDirectoryName(output));
 
-            Globals.Logger.User($"Attempting to apply rule to '{input}'");
+            logger.User($"Attempting to apply rule to '{input}'");
             bool success = TransformStream(FileExtensions.TryOpenRead(input), FileExtensions.TryCreate(output));
 
             // If the output file has size 0, delete it
@@ -104,7 +113,7 @@ namespace SabreTools.Library.Skippers
                 || (Operation > HeaderSkipOperation.Byteswap && (extsize % 4) != 0)
                 || (Operation > HeaderSkipOperation.Bitswap && (StartOffset == null || StartOffset % 2 == 0)))
             {
-                Globals.Logger.Error("The stream did not have the correct size to be transformed!");
+                logger.Error("The stream did not have the correct size to be transformed!");
                 return false;
             }
 
@@ -113,7 +122,7 @@ namespace SabreTools.Library.Skippers
             BinaryReader br = null;
             try
             {
-                Globals.Logger.User("Applying found rule to input stream");
+                logger.User("Applying found rule to input stream");
                 bw = new BinaryWriter(output);
                 br = new BinaryReader(input);
 
@@ -201,7 +210,7 @@ namespace SabreTools.Library.Skippers
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 return false;
             }
             finally

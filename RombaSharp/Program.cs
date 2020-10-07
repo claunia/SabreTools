@@ -18,7 +18,19 @@ namespace RombaSharp
     /// </remarks>
     public class Program
     {
+        #region Static Variables
+
+        /// <summary>
+        /// Help object that determines available functionality
+        /// </summary>
         private static Help _help;
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
+
+        #endregion
 
         /// <summary>
         /// Entry class for the RombaSharp application
@@ -26,12 +38,11 @@ namespace RombaSharp
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            Globals.Logger = new Logger("romba.log")
-            {
-                AppendPrefix = true,
-                LowestLogLevel = LogLevel.VERBOSE,
-                ThrowOnError = false,
-            };
+            LoggerImpl.SetFilename("romba.log", true);
+            LoggerImpl.AppendPrefix = true;
+            LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
+            LoggerImpl.ThrowOnError = false;
+            LoggerImpl.Start();
 
             // Create a new Help object for this program
             _help = RetrieveHelp();
@@ -58,7 +69,7 @@ namespace RombaSharp
             if ((new List<string>(args)).Contains("--credits"))
             {
                 _help.OutputCredits();
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -66,7 +77,7 @@ namespace RombaSharp
             if (args.Length == 0)
             {
                 _help.OutputGenericHelp();
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -76,9 +87,9 @@ namespace RombaSharp
             // Verify that the flag is valid
             if (!_help.TopLevelFlag(featureName))
             {
-                Globals.Logger.User($"'{featureName}' is not valid feature flag");
+                logger.User($"'{featureName}' is not valid feature flag");
                 _help.OutputIndividualFeature(featureName);
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -92,14 +103,14 @@ namespace RombaSharp
             if (featureName == DisplayHelp.Value || featureName == DisplayHelpDetailed.Value)
             {
                 feature.ProcessArgs(args, _help);
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
             // Now verify that all other flags are valid
             if (!feature.ProcessArgs(args, _help))
             {
-                Globals.Logger.Close();
+                LoggerImpl.Close();
                 return;
             }
 
@@ -115,7 +126,7 @@ namespace RombaSharp
 
                 // Require input verification
                 case Archive.Value:
-                case Features.Build.Value:
+                case Build.Value:
                 case DatStats.Value:
                 case Fixdat.Value:
                 case Import.Value:
@@ -150,7 +161,7 @@ namespace RombaSharp
                     break;
             }
 
-            Globals.Logger.Close();
+            LoggerImpl.Close();
             return;
         }
 
@@ -178,7 +189,7 @@ namespace RombaSharp
             help.Add(new DisplayHelpDetailed());
             help.Add(new Script());
             help.Add(new Archive());
-            help.Add(new Features.Build());
+            help.Add(new Build());
             help.Add(new Cancel());
             help.Add(new DatStats());
             help.Add(new DbStats());
@@ -212,7 +223,7 @@ namespace RombaSharp
         {
             if (inputs.Count == 0)
             {
-                Globals.Logger.Error("This feature requires at least one input");
+                logger.Error("This feature requires at least one input");
                 _help.OutputIndividualFeature(feature);
                 Environment.Exit(0);
             }

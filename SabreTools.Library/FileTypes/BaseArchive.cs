@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.FileTypes
 {
@@ -63,7 +63,7 @@ namespace SabreTools.Library.FileTypes
                 return archive;
 
             // Create the archive based on the type
-            Globals.Logger.Verbose($"Found archive of type: {at}");
+            logger.Verbose($"Found archive of type: {at}");
             switch (at)
             {
                 case FileType.GZipArchive:

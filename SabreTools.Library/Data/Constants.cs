@@ -112,7 +112,6 @@ namespace SabreTools.Library.Data
 
         #region Database schema
 
-        public const string HeadererDbSchema = "Headerer";
         public static string HeadererFileName = Path.Combine(Globals.ExeDir, "Headerer.sqlite");
         public static string HeadererConnectionString = $"Data Source={HeadererFileName};Version = 3;";
 

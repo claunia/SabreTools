@@ -160,7 +160,7 @@ namespace SabreTools.Features
                 {
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
-                    Globals.Logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
+                    logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
                     datFile.Parse(inputPath, keep: true,
                         keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)

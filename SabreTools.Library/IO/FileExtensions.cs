@@ -8,6 +8,7 @@ using System.Xml.Schema;
 using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Skippers;
 
 namespace SabreTools.Library.IO
@@ -17,6 +18,15 @@ namespace SabreTools.Library.IO
     /// </summary>
     public static class FileExtensions
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Add an aribtrary number of bytes to the inputted file
         /// </summary>
@@ -59,12 +69,12 @@ namespace SabreTools.Library.IO
             string ext = PathExtensions.GetNormalizedExtension(filename);
 
             // Read the input file, if possible
-            Globals.Logger.Verbose($"Attempting to read file to get format: {filename}");
+            logger.Verbose($"Attempting to read file to get format: {filename}");
 
             // Check if file exists
             if (!File.Exists(filename))
             {
-                Globals.Logger.Warning($"File '{filename}' could not read from!");
+                logger.Warning($"File '{filename}' could not read from!");
                 return 0;
             }
 
@@ -189,7 +199,7 @@ namespace SabreTools.Library.IO
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning(ex, $"An exception occurred trying to figure out the format of '{filename}'");
+                logger.Warning(ex, $"An exception occurred trying to figure out the format of '{filename}'");
                 return 0;
             }
         }
@@ -305,7 +315,7 @@ namespace SabreTools.Library.IO
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning(ex, $"An exception occurred determining file type of '{input}'");
+                logger.Warning(ex, $"An exception occurred determining file type of '{input}'");
             }
 
             return outFileType;
@@ -401,12 +411,12 @@ namespace SabreTools.Library.IO
         /// <returns>The IniReader representing the (possibly converted) file, null otherwise</returns>
         public static IniReader GetIniReader(this string filename, bool validateRows)
         {
-            Globals.Logger.Verbose($"Attempting to read file: {filename}");
+            logger.Verbose($"Attempting to read file: {filename}");
 
             // Check if file exists
             if (!File.Exists(filename))
             {
-                Globals.Logger.Warning($"File '{filename}' could not read from!");
+                logger.Warning($"File '{filename}' could not read from!");
                 return null;
             }
 
@@ -424,12 +434,12 @@ namespace SabreTools.Library.IO
         /// <returns>The XmlTextReader representing the (possibly converted) file, null otherwise</returns>
         public static XmlReader GetXmlTextReader(this string filename)
         {
-            Globals.Logger.Verbose($"Attempting to read file: {filename}");
+            logger.Verbose($"Attempting to read file: {filename}");
 
             // Check if file exists
             if (!File.Exists(filename))
             {
-                Globals.Logger.Warning($"File '{filename}' could not read from!");
+                logger.Warning($"File '{filename}' could not read from!");
                 return null;
             }
 

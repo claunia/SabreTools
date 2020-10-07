@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using SabreTools.Library.Data;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 using NaturalSort;
 using Newtonsoft.Json;
@@ -370,6 +371,16 @@ namespace SabreTools.Library.DatItems
         };
 
         #endregion
+
+        #endregion
+        
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        protected static Logger logger = new Logger();
 
         #endregion
 
@@ -1016,14 +1027,14 @@ namespace SabreTools.Library.DatItems
                 // If the current item exactly matches the last item, then we don't add it
                 if (datItem.GetDuplicateStatus(lastItem).HasFlag(DupeType.All))
                 {
-                    Globals.Logger.Verbose($"Exact duplicate found for '{datItemName}'");
+                    logger.Verbose($"Exact duplicate found for '{datItemName}'");
                     continue;
                 }
 
                 // If the current name matches the previous name, rename the current item
                 else if (datItemName == lastItemName)
                 {
-                    Globals.Logger.Verbose($"Name duplicate found for '{datItemName}'");
+                    logger.Verbose($"Name duplicate found for '{datItemName}'");
 
                     if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
                     {

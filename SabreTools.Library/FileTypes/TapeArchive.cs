@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
@@ -76,16 +75,16 @@ namespace SabreTools.Library.FileTypes
             catch (EndOfStreamException ex)
             {
                 // Catch this but don't count it as an error because SharpCompress is unsafe
-                Globals.Logger.Verbose(ex);
+                logger.Verbose(ex);
             }
             catch (InvalidOperationException ex)
             {
-                Globals.Logger.Warning(ex);
+                logger.Warning(ex);
                 encounteredErrors = true;
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 encounteredErrors = true;
             }
 
@@ -165,7 +164,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 ms = null;
                 realEntry = null;
             }
@@ -221,7 +220,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 return null;
             }
 
@@ -262,7 +261,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
             }
 
             return empties;
@@ -412,7 +411,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 success = false;
             }
             finally
@@ -586,7 +585,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 success = false;
             }
             finally

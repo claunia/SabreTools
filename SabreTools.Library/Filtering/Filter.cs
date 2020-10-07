@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Filtering
@@ -286,6 +286,15 @@ namespace SabreTools.Library.Filtering
 
         #endregion // Fields
 
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private Logger logger = new Logger();
+
+        #endregion
+
         #region Instance methods
 
         #region Filter Population
@@ -301,7 +310,7 @@ namespace SabreTools.Library.Filtering
                 // If we don't even have a possible filter pair
                 if (!filterPair.Contains(":"))
                 {
-                    Globals.Logger.Warning($"'{filterPair}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                    logger.Warning($"'{filterPair}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
                     continue;
                 }
 

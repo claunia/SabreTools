@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 using Microsoft.Data.Sqlite;
 
@@ -30,22 +29,22 @@ namespace RombaSharp.Features
             // Total number of CRCs
             string query = "SELECT COUNT(*) FROM crc";
             SqliteCommand slc = new SqliteCommand(query, dbc);
-            Globals.Logger.User($"Total CRCs: {(long)slc.ExecuteScalar()}");
+            logger.User($"Total CRCs: {(long)slc.ExecuteScalar()}");
 
             // Total number of MD5s
             query = "SELECT COUNT(*) FROM md5";
             slc = new SqliteCommand(query, dbc);
-            Globals.Logger.User($"Total MD5s: {(long)slc.ExecuteScalar()}");
+            logger.User($"Total MD5s: {(long)slc.ExecuteScalar()}");
 
             // Total number of SHA1s
             query = "SELECT COUNT(*) FROM sha1";
             slc = new SqliteCommand(query, dbc);
-            Globals.Logger.User($"Total SHA1s: {(long)slc.ExecuteScalar()}");
+            logger.User($"Total SHA1s: {(long)slc.ExecuteScalar()}");
 
             // Total number of DATs
             query = "SELECT COUNT(*) FROM dat";
             slc = new SqliteCommand(query, dbc);
-            Globals.Logger.User($"Total DATs: {(long)slc.ExecuteScalar()}");
+            logger.User($"Total DATs: {(long)slc.ExecuteScalar()}");
 
             slc.Dispose();
             dbc.Dispose();

@@ -13,6 +13,7 @@ using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Reports;
 using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;
@@ -32,16 +33,24 @@ namespace SabreTools.Library.DatFiles
         /// <summary>
         /// Header values
         /// </summary>
-        [JsonProperty("header")]
-        [XmlElement("header")]
+        [JsonProperty("header"), XmlElement("header")]
         public DatHeader Header { get; set; } = new DatHeader();
 
         /// <summary>
         /// DatItems and related statistics
         /// </summary>
-        [JsonProperty("items")]
-        [XmlElement("items")]
+        [JsonProperty("items"), XmlElement("items")]
         public ItemDictionary Items { get; set; } = new ItemDictionary();
+
+        #endregion
+
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        protected Logger logger = new Logger();
 
         #endregion
 
@@ -242,7 +251,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
         public void BaseReplace(DatFile intDat, List<Field> updateFields, bool onlySame)
         {
-            Globals.Logger.User($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
+            logger.User($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
             if (updateFields.Intersect(DatItem.DatItemFields).Any())
@@ -315,7 +324,7 @@ namespace SabreTools.Library.DatFiles
             else
                 Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
-            Globals.Logger.User($"Comparing '{intDat.Header.FileName}' to base DAT");
+            logger.User($"Comparing '{intDat.Header.FileName}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
@@ -682,7 +691,7 @@ namespace SabreTools.Library.DatFiles
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>
             {
                 var input = inputs[i];
-                Globals.Logger.User($"Adding DAT: {input.CurrentPath}");
+                logger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = Create(Header.CloneFiltering());
                 datFiles[i].Parse(input, i, keep: true);
             });
@@ -752,7 +761,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }
@@ -813,7 +822,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }
@@ -886,7 +895,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }
@@ -934,7 +943,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }
@@ -1055,7 +1064,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Warning(ex.ToString());
+                logger.Warning(ex.ToString());
                 if (throwOnError) throw ex;
             }
         }
@@ -1174,7 +1183,7 @@ namespace SabreTools.Library.DatFiles
                 fields = new List<Field>();
 
             // Output the logging statement
-            Globals.Logger.User("Removing filtered fields");
+            logger.User("Removing filtered fields");
 
             // Now process all of the roms
             Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
@@ -1196,7 +1205,7 @@ namespace SabreTools.Library.DatFiles
         public void StripSceneDatesFromItems()
         {
             // Output the logging statement
-            Globals.Logger.User("Stripping scene-style dates");
+            logger.User("Stripping scene-style dates");
 
             // Set the regex pattern to use
             string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
@@ -1238,7 +1247,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="mergeroms">Dedupe type to be used</param>
         private void CreateDeviceNonMergedSets(DedupeType mergeroms)
         {
-            Globals.Logger.User("Creating device non-merged sets from the DAT");
+            logger.User("Creating device non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
@@ -1257,7 +1266,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="mergeroms">Dedupe type to be used</param>
         private void CreateFullyNonMergedSets(DedupeType mergeroms)
         {
-            Globals.Logger.User("Creating fully non-merged sets from the DAT");
+            logger.User("Creating fully non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
@@ -1280,7 +1289,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="mergeroms">Dedupe type to be used</param>
         private void CreateMergedSets(DedupeType mergeroms)
         {
-            Globals.Logger.User("Creating merged sets from the DAT");
+            logger.User("Creating merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
@@ -1302,7 +1311,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="mergeroms">Dedupe type to be used</param>
         private void CreateNonMergedSets(DedupeType mergeroms)
         {
-            Globals.Logger.User("Creating non-merged sets from the DAT");
+            logger.User("Creating non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
@@ -1324,7 +1333,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="mergeroms">Dedupe type to be used</param>
         private void CreateSplitSets(DedupeType mergeroms)
         {
-            Globals.Logger.User("Creating split sets from the DAT");
+            logger.User("Creating split sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
             Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
@@ -1868,7 +1877,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex, $"Error with file '{currentPath}'");
+                logger.Error(ex, $"Error with file '{currentPath}'");
                 if (throwOnError) throw ex;
             }
         }
@@ -1892,7 +1901,7 @@ namespace SabreTools.Library.DatFiles
                     && string.IsNullOrWhiteSpace(disk.MD5)
                     && string.IsNullOrWhiteSpace(disk.SHA1))
                 {
-                    Globals.Logger.Verbose($"Incomplete entry for '{disk.Name}' will be output as nodump");
+                    logger.Verbose($"Incomplete entry for '{disk.Name}' will be output as nodump");
                     disk.ItemStatus = ItemStatus.Nodump;
                 }
 
@@ -1906,7 +1915,7 @@ namespace SabreTools.Library.DatFiles
                 if (rom.Size == null && !rom.HasHashes())
                 {
                     // No-op, just catch it so it doesn't go further
-                    Globals.Logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.Name}'");
+                    logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.Name}'");
                 }
 
                 // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
@@ -1930,7 +1939,7 @@ namespace SabreTools.Library.DatFiles
                 // If the file has no size and it's not the above case, skip and log
                 else if (rom.ItemStatus != ItemStatus.Nodump && (rom.Size == 0 || rom.Size == null))
                 {
-                    Globals.Logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
+                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
                     rom.ItemStatus = ItemStatus.Nodump;
                 }
 
@@ -1939,7 +1948,7 @@ namespace SabreTools.Library.DatFiles
                     && rom.Size != null && rom.Size > 0
                     && !rom.HasHashes())
                 {
-                    Globals.Logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
+                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
                     rom.ItemStatus = ItemStatus.Nodump;
                 }
 
@@ -1988,7 +1997,7 @@ namespace SabreTools.Library.DatFiles
             // Process the input
             if (Directory.Exists(basePath))
             {
-                Globals.Logger.Verbose($"Folder found: {basePath}");
+                logger.Verbose($"Folder found: {basePath}");
 
                 // Process the files in the main folder or any subfolder
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
@@ -2008,7 +2017,7 @@ namespace SabreTools.Library.DatFiles
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
-            Globals.Logger.User("Cleaning temp folder");
+            logger.User("Cleaning temp folder");
             if (Globals.TempDir != Path.GetTempPath())
                 DirectoryExtensions.TryDelete(Globals.TempDir);
 
@@ -2106,11 +2115,11 @@ namespace SabreTools.Library.DatFiles
                 // Add the list if it doesn't exist already
                 Rom rom = new Rom(baseFile);
                 Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
-                Globals.Logger.User($"File added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
+                logger.User($"File added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
             }
             else
             {
-                Globals.Logger.User($"File not added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
+                logger.User($"File not added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
                 return true;
             }
 
@@ -2199,7 +2208,7 @@ namespace SabreTools.Library.DatFiles
                 gamename = gamename.Trim(Path.DirectorySeparatorChar);
                 romname = romname.Trim(Path.DirectorySeparatorChar);
 
-                Globals.Logger.Verbose($"Adding blank empty folder: {gamename}");
+                logger.Verbose($"Adding blank empty folder: {gamename}");
                 Items["null"].Add(new Rom(romname, gamename));
             });
         }
@@ -2213,7 +2222,7 @@ namespace SabreTools.Library.DatFiles
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         private void ProcessFile(string item, string basePath, Hash hashes, TreatAsFile asFiles)
         {
-            Globals.Logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
+            logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = FileExtensions.GetInfo(item, header: Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
             DatItem datItem = DatItem.Create(baseFile);
             ProcessFileHelper(item, datItem, basePath, string.Empty);
@@ -2249,11 +2258,11 @@ namespace SabreTools.Library.DatFiles
                 string key = datItem.GetKey(Field.DatItem_CRC);
                 Items.Add(key, datItem);
 
-                Globals.Logger.User($"File added: {datItem.GetName() ?? string.Empty}{Environment.NewLine}");
+                logger.User($"File added: {datItem.GetName() ?? string.Empty}{Environment.NewLine}");
             }
             catch (IOException ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 return;
             }
         }
@@ -2372,7 +2381,7 @@ namespace SabreTools.Library.DatFiles
             // If the DAT is not populated and inverse is not set, inform the user and quit
             if (Items.TotalCount == 0 && !inverse)
             {
-                Globals.Logger.User("No entries were found to rebuild, exiting...");
+                logger.User("No entries were found to rebuild, exiting...");
                 return false;
             }
 
@@ -2402,7 +2411,7 @@ namespace SabreTools.Library.DatFiles
                 // Add to the list if the input is a directory
                 if (Directory.Exists(input))
                 {
-                    Globals.Logger.Verbose($"Adding depot: {input}");
+                    logger.Verbose($"Adding depot: {input}");
                     lock (directories)
                     {
                         directories.Add(input);
@@ -2425,7 +2434,7 @@ namespace SabreTools.Library.DatFiles
                 if (hash.Length != Constants.SHA1Length)
                     continue;
 
-                Globals.Logger.User($"Checking hash '{hash}'");
+                logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
                 string subpath = PathExtensions.GetDepotPath(hash, Header.InputDepot.Depth);
@@ -2508,7 +2517,7 @@ namespace SabreTools.Library.DatFiles
             // If the DAT is not populated and inverse is not set, inform the user and quit
             if (Items.TotalCount == 0 && !inverse)
             {
-                Globals.Logger.User("No entries were found to rebuild, exiting...");
+                logger.User("No entries were found to rebuild, exiting...");
                 return false;
             }
 
@@ -2541,7 +2550,7 @@ namespace SabreTools.Library.DatFiles
                 // If the input is a file
                 if (File.Exists(input))
                 {
-                    Globals.Logger.User($"Checking file: {input}");
+                    logger.User($"Checking file: {input}");
                     bool rebuilt = RebuildGenericHelper(input, outDir, quickScan, date, inverse, outputFormat, asFiles);
 
                     // If we are supposed to delete the file, do so
@@ -2552,10 +2561,10 @@ namespace SabreTools.Library.DatFiles
                 // If the input is a directory
                 else if (Directory.Exists(input))
                 {
-                    Globals.Logger.Verbose($"Checking directory: {input}");
+                    logger.Verbose($"Checking directory: {input}");
                     foreach (string file in Directory.EnumerateFiles(input, "*", SearchOption.AllDirectories))
                     {
-                        Globals.Logger.User($"Checking file: {file}");
+                        logger.User($"Checking file: {file}");
                         bool rebuilt = RebuildGenericHelper(file, outDir, quickScan, date, inverse, outputFormat, asFiles);
 
                         // If we are supposed to delete the file, do so
@@ -2701,7 +2710,7 @@ namespace SabreTools.Library.DatFiles
                 if (RebuildTorrentXz(datItem, file, outDir, outputFormat, isZip))
                     return true;
 
-                Globals.Logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
+                logger.User($"{(inverse ? "No matches" : "Matches")} found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
                 rebuilt = true;
 
                 // Special case for partial packing mode
@@ -2751,7 +2760,7 @@ namespace SabreTools.Library.DatFiles
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(headerless, transformStream, false, out dupes))
                         {
-                            Globals.Logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
+                            logger.User($"Headerless matches found for '{Path.GetFileName(datItem.GetName() ?? datItem.ItemType.ToString())}', rebuilding accordingly...");
                             rebuilt = true;
 
                             // Now loop through the list and rebuild accordingly
@@ -2856,7 +2865,7 @@ namespace SabreTools.Library.DatFiles
             BaseFile tgzRom = tgz.GetTorrentGZFileInfo();
             if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
             {
-                Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
+                logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
                 string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
@@ -2899,7 +2908,7 @@ namespace SabreTools.Library.DatFiles
             BaseFile txzRom = txz.GetTorrentXZFileInfo();
             if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
             {
-                Globals.Logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
+                logger.User($"Matches found for '{Path.GetFileName(datItem.GetName() ?? string.Empty)}', rebuilding accordingly...");
 
                 // Get the proper output path
                 string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
@@ -3002,7 +3011,7 @@ namespace SabreTools.Library.DatFiles
                 // Add to the list if the input is a directory
                 if (Directory.Exists(input))
                 {
-                    Globals.Logger.Verbose($"Adding depot: {input}");
+                    logger.Verbose($"Adding depot: {input}");
                     directories.Add(input);
                 }
             }
@@ -3022,7 +3031,7 @@ namespace SabreTools.Library.DatFiles
                 if (hash.Length != Constants.SHA1Length)
                     continue;
 
-                Globals.Logger.User($"Checking hash '{hash}'");
+                logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
                 string subpath = PathExtensions.GetDepotPath(hash, Header.InputDepot.Depth);
@@ -3175,7 +3184,7 @@ namespace SabreTools.Library.DatFiles
         public Dictionary<Field, DatFile> SplitByHash()
         {
             // Create each of the respective output DATs
-            Globals.Logger.User("Creating and populating new DATs");
+            logger.User("Creating and populating new DATs");
 
             // Create the set of field-to-dat mappings
             Dictionary<Field, DatFile> fieldDats = new Dictionary<Field, DatFile>();
@@ -3406,7 +3415,7 @@ namespace SabreTools.Library.DatFiles
         public (DatFile lessThan, DatFile greaterThan) SplitBySize(long radix)
         {
             // Create each of the respective output DATs
-            Globals.Logger.User("Creating and populating new DATs");
+            logger.User("Creating and populating new DATs");
 
             DatFile lessThan = Create(Header.CloneStandard());
             lessThan.Header.FileName += $" (less than {radix})";
@@ -3453,7 +3462,7 @@ namespace SabreTools.Library.DatFiles
         public Dictionary<ItemType, DatFile> SplitByType()
         {
             // Create each of the respective output DATs
-            Globals.Logger.User("Creating and populating new DATs");
+            logger.User("Creating and populating new DATs");
 
             // Create the set of type-to-dat mappings
             Dictionary<ItemType, DatFile> typeDats = new Dictionary<ItemType, DatFile>();
@@ -3508,7 +3517,7 @@ namespace SabreTools.Library.DatFiles
             // If we have nothing writable, abort
             if (!HasWritable())
             {
-                Globals.Logger.User("There were no items to write out!");
+                logger.User("There were no items to write out!");
                 return false;
             }
 
@@ -3518,7 +3527,7 @@ namespace SabreTools.Library.DatFiles
             // If the DAT has no output format, default to XML
             if (Header.DatFormat == 0)
             {
-                Globals.Logger.Verbose("No DAT format defined, defaulting to XML");
+                logger.Verbose("No DAT format defined, defaulting to XML");
                 Header.DatFormat = DatFormat.Logiqx;
             }
 
@@ -3529,7 +3538,7 @@ namespace SabreTools.Library.DatFiles
             Items.BucketBy(Field.Machine_Name, DedupeType.None);
 
             // Output the number of items we're going to be writing
-            Globals.Logger.User($"A total of {Items.TotalCount - Items.RemovedCount} items will be written out to '{Header.FileName}'");
+            logger.User($"A total of {Items.TotalCount - Items.RemovedCount} items will be written out to '{Header.FileName}'");
 
             // Get the outfile names
             Dictionary<DatFormat, string> outfiles = Header.CreateOutFileNames(outDir, overwrite);
@@ -3546,7 +3555,7 @@ namespace SabreTools.Library.DatFiles
                     }
                     catch (Exception ex)
                     {
-                        Globals.Logger.Error(ex, $"Datfile {outfile} could not be written out");
+                        logger.Error(ex, $"Datfile {outfile} could not be written out");
                         if (throwOnError) throw ex;
                     }
 
@@ -3554,7 +3563,7 @@ namespace SabreTools.Library.DatFiles
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 if (throwOnError) throw ex;
                 return false;
             }
@@ -3774,7 +3783,7 @@ namespace SabreTools.Library.DatFiles
             // If the Rom has "null" characteristics, ensure all fields
             if (rom.Size == null && rom.CRC == "null")
             {
-                Globals.Logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
+                logger.Verbose($"Empty folder found: {datItem.Machine.Name}");
 
                 rom.Name = (rom.Name == "null" ? "-" : rom.Name);
                 rom.Size = Constants.SizeZero;

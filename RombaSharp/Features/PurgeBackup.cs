@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.Help;
 
 namespace RombaSharp.Features
@@ -40,7 +39,7 @@ structure. It also deletes the specified DATs from the DAT index.";
             List<string> dats = GetList(features, DatsListStringValue);
             List<string> depot = GetList(features, DepotListStringValue);
 
-            Globals.Logger.Error("This feature is not yet implemented: purge-backup");
+            logger.Error("This feature is not yet implemented: purge-backup");
         }
     }
 }

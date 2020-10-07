@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 
 using SabreTools.Library.Data;
+using SabreTools.Library.Logging;
 using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Library.Tools
@@ -12,6 +13,15 @@ namespace SabreTools.Library.Tools
     /// </summary>
     public static class DatabaseTools
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Add a header to the database
         /// </summary>
@@ -21,7 +31,7 @@ namespace SabreTools.Library.Tools
         public static void AddHeaderToDatabase(string header, string SHA1, string source)
         {
             // Ensure the database exists
-            EnsureDatabase(Constants.HeadererDbSchema, Constants.HeadererFileName, Constants.HeadererConnectionString);
+            EnsureDatabase(Constants.HeadererFileName, Constants.HeadererConnectionString);
 
             // Open the database connection
             SqliteConnection dbc = new SqliteConnection(Constants.HeadererConnectionString);
@@ -36,7 +46,7 @@ namespace SabreTools.Library.Tools
             {
                 query = $"INSERT INTO data (sha1, header, type) VALUES ('{SHA1}', '{header}', '{source}')";
                 slc = new SqliteCommand(query, dbc);
-                Globals.Logger.Verbose($"Result of inserting header: {slc.ExecuteNonQuery()}");
+                logger.Verbose($"Result of inserting header: {slc.ExecuteNonQuery()}");
             }
 
             // Dispose of database objects
@@ -48,15 +58,10 @@ namespace SabreTools.Library.Tools
         /// <summary>
         /// Ensure that the databse exists and has the proper schema
         /// </summary>
-        /// <param name="type">Schema type to use</param>
         /// <param name="db">Name of the databse</param>
         /// <param name="connectionString">Connection string for SQLite</param>
-        /// TODO: Re-evaluate why this method needs to exist
-        public static void EnsureDatabase(string type, string db, string connectionString)
+        public static void EnsureDatabase(string db, string connectionString)
         {
-            // Set the type to lowercase
-            type = type.ToLowerInvariant();
-
             // Make sure the file exists
             if (!File.Exists(db))
                 File.Create(db);
@@ -68,77 +73,20 @@ namespace SabreTools.Library.Tools
             // Make sure the database has the correct schema
             try
             {
-                if (type == "rombasharp")
-                {
-                    string query = @"
-CREATE TABLE IF NOT EXISTS crc (
-    'crc'	TEXT		NOT NULL,
-    PRIMARY KEY (crc)
-)";
-                    SqliteCommand slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-
-                    query = @"
-CREATE TABLE IF NOT EXISTS md5 (
-    'md5'	TEXT		NOT NULL,
-    PRIMARY KEY (md5)
-)";
-                    slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-
-                    query = @"
-CREATE TABLE IF NOT EXISTS sha1 (
-    'sha1'	TEXT		NOT NULL,
-    'depot'	TEXT,
-    PRIMARY KEY (sha1)
-)";
-                    slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-
-                    query = @"
-CREATE TABLE IF NOT EXISTS crcsha1 (
-    'crc'	TEXT		NOT NULL,
-    'sha1'	TEXT		NOT NULL,
-    PRIMARY KEY (crc, sha1)
-)";
-                    slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-
-                    query = @"
-CREATE TABLE IF NOT EXISTS md5sha1 (
-    'md5'	TEXT		NOT NULL,
-    'sha1'	TEXT		NOT NULL,
-    PRIMARY KEY (md5, sha1)
-)";
-                    slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-
-                    query = @"
-CREATE TABLE IF NOT EXISTS dat (
-    'hash'	TEXT		NOT NULL,
-    PRIMARY KEY (hash)
-)";
-                    slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-                    slc.Dispose();
-                }
-                else if (type == "headerer")
-                {
-                    string query = @"
+                string query = @"
 CREATE TABLE IF NOT EXISTS data (
     'sha1'		TEXT		NOT NULL,
     'header'	TEXT		NOT NULL,
     'type'		TEXT		NOT NULL,
     PRIMARY KEY (sha1, header, type)
 )";
-                    SqliteCommand slc = new SqliteCommand(query, dbc);
-                    slc.ExecuteNonQuery();
-                    slc.Dispose();
-                }
+                SqliteCommand slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+                slc.Dispose();
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
             }
             finally
             {
@@ -154,7 +102,7 @@ CREATE TABLE IF NOT EXISTS data (
         public static List<string> RetrieveHeadersFromDatabase(string SHA1)
         {
             // Ensure the database exists
-            EnsureDatabase(Constants.HeadererDbSchema, Constants.HeadererFileName, Constants.HeadererConnectionString);
+            EnsureDatabase(Constants.HeadererFileName, Constants.HeadererConnectionString);
 
             // Open the database connection
             SqliteConnection dbc = new SqliteConnection(Constants.HeadererConnectionString);
@@ -171,13 +119,13 @@ CREATE TABLE IF NOT EXISTS data (
             {
                 while (sldr.Read())
                 {
-                    Globals.Logger.Verbose($"Found match with rom type '{sldr.GetString(1)}'");
+                    logger.Verbose($"Found match with rom type '{sldr.GetString(1)}'");
                     headers.Add(sldr.GetString(0));
                 }
             }
             else
             {
-                Globals.Logger.Warning("No matching header could be found!");
+                logger.Warning("No matching header could be found!");
             }
 
             // Dispose of database objects

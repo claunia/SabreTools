@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Filtering;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 
@@ -42,13 +40,13 @@ namespace RombaSharp.Features
             // Check that all required files exist
             if (!File.Exists(olddat))
             {
-                Globals.Logger.Error($"File '{olddat}' does not exist!");
+                logger.Error($"File '{olddat}' does not exist!");
                 return;
             }
 
             if (!File.Exists(newdat))
             {
-                Globals.Logger.Error($"File '{newdat}' does not exist!");
+                logger.Error($"File '{newdat}' does not exist!");
                 return;
             }
 

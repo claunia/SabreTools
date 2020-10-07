@@ -93,7 +93,7 @@ namespace SabreTools.Features
                 // Level splitting
                 if (splittingMode.HasFlag(SplittingMode.Level))
                 {
-                    Globals.Logger.Warning("This feature is not implemented: level-split");
+                    logger.Warning("This feature is not implemented: level-split");
                     internalDat.SplitByLevel(
                         OutputDir,
                         GetBoolean(features, ShortValue),

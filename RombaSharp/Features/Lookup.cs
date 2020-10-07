@@ -82,11 +82,11 @@ namespace RombaSharp.Features
                         count++;
                     }
 
-                    Globals.Logger.User($"For hash '{input}' there were {count} matches in the database");
+                    logger.User($"For hash '{input}' there were {count} matches in the database");
                 }
                 else
                 {
-                    Globals.Logger.User($"Hash '{input}' had no matches in the database");
+                    logger.User($"Hash '{input}' had no matches in the database");
                 }
 
                 sldr.Dispose();
@@ -105,11 +105,11 @@ namespace RombaSharp.Features
                         count++;
                     }
 
-                    Globals.Logger.User($"For hash '{input}' there were {count} matches in the database");
+                    logger.User($"For hash '{input}' there were {count} matches in the database");
                 }
                 else
                 {
-                    Globals.Logger.User($"Hash '{input}' had no matches in the database");
+                    logger.User($"Hash '{input}' had no matches in the database");
                 }
 
                 sldr.Dispose();
@@ -128,11 +128,11 @@ namespace RombaSharp.Features
                         count++;
                     }
 
-                    Globals.Logger.User($"For hash '{input}' there were {count} matches in the database");
+                    logger.User($"For hash '{input}' there were {count} matches in the database");
                 }
                 else
                 {
-                    Globals.Logger.User($"Hash '{input}' had no matches in the database");
+                    logger.User($"Hash '{input}' had no matches in the database");
                 }
 
                 sldr.Dispose();

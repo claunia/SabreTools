@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.FileTypes
@@ -18,7 +18,12 @@ namespace SabreTools.Library.FileTypes
         #region Protected instance variables
 
         protected List<BaseFile> _children;
-        
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        protected static Logger logger = new Logger();
+
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
         /// </summary>
@@ -125,7 +130,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 return false;
             }
 
@@ -203,7 +208,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 return realentry;
             }
 
@@ -242,7 +247,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 return (ms, realentry);
             }
 
@@ -372,7 +377,7 @@ namespace SabreTools.Library.FileTypes
             }
             catch (Exception ex)
             {
-                Globals.Logger.Error(ex);
+                logger.Error(ex);
                 success = false;
             }
             finally

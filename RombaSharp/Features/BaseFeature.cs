@@ -9,6 +9,7 @@ using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
+using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;
 
@@ -367,13 +368,97 @@ namespace RombaSharp.Features
 
         // Other internal variables
         internal const string _config = "config.xml";
-        internal const string _dbSchema = "rombasharp";
         internal static string _connectionString;
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        protected Logger logger = new Logger();
 
         public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
         {
             InitializeConfiguration();
-            DatabaseTools.EnsureDatabase(_dbSchema, _db, _connectionString);
+            EnsureDatabase(_db, _connectionString);
+        }
+
+        /// <summary>
+        /// Ensure that the databse exists and has the proper schema
+        /// </summary>
+        /// <param name="db">Name of the databse</param>
+        /// <param name="connectionString">Connection string for SQLite</param>
+        public void EnsureDatabase(string db, string connectionString)
+        {
+            // Make sure the file exists
+            if (!File.Exists(db))
+                File.Create(db);
+
+            // Open the database connection
+            SqliteConnection dbc = new SqliteConnection(connectionString);
+            dbc.Open();
+
+            // Make sure the database has the correct schema
+            try
+            {
+                string query = @"
+CREATE TABLE IF NOT EXISTS crc (
+    'crc'	TEXT		NOT NULL,
+    PRIMARY KEY (crc)
+)";
+                SqliteCommand slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+
+                query = @"
+CREATE TABLE IF NOT EXISTS md5 (
+    'md5'	TEXT		NOT NULL,
+    PRIMARY KEY (md5)
+)";
+                slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+
+                query = @"
+CREATE TABLE IF NOT EXISTS sha1 (
+    'sha1'	TEXT		NOT NULL,
+    'depot'	TEXT,
+    PRIMARY KEY (sha1)
+)";
+                slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+
+                query = @"
+CREATE TABLE IF NOT EXISTS crcsha1 (
+    'crc'	TEXT		NOT NULL,
+    'sha1'	TEXT		NOT NULL,
+    PRIMARY KEY (crc, sha1)
+)";
+                slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+
+                query = @"
+CREATE TABLE IF NOT EXISTS md5sha1 (
+    'md5'	TEXT		NOT NULL,
+    'sha1'	TEXT		NOT NULL,
+    PRIMARY KEY (md5, sha1)
+)";
+                slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+
+                query = @"
+CREATE TABLE IF NOT EXISTS dat (
+    'hash'	TEXT		NOT NULL,
+    PRIMARY KEY (hash)
+)";
+                slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+                slc.Dispose();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            finally
+            {
+                dbc.Dispose();
+            }
         }
 
         #region Helper methods
@@ -383,7 +468,7 @@ namespace RombaSharp.Features
         /// </summary>
         /// <param name="inputs">List of input strings to check for, presumably file names</param>
         /// <returns>Dictionary of hash/full path for each of the valid DATs</returns>
-        internal static Dictionary<string, string> GetValidDats(List<string> inputs)
+        internal Dictionary<string, string> GetValidDats(List<string> inputs)
         {
             // Get a dictionary of filenames that actually exist in the DATRoot, logging which ones are not
             List<string> datRootDats = Directory.EnumerateFiles(_dats, "*", SearchOption.AllDirectories).ToList();
@@ -399,7 +484,7 @@ namespace RombaSharp.Features
                 }
                 else
                 {
-                    Globals.Logger.Warning($"The file '{input}' could not be found in the DAT root");
+                    logger.Warning($"The file '{input}' could not be found in the DAT root");
                 }
             }
 
@@ -409,7 +494,7 @@ namespace RombaSharp.Features
         /// <summary>
         /// Initialize the Romba application from XML config
         /// </summary>
-        private static void InitializeConfiguration()
+        private void InitializeConfiguration()
         {
             // Get default values if they're not written
             int workers = 4,
@@ -604,13 +689,13 @@ namespace RombaSharp.Features
         /// </summary>
         /// <param name="dat">DatFile hash information to add</param>
         /// <param name="dbc">Database connection to use</param>
-        internal static void AddDatToDatabase(Rom dat, SqliteConnection dbc)
+        internal void AddDatToDatabase(Rom dat, SqliteConnection dbc)
         {
             // Get the dat full path
             string fullpath = Path.Combine(_dats, (dat.Machine.Name == "dats" ? string.Empty : dat.Machine.Name), dat.Name);
 
             // Parse the Dat if possible
-            Globals.Logger.User($"Adding from '{dat.Name}'");
+            logger.User($"Adding from '{dat.Name}'");
             DatFile tempdat = DatFile.CreateAndParse(fullpath);
 
             // If the Dat wasn't empty, add the information
@@ -627,7 +712,7 @@ namespace RombaSharp.Features
             {
                 foreach (DatItem datItem in tempdat.Items[romkey])
                 {
-                    Globals.Logger.Verbose($"Checking and adding file '{datItem.GetName() ?? string.Empty}'");
+                    logger.Verbose($"Checking and adding file '{datItem.GetName() ?? string.Empty}'");
 
                     if (datItem.ItemType == ItemType.Disk)
                     {
