@@ -26,7 +26,12 @@ namespace RombaSharp
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            Globals.Logger = new Logger("romba.log");
+            Globals.Logger = new Logger("romba.log")
+            {
+                AppendPrefix = true,
+                LowestLogLevel = LogLevel.VERBOSE,
+                ThrowOnError = false,
+            };
 
             // Create a new Help object for this program
             _help = RetrieveHelp();

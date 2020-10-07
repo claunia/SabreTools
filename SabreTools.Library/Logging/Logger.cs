@@ -36,6 +36,11 @@ namespace SabreTools.Library.Logging
         public LogLevel LowestLogLevel { get; set; } = LogLevel.VERBOSE;
 
         /// <summary>
+        /// Determines whether to prefix log lines with level and datetime
+        /// </summary>
+        public bool AppendPrefix { get; set; } = true;
+
+        /// <summary>
         /// Determines whether to throw if an exception is logged
         /// </summary>
         public bool ThrowOnError { get; set; } = false;
@@ -71,6 +76,8 @@ namespace SabreTools.Library.Logging
 
         #endregion
 
+        #region Constructors
+
         /// <summary>
         /// Initialize a console-only logger object
         /// </summary>
@@ -86,6 +93,7 @@ namespace SabreTools.Library.Logging
         /// <param name="addDate">True to add a date string to the filename (default), false otherwise</param>
         public Logger(string filename, bool addDate = true)
         {
+            // Set and create the output
             if (addDate)
                 Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{PathExtensions.GetNormalizedExtension(filename)}";
             else
@@ -97,16 +105,25 @@ namespace SabreTools.Library.Logging
             Start();
         }
 
+        #endregion
+
+        #region Control
+
         /// <summary>
         /// Start logging by opening output file (if necessary)
         /// </summary>
         /// <returns>True if the logging was started correctly, false otherwise</returns>
         public bool Start()
         {
+            // Setup the logging handler to always use the internal log
+            LogEventHandler += HandleLogEvent;
+
+            // Start the logging
             StartTime = DateTime.Now;
             if (!LogToFile)
                 return true;
 
+            // Setup file output and perform initial log
             try
             {
                 FileStream logfile = FileExtensions.TryCreate(Path.Combine(LogDirectory, Filename));
@@ -183,14 +200,61 @@ namespace SabreTools.Library.Logging
             return true;
         }
 
+        #endregion
+
+        #region Event Handling
+
+        /// <summary>
+        /// Handler for log events
+        /// </summary>
+        public static event LogEventHandler LogEventHandler = delegate { };
+
+        /// <summary>
+        /// Default log event handling
+        /// </summary>
+        public void HandleLogEvent(object sender, LogEventArgs args)
+        {
+            // Null args means we can't handle it
+            if (args == null)
+                return;
+
+            // If we have an exception and we're throwing on that
+            if (ThrowOnError && args.Exception != null)
+                throw args.Exception;
+
+            // If we have a warning or error, set the flags accordingly
+            if (args.LogLevel == LogLevel.WARNING)
+                LoggedWarnings = true;
+            if (args.LogLevel == LogLevel.ERROR)
+                LoggedErrors = true;
+
+            // Setup the statement based on the inputs
+            string logLine;
+            if (args.Exception == null)
+            {
+                logLine = args.Statement ?? string.Empty;
+            }
+            else if (args.TotalCount != null && args.CurrentCount != null)
+            {
+                double percentage = (args.CurrentCount.Value / args.TotalCount.Value) * 100;
+                logLine = $"{percentage:N2}%{(args.Statement != null ? ": " + args.Statement : string.Empty)}";
+            }
+            else
+            {
+                logLine = $"{(args.Statement != null ? args.Statement + ": " : string.Empty)}{args.Exception}";
+            }
+
+            // Then write to the log
+            Log(logLine, args.LogLevel);
+        }
+
         /// <summary>
         /// Write the given string to the log output
         /// </summary>
         /// <param name="output">String to be written log</param>
         /// <param name="loglevel">Severity of the information being logged</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement, false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        private bool Log(string output, LogLevel loglevel, bool appendPrefix)
+        private bool Log(string output, LogLevel loglevel)
         {
             // If the log level is less than the filter level, we skip it but claim we didn't
             if (loglevel < LowestLogLevel)
@@ -198,16 +262,16 @@ namespace SabreTools.Library.Logging
 
             // USER and ERROR writes to console
             if (loglevel == LogLevel.USER || loglevel == LogLevel.ERROR)
-                Console.WriteLine((loglevel == LogLevel.ERROR && appendPrefix ? loglevel.ToString() + " " : string.Empty) + output);
+                Console.WriteLine((loglevel == LogLevel.ERROR && this.AppendPrefix ? loglevel.ToString() + " " : string.Empty) + output);
 
             // If we're writing to file, use the existing stream
             if (LogToFile)
             {
                 try
                 {
-                    lock(_lock)
+                    lock (_lock)
                     {
-                        _log.WriteLine((appendPrefix ? $"{loglevel} - {DateTime.Now} - " : string.Empty) + output);
+                        _log.WriteLine((this.AppendPrefix ? $"{loglevel} - {DateTime.Now} - " : string.Empty) + output);
                     }
                 }
                 catch (Exception ex)
@@ -222,67 +286,29 @@ namespace SabreTools.Library.Logging
             return true;
         }
 
-        /// <summary>
-        /// Write the given exact string to the log output
-        /// </summary>
-        /// <param name="output">String to be written log</param>
-        /// <param name="line">Line number to write out to</param>
-        /// <param name="column">Column number to write out to</param>
-        /// <returns>True if the output could be written, false otherwise</returns>
-        public bool WriteExact(string output, int line, int column)
-        {
-            // Set the cursor position (if not being redirected)
-            if (!Console.IsOutputRedirected)
-            {
-                Console.CursorTop = line;
-                Console.CursorLeft = column;
-            }
+        #endregion
 
-            // Write out to the console
-            Console.Write(output);
-
-            // If we're writing to file, use the existing stream
-            if (LogToFile)
-            {
-                try
-                {
-                    lock (_lock)
-                    {
-                        _log.Write($"{DateTime.Now} - {output}");
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Could not write to log file!");
-                    return false;
-                }
-            }
-
-            return true;
-        }
+        #region Log Event Triggers
 
         /// <summary>
         /// Write the given exception as a verbose message to the log output
         /// </summary>
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool Verbose(Exception ex, string output = null, bool appendPrefix = true)
+        public void Verbose(Exception ex, string output = null)
         {
-            if (ThrowOnError) throw ex;
-            return Verbose($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.VERBOSE, output, ex));
         }
 
         /// <summary>
         /// Write the given string as a verbose message to the log output
         /// </summary>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool Verbose(string output, bool appendPrefix = true)
+        public void Verbose(string output)
         {
-            return Log(output, LogLevel.VERBOSE, appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.VERBOSE, output, null));
         }
 
         /// <summary>
@@ -290,23 +316,20 @@ namespace SabreTools.Library.Logging
         /// </summary>
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool User(Exception ex, string output = null, bool appendPrefix = true)
+        public void User(Exception ex, string output = null)
         {
-            if (ThrowOnError) throw ex;
-            return User($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.USER, output, ex));
         }
 
         /// <summary>
         /// Write the given string as a user message to the log output
         /// </summary>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool User(string output, bool appendPrefix = true)
+        public void User(string output)
         {
-            return Log(output, LogLevel.USER, appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.USER, output, null));
         }
 
         /// <summary>
@@ -314,24 +337,20 @@ namespace SabreTools.Library.Logging
         /// </summary>
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool Warning(Exception ex, string output = null, bool appendPrefix = true)
+        public void Warning(Exception ex, string output = null)
         {
-            if (ThrowOnError) throw ex;
-            return Warning($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.WARNING, output, ex));
         }
 
         /// <summary>
         /// Write the given string as a warning to the log output
         /// </summary>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool Warning(string output, bool appendPrefix = true)
+        public void Warning(string output)
         {
-            LoggedWarnings = true;
-            return Log(output, LogLevel.WARNING, appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.WARNING, output, null));
         }
 
         /// <summary>
@@ -339,44 +358,22 @@ namespace SabreTools.Library.Logging
         /// </summary>
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool Error(Exception ex, string output = null, bool appendPrefix = true)
+        public void Error(Exception ex, string output = null)
         {
-            if (ThrowOnError) throw ex;
-            return Error($"{(output != null ? output + ": " : string.Empty)}{ex}", appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.ERROR, output, ex));
         }
 
         /// <summary>
         /// Writes the given string as an error in the log
         /// </summary>
         /// <param name="output">String to be written log</param>
-        /// <param name="appendPrefix">True if the level and datetime should be prepended to each statement (default), false otherwise</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        public bool Error(string output, bool appendPrefix = true)
+        public void Error(string output)
         {
-            LoggedErrors = true;
-            return Log(output, LogLevel.ERROR, appendPrefix);
+            LogEventHandler(this, new LogEventArgs(LogLevel.ERROR, output, null));
         }
 
-        /// <summary>
-        /// Clear lines beneath the given line in the console
-        /// </summary>
-        /// <param name="line">Line number to clear beneath</param>
-        /// <returns>True</returns>
-        public bool ClearBeneath(int line)
-        {
-            if (!Console.IsOutputRedirected)
-            {
-                for (int i = line; i < Console.WindowHeight; i++)
-                {
-                    // http://stackoverflow.com/questions/8946808/can-console-clear-be-used-to-only-clear-a-line-instead-of-whole-console
-                    Console.SetCursorPosition(0, Console.CursorTop);
-                    Console.Write(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(0, i);
-                }
-            }
-            return true;
-        }
+        #endregion
     }
 }
