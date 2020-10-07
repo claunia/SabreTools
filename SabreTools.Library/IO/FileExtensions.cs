@@ -203,9 +203,13 @@ namespace SabreTools.Library.IO
         /// <link>http://stackoverflow.com/questions/3825390/effective-way-to-find-any-files-encoding</link>
         public static Encoding GetEncoding(string filename)
         {
+            // Try to open the file
+            FileStream file = TryOpenRead(filename);
+            if (file == null)
+                return Encoding.Default;
+
             // Read the BOM
             var bom = new byte[4];
-            FileStream file = FileExtensions.TryOpenRead(filename);
             file.Read(bom, 0, 4);
             file.Dispose();
 
