@@ -916,6 +916,10 @@ namespace SabreTools.Library.DatItems
             {
                 DatItem file = infiles[f];
 
+                // If we somehow have a null item, skip
+                if (file == null)
+                    continue;
+
                 // If we don't have a Dis, Media, or Rom, we skip checking for duplicates
                 if (file.ItemType != ItemType.Disk && file.ItemType != ItemType.Media && file.ItemType != ItemType.Rom)
                     continue;
