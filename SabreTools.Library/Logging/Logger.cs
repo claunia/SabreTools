@@ -45,6 +45,17 @@ namespace SabreTools.Library.Logging
         }
 
         /// <summary>
+        /// Write the given verbose progress message to the log output
+        /// </summary>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        public void Verbose(long total, long current, string output = null)
+        {
+            LoggerImpl.Verbose(instance, total, current, output);
+        }
+
+        /// <summary>
         /// Write the given exception as a user message to the log output
         /// </summary>
         /// <param name="ex">Exception to be written log</param>
@@ -63,6 +74,17 @@ namespace SabreTools.Library.Logging
         public void User(string output)
         {
             LoggerImpl.User(this.instance, output);
+        }
+
+        /// <summary>
+        /// Write the given user progress message to the log output
+        /// </summary>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        public void User(long total, long current, string output = null)
+        {
+            LoggerImpl.User(instance, total, current, output);
         }
 
         /// <summary>
@@ -87,6 +109,17 @@ namespace SabreTools.Library.Logging
         }
 
         /// <summary>
+        /// Write the given warning progress message to the log output
+        /// </summary>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        public void Warning(long total, long current, string output = null)
+        {
+            LoggerImpl.Warning(instance, total, current, output);
+        }
+
+        /// <summary>
         /// Writes the given exception as an error in the log
         /// </summary>
         /// <param name="ex">Exception to be written log</param>
@@ -105,6 +138,17 @@ namespace SabreTools.Library.Logging
         public void Error(string output)
         {
             LoggerImpl.Error(this.instance, output);
+        }
+
+        /// <summary>
+        /// Write the given error progress message to the log output
+        /// </summary>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        public void Error(long total, long current, string output = null)
+        {
+            LoggerImpl.Error(instance, total, current, output);
         }
 
         #endregion

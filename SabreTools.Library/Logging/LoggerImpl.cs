@@ -216,18 +216,18 @@ namespace SabreTools.Library.Logging
 
             // Setup the statement based on the inputs
             string logLine;
-            if (args.Exception == null)
+            if (args.Exception != null)
             {
-                logLine = args.Statement ?? string.Empty;
+                logLine = $"{(args.Statement != null ? args.Statement + ": " : string.Empty)}{args.Exception}";
             }
             else if (args.TotalCount != null && args.CurrentCount != null)
             {
-                double percentage = (args.CurrentCount.Value / args.TotalCount.Value) * 100;
+                double percentage = ((double)args.CurrentCount.Value / args.TotalCount.Value) * 100;
                 logLine = $"{percentage:N2}%{(args.Statement != null ? ": " + args.Statement : string.Empty)}";
             }
             else
             {
-                logLine = $"{(args.Statement != null ? args.Statement + ": " : string.Empty)}{args.Exception}";
+                logLine = args.Statement ?? string.Empty;
             }
 
             // Then write to the log
@@ -299,6 +299,18 @@ namespace SabreTools.Library.Logging
         }
 
         /// <summary>
+        /// Write the given verbose progress message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        internal static void Verbose(object instance, long total, long current, string output = null)
+        {
+            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.VERBOSE, output));
+        }
+
+        /// <summary>
         /// Write the given exception as a user message to the log output
         /// </summary>
         /// <param name="instance">Instance object that's the source of logging</param>
@@ -319,6 +331,18 @@ namespace SabreTools.Library.Logging
         internal static void User(object instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, null));
+        }
+
+        /// <summary>
+        /// Write the given user progress message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        internal static void User(object instance, long total, long current, string output = null)
+        {
+            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.USER, output));
         }
 
         /// <summary>
@@ -345,6 +369,18 @@ namespace SabreTools.Library.Logging
         }
 
         /// <summary>
+        /// Write the given warning progress message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        internal static void Warning(object instance, long total, long current, string output = null)
+        {
+            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.WARNING, output));
+        }
+
+        /// <summary>
         /// Writes the given exception as an error in the log
         /// </summary>
         /// <param name="instance">Instance object that's the source of logging</param>
@@ -365,6 +401,18 @@ namespace SabreTools.Library.Logging
         internal static void Error(object instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, null));
+        }
+
+        /// <summary>
+        /// Write the given error progress message to the log output
+        /// </summary>
+        /// <param name="instance">Instance object that's the source of logging</param>
+        /// <param name="total">Total count for progress</param>
+        /// <param name="current">Current count for progres</param>
+        /// <param name="output">String to be written log</param>
+        internal static void Error(object instance, long total, long current, string output = null)
+        {
+            LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.ERROR, output));
         }
 
         #endregion
