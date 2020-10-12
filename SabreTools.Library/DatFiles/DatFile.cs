@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -1995,17 +1996,32 @@ namespace SabreTools.Library.DatFiles
             // Clean the temp directory path
             Globals.TempDir = DirectoryExtensions.Ensure(Globals.TempDir, temp: true);
 
+            // Set the progress variables
+            long totalSize = 0;
+            long currentSize = 0;
+
             // Process the input
             if (Directory.Exists(basePath))
             {
                 logger.Verbose($"Folder found: {basePath}");
 
-                // Process the files in the main folder or any subfolder
+                // Get a list of all files to process
                 List<string> files = Directory.EnumerateFiles(basePath, "*", SearchOption.AllDirectories).ToList();
+
+                // Loop through and add the file sizes
                 Parallel.ForEach(files, Globals.ParallelOptions, item =>
                 {
-                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, hashes);
+                    Interlocked.Add(ref totalSize, new FileInfo(item).Length);
                 });
+
+                // Process the files in the main folder or any subfolder
+                logger.User(totalSize, currentSize);
+                foreach (string item in files)
+                {
+                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, hashes);
+                    currentSize += new FileInfo(item).Length;
+                    logger.User(totalSize, currentSize, item);
+                }
 
                 // Now find all folders that are empty, if we are supposed to
                 if (addBlanks)
@@ -2013,8 +2029,14 @@ namespace SabreTools.Library.DatFiles
             }
             else if (File.Exists(basePath))
             {
+                logger.Verbose($"File found: {basePath}");
+
+                totalSize = new FileInfo(basePath).Length;
+                logger.User(totalSize, currentSize);
+
                 string parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
                 CheckFileForHashes(basePath, parentPath, asFiles, skipFileType, addBlanks, hashes);
+                logger.User(totalSize, totalSize, basePath);
             }
 
             // Now that we're done, delete the temp folder (if it's not the default)
@@ -2116,11 +2138,11 @@ namespace SabreTools.Library.DatFiles
                 // Add the list if it doesn't exist already
                 Rom rom = new Rom(baseFile);
                 Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
-                logger.User($"File added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
+                logger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
             else
             {
-                logger.User($"File not added: {Path.GetFileNameWithoutExtension(item)}{Environment.NewLine}");
+                logger.Verbose($"File not added: {Path.GetFileNameWithoutExtension(item)}");
                 return true;
             }
 
@@ -2259,7 +2281,7 @@ namespace SabreTools.Library.DatFiles
                 string key = datItem.GetKey(Field.DatItem_CRC);
                 Items.Add(key, datItem);
 
-                logger.User($"File added: {datItem.GetName() ?? string.Empty}{Environment.NewLine}");
+                logger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");
             }
             catch (IOException ex)
             {
