@@ -45,6 +45,14 @@ namespace SabreTools.Library.DatFiles
             {
                 try
                 {
+                    // If we can't read the next line, break
+                    if (!svr.ReadNextLine())
+                        break;
+
+                    // If the line returns null somehow, skip
+                    if (svr.Line == null)
+                        continue;
+
                     /*
                     The gameinfo order is as follows
                     0 - SHA-256
@@ -53,7 +61,7 @@ namespace SabreTools.Library.DatFiles
                     3 - MD5
                     4 - CRC32
                     */
-                    
+
                     string[] fullname = svr.Line[1].Split('/');
 
                     Rom rom = new Rom
