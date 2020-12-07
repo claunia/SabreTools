@@ -9,9 +9,11 @@
 /SabreTools/Properties/launchSettings.json
 /SabreTools/SabreTools.csproj.user
 /SabreTools.Data/bin/
-/SabreTools.Data/obj
+/SabreTools.Data/obj/
 /SabreTools.Help/bin/
 /SabreTools.Help/obj/
+/SabreTools.IO/bin/
+/SabreTools.IO/obj/
 /SabreTools.Library/bin/
 /SabreTools.Library/obj/
 /SabreTools.Logging/bin/

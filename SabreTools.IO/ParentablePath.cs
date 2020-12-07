@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace SabreTools.Library.IO
+namespace SabreTools.IO
 {
     /// <summary>
     /// A path that optionally contains a parent root

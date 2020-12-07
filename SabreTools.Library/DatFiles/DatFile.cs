@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;

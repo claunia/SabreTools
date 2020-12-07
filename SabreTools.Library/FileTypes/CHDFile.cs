@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 
+using SabreTools.IO;
 using SabreTools.Library.FileTypes.CHD;
 using SabreTools.Library.IO;
 

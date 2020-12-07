@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace SabreTools.Library.IO
+namespace SabreTools.IO
 {
     public class IniReader : IDisposable
     {

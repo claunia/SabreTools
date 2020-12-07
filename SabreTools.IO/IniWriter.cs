@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace SabreTools.Library.IO
+namespace SabreTools.IO
 {
     public class IniWriter : IDisposable
     {

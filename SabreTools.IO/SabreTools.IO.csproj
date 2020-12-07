@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SabreTools.Data\SabreTools.Data.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
   </ItemGroup>
 

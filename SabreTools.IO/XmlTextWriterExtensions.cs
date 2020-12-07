@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace SabreTools.Library.IO
+namespace SabreTools.IO
 {
     /// <summary>
     /// Additional methods for XmlTextWriter

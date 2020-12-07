@@ -1,4 +1,4 @@
-﻿namespace SabreTools.Library.IO
+﻿namespace SabreTools.IO
 {
     /// <summary>
     /// Different types of CMP rows being parsed

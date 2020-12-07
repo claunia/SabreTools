@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;

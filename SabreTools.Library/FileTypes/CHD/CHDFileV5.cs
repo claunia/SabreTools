@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-using SabreTools.Library.IO;
+using SabreTools.IO;
 
 namespace SabreTools.Library.FileTypes.CHD
 {

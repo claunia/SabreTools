@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Help;
+using SabreTools.IO;
 using SabreTools.Library.IO;
 using Microsoft.Data.Sqlite;
 

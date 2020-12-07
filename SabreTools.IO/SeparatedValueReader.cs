@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace SabreTools.Library.IO
+namespace SabreTools.IO
 {
     public class SeparatedValueReader : IDisposable
     {
