@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Data;
+using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 using Compress.ThreadReaders;
 

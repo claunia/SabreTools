@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Logging;
+
 namespace SabreTools.Help
 {
     /// <summary>
@@ -23,8 +25,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Logging object
         /// </summary>
-        // TODO: Re-enable all logging once Logging namespace separated out
-        //private readonly Logger logger;
+        private readonly Logger logger;
 
         #endregion
 
@@ -35,7 +36,7 @@ namespace SabreTools.Help
         /// </summary>
         public TopLevel()
         {
-            //logger = new Logger(this);
+            logger = new Logger(this);
         }
 
         #endregion
@@ -67,9 +68,9 @@ namespace SabreTools.Help
                     // Everything else isn't a file
                     else
                     {
-                        //logger.Error($"Invalid input detected: {args[i]}");
+                        logger.Error($"Invalid input detected: {args[i]}");
                         help.OutputIndividualFeature(this.Name);
-                        //LoggerImpl.Close();
+                        LoggerImpl.Close();
                         return false;
                     }
                 }

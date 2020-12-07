@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Logging;
+
 namespace SabreTools.Library.Skippers
 {
     public class SkipperRule
@@ -40,8 +42,7 @@ namespace SabreTools.Library.Skippers
         /// <summary>
         /// Logging object
         /// </summary>
-        // TODO: Re-enable all logging once Logging namespace separated out
-        //private readonly Logger logger;
+        private readonly Logger logger;
 
         #endregion
 
@@ -52,7 +53,7 @@ namespace SabreTools.Library.Skippers
         /// </summary>
         public SkipperRule()
         {
-            //logger = new Logger(this);
+            logger = new Logger(this);
         }
 
         #endregion
@@ -85,7 +86,7 @@ namespace SabreTools.Library.Skippers
             // If the input file doesn't exist, fail
             if (!File.Exists(input))
             {
-                //logger.Error($"I'm sorry but '{input}' doesn't exist!");
+                logger.Error($"I'm sorry but '{input}' doesn't exist!");
                 return false;
             }
 
@@ -123,7 +124,7 @@ namespace SabreTools.Library.Skippers
                 || (Operation > HeaderSkipOperation.Byteswap && (extsize % 4) != 0)
                 || (Operation > HeaderSkipOperation.Bitswap && (StartOffset == null || StartOffset % 2 == 0)))
             {
-                //logger.Error("The stream did not have the correct size to be transformed!");
+                logger.Error("The stream did not have the correct size to be transformed!");
                 return false;
             }
 
@@ -132,7 +133,7 @@ namespace SabreTools.Library.Skippers
             BinaryReader br = null;
             try
             {
-                //logger.User("Applying found rule to input stream");
+                logger.User("Applying found rule to input stream");
                 bw = new BinaryWriter(output);
                 br = new BinaryReader(input);
 
@@ -220,7 +221,7 @@ namespace SabreTools.Library.Skippers
             }
             catch (Exception ex)
             {
-                //logger.Error(ex);
+                logger.Error(ex);
                 return false;
             }
             finally

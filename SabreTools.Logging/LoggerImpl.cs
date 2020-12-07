@@ -3,9 +3,8 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Data;
-using SabreTools.Library.IO;
 
-namespace SabreTools.Library.Logging
+namespace SabreTools.Logging
 {
     /// <summary>
     /// Internal logging implementation
@@ -87,7 +86,7 @@ namespace SabreTools.Library.Logging
         {
             // Set and create the output
             if (addDate)
-                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{PathExtensions.GetNormalizedExtension(filename)}";
+                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{GetNormalizedExtension(filename)}";
             else
                 Filename = filename;
         }
@@ -112,7 +111,7 @@ namespace SabreTools.Library.Logging
                 if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
                     Directory.CreateDirectory(LogDirectory);
 
-                FileStream logfile = FileExtensions.TryCreate(Path.Combine(LogDirectory, Filename));
+                FileStream logfile = TryCreate(Path.Combine(LogDirectory, Filename));
                 _log = new StreamWriter(logfile, Encoding.UTF8, (int)(4 * Constants.KibiByte), true)
                 {
                     AutoFlush = true
@@ -282,7 +281,7 @@ namespace SabreTools.Library.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void Verbose(object instance, Exception ex, string output = null)
+        public static void Verbose(object instance, Exception ex, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, ex));
         }
@@ -293,7 +292,7 @@ namespace SabreTools.Library.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void Verbose(object instance, string output)
+        public static void Verbose(object instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.VERBOSE, output, null));
         }
@@ -305,7 +304,7 @@ namespace SabreTools.Library.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        internal static void Verbose(object instance, long total, long current, string output = null)
+        public static void Verbose(object instance, long total, long current, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.VERBOSE, output));
         }
@@ -317,7 +316,7 @@ namespace SabreTools.Library.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void User(object instance, Exception ex, string output = null)
+        public static void User(object instance, Exception ex, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, ex));
         }
@@ -328,7 +327,7 @@ namespace SabreTools.Library.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void User(object instance, string output)
+        public static void User(object instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.USER, output, null));
         }
@@ -340,7 +339,7 @@ namespace SabreTools.Library.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        internal static void User(object instance, long total, long current, string output = null)
+        public static void User(object instance, long total, long current, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.USER, output));
         }
@@ -352,7 +351,7 @@ namespace SabreTools.Library.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void Warning(object instance, Exception ex, string output = null)
+        public static void Warning(object instance, Exception ex, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, ex));
         }
@@ -363,7 +362,7 @@ namespace SabreTools.Library.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void Warning(object instance, string output)
+        public static void Warning(object instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.WARNING, output, null));
         }
@@ -375,7 +374,7 @@ namespace SabreTools.Library.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        internal static void Warning(object instance, long total, long current, string output = null)
+        public static void Warning(object instance, long total, long current, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.WARNING, output));
         }
@@ -387,7 +386,7 @@ namespace SabreTools.Library.Logging
         /// <param name="ex">Exception to be written log</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void Error(object instance, Exception ex, string output = null)
+        public static void Error(object instance, Exception ex, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, ex));
         }
@@ -398,7 +397,7 @@ namespace SabreTools.Library.Logging
         /// <param name="instance">Instance object that's the source of logging</param>
         /// <param name="output">String to be written log</param>
         /// <returns>True if the output could be written, false otherwise</returns>
-        internal static void Error(object instance, string output)
+        public static void Error(object instance, string output)
         {
             LogEventHandler(instance, new LogEventArgs(LogLevel.ERROR, output, null));
         }
@@ -410,9 +409,60 @@ namespace SabreTools.Library.Logging
         /// <param name="total">Total count for progress</param>
         /// <param name="current">Current count for progres</param>
         /// <param name="output">String to be written log</param>
-        internal static void Error(object instance, long total, long current, string output = null)
+        public static void Error(object instance, long total, long current, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.ERROR, output));
+        }
+
+        #endregion
+
+        // TODO: Remove this region once IO namespace is separated out properly
+        #region TEMPORARY - REMOVEME
+
+        /// <summary>
+        /// Get the extension from the path, if possible
+        /// </summary>
+        /// <param name="path">Path to get extension from</param>
+        /// <returns>Extension, if possible</returns>
+        public static string GetNormalizedExtension(string path)
+        {
+            // Check null or empty first
+            if (string.IsNullOrWhiteSpace(path))
+                return null;
+
+            // Get the extension from the path, if possible
+            string ext = Path.GetExtension(path)?.ToLowerInvariant();
+
+            // Check if the extension is null or empty
+            if (string.IsNullOrWhiteSpace(ext))
+                return null;
+
+            // Make sure that extensions are valid
+            ext = ext.TrimStart('.');
+
+            return ext;
+        }
+
+        /// <summary>
+        /// Try to create a file for write, optionally throwing the error
+        /// </summary>
+        /// <param name="file">Name of the file to create</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>An opened stream representing the file on success, null otherwise</returns>
+        public static FileStream TryCreate(string file, bool throwOnError = false)
+        {
+            // Now wrap opening the file
+            try
+            {
+                return File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            }
+            catch (Exception ex)
+            {
+                if (throwOnError)
+                    throw ex;
+                else
+                    return null;
+            }
         }
 
         #endregion

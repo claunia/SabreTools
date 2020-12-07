@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Logging;
+using SabreTools.Logging;
 using NaturalSort;
 
 namespace SabreTools.Library.IO

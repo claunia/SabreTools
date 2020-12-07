@@ -6,10 +6,10 @@ using System.Xml;
 
 using SabreTools.Data;
 using SabreTools.Help;
+using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
-using SabreTools.Library.Logging;
 using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;
 

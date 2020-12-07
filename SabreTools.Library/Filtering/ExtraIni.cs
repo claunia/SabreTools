@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Logging;
+using SabreTools.Logging;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Filtering

@@ -6,10 +6,9 @@ using System.Xml;
 using System.Xml.Schema;
 
 using SabreTools.Data;
+using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Logging;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.IO
 {

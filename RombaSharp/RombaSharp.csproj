@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SabreTools.Help\SabreTools.Help.csproj" />
     <ProjectReference Include="..\SabreTools.Library\SabreTools.Library.csproj" />
+    <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
   </ItemGroup>
 
 </Project>

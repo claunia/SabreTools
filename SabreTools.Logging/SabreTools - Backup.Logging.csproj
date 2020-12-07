@@ -11,8 +11,4 @@
     <DefineConstants>NET_FRAMEWORK</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
-  </ItemGroup>
-
 </Project>

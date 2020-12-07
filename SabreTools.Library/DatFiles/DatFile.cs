@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using SabreTools.Data;
+using SabreTools.Logging;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.IO;
-using SabreTools.Library.Logging;
 using SabreTools.Library.Reports;
 using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SabreTools.Library.Logging
+namespace SabreTools.Logging
 {
     /// <summary>
     /// Generic delegate type for log events

@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 
 using SabreTools.Data;
-using SabreTools.Library.Logging;
+using SabreTools.Logging;
 using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Library.Tools

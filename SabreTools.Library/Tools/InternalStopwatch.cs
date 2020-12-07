@@ -1,6 +1,6 @@
 ﻿using System;
 
-using SabreTools.Library.Logging;
+using SabreTools.Logging;
 
 namespace SabreTools.Library.Tools
 {

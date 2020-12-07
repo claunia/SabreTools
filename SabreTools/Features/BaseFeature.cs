@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 using SabreTools.Data;
 using SabreTools.Help;
+using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
-using SabreTools.Library.Logging;
 using SabreTools.Library.Reports;
 using SabreTools.Library.Tools;
 
