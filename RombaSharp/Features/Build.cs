@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 
 namespace RombaSharp.Features
@@ -18,7 +18,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "build" };
             Description = "For each specified DAT file it creates the torrentzip files.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"For each specified DAT file it creates the torrentzip files in the specified
 output dir. The files will be placed in the specified location using a folder
 structure according to the original DAT master directory tree structure.";

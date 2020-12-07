@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -13,7 +13,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "memstats" };
             Description = "Prints memory stats.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Print memory stats.";
             Features = new Dictionary<string, Feature>();
         }

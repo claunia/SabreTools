@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using SabreTools.Data;
-using SabreTools.Library.Help;
+using SabreTools.Help;
 using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;
 
@@ -16,7 +16,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "lookup" };
             Description = "For each specified hash it looks up any available information.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "For each specified hash it looks up any available information (dat or rom).";
             Features = new Dictionary<string, Feature>();
 

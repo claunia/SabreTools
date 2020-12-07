@@ -1,9 +1,9 @@
-﻿namespace SabreTools.Library.Help
+﻿namespace SabreTools.Help
 {
     /// <summary>
-    /// Determines the feature type to check for
+    /// Determines the parameter type to check for
     /// </summary>
-    public enum FeatureType
+    public enum ParameterType
     {
         Flag = 0,
         String,

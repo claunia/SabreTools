@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 
 namespace RombaSharp.Features
@@ -16,7 +16,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "diffdat" };
             Description = "Creates a DAT file with those entries that are in -new DAT.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"Creates a DAT file with those entries that are in -new DAT file and not
 in -old DAT file. Ignores those entries in -old that are not in -new.";
             this.Features = new Dictionary<string, Feature>();

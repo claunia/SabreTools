@@ -40,7 +40,8 @@ namespace SabreTools.Library.Skippers
         /// <summary>
         /// Logging object
         /// </summary>
-        //private readonly Logger logger; // TODO: Re-enable all logging once Logging namespace separated out
+        // TODO: Re-enable all logging once Logging namespace separated out
+        //private readonly Logger logger;
 
         #endregion
 

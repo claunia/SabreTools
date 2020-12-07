@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Features
 {
@@ -15,7 +14,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-ex", "--extract" };
             Description = "Extract and remove copier headers";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"This will detect, store, and remove copier headers from a file or folder of files. The headers are backed up and collated by the hash of the unheadered file. Files are then output without the detected copier header alongside the originals with the suffix .new. No input files are altered in the process. Only uncompressed files will be processed.
 
 The following systems have headers that this program can work with:

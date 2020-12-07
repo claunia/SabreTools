@@ -2,6 +2,7 @@
 using System.IO;
 
 using SabreTools.Data;
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
@@ -18,18 +19,18 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "refresh-dats" };
             Description = "Refreshes the DAT index from the files in the DAT master directory tree.";
-            _featureType = SabreTools.Library.Help.FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"Refreshes the DAT index from the files in the DAT master directory tree.
 Detects any changes in the DAT master directory tree and updates the DAT index
 accordingly, marking deleted or overwritten dats as orphaned and updating
 contents of any changed dats.";
-            Features = new Dictionary<string, SabreTools.Library.Help.Feature>();
+            Features = new Dictionary<string, SabreTools.Help.Feature>();
 
             AddFeature(WorkersInt32Input);
             AddFeature(MissingSha1sStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

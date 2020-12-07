@@ -2,8 +2,8 @@
 using System.IO;
 
 using SabreTools.Data;
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 
 namespace RombaSharp.Features
@@ -18,7 +18,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "miss" };
             Description = "Create miss and have file";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "For each specified DAT file, create miss and have file";
             Features = new Dictionary<string, Feature>();
         }

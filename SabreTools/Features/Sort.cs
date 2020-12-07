@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Help;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
@@ -18,7 +18,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-ss", "--sort" };
             Description = "Sort inputs by a set of DATs";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "This feature allows the user to quickly rebuild based on a supplied DAT file(s). By default all files will be rebuilt to uncompressed folders in the output directory.";
             Features = new Dictionary<string, Feature>();
 

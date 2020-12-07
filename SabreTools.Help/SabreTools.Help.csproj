@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
     <RuntimeIdentifiers>win10-x64;win7-x86</RuntimeIdentifiers>
     <Configurations>Debug;Release</Configurations>
@@ -11,14 +10,5 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
     <DefineConstants>NET_FRAMEWORK</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\SabreTools.Help\SabreTools.Help.csproj" />
-    <ProjectReference Include="..\SabreTools.Library\SabreTools.Library.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 
 </Project>

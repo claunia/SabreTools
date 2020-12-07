@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -13,7 +13,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "-??", "-hd", "--help-detailed" };
             Description = "Show this detailed help";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Display a detailed help text to the screen.";
             Features = new Dictionary<string, Feature>();
         }

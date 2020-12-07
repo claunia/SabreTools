@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 
 namespace SabreTools.Features
 {
@@ -13,12 +13,12 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-??", "-hd", "--help-detailed" };
             Description = "Show this detailed help";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Display a detailed help text to the screen.";
             Features = new Dictionary<string, Feature>();
         }
 
-        public override bool ProcessArgs(string[] args, Help help)
+        public override bool ProcessArgs(string[] args, Help.Help help)
         {
             // If we had something else after help
             if (args.Length > 1)

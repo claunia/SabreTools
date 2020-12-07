@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Logging;
-
-namespace SabreTools.Library.Help
+namespace SabreTools.Help
 {
     /// <summary>
     /// Represents an actionable top-level feature
@@ -25,7 +23,8 @@ namespace SabreTools.Library.Help
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger;
+        // TODO: Re-enable all logging once Logging namespace separated out
+        //private readonly Logger logger;
 
         #endregion
 
@@ -36,7 +35,7 @@ namespace SabreTools.Library.Help
         /// </summary>
         public TopLevel()
         {
-            logger = new Logger(this);
+            //logger = new Logger(this);
         }
 
         #endregion
@@ -68,9 +67,9 @@ namespace SabreTools.Library.Help
                     // Everything else isn't a file
                     else
                     {
-                        logger.Error($"Invalid input detected: {args[i]}");
+                        //logger.Error($"Invalid input detected: {args[i]}");
                         help.OutputIndividualFeature(this.Name);
-                        LoggerImpl.Close();
+                        //LoggerImpl.Close();
                         return false;
                     }
                 }

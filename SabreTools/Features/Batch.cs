@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.Filtering;
@@ -21,7 +22,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-bt", "--batch" };
             Description = "Enable batch mode";
-            _featureType = SabreTools.Library.Help.FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"Run a special mode that takes input files as lists of batch commands to run sequentially. Each command has to be its own line and must be followed by a semicolon (`;`). Commented lines may start with either `REM` or `#`. Multiple batch files are allowed but they will be run independently from each other.
 
 The following commands are currently implemented:
@@ -41,10 +42,10 @@ Add new output format(s):           format(datformat, ...);
 Set the output directory:           output(outdir);
 Write the internal items:           write([overwrite = true]);
 Reset the internal state:           reset();";
-            Features = new Dictionary<string, Library.Help.Feature>();
+            Features = new Dictionary<string, Help.Feature>();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
 using SabreTools.Library.Reports;
 
 namespace RombaSharp.Features
@@ -16,7 +16,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "datstats" };
             Description = "Prints dat stats.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Print dat stats.";
             Features = new Dictionary<string, Feature>();
         }

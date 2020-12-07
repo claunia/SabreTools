@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -13,7 +13,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "progress" };
             Description = "Shows progress of the currently running command.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Shows progress of the currently running command.";
             Features = new Dictionary<string, Feature>();
         }

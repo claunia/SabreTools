@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
-using SabreTools.Library.Logging;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -14,7 +13,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "fixdat" };
             Description = "For each specified DAT file it creates a fix DAT.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"For each specified DAT file it creates a fix DAT with the missing entries for that DAT. If nothing is missing it doesn't create a fix DAT for that particular DAT.";
             Features = new Dictionary<string, Feature>();
 

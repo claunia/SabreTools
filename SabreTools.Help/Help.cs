@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SabreTools.Library.Help
+namespace SabreTools.Help
 {
     public class Help
     {

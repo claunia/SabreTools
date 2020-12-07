@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using RombaSharp.Features;
 using SabreTools.Data;
-using SabreTools.Library.Help;
+using SabreTools.Help;
 using SabreTools.Library.Logging;
 
 namespace RombaSharp

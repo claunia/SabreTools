@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 using SabreTools.Library.IO;
 using Microsoft.Data.Sqlite;
 
@@ -17,7 +17,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "export" };
             Description = "Exports db to export.csv";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Exports db to standardized export.csv";
             Features = new Dictionary<string, Feature>();
         }

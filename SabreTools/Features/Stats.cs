@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
 
 namespace SabreTools.Features
 {
@@ -15,7 +15,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-st", "--stats" };
             Description = "Get statistics on all input DATs";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"This will output by default the combined statistics for all input DAT files.
 
 The stats that are outputted are as follows:

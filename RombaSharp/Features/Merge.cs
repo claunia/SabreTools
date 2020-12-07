@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 using SabreTools.Library.IO;
 
 namespace RombaSharp.Features
@@ -16,7 +16,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "merge" };
             Description = "Merges depot";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Merges specified depot into current depot.";
             Features = new Dictionary<string, Feature>();
 

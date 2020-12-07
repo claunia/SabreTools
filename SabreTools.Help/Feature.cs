@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SabreTools.Library.Help
+namespace SabreTools.Help
 {
     public class Feature
     {
         #region Protected instance variables
 
-        protected FeatureType _featureType;
+        protected ParameterType _featureType;
         protected bool _foundOnce = false;
         protected object _value = null;
 
@@ -32,11 +32,11 @@ namespace SabreTools.Library.Help
             this.Flags = new List<string>();
             this.Description = null;
             this.LongDescription = null;
-            this._featureType = FeatureType.Flag;
+            this._featureType = ParameterType.Flag;
             this.Features = new Dictionary<string, Feature>();
         }
 
-        public Feature(string name, string flag, string description, FeatureType featureType, string longDescription = null)
+        public Feature(string name, string flag, string description, ParameterType featureType, string longDescription = null)
         {
             this.Name = name;
             this.Flags = new List<string>
@@ -49,7 +49,7 @@ namespace SabreTools.Library.Help
             this.Features = new Dictionary<string, Feature>();
         }
 
-        public Feature(string name, List<string> flags, string description, FeatureType featureType, string longDescription = null)
+        public Feature(string name, List<string> flags, string description, ParameterType featureType, string longDescription = null)
         {
             this.Name = name;
             this.Flags = flags;
@@ -172,16 +172,16 @@ namespace SabreTools.Library.Help
             this.Flags.CopyTo(newflags);
             switch (_featureType)
             {
-                case FeatureType.Int32:
-                case FeatureType.Int64:
-                case FeatureType.List:
-                case FeatureType.String:
+                case ParameterType.Int32:
+                case ParameterType.Int64:
+                case ParameterType.List:
+                case ParameterType.String:
                     for (int i = 0; i < newflags.Length; i++)
                     {
                         newflags[i] += "=";
                     }
                     break;
-                case FeatureType.Flag:
+                case ParameterType.Flag:
                 default:
                     // No-op
                     break;
@@ -310,16 +310,16 @@ namespace SabreTools.Library.Help
             this.Flags.CopyTo(newflags);
             switch (_featureType)
             {
-                case FeatureType.Int32:
-                case FeatureType.Int64:
-                case FeatureType.List:
-                case FeatureType.String:
+                case ParameterType.Int32:
+                case ParameterType.Int64:
+                case ParameterType.List:
+                case ParameterType.String:
                     for (int i = 0; i < newflags.Length; i++)
                     {
                         newflags[i] += "=";
                     }
                     break;
-                case FeatureType.Flag:
+                case ParameterType.Flag:
                 default:
                     // No-op
                     break;
@@ -427,7 +427,7 @@ namespace SabreTools.Library.Help
             switch (_featureType)
             {
                 // If we have a flag, make sure it doesn't have an equal sign in it 
-                case FeatureType.Flag:
+                case ParameterType.Flag:
                     valid = !input.Contains("=") && this.Flags.Contains(input);
                     if (valid)
                     {
@@ -443,7 +443,7 @@ namespace SabreTools.Library.Help
                     break;
 
                 // If we have an Int32, try to parse it if at all possible
-                case FeatureType.Int32:
+                case ParameterType.Int32:
                     valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
@@ -462,7 +462,7 @@ namespace SabreTools.Library.Help
                     break;
 
                 // If we have an Int32, try to parse it if at all possible
-                case FeatureType.Int64:
+                case ParameterType.Int64:
                     valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
@@ -481,7 +481,7 @@ namespace SabreTools.Library.Help
                     break;
 
                 // If we have an input, make sure it has an equals sign in it
-                case FeatureType.List:
+                case ParameterType.List:
                     valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
@@ -493,7 +493,7 @@ namespace SabreTools.Library.Help
 
                     break;
 
-                case FeatureType.String:
+                case ParameterType.String:
                     valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
@@ -521,7 +521,7 @@ namespace SabreTools.Library.Help
         /// </summary>
         public bool GetBoolValue()
         {
-            if (_featureType != FeatureType.Flag)
+            if (_featureType != ParameterType.Flag)
                 throw new ArgumentException("Feature is not a flag");
 
             return (_value as bool?) ?? false;
@@ -532,7 +532,7 @@ namespace SabreTools.Library.Help
         /// </summary>
         public string GetStringValue()
         {
-            if (_featureType != FeatureType.String)
+            if (_featureType != ParameterType.String)
                 throw new ArgumentException("Feature is not a string");
 
             return (_value as string);
@@ -543,7 +543,7 @@ namespace SabreTools.Library.Help
         /// </summary>
         public int GetInt32Value()
         {
-            if (_featureType != FeatureType.Int32)
+            if (_featureType != ParameterType.Int32)
                 throw new ArgumentException("Feature is not an int");
 
             return (_value as int?) ?? int.MinValue;
@@ -554,7 +554,7 @@ namespace SabreTools.Library.Help
         /// </summary>
         public long GetInt64Value()
         {
-            if (_featureType != FeatureType.Int64)
+            if (_featureType != ParameterType.Int64)
                 throw new ArgumentException("Feature is not a long");
 
             return (_value as long?) ?? long.MinValue;
@@ -565,7 +565,7 @@ namespace SabreTools.Library.Help
         /// </summary>
         public List<string> GetListValue()
         {
-            if (_featureType != FeatureType.List)
+            if (_featureType != ParameterType.List)
                 throw new ArgumentException("Feature is not a list");
 
             return (_value as List<string>) ?? new List<string>();
@@ -580,15 +580,15 @@ namespace SabreTools.Library.Help
 #if NET_FRAMEWORK
             switch (_featureType)
             {
-                case FeatureType.Flag:
+                case ParameterType.Flag:
                     return (_value as bool?) == true;
-                case FeatureType.String:
+                case ParameterType.String:
                     return (_value as string) != null;
-                case FeatureType.Int32:
+                case ParameterType.Int32:
                     return (_value as int?).HasValue && (_value as int?).Value != int.MinValue;
-                case FeatureType.Int64:
+                case ParameterType.Int64:
                     return (_value as long?).HasValue && (_value as long?).Value != long.MinValue;
-                case FeatureType.List:
+                case ParameterType.List:
                     return (_value as List<string>) != null;
                 default:
                     return false;
@@ -596,11 +596,11 @@ namespace SabreTools.Library.Help
 #else
             return _featureType switch
             {
-                FeatureType.Flag => (_value as bool?) == true,
-                FeatureType.String => (_value as string) != null,
-                FeatureType.Int32 => (_value as int?).HasValue && (_value as int?).Value != int.MinValue,
-                FeatureType.Int64 => (_value as long?).HasValue && (_value as long?).Value != long.MinValue,
-                FeatureType.List => (_value as List<string>) != null,
+                ParameterType.Flag => (_value as bool?) == true,
+                ParameterType.String => (_value as string) != null,
+                ParameterType.Int32 => (_value as int?).HasValue && (_value as int?).Value != int.MinValue,
+                ParameterType.Int64 => (_value as long?).HasValue && (_value as long?).Value != long.MinValue,
+                ParameterType.List => (_value as List<string>) != null,
                 _ => false,
             };
 #endif
