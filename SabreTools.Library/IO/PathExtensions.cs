@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-using SabreTools.Library.Data;
+using SabreTools.Data;
 
 namespace SabreTools.Library.IO
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SabreTools.Library.Data
+namespace SabreTools.Data
 {
     /// <summary>
     /// Generic console preparation for program output

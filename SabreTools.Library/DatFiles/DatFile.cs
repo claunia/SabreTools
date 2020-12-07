@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-using SabreTools.Library.Data;
+using SabreTools.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;

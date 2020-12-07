@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using SabreTools.Library.Data;
+using SabreTools.Data;
 
 namespace SabreTools.Library.IO
 {

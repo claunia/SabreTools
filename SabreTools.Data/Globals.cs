@@ -3,9 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using SabreTools.Library.Logging;
-
-namespace SabreTools.Library.Data
+namespace SabreTools.Data
 {
     /// <summary>
     /// Globally-accessible objects for the library

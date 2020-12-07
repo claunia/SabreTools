@@ -1,7 +1,5 @@
-﻿using SabreTools.Library.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace SabreTools.Library.Help

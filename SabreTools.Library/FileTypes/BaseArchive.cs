@@ -3,7 +3,6 @@ using System.IO;
 
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
-using SabreTools.Library.Logging;
 
 namespace SabreTools.Library.FileTypes
 {

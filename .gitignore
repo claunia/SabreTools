@@ -8,6 +8,8 @@
 /SabreTools/obj/
 /SabreTools/Properties/launchSettings.json
 /SabreTools/SabreTools.csproj.user
+/SabreTools.Data/bin/
+/SabreTools.Data/obj/
 /SabreTools.Library/bin/
 /SabreTools.Library/obj/
 /SabreTools.userprefs

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
+
 using Aaru.Checksums;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.External;
