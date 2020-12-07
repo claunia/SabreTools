@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.IO;
-using SabreTools.Library.Logging;
-
 namespace SabreTools.Library.Skippers
 {
     public class SkipperRule
@@ -43,7 +40,7 @@ namespace SabreTools.Library.Skippers
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger;
+        //private readonly Logger logger; // TODO: Re-enable all logging once Logging namespace separated out
 
         #endregion
 
@@ -54,7 +51,7 @@ namespace SabreTools.Library.Skippers
         /// </summary>
         public SkipperRule()
         {
-            logger = new Logger(this);
+            //logger = new Logger(this);
         }
 
         #endregion
@@ -87,20 +84,20 @@ namespace SabreTools.Library.Skippers
             // If the input file doesn't exist, fail
             if (!File.Exists(input))
             {
-                logger.Error($"I'm sorry but '{input}' doesn't exist!");
+                //logger.Error($"I'm sorry but '{input}' doesn't exist!");
                 return false;
             }
 
             // Create the output directory if it doesn't already
-            DirectoryExtensions.Ensure(Path.GetDirectoryName(output));
+            Ensure(Path.GetDirectoryName(output));
 
-            logger.User($"Attempting to apply rule to '{input}'");
-            bool success = TransformStream(FileExtensions.TryOpenRead(input), FileExtensions.TryCreate(output));
+            //logger.User($"Attempting to apply rule to '{input}'");
+            bool success = TransformStream(TryOpenRead(input), TryCreate(output));
 
             // If the output file has size 0, delete it
             if (new FileInfo(output).Length == 0)
             {
-                FileExtensions.TryDelete(output);
+                TryDelete(output);
                 success = false;
             }
 
@@ -125,7 +122,7 @@ namespace SabreTools.Library.Skippers
                 || (Operation > HeaderSkipOperation.Byteswap && (extsize % 4) != 0)
                 || (Operation > HeaderSkipOperation.Bitswap && (StartOffset == null || StartOffset % 2 == 0)))
             {
-                logger.Error("The stream did not have the correct size to be transformed!");
+                //logger.Error("The stream did not have the correct size to be transformed!");
                 return false;
             }
 
@@ -134,7 +131,7 @@ namespace SabreTools.Library.Skippers
             BinaryReader br = null;
             try
             {
-                logger.User("Applying found rule to input stream");
+                //logger.User("Applying found rule to input stream");
                 bw = new BinaryWriter(output);
                 br = new BinaryReader(input);
 
@@ -222,7 +219,7 @@ namespace SabreTools.Library.Skippers
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                //logger.Error(ex);
                 return false;
             }
             finally
@@ -238,5 +235,113 @@ namespace SabreTools.Library.Skippers
 
             return success;
         }
+
+        // TODO: Remove this region once IO namespace is separated out properly
+        #region TEMPORARY - REMOVEME
+
+        /// <summary>
+        /// Ensure the output directory is a proper format and can be created
+        /// </summary>
+        /// <param name="dir">Directory to check</param>
+        /// <param name="create">True if the directory should be created, false otherwise (default)</param>
+        /// <param name="temp">True if this is a temp directory, false otherwise</param>
+        /// <returns>Full path to the directory</returns>
+        public static string Ensure(string dir, bool create = false, bool temp = false)
+        {
+            // If the output directory is invalid
+            if (string.IsNullOrWhiteSpace(dir))
+            {
+                if (temp)
+                    dir = Path.GetTempPath();
+                else
+                    dir = Environment.CurrentDirectory;
+            }
+
+            // Get the full path for the output directory
+            dir = Path.GetFullPath(dir);
+
+            // If we're creating the output folder, do so
+            if (create)
+                Directory.CreateDirectory(dir);
+
+            return dir;
+        }
+
+        /// <summary>
+        /// Try to create a file for write, optionally throwing the error
+        /// </summary>
+        /// <param name="file">Name of the file to create</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>An opened stream representing the file on success, null otherwise</returns>
+        public static FileStream TryCreate(string file, bool throwOnError = false)
+        {
+            // Now wrap opening the file
+            try
+            {
+                return File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            }
+            catch (Exception ex)
+            {
+                if (throwOnError)
+                    throw ex;
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Try to safely delete a file, optionally throwing the error
+        /// </summary>
+        /// <param name="file">Name of the file to delete</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>True if the file didn't exist or could be deleted, false otherwise</returns>
+        public static bool TryDelete(string file, bool throwOnError = false)
+        {
+            // Check if the file exists first
+            if (!File.Exists(file))
+                return true;
+
+            // Now wrap deleting the file
+            try
+            {
+                File.Delete(file);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                if (throwOnError)
+                    throw ex;
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Try to open a file for read, optionally throwing the error
+        /// </summary>
+        /// <param name="file">Name of the file to open</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>An opened stream representing the file on success, null otherwise</returns>
+        public static FileStream TryOpenRead(string file, bool throwOnError = false)
+        {
+            // Check if the file exists first
+            if (!File.Exists(file))
+                return null;
+
+            // Now wrap opening the file
+            try
+            {
+                return File.Open(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            }
+            catch (Exception ex)
+            {
+                if (throwOnError)
+                    throw ex;
+                else
+                    return null;
+            }
+        }
+
+        #endregion
     }
 }

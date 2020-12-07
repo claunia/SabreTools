@@ -4,10 +4,14 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 
-using SabreTools.Library.IO;
-
 namespace SabreTools.Library.Skippers
 {
+    /// <remarks>
+    /// It is well worth considering just moving the XML files to code, similar to how RV does it
+    /// if only because nobody really has any skippers outside of this. It would also make the
+    /// output directory cleaner and less prone to user error in case something didn't get copied
+    /// correctly. The contents of these files should still be added to the wiki, in that case.
+    /// </remarks>
     public class SkipperFile
     {
         #region Fields
@@ -55,7 +59,7 @@ namespace SabreTools.Library.Skippers
             Rules = new List<SkipperRule>();
             SourceFile = Path.GetFileNameWithoutExtension(filename);
 
-            XmlReader xtr = filename.GetXmlTextReader();
+            XmlReader xtr = GetXmlTextReader(filename);
             bool valid = Parse(xtr);
 
             // If we somehow have an invalid file, zero out the fields
@@ -403,6 +407,35 @@ namespace SabreTools.Library.Skippers
 
             // If nothing passed, we return null by default
             return null;
+        }
+
+        #endregion
+
+        // TODO: Remove this region once IO namespace is separated out properly
+        #region TEMPORARY - REMOVEME
+
+        /// <summary>
+        /// Get the XmlTextReader associated with a file, if possible
+        /// </summary>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <returns>The XmlTextReader representing the (possibly converted) file, null otherwise</returns>
+        private static XmlReader GetXmlTextReader(string filename)
+        {
+            // Check if file exists
+            if (!File.Exists(filename))
+                return null;
+
+            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
+
+            return xtr;
         }
 
         #endregion

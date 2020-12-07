@@ -4,11 +4,11 @@ using System.IO;
 using SabreTools.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.IO;
 using SabreTools.Library.Logging;
+using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;
 
-namespace SabreTools.Library.Skippers
+namespace SabreTools.Library.IO
 {
     /// <summary>
     /// Class for wrapping general file transformations
@@ -32,6 +32,11 @@ namespace SabreTools.Library.Skippers
         /// </summary>
         private static List<SkipperFile> List;
 
+        /// <summary>
+        /// Local paths
+        /// </summary>
+        private static string LocalPath = Path.Combine(Globals.ExeDir, "Skippers") + Path.DirectorySeparatorChar;
+
         #region Logging
 
         /// <summary>
@@ -40,11 +45,6 @@ namespace SabreTools.Library.Skippers
         private static readonly Logger logger = new Logger();
 
         #endregion
-
-        /// <summary>
-        /// Local paths
-        /// </summary>
-        public static string LocalPath = Path.Combine(Globals.ExeDir, "Skippers") + Path.DirectorySeparatorChar;
 
         /// <summary>
         /// Initialize static fields

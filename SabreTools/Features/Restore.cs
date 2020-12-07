@@ -2,7 +2,6 @@
 
 using SabreTools.Library.Help;
 using SabreTools.Library.IO;
-using SabreTools.Library.Skippers;
 
 namespace SabreTools.Features
 {

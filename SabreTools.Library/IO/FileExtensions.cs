@@ -9,7 +9,7 @@ using SabreTools.Data;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Logging;
-using SabreTools.Library.Skippers;
+using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.IO
 {
@@ -370,7 +370,7 @@ namespace SabreTools.Library.IO
             // Try to match the supplied header skipper
             if (header != null)
             {
-                SkipperRule rule = Transform.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
+                var rule = Transform.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
 
                 // If there's a match, transform the stream before getting info
                 if (rule.Tests != null && rule.Tests.Count != 0)
