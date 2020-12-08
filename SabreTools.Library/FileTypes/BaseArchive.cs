@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 
 namespace SabreTools.Library.FileTypes
 {
@@ -55,7 +56,7 @@ namespace SabreTools.Library.FileTypes
             BaseArchive archive = null;
 
             // First get the archive type
-            FileType? at = input.GetFileType();
+            FileType? at = GetFileType(input);
 
             // If we got back null, then it's not an archive, so we we return
             if (at == null)

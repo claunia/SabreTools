@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SabreTools.Data\SabreTools.Data.csproj" />
+    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
   </ItemGroup>
 
 </Project>

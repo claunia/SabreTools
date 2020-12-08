@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Logging;
-
+// TODO: Figure out a reasonable way of adding logging back to this
 namespace SabreTools.IO
 {
     /// <summary>
@@ -20,12 +19,22 @@ namespace SabreTools.IO
         {
             foreach (string file in Directory.EnumerateFiles(dir, "*", SearchOption.TopDirectoryOnly))
             {
-                FileTryDelete(file);
+                try
+                {
+                    if (File.Exists(file))
+                        File.Delete(file);
+                }
+                catch { }
             }
 
             foreach (string subdir in Directory.EnumerateDirectories(dir, "*", SearchOption.TopDirectoryOnly))
             {
-                TryDelete(subdir);
+                try
+                {
+                    if (Directory.Exists(subdir))
+                        Directory.Delete(subdir);
+                }
+                catch { }
             }
         }
 
@@ -90,7 +99,7 @@ namespace SabreTools.IO
                 }
                 catch (Exception ex)
                 {
-                    LoggerImpl.Error(ex, $"An exception occurred getting the full path for '{input}'");
+                    //LoggerImpl.Error(ex, $"An exception occurred getting the full path for '{input}'");
                     continue;
                 }
 
@@ -105,11 +114,11 @@ namespace SabreTools.IO
                         }
                         catch (PathTooLongException ex)
                         {
-                            LoggerImpl.Warning(ex, $"The path for '{dir}' was too long");
+                            //LoggerImpl.Warning(ex, $"The path for '{dir}' was too long");
                         }
                         catch (Exception ex)
                         {
-                            LoggerImpl.Error(ex, $"An exception occurred processing '{dir}'");
+                            //LoggerImpl.Error(ex, $"An exception occurred processing '{dir}'");
                         }
                     }
                 }
@@ -186,7 +195,7 @@ namespace SabreTools.IO
                 }
                 catch (Exception ex)
                 {
-                    LoggerImpl.Error(ex, $"An exception occurred getting the full path for '{input}'");
+                    //LoggerImpl.Error(ex, $"An exception occurred getting the full path for '{input}'");
                     continue;
                 }
 
@@ -201,11 +210,11 @@ namespace SabreTools.IO
                         }
                         catch (PathTooLongException ex)
                         {
-                            LoggerImpl.Warning(ex, $"The path for '{file}' was too long");
+                            //LoggerImpl.Warning(ex, $"The path for '{file}' was too long");
                         }
                         catch (Exception ex)
                         {
-                            LoggerImpl.Error(ex, $"An exception occurred processing '{file}'");
+                            //LoggerImpl.Error(ex, $"An exception occurred processing '{file}'");
                         }
                     }
                 }
@@ -217,11 +226,11 @@ namespace SabreTools.IO
                     }
                     catch (PathTooLongException ex)
                     {
-                        LoggerImpl.Warning(ex, $"The path for '{input}' was too long");
+                        //LoggerImpl.Warning(ex, $"The path for '{input}' was too long");
                     }
                     catch (Exception ex)
                     {
-                        LoggerImpl.Error(ex, $"An exception occurred processing '{input}'");
+                        //LoggerImpl.Error(ex, $"An exception occurred processing '{input}'");
                     }
                 }
             }
@@ -287,85 +296,8 @@ namespace SabreTools.IO
                 .ToList();
         }
 
-        /// <summary>
-        /// Try to safely delete a directory, optionally throwing the error
-        /// </summary>
-        /// <param name="file">Name of the directory to delete</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the file didn't exist or could be deleted, false otherwise</returns>
-        public static bool TryCreateDirectory(string file, bool throwOnError = false)
-        {
-            // Now wrap creating the directory
-            try
-            {
-                Directory.CreateDirectory(file);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                if (throwOnError)
-                    throw ex;
-                else
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// Try to safely delete a directory, optionally throwing the error
-        /// </summary>
-        /// <param name="file">Name of the directory to delete</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the file didn't exist or could be deleted, false otherwise</returns>
-        public static bool TryDelete(string file, bool throwOnError = false)
-        {
-            // Check if the directory exists first
-            if (!Directory.Exists(file))
-                return true;
-
-            // Now wrap deleting the directory
-            try
-            {
-                Directory.Delete(file, true);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                if (throwOnError)
-                    throw ex;
-                else
-                    return false;
-            }
-        }
-
         // TODO: Remove this entire section once External and the rest of IO is in its own library (or pulled in otherwise)
         #region TEMPORARY - REMOVEME
-
-        /// <summary>
-        /// Try to safely delete a file, optionally throwing the error
-        /// </summary>
-        /// <param name="file">Name of the file to delete</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the file didn't exist or could be deleted, false otherwise</returns>
-        private static bool FileTryDelete(string file, bool throwOnError = false)
-        {
-            // Check if the file exists first
-            if (!File.Exists(file))
-                return true;
-
-            // Now wrap deleting the file
-            try
-            {
-                File.Delete(file);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                if (throwOnError)
-                    throw ex;
-                else
-                    return false;
-            }
-        }
 
         private class NaturalComparer : Comparer<string>, IDisposable
         {

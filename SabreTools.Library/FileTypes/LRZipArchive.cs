@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Data;
 using SabreTools.Library.DatItems;
 
 namespace SabreTools.Library.FileTypes

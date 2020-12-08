@@ -1,13 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Data;
-using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Library.DatFiles;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;
+using SabreTools.Skippers;
+using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Library.IO
 {
@@ -83,7 +83,8 @@ namespace SabreTools.Library.IO
         public static bool DetectTransformStore(string file, string outDir, bool nostore)
         {
             // Create the output directory if it doesn't exist
-            DirectoryExtensions.Ensure(outDir, create: true);
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
 
             logger.User($"\nGetting skipper information for '{file}'");
 
@@ -102,10 +103,10 @@ namespace SabreTools.Library.IO
             {
                 // Extract the header as a string for the database
 #if NET_FRAMEWORK
-                using (var fs = FileExtensions.TryOpenRead(file))
+                using (var fs = File.OpenRead(file))
                 {
 #else
-                using var fs = FileExtensions.TryOpenRead(file);
+                using var fs = File.OpenRead(file);
 #endif
                 byte[] hbin = new byte[(int)rule.StartOffset];
                 fs.Read(hbin, 0, (int)rule.StartOffset);
@@ -130,8 +131,8 @@ namespace SabreTools.Library.IO
             // Now add the information to the database if it's not already there
             if (!nostore)
             {
-                BaseFile baseFile = FileExtensions.GetInfo(newfile, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
-                DatabaseTools.AddHeaderToDatabase(hstr, Utilities.ByteArrayToString(baseFile.SHA1), rule.SourceFile);
+                BaseFile baseFile = BaseFile.GetInfo(newfile, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
+                AddHeaderToDatabase(hstr, Utilities.ByteArrayToString(baseFile.SHA1), rule.SourceFile);
             }
 
             return true;
@@ -150,10 +151,10 @@ namespace SabreTools.Library.IO
                 Directory.CreateDirectory(outDir);
 
             // First, get the SHA-1 hash of the file
-            BaseFile baseFile = FileExtensions.GetInfo(file, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
+            BaseFile baseFile = BaseFile.GetInfo(file, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
 
             // Retrieve a list of all related headers from the database
-            List<string> headers = DatabaseTools.RetrieveHeadersFromDatabase(Utilities.ByteArrayToString(baseFile.SHA1));
+            List<string> headers = RetrieveHeadersFromDatabase(Utilities.ByteArrayToString(baseFile.SHA1));
 
             // If we have nothing retrieved, we return false
             if (headers.Count == 0)
@@ -164,7 +165,7 @@ namespace SabreTools.Library.IO
             {
                 string outputFile = (string.IsNullOrWhiteSpace(outDir) ? $"{Path.GetFullPath(file)}.new" : Path.Combine(outDir, Path.GetFileName(file))) + i;
                 logger.User($"Creating reheadered file: {outputFile}");
-                FileExtensions.AppendBytes(file, outputFile, Utilities.StringToByteArray(headers[i]), null);
+                AppendBytes(file, outputFile, Utilities.StringToByteArray(headers[i]), null);
                 logger.User("Reheadered file created!");
             }
 
@@ -187,7 +188,7 @@ namespace SabreTools.Library.IO
                 return new SkipperRule();
             }
 
-            return GetMatchingRule(FileExtensions.TryOpenRead(input), skipperName);
+            return GetMatchingRule(File.OpenRead(input), skipperName);
         }
 
         /// <summary>
@@ -234,5 +235,171 @@ namespace SabreTools.Library.IO
 
             return skipperRule;
         }
+    
+        /// <summary>
+        /// Add an aribtrary number of bytes to the inputted file
+        /// </summary>
+        /// <param name="input">File to be appended to</param>
+        /// <param name="output">Outputted file</param>
+        /// <param name="bytesToAddToHead">Bytes to be added to head of file</param>
+        /// <param name="bytesToAddToTail">Bytes to be added to tail of file</param>
+        private static void AppendBytes(string input, string output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
+        {
+            // If any of the inputs are invalid, skip
+            if (!File.Exists(input))
+                return;
+
+#if NET_FRAMEWORK
+            using (FileStream fsr = File.OpenRead(input))
+            using (FileStream fsw = File.OpenWrite(output))
+            {
+#else
+            using FileStream fsr = File.OpenRead(input);
+            using FileStream fsw = File.OpenWrite(output);
+#endif
+                AppendBytes(fsr, fsw, bytesToAddToHead, bytesToAddToTail);
+#if NET_FRAMEWORK
+            }
+#endif
+        }
+
+        /// <summary>
+        /// Add an aribtrary number of bytes to the inputted stream
+        /// </summary>
+        /// <param name="input">Stream to be appended to</param>
+        /// <param name="output">Outputted stream</param>
+        /// <param name="bytesToAddToHead">Bytes to be added to head of stream</param>
+        /// <param name="bytesToAddToTail">Bytes to be added to tail of stream</param>
+        private static void AppendBytes(Stream input, Stream output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
+        {
+            // Write out prepended bytes
+            if (bytesToAddToHead != null && bytesToAddToHead.Length > 0)
+                output.Write(bytesToAddToHead, 0, bytesToAddToHead.Length);
+
+            // Now copy the existing file over
+            input.CopyTo(output);
+
+            // Write out appended bytes
+            if (bytesToAddToTail != null && bytesToAddToTail.Length > 0)
+                output.Write(bytesToAddToTail, 0, bytesToAddToTail.Length);
+        }
+    
+        #region Database Operations
+
+        /// <summary>
+        /// Ensure that the databse exists and has the proper schema
+        /// </summary>
+        /// <param name="db">Name of the databse</param>
+        /// <param name="connectionString">Connection string for SQLite</param>
+        private static void EnsureDatabase(string db, string connectionString)
+        {
+            // Make sure the file exists
+            if (!File.Exists(db))
+                File.Create(db);
+
+            // Open the database connection
+            SqliteConnection dbc = new SqliteConnection(connectionString);
+            dbc.Open();
+
+            // Make sure the database has the correct schema
+            try
+            {
+                string query = @"
+CREATE TABLE IF NOT EXISTS data (
+    'sha1'		TEXT		NOT NULL,
+    'header'	TEXT		NOT NULL,
+    'type'		TEXT		NOT NULL,
+    PRIMARY KEY (sha1, header, type)
+)";
+                SqliteCommand slc = new SqliteCommand(query, dbc);
+                slc.ExecuteNonQuery();
+                slc.Dispose();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            finally
+            {
+                dbc.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Add a header to the database
+        /// </summary>
+        /// <param name="header">String representing the header bytes</param>
+        /// <param name="SHA1">SHA-1 of the deheadered file</param>
+        /// <param name="type">Name of the source skipper file</param>
+        private static void AddHeaderToDatabase(string header, string SHA1, string source)
+        {
+            // Ensure the database exists
+            EnsureDatabase(Constants.HeadererFileName, Constants.HeadererConnectionString);
+
+            // Open the database connection
+            SqliteConnection dbc = new SqliteConnection(Constants.HeadererConnectionString);
+            dbc.Open();
+
+            string query = $"SELECT * FROM data WHERE sha1='{SHA1}' AND header='{header}'";
+            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteDataReader sldr = slc.ExecuteReader();
+            bool exists = sldr.HasRows;
+
+            if (!exists)
+            {
+                query = $"INSERT INTO data (sha1, header, type) VALUES ('{SHA1}', '{header}', '{source}')";
+                slc = new SqliteCommand(query, dbc);
+                logger.Verbose($"Result of inserting header: {slc.ExecuteNonQuery()}");
+            }
+
+            // Dispose of database objects
+            slc.Dispose();
+            sldr.Dispose();
+            dbc.Dispose();
+        }
+
+        /// <summary>
+        /// Retrieve headers from the database
+        /// </summary>
+        /// <param name="SHA1">SHA-1 of the deheadered file</param>
+        /// <returns>List of strings representing the headers to add</returns>
+        private static List<string> RetrieveHeadersFromDatabase(string SHA1)
+        {
+            // Ensure the database exists
+            EnsureDatabase(Constants.HeadererFileName, Constants.HeadererConnectionString);
+
+            // Open the database connection
+            SqliteConnection dbc = new SqliteConnection(Constants.HeadererConnectionString);
+            dbc.Open();
+
+            // Create the output list of headers
+            List<string> headers = new List<string>();
+
+            string query = $"SELECT header, type FROM data WHERE sha1='{SHA1}'";
+            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteDataReader sldr = slc.ExecuteReader();
+
+            if (sldr.HasRows)
+            {
+                while (sldr.Read())
+                {
+                    logger.Verbose($"Found match with rom type '{sldr.GetString(1)}'");
+                    headers.Add(sldr.GetString(0));
+                }
+            }
+            else
+            {
+                logger.Warning("No matching header could be found!");
+            }
+
+            // Dispose of database objects
+            slc.Dispose();
+            sldr.Dispose();
+            dbc.Dispose();
+
+            return headers;
+        }
+    
+        #endregion
     }
 }

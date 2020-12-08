@@ -34,7 +34,7 @@ namespace SabreTools.Library.DatFiles
         protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all intenral variables
-            IniReader ir = filename.GetIniReader(false);
+            IniReader ir = new IniReader(filename) { ValidateRows = false };
 
             // If we got a null reader, just return
             if (ir == null)
@@ -384,7 +384,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = FileExtensions.TryCreate(outfile);
+                FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

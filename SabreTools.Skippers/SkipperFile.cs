@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 
-namespace SabreTools.Library.Skippers
+namespace SabreTools.Skippers
 {
     /// <remarks>
     /// It is well worth considering just moving the XML files to code, similar to how RV does it

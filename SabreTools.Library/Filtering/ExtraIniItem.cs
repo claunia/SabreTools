@@ -41,7 +41,7 @@ namespace SabreTools.Library.Filtering
         public bool PopulateFromFile(string ini)
         {
             // Prepare all intenral variables
-            IniReader ir = ini.GetIniReader(false);
+            IniReader ir = new IniReader(ini) { ValidateRows = false };
             bool foundRootFolder = false;
 
             // If we got a null reader, just return

@@ -17,8 +17,8 @@ using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.IO;
 using SabreTools.Library.Reports;
-using SabreTools.Library.Skippers;
 using SabreTools.Library.Tools;
+using SabreTools.Skippers;
 using NaturalSort;
 using Newtonsoft.Json;
 
@@ -1870,19 +1870,156 @@ namespace SabreTools.Library.DatFiles
             Header.FileName = (string.IsNullOrWhiteSpace(Header.FileName) ? (keepext ? Path.GetFileName(currentPath) : Path.GetFileNameWithoutExtension(currentPath)) : Header.FileName);
 
             // If the output type isn't set already, get the internal output type
-            Header.DatFormat = (Header.DatFormat == 0 ? currentPath.GetDatFormat() : Header.DatFormat);
+            DatFormat currentPathFormat = GetDatFormat(currentPath);
+            Header.DatFormat = (Header.DatFormat == 0 ? currentPathFormat : Header.DatFormat);
             Items.SetBucketedBy(Field.DatItem_CRC); // Setting this because it can reduce issues later
 
             // Now parse the correct type of DAT
             try
             {
-                Create(currentPath.GetDatFormat(), this, quotes)?.ParseFile(currentPath, indexId, keep, throwOnError);
+                Create(currentPathFormat, this, quotes)?.ParseFile(currentPath, indexId, keep, throwOnError);
             }
             catch (Exception ex)
             {
                 logger.Error(ex, $"Error with file '{currentPath}'");
                 if (throwOnError) throw ex;
             }
+        }
+
+        /// <summary>
+        /// Get what type of DAT the input file is
+        /// </summary>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <returns>The DatFormat corresponding to the DAT</returns>
+        protected DatFormat GetDatFormat(string filename)
+        {
+            // Limit the output formats based on extension
+            if (!PathExtensions.HasValidDatExtension(filename))
+                return 0;
+
+            // Get the extension from the filename
+            string ext = PathExtensions.GetNormalizedExtension(filename);
+
+            // Check if file exists
+            if (!File.Exists(filename))
+                return 0;
+            
+            // Some formats should only require the extension to know
+            switch (ext)
+            {
+                case "csv":
+                    return DatFormat.CSV;
+                case "json":
+                    return DatFormat.SabreJSON;
+                case "md5":
+                    return DatFormat.RedumpMD5;
+#if NET_FRAMEWORK
+                case "ripemd160":
+                    return DatFormat.RedumpRIPEMD160;
+#endif
+                case "sfv":
+                    return DatFormat.RedumpSFV;
+                case "sha1":
+                    return DatFormat.RedumpSHA1;
+                case "sha256":
+                    return DatFormat.RedumpSHA256;
+                case "sha384":
+                    return DatFormat.RedumpSHA384;
+                case "sha512":
+                    return DatFormat.RedumpSHA512;
+                case "spamsum":
+                    return DatFormat.RedumpSpamSum;
+                case "ssv":
+                    return DatFormat.SSV;
+                case "tsv":
+                    return DatFormat.TSV;
+            }
+
+            // For everything else, we need to read it
+            // Get the first two non-whitespace, non-comment lines to check, if possible
+            string first = string.Empty, second = string.Empty;
+
+            try
+            {
+                using (StreamReader sr = File.OpenText(filename))
+                {
+                    first = sr.ReadLine().ToLowerInvariant();
+                    while ((string.IsNullOrWhiteSpace(first) || first.StartsWith("<!--"))
+                        && !sr.EndOfStream)
+                    {
+                        first = sr.ReadLine().ToLowerInvariant();
+                    }
+
+                    if (!sr.EndOfStream)
+                    {
+                        second = sr.ReadLine().ToLowerInvariant();
+                        while (string.IsNullOrWhiteSpace(second) || second.StartsWith("<!--")
+                            && !sr.EndOfStream)
+                        {
+                            second = sr.ReadLine().ToLowerInvariant();
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            // If we have an XML-based DAT
+            if (first.Contains("<?xml") && first.Contains("?>"))
+            {
+                if (second.StartsWith("<!doctype datafile"))
+                    return DatFormat.Logiqx;
+
+                else if (second.StartsWith("<!doctype mame")
+                    || second.StartsWith("<!doctype m1")
+                    || second.StartsWith("<mame")
+                    || second.StartsWith("<m1"))
+                    return DatFormat.Listxml;
+
+                else if (second.StartsWith("<!doctype softwaredb"))
+                    return DatFormat.OpenMSX;
+
+                else if (second.StartsWith("<!doctype softwarelist"))
+                    return DatFormat.SoftwareList;
+
+                else if (second.StartsWith("<!doctype sabredat"))
+                    return DatFormat.SabreXML;
+
+                else if ((second.StartsWith("<dat") && !second.StartsWith("<datafile"))
+                    || second.StartsWith("<?xml-stylesheet"))
+                    return DatFormat.OfflineList;
+
+                // Older and non-compliant DATs
+                else
+                    return DatFormat.Logiqx;
+            }
+
+            // If we have an SMDB (SHA-256, Filename, SHA-1, MD5, CRC32)
+            else if (Regex.IsMatch(first, @"[0-9a-f]{64}\t.*?\t[0-9a-f]{40}\t[0-9a-f]{32}\t[0-9a-f]{8}"))
+                return DatFormat.EverdriveSMDB;
+
+            // If we have an INI-based DAT
+            else if (first.Contains("[") && first.Contains("]"))
+                return DatFormat.RomCenter;
+
+            // If we have a listroms DAT
+            else if (first.StartsWith("roms required for driver"))
+                return DatFormat.Listrom;
+
+            // If we have a CMP-based DAT
+            else if (first.Contains("clrmamepro"))
+                return DatFormat.ClrMamePro;
+
+            else if (first.Contains("romvault"))
+                return DatFormat.ClrMamePro;
+
+            else if (first.Contains("doscenter"))
+                return DatFormat.DOSCenter;
+
+            else if (first.Contains("#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra"))
+                return DatFormat.AttractMode;
+
+            else
+                return DatFormat.ClrMamePro;
         }
 
         /// <summary>
@@ -2043,7 +2180,10 @@ namespace SabreTools.Library.DatFiles
             // Now that we're done, delete the temp folder (if it's not the default)
             logger.User("Cleaning temp folder");
             if (Globals.TempDir != Path.GetTempPath())
-                DirectoryExtensions.TryDelete(Globals.TempDir);
+            {
+                if (Directory.Exists(Globals.TempDir))
+                    Directory.Delete(Globals.TempDir, true);
+            }
 
             return true;
         }
@@ -2247,7 +2387,7 @@ namespace SabreTools.Library.DatFiles
         private void ProcessFile(string item, string basePath, Hash hashes, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = FileExtensions.GetInfo(item, header: Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
+            BaseFile baseFile = BaseFile.GetInfo(item, header: Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
             DatItem datItem = DatItem.Create(baseFile);
             ProcessFileHelper(item, datItem, basePath, string.Empty);
         }
@@ -2504,7 +2644,7 @@ namespace SabreTools.Library.DatFiles
 
                 // If we are supposed to delete the depot file, do so
                 if (delete && usedInternally)
-                    FileExtensions.TryDelete(foundpath);
+                    File.Delete(foundpath);
             }
 
             watch.Stop();
@@ -2579,7 +2719,7 @@ namespace SabreTools.Library.DatFiles
 
                     // If we are supposed to delete the file, do so
                     if (delete && rebuilt)
-                        FileExtensions.TryDelete(input);
+                        File.Delete(input);
                 }
 
                 // If the input is a directory
@@ -2593,7 +2733,7 @@ namespace SabreTools.Library.DatFiles
 
                         // If we are supposed to delete the file, do so
                         if (delete && rebuilt)
-                            FileExtensions.TryDelete(input);
+                            File.Delete(input);
                     }
                 }
             }
@@ -2653,7 +2793,7 @@ namespace SabreTools.Library.DatFiles
             // If the entries list is null, we encountered an error or have a file and should scan externally
             if (entries == null && File.Exists(file))
             {
-                BaseFile internalFileInfo = FileExtensions.GetInfo(file, asFiles: asFiles);
+                BaseFile internalFileInfo = BaseFile.GetInfo(file, asFiles: asFiles);
 
                 // Create the correct DatItem
                 DatItem internalDatItem;
@@ -2982,7 +3122,7 @@ namespace SabreTools.Library.DatFiles
             // Otherwise, just open the filestream
             else
             {
-                stream = FileExtensions.TryOpenRead(file);
+                stream = File.OpenRead(file);
             }
 
             // If the stream is null, then continue

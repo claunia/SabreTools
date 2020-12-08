@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using SabreTools.IO;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.IO;
 
 namespace SabreTools.Library.Reports
 {
@@ -28,7 +28,7 @@ namespace SabreTools.Library.Reports
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
         public BaseReport(string filename, bool baddumpCol = false, bool nodumpCol = false)
         {
-            var fs = FileExtensions.TryCreate(filename);
+            var fs = File.Create(filename);
             if (fs != null)
                 _writer = new StreamWriter(fs);
 

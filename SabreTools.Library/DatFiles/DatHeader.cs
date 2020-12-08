@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
+using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 

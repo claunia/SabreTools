@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 
 namespace SabreTools.Library.DatFiles
 {
@@ -47,7 +46,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = FileExtensions.TryCreate(outfile);
+                FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

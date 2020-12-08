@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -35,7 +35,7 @@ namespace SabreTools.Library.DatFiles
         protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
-            StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(filename), new UTF8Encoding(false));
+            StreamReader sr = new StreamReader(File.OpenRead(filename), new UTF8Encoding(false));
             JsonTextReader jtr = new JsonTextReader(sr);
 
             // If we got a null reader, just return
@@ -342,7 +342,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = FileExtensions.TryCreate(outfile);
+                FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

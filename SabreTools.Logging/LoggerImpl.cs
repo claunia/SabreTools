@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Data;
+using SabreTools.IO;
 
 namespace SabreTools.Logging
 {
@@ -86,7 +87,7 @@ namespace SabreTools.Logging
         {
             // Set and create the output
             if (addDate)
-                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{GetNormalizedExtension(filename)}";
+                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{PathExtensions.GetNormalizedExtension(filename)}";
             else
                 Filename = filename;
         }
@@ -111,7 +112,7 @@ namespace SabreTools.Logging
                 if (!string.IsNullOrEmpty(LogDirectory) && !Directory.Exists(LogDirectory))
                     Directory.CreateDirectory(LogDirectory);
 
-                FileStream logfile = TryCreate(Path.Combine(LogDirectory, Filename));
+                FileStream logfile = File.Create(Path.Combine(LogDirectory, Filename));
                 _log = new StreamWriter(logfile, Encoding.UTF8, (int)(4 * Constants.KibiByte), true)
                 {
                     AutoFlush = true
@@ -412,57 +413,6 @@ namespace SabreTools.Logging
         public static void Error(object instance, long total, long current, string output = null)
         {
             LogEventHandler(instance, new LogEventArgs(total, current, LogLevel.ERROR, output));
-        }
-
-        #endregion
-
-        // TODO: Remove this region once IO namespace is separated out properly
-        #region TEMPORARY - REMOVEME
-
-        /// <summary>
-        /// Get the extension from the path, if possible
-        /// </summary>
-        /// <param name="path">Path to get extension from</param>
-        /// <returns>Extension, if possible</returns>
-        public static string GetNormalizedExtension(string path)
-        {
-            // Check null or empty first
-            if (string.IsNullOrWhiteSpace(path))
-                return null;
-
-            // Get the extension from the path, if possible
-            string ext = Path.GetExtension(path)?.ToLowerInvariant();
-
-            // Check if the extension is null or empty
-            if (string.IsNullOrWhiteSpace(ext))
-                return null;
-
-            // Make sure that extensions are valid
-            ext = ext.TrimStart('.');
-
-            return ext;
-        }
-
-        /// <summary>
-        /// Try to create a file for write, optionally throwing the error
-        /// </summary>
-        /// <param name="file">Name of the file to create</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>An opened stream representing the file on success, null otherwise</returns>
-        public static FileStream TryCreate(string file, bool throwOnError = false)
-        {
-            // Now wrap opening the file
-            try
-            {
-                return File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            }
-            catch (Exception ex)
-            {
-                if (throwOnError)
-                    throw ex;
-                else
-                    return null;
-            }
         }
 
         #endregion

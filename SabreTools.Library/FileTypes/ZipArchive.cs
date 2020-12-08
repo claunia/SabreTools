@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 using Compress;
 using Compress.ZipFile;
@@ -87,7 +87,7 @@ namespace SabreTools.Library.FileTypes
                         continue;
                     }
 
-                    FileStream writeStream = FileExtensions.TryCreate(Path.Combine(outDir, zf.Filename(i)));
+                    FileStream writeStream = File.Create(Path.Combine(outDir, zf.Filename(i)));
 
                     // If the stream is smaller than the buffer, just run one loop through to avoid issues
                     if (streamsize < _bufferSize)
@@ -156,7 +156,7 @@ namespace SabreTools.Library.FileTypes
                 Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
 
                 // Now open and write the file if possible
-                FileStream fs = FileExtensions.TryCreate(realEntry);
+                FileStream fs = File.Create(realEntry);
                 if (fs != null)
                 {
                     ms.Seek(0, SeekOrigin.Begin);
@@ -412,7 +412,7 @@ namespace SabreTools.Library.FileTypes
         public override bool Write(string inputFile, string outDir, Rom rom)
         {
             // Get the file stream for the file and write out
-            return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom);
+            return Write(File.OpenRead(inputFile), outDir, rom);
         }
 
         /// <summary>
@@ -598,7 +598,7 @@ namespace SabreTools.Library.FileTypes
 
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
-                FileExtensions.TryDelete(archiveFileName);
+                File.Delete(archiveFileName);
 
             File.Move(tempFile, archiveFileName);
 
@@ -678,7 +678,7 @@ namespace SabreTools.Library.FileTypes
                         int index = inputIndexMap[key];
 
                         // Open the input file for reading
-                        Stream freadStream = FileExtensions.TryOpenRead(inputFiles[index]);
+                        Stream freadStream = File.OpenRead(inputFiles[index]);
                         ulong istreamSize = (ulong)(new FileInfo(inputFiles[index]).Length);
 
                         DateTime dt = DateTime.Now;
@@ -761,7 +761,7 @@ namespace SabreTools.Library.FileTypes
                         if (index < 0)
                         {
                             // Open the input file for reading
-                            Stream freadStream = FileExtensions.TryOpenRead(inputFiles[-index - 1]);
+                            Stream freadStream = File.OpenRead(inputFiles[-index - 1]);
                             ulong istreamSize = (ulong)(new FileInfo(inputFiles[-index - 1]).Length);
 
                             DateTime dt = DateTime.Now;
@@ -824,7 +824,7 @@ namespace SabreTools.Library.FileTypes
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
             {
-                FileExtensions.TryDelete(archiveFileName);
+                File.Delete(archiveFileName);
             }
             File.Move(tempFile, archiveFileName);
 

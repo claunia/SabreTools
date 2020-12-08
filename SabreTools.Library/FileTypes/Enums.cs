@@ -1253,30 +1253,6 @@ namespace SabreTools.Library.FileTypes
     }
 
     /// <summary>
-    /// Type of file that is being looked at
-    /// </summary>
-    public enum FileType
-    {
-        // Singleton
-        None = 0,
-        AaruFormat,
-        CHD,
-
-        // Can contain children
-        Folder,
-        SevenZipArchive,
-        GZipArchive,
-        LRZipArchive,
-        LZ4Archive,
-        RarArchive,
-        TapeArchive,
-        XZArchive,
-        ZipArchive,
-        ZPAQArchive,
-        ZstdArchive,
-    }
-
-    /// <summary>
     /// Output format for rebuilt files
     /// </summary>
     public enum OutputFormat

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace SabreTools.Library.Skippers
+namespace SabreTools.Skippers
 {
     /// <summary>
     /// Individual test that applies to a SkipperRule

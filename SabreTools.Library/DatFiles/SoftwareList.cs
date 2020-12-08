@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Schema;
 
 using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
 // TODO: Use softwarelist.dtd and *try* to make this write more correctly
@@ -37,7 +37,15 @@ namespace SabreTools.Library.DatFiles
         protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
-            XmlReader xtr = filename.GetXmlTextReader();
+            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
 
             // If we got a null reader, just return
             if (xtr == null)
@@ -531,7 +539,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = FileExtensions.TryCreate(outfile);
+                FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

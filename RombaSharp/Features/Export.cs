@@ -2,7 +2,6 @@
 using System.IO;
 
 using SabreTools.Help;
-using SabreTools.Library.IO;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -29,7 +28,7 @@ namespace RombaSharp.Features
 
             SqliteConnection dbc = new SqliteConnection(_connectionString);
             dbc.Open();
-            StreamWriter sw = new StreamWriter(FileExtensions.TryCreate("export.csv"));
+            StreamWriter sw = new StreamWriter(File.Create("export.csv"));
 
             // First take care of all file hashes
             sw.WriteLine("CRC,MD5,SHA-1"); // ,Depot

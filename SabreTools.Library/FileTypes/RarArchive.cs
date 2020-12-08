@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
@@ -106,7 +106,7 @@ namespace SabreTools.Library.FileTypes
                 Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
 
                 // Now open and write the file if possible
-                FileStream fs = FileExtensions.TryCreate(realEntry);
+                FileStream fs = File.Create(realEntry);
                 if (fs != null)
                 {
                     ms.Seek(0, SeekOrigin.Begin);
@@ -182,7 +182,7 @@ namespace SabreTools.Library.FileTypes
 
             try
             {
-                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(FileExtensions.TryOpenRead(this.Filename));
+                SharpCompress.Archives.Rar.RarArchive ra = SharpCompress.Archives.Rar.RarArchive.Open(File.OpenRead(this.Filename));
                 foreach (RarArchiveEntry entry in ra.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
@@ -284,7 +284,7 @@ namespace SabreTools.Library.FileTypes
         public override bool Write(string inputFile, string outDir, Rom rom)
         {
             // Get the file stream for the file and write out
-            return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom);
+            return Write(File.OpenRead(inputFile), outDir, rom);
         }
 
         /// <summary>

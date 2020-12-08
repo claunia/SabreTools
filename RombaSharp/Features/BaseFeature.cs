@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.Schema;
 
 using SabreTools.Data;
 using SabreTools.Help;
 using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
+using SabreTools.Library.FileTypes;
 using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;
 
@@ -479,7 +480,7 @@ CREATE TABLE IF NOT EXISTS dat (
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = Utilities.ByteArrayToString(FileExtensions.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
+                    string sha1 = Utilities.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
                     foundDats.Add(sha1, fullpath);
                 }
                 else
@@ -510,7 +511,15 @@ CREATE TABLE IF NOT EXISTS dat (
             Dictionary<string, Tuple<long, bool>> depots = new Dictionary<string, Tuple<long, bool>>();
 
             // Get the XML text reader for the configuration file, if possible
-            XmlReader xtr = _config.GetXmlTextReader();
+            XmlReader xtr = XmlReader.Create(_config, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
 
             // Now parse the XML file for settings
             if (xtr != null)

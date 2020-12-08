@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-
-using SabreTools.Logging;
 
 namespace SabreTools.IO
 {
@@ -11,27 +8,6 @@ namespace SabreTools.IO
     /// </summary>
     public static class StreamExtensions
     {
-        /// <summary>
-        /// Add an aribtrary number of bytes to the inputted stream
-        /// </summary>
-        /// <param name="input">Stream to be appended to</param>
-        /// <param name="output">Outputted stream</param>
-        /// <param name="bytesToAddToHead">Bytes to be added to head of stream</param>
-        /// <param name="bytesToAddToTail">Bytes to be added to tail of stream</param>
-        public static void AppendBytes(Stream input, Stream output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
-        {
-            // Write out prepended bytes
-            if (bytesToAddToHead != null && bytesToAddToHead.Count() > 0)
-                output.Write(bytesToAddToHead, 0, bytesToAddToHead.Length);
-
-            // Now copy the existing file over
-            input.CopyTo(output);
-
-            // Write out appended bytes
-            if (bytesToAddToTail != null && bytesToAddToTail.Count() > 0)
-                output.Write(bytesToAddToTail, 0, bytesToAddToTail.Length);
-        }
-
         /// <summary>
         /// Seek to a specific point in the stream, if possible
         /// </summary>
@@ -51,16 +27,10 @@ namespace SabreTools.IO
 
                 return input.Position;
             }
-            catch (NotSupportedException ex)
+            catch
             {
-                LoggerImpl.Verbose(ex, "Stream does not support seeking to starting offset. Stream position not changed");
+                return -1;
             }
-            catch (NotImplementedException ex)
-            {
-                LoggerImpl.Warning(ex, "Stream does not support seeking to starting offset. Stream position not changed");
-            }
-
-            return -1;
         }
     }
 }

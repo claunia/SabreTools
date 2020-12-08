@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Data;
+using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 using Compress.ZipFile;
 using SharpCompress.Archives;
@@ -111,7 +111,7 @@ namespace SabreTools.Library.FileTypes
                 Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
 
                 // Now open and write the file if possible
-                FileStream fs = FileExtensions.TryCreate(realEntry);
+                FileStream fs = File.Create(realEntry);
                 if (fs != null)
                 {
                     ms.Seek(0, SeekOrigin.Begin);
@@ -187,7 +187,7 @@ namespace SabreTools.Library.FileTypes
 
             try
             {
-                TarArchive ta = TarArchive.Open(FileExtensions.TryOpenRead(this.Filename));
+                TarArchive ta = TarArchive.Open(File.OpenRead(this.Filename));
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
@@ -289,7 +289,7 @@ namespace SabreTools.Library.FileTypes
         public override bool Write(string inputFile, string outDir, Rom rom)
         {
             // Get the file stream for the file and write out
-            return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom);
+            return Write(File.OpenRead(inputFile), outDir, rom);
         }
 
         /// <summary>
@@ -422,7 +422,7 @@ namespace SabreTools.Library.FileTypes
 
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
-                FileExtensions.TryDelete(archiveFileName);
+                File.Delete(archiveFileName);
 
             File.Move(tempFile, archiveFileName);
 
@@ -503,7 +503,7 @@ namespace SabreTools.Library.FileTypes
                             usableDate = dt;
 
                         // Copy the input stream to the output
-                        tarFile.AddEntry(roms[index].Name, FileExtensions.TryOpenRead(inputFiles[index]), size: roms[index].Size ?? 0, modified: usableDate);
+                        tarFile.AddEntry(roms[index].Name, File.OpenRead(inputFiles[index]), size: roms[index].Size ?? 0, modified: usableDate);
                     }
                 }
 
@@ -561,7 +561,7 @@ namespace SabreTools.Library.FileTypes
                                 usableDate = dt;
 
                             // Copy the input file to the output
-                            tarFile.AddEntry(roms[-index - 1].Name, FileExtensions.TryOpenRead(inputFiles[-index - 1]), size: roms[-index - 1].Size ?? 0, modified: usableDate);
+                            tarFile.AddEntry(roms[-index - 1].Name, File.OpenRead(inputFiles[-index - 1]), size: roms[-index - 1].Size ?? 0, modified: usableDate);
                         }
 
                         // Otherwise, copy the file from the old archive
@@ -597,7 +597,7 @@ namespace SabreTools.Library.FileTypes
             // If the old file exists, delete it and replace
             if (File.Exists(archiveFileName))
             {
-                FileExtensions.TryDelete(archiveFileName);
+                File.Delete(archiveFileName);
             }
             File.Move(tempFile, archiveFileName);
 

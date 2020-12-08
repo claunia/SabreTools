@@ -1,4 +1,4 @@
-﻿namespace SabreTools.Library.Skippers
+﻿namespace SabreTools.Skippers
 {
     /// <summary>
     /// Determines the header skip operation

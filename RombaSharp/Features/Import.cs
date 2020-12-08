@@ -4,7 +4,6 @@ using System.Linq;
 
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Library.IO;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -38,7 +37,7 @@ namespace RombaSharp.Features
             // Now, for each of these files, attempt to add the data found inside
             foreach (string input in Inputs)
             {
-                StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(input));
+                StreamReader sr = new StreamReader(File.OpenRead(input));
 
                 // The first line should be the hash header
                 string line = sr.ReadLine();

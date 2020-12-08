@@ -36,7 +36,7 @@ namespace SabreTools.Library.DatFiles
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);
-            ClrMameProReader cmpr = new ClrMameProReader(FileExtensions.TryOpenRead(filename), enc)
+            ClrMameProReader cmpr = new ClrMameProReader(File.OpenRead(filename), enc)
             {
                 DosCenter = true
             };
@@ -278,7 +278,7 @@ namespace SabreTools.Library.DatFiles
             try
             {
                 logger.User($"Opening file for writing: {outfile}");
-                FileStream fs = FileExtensions.TryCreate(outfile);
+                FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

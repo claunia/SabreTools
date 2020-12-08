@@ -69,7 +69,7 @@ namespace SabreTools.Library.FileTypes
                 Directory.CreateDirectory(outDir);
 
                 // Decompress the _filename stream
-                FileStream outstream = FileExtensions.TryCreate(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)));
+                FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)));
                 var xz = new XZStream(File.OpenRead(this.Filename));
                 xz.CopyTo(outstream);
 
@@ -118,7 +118,7 @@ namespace SabreTools.Library.FileTypes
                 Directory.CreateDirectory(Path.GetDirectoryName(realEntry));
 
                 // Now open and write the file if possible
-                FileStream fs = FileExtensions.TryCreate(realEntry);
+                FileStream fs = File.Create(realEntry);
                 if (fs != null)
                 {
                     ms.Seek(0, SeekOrigin.Begin);
@@ -218,7 +218,7 @@ namespace SabreTools.Library.FileTypes
                         if (this.AvailableHashes == Hash.CRC)
                         {
                             xzEntryRom.Filename = gamename;
-                            using (BinaryReader br = new BinaryReader(FileExtensions.TryOpenRead(this.Filename)))
+                            using (BinaryReader br = new BinaryReader(File.OpenRead(this.Filename)))
                             {
                                 br.BaseStream.Seek(-8, SeekOrigin.End);
                                 xzEntryRom.CRC = br.ReadBytesBigEndian(4);
@@ -335,7 +335,7 @@ namespace SabreTools.Library.FileTypes
             inputFile = Path.GetFullPath(inputFile);
 
             // Get the file stream for the file and write out
-            return Write(FileExtensions.TryOpenRead(inputFile), outDir, rom);
+            return Write(File.OpenRead(inputFile), outDir, rom);
         }
 
         /// <summary>
@@ -374,7 +374,7 @@ namespace SabreTools.Library.FileTypes
             if (!File.Exists(outfile))
             {
                 // Compress the input stream
-                XZStream outputStream = new XZStream(FileExtensions.TryCreate(outfile));
+                XZStream outputStream = new XZStream(File.Create(outfile));
                 inputStream.CopyTo(outputStream);
 
                 // Dispose of everything

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -110,7 +111,7 @@ namespace SabreTools.Library.FileTypes
 
             if (getHashes)
             {
-                BaseFile temp = FileExtensions.GetInfo(this.Filename, hashes: this.AvailableHashes);
+                BaseFile temp = GetInfo(this.Filename, hashes: this.AvailableHashes);
                 if (temp != null)
                 {
                     this.Parent = temp.Parent;
@@ -164,6 +165,141 @@ namespace SabreTools.Library.FileTypes
         #endregion
 
         #region Static Methods
+
+        /// <summary>
+        /// Returns the file type of an input file
+        /// </summary>
+        /// <param name="input">Input file to check</param>
+        /// <returns>FileType of inputted file (null on error)</returns>
+        public static FileType? GetFileType(string input)
+        {
+            FileType? outFileType = null;
+
+            // If the file is null, then we have no archive type
+            if (input == null)
+                return outFileType;
+
+            // First line of defense is going to be the extension, for better or worse
+            if (!PathExtensions.HasValidArchiveExtension(input))
+                return outFileType;
+
+            // Read the first bytes of the file and get the magic number
+            BinaryReader br = new BinaryReader(File.OpenRead(input));
+            byte[] magic = br.ReadBytes(8);
+            br.Dispose();
+
+            // Now try to match it to a known signature
+            if (magic.StartsWith(Constants.SevenZipSignature))
+            {
+                outFileType = FileType.SevenZipArchive;
+            }
+            else if (magic.StartsWith(Constants.AaruFormatSignature))
+            {
+                outFileType = FileType.AaruFormat;
+            }
+            else if (magic.StartsWith(Constants.CHDSignature))
+            {
+                outFileType = FileType.CHD;
+            }
+            else if (magic.StartsWith(Constants.GzSignature))
+            {
+                outFileType = FileType.GZipArchive;
+            }
+            else if (magic.StartsWith(Constants.LRZipSignature))
+            {
+                outFileType = FileType.LRZipArchive;
+            }
+            else if (magic.StartsWith(Constants.LZ4Signature)
+                || magic.StartsWith(Constants.LZ4SkippableMinSignature)
+                || magic.StartsWith(Constants.LZ4SkippableMaxSignature))
+            {
+                outFileType = FileType.LZ4Archive;
+            }
+            else if (magic.StartsWith(Constants.RarSignature)
+                || magic.StartsWith(Constants.RarFiveSignature))
+            {
+                outFileType = FileType.RarArchive;
+            }
+            else if (magic.StartsWith(Constants.TarSignature)
+                || magic.StartsWith(Constants.TarZeroSignature))
+            {
+                outFileType = FileType.TapeArchive;
+            }
+            else if (magic.StartsWith(Constants.XZSignature))
+            {
+                outFileType = FileType.XZArchive;
+            }
+            else if (magic.StartsWith(Constants.ZipSignature)
+                || magic.StartsWith(Constants.ZipSignatureEmpty)
+                || magic.StartsWith(Constants.ZipSignatureSpanned))
+            {
+                outFileType = FileType.ZipArchive;
+            }
+            else if (magic.StartsWith(Constants.ZPAQSignature))
+            {
+                outFileType = FileType.ZPAQArchive;
+            }
+            else if (magic.StartsWith(Constants.ZstdSignature))
+            {
+                outFileType = FileType.ZstdArchive;
+            }
+
+            return outFileType;
+        }
+
+        /// <summary>
+        /// Retrieve file information for a single file
+        /// </summary>
+        /// <param name="input">Filename to get information from</param>
+        /// <param name="header">Populated string representing the name of the skipper to use, a blank string to use the first available checker, null otherwise</param>
+        /// <param name="hashes">Hashes to include in the information</param>
+        /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
+        /// <returns>Populated BaseFile object if success, empty one on error</returns>
+        public static BaseFile GetInfo(string input, string header = null, Hash hashes = Hash.Standard, TreatAsFile asFiles = 0x00)
+        {
+            // Add safeguard if file doesn't exist
+            if (!File.Exists(input))
+                return null;
+
+            // Get input information
+            var fileType = GetFileType(input);
+            Stream inputStream = File.OpenRead(input);
+
+            // Try to match the supplied header skipper
+            if (header != null)
+            {
+                var rule = Transform.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
+
+                // If there's a match, transform the stream before getting info
+                if (rule.Tests != null && rule.Tests.Count != 0)
+                {
+                    // Create the output stream
+                    MemoryStream outputStream = new MemoryStream();
+
+                    // Transform the stream and get the information from it
+                    rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
+                    inputStream = outputStream;
+                }
+            }
+
+            // Get the info in the proper manner
+            BaseFile baseFile;
+            if (fileType == FileType.AaruFormat && !asFiles.HasFlag(TreatAsFile.AaruFormat))
+                baseFile = AaruFormat.Create(inputStream);
+            else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
+                baseFile = CHDFile.Create(inputStream);
+            else
+                baseFile = GetInfo(inputStream, hashes: hashes, keepReadOpen: false);
+
+            // Dispose of the input stream
+            inputStream?.Dispose();
+
+            // Add unique data from the file
+            baseFile.Filename = Path.GetFileName(input);
+            baseFile.Date = new FileInfo(input).LastWriteTime.ToString("yyyy/MM/dd HH:mm:ss");
+
+            return baseFile;
+        }
 
         /// <summary>
         /// Retrieve file information for a single file

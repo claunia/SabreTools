@@ -2,9 +2,9 @@
 using System.IO;
 using System.Text;
 
+using SabreTools.Data;
 using SabreTools.IO;
 using SabreTools.Library.FileTypes.CHD;
-using SabreTools.Library.IO;
 
 namespace SabreTools.Library.FileTypes
 {
@@ -31,7 +31,7 @@ namespace SabreTools.Library.FileTypes
         /// <param name="filename">Filename respresenting the CHD file</param>
         public static CHDFile Create(string filename)
         {
-            using (FileStream fs = FileExtensions.TryOpenRead(filename))
+            using (FileStream fs = File.OpenRead(filename))
             {
                 return Create(fs);
             }

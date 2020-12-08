@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using SabreTools.Data;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.FileTypes
@@ -249,7 +249,7 @@ namespace SabreTools.Library.FileTypes
                 // If we had a file, copy that over to the new name
                 if (!string.IsNullOrWhiteSpace(match))
                 {
-                    FileExtensions.TryOpenRead(match).CopyTo(ms);
+                    File.OpenRead(match).CopyTo(ms);
                     realentry = match;
                 }
             }
@@ -277,7 +277,7 @@ namespace SabreTools.Library.FileTypes
                 _children = new List<BaseFile>();
                 foreach (string file in Directory.EnumerateFiles(this.Filename, "*", SearchOption.TopDirectoryOnly))
                 {
-                    BaseFile nf = FileExtensions.GetInfo(file, hashes: this.AvailableHashes);
+                    BaseFile nf = GetInfo(file, hashes: this.AvailableHashes);
                     _children.Add(nf);
                 }
 
@@ -315,7 +315,7 @@ namespace SabreTools.Library.FileTypes
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
         public virtual bool Write(string inputFile, string outDir, Rom rom)
         {
-            FileStream fs = FileExtensions.TryOpenRead(inputFile);
+            FileStream fs = File.OpenRead(inputFile);
             return Write(fs, outDir, rom);
         }
 
@@ -356,7 +356,7 @@ namespace SabreTools.Library.FileTypes
                     Directory.CreateDirectory(Path.GetDirectoryName(fileName));
 
                 // Overwrite output files by default
-                outputStream = FileExtensions.TryCreate(fileName);
+                outputStream = File.Create(fileName);
 
                 // If the output stream isn't null
                 if (outputStream != null)
