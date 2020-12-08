@@ -8,7 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatItems;

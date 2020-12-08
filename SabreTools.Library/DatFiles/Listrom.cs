@@ -4,9 +4,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using SabreTools.Core;
 using SabreTools.IO;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.DatFiles
 {

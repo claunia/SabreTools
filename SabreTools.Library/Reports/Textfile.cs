@@ -1,7 +1,5 @@
 ﻿using System.IO;
 
-using SabreTools.Library.Tools;
-
 namespace SabreTools.Library.Reports
 {
     /// <summary>

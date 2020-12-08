@@ -4,11 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Logging;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
-using SabreTools.Library.Tools;
 using NaturalSort;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -1148,7 +1147,7 @@ namespace SabreTools.Library.DatItems
 
                     return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : x.Source.Index - y.Source.Index);
                 }
-                catch (Exception ex)
+                catch
                 {
                     // Absorb the error
                     return 0;

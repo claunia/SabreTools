@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-// TODO: Figure out a reasonable way of adding logging back to this
 namespace SabreTools.IO
 {
     /// <summary>
@@ -92,34 +91,13 @@ namespace SabreTools.IO
                 }
 
                 // Get the parent path in case of appending
-                string parentPath;
-                try
-                {
-                    parentPath = Path.GetFullPath(input);
-                }
-                catch (Exception ex)
-                {
-                    //LoggerImpl.Error(ex, $"An exception occurred getting the full path for '{input}'");
-                    continue;
-                }
-
+                string parentPath = Path.GetFullPath(input);
                 if (Directory.Exists(input))
                 {
                     List<string> directories = GetDirectoriesOrdered(input, pattern);
                     foreach (string dir in directories)
                     {
-                        try
-                        {
-                            outputs.Add(new ParentablePath(Path.GetFullPath(dir), appendparent ? parentPath : string.Empty));
-                        }
-                        catch (PathTooLongException ex)
-                        {
-                            //LoggerImpl.Warning(ex, $"The path for '{dir}' was too long");
-                        }
-                        catch (Exception ex)
-                        {
-                            //LoggerImpl.Error(ex, $"An exception occurred processing '{dir}'");
-                        }
+                        outputs.Add(new ParentablePath(Path.GetFullPath(dir), appendparent ? parentPath : string.Empty));
                     }
                 }
             }
@@ -188,50 +166,18 @@ namespace SabreTools.IO
                 }
 
                 // Get the parent path in case of appending
-                string parentPath;
-                try
-                {
-                    parentPath = Path.GetFullPath(input);
-                }
-                catch (Exception ex)
-                {
-                    //LoggerImpl.Error(ex, $"An exception occurred getting the full path for '{input}'");
-                    continue;
-                }
-
+                string parentPath = Path.GetFullPath(input);
                 if (Directory.Exists(input))
                 {
                     List<string> files = GetFilesOrdered(input, pattern);
                     foreach (string file in files)
                     {
-                        try
-                        {
-                            outputs.Add(new ParentablePath(Path.GetFullPath(file), appendparent ? parentPath : string.Empty));
-                        }
-                        catch (PathTooLongException ex)
-                        {
-                            //LoggerImpl.Warning(ex, $"The path for '{file}' was too long");
-                        }
-                        catch (Exception ex)
-                        {
-                            //LoggerImpl.Error(ex, $"An exception occurred processing '{file}'");
-                        }
+                        outputs.Add(new ParentablePath(Path.GetFullPath(file), appendparent ? parentPath : string.Empty));
                     }
                 }
                 else if (File.Exists(input))
                 {
-                    try
-                    {
-                        outputs.Add(new ParentablePath(Path.GetFullPath(input), appendparent ? parentPath : string.Empty));
-                    }
-                    catch (PathTooLongException ex)
-                    {
-                        //LoggerImpl.Warning(ex, $"The path for '{input}' was too long");
-                    }
-                    catch (Exception ex)
-                    {
-                        //LoggerImpl.Error(ex, $"An exception occurred processing '{input}'");
-                    }
+                    outputs.Add(new ParentablePath(Path.GetFullPath(input), appendparent ? parentPath : string.Empty));
                 }
             }
 

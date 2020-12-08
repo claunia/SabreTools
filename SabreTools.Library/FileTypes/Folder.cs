@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.FileTypes
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.Core
 {
     // https://github.com/dotnet/runtime/issues/728
     public class BaseFirstContractResolver : DefaultContractResolver

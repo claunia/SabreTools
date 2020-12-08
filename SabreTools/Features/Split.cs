@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Library.DatFiles;

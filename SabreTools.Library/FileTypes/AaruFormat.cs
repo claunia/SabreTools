@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 
 using SabreTools.IO;
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Library.FileTypes.Aaru;
 
 namespace SabreTools.Library.FileTypes

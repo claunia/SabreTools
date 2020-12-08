@@ -5,13 +5,12 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Schema;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Help;
 using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Tools;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features

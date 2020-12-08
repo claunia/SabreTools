@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using SabreTools.Features;
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Help;
 using SabreTools.Logging;
 

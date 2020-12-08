@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 
+using SabreTools.Core;
 using SabreTools.Library.DatFiles;
 
 namespace SabreTools.Library.Reports

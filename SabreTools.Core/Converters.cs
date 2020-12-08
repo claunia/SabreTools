@@ -1,13 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-using SabreTools.Data;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.FileTypes;
-using SabreTools.Library.Reports;
-
-namespace SabreTools.Library.Tools
+namespace SabreTools.Core
 {
     public static class Converters
     {

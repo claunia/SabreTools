@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Text;
 
+using SabreTools.Core;
+
 namespace SabreTools.Library.FileTypes.Aaru
 {
     /// <summary>

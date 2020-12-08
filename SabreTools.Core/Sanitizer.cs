@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using SabreTools.Data;
-
-namespace SabreTools.Library.Tools
+namespace SabreTools.Core
 {
     public static class Sanitizer
     {

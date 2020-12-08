@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Data;
-using SabreTools.Library.Tools;
+using SabreTools.Core;
 using Compress.ZipFile;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;

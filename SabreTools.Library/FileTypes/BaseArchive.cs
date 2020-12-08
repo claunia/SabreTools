@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Data;
+using SabreTools.Core;
 
 namespace SabreTools.Library.FileTypes
 {

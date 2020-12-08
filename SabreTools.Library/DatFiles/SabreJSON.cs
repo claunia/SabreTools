@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using SabreTools.Core;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

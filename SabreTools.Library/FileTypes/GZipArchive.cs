@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.IO;
-using SabreTools.Library.Tools;
 using Compress;
 using Compress.gZip;
 using Compress.ZipFile.ZLib;

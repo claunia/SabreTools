@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.IO;
-using SabreTools.Library.Tools;
 using SharpCompress.Compressors.Xz;
 
 namespace SabreTools.Library.FileTypes

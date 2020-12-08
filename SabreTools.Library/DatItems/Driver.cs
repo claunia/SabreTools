@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Library.Filtering;
-using SabreTools.Library.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using SabreTools.Core;
 using SabreTools.IO;
 using SabreTools.Library.DatItems;
 

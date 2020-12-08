@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.Logging;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.Filtering
 {

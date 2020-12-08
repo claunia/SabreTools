@@ -1145,7 +1145,7 @@ namespace Compress.ZipFile
                         }
                         else
                         {
-                            return SabreTools.Library.Tools.Utilities.ConvertMsDosTimeFormatToDateTime(_lastModFileDateTime.Value);
+                            return SabreTools.Core.Utilities.ConvertMsDosTimeFormatToDateTime(_lastModFileDateTime.Value);
                         }
                     }
                     catch

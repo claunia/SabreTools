@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-using SabreTools.Data;
+using SabreTools.Core;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatItems;
@@ -17,7 +17,6 @@ using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.IO;
 using SabreTools.Library.Reports;
-using SabreTools.Library.Tools;
 using SabreTools.Skippers;
 using NaturalSort;
 using Newtonsoft.Json;

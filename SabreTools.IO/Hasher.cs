@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 
 using Aaru.Checksums;
-using SabreTools.Data;
+using SabreTools.Core;
 
 namespace SabreTools.IO
 {

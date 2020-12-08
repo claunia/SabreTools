@@ -7,7 +7,7 @@ namespace SabreTools.Library.Reports
     /// </summary>
     internal class SeparatedValue : BaseReport
     {
-        private char _separator;
+        private readonly char _separator;
 
         /// <summary>
         /// Create a new report from the filename

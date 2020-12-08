@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.MD = README.MD
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Data", "SabreTools.Data\SabreTools.Data.csproj", "{66E2FB10-77C0-4589-9DCD-3CA48702C18A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SabreTools.Core", "SabreTools.Core\SabreTools.Core.csproj", "{66E2FB10-77C0-4589-9DCD-3CA48702C18A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Skippers", "SabreTools.Skippers\SabreTools.Skippers.csproj", "{D8665F27-75E6-4E3F-9F0A-286433831C69}"
 EndProject
