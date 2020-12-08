@@ -2,7 +2,7 @@
 
 using SabreTools.Core;
 
-namespace SabreTools.Library.Filtering
+namespace SabreTools.Filtering
 {
     /// <summary>
     /// Represents the cleaning operations that need to be performed on a set of items, usually a DAT

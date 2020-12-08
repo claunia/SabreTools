@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Logging", "Sabre
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.IO", "SabreTools.IO\SabreTools.IO.csproj", "{884163E0-1B61-468C-8839-7C67AB44EA3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Filtering", "SabreTools.Filtering\SabreTools.Filtering.csproj", "{35129634-0F13-416A-8D4D-35B71DFECFFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,14 @@ Global
 		{884163E0-1B61-468C-8839-7C67AB44EA3F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{884163E0-1B61-468C-8839-7C67AB44EA3F}.Release|x64.ActiveCfg = Release|Any CPU
 		{884163E0-1B61-468C-8839-7C67AB44EA3F}.Release|x64.Build.0 = Release|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Debug|x64.Build.0 = Debug|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|x64.ActiveCfg = Release|Any CPU
+		{35129634-0F13-416A-8D4D-35B71DFECFFD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,7 @@
 using SabreTools.Core;
 using SabreTools.Logging;
 
-namespace SabreTools.Library.Filtering
+namespace SabreTools.Filtering
 {
     public class ExtraIni
     {

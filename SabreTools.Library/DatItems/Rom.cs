@@ -6,8 +6,8 @@ using System.Text;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.Filtering;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

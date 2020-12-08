@@ -2,10 +2,10 @@
 using System.IO;
 
 using SabreTools.Core;
+using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Filtering;
 
 namespace RombaSharp.Features
 {

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.Filtering;
 using SabreTools.Logging;
 using SabreTools.Library.FileTypes;
-using SabreTools.Library.Filtering;
 using NaturalSort;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

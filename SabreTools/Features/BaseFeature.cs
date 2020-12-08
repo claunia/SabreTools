@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 
 using SabreTools.Core;
+using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.Filtering;
 
 namespace SabreTools.Features
 {

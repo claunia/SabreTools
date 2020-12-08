@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using SabreTools.Core;
 using SabreTools.Logging;
 
-namespace SabreTools.Library.Filtering
+namespace SabreTools.Filtering
 {
     /// <summary>
     /// Represents the filtering operations that need to be performed on a set of items, usually a DAT
