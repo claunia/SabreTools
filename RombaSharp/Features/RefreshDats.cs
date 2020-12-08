@@ -5,7 +5,7 @@ using SabreTools.Data;
 using SabreTools.Help;
 using SabreTools.Library.DatFiles;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.Tools;
+using SabreTools.Logging;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features

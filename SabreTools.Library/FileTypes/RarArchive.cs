@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Data;
-using SabreTools.IO;
-using SabreTools.Library.DatItems;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
@@ -44,11 +42,7 @@ namespace SabreTools.Library.FileTypes
 
         #region Extraction
 
-        /// <summary>
-        /// Attempt to extract a file as an archive
-        /// </summary>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>True if the extraction was a success, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool CopyAll(string outDir)
         {
             bool encounteredErrors = true;
@@ -86,12 +80,7 @@ namespace SabreTools.Library.FileTypes
             return encounteredErrors;
         }
 
-        /// <summary>
-        /// Attempt to extract a file from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>Name of the extracted file, null on error</returns>
+        /// <inheritdoc/>
         public override string CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
@@ -132,12 +121,7 @@ namespace SabreTools.Library.FileTypes
             return realEntry;
         }
 
-        /// <summary>
-        /// Attempt to extract a stream from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="realEntry">Output representing the entry name that was found</param>
-        /// <returns>MemoryStream representing the entry, null on error</returns>
+        /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
             MemoryStream ms = new MemoryStream();
@@ -171,10 +155,7 @@ namespace SabreTools.Library.FileTypes
 
         #region Information
 
-        /// <summary>
-        /// Generate a list of DatItem objects from the header values in an archive
-        /// </summary>
-        /// <returns>List of DatItem objects representing the found data</returns>
+        /// <inheritdoc/>
         public override List<BaseFile> GetChildren()
         {
             List<BaseFile> found = new List<BaseFile>();
@@ -222,11 +203,7 @@ namespace SabreTools.Library.FileTypes
             return found;
         }
 
-        /// <summary>
-        /// Generate a list of empty folders in an archive
-        /// </summary>
-        /// <param name="input">Input file to get data from</param>
-        /// <returns>List of empty folders in the archive</returns>
+        /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
             List<string> empties = new List<string>();
@@ -262,9 +239,7 @@ namespace SabreTools.Library.FileTypes
             return empties;
         }
 
-        /// <summary>
-        /// Check whether the input file is a standardized format
-        /// </summary>
+        /// <inheritdoc/>
         public override bool IsTorrent()
         {
             throw new NotImplementedException();
@@ -274,39 +249,21 @@ namespace SabreTools.Library.FileTypes
 
         #region Writing
 
-        /// <summary>
-        /// Write an input file to a torrentrar archive
-        /// </summary>
-        /// <param name="inputFile">Input filename to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(string inputFile, string outDir, Rom rom)
+        /// <inheritdoc/>
+        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
         {
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, rom);
+            return Write(File.OpenRead(inputFile), outDir, baseFile);
         }
 
-        /// <summary>
-        /// Write an input stream to a torrentrar archive
-        /// </summary>
-        /// <param name="inputStream">Input stream to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(Stream inputStream, string outDir, Rom rom)
+        /// <inheritdoc/>
+        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Write a set of input files to a torrentrar archive (assuming the same output archive name)
-        /// </summary>
-        /// <param name="inputFiles">Input files to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(List<string> inputFiles, string outDir, List<Rom> roms)
+        /// <inheritdoc/>
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> roms)
         {
             throw new NotImplementedException();
         }

@@ -38,7 +38,7 @@ namespace SabreTools.Library.Reports
         {
             string line = @"'" + _name + @"':
 --------------------------------------------------
-    Uncompressed size:       " + Utilities.GetBytesReadable(_stats.TotalSize) + @"
+    Uncompressed size:       " + GetBytesReadable(_stats.TotalSize) + @"
     Games found:             " + _machineCount + @"
     Roms found:              " + _stats.RomCount + @"
     Disks found:             " + _stats.DiskCount + @"

@@ -5,7 +5,6 @@ using System.Text;
 using SabreTools.IO;
 using SabreTools.Data;
 using SabreTools.Library.FileTypes.Aaru;
-using SabreTools.Library.IO;
 
 namespace SabreTools.Library.FileTypes
 {

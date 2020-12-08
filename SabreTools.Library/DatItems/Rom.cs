@@ -587,6 +587,30 @@ namespace SabreTools.Library.DatItems
             };
         }
 
+        /// <summary>
+        /// Convert Rom object to a BaseFile
+        /// </summary>
+        public BaseFile ConvertToBaseFile()
+        {
+            return new BaseFile()
+            {
+                Filename = this.Name,
+                Parent = this.Machine?.Name,
+                Date = this.Date,
+                Size = this.Size,
+                CRC = this._crc,
+                MD5 = this._md5,
+#if NET_FRAMEWORK
+                RIPEMD160 = this._ripemd160,
+#endif
+                SHA1 = this._sha1,
+                SHA256 = this._sha256,
+                SHA384 = this._sha384,
+                SHA512 = this._sha512,
+                SpamSum = this._spamsum,
+            };
+        }
+
         #endregion
 
         #region Comparision Methods

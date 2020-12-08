@@ -2898,7 +2898,7 @@ namespace SabreTools.Library.DatFiles
                     Folder outputArchive = GetPreconfiguredFolder(date, outputFormat);
 
                     // Now rebuild to the output file
-                    outputArchive.Write(fileStream, outDir, item as Rom);
+                    outputArchive.Write(fileStream, outDir, (item as Rom).ConvertToBaseFile());
                 }
 
                 // Close the input stream
@@ -2939,8 +2939,8 @@ namespace SabreTools.Library.DatFiles
 
                                 // Now rebuild to the output file
                                 bool eitherSuccess = false;
-                                eitherSuccess |= outputArchive.Write(transformStream, outDir, item as Rom);
-                                eitherSuccess |= outputArchive.Write(fileStream, outDir, datItem as Rom);
+                                eitherSuccess |= outputArchive.Write(transformStream, outDir, (item as Rom).ConvertToBaseFile());
+                                eitherSuccess |= outputArchive.Write(fileStream, outDir, (datItem as Rom).ConvertToBaseFile());
 
                                 // Now add the success of either rebuild
                                 rebuilt &= eitherSuccess;

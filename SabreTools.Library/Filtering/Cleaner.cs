@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
+using SabreTools.Data;
 
 namespace SabreTools.Library.Filtering
 {
@@ -19,7 +18,6 @@ namespace SabreTools.Library.Filtering
         /// Deduplicate items using the given method
         /// </summary>
         public DedupeType DedupeRoms { get; set; }
-
 
         /// <summary>
         /// Set Machine Description from Machine Name

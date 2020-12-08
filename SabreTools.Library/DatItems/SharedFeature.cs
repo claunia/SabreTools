@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
+using SabreTools.Data;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
 using Newtonsoft.Json;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 
-using SabreTools.IO;
 using SabreTools.Library.DatFiles;
 
 namespace SabreTools.Library.Reports
@@ -139,5 +138,62 @@ namespace SabreTools.Library.Reports
         /// Write out the footer to the stream, if any exists
         /// </summary>
         public abstract void WriteFooter();
+    
+        /// <summary>
+        /// Returns the human-readable file size for an arbitrary, 64-bit file size 
+        /// The default format is "0.### XB", e.g. "4.2 KB" or "1.434 GB"
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>Human-readable file size</returns>
+        /// <link>http://www.somacon.com/p576.php</link>
+        protected static string GetBytesReadable(long input)
+        {
+            // Get absolute value
+            long absolute_i = (input < 0 ? -input : input);
+
+            // Determine the suffix and readable value
+            string suffix;
+            double readable;
+            if (absolute_i >= 0x1000000000000000) // Exabyte
+            {
+                suffix = "EB";
+                readable = (input >> 50);
+            }
+            else if (absolute_i >= 0x4000000000000) // Petabyte
+            {
+                suffix = "PB";
+                readable = (input >> 40);
+            }
+            else if (absolute_i >= 0x10000000000) // Terabyte
+            {
+                suffix = "TB";
+                readable = (input >> 30);
+            }
+            else if (absolute_i >= 0x40000000) // Gigabyte
+            {
+                suffix = "GB";
+                readable = (input >> 20);
+            }
+            else if (absolute_i >= 0x100000) // Megabyte
+            {
+                suffix = "MB";
+                readable = (input >> 10);
+            }
+            else if (absolute_i >= 0x400) // Kilobyte
+            {
+                suffix = "KB";
+                readable = input;
+            }
+            else
+            {
+                return input.ToString("0 B"); // Byte
+            }
+
+            // Divide by 1024 to get fractional value
+            readable /= 1024;
+
+            // Return formatted number with suffix
+            return readable.ToString("0.### ") + suffix;
+        }
     }
 }

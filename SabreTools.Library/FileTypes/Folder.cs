@@ -6,7 +6,6 @@ using System.Linq;
 using SabreTools.Data;
 using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Library.DatItems;
 using SabreTools.Library.Tools;
 
 namespace SabreTools.Library.FileTypes
@@ -227,7 +226,6 @@ namespace SabreTools.Library.FileTypes
         /// Attempt to extract a stream from an archive
         /// </summary>
         /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="realEntry">Output representing the entry name that was found</param>
         /// <returns>MemoryStream representing the entry, null on error</returns>
         public virtual (MemoryStream, string) CopyToStream(string entryName)
         {
@@ -310,13 +308,13 @@ namespace SabreTools.Library.FileTypes
         /// </summary>
         /// <param name="inputFile">Input filename to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
+        /// <param name="baseFile">BaseFile representing the new information</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(string inputFile, string outDir, Rom rom)
+        public virtual bool Write(string inputFile, string outDir, BaseFile baseFile)
         {
             FileStream fs = File.OpenRead(inputFile);
-            return Write(fs, outDir, rom);
+            return Write(fs, outDir, baseFile);
         }
 
         /// <summary>
@@ -324,15 +322,15 @@ namespace SabreTools.Library.FileTypes
         /// </summary>
         /// <param name="inputStream">Input stream to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
+        /// <param name="baseFile">BaseFile representing the new information</param>
         /// <returns>True if the write was a success, false otherwise</returns>
         /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public virtual bool Write(Stream inputStream, string outDir, Rom rom)
+        public virtual bool Write(Stream inputStream, string outDir, BaseFile baseFile)
         {
             bool success = false;
 
             // If either input is null or empty, return
-            if (inputStream == null || rom == null || rom.Name == null)
+            if (inputStream == null || baseFile == null || baseFile.Filename == null)
                 return success;
 
             // If the stream is not readable, return
@@ -345,9 +343,9 @@ namespace SabreTools.Library.FileTypes
             // Get the output folder name from the first rebuild rom
             string fileName;
             if (writeToParent)
-                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Name));
+                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(baseFile.Filename));
             else
-                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(rom.Machine.Name), Sanitizer.RemovePathUnsafeCharacters(rom.Name));
+                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(baseFile.Parent), Sanitizer.RemovePathUnsafeCharacters(baseFile.Filename));
 
             try
             {
@@ -374,11 +372,8 @@ namespace SabreTools.Library.FileTypes
 
                     outputStream.Dispose();
 
-                    if (rom.ItemType == ItemType.Rom)
-                    {
-                        if (!string.IsNullOrWhiteSpace(rom.Date))
-                            File.SetCreationTime(fileName, DateTime.Parse(rom.Date));
-                    }
+                    if (!string.IsNullOrWhiteSpace(baseFile.Date))
+                        File.SetCreationTime(fileName, DateTime.Parse(baseFile.Date));
 
                     success = true;
                 }
@@ -401,9 +396,9 @@ namespace SabreTools.Library.FileTypes
         /// </summary>
         /// <param name="inputFiles">Input files to be moved</param>
         /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the archive was written properly, false otherwise</returns>
-        public virtual bool Write(List<string> inputFiles, string outDir, List<Rom> roms)
+        /// <param name="baseFiles">BaseFiles representing the new information</param>
+        /// <returns>True if the inputs were written properly, false otherwise</returns>
+        public virtual bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
         {
             throw new NotImplementedException();
         }

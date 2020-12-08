@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Data;
-using SabreTools.Library.DatItems;
 
 namespace SabreTools.Library.FileTypes
 {
@@ -39,33 +38,19 @@ namespace SabreTools.Library.FileTypes
 
         #region Extraction
 
-        /// <summary>
-        /// Attempt to extract a file as an archive
-        /// </summary>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>True if the extraction was a success, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool CopyAll(string outDir)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Attempt to extract a file from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>Name of the extracted file, null on error</returns>
+        /// <inheritdoc/>
         public override string CopyToFile(string entryName, string outDir)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Attempt to extract a stream from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="realEntry">Output representing the entry name that was found</param>
-        /// <returns>MemoryStream representing the entry, null on error</returns>
+        /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
             throw new NotImplementedException();
@@ -75,28 +60,19 @@ namespace SabreTools.Library.FileTypes
 
         #region Information
 
-        /// <summary>
-        /// Generate a list of DatItem objects from the header values in an archive
-        /// </summary>
-        /// <returns>List of DatItem objects representing the found data</returns>
+        /// <inheritdoc/>
         public override List<BaseFile> GetChildren()
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Generate a list of empty folders in an archive
-        /// </summary>
-        /// <param name="input">Input file to get data from</param>
-        /// <returns>List of empty folders in the archive</returns>
+        /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Check whether the input file is a standardized format
-        /// </summary>
+        /// <inheritdoc/>
         public override bool IsTorrent()
         {
             throw new NotImplementedException();
@@ -106,40 +82,20 @@ namespace SabreTools.Library.FileTypes
 
         #region Writing
 
-        /// <summary>
-        /// Write an input file to a torrent ZPAQ file
-        /// </summary>
-        /// <param name="inputFile">Input filename to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the write was a success, false otherwise</returns>
-        /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public override bool Write(string inputFile, string outDir, Rom rom)
+        /// <inheritdoc/>
+        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Write an input stream to a torrent ZPAQ file
-        /// </summary>
-        /// <param name="inputStream">Input stream to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the write was a success, false otherwise</returns>
-        /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public override bool Write(Stream inputStream, string outDir, Rom rom)
+        /// <inheritdoc/>
+        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Write a set of input files to a torrent ZPAQ archive (assuming the same output archive name)
-        /// </summary>
-        /// <param name="inputFiles">Input files to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(List<string> inputFiles, string outDir, List<Rom> roms)
+        /// <inheritdoc/>
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
         {
             throw new NotImplementedException();
         }

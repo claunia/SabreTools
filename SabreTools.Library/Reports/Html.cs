@@ -43,7 +43,7 @@ namespace SabreTools.Library.Reports
             string line = "\t\t\t<tr" + (_name.StartsWith("DIR: ")
                             ? $" class=\"dir\"><td>{WebUtility.HtmlEncode(_name.Remove(0, 5))}"
                             : $"><td>{WebUtility.HtmlEncode(_name)}") + "</td>"
-                        + $"<td align=\"right\">{Utilities.GetBytesReadable(_stats.TotalSize)}</td>"
+                        + $"<td align=\"right\">{GetBytesReadable(_stats.TotalSize)}</td>"
                         + $"<td align=\"right\">{_machineCount}</td>"
                         + $"<td align=\"right\">{_stats.RomCount}</td>"
                         + $"<td align=\"right\">{_stats.DiskCount}</td>"

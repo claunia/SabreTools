@@ -6,9 +6,6 @@ using System.Text.RegularExpressions;
 
 using SabreTools.Data;
 using SabreTools.IO;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
 using Compress;
 using Compress.gZip;
@@ -57,11 +54,7 @@ namespace SabreTools.Library.FileTypes
 
         #region Extraction
 
-        /// <summary>
-        /// Attempt to extract a file as an archive
-        /// </summary>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>True if the extraction was a success, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool CopyAll(string outDir)
         {
             bool encounteredErrors = true;
@@ -104,12 +97,7 @@ namespace SabreTools.Library.FileTypes
             return encounteredErrors;
         }
 
-        /// <summary>
-        /// Attempt to extract a file from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="outDir">Output directory for archive extraction</param>
-        /// <returns>Name of the extracted file, null on error</returns>
+        /// <inheritdoc/>
         public override string CopyToFile(string entryName, string outDir)
         {
             // Try to extract a stream using the given information
@@ -150,12 +138,7 @@ namespace SabreTools.Library.FileTypes
             return realEntry;
         }
 
-        /// <summary>
-        /// Attempt to extract a stream from an archive
-        /// </summary>
-        /// <param name="entryName">Name of the entry to be extracted</param>
-        /// <param name="realEntry">Output representing the entry name that was found</param>
-        /// <returns>MemoryStream representing the entry, null on error</returns>
+        /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
             MemoryStream ms = new MemoryStream();
@@ -196,10 +179,7 @@ namespace SabreTools.Library.FileTypes
 
         #region Information
 
-        /// <summary>
-        /// Generate a list of DatItem objects from the header values in an archive
-        /// </summary>
-        /// <returns>List of DatItem objects representing the found data</returns>
+        /// <inheritdoc/>
         public override List<BaseFile> GetChildren()
         {
             if (_children == null || _children.Count == 0)
@@ -261,20 +241,14 @@ namespace SabreTools.Library.FileTypes
             return _children;
         }
 
-        /// <summary>
-        /// Generate a list of empty folders in an archive
-        /// </summary>
-        /// <param name="input">Input file to get data from</param>
-        /// <returns>List of empty folders in the archive</returns>
+        /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
             // GZip files don't contain directories
             return new List<string>();
         }
 
-        /// <summary>
-        /// Check whether the input file is a standardized format
-        /// </summary>
+        /// <inheritdoc/>
         public override bool IsTorrent()
         {
             // Check for the file existing first
@@ -301,7 +275,7 @@ namespace SabreTools.Library.FileTypes
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {Utilities.GetBytesReadable(filesize)}");
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {filesize}");
                 return false;
             }
 
@@ -362,7 +336,7 @@ namespace SabreTools.Library.FileTypes
             // Check if the file is at least the minimum length
             if (filesize < 40 /* bytes */)
             {
-                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {Utilities.GetBytesReadable(filesize)}");
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {filesize}");
                 return null;
             }
 
@@ -415,15 +389,8 @@ namespace SabreTools.Library.FileTypes
 
         #region Writing
 
-        /// <summary>
-        /// Write an input file to a torrent GZ file
-        /// </summary>
-        /// <param name="inputFile">Input filename to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the write was a success, false otherwise</returns>
-        /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public override bool Write(string inputFile, string outDir, Rom rom = null)
+        /// <inheritdoc/>
+        public override bool Write(string inputFile, string outDir, BaseFile baseFile = null)
         {
             // Check that the input file exists
             if (!File.Exists(inputFile))
@@ -435,18 +402,11 @@ namespace SabreTools.Library.FileTypes
             inputFile = Path.GetFullPath(inputFile);
 
             // Get the file stream for the file and write out
-            return Write(File.OpenRead(inputFile), outDir, rom);
+            return Write(File.OpenRead(inputFile), outDir, baseFile);
         }
 
-        /// <summary>
-        /// Write an input stream to a torrent GZ file
-        /// </summary>
-        /// <param name="inputStream">Input stream to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the write was a success, false otherwise</returns>
-        /// <remarks>This works for now, but it can be sped up by using Ionic.Zip or another zlib wrapper that allows for header values built-in. See edc's code.</remarks>
-        public override bool Write(Stream inputStream, string outDir, Rom rom = null)
+        /// <inheritdoc/>
+        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile = null)
         {
             bool success = false;
 
@@ -461,10 +421,10 @@ namespace SabreTools.Library.FileTypes
             outDir = Path.GetFullPath(outDir);
 
             // Now get the Rom info for the file so we have hashes and size
-            rom = new Rom(GetInfo(inputStream, keepReadOpen: true));
+            baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(rom.SHA1, Depth));
+            string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(Utilities.ByteArrayToString(baseFile.SHA1), Depth));
 
             // Check to see if the folder needs to be created
             if (!Directory.Exists(Path.GetDirectoryName(outfile)))
@@ -481,11 +441,11 @@ namespace SabreTools.Library.FileTypes
 
                 // Write standard header and TGZ info
                 byte[] data = Constants.TorrentGZHeader
-                                .Concat(Utilities.StringToByteArray(rom.MD5)) // MD5
-                                .Concat(Utilities.StringToByteArray(rom.CRC)) // CRC
+                            .Concat(baseFile.MD5) // MD5
+                            .Concat(baseFile.CRC) // CRC
                             .ToArray();
                 sw.Write(data);
-                sw.Write((ulong)(rom.Size ?? 0)); // Long size (Unsigned, Mirrored)
+                sw.Write((ulong)(baseFile.Size ?? 0)); // Long size (Unsigned, Mirrored)
 
                 // Now create a deflatestream from the input file
                 ZlibBaseStream ds = new ZlibBaseStream(outputStream, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
@@ -502,8 +462,8 @@ namespace SabreTools.Library.FileTypes
                 ds.Dispose();
 
                 // Now write the standard footer
-                sw.Write(Utilities.StringToByteArray(rom.CRC).Reverse().ToArray());
-                sw.Write((uint)(rom.Size ?? 0));
+                sw.Write(baseFile.CRC.Reverse().ToArray());
+                sw.Write((uint)(baseFile.Size ?? 0));
 
                 // Dispose of everything
                 sw.Dispose();
@@ -513,14 +473,8 @@ namespace SabreTools.Library.FileTypes
             return true;
         }
 
-        /// <summary>
-        /// Write a set of input files to a torrent GZ archive (assuming the same output archive name)
-        /// </summary>
-        /// <param name="inputFiles">Input files to be moved</param>
-        /// <param name="outDir">Output directory to build to</param>
-        /// <param name="rom">DatItem representing the new information</param>
-        /// <returns>True if the archive was written properly, false otherwise</returns>
-        public override bool Write(List<string> inputFiles, string outDir, List<Rom> roms)
+        /// <inheritdoc/>
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFile)
         {
             throw new NotImplementedException();
         }

@@ -1,8 +1,6 @@
 ﻿using System;
 
-using SabreTools.Logging;
-
-namespace SabreTools.Library.Tools
+namespace SabreTools.Logging
 {
     /// <summary>
     /// Stopwatch class for keeping track of duration in the code

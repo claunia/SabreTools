@@ -3,27 +3,6 @@
 namespace SabreTools.Library.DatFiles
 {
     /// <summary>
-    /// Determines the DAT deduplication type
-    /// </summary>
-    public enum DedupeType
-    {
-        None = 0,
-        Full,
-
-        // Force only deduping with certain types
-        Game,
-        CRC,
-        MD5,
-#if NET_FRAMEWORK
-        RIPEMD160,
-#endif
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512,
-    }
-
-    /// <summary>
     /// Determines merging tag handling for DAT output
     /// </summary>
     public enum MergingFlag

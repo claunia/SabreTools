@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
+using SabreTools.Data;
 using SabreTools.Library.FileTypes;
 using SabreTools.Library.Filtering;
 using SabreTools.Library.Tools;
@@ -270,6 +271,20 @@ namespace SabreTools.Library.DatItems
 
                 DiskArea = this.DiskArea,
                 Part = this.Part,
+            };
+        }
+
+        /// <summary>
+        /// Convert Disk object to a BaseFile
+        /// </summary>
+        public BaseFile ConvertToBaseFile()
+        {
+            return new BaseFile()
+            {
+                Filename = this.Name,
+                Parent = this.Machine?.Name,
+                MD5 = this._md5,
+                SHA1 = this._sha1,
             };
         }
 
