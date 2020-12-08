@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.DatFiles;
+using SabreTools.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -308,7 +308,7 @@ namespace SabreTools.Library.FileTypes
                     // Otherwise, use the stream directly
                     else
                     {
-                        zipEntryRom = readStream.GetInfo(size: (long)zf.UncompressedSize(i), hashes: this.AvailableHashes, keepReadOpen: true);
+                        zipEntryRom = GetInfo(readStream, size: (long)zf.UncompressedSize(i), hashes: this.AvailableHashes, keepReadOpen: true);
                     }
 
                     // Fill in comon details and add to the list

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.DatFiles;
+using SabreTools.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SharpCompress.Archives;
@@ -199,7 +199,7 @@ namespace SabreTools.Library.FileTypes
                     {
                         using (Stream entryStream = entry.OpenEntryStream())
                         {
-                            rarEntryRom = entryStream.GetInfo(size: entry.Size, hashes: this.AvailableHashes);
+                            rarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashes);
                         }
                     }
 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+using SabreTools.Data;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Library.DatFiles;

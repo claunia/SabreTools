@@ -24,9 +24,9 @@
 
 using System;
 
-namespace SabreTools.Library.External
+namespace OptimizedCRC
 {
-    public class OptimizedCRC : IDisposable
+    internal class OptimizedCRC : IDisposable
     {
         private const uint kCrcPoly = 0xEDB88320;
         private const uint kInitial = 0xFFFFFFFF;

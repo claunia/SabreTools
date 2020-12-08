@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using SabreTools.Data;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Library.DatFiles;

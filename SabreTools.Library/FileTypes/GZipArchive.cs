@@ -239,7 +239,7 @@ namespace SabreTools.Library.FileTypes
                             var gz = new gZip();
                             ZipReturn ret = gz.ZipFileOpen(this.Filename);
                             ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
-                            gzipEntryRom = gzstream.GetInfo(hashes: this.AvailableHashes);
+                            gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashes);
                             gzipEntryRom.Filename = gz.Filename(0);
                             gzipEntryRom.Parent = gamename;
                             gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
@@ -461,7 +461,7 @@ namespace SabreTools.Library.FileTypes
             outDir = Path.GetFullPath(outDir);
 
             // Now get the Rom info for the file so we have hashes and size
-            rom = new Rom(inputStream.GetInfo(keepReadOpen: true));
+            rom = new Rom(GetInfo(inputStream, keepReadOpen: true));
 
             // Get the output file name
             string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(rom.SHA1, Depth));

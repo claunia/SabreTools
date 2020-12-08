@@ -3,10 +3,9 @@ using System.Linq;
 using System.Security.Cryptography;
 
 using Aaru.Checksums;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.External;
+using SabreTools.Data;
 
-namespace SabreTools.Library.Tools
+namespace SabreTools.IO
 {
     /// <summary>
     /// Async hashing class wraper
@@ -30,7 +29,7 @@ namespace SabreTools.Library.Tools
             switch (HashType)
             {
                 case Hash.CRC:
-                    _hasher = new OptimizedCRC();
+                    _hasher = new OptimizedCRC.OptimizedCRC();
                     break;
 
                 case Hash.MD5:
@@ -78,7 +77,7 @@ namespace SabreTools.Library.Tools
             switch (HashType)
             {
                 case Hash.CRC:
-                    (_hasher as OptimizedCRC).Update(buffer, 0, size);
+                    (_hasher as OptimizedCRC.OptimizedCRC).Update(buffer, 0, size);
                     break;
 
                 case Hash.MD5:
@@ -107,7 +106,7 @@ namespace SabreTools.Library.Tools
             switch (HashType)
             {
                 case Hash.CRC:
-                    (_hasher as OptimizedCRC).Update(emptyBuffer, 0, 0);
+                    (_hasher as OptimizedCRC.OptimizedCRC).Update(emptyBuffer, 0, 0);
                     break;
 
                 case Hash.MD5:
@@ -135,7 +134,7 @@ namespace SabreTools.Library.Tools
             switch (HashType)
             {
                 case Hash.CRC:
-                    return BitConverter.GetBytes((_hasher as OptimizedCRC).Value).Reverse().ToArray();
+                    return BitConverter.GetBytes((_hasher as OptimizedCRC.OptimizedCRC).Value).Reverse().ToArray();
 
                 case Hash.MD5:
 #if NET_FRAMEWORK

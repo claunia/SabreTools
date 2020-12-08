@@ -2779,7 +2779,7 @@ namespace SabreTools.Library.DatFiles
                     if (rule.TransformStream(fileStream, transformStream, keepReadOpen: true, keepWriteOpen: true))
                     {
                         // Get the file informations that we will be using
-                        Rom headerless = new Rom(transformStream.GetInfo(keepReadOpen: true));
+                        Rom headerless = new Rom(BaseFile.GetInfo(transformStream, keepReadOpen: true));
 
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(headerless, transformStream, false, out dupes))
@@ -2851,7 +2851,7 @@ namespace SabreTools.Library.DatFiles
                 string machinename = null;
 
                 // Get the item from the current file
-                Rom item = new Rom(stream.GetInfo(keepReadOpen: true));
+                Rom item = new Rom(BaseFile.GetInfo(stream, keepReadOpen: true));
                 item.Machine.Name = Path.GetFileNameWithoutExtension(item.Name);
                 item.Machine.Description = Path.GetFileNameWithoutExtension(item.Name);
 

@@ -391,7 +391,7 @@ namespace SabreTools.Library.IO
             else if (fileType == FileType.CHD && !asFiles.HasFlag(TreatAsFile.CHD))
                 baseFile = CHDFile.Create(inputStream);
             else
-                baseFile = inputStream.GetInfo(hashes: hashes, keepReadOpen: false);
+                baseFile = BaseFile.GetInfo(inputStream, hashes: hashes, keepReadOpen: false);
 
             // Dispose of the input stream
             inputStream?.Dispose();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.DatFiles;
+using SabreTools.Data;
 using SabreTools.Library.DatItems;
 using SabreTools.Library.IO;
 using SabreTools.Library.Tools;
@@ -204,7 +204,7 @@ namespace SabreTools.Library.FileTypes
                     {
                         using (Stream entryStream = entry.OpenEntryStream())
                         {
-                            tarEntryRom = entryStream.GetInfo(size: entry.Size, hashes: this.AvailableHashes);
+                            tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashes);
                         }
                     }
 
