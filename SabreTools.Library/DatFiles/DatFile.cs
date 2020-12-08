@@ -10,12 +10,11 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.FileTypes;
 using SabreTools.Filtering;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Library.DatItems;
-using SabreTools.Library.FileTypes;
-using SabreTools.Library.IO;
 using SabreTools.Library.Reports;
 using SabreTools.Skippers;
 using NaturalSort;
@@ -2556,7 +2555,7 @@ namespace SabreTools.Library.DatFiles
                 outputFormat = Header.ForcePacking.AsOutputFormat();
 
             // Preload the Skipper list
-            Transform.Init();
+            SkipperMatch.Init();
 
             #endregion
 
@@ -2696,7 +2695,7 @@ namespace SabreTools.Library.DatFiles
                 outputFormat = Header.ForcePacking.AsOutputFormat();
 
             // Preload the Skipper list
-            Transform.Init();
+            SkipperMatch.Init();
 
             #endregion
 
@@ -2908,7 +2907,7 @@ namespace SabreTools.Library.DatFiles
             if (Header.HeaderSkipper != null)
             {
                 // Check to see if we have a matching header first
-                SkipperRule rule = Transform.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(Header.HeaderSkipper));
+                SkipperRule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(Header.HeaderSkipper));
 
                 // If there's a match, create the new file to write
                 if (rule.Tests != null && rule.Tests.Count != 0)

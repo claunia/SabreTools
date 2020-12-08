@@ -3,7 +3,7 @@ using System.Text;
 
 using SabreTools.Core;
 
-namespace SabreTools.Library.FileTypes.Aaru
+namespace SabreTools.FileTypes.Aaru
 {
     /// <summary>
     /// Checksum block, contains a checksum of all user data sectors

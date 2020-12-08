@@ -3,7 +3,7 @@ using System.Text;
 
 using SabreTools.IO;
 
-namespace SabreTools.Library.FileTypes.CHD
+namespace SabreTools.FileTypes.CHD
 {
     /// <summary>
     /// CHD V5 File

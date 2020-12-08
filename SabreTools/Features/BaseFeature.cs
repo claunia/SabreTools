@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 using SabreTools.Core;
 using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.Logging;
 using SabreTools.Library.DatFiles;
+using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Features
 {
@@ -3038,6 +3040,39 @@ Some special strings that can be used:
 
         #endregion
     
+        #region Protected Helpers
+
+        /// <summary>
+        /// Ensure that the databse exists and has the proper schema
+        /// </summary>
+        /// <param name="db">Name of the databse</param>
+        /// <param name="connectionString">Connection string for SQLite</param>
+        protected static void EnsureDatabase(string db, string connectionString)
+        {
+            // Make sure the file exists
+            if (!File.Exists(db))
+                File.Create(db);
+
+            // Open the database connection
+            SqliteConnection dbc = new SqliteConnection(connectionString);
+            dbc.Open();
+
+            // Make sure the database has the correct schema
+            string query = @"
+CREATE TABLE IF NOT EXISTS data (
+    'sha1'		TEXT		NOT NULL,
+    'header'	TEXT		NOT NULL,
+    'type'		TEXT		NOT NULL,
+    PRIMARY KEY (sha1, header, type)
+)";
+            SqliteCommand slc = new SqliteCommand(query, dbc);
+            slc.ExecuteNonQuery();
+            slc.Dispose();
+            dbc.Dispose();
+        }
+
+        #endregion
+
         #region Private Helpers
 
         /// <summary>

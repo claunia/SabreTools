@@ -5,7 +5,6 @@ using System.IO;
 using SabreTools.Core;
 using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
 
 namespace SabreTools.Features
 {

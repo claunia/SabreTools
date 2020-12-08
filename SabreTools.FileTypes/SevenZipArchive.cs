@@ -9,7 +9,7 @@ using Compress.SevenZip;
 using Compress.ZipFile;
 using NaturalSort;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
     /// Represents a Torrent7zip archive for reading and writing

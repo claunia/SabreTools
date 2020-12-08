@@ -4,34 +4,34 @@ using System.IO;
 
 using SabreTools.Core;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
     /// Represents a TorrentLRZip archive for reading and writing
     /// </summary>
-    /// TODO: Implement from source at https://github.com/ckolivas/lrzip
-    public class LRZipArchive : BaseArchive
+    /// TODO: Implement from source at https://github.com/lz4/lz4
+    public class LZ4Archive : BaseArchive
     {
         #region Constructors
 
         /// <summary>
-        /// Create a new LRZipArchive with no base file
+        /// Create a new LZ4Archive with no base file
         /// </summary>
-        public LRZipArchive()
+        public LZ4Archive()
             : base()
         {
-            this.Type = FileType.LRZipArchive;
+            this.Type = FileType.LZ4Archive;
         }
 
         /// <summary>
-        /// Create a new LRZipArchive from the given file
+        /// Create a new LZ4Archive from the given file
         /// </summary>
         /// <param name="filename">Name of the file to use as an archive</param>
         /// <param name="getHashes">True if hashes for this file should be calculated, false otherwise (default)</param>
-        public LRZipArchive(string filename, bool getHashes = false)
+        public LZ4Archive(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.LRZipArchive;
+            this.Type = FileType.LZ4Archive;
         }
 
         #endregion
@@ -83,13 +83,13 @@ namespace SabreTools.Library.FileTypes
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public override bool Write(string inputFile, string outDir, BaseFile rom)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public override bool Write(Stream inputStream, string outDir, BaseFile rom)
         {
             throw new NotImplementedException();
         }

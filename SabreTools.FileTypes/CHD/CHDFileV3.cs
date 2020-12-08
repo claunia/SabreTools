@@ -4,12 +4,12 @@ using System.Text;
 
 using SabreTools.IO;
 
-namespace SabreTools.Library.FileTypes.CHD
+namespace SabreTools.FileTypes.CHD
 {
     /// <summary>
-    /// CHD V4 File
+    /// CHD V3 File
     /// </summary>
-    internal class CHDFileV4 : CHDFile
+    internal class CHDFileV3 : CHDFile
     {
         /// <summary>
         /// CHD flags
@@ -29,7 +29,6 @@ namespace SabreTools.Library.FileTypes.CHD
             CHDCOMPRESSION_NONE = 0,
             CHDCOMPRESSION_ZLIB = 1,
             CHDCOMPRESSION_ZLIB_PLUS = 2,
-            CHDCOMPRESSION_AV = 3,
         }
 
         /// <summary>
@@ -44,26 +43,27 @@ namespace SabreTools.Library.FileTypes.CHD
             public byte flags;         // flags, indicating compression info
         }
 
-        public const int HeaderSize = 108;
-        public const uint Version = 4;
+        public const int HeaderSize = 120;
+        public const uint Version = 3;
 
-        // V4-specific header values
+        // V3-specific header values
         public Flags flags;                        // flags (see above)
         public Compression compression;            // compression type
         public uint totalhunks;                    // total # of hunks represented
         public ulong logicalbytes;                 // logical size of the data (in bytes)
         public ulong metaoffset;                   // offset to the first blob of metadata
+        public byte[] md5 = new byte[16];          // MD5 checksum of raw data
+        public byte[] parentmd5 = new byte[16];    // MD5 checksum of parent file
         public uint hunkbytes;                     // number of bytes per hunk
-        public byte[] sha1 = new byte[20];         // combined raw+meta SHA1
-        public byte[] parentsha1 = new byte[20];   // combined raw+meta SHA1 of parent
-        public byte[] rawsha1 = new byte[20];      // raw data SHA1
+        public byte[] sha1 = new byte[20];         // SHA1 checksum of raw data
+        public byte[] parentsha1 = new byte[20];   // SHA1 checksum of parent file
 
         /// <summary>
-        /// Parse and validate the header as if it's V4
+        /// Parse and validate the header as if it's V3
         /// </summary>
-        public static CHDFileV4 Deserialize(Stream stream)
+        public static CHDFileV3 Deserialize(Stream stream)
         {
-            CHDFileV4 chd = new CHDFileV4();
+            CHDFileV3 chd = new CHDFileV3();
 
             using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
             {
@@ -75,11 +75,13 @@ namespace SabreTools.Library.FileTypes.CHD
                 chd.totalhunks = br.ReadUInt32BigEndian();
                 chd.logicalbytes = br.ReadUInt64BigEndian();
                 chd.metaoffset = br.ReadUInt64BigEndian();
+                chd.md5 = br.ReadBytes(16);
+                chd.parentmd5 = br.ReadBytes(16);
                 chd.hunkbytes = br.ReadUInt32BigEndian();
                 chd.sha1 = br.ReadBytes(20);
                 chd.parentsha1 = br.ReadBytes(20);
-                chd.rawsha1 = br.ReadBytes(20);
 
+                chd.MD5 = chd.md5;
                 chd.SHA1 = chd.sha1;
             }
 

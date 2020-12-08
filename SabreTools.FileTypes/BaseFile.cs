@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.IO;
-using SabreTools.Library.IO;
 using SabreTools.Logging;
+using SabreTools.Skippers;
 using Compress.ThreadReaders;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     public class BaseFile
     {
@@ -268,7 +267,7 @@ namespace SabreTools.Library.FileTypes
             // Try to match the supplied header skipper
             if (header != null)
             {
-                var rule = Transform.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
+                var rule = SkipperMatch.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
 
                 // If there's a match, transform the stream before getting info
                 if (rule.Tests != null && rule.Tests.Count != 0)

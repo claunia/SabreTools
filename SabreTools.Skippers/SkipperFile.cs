@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Xml;
+using System.Xml.Schema;
 
 namespace SabreTools.Skippers
 {
@@ -59,7 +60,16 @@ namespace SabreTools.Skippers
             Rules = new List<SkipperRule>();
             SourceFile = Path.GetFileNameWithoutExtension(filename);
 
-            XmlReader xtr = GetXmlTextReader(filename);
+            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
+
             bool valid = Parse(xtr);
 
             // If we somehow have an invalid file, zero out the fields
@@ -407,35 +417,6 @@ namespace SabreTools.Skippers
 
             // If nothing passed, we return null by default
             return null;
-        }
-
-        #endregion
-
-        // TODO: Remove this region once IO namespace is separated out properly
-        #region TEMPORARY - REMOVEME
-
-        /// <summary>
-        /// Get the XmlTextReader associated with a file, if possible
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <returns>The XmlTextReader representing the (possibly converted) file, null otherwise</returns>
-        private static XmlReader GetXmlTextReader(string filename)
-        {
-            // Check if file exists
-            if (!File.Exists(filename))
-                return null;
-
-            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            return xtr;
         }
 
         #endregion

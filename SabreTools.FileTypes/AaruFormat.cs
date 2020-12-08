@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 using SabreTools.IO;
 using SabreTools.Core;
-using SabreTools.Library.FileTypes.Aaru;
+using SabreTools.FileTypes.Aaru;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
     /// AaruFormat code is based on the Aaru project

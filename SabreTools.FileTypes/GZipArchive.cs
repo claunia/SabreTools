@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using SabreTools.Core;
 using SabreTools.IO;
-using SharpCompress.Compressors.Xz;
+using Compress;
+using Compress.gZip;
+using Compress.ZipFile.ZLib;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
-    /// Represents a TorrentXZ archive for reading and writing
+    /// Represents a TorrentGZip archive for reading and writing
     /// </summary>
-    public class XZArchive : BaseArchive
+    public class GZipArchive : BaseArchive
     {
         #region Fields
 
@@ -28,10 +31,10 @@ namespace SabreTools.Library.FileTypes
         /// <summary>
         /// Create a new TorrentGZipArchive with no base file
         /// </summary>
-        public XZArchive()
+        public GZipArchive()
             : base()
         {
-            this.Type = FileType.XZArchive;
+            this.Type = FileType.GZipArchive;
         }
 
         /// <summary>
@@ -40,10 +43,10 @@ namespace SabreTools.Library.FileTypes
         /// <param name="filename">Name of the file to use as an archive</param>
         /// <param name="read">True for opening file as read, false for opening file as write</param>
         /// <param name="getHashes">True if hashes for this file should be calculated, false otherwise (default)</param>
-        public XZArchive(string filename, bool getHashes = false)
+        public GZipArchive(string filename, bool getHashes = false)
             : base(filename, getHashes)
         {
-            this.Type = FileType.XZArchive;
+            this.Type = FileType.GZipArchive;
         }
 
         #endregion
@@ -62,12 +65,15 @@ namespace SabreTools.Library.FileTypes
 
                 // Decompress the _filename stream
                 FileStream outstream = File.Create(Path.Combine(outDir, Path.GetFileNameWithoutExtension(this.Filename)));
-                var xz = new XZStream(File.OpenRead(this.Filename));
-                xz.CopyTo(outstream);
+                var gz = new gZip();
+                ZipReturn ret = gz.ZipFileOpen(this.Filename);
+                ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
+                gzstream.CopyTo(outstream);
 
                 // Dispose of the streams
                 outstream.Dispose();
-                xz.Dispose();
+                ret = gz.ZipFileCloseReadStream();
+                gz.ZipFileClose();
 
                 encounteredErrors = false;
             }
@@ -86,7 +92,7 @@ namespace SabreTools.Library.FileTypes
                 logger.Error(ex);
                 encounteredErrors = true;
             }
-
+            
             return encounteredErrors;
         }
 
@@ -141,20 +147,22 @@ namespace SabreTools.Library.FileTypes
             {
                 // Decompress the _filename stream
                 realEntry = Path.GetFileNameWithoutExtension(this.Filename);
-                var xz = new XZStream(File.OpenRead(this.Filename));
+                var gz = new gZip();
+                ZipReturn ret = gz.ZipFileOpen(this.Filename);
+                ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
 
                 // Write the file out
-                byte[] xbuffer = new byte[_bufferSize];
-                int xlen;
-                while ((xlen = xz.Read(xbuffer, 0, _bufferSize)) > 0)
+                byte[] gbuffer = new byte[_bufferSize];
+                int glen;
+                while ((glen = gzstream.Read(gbuffer, 0, _bufferSize)) > 0)
                 {
 
-                    ms.Write(xbuffer, 0, xlen);
+                    ms.Write(gbuffer, 0, glen);
                     ms.Flush();
                 }
 
                 // Dispose of the streams
-                xz.Dispose();
+                gzstream.Dispose();
             }
             catch (Exception ex)
             {
@@ -179,43 +187,47 @@ namespace SabreTools.Library.FileTypes
 
                 string gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
-                BaseFile possibleTxz = GetTorrentXZFileInfo();
+                BaseFile possibleTgz = GetTorrentGZFileInfo();
 
                 // If it was, then add it to the outputs and continue
-                if (possibleTxz != null && possibleTxz.Filename != null)
+                if (possibleTgz != null && possibleTgz.Filename != null)
                 {
-                    _children.Add(possibleTxz);
+                    _children.Add(possibleTgz);
                 }
                 else
                 {
                     try
                     {
                         // Create a blank item for the entry
-                        BaseFile xzEntryRom = new BaseFile();
+                        BaseFile gzipEntryRom = new BaseFile();
 
                         // Perform a quickscan, if flagged to
                         if (this.AvailableHashes == Hash.CRC)
                         {
-                            xzEntryRom.Filename = gamename;
+                            gzipEntryRom.Filename = gamename;
                             using (BinaryReader br = new BinaryReader(File.OpenRead(this.Filename)))
                             {
                                 br.BaseStream.Seek(-8, SeekOrigin.End);
-                                xzEntryRom.CRC = br.ReadBytesBigEndian(4);
-                                xzEntryRom.Size = br.ReadInt32BigEndian();
+                                gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
+                                gzipEntryRom.Size = br.ReadInt32BigEndian();
                             }
                         }
                         // Otherwise, use the stream directly
                         else
                         {
-                            var xzStream = new XZStream(File.OpenRead(this.Filename));
-                            xzEntryRom = GetInfo(xzStream, hashes: this.AvailableHashes);
-                            xzEntryRom.Filename = gamename;
-                            xzStream.Dispose();
+                            var gz = new gZip();
+                            ZipReturn ret = gz.ZipFileOpen(this.Filename);
+                            ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
+                            gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashes);
+                            gzipEntryRom.Filename = gz.Filename(0);
+                            gzipEntryRom.Parent = gamename;
+                            gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
+                            gzstream.Dispose();
                         }
 
                         // Fill in comon details and add to the list
-                        xzEntryRom.Parent = gamename;
-                        _children.Add(xzEntryRom);
+                        gzipEntryRom.Parent = gamename;
+                        _children.Add(gzipEntryRom);
                     }
                     catch (Exception ex)
                     {
@@ -231,7 +243,7 @@ namespace SabreTools.Library.FileTypes
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
-            // XZ files don't contain directories
+            // GZip files don't contain directories
             return new List<string>();
         }
 
@@ -243,39 +255,127 @@ namespace SabreTools.Library.FileTypes
                 return false;
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
+            long filesize = new FileInfo(this.Filename).Length;
+
+            // If we have the romba depot files, just skip them gracefully
+            if (datum == ".romba_size" || datum == ".romba_size.backup")
+            {
+                logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
+                return false;
+            }
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
                 logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
                 return false;
             }
 
+            // Check if the file is at least the minimum length
+            if (filesize < 40 /* bytes */)
+            {
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {filesize}");
+                return false;
+            }
+
+            // Get the Romba-specific header data
+            BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+            byte[] header = br.ReadBytes(12); // Get preamble header for checking
+            br.ReadBytes(16); // headermd5
+            br.ReadBytes(4); // headercrc
+            br.ReadUInt64(); // headersz
+            br.Dispose();
+
+            // If the header is not correct, return a blank rom
+            bool correct = true;
+            for (int i = 0; i < header.Length; i++)
+            {
+                // This is a temp fix to ignore the modification time and OS until romba can be fixed
+                if (i == 4 || i == 5 || i == 6 || i == 7 || i == 9)
+                    continue;
+
+                correct &= (header[i] == Constants.TorrentGZHeader[i]);
+            }
+
+            if (!correct)
+                return false;
+
             return true;
         }
 
         /// <summary>
-        /// Retrieve file information for a single torrent XZ file
+        /// Retrieve file information for a single torrent GZ file
         /// </summary>
         /// <returns>Populated DatItem object if success, empty one on error</returns>
-        public BaseFile GetTorrentXZFileInfo()
+        public BaseFile GetTorrentGZFileInfo()
         {
             // Check for the file existing first
             if (!File.Exists(this.Filename))
+            {
                 return null;
+            }
 
             string datum = Path.GetFileName(this.Filename).ToLowerInvariant();
+            long filesize = new FileInfo(this.Filename).Length;
+
+            // If we have the romba depot files, just skip them gracefully
+            if (datum == ".romba_size" || datum == ".romba_size.backup")
+            {
+                logger.Verbose($"Romba depot file found, skipping: {this.Filename}");
+                return null;
+            }
 
             // Check if the name is the right length
-            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.xz"))
+            if (!Regex.IsMatch(datum, @"^[0-9a-f]{" + Constants.SHA1Length + @"}\.gz"))
             {
                 logger.Warning($"Non SHA-1 filename found, skipping: '{Path.GetFullPath(this.Filename)}'");
                 return null;
             }
 
+            // Check if the file is at least the minimum length
+            if (filesize < 40 /* bytes */)
+            {
+                logger.Warning($"Possibly corrupt file '{Path.GetFullPath(this.Filename)}' with size {filesize}");
+                return null;
+            }
+
+            // Get the Romba-specific header data
+            byte[] header; // Get preamble header for checking
+            byte[] headermd5; // MD5
+            byte[] headercrc; // CRC
+            ulong headersz; // Int64 size
+            BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+            header = br.ReadBytes(12);
+            headermd5 = br.ReadBytes(16);
+            headercrc = br.ReadBytes(4);
+            headersz = br.ReadUInt64();
+            br.Dispose();
+
+            // If the header is not correct, return a blank rom
+            bool correct = true;
+            for (int i = 0; i < header.Length; i++)
+            {
+                // This is a temp fix to ignore the modification time and OS until romba can be fixed
+                if (i == 4 || i == 5 || i == 6 || i == 7 || i == 9)
+                {
+                    continue;
+                }
+                correct &= (header[i] == Constants.TorrentGZHeader[i]);
+            }
+            if (!correct)
+            {
+                return null;
+            }
+
+            // Now convert the data and get the right position
+            long extractedsize = (long)headersz;
+
             BaseFile baseFile = new BaseFile
             {
                 Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
+                Size = extractedsize,
+                CRC = headercrc,
+                MD5 = headermd5,
                 SHA1 = Utilities.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
 
                 Parent = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
@@ -289,7 +389,7 @@ namespace SabreTools.Library.FileTypes
         #region Writing
 
         /// <inheritdoc/>
-        public override bool Write(string inputFile, string outDir, BaseFile baseFile)
+        public override bool Write(string inputFile, string outDir, BaseFile baseFile = null)
         {
             // Check that the input file exists
             if (!File.Exists(inputFile))
@@ -305,7 +405,7 @@ namespace SabreTools.Library.FileTypes
         }
 
         /// <inheritdoc/>
-        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile)
+        public override bool Write(Stream inputStream, string outDir, BaseFile baseFile = null)
         {
             bool success = false;
 
@@ -324,7 +424,6 @@ namespace SabreTools.Library.FileTypes
 
             // Get the output file name
             string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(Utilities.ByteArrayToString(baseFile.SHA1), Depth));
-            outfile = outfile.Replace(".gz", ".xz");
 
             // Check to see if the folder needs to be created
             if (!Directory.Exists(Path.GetDirectoryName(outfile)))
@@ -334,10 +433,39 @@ namespace SabreTools.Library.FileTypes
             if (!File.Exists(outfile))
             {
                 // Compress the input stream
-                XZStream outputStream = new XZStream(File.Create(outfile));
-                inputStream.CopyTo(outputStream);
+                FileStream outputStream = File.Create(outfile);
+
+                // Open the output file for writing
+                BinaryWriter sw = new BinaryWriter(outputStream);
+
+                // Write standard header and TGZ info
+                byte[] data = Constants.TorrentGZHeader
+                            .Concat(baseFile.MD5) // MD5
+                            .Concat(baseFile.CRC) // CRC
+                            .ToArray();
+                sw.Write(data);
+                sw.Write((ulong)(baseFile.Size ?? 0)); // Long size (Unsigned, Mirrored)
+
+                // Now create a deflatestream from the input file
+                ZlibBaseStream ds = new ZlibBaseStream(outputStream, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
+
+                // Copy the input stream to the output
+                byte[] ibuffer = new byte[_bufferSize];
+                int ilen;
+                while ((ilen = inputStream.Read(ibuffer, 0, _bufferSize)) > 0)
+                {
+                    ds.Write(ibuffer, 0, ilen);
+                    ds.Flush();
+                }
+
+                ds.Dispose();
+
+                // Now write the standard footer
+                sw.Write(baseFile.CRC.Reverse().ToArray());
+                sw.Write((uint)(baseFile.Size ?? 0));
 
                 // Dispose of everything
+                sw.Dispose();
                 outputStream.Dispose();
             }
 
@@ -345,7 +473,7 @@ namespace SabreTools.Library.FileTypes
         }
 
         /// <inheritdoc/>
-        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFiles)
+        public override bool Write(List<string> inputFiles, string outDir, List<BaseFile> baseFile)
         {
             throw new NotImplementedException();
         }

@@ -4,9 +4,9 @@ using System.Text;
 
 using SabreTools.Core;
 using SabreTools.IO;
-using SabreTools.Library.FileTypes.CHD;
+using SabreTools.FileTypes.CHD;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
     /// This is code adapted from chd.h and chd.cpp in MAME

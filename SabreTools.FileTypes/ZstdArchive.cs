@@ -4,7 +4,7 @@ using System.IO;
 
 using SabreTools.Core;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
     /// Represents a ZstdArchive archive for reading and writing

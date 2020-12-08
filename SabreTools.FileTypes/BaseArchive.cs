@@ -3,7 +3,7 @@ using System.IO;
 
 using SabreTools.Core;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     public abstract class BaseArchive : Folder
     {

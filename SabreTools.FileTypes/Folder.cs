@@ -7,7 +7,7 @@ using SabreTools.Core;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-namespace SabreTools.Library.FileTypes
+namespace SabreTools.FileTypes
 {
     /// <summary>
     /// Represents a folder for reading and writing
