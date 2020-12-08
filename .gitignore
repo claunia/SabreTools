@@ -10,6 +10,8 @@
 /SabreTools/SabreTools.csproj.user
 /SabreTools.Core/bin/
 /SabreTools.Core/obj/
+/SabreTools.DatItems/bin/
+/SabreTools.DatItems/obj/
 /SabreTools.FileTypes/bin/
 /SabreTools.FileTypes/obj/
 /SabreTools.Filtering/bin/

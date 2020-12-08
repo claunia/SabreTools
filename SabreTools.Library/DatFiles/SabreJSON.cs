@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Core;
-using SabreTools.Library.DatItems;
+using SabreTools.DatItems;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

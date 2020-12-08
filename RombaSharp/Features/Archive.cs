@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
+using SabreTools.DatItems;
 using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features

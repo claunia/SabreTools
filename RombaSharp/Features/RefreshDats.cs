@@ -2,9 +2,9 @@
 using System.IO;
 
 using SabreTools.Core;
+using SabreTools.DatItems;
 using SabreTools.Help;
 using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
 using SabreTools.Logging;
 using Microsoft.Data.Sqlite;
 

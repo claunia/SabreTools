@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Library.DatItems;
 using SabreTools.Library.Reports;
 using NaturalSort;
 using Newtonsoft.Json;

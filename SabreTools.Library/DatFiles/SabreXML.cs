@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-using SabreTools.Library.DatItems;
+using SabreTools.DatItems;
 
 namespace SabreTools.Library.DatFiles
 {
