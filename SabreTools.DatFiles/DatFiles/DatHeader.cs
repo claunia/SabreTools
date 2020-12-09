@@ -5,10 +5,11 @@ using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.IO;
 using Newtonsoft.Json;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Represents all possible DAT header information

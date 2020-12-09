@@ -10,17 +10,18 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.DatFiles.Reports;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.Filtering;
 using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Library.Reports;
 using SabreTools.Skippers;
 using NaturalSort;
 using Newtonsoft.Json;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Represents a format-agnostic DAT

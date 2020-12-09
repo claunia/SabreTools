@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using Compress.ZipFile;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;

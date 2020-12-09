@@ -8,10 +8,11 @@ using System.Xml;
 using System.Xml.Schema;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Represents parsing and writing of a Logiqx-derived DAT

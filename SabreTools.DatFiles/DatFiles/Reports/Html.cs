@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace SabreTools.Library.Reports
+namespace SabreTools.DatFiles.Reports
 {
     /// <summary>
     /// HTML report format

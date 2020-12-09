@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using Compress;
 using Compress.ZipFile;
 using NaturalSort;

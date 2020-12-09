@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.IO;
 using SharpCompress.Compressors.Xz;
 

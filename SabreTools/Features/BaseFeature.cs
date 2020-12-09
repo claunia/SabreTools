@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
 using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.Logging;
-using SabreTools.Library.DatFiles;
 using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Features

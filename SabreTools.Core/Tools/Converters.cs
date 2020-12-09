@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace SabreTools.Core
+namespace SabreTools.Core.Tools
 {
     public static class Converters
     {

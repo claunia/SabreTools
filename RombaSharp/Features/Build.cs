@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Library.DatFiles;
 
 namespace RombaSharp.Features
 {

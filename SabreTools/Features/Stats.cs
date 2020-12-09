@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.DatFiles;
 using SabreTools.Help;
-using SabreTools.Library.DatFiles;
 
 namespace SabreTools.Features
 {

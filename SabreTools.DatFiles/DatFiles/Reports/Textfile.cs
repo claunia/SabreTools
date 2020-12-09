@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SabreTools.Library.Reports
+namespace SabreTools.DatFiles.Reports
 {
     /// <summary>
     /// Textfile report format

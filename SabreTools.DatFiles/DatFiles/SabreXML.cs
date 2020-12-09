@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 
 using SabreTools.DatItems;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Represents parsing and writing of a SabreDAT XML

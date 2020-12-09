@@ -10,6 +10,8 @@
 /SabreTools/SabreTools.csproj.user
 /SabreTools.Core/bin/
 /SabreTools.Core/obj/
+/SabreTools.DatFiles/bin/
+/SabreTools.DatFiles/obj/
 /SabreTools.DatItems/bin/
 /SabreTools.DatItems/obj/
 /SabreTools.FileTypes/bin/
@@ -20,8 +22,6 @@
 /SabreTools.Help/obj/
 /SabreTools.IO/bin/
 /SabreTools.IO/obj/
-/SabreTools.Library/bin/
-/SabreTools.Library/obj/
 /SabreTools.Logging/bin/
 /SabreTools.Logging/obj/
 /SabreTools.Skippers/bin/

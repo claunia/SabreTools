@@ -7,11 +7,12 @@ using System.Xml;
 using System.Xml.Schema;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
 // TODO: Use softwarelist.dtd and *try* to make this write more correctly
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Represents parsing and writing of a SoftwareList

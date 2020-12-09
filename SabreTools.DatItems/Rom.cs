@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
 using SabreTools.Filtering;
 using Newtonsoft.Json;

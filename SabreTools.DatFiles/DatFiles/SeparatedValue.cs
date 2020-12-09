@@ -4,27 +4,33 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
-    /// Represents parsing and writing of an AttractMode DAT
+    /// Represents parsing and writing of a value-separated DAT
     /// </summary>
-    internal class AttractMode : DatFile
+    internal class SeparatedValue : DatFile
     {
+        // Private instance variables specific to Separated Value DATs
+        private readonly char _delim;
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public AttractMode(DatFile datFile)
+        /// <param name="delim">Delimiter for parsing individual lines</param>
+        public SeparatedValue(DatFile datFile, char delim)
             : base(datFile)
         {
+            _delim = delim;
         }
 
         /// <summary>
-        /// Parse an AttractMode DAT and return all found games within
+        /// Parse a character-separated value DAT and return all found games and roms within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
@@ -37,9 +43,9 @@ namespace SabreTools.Library.DatFiles
             SeparatedValueReader svr = new SeparatedValueReader(File.OpenRead(filename), enc)
             {
                 Header = true,
-                Quotes = false,
-                Separator = ';',
-                VerifyFieldCount = true
+                Quotes = true,
+                Separator = _delim,
+                VerifyFieldCount = true,
             };
 
             // If we're somehow at the end of the stream already, we can't do anything
@@ -49,9 +55,6 @@ namespace SabreTools.Library.DatFiles
             // Read in the header
             svr.ReadHeader();
 
-            // Header values should match
-            // #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-
             // Loop through all of the data lines
             while (!svr.EndOfStream)
             {
@@ -60,45 +63,30 @@ namespace SabreTools.Library.DatFiles
                     // Get the current line, split and parse
                     svr.ReadNextLine();
 
-                    Rom rom = new Rom
+                    // Create mapping dictionary
+                    var mappings = new Dictionary<Field, string>();
+
+                    // Now we loop through and get values for everything
+                    for (int i = 0; i < svr.HeaderValues.Count; i++)
                     {
-                        Name = "-",
-                        Size = Constants.SizeZero,
-                        CRC = Constants.CRCZero,
-                        MD5 = Constants.MD5Zero,
-                        SHA1 = Constants.SHA1Zero,
-                        ItemStatus = ItemStatus.None,
+                        Field key = svr.HeaderValues[i].AsField();
+                        string value = svr.Line[i];
+                        mappings[key] = value;
+                    }
 
-                        Machine = new Machine
-                        {
-                            Name = svr.Line[0], // #Name
-                            Description = svr.Line[1], // Title
-                            CloneOf = svr.Line[3], // CloneOf
-                            Year = svr.Line[4], // Year
-                            Manufacturer = svr.Line[5], // Manufacturer
-                            Category = svr.Line[6], // Category
-                            Players = svr.Line[7], // Players
-                            Rotation = svr.Line[8], // Rotation
-                            Control = svr.Line[9], // Control
-                            Status = svr.Line[10], // Status
-                            DisplayCount = svr.Line[11], // DisplayCount
-                            DisplayType = svr.Line[12], // DisplayType
-                            Comment = svr.Line[15], // Extra
-                            Buttons = svr.Line[16], // Buttons
-                        },
+                    // Set DatHeader fields
+                    DatHeader header = new DatHeader();
+                    header.SetFields(mappings);
+                    Header.ConditionalCopy(header);
 
-                        AltName = svr.Line[13], // AltRomname
-                        AltTitle = svr.Line[14], // AltTitle
-
-                        Source = new Source
-                        {
-                            Index = indexId,
-                            Name = filename,
-                        },
-                    };
-
-                    // Now process and add the rom
-                    ParseAddHelper(rom);
+                    // Set Machine and DatItem fields
+                    if (mappings.ContainsKey(Field.DatItem_Type))
+                    {
+                        DatItem datItem = DatItem.Create(mappings[Field.DatItem_Type].AsItemType());
+                        datItem.SetFields(mappings);
+                        datItem.Source = new Source(indexId, filename);
+                        ParseAddHelper(datItem);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -118,7 +106,7 @@ namespace SabreTools.Library.DatFiles
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[] { ItemType.Rom };
+            return new ItemType[] { ItemType.Disk, ItemType.Media, ItemType.Rom };
         }
 
         /// <summary>
@@ -144,8 +132,8 @@ namespace SabreTools.Library.DatFiles
 
                 SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
                 {
-                    Quotes = false,
-                    Separator = ';',
+                    Quotes = true,
+                    Separator = this._delim,
                     VerifyFieldCount = true
                 };
 
@@ -177,7 +165,7 @@ namespace SabreTools.Library.DatFiles
                     }
                 }
 
-                logger.Verbose($"File written!{Environment.NewLine}");
+                logger.Verbose("File written!" + Environment.NewLine);
                 svw.Dispose();
                 fs.Dispose();
             }
@@ -198,25 +186,26 @@ namespace SabreTools.Library.DatFiles
         private void WriteHeader(SeparatedValueWriter svw)
         {
             string[] headers = new string[]
-            {
-                "#Name",
-                "Title",
-                "Emulator",
-                "CloneOf",
-                "Year",
-                "Manufacturer",
-                "Category",
-                "Players",
-                "Rotation",
-                "Control",
-                "Status",
-                "DisplayCount",
-                "DisplayType",
-                "AltRomname",
-                "AltTitle",
-                "Extra",
-                "Buttons",
-            };
+                            {
+                    "File Name",
+                    "Internal Name",
+                    "Description",
+                    "Game Name",
+                    "Game Description",
+                    "Type",
+                    "Rom Name",
+                    "Disk Name",
+                    "Size",
+                    "CRC",
+                    "MD5",
+                    //"RIPEMD160",
+                    "SHA1",
+                    "SHA256",
+                    //"SHA384",
+                    //"SHA512",
+                    //"SpamSum",
+                    "Nodump",
+                            };
 
             svw.WriteHeader(headers);
 
@@ -224,48 +213,83 @@ namespace SabreTools.Library.DatFiles
         }
 
         /// <summary>
-        /// Write out Game start using the supplied StreamWriter
+        /// Write out DatItem using the supplied StreamWriter
         /// </summary>
         /// <param name="svw">SeparatedValueWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         private void WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
         {
-            // No game should start with a path separator
-            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
-
-            // Pre-process the item name
-            ProcessItemName(datItem, true);
+            // Separated values should only output Rom and Disk
+            if (datItem.ItemType != ItemType.Disk && datItem.ItemType != ItemType.Rom)
+                return;
 
             // Build the state
+            // TODO: Can we have some way of saying what fields to write out? Support for read extends to all fields now
+            string[] fields = new string[14]; // 18;
+            fields[0] = Header.FileName;
+            fields[1] = Header.Name;
+            fields[2] = Header.Description;
+            fields[3] = datItem.Machine.Name;
+            fields[4] = datItem.Machine.Description;
+
             switch (datItem.ItemType)
             {
+                case ItemType.Disk:
+                    var disk = datItem as Disk;
+                    fields[5] = "disk";
+                    fields[6] = string.Empty;
+                    fields[7] = disk.Name;
+                    fields[8] = string.Empty;
+                    fields[9] = string.Empty;
+                    fields[10] = disk.MD5?.ToLowerInvariant();
+                    //fields[11] = string.Empty;
+                    fields[11] = disk.SHA1?.ToLowerInvariant();
+                    fields[12] = string.Empty;
+                    //fields[13] = string.Empty;
+                    //fields[14] = string.Empty;
+                    //fields[15] = string.Empty;
+                    fields[13] = disk.ItemStatus.ToString();
+                    break;
+
+                case ItemType.Media:
+                    var media = datItem as Media;
+                    fields[5] = "media";
+                    fields[6] = string.Empty;
+                    fields[7] = media.Name;
+                    fields[8] = string.Empty;
+                    fields[9] = string.Empty;
+                    fields[10] = media.MD5?.ToLowerInvariant();
+                    //fields[11] = string.Empty;
+                    fields[11] = media.SHA1?.ToLowerInvariant();
+                    fields[12] = media.SHA256?.ToLowerInvariant();
+                    //fields[13] = string.Empty;
+                    //fields[14] = string.Empty;
+                    //fields[15] = media.SpamSum?.ToLowerInvariant();
+                    fields[13] = string.Empty;
+                    break;
+
                 case ItemType.Rom:
                     var rom = datItem as Rom;
-                    string[] fields = new string[]
-                    {
-                            rom.Machine.Name,
-                            rom.Machine.Description,
-                            Header.FileName,
-                            rom.Machine.CloneOf,
-                            rom.Machine.Year,
-                            rom.Machine.Manufacturer,
-                            rom.Machine.Category,
-                            rom.Machine.Players,
-                            rom.Machine.Rotation,
-                            rom.Machine.Control,
-                            rom.ItemStatus.ToString(),
-                            rom.Machine.DisplayCount,
-                            rom.Machine.DisplayType,
-                            rom.AltName,
-                            rom.AltTitle,
-                            rom.Machine.Comment,
-                            rom.Machine.Buttons,
-                    };
-
-                    svw.WriteValues(fields);
+                    fields[5] = "rom";
+                    fields[6] = rom.Name;
+                    fields[7] = string.Empty;
+                    fields[8] = rom.Size?.ToString();
+                    fields[9] = rom.CRC?.ToLowerInvariant();
+                    fields[10] = rom.MD5?.ToLowerInvariant();
+                    //fields[11] = rom.RIPEMD160?.ToLowerInvariant();
+                    fields[11] = rom.SHA1?.ToLowerInvariant();
+                    fields[12] = rom.SHA256?.ToLowerInvariant();
+                    //fields[13] = rom.SHA384?.ToLowerInvariant();
+                    //fields[14] = rom.SHA512?.ToLowerInvariant();
+                    //fields[15] = rom.SpamSum?.ToLowerInvariant();
+                    fields[13] = rom.ItemStatus.ToString();
                     break;
             }
+
+            svw.WriteString(CreatePrefixPostfix(datItem, true));
+            svw.WriteValues(fields, false);
+            svw.WriteString(CreatePrefixPostfix(datItem, false));
+            svw.WriteLine();
 
             svw.Flush();
         }

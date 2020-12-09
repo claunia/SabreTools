@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SabreTools.Core
+namespace SabreTools.Core.Tools
 {
     /// <summary>
     /// Static utility functions used throughout the library

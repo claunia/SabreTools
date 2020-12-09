@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.Help;
-using SabreTools.Library.DatFiles;
-
 namespace SabreTools.Features
 {
     internal class DatFromDir : BaseFeature

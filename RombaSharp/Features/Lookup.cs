@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.Help;
 using Microsoft.Data.Sqlite;
 

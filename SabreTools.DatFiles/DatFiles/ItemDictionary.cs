@@ -12,11 +12,11 @@ using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
-using SabreTools.Library.Reports;
+using SabreTools.DatFiles.Reports;
 using NaturalSort;
 using Newtonsoft.Json;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Item dictionary with statistics, bucketing, and sorting

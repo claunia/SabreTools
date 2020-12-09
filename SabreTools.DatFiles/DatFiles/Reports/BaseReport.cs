@@ -2,9 +2,9 @@
 using System.IO;
 
 using SabreTools.Core;
-using SabreTools.Library.DatFiles;
+using SabreTools.DatFiles;
 
-namespace SabreTools.Library.Reports
+namespace SabreTools.DatFiles.Reports
 {
     /// <summary>
     /// Base class for a report output format

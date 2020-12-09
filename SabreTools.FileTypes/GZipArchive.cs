@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.IO;
 using Compress;
 using Compress.gZip;

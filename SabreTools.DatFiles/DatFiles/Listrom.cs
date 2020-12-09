@@ -5,10 +5,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Represents parsing and writing of a MAME Listrom DAT

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.IO;
 using SabreTools.Logging;
 
@@ -65,7 +66,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Create an folder object of the specified type, if possible
         /// </summary>
-        /// <param name="outputFormat">SabreTools.Library.Data.OutputFormat representing the archive to create</param>
+        /// <param name="outputFormat">OutputFormat representing the archive to create</param>
         /// <returns>Archive object representing the inputs</returns>
         public static Folder Create(OutputFormat outputFormat)
         {

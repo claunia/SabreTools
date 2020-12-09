@@ -2,7 +2,7 @@
 
 using SabreTools.Core;
 
-namespace SabreTools.Library.DatFiles
+namespace SabreTools.DatFiles
 {
     /// <summary>
     /// Depot information wrapper

@@ -2,9 +2,9 @@
 using System.IO;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.Help;
 using SabreTools.IO;
-using SabreTools.Library.DatFiles;
 using SabreTools.Logging;
 
 namespace SabreTools.Features

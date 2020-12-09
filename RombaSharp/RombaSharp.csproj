@@ -17,11 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
     <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
     <ProjectReference Include="..\SabreTools.FileTypes\SabreTools.FileTypes.csproj" />
     <ProjectReference Include="..\SabreTools.Filtering\SabreTools.Filtering.csproj" />
     <ProjectReference Include="..\SabreTools.Help\SabreTools.Help.csproj" />
-    <ProjectReference Include="..\SabreTools.Library\SabreTools.Library.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
   </ItemGroup>
 
