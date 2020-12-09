@@ -16,43 +16,43 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="a7800.xml" />
-    <None Remove="fds.xml" />
-    <None Remove="lynx.xml" />
-    <None Remove="n64.xml" />
-    <None Remove="nes.xml" />
-    <None Remove="pce.xml" />
-    <None Remove="psid.xml" />
-    <None Remove="snes.xml" />
-    <None Remove="spc.xml" />
+    <None Remove="Skippers\a7800.xml" />
+    <None Remove="Skippers\fds.xml" />
+    <None Remove="Skippers\lynx.xml" />
+    <None Remove="Skippers\n64.xml" />
+    <None Remove="Skippers\nes.xml" />
+    <None Remove="Skippers\pce.xml" />
+    <None Remove="Skippers\psid.xml" />
+    <None Remove="Skippers\snes.xml" />
+    <None Remove="Skippers\spc.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="a7800.xml">
+    <Content Include="Skippers\a7800.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="fds.xml">
+    <Content Include="Skippers\fds.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="lynx.xml">
+    <Content Include="Skippers\lynx.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="n64.xml">
+    <Content Include="Skippers\n64.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="nes.xml">
+    <Content Include="Skippers\nes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="pce.xml">
+    <Content Include="Skippers\pce.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="psid.xml">
+    <Content Include="Skippers\psid.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="snes.xml">
+    <Content Include="Skippers\snes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="spc.xml">
+    <Content Include="Skippers\spc.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
