@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using SabreTools.Core;
@@ -8,6 +9,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace SabreTools.DatFiles
 {
@@ -519,6 +521,30 @@ namespace SabreTools.DatFiles
             jtw.WriteEndObject();
 
             jtw.Flush();
+        }
+    
+        // https://github.com/dotnet/runtime/issues/728
+        private class BaseFirstContractResolver : DefaultContractResolver
+        {
+            public BaseFirstContractResolver()
+            {
+                NamingStrategy = new CamelCaseNamingStrategy();
+            }
+
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                return base.CreateProperties(type, memberSerialization)
+                    .OrderBy(p => BaseTypesAndSelf(p.DeclaringType).Count()).ToList();
+
+                IEnumerable<Type> BaseTypesAndSelf(Type t)
+                {
+                    while (t != null)
+                    {
+                        yield return t;
+                        t = t.BaseType;
+                    }
+                }
+            }
         }
     }
 }
