@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.Filtering;
-using SabreTools.Library.Help;
-using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
+using SabreTools.Filtering;
+using SabreTools.Help;
+using SabreTools.IO;
 
 namespace RombaSharp.Features
 {
@@ -18,7 +19,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "dir2dat" };
             Description = "Creates a DAT file for the specified input directory and saves it to the -out filename.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Creates a DAT file for the specified input directory and saves it to the -out filename.";
             Features = new Dictionary<string, Feature>();
 

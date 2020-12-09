@@ -10,11 +10,11 @@ The SabreTools project started as a desktop port of some core features of Wizard
 
 ## Features
 
-For the most complete set of information, see the the [Wiki](https://github.com/SabreTools/SabreTools/wiki) or the [README.1ST](https://raw.githubusercontent.com/SabreTools/SabreTools/main/SabreTools.Library/README.1ST) file. Currently, the SabreTools suite consists of the following programs:
+For the most complete set of information, see the the [Wiki](https://github.com/SabreTools/SabreTools/wiki) or the [README.1ST](https://raw.githubusercontent.com/SabreTools/SabreTools/main/SabreTools.Core/README.1ST) file. Currently, the SabreTools suite consists of the following programs:
 
-### SabreTools / SabreTools.Library
+### SabreTools / SabreTools Libraries
 
-As the core of the SabreTools suite, the C# library provides nearly all of the functionality, while the main executable acts as a reference implementation. Below is a list of features included in the library and exposed though the executable:
+As the core of the SabreTools suite, the C# libraries provide nearly all of the functionality, while the main executable acts as a reference implementation. Below is a list of features included in the libraries and exposed though the executable:
 
 * **Dir2DAT / DATFromDir** - Create a DAT from a file, folder, or mix of both
 	* Archives and files can be filtered selectively

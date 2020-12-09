@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 using SabreTools.Features;
-using SabreTools.Library.Data;
-using SabreTools.Library.Help;
-using SabreTools.Library.Logging;
+using SabreTools.Core;
+using SabreTools.Help;
+using SabreTools.Logging;
 
 namespace SabreTools
 {
@@ -15,7 +15,7 @@ namespace SabreTools
         /// <summary>
         /// Help object that determines available functionality
         /// </summary>
-        private static Help _help;
+        private static FeatureSet _help;
 
         /// <summary>
         /// Logging object
@@ -149,7 +149,7 @@ namespace SabreTools
         /// Generate a Help object for this program
         /// </summary>
         /// <returns>Populated Help object</returns>
-        private static Help RetrieveHelp()
+        private static FeatureSet RetrieveHelp()
         {
             // Create and add the header to the Help object
             string barrier = "-----------------------------------------";
@@ -162,7 +162,7 @@ namespace SabreTools
             };
 
             // Create the base help object with header
-            Help help = new Help(helpHeader);
+            FeatureSet help = new FeatureSet(helpHeader);
 
             // Add all of the features
             help.Add(new DisplayHelp());

@@ -2,9 +2,8 @@
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.Help;
-using SabreTools.Library.IO;
-using SabreTools.Library.Logging;
+using SabreTools.Help;
+using SabreTools.IO;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -19,7 +18,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "import" };
             Description = "Import a database from a formatted CSV file";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Import a database from a formatted CSV file";
             Features = new Dictionary<string, Feature>();
         }
@@ -38,7 +37,7 @@ namespace RombaSharp.Features
             // Now, for each of these files, attempt to add the data found inside
             foreach (string input in Inputs)
             {
-                StreamReader sr = new StreamReader(FileExtensions.TryOpenRead(input));
+                StreamReader sr = new StreamReader(File.OpenRead(input));
 
                 // The first line should be the hash header
                 string line = sr.ReadLine();

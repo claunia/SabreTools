@@ -2,9 +2,10 @@
 using System.IO;
 using System.Linq;
 
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.FileTypes;
+using SabreTools.Core;
+using SabreTools.DatFiles;
+using SabreTools.DatItems;
+using SabreTools.Help;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -18,14 +19,14 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "archive" };
             Description = "Adds ROM files from the specified directories to the ROM archive.";
-            _featureType = SabreTools.Library.Help.FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = @"Adds ROM files from the specified directories to the ROM archive.
 Traverses the specified directory trees looking for zip files and normal files.
 Unpacked files will be stored as individual entries. Prior to unpacking a zip
 file, the external SHA1 is checked against the DAT index. 
 If -only-needed is set, only those files are put in the ROM archive that
 have a current entry in the DAT index.";
-            Features = new Dictionary<string, SabreTools.Library.Help.Feature>();
+            Features = new Dictionary<string, SabreTools.Help.Feature>();
 
             AddFeature(OnlyNeededFlag);
             AddFeature(ResumeStringInput);
@@ -38,7 +39,7 @@ have a current entry in the DAT index.";
             AddFeature(NoDbFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

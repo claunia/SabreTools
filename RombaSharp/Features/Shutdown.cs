@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -13,7 +13,7 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "shutdown" };
             Description = "Gracefully shuts down server.";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Gracefully shuts down server saving all the cached data.";
             Features = new Dictionary<string, Feature>();
         }

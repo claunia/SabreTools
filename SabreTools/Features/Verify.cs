@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.Help;
-using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
+using SabreTools.Core;
+using SabreTools.DatFiles;
+using SabreTools.Help;
+using SabreTools.IO;
+using SabreTools.Logging;
 
 namespace SabreTools.Features
 {
@@ -16,7 +17,7 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-ve", "--verify" };
             Description = "Verify a folder against DATs";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "When used, this will use an input DAT or set of DATs to blindly check against an input folder. The base of the folder is considered the base for the combined DATs and games are either the directories or archives within. This will only do a direct verification of the items within and will create a fixdat afterwards for missing files.";
             Features = new Dictionary<string, Feature>();
 

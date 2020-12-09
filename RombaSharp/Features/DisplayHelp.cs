@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using SabreTools.Library.Help;
+using SabreTools.Help;
 
 namespace RombaSharp.Features
 {
@@ -13,12 +13,12 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "-?", "-h", "--help" };
             Description = "Show this help";
-            _featureType = FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Built-in to most of the programs is a basic help text.";
             Features = new Dictionary<string, Feature>();
         }
 
-        public override bool ProcessArgs(string[] args, Help help)
+        public override bool ProcessArgs(string[] args, FeatureSet help)
         {
             // If we had something else after help
             if (args.Length > 1)

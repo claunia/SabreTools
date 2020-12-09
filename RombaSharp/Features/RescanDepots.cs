@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
+using SabreTools.Core;
+using SabreTools.DatFiles;
+using SabreTools.DatItems;
+using SabreTools.Help;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -17,12 +19,12 @@ namespace RombaSharp.Features
             Name = Value;
             Flags = new List<string>() { "depot-rescan" };
             Description = "Rescan a specific depot to get new information";
-            _featureType = SabreTools.Library.Help.FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
-            Features = new Dictionary<string, SabreTools.Library.Help.Feature>();
+            Features = new Dictionary<string, SabreTools.Help.Feature>();
         }
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
             base.ProcessFeatures(features);
             logger.Error("This feature is not yet implemented: rescan-depots");

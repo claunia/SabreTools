@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -13,7 +13,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SabreTools.Library\SabreTools.Library.csproj" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
+    <ProjectReference Include="..\SabreTools.Filtering\SabreTools.Filtering.csproj" />
+    <ProjectReference Include="..\SabreTools.Help\SabreTools.Help.csproj" />
+    <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

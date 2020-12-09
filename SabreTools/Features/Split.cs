@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
+using SabreTools.Core;
+using SabreTools.DatFiles;
+using SabreTools.Help;
+using SabreTools.IO;
+using SabreTools.Logging;
 
 namespace SabreTools.Features
 {
@@ -18,9 +18,9 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-sp", "--split" };
             Description = "Split input DATs by a given criteria";
-            _featureType = SabreTools.Library.Help.FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
-            Features = new Dictionary<string, Library.Help.Feature>();
+            Features = new Dictionary<string, Help.Feature>();
 
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
@@ -38,7 +38,7 @@ namespace SabreTools.Features
             AddFeature(TypeFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
             base.ProcessFeatures(features);
             SplittingMode splittingMode = GetSplittingMode(features);

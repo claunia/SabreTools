@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
+    <RuntimeIdentifiers>win10-x64;win7-x86</RuntimeIdentifiers>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+    <DefineConstants>NET_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
+    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
+  </ItemGroup>
+
+</Project>

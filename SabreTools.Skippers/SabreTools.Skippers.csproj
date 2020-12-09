@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
+    <RuntimeIdentifiers>win10-x64;win7-x86</RuntimeIdentifiers>
+    <Configurations>Debug;Release</Configurations>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+    <DefineConstants>NET_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Skippers\a7800.xml" />
+    <None Remove="Skippers\fds.xml" />
+    <None Remove="Skippers\lynx.xml" />
+    <None Remove="Skippers\n64.xml" />
+    <None Remove="Skippers\nes.xml" />
+    <None Remove="Skippers\pce.xml" />
+    <None Remove="Skippers\psid.xml" />
+    <None Remove="Skippers\snes.xml" />
+    <None Remove="Skippers\spc.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Skippers\a7800.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\fds.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\lynx.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\n64.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\nes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\pce.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\psid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\snes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Skippers\spc.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

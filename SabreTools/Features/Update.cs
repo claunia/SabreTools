@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.IO;
-using SabreTools.Library.Tools;
+using SabreTools.Core;
+using SabreTools.DatFiles;
+using SabreTools.Help;
+using SabreTools.IO;
+using SabreTools.Logging;
 
 namespace SabreTools.Features
 {
@@ -20,9 +20,9 @@ namespace SabreTools.Features
             Name = Value;
             Flags = new List<string>() { "-ud", "--update" };
             Description = "Update and manipulate DAT(s)";
-            _featureType = SabreTools.Library.Help.FeatureType.Flag;
+            _featureType = ParameterType.Flag;
             LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
-            Features = new Dictionary<string, Library.Help.Feature>();
+            Features = new Dictionary<string, Help.Feature>();
 
             // Output Formats
             AddFeature(OutputTypeListInput);
@@ -97,7 +97,7 @@ namespace SabreTools.Features
             AddFeature(ThreadsInt32Input);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
             base.ProcessFeatures(features);
 

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.Schema;
 
-using SabreTools.Library.Data;
-using SabreTools.Library.DatFiles;
-using SabreTools.Library.DatItems;
-using SabreTools.Library.Help;
-using SabreTools.Library.IO;
-using SabreTools.Library.Logging;
-using SabreTools.Library.Tools;
+using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
+using SabreTools.DatItems;
+using SabreTools.FileTypes;
+using SabreTools.Help;
+using SabreTools.Logging;
 using Microsoft.Data.Sqlite;
 
 namespace RombaSharp.Features
@@ -20,93 +21,93 @@ namespace RombaSharp.Features
         #region Private Flag features
 
         internal const string CopyValue = "copy";
-        internal static SabreTools.Library.Help.Feature CopyFlag
+        internal static SabreTools.Help.Feature CopyFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     CopyValue,
                     "-copy",
                     "Copy files to output instead of rebuilding",
-                    SabreTools.Library.Help.FeatureType.Flag);
+                    ParameterType.Flag);
             }
         } // Unique to RombaSharp
 
         internal const string FixdatOnlyValue = "fixdat-only";
-        internal static SabreTools.Library.Help.Feature FixdatOnlyFlag
+        internal static SabreTools.Help.Feature FixdatOnlyFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     FixdatOnlyValue,
                     "-fixdatOnly",
                     "only fix dats and don't generate torrentzips",
-                    SabreTools.Library.Help.FeatureType.Flag);
+                    ParameterType.Flag);
             }
         }
 
         internal const string LogOnlyValue = "log-only";
-        internal static SabreTools.Library.Help.Feature LogOnlyFlag
+        internal static SabreTools.Help.Feature LogOnlyFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                 LogOnlyValue,
                 "-log-only",
                 "Only write out actions to log",
-                SabreTools.Library.Help.FeatureType.Flag);
+                ParameterType.Flag);
             }
         }
 
         internal const string NoDbValue = "no-db";
-        internal static SabreTools.Library.Help.Feature NoDbFlag
+        internal static SabreTools.Help.Feature NoDbFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     NoDbValue,
                     "-no-db",
                     "archive into depot but do not touch DB index and ignore only-needed flag",
-                    SabreTools.Library.Help.FeatureType.Flag);
+                    ParameterType.Flag);
             }
         }
 
         internal const string OnlyNeededValue = "only-needed";
-        internal static SabreTools.Library.Help.Feature OnlyNeededFlag
+        internal static SabreTools.Help.Feature OnlyNeededFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     OnlyNeededValue,
                     "-only-needed",
                     "only archive ROM files actually referenced by DAT files from the DAT index",
-                    SabreTools.Library.Help.FeatureType.Flag);
+                    ParameterType.Flag);
             }
         }
 
         internal const string SkipInitialScanValue = "skip-initial-scan";
-        internal static SabreTools.Library.Help.Feature SkipInitialScanFlag
+        internal static SabreTools.Help.Feature SkipInitialScanFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     SkipInitialScanValue,
                     "-skip-initial-scan",
                     "skip the initial scan of the files to determine amount of work",
-                    SabreTools.Library.Help.FeatureType.Flag);
+                    ParameterType.Flag);
             }
         }
 
         internal const string UseGolangZipValue = "use-golang-zip";
-        internal static SabreTools.Library.Help.Feature UseGolangZipFlag
+        internal static SabreTools.Help.Feature UseGolangZipFlag
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     UseGolangZipValue,
                     "-use-golang-zip",
                     "use go zip implementation instead of zlib",
-                    SabreTools.Library.Help.FeatureType.Flag);
+                    ParameterType.Flag);
             }
         }
 
@@ -115,67 +116,67 @@ namespace RombaSharp.Features
         #region Private Int32 features
 
         internal const string Include7ZipsInt32Value = "include-7zips";
-        internal static SabreTools.Library.Help.Feature Include7ZipsInt32Input
+        internal static SabreTools.Help.Feature Include7ZipsInt32Input
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     Include7ZipsInt32Value,
                     "-include-7zips",
                     "flag value == 0 means: add 7zip files themselves into the depot in addition to their contents, flag value == 2 means add 7zip files themselves but don't add content",
-                    SabreTools.Library.Help.FeatureType.Int32);
+                    ParameterType.Int32);
             }
         }
 
         internal const string IncludeGZipsInt32Value = "include-gzips";
-        internal static SabreTools.Library.Help.Feature IncludeGZipsInt32Input
+        internal static SabreTools.Help.Feature IncludeGZipsInt32Input
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     IncludeGZipsInt32Value,
                     "-include-gzips",
                     "flag value == 0 means: add gzip files themselves into the depot in addition to their contents, flag value == 2 means add gzip files themselves but don't add content",
-                    SabreTools.Library.Help.FeatureType.Int32);
+                    ParameterType.Int32);
             }
         }
 
         internal const string IncludeZipsInt32Value = "include-zips";
-        internal static SabreTools.Library.Help.Feature IncludeZipsInt32Input
+        internal static SabreTools.Help.Feature IncludeZipsInt32Input
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     IncludeZipsInt32Value,
                     "-include-zips",
                     "flag value == 0 means: add zip files themselves into the depot in addition to their contents, flag value == 2 means add zip files themselves but don't add content",
-                    SabreTools.Library.Help.FeatureType.Int32);
+                    ParameterType.Int32);
             }
         }
 
         internal const string SubworkersInt32Value = "subworkers";
-        internal static SabreTools.Library.Help.Feature SubworkersInt32Input
+        internal static SabreTools.Help.Feature SubworkersInt32Input
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     SubworkersInt32Value,
                     "-subworkers",
                     "how many subworkers to launch for each worker",
-                    SabreTools.Library.Help.FeatureType.Int32);
+                    ParameterType.Int32);
             }
         } // Defaults to Workers count in config
 
         internal const string WorkersInt32Value = "workers";
-        internal static SabreTools.Library.Help.Feature WorkersInt32Input
+        internal static SabreTools.Help.Feature WorkersInt32Input
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     WorkersInt32Value,
                     "-workers",
                     "how many workers to launch for the job",
-                    SabreTools.Library.Help.FeatureType.Int32);
+                    ParameterType.Int32);
             }
         } // Defaults to Workers count in config
 
@@ -184,15 +185,15 @@ namespace RombaSharp.Features
         #region Private Int64 features
 
         internal const string SizeInt64Value = "size";
-        internal static SabreTools.Library.Help.Feature SizeInt64Input
+        internal static SabreTools.Help.Feature SizeInt64Input
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     SizeInt64Value,
                     "-size",
                     "size of the rom to lookup",
-                    SabreTools.Library.Help.FeatureType.Int64);
+                    ParameterType.Int64);
             }
         }
 
@@ -201,28 +202,28 @@ namespace RombaSharp.Features
         #region Private List<String> features
 
         internal const string DatsListStringValue = "dats";
-        internal static SabreTools.Library.Help.Feature DatsListStringInput
+        internal static SabreTools.Help.Feature DatsListStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     DatsListStringValue,
                     "-dats",
                     "purge only roms declared in these dats",
-                    SabreTools.Library.Help.FeatureType.List);
+                    ParameterType.List);
             }
         }
 
         internal const string DepotListStringValue = "depot";
-        internal static SabreTools.Library.Help.Feature DepotListStringInput
+        internal static SabreTools.Help.Feature DepotListStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     DepotListStringValue,
                     "-depot",
                     "work only on specified depot path",
-                    SabreTools.Library.Help.FeatureType.List);
+                    ParameterType.List);
             }
         }
 
@@ -231,119 +232,119 @@ namespace RombaSharp.Features
         #region Private String features
 
         internal const string BackupStringValue = "backup";
-        internal static SabreTools.Library.Help.Feature BackupStringInput
+        internal static SabreTools.Help.Feature BackupStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     BackupStringValue,
                     "-backup",
                     "backup directory where backup files are moved to",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string DescriptionStringValue = "description";
-        internal static SabreTools.Library.Help.Feature DescriptionStringInput
+        internal static SabreTools.Help.Feature DescriptionStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     DescriptionStringValue,
                     "-description",
                     "description value in DAT header",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string MissingSha1sStringValue = "missing-sha1s";
-        internal static SabreTools.Library.Help.Feature MissingSha1sStringInput
+        internal static SabreTools.Help.Feature MissingSha1sStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     MissingSha1sStringValue,
                     "-missingSha1s",
                     "write paths of dats with missing sha1s into this file",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string NameStringValue = "name";
-        internal static SabreTools.Library.Help.Feature NameStringInput
+        internal static SabreTools.Help.Feature NameStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     NameStringValue,
                     "-name",
                     "name value in DAT header",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string NewStringValue = "new";
-        internal static SabreTools.Library.Help.Feature NewStringInput
+        internal static SabreTools.Help.Feature NewStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     NewStringValue,
                     "-new",
                     "new DAT file",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string OldStringValue = "old";
-        internal static SabreTools.Library.Help.Feature OldStringInput
+        internal static SabreTools.Help.Feature OldStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     OldStringValue,
                     "-old",
                     "old DAT file",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string OutStringValue = "out";
-        internal static SabreTools.Library.Help.Feature OutStringInput
+        internal static SabreTools.Help.Feature OutStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     OutStringValue,
                     "-out",
                     "output file",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string ResumeStringValue = "resume";
-        internal static SabreTools.Library.Help.Feature ResumeStringInput
+        internal static SabreTools.Help.Feature ResumeStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     ResumeStringValue,
                     "-resume",
                     "resume a previously interrupted operation from the specified path",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
         internal const string SourceStringValue = "source";
-        internal static SabreTools.Library.Help.Feature SourceStringInput
+        internal static SabreTools.Help.Feature SourceStringInput
         {
             get
             {
-                return new SabreTools.Library.Help.Feature(
+                return new SabreTools.Help.Feature(
                     SourceStringValue,
                     "-source",
                     "source directory",
-                    SabreTools.Library.Help.FeatureType.String);
+                    ParameterType.String);
             }
         }
 
@@ -375,7 +376,7 @@ namespace RombaSharp.Features
         /// </summary>
         protected Logger logger = new Logger();
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Library.Help.Feature> features)
+        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
             InitializeConfiguration();
             EnsureDatabase(_db, _connectionString);
@@ -479,7 +480,7 @@ CREATE TABLE IF NOT EXISTS dat (
                 if (lowerCaseDats.Contains(input.ToLowerInvariant()))
                 {
                     string fullpath = Path.GetFullPath(datRootDats[lowerCaseDats.IndexOf(input.ToLowerInvariant())]);
-                    string sha1 = Utilities.ByteArrayToString(FileExtensions.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
+                    string sha1 = Utilities.ByteArrayToString(BaseFile.GetInfo(fullpath, hashes: Hash.SHA1).SHA1);
                     foundDats.Add(sha1, fullpath);
                 }
                 else
@@ -510,7 +511,15 @@ CREATE TABLE IF NOT EXISTS dat (
             Dictionary<string, Tuple<long, bool>> depots = new Dictionary<string, Tuple<long, bool>>();
 
             // Get the XML text reader for the configuration file, if possible
-            XmlReader xtr = _config.GetXmlTextReader();
+            XmlReader xtr = XmlReader.Create(_config, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
 
             // Now parse the XML file for settings
             if (xtr != null)
