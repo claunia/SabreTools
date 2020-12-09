@@ -46,7 +46,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Process args list based on current feature
         /// </summary>
-        public virtual bool ProcessArgs(string[] args, Help help)
+        public virtual bool ProcessArgs(string[] args, FeatureSet help)
         {
             for (int i = 1; i < args.Length; i++)
             {

@@ -15,7 +15,7 @@ namespace SabreTools
         /// <summary>
         /// Help object that determines available functionality
         /// </summary>
-        private static Help.Help _help;
+        private static FeatureSet _help;
 
         /// <summary>
         /// Logging object
@@ -149,7 +149,7 @@ namespace SabreTools
         /// Generate a Help object for this program
         /// </summary>
         /// <returns>Populated Help object</returns>
-        private static Help.Help RetrieveHelp()
+        private static FeatureSet RetrieveHelp()
         {
             // Create and add the header to the Help object
             string barrier = "-----------------------------------------";
@@ -162,7 +162,7 @@ namespace SabreTools
             };
 
             // Create the base help object with header
-            Help.Help help = new Help.Help(helpHeader);
+            FeatureSet help = new FeatureSet(helpHeader);
 
             // Add all of the features
             help.Add(new DisplayHelp());

@@ -18,7 +18,7 @@ namespace RombaSharp.Features
             Features = new Dictionary<string, Feature>();
         }
 
-        public override bool ProcessArgs(string[] args, Help help)
+        public override bool ProcessArgs(string[] args, FeatureSet help)
         {
             // If we had something else after help
             if (args.Length > 1)

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SabreTools.Help
 {
-    public class Help
+    public class FeatureSet
     {
         #region Private variables
 
@@ -16,13 +16,13 @@ namespace SabreTools.Help
 
         #region Constructors
 
-        public Help()
+        public FeatureSet()
         {
             _header = new List<string>();
             _features = new Dictionary<string, Feature>();
         }
 
-        public Help(List<string> header)
+        public FeatureSet(List<string> header)
         {
             _header = header;
             _features = new Dictionary<string, Feature>();
