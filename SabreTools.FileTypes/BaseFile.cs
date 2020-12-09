@@ -13,6 +13,34 @@ namespace SabreTools.FileTypes
 {
     public class BaseFile
     {
+        #region Constants
+
+        private static readonly byte[] SevenZipSignature = { 0x37, 0x7a, 0xbc, 0xaf, 0x27, 0x1c };
+        private static readonly byte[] AaruFormatSignature = { 0x41, 0x41, 0x52, 0x55, 0x46, 0x52, 0x4d, 0x54 };
+        private static readonly byte[] BZ2Signature = { 0x42, 0x5a, 0x68 };
+        private static readonly byte[] CabinetSignature = { 0x4d, 0x53, 0x43, 0x46 };
+        private static readonly byte[] CHDSignature = { 0x4d, 0x43, 0x6f, 0x6d, 0x70, 0x72, 0x48, 0x44 };
+        private static readonly byte[] ELFSignature = { 0x7f, 0x45, 0x4c, 0x46 };
+        private static readonly byte[] FreeArcSignature = { 0x41, 0x72, 0x43, 0x01 };
+        private static readonly byte[] GzSignature = { 0x1f, 0x8b, 0x08 };
+        private static readonly byte[] LRZipSignature = { 0x4c, 0x52, 0x5a, 0x49 };
+        private static readonly byte[] LZ4Signature = { 0x18, 0x4d, 0x22, 0x04 };
+        private static readonly byte[] LZ4SkippableMinSignature = { 0x18, 0x4d, 0x22, 0x04 };
+        private static readonly byte[] LZ4SkippableMaxSignature = { 0x18, 0x4d, 0x2a, 0x5f };
+        private static readonly byte[] PESignature = { 0x4d, 0x5a };
+        private static readonly byte[] RarSignature = { 0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x00 };
+        private static readonly byte[] RarFiveSignature = { 0x52, 0x61, 0x72, 0x21, 0x1a, 0x07, 0x01, 0x00 };
+        private static readonly byte[] TarSignature = { 0x75, 0x73, 0x74, 0x61, 0x72, 0x20, 0x20, 0x00 };
+        private static readonly byte[] TarZeroSignature = { 0x75, 0x73, 0x74, 0x61, 0x72, 0x00, 0x30, 0x30 };
+        private static readonly byte[] XZSignature = { 0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00 };
+        private static readonly byte[] ZipSignature = { 0x50, 0x4b, 0x03, 0x04 };
+        private static readonly byte[] ZipSignatureEmpty = { 0x50, 0x4b, 0x05, 0x06 };
+        private static readonly byte[] ZipSignatureSpanned = { 0x50, 0x4b, 0x07, 0x08 };
+        private static readonly byte[] ZPAQSignature = { 0x7a, 0x50, 0x51 };
+        private static readonly byte[] ZstdSignature = { 0xfd, 0x2f, 0xb5 };
+
+        #endregion
+
         // TODO: Get all of these values automatically so there is no public "set"
         #region Fields
 
@@ -188,57 +216,57 @@ namespace SabreTools.FileTypes
             br.Dispose();
 
             // Now try to match it to a known signature
-            if (magic.StartsWith(Constants.SevenZipSignature))
+            if (magic.StartsWith(SevenZipSignature))
             {
                 outFileType = FileType.SevenZipArchive;
             }
-            else if (magic.StartsWith(Constants.AaruFormatSignature))
+            else if (magic.StartsWith(AaruFormatSignature))
             {
                 outFileType = FileType.AaruFormat;
             }
-            else if (magic.StartsWith(Constants.CHDSignature))
+            else if (magic.StartsWith(CHDSignature))
             {
                 outFileType = FileType.CHD;
             }
-            else if (magic.StartsWith(Constants.GzSignature))
+            else if (magic.StartsWith(GzSignature))
             {
                 outFileType = FileType.GZipArchive;
             }
-            else if (magic.StartsWith(Constants.LRZipSignature))
+            else if (magic.StartsWith(LRZipSignature))
             {
                 outFileType = FileType.LRZipArchive;
             }
-            else if (magic.StartsWith(Constants.LZ4Signature)
-                || magic.StartsWith(Constants.LZ4SkippableMinSignature)
-                || magic.StartsWith(Constants.LZ4SkippableMaxSignature))
+            else if (magic.StartsWith(LZ4Signature)
+                || magic.StartsWith(LZ4SkippableMinSignature)
+                || magic.StartsWith(LZ4SkippableMaxSignature))
             {
                 outFileType = FileType.LZ4Archive;
             }
-            else if (magic.StartsWith(Constants.RarSignature)
-                || magic.StartsWith(Constants.RarFiveSignature))
+            else if (magic.StartsWith(RarSignature)
+                || magic.StartsWith(RarFiveSignature))
             {
                 outFileType = FileType.RarArchive;
             }
-            else if (magic.StartsWith(Constants.TarSignature)
-                || magic.StartsWith(Constants.TarZeroSignature))
+            else if (magic.StartsWith(TarSignature)
+                || magic.StartsWith(TarZeroSignature))
             {
                 outFileType = FileType.TapeArchive;
             }
-            else if (magic.StartsWith(Constants.XZSignature))
+            else if (magic.StartsWith(XZSignature))
             {
                 outFileType = FileType.XZArchive;
             }
-            else if (magic.StartsWith(Constants.ZipSignature)
-                || magic.StartsWith(Constants.ZipSignatureEmpty)
-                || magic.StartsWith(Constants.ZipSignatureSpanned))
+            else if (magic.StartsWith(ZipSignature)
+                || magic.StartsWith(ZipSignatureEmpty)
+                || magic.StartsWith(ZipSignatureSpanned))
             {
                 outFileType = FileType.ZipArchive;
             }
-            else if (magic.StartsWith(Constants.ZPAQSignature))
+            else if (magic.StartsWith(ZPAQSignature))
             {
                 outFileType = FileType.ZPAQArchive;
             }
-            else if (magic.StartsWith(Constants.ZstdSignature))
+            else if (magic.StartsWith(ZstdSignature))
             {
                 outFileType = FileType.ZstdArchive;
             }

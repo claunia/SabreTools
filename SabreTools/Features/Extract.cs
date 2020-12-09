@@ -127,10 +127,10 @@ The following systems have headers that this program can work with:
         private void AddHeaderToDatabase(string header, string SHA1, string source)
         {
             // Ensure the database exists
-            EnsureDatabase(Constants.HeadererFileName, Constants.HeadererConnectionString);
+            EnsureDatabase();
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(Constants.HeadererConnectionString);
+            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
             dbc.Open();
 
             string query = $"SELECT * FROM data WHERE sha1='{SHA1}' AND header='{header}'";

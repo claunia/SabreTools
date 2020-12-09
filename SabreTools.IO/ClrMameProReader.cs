@@ -11,6 +11,17 @@ namespace SabreTools.IO
 {
     public class ClrMameProReader : IDisposable
     {
+        #region Constants
+
+        public const string HeaderPatternCMP = @"(^.*?) \($";
+        public const string InternalPatternCMP = @"(^\S*?) (\(.+\))$";
+        public const string InternalPatternAttributesCMP = @"[^\s""]+|""[^""]*""";
+        //public const string InternalPatternAttributesCMP = @"([^\s]*""[^""]+""[^\s]*)|[^""]?\w+[^""]?";
+        public const string ItemPatternCMP = @"^\s*(\S*?) (.*)";
+        public const string EndPatternCMP = @"^\s*\)\s*$";
+
+        #endregion
+
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
@@ -130,9 +141,9 @@ namespace SabreTools.IO
             }
 
             // Top-level
-            else if (Regex.IsMatch(CurrentLine, Constants.HeaderPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, HeaderPatternCMP))
             {
-                GroupCollection gc = Regex.Match(CurrentLine, Constants.HeaderPatternCMP).Groups;
+                GroupCollection gc = Regex.Match(CurrentLine, HeaderPatternCMP).Groups;
                 string normalizedValue = gc[1].Value.ToLowerInvariant();
 
                 Internal = null;
@@ -143,9 +154,9 @@ namespace SabreTools.IO
             }
 
             // Internal
-            else if (Regex.IsMatch(CurrentLine, Constants.InternalPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, InternalPatternCMP))
             {
-                GroupCollection gc = Regex.Match(CurrentLine, Constants.InternalPatternCMP).Groups;
+                GroupCollection gc = Regex.Match(CurrentLine, InternalPatternCMP).Groups;
                 string normalizedValue = gc[1].Value.ToLowerInvariant();
                 string[] linegc = SplitLineAsCMP(gc[2].Value);
 
@@ -232,9 +243,9 @@ namespace SabreTools.IO
             }
 
             // Standalone
-            else if (Regex.IsMatch(CurrentLine, Constants.ItemPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, ItemPatternCMP))
             {
-                GroupCollection gc = Regex.Match(CurrentLine, Constants.ItemPatternCMP).Groups;
+                GroupCollection gc = Regex.Match(CurrentLine, ItemPatternCMP).Groups;
                 string itemval = gc[2].Value.Replace("\"", string.Empty);
 
                 Internal = null;
@@ -244,7 +255,7 @@ namespace SabreTools.IO
             }
 
             // End section
-            else if (Regex.IsMatch(CurrentLine, Constants.EndPatternCMP))
+            else if (Regex.IsMatch(CurrentLine, EndPatternCMP))
             {
                 Internal = null;
                 InternalName = null;
@@ -281,7 +292,7 @@ namespace SabreTools.IO
 
             // Now we get each string, divided up as cleanly as possible
             string[] matches = Regex
-                .Matches(s, Constants.InternalPatternAttributesCMP)
+                .Matches(s, InternalPatternAttributesCMP)
                 .Cast<Match>()
                 .Select(m => m.Groups[0].Value)
                 .ToArray();

@@ -90,10 +90,10 @@ The following systems have headers that this program can work with:
         private List<string> RetrieveHeadersFromDatabase(string SHA1)
         {
             // Ensure the database exists
-            EnsureDatabase(Constants.HeadererFileName, Constants.HeadererConnectionString);
+            EnsureDatabase();
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(Constants.HeadererConnectionString);
+            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
             dbc.Open();
 
             // Create the output list of headers

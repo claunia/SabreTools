@@ -18,6 +18,20 @@ namespace SabreTools.DatFiles
     internal class OpenMSX : DatFile
     {
         /// <summary>
+        /// DTD for original openMSX DATs
+        /// </summary>
+        private const string OpenMSXDTD = @"<!ELEMENT softwaredb (person*)>
+<!ELEMENT software (title, genmsxid?, system, company,year,country,dump)>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT genmsxid (#PCDATA)>
+<!ELEMENT system (#PCDATA)>
+<!ELEMENT company (#PCDATA)>
+<!ELEMENT year (#PCDATA)>
+<!ELEMENT country (#PCDATA)>
+<!ELEMENT dump (#PCDATA)>
+";
+
+        /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>

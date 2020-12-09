@@ -23,6 +23,110 @@ namespace SabreTools.DatFiles
         private readonly bool _deprecated;
 
         /// <summary>
+        /// DTD for original Logiqx DATs
+        /// </summary>
+        private const string LogiqxDTD = @"<!--
+   ROM Management Datafile - DTD
+
+   For further information, see: http://www.logiqx.com/
+
+   This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+   PUBLIC string.Empty -//Logiqx//DTD ROM Management Datafile//ENstring.Empty
+   SYSTEM string.Emptyhttp://www.logiqx.com/Dats/datafile.dtdstring.Empty
+
+   $Revision: 1.5 $
+   $Date: 2008/10/28 21:39:16 $
+
+-->
+
+<!ELEMENT datafile(header?, game*, machine*)>
+    <!ATTLIST datafile build CDATA #IMPLIED>
+    <!ATTLIST datafile debug (yes|no) string.Emptynostring.Empty>
+    <!ELEMENT header(name, description, category?, version, date?, author, email?, homepage?, url?, comment?, clrmamepro?, romcenter?)>
+        <!ELEMENT name(#PCDATA)>
+        <!ELEMENT description (#PCDATA)>
+        <!ELEMENT category (#PCDATA)>
+        <!ELEMENT version (#PCDATA)>
+        <!ELEMENT date (#PCDATA)>
+        <!ELEMENT author (#PCDATA)>
+        <!ELEMENT email (#PCDATA)>
+        <!ELEMENT homepage (#PCDATA)>
+        <!ELEMENT url (#PCDATA)>
+        <!ELEMENT comment (#PCDATA)>
+        <!ELEMENT clrmamepro EMPTY>
+            <!ATTLIST clrmamepro header CDATA #IMPLIED>
+            <!ATTLIST clrmamepro forcemerging (none|split|full) string.Emptysplitstring.Empty>
+            <!ATTLIST clrmamepro forcenodump(obsolete|required|ignore) string.Emptyobsoletestring.Empty>
+            <!ATTLIST clrmamepro forcepacking(zip|unzip) string.Emptyzipstring.Empty>
+        <!ELEMENT romcenter EMPTY>
+            <!ATTLIST romcenter plugin CDATA #IMPLIED>
+            <!ATTLIST romcenter rommode (merged|split|unmerged) string.Emptysplitstring.Empty>
+            <!ATTLIST romcenter biosmode(merged|split|unmerged) string.Emptysplitstring.Empty>
+            <!ATTLIST romcenter samplemode(merged|unmerged) string.Emptymergedstring.Empty>
+            <!ATTLIST romcenter lockrommode(yes|no) string.Emptynostring.Empty>
+            <!ATTLIST romcenter lockbiosmode(yes|no) string.Emptynostring.Empty>
+            <!ATTLIST romcenter locksamplemode(yes|no) string.Emptynostring.Empty>
+    <!ELEMENT game(comment*, description, year?, manufacturer?, release*, biosset*, rom*, disk*, sample*, archive*)>
+        <!ATTLIST game name CDATA #REQUIRED>
+        <!ATTLIST game sourcefile CDATA #IMPLIED>
+        <!ATTLIST game isbios (yes|no) string.Emptynostring.Empty>
+        <!ATTLIST game cloneof CDATA #IMPLIED>
+        <!ATTLIST game romof CDATA #IMPLIED>
+        <!ATTLIST game sampleof CDATA #IMPLIED>
+        <!ATTLIST game board CDATA #IMPLIED>
+        <!ATTLIST game rebuildto CDATA #IMPLIED>
+        <!ELEMENT year (#PCDATA)>
+        <!ELEMENT manufacturer (#PCDATA)>
+        <!ELEMENT release EMPTY>
+            <!ATTLIST release name CDATA #REQUIRED>
+            <!ATTLIST release region CDATA #REQUIRED>
+            <!ATTLIST release language CDATA #IMPLIED>
+            <!ATTLIST release date CDATA #IMPLIED>
+            <!ATTLIST release default (yes|no) string.Emptynostring.Empty>
+        <!ELEMENT biosset EMPTY>
+            <!ATTLIST biosset name CDATA #REQUIRED>
+            <!ATTLIST biosset description CDATA #REQUIRED>
+            <!ATTLIST biosset default (yes|no) string.Emptynostring.Empty>
+        <!ELEMENT rom EMPTY>
+            <!ATTLIST rom name CDATA #REQUIRED>
+            <!ATTLIST rom size CDATA #REQUIRED>
+            <!ATTLIST rom crc CDATA #IMPLIED>
+            <!ATTLIST rom md5 CDATA #IMPLIED>
+            <!ATTLIST rom ripemd160 CDATA #IMPLIED>
+            <!ATTLIST rom sha1 CDATA #IMPLIED>
+            <!ATTLIST rom sha256 CDATA #IMPLIED>
+            <!ATTLIST rom sha384 CDATA #IMPLIED>
+            <!ATTLIST rom sha512 CDATA #IMPLIED>
+            <!ATTLIST rom merge CDATA #IMPLIED>
+            <!ATTLIST rom status (baddump|nodump|good|verified) string.Emptygoodstring.Empty>
+            <!ATTLIST rom date CDATA #IMPLIED>
+        <!ELEMENT disk EMPTY>
+            <!ATTLIST disk name CDATA #REQUIRED>
+            <!ATTLIST disk md5 CDATA #IMPLIED>
+            <!ATTLIST disk ripemd160 CDATA #IMPLIED>
+            <!ATTLIST disk sha1 CDATA #IMPLIED>
+            <!ATTLIST disk sha256 CDATA #IMPLIED>
+            <!ATTLIST disk sha384 CDATA #IMPLIED>
+            <!ATTLIST disk sha512 CDATA #IMPLIED>
+            <!ATTLIST disk merge CDATA #IMPLIED>
+            <!ATTLIST disk status (baddump|nodump|good|verified) string.Emptygoodstring.Empty>
+        <!ELEMENT sample EMPTY>
+            <!ATTLIST sample name CDATA #REQUIRED>
+        <!ELEMENT archive EMPTY>
+            <!ATTLIST archive name CDATA #REQUIRED>
+    <!ELEMENT machine (comment*, description, year?, manufacturer?, release*, biosset*, rom*, disk*, sample*, archive*)>
+        <!ATTLIST machine name CDATA #REQUIRED>
+        <!ATTLIST machine sourcefile CDATA #IMPLIED>
+        <!ATTLIST machine isbios (yes|no) string.Emptynostring.Empty>
+        <!ATTLIST machine cloneof CDATA #IMPLIED>
+        <!ATTLIST machine romof CDATA #IMPLIED>
+        <!ATTLIST machine sampleof CDATA #IMPLIED>
+        <!ATTLIST machine board CDATA #IMPLIED>
+        <!ATTLIST machine rebuildto CDATA #IMPLIED>
+";
+
+        /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
