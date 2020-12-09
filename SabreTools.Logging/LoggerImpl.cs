@@ -113,7 +113,7 @@ namespace SabreTools.Logging
                     Directory.CreateDirectory(LogDirectory);
 
                 FileStream logfile = File.Create(Path.Combine(LogDirectory, Filename));
-                _log = new StreamWriter(logfile, Encoding.UTF8, (int)(4 * Constants.KibiByte), true)
+                _log = new StreamWriter(logfile, Encoding.UTF8, 4096, true)
                 {
                     AutoFlush = true
                 };
