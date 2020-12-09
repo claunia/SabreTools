@@ -18,6 +18,27 @@ namespace SabreTools.FileTypes
     /// </summary>
     public class GZipArchive : BaseArchive
     {
+        #region Constants
+
+        /* (Torrent)GZ Header Format
+            https://tools.ietf.org/html/rfc1952
+
+            00-01		Identification (0x1F, 0x8B) GzSignature
+            02			Compression Method (0-7 reserved, 8 deflate; 0x08)
+            03			Flags (0 FTEXT, 1 FHCRC, 2 FEXTRA, 3 FNAME, 4 FCOMMENT, 5 reserved, 6 reserved, 7 reserved; 0x04)
+            04-07		Modification time (Unix format; 0x00, 0x00, 0x00, 0x00)
+            08			Extra Flags (2 maximum compression, 4 fastest algorithm; 0x00)
+            09			OS (See list on https://tools.ietf.org/html/rfc1952; 0x00)
+            0A-0B		Length of extra field (mirrored; 0x1C, 0x00)
+            0C-27		Extra field
+                0C-1B	MD5 Hash
+                1C-1F	CRC hash
+                20-27	Int64 size (mirrored)
+        */
+        private readonly static byte[] TorrentGZHeader = new byte[] { 0x1f, 0x8b, 0x08, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x00 };
+
+        #endregion
+
         #region Fields
 
         /// <summary>
@@ -295,7 +316,7 @@ namespace SabreTools.FileTypes
                 if (i == 4 || i == 5 || i == 6 || i == 7 || i == 9)
                     continue;
 
-                correct &= (header[i] == Constants.TorrentGZHeader[i]);
+                correct &= (header[i] == TorrentGZHeader[i]);
             }
 
             if (!correct)
@@ -361,7 +382,7 @@ namespace SabreTools.FileTypes
                 {
                     continue;
                 }
-                correct &= (header[i] == Constants.TorrentGZHeader[i]);
+                correct &= (header[i] == TorrentGZHeader[i]);
             }
             if (!correct)
             {
@@ -440,7 +461,7 @@ namespace SabreTools.FileTypes
                 BinaryWriter sw = new BinaryWriter(outputStream);
 
                 // Write standard header and TGZ info
-                byte[] data = Constants.TorrentGZHeader
+                byte[] data = TorrentGZHeader
                             .Concat(baseFile.MD5) // MD5
                             .Concat(baseFile.CRC) // CRC
                             .ToArray();

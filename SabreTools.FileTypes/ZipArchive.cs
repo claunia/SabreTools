@@ -16,6 +16,31 @@ namespace SabreTools.FileTypes
     /// </summary>
     public class ZipArchive : BaseArchive
     {
+        #region Constants
+
+        private const uint LocalFileHeaderSignature = 0x04034b50;
+        private const uint EndOfLocalFileHeaderSignature = 0x08074b50;
+        private const uint CentralDirectoryHeaderSignature = 0x02014b50;
+        private const uint EndOfCentralDirSignature = 0x06054b50;
+        private const uint Zip64EndOfCentralDirSignature = 0x06064b50;
+        private const uint Zip64EndOfCentralDirectoryLocator = 0x07064b50;
+        private const uint TorrentZipFileDateTime = 0x2198BC00;
+
+        /* TorrentZip Header Format
+            https://pkware.cachefly.net/webdocs/APPNOTE/APPNOTE_6.2.0.txt
+            http://www.romvault.com/trrntzip_explained.doc
+
+            00-03		Local file header signature (0x50, 0x4B, 0x03, 0x04) ZipSignature
+            04-05		Version needed to extract (0x14, 0x00)
+            06-07		General purpose bit flag (0x02, 0x00)
+            08-09		Compression method (0x08, 0x00)
+            0A-0B		Last mod file time (0x00, 0xBC)
+            0C-0D		Last mod file date (0x98, 0x21)
+        */
+        private readonly static byte[] TorrentZipHeader = new byte[] { 0x50, 0x4b, 0x03, 0x04, 0x14, 0x00, 0x02, 0x00, 0x08, 0x00, 0x00, 0xbc, 0x98, 0x21 };
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
