@@ -2603,7 +2603,7 @@ Some special strings that can be used:
 
             foreach (string rt in GetList(features, ReportTypeListValue))
             {
-                statDatFormat |= rt.AsStatReportFormat();
+                statDatFormat |= GetStatReportFormat(rt);
             }
 
             return statDatFormat;
@@ -2812,7 +2812,7 @@ Some special strings that can be used:
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))
             {
-                DatFormat dftemp = ot.AsDatFormat();
+                DatFormat dftemp = GetDatFormat(ot);
                 if (dftemp == DatFormat.Logiqx && deprecated)
                     datHeader.DatFormat |= DatFormat.LogiqxDeprecated;
                 else
@@ -3103,9 +3103,133 @@ CREATE TABLE IF NOT EXISTS data (
             dbc.Dispose();
         }
 
+        /// <summary>
+        /// Get DatFormat value from input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>DatFormat value corresponding to the string</returns>
+        protected static DatFormat GetDatFormat(string input)
+        {
+            switch (input?.Trim().ToLowerInvariant())
+            {
+                case "all":
+                    return DatFormat.ALL;
+                case "am":
+                case "attractmode":
+                    return DatFormat.AttractMode;
+                case "cmp":
+                case "clrmamepro":
+                    return DatFormat.ClrMamePro;
+                case "csv":
+                    return DatFormat.CSV;
+                case "dc":
+                case "doscenter":
+                    return DatFormat.DOSCenter;
+                case "everdrive":
+                case "smdb":
+                    return DatFormat.EverdriveSMDB;
+                case "json":
+                case "sj":
+                case "sabrejson":
+                    return DatFormat.SabreJSON;
+                case "lr":
+                case "listrom":
+                    return DatFormat.Listrom;
+                case "lx":
+                case "listxml":
+                    return DatFormat.Listxml;
+                case "md5":
+                    return DatFormat.RedumpMD5;
+                case "miss":
+                case "missfile":
+                    return DatFormat.MissFile;
+                case "msx":
+                case "openmsx":
+                    return DatFormat.OpenMSX;
+                case "ol":
+                case "offlinelist":
+                    return DatFormat.OfflineList;
+                case "rc":
+                case "romcenter":
+                    return DatFormat.RomCenter;
+#if NET_FRAMEWORK
+                case "ripemd160":
+                    return DatFormat.RedumpRIPEMD160;
+#endif
+                case "sd":
+                case "sabredat":
+                case "sx":
+                case "sabrexml":
+                    return DatFormat.SabreXML;
+                case "sfv":
+                    return DatFormat.RedumpSFV;
+                case "sha1":
+                    return DatFormat.RedumpSHA1;
+                case "sha256":
+                    return DatFormat.RedumpSHA256;
+                case "sha384":
+                    return DatFormat.RedumpSHA384;
+                case "sha512":
+                    return DatFormat.RedumpSHA512;
+                case "sl":
+                case "softwarelist":
+                    return DatFormat.SoftwareList;
+                case "spamsum":
+                    return DatFormat.RedumpSpamSum;
+                case "ssv":
+                    return DatFormat.SSV;
+                case "tsv":
+                    return DatFormat.TSV;
+                case "xml":
+                case "logiqx":
+                    return DatFormat.Logiqx;
+                default:
+                    return 0x0;
+            }
+        }
+
         #endregion
 
         #region Private Helpers
+
+        /// <summary>
+        /// Get StatReportFormat value from input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>StatReportFormat value corresponding to the string</returns>
+        private static StatReportFormat GetStatReportFormat(string input)
+        {
+#if NET_FRAMEWORK
+            switch (input?.Trim().ToLowerInvariant())
+            {
+                case "all":
+                    return StatReportFormat.All;
+                case "csv":
+                    return StatReportFormat.CSV;
+                case "html":
+                    return StatReportFormat.HTML;
+                case "ssv":
+                    return StatReportFormat.SSV;
+                case "text":
+                    return StatReportFormat.Textfile;
+                case "tsv":
+                    return StatReportFormat.TSV;
+                default:
+                    return 0x0;
+            }
+#else
+            return input?.Trim().ToLowerInvariant() switch
+            {
+                "all" => StatReportFormat.All,
+                "csv" => StatReportFormat.CSV,
+                "html" => StatReportFormat.HTML,
+                "ssv" => StatReportFormat.SSV,
+                "text" => StatReportFormat.Textfile,
+                "tsv" => StatReportFormat.TSV,
+                _ => 0x0,
+            };
+#endif
+        }
 
         /// <summary>
         /// Get the multiplier to be used with the size given

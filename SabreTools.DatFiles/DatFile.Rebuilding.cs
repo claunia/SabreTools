@@ -59,7 +59,7 @@ namespace SabreTools.DatFiles
 
             #region Rebuild from depots in order
 
-            string format = outputFormat.FromOutputFormat() ?? string.Empty;
+            string format = FromOutputFormat(outputFormat) ?? string.Empty;
             InternalStopwatch watch = new InternalStopwatch($"Rebuilding all files to {format}");
 
             // Now loop through and get only directories from the input paths
@@ -199,7 +199,7 @@ namespace SabreTools.DatFiles
 
             #region Rebuild from sources in order
 
-            string format = outputFormat.FromOutputFormat() ?? string.Empty;
+            string format = FromOutputFormat(outputFormat) ?? string.Empty;
             InternalStopwatch watch = new InternalStopwatch($"Rebuilding all files to {format}");
 
             // Now loop through all of the files in all of the inputs
@@ -633,7 +633,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the default OutputFormat associated with each PackingFlag
         /// </summary>
-        public OutputFormat GetOutputFormat(PackingFlag packing)
+        private OutputFormat GetOutputFormat(PackingFlag packing)
         {
 #if NET_FRAMEWORK
             switch (packing)
@@ -681,6 +681,57 @@ namespace SabreTools.DatFiles
                 xzArchive.Depth = Header.OutputDepot.Depth;
 
             return outputArchive;
+        }
+    
+        /// <summary>
+        /// Get string value from input OutputFormat
+        /// </summary>
+        /// <param name="itemType">OutputFormat to get value from</param>
+        /// <returns>String value corresponding to the OutputFormat</returns>
+        private string FromOutputFormat(OutputFormat itemType)
+        {
+#if NET_FRAMEWORK
+            switch (itemType)
+            {
+                case OutputFormat.Folder:
+                case OutputFormat.ParentFolder:
+                    return "directory";
+                case OutputFormat.TapeArchive:
+                    return "TAR";
+                case OutputFormat.Torrent7Zip:
+                    return "Torrent7Z";
+                case OutputFormat.TorrentGzip:
+                case OutputFormat.TorrentGzipRomba:
+                    return "TorrentGZ";
+                case OutputFormat.TorrentLRZip:
+                    return "TorrentLRZ";
+                case OutputFormat.TorrentRar:
+                    return "TorrentRAR";
+                case OutputFormat.TorrentXZ:
+                case OutputFormat.TorrentXZRomba:
+                    return "TorrentXZ";
+                case OutputFormat.TorrentZip:
+                    return "TorrentZip";
+                default:
+                    return null;
+            }
+#else
+            return itemType switch
+            {
+                OutputFormat.Folder => "directory",
+                OutputFormat.ParentFolder => "directory",
+                OutputFormat.TapeArchive => "TAR",
+                OutputFormat.Torrent7Zip => "Torrent7Z",
+                OutputFormat.TorrentGzip => "TorrentGZ",
+                OutputFormat.TorrentGzipRomba => "TorrentGZ",
+                OutputFormat.TorrentLRZip => "TorrentLRZ",
+                OutputFormat.TorrentRar => "TorrentRAR",
+                OutputFormat.TorrentXZ => "TorrentXZ",
+                OutputFormat.TorrentXZRomba => "TorrentXZ",
+                OutputFormat.TorrentZip => "TorrentZip",
+                _ => null,
+            };
+#endif
         }
     }
 }

@@ -8,37 +8,6 @@ namespace SabreTools.Core.Tools
         #region Enum to Enum
 
         /// <summary>
-        /// Get the field associated with each hash type
-        /// </summary>
-        public static Field AsField(this Hash hash)
-        {
-            switch (hash)
-            {
-                case Hash.CRC:
-                    return Field.DatItem_CRC;
-                case Hash.MD5:
-                    return Field.DatItem_MD5;
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-                    return Field.DatItem_RIPEMD160;
-#endif
-                case Hash.SHA1:
-                    return Field.DatItem_SHA1;
-                case Hash.SHA256:
-                    return Field.DatItem_SHA256;
-                case Hash.SHA384:
-                    return Field.DatItem_SHA384;
-                case Hash.SHA512:
-                    return Field.DatItem_SHA512;
-                case Hash.SpamSum:
-                    return Field.DatItem_SpamSum;
-
-                default:
-                    return Field.NULL;
-            }
-        }
-
-        /// <summary>
         /// Get the fields associated with each hash type
         /// </summary>
         public static List<Field> AsFields(this Hash hash)
@@ -162,91 +131,6 @@ namespace SabreTools.Core.Tools
                 _ => ControlType.NULL,
             };
 #endif
-        }
-
-        /// <summary>
-        /// Get DatFormat value from input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>DatFormat value corresponding to the string</returns>
-        public static DatFormat AsDatFormat(this string input)
-        {
-            switch (input?.Trim().ToLowerInvariant())
-            {
-                case "all":
-                    return DatFormat.ALL;
-                case "am":
-                case "attractmode":
-                    return DatFormat.AttractMode;
-                case "cmp":
-                case "clrmamepro":
-                    return DatFormat.ClrMamePro;
-                case "csv":
-                    return DatFormat.CSV;
-                case "dc":
-                case "doscenter":
-                    return DatFormat.DOSCenter;
-                case "everdrive":
-                case "smdb":
-                    return DatFormat.EverdriveSMDB;
-                case "json":
-                case "sj":
-                case "sabrejson":
-                    return DatFormat.SabreJSON;
-                case "lr":
-                case "listrom":
-                    return DatFormat.Listrom;
-                case "lx":
-                case "listxml":
-                    return DatFormat.Listxml;
-                case "md5":
-                    return DatFormat.RedumpMD5;
-                case "miss":
-                case "missfile":
-                    return DatFormat.MissFile;
-                case "msx":
-                case "openmsx":
-                    return DatFormat.OpenMSX;
-                case "ol":
-                case "offlinelist":
-                    return DatFormat.OfflineList;
-                case "rc":
-                case "romcenter":
-                    return DatFormat.RomCenter;
-#if NET_FRAMEWORK
-                case "ripemd160":
-                    return DatFormat.RedumpRIPEMD160;
-#endif
-                case "sd":
-                case "sabredat":
-                case "sx":
-                case "sabrexml":
-                    return DatFormat.SabreXML;
-                case "sfv":
-                    return DatFormat.RedumpSFV;
-                case "sha1":
-                    return DatFormat.RedumpSHA1;
-                case "sha256":
-                    return DatFormat.RedumpSHA256;
-                case "sha384":
-                    return DatFormat.RedumpSHA384;
-                case "sha512":
-                    return DatFormat.RedumpSHA512;
-                case "sl":
-                case "softwarelist":
-                    return DatFormat.SoftwareList;
-                case "spamsum":
-                    return DatFormat.RedumpSpamSum;
-                case "ssv":
-                    return DatFormat.SSV;
-                case "tsv":
-                    return DatFormat.TSV;
-                case "xml":
-                case "logiqx":
-                    return DatFormat.Logiqx;
-                default:
-                    return 0x0;
-            }
         }
 
         /// <summary>
@@ -2244,45 +2128,6 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get StatReportFormat value from input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>StatReportFormat value corresponding to the string</returns>
-        public static StatReportFormat AsStatReportFormat(this string input)
-        {
-#if NET_FRAMEWORK
-            switch (input?.Trim().ToLowerInvariant())
-            {
-                case "all":
-                    return StatReportFormat.All;
-                case "csv":
-                    return StatReportFormat.CSV;
-                case "html":
-                    return StatReportFormat.HTML;
-                case "ssv":
-                    return StatReportFormat.SSV;
-                case "text":
-                    return StatReportFormat.Textfile;
-                case "tsv":
-                    return StatReportFormat.TSV;
-                default:
-                    return 0x0;
-            }
-#else
-            return input?.Trim().ToLowerInvariant() switch
-            {
-                "all" => StatReportFormat.All,
-                "csv" => StatReportFormat.CSV,
-                "html" => StatReportFormat.HTML,
-                "ssv" => StatReportFormat.SSV,
-                "text" => StatReportFormat.Textfile,
-                "tsv" => StatReportFormat.TSV,
-                _ => 0x0,
-            };
-#endif
-        }
-
-        /// <summary>
         /// Get Supported value from input string
         /// </summary>
         /// <param name="supported">String to get value from</param>
@@ -2560,7 +2405,6 @@ namespace SabreTools.Core.Tools
             };
 #endif
         }
-
 
         /// <summary>
         /// Get string value from input DisplayType
@@ -3073,57 +2917,6 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get string value from input OutputFormat
-        /// </summary>
-        /// <param name="itemType">OutputFormat to get value from</param>
-        /// <returns>String value corresponding to the OutputFormat</returns>
-        public static string FromOutputFormat(this OutputFormat itemType)
-        {
-#if NET_FRAMEWORK
-            switch (itemType)
-            {
-                case OutputFormat.Folder:
-                case OutputFormat.ParentFolder:
-                    return "directory";
-                case OutputFormat.TapeArchive:
-                    return "TAR";
-                case OutputFormat.Torrent7Zip:
-                    return "Torrent7Z";
-                case OutputFormat.TorrentGzip:
-                case OutputFormat.TorrentGzipRomba:
-                    return "TorrentGZ";
-                case OutputFormat.TorrentLRZip:
-                    return "TorrentLRZ";
-                case OutputFormat.TorrentRar:
-                    return "TorrentRAR";
-                case OutputFormat.TorrentXZ:
-                case OutputFormat.TorrentXZRomba:
-                    return "TorrentXZ";
-                case OutputFormat.TorrentZip:
-                    return "TorrentZip";
-                default:
-                    return null;
-            }
-#else
-            return itemType switch
-            {
-                OutputFormat.Folder => "directory",
-                OutputFormat.ParentFolder => "directory",
-                OutputFormat.TapeArchive => "TAR",
-                OutputFormat.Torrent7Zip => "Torrent7Z",
-                OutputFormat.TorrentGzip => "TorrentGZ",
-                OutputFormat.TorrentGzipRomba => "TorrentGZ",
-                OutputFormat.TorrentLRZip => "TorrentLRZ",
-                OutputFormat.TorrentRar => "TorrentRAR",
-                OutputFormat.TorrentXZ => "TorrentXZ",
-                OutputFormat.TorrentXZRomba => "TorrentXZ",
-                OutputFormat.TorrentZip => "TorrentZip",
-                _ => null,
-            };
-#endif
-        }
-
-        /// <summary>
         /// Get string value from input PackingFlag
         /// </summary>
         /// <param name="packing">PackingFlag to get value from</param>
@@ -3248,45 +3041,6 @@ namespace SabreTools.Core.Tools
             {
                 SoftwareListStatus.Original => "original",
                 SoftwareListStatus.Compatible => "compatible",
-                _ => null,
-            };
-#endif
-        }
-
-        /// <summary>
-        /// Get string value from input StatReportFormat
-        /// </summary>
-        /// <param name="input">StatReportFormat to get value from</param>
-        /// <returns>String value corresponding to the StatReportFormat</returns>
-        public static string FromStatReportFormat(this StatReportFormat input)
-        {
-#if NET_FRAMEWORK
-            switch (input)
-            {
-                case StatReportFormat.All:
-                    return "all";
-                case StatReportFormat.CSV:
-                    return "csv";
-                case StatReportFormat.HTML:
-                    return "html";
-                case StatReportFormat.SSV:
-                    return "ssv";
-                case StatReportFormat.Textfile:
-                    return "text";
-                case StatReportFormat.TSV:
-                    return "tsv";
-                default:
-                    return null;
-            }
-#else
-            return input switch
-            {
-                StatReportFormat.All => "all",
-                StatReportFormat.CSV => "csv",
-                StatReportFormat.HTML => "html",
-                StatReportFormat.SSV => "ssv",
-                StatReportFormat.Textfile => "text",
-                StatReportFormat.TSV => "tsv",
                 _ => null,
             };
 #endif

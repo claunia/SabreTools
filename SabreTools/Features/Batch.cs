@@ -358,7 +358,7 @@ Reset the internal state:           reset();";
                                 datFile.Header.DatFormat = 0x00;
                                 foreach (string format in command.Arguments)
                                 {
-                                    datFile.Header.DatFormat |= format.AsDatFormat();
+                                    datFile.Header.DatFormat |= GetDatFormat(format);
                                 }
 
                                 // If we had an invalid input, log and continue
