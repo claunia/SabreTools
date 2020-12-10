@@ -63,7 +63,7 @@ namespace SabreTools.Features
                 // Extension splitting
                 if (splittingMode.HasFlag(SplittingMode.Extension))
                 {
-                    (DatFile extADat, DatFile extBDat) = DatTool.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
+                    (DatFile extADat, DatFile extBDat) = Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
 
                     InternalStopwatch watch = new InternalStopwatch("Outputting extension-split DATs");
 
@@ -77,7 +77,7 @@ namespace SabreTools.Features
                 // Hash splitting
                 if (splittingMode.HasFlag(SplittingMode.Hash))
                 {
-                    Dictionary<Field, DatFile> typeDats = DatTool.SplitByHash(internalDat);
+                    Dictionary<Field, DatFile> typeDats = Splitter.SplitByHash(internalDat);
 
                     InternalStopwatch watch = new InternalStopwatch("Outputting hash-split DATs");
 
@@ -94,7 +94,7 @@ namespace SabreTools.Features
                 if (splittingMode.HasFlag(SplittingMode.Level))
                 {
                     logger.Warning("This feature is not implemented: level-split");
-                    DatTool.SplitByLevel(
+                    Splitter.SplitByLevel(
                         internalDat,
                         OutputDir,
                         GetBoolean(features, ShortValue),
@@ -104,7 +104,7 @@ namespace SabreTools.Features
                 // Size splitting
                 if (splittingMode.HasFlag(SplittingMode.Size))
                 {
-                    (DatFile lessThan, DatFile greaterThan) = DatTool.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
+                    (DatFile lessThan, DatFile greaterThan) = Splitter.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
 
                     InternalStopwatch watch = new InternalStopwatch("Outputting size-split DATs");
 
@@ -118,7 +118,7 @@ namespace SabreTools.Features
                 // Type splitting
                 if (splittingMode.HasFlag(SplittingMode.Type))
                 {
-                    Dictionary<ItemType, DatFile> typeDats = DatTool.SplitByType(internalDat);
+                    Dictionary<ItemType, DatFile> typeDats = Splitter.SplitByType(internalDat);
 
                     InternalStopwatch watch = new InternalStopwatch("Outputting ItemType DATs");
 

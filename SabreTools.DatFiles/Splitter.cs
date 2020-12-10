@@ -8,14 +8,24 @@ using System.Threading.Tasks;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.IO;
+using SabreTools.Logging;
 using NaturalSort;
 
 // This file represents all methods related to splitting a DatFile into multiple
 namespace SabreTools.DatFiles
 {
     // TODO: Implement Level split
-    public partial class DatTool
+    public class Splitter
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Split a DAT by input extensions
         /// </summary>
@@ -303,7 +313,7 @@ namespace SabreTools.DatFiles
             newDatFile.Header.Type = null;
 
             // Write out the temporary DAT to the proper directory
-            Write(newDatFile, outDir);
+            DatTool.Write(newDatFile, outDir);
         }
 
         /// <summary>
