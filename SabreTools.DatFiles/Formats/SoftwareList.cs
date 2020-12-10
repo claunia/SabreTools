@@ -337,8 +337,8 @@ namespace SabreTools.DatFiles.Formats
                         var dataArea = new DataArea
                         {
                             Name = reader.GetAttribute("name"),
-                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
-                            Width = Sanitizer.CleanLong(reader.GetAttribute("width")),
+                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
+                            Width = Utilities.CleanLong(reader.GetAttribute("width")),
                             Endianness = reader.GetAttribute("endianness").AsEndianness(),
                         };
 
@@ -464,7 +464,7 @@ namespace SabreTools.DatFiles.Formats
                         var rom = new Rom
                         {
                             Name = reader.GetAttribute("name"),
-                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
+                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
                             SHA1 = reader.GetAttribute("sha1"),
                             Offset = reader.GetAttribute("offset"),

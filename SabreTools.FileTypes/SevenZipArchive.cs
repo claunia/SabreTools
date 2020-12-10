@@ -415,7 +415,7 @@ namespace SabreTools.FileTypes
             inputStream.Seek(0, SeekOrigin.Begin);
 
             // Get the output archive name from the first rebuild rom
-            string archiveFileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(baseFile.Parent) + (baseFile.Parent.EndsWith(".7z") ? string.Empty : ".7z"));
+            string archiveFileName = Path.Combine(outDir, Utilities.RemovePathUnsafeCharacters(baseFile.Parent) + (baseFile.Parent.EndsWith(".7z") ? string.Empty : ".7z"));
 
             // Set internal variables
             Stream writeStream = null;
@@ -610,7 +610,7 @@ namespace SabreTools.FileTypes
             }
 
             // Get the output archive name from the first rebuild rom
-            string archiveFileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(baseFiles[0].Parent) + (baseFiles[0].Parent.EndsWith(".7z") ? string.Empty : ".7z"));
+            string archiveFileName = Path.Combine(outDir, Utilities.RemovePathUnsafeCharacters(baseFiles[0].Parent) + (baseFiles[0].Parent.EndsWith(".7z") ? string.Empty : ".7z"));
 
             // Set internal variables
             Stream writeStream = null;

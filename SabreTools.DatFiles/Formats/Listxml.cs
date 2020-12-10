@@ -393,7 +393,7 @@ namespace SabreTools.DatFiles.Formats
                             Name = reader.GetAttribute("name"),
                             Tag = reader.GetAttribute("tag"),
                             ChipType = reader.GetAttribute("type").AsChipType(),
-                            Clock = Sanitizer.CleanLong(reader.GetAttribute("clock")),
+                            Clock = Utilities.CleanLong(reader.GetAttribute("clock")),
 
                             Source = new Source
                             {
@@ -457,7 +457,7 @@ namespace SabreTools.DatFiles.Formats
                             DeviceType = reader.GetAttribute("type").AsDeviceType(),
                             Tag = reader.GetAttribute("tag"),
                             FixedImage = reader.GetAttribute("fixed_image"),
-                            Mandatory = Sanitizer.CleanLong(reader.GetAttribute("mandatory")),
+                            Mandatory = Utilities.CleanLong(reader.GetAttribute("mandatory")),
                             Interface = reader.GetAttribute("interface"),
 
                             Source = new Source
@@ -544,17 +544,17 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Tag = reader.GetAttribute("tag"),
                             DisplayType = reader.GetAttribute("type").AsDisplayType(),
-                            Rotate = Sanitizer.CleanLong(reader.GetAttribute("rotate")),
+                            Rotate = Utilities.CleanLong(reader.GetAttribute("rotate")),
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
-                            Width = Sanitizer.CleanLong(reader.GetAttribute("width")),
-                            Height = Sanitizer.CleanLong(reader.GetAttribute("height")),
-                            PixClock = Sanitizer.CleanLong(reader.GetAttribute("pixclock")),
-                            HTotal = Sanitizer.CleanLong(reader.GetAttribute("htotal")),
-                            HBEnd = Sanitizer.CleanLong(reader.GetAttribute("hbend")),
-                            HBStart = Sanitizer.CleanLong(reader.GetAttribute("hbstart")),
-                            VTotal = Sanitizer.CleanLong(reader.GetAttribute("vtotal")),
-                            VBEnd = Sanitizer.CleanLong(reader.GetAttribute("vbend")),
-                            VBStart = Sanitizer.CleanLong(reader.GetAttribute("vbstart")),
+                            Width = Utilities.CleanLong(reader.GetAttribute("width")),
+                            Height = Utilities.CleanLong(reader.GetAttribute("height")),
+                            PixClock = Utilities.CleanLong(reader.GetAttribute("pixclock")),
+                            HTotal = Utilities.CleanLong(reader.GetAttribute("htotal")),
+                            HBEnd = Utilities.CleanLong(reader.GetAttribute("hbend")),
+                            HBStart = Utilities.CleanLong(reader.GetAttribute("hbstart")),
+                            VTotal = Utilities.CleanLong(reader.GetAttribute("vtotal")),
+                            VBEnd = Utilities.CleanLong(reader.GetAttribute("vbend")),
+                            VBStart = Utilities.CleanLong(reader.GetAttribute("vbstart")),
 
                             Source = new Source
                             {
@@ -615,8 +615,8 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Service = reader.GetAttribute("service").AsYesNo(),
                             Tilt = reader.GetAttribute("tilt").AsYesNo(),
-                            Players = Sanitizer.CleanLong(reader.GetAttribute("players")),
-                            Coins = Sanitizer.CleanLong(reader.GetAttribute("coins")),
+                            Players = Utilities.CleanLong(reader.GetAttribute("players")),
+                            Coins = Utilities.CleanLong(reader.GetAttribute("coins")),
 
                             Source = new Source
                             {
@@ -676,7 +676,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = reader.GetAttribute("name"),
                             Bios = reader.GetAttribute("bios"),
-                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
+                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
                             SHA1 = reader.GetAttribute("sha1"),
                             MergeTag = reader.GetAttribute("merge"),
@@ -752,7 +752,7 @@ namespace SabreTools.DatFiles.Formats
                     case "sound":
                         var sound = new Sound
                         {
-                            Channels = Sanitizer.CleanLong(reader.GetAttribute("channels")),
+                            Channels = Utilities.CleanLong(reader.GetAttribute("channels")),
 
                             Source = new Source
                             {
@@ -883,13 +883,13 @@ namespace SabreTools.DatFiles.Formats
                         var control = new Control
                         {
                             ControlType = reader.GetAttribute("type").AsControlType(),
-                            Player = Sanitizer.CleanLong(reader.GetAttribute("player")),
-                            Buttons = Sanitizer.CleanLong(reader.GetAttribute("buttons")),
-                            RequiredButtons = Sanitizer.CleanLong(reader.GetAttribute("reqbuttons")),
-                            Minimum = Sanitizer.CleanLong(reader.GetAttribute("minimum")),
-                            Maximum = Sanitizer.CleanLong(reader.GetAttribute("maximum")),
-                            Sensitivity = Sanitizer.CleanLong(reader.GetAttribute("sensitivity")),
-                            KeyDelta = Sanitizer.CleanLong(reader.GetAttribute("keydelta")),
+                            Player = Utilities.CleanLong(reader.GetAttribute("player")),
+                            Buttons = Utilities.CleanLong(reader.GetAttribute("buttons")),
+                            RequiredButtons = Utilities.CleanLong(reader.GetAttribute("reqbuttons")),
+                            Minimum = Utilities.CleanLong(reader.GetAttribute("minimum")),
+                            Maximum = Utilities.CleanLong(reader.GetAttribute("maximum")),
+                            Sensitivity = Utilities.CleanLong(reader.GetAttribute("sensitivity")),
+                            KeyDelta = Utilities.CleanLong(reader.GetAttribute("keydelta")),
                             Reverse = reader.GetAttribute("reverse").AsYesNo(),
                             Ways = reader.GetAttribute("ways"),
                             Ways2 = reader.GetAttribute("ways2"),
@@ -957,7 +957,7 @@ namespace SabreTools.DatFiles.Formats
                         var dipLocation = new Location
                         {
                             Name = reader.GetAttribute("name"),
-                            Number = Sanitizer.CleanLong(reader.GetAttribute("number")),
+                            Number = Utilities.CleanLong(reader.GetAttribute("number")),
                             Inverted = reader.GetAttribute("inverted").AsYesNo()
                         };
 
@@ -1089,7 +1089,7 @@ namespace SabreTools.DatFiles.Formats
                         var confLocation = new Location
                         {
                             Name = reader.GetAttribute("name"),
-                            Number = Sanitizer.CleanLong(reader.GetAttribute("number")),
+                            Number = Utilities.CleanLong(reader.GetAttribute("number")),
                             Inverted = reader.GetAttribute("inverted").AsYesNo()
                         };
 

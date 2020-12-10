@@ -343,9 +343,9 @@ namespace SabreTools.FileTypes
             // Get the output folder name from the first rebuild rom
             string fileName;
             if (writeToParent)
-                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(baseFile.Filename));
+                fileName = Path.Combine(outDir, Utilities.RemovePathUnsafeCharacters(baseFile.Filename));
             else
-                fileName = Path.Combine(outDir, Sanitizer.RemovePathUnsafeCharacters(baseFile.Parent), Sanitizer.RemovePathUnsafeCharacters(baseFile.Filename));
+                fileName = Path.Combine(outDir, Utilities.RemovePathUnsafeCharacters(baseFile.Parent), Utilities.RemovePathUnsafeCharacters(baseFile.Filename));
 
             try
             {

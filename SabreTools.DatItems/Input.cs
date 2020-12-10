@@ -89,10 +89,10 @@ namespace SabreTools.DatItems
                 Tilt = mappings[Field.DatItem_Tilt].AsYesNo();
 
             if (mappings.Keys.Contains(Field.DatItem_Players))
-                Players = Sanitizer.CleanLong(mappings[Field.DatItem_Players]);
+                Players = Utilities.CleanLong(mappings[Field.DatItem_Players]);
 
             if (mappings.Keys.Contains(Field.DatItem_Coins))
-                Coins = Sanitizer.CleanLong(mappings[Field.DatItem_Coins]);
+                Coins = Utilities.CleanLong(mappings[Field.DatItem_Coins]);
 
             if (ControlsSpecified)
             {

@@ -105,7 +105,7 @@ namespace SabreTools.DatItems
                 FixedImage = mappings[Field.DatItem_FixedImage];
 
             if (mappings.Keys.Contains(Field.DatItem_Mandatory))
-                Mandatory = Sanitizer.CleanLong(mappings[Field.DatItem_Mandatory]);
+                Mandatory = Utilities.CleanLong(mappings[Field.DatItem_Mandatory]);
 
             if (mappings.Keys.Contains(Field.DatItem_Interface))
                 Interface = mappings[Field.DatItem_Interface];

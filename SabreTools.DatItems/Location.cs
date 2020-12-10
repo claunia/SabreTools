@@ -72,7 +72,7 @@ namespace SabreTools.DatItems
                 Name = mappings[Field.DatItem_Location_Name];
 
             if (mappings.Keys.Contains(Field.DatItem_Location_Number))
-                Number = Sanitizer.CleanLong(mappings[Field.DatItem_Location_Number]);
+                Number = Utilities.CleanLong(mappings[Field.DatItem_Location_Number]);
 
             if (mappings.Keys.Contains(Field.DatItem_Location_Inverted))
                 Inverted = mappings[Field.DatItem_Location_Inverted].AsYesNo();

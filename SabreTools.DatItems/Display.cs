@@ -178,16 +178,16 @@ namespace SabreTools.DatItems
                 DisplayType = mappings[Field.DatItem_DisplayType].AsDisplayType();
 
             if (mappings.Keys.Contains(Field.DatItem_Rotate))
-                Rotate = Sanitizer.CleanLong(mappings[Field.DatItem_Rotate]);
+                Rotate = Utilities.CleanLong(mappings[Field.DatItem_Rotate]);
 
             if (mappings.Keys.Contains(Field.DatItem_FlipX))
                 FlipX = mappings[Field.DatItem_FlipX].AsYesNo();
 
             if (mappings.Keys.Contains(Field.DatItem_Width))
-                Width = Sanitizer.CleanLong(mappings[Field.DatItem_Width]);
+                Width = Utilities.CleanLong(mappings[Field.DatItem_Width]);
 
             if (mappings.Keys.Contains(Field.DatItem_Height))
-                Height = Sanitizer.CleanLong(mappings[Field.DatItem_Height]);
+                Height = Utilities.CleanLong(mappings[Field.DatItem_Height]);
 
             if (mappings.Keys.Contains(Field.DatItem_Refresh))
             {
@@ -196,25 +196,25 @@ namespace SabreTools.DatItems
             }
 
             if (mappings.Keys.Contains(Field.DatItem_PixClock))
-                PixClock = Sanitizer.CleanLong(mappings[Field.DatItem_PixClock]);
+                PixClock = Utilities.CleanLong(mappings[Field.DatItem_PixClock]);
 
             if (mappings.Keys.Contains(Field.DatItem_HTotal))
-                HTotal = Sanitizer.CleanLong(mappings[Field.DatItem_HTotal]);
+                HTotal = Utilities.CleanLong(mappings[Field.DatItem_HTotal]);
 
             if (mappings.Keys.Contains(Field.DatItem_HBEnd))
-                HBEnd = Sanitizer.CleanLong(mappings[Field.DatItem_HBEnd]);
+                HBEnd = Utilities.CleanLong(mappings[Field.DatItem_HBEnd]);
 
             if (mappings.Keys.Contains(Field.DatItem_HBStart))
-                HBStart = Sanitizer.CleanLong(mappings[Field.DatItem_HBStart]);
+                HBStart = Utilities.CleanLong(mappings[Field.DatItem_HBStart]);
 
             if (mappings.Keys.Contains(Field.DatItem_VTotal))
-                VTotal = Sanitizer.CleanLong(mappings[Field.DatItem_VTotal]);
+                VTotal = Utilities.CleanLong(mappings[Field.DatItem_VTotal]);
 
             if (mappings.Keys.Contains(Field.DatItem_VBEnd))
-                VBEnd = Sanitizer.CleanLong(mappings[Field.DatItem_VBEnd]);
+                VBEnd = Utilities.CleanLong(mappings[Field.DatItem_VBEnd]);
 
             if (mappings.Keys.Contains(Field.DatItem_VBStart))
-                VBStart = Sanitizer.CleanLong(mappings[Field.DatItem_VBStart]);
+                VBStart = Utilities.CleanLong(mappings[Field.DatItem_VBStart]);
         }
 
         #endregion

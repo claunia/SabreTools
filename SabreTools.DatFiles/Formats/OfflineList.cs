@@ -526,7 +526,7 @@ namespace SabreTools.DatFiles.Formats
                         break;
 
                     case "romsize":
-                        size = Sanitizer.CleanLong(reader.ReadElementContentAsString());
+                        size = Utilities.CleanLong(reader.ReadElementContentAsString());
                         break;
 
                     case "publisher":

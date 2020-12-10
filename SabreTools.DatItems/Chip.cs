@@ -88,7 +88,7 @@ namespace SabreTools.DatItems
                 ChipType = mappings[Field.DatItem_ChipType].AsChipType();
 
             if (mappings.Keys.Contains(Field.DatItem_Clock))
-                Clock = Sanitizer.CleanLong(mappings[Field.DatItem_Clock]);
+                Clock = Utilities.CleanLong(mappings[Field.DatItem_Clock]);
         }
 
         #endregion

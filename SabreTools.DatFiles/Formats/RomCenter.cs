@@ -338,7 +338,7 @@ namespace SabreTools.DatFiles.Formats
                 Rom rom = new Rom
                 {
                     Name = rominfo[5],
-                    Size = Sanitizer.CleanLong(rominfo[7]),
+                    Size = Utilities.CleanLong(rominfo[7]),
                     CRC = rominfo[6],
                     ItemStatus = ItemStatus.None,
 

@@ -149,25 +149,25 @@ namespace SabreTools.DatItems
                 ControlType = mappings[Field.DatItem_Control_Type].AsControlType();
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Player))
-                Player = Sanitizer.CleanLong(mappings[Field.DatItem_Control_Player]);
+                Player = Utilities.CleanLong(mappings[Field.DatItem_Control_Player]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Buttons))
-                Buttons = Sanitizer.CleanLong(mappings[Field.DatItem_Control_Buttons]);
+                Buttons = Utilities.CleanLong(mappings[Field.DatItem_Control_Buttons]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_RequiredButtons))
-                RequiredButtons = Sanitizer.CleanLong(mappings[Field.DatItem_Control_RequiredButtons]);
+                RequiredButtons = Utilities.CleanLong(mappings[Field.DatItem_Control_RequiredButtons]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Minimum))
-                Minimum = Sanitizer.CleanLong(mappings[Field.DatItem_Control_Minimum]);
+                Minimum = Utilities.CleanLong(mappings[Field.DatItem_Control_Minimum]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Maximum))
-                Maximum = Sanitizer.CleanLong(mappings[Field.DatItem_Control_Maximum]);
+                Maximum = Utilities.CleanLong(mappings[Field.DatItem_Control_Maximum]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Sensitivity))
-                Sensitivity = Sanitizer.CleanLong(mappings[Field.DatItem_Control_Sensitivity]);
+                Sensitivity = Utilities.CleanLong(mappings[Field.DatItem_Control_Sensitivity]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_KeyDelta))
-                KeyDelta = Sanitizer.CleanLong(mappings[Field.DatItem_Control_KeyDelta]);
+                KeyDelta = Utilities.CleanLong(mappings[Field.DatItem_Control_KeyDelta]);
 
             if (mappings.Keys.Contains(Field.DatItem_Control_Reverse))
                 Reverse = mappings[Field.DatItem_Control_Reverse].AsYesNo();

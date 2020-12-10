@@ -372,7 +372,7 @@ namespace SabreTools.DatItems
                 Bios = mappings[Field.DatItem_Bios];
 
             if (mappings.Keys.Contains(Field.DatItem_Size))
-                Size = Sanitizer.CleanLong(mappings[Field.DatItem_Size]);
+                Size = Utilities.CleanLong(mappings[Field.DatItem_Size]);
 
             if (mappings.Keys.Contains(Field.DatItem_CRC))
                 CRC = mappings[Field.DatItem_CRC];

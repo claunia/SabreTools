@@ -43,7 +43,7 @@ namespace SabreTools.DatItems
 
             // Handle Sound-specific fields
             if (mappings.Keys.Contains(Field.DatItem_Channels))
-                Channels = Sanitizer.CleanLong(mappings[Field.DatItem_Channels]);
+                Channels = Utilities.CleanLong(mappings[Field.DatItem_Channels]);
         }
 
         #endregion

@@ -84,10 +84,10 @@ namespace SabreTools.DatItems
                 Name = mappings[Field.DatItem_AreaName];
 
             if (mappings.Keys.Contains(Field.DatItem_AreaSize))
-                Size = Sanitizer.CleanLong(mappings[Field.DatItem_AreaSize]);
+                Size = Utilities.CleanLong(mappings[Field.DatItem_AreaSize]);
 
             if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
-                Width = Sanitizer.CleanLong(mappings[Field.DatItem_AreaWidth]);
+                Width = Utilities.CleanLong(mappings[Field.DatItem_AreaWidth]);
 
             if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
                 Endianness = mappings[Field.DatItem_AreaEndianness].AsEndianness();

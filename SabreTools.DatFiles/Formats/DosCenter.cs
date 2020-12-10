@@ -224,7 +224,7 @@ namespace SabreTools.DatFiles.Formats
                                 break;
 
                             case "size":
-                                item.Size = Sanitizer.CleanLong(attrVal);
+                                item.Size = Utilities.CleanLong(attrVal);
                                 break;
 
                             case "crc":

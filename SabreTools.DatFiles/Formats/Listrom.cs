@@ -151,7 +151,7 @@ namespace SabreTools.DatFiles.Formats
                             Rom rom = new Rom()
                             {
                                 Name = romname,
-                                Size = Sanitizer.CleanLong(split[0]),
+                                Size = Utilities.CleanLong(split[0]),
                                 CRC = CleanListromHashData(split[1]),
                                 SHA1 = CleanListromHashData(split[2]),
 
@@ -199,7 +199,7 @@ namespace SabreTools.DatFiles.Formats
                             Rom rom = new Rom()
                             {
                                 Name = romname,
-                                Size = Sanitizer.CleanLong(split[0]),
+                                Size = Utilities.CleanLong(split[0]),
                                 CRC = CleanListromHashData(split[2]),
                                 SHA1 = CleanListromHashData(split[3]),
                                 ItemStatus = ItemStatus.BadDump,
@@ -225,7 +225,7 @@ namespace SabreTools.DatFiles.Formats
                             Rom rom = new Rom()
                             {
                                 Name = romname,
-                                Size = Sanitizer.CleanLong(split[0]),
+                                Size = Utilities.CleanLong(split[0]),
                                 ItemStatus = ItemStatus.Nodump,
 
                                 Machine = new Machine

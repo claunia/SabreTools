@@ -609,7 +609,7 @@ namespace SabreTools.DatFiles.Formats
                         DatItem rom = new Rom
                         {
                             Name = reader.GetAttribute("name"),
-                            Size = Sanitizer.CleanLong(reader.GetAttribute("size")),
+                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
                             MD5 = reader.GetAttribute("md5"),
 #if NET_FRAMEWORK

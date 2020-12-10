@@ -311,7 +311,7 @@ namespace SabreTools.DatFiles.Formats
 
                             case "size":
                                 if (item.ItemType == ItemType.Rom)
-                                    (item as Rom).Size = Sanitizer.CleanLong(attrVal);
+                                    (item as Rom).Size = Utilities.CleanLong(attrVal);
 
                                 break;
                             case "crc":

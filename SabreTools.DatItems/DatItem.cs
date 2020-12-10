@@ -1406,10 +1406,10 @@ namespace SabreTools.DatItems
                         {
                             if (x.ItemType == y.ItemType)
                             {
-                                if (Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)) == Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)))
-                                    return nc.Compare(Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetFileName(Sanitizer.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
+                                if (Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)) == Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)))
+                                    return nc.Compare(Path.GetFileName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetFileName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
 
-                                return nc.Compare(Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetDirectoryName(Sanitizer.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
+                                return nc.Compare(Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
                             }
 
                             return x.ItemType - y.ItemType;
