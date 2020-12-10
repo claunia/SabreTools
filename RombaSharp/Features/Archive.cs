@@ -62,12 +62,11 @@ have a current entry in the DAT index.";
             }
 
             // Then process all of the input directories into an internal DAT
-            DatTool dt = new DatTool();
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                dt.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive);
-                dt.PopulateFromDir(df, dir, asFiles: TreatAsFile.All);
+                DatTool.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive);
+                DatTool.PopulateFromDir(df, dir, asFiles: TreatAsFile.All);
             }
 
             // Create an empty Dat for files that need to be rebuilt
@@ -190,7 +189,7 @@ have a current entry in the DAT index.";
             }
 
             // Create the sorting object to use and rebuild the needed files
-            dt.RebuildGeneric(
+            DatTool.RebuildGeneric(
                 need,
                 onlyDirs,
                 outDir: _depots.Keys.ToList()[0],

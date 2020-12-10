@@ -15,7 +15,6 @@ namespace SabreTools.DatFiles
 {
     // TODO: See if any of the methods can be broken up a bit more neatly
     // TODO: See if any of this can be more stateful given the inputted DatFile
-    // TODO: Re-evaluate if these should be made static instead of instanced
     public partial class DatTool
     {
         /// <summary>
@@ -27,7 +26,7 @@ namespace SabreTools.DatFiles
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        public bool PopulateFromDir(
+        public static bool PopulateFromDir(
             DatFile datFile,
             string basePath,
             TreatAsFile asFiles = 0x00,
@@ -102,7 +101,7 @@ namespace SabreTools.DatFiles
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        private void CheckFileForHashes(
+        private static void CheckFileForHashes(
             DatFile datFile,
             string item,
             string basePath,
@@ -176,7 +175,7 @@ namespace SabreTools.DatFiles
         /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">Filename of the item to be checked</param>
         /// <returns>True if we checked a depot file, false otherwise</returns>
-        private bool CheckDepotFile(DatFile datFile, string item)
+        private static bool CheckDepotFile(DatFile datFile, string item)
         {
             // If we're not in Depot mode, return false
             if (datFile.Header.OutputDepot?.IsActive != true)
@@ -210,7 +209,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="extracted">List of BaseFiles representing the internal files</param>
-        private void ProcessArchive(DatFile datFile, string item, string basePath, List<BaseFile> extracted)
+        private static void ProcessArchive(DatFile datFile, string item, string basePath, List<BaseFile> extracted)
         {
             // Get the parent path for all items
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
@@ -230,7 +229,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">File containing the blanks</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="archive">BaseArchive to get blanks from</param>
-        private void ProcessArchiveBlanks(DatFile datFile, string item, string basePath, BaseArchive archive)
+        private static void ProcessArchiveBlanks(DatFile datFile, string item, string basePath, BaseArchive archive)
         {
             List<string> empties = new List<string>();
 
@@ -254,7 +253,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        private void ProcessDirectoryBlanks(DatFile datFile, string basePath)
+        private static void ProcessDirectoryBlanks(DatFile datFile, string basePath)
         {
             // If we're in depot mode, we don't process blanks
             if (datFile.Header.OutputDepot?.IsActive == true)
@@ -301,7 +300,7 @@ namespace SabreTools.DatFiles
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private void ProcessFile(DatFile datFile, string item, string basePath, Hash hashes, TreatAsFile asFiles)
+        private static void ProcessFile(DatFile datFile, string item, string basePath, Hash hashes, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
             BaseFile baseFile = BaseFile.GetInfo(item, header: datFile.Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
@@ -317,7 +316,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">Rom data to be used to write to file</param>
         /// <param name="basepath">Path the represents the parent directory</param>
         /// <param name="parent">Parent game to be used</param>
-        private void ProcessFileHelper(DatFile datFile, string item, DatItem datItem, string basepath, string parent)
+        private static void ProcessFileHelper(DatFile datFile, string item, DatItem datItem, string basepath, string parent)
         {
             // If we didn't get an accepted parsed type somehow, cancel out
             List<ItemType> parsed = new List<ItemType> { ItemType.Disk, ItemType.Media, ItemType.Rom };
@@ -357,7 +356,7 @@ namespace SabreTools.DatFiles
         /// <param name="item">Item name to use</param>
         /// <param name="parent">Parent name to use</param>
         /// <param name="basepath">Base path to use</param>
-        private void SetDatItemInfo(DatFile datFile, DatItem datItem, string item, string parent, string basepath)
+        private static void SetDatItemInfo(DatFile datFile, DatItem datItem, string item, string parent, string basepath)
         {
             // Get the data to be added as game and item names
             string machineName, itemName;

@@ -51,9 +51,6 @@ namespace SabreTools.Features
             bool quickScan = GetBoolean(features, QuickValue);
             var splitType = GetSplitType(features);
 
-            // Get the DatTool for required operations
-            DatTool dt = new DatTool();
-
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
             {
@@ -61,7 +58,7 @@ namespace SabreTools.Features
                 {
                     // Parse in from the file
                     DatFile datdata = DatFile.Create();
-                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
+                    DatTool.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
                     datdata.ApplyExtras(Extras);
@@ -79,7 +76,7 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     if (Header.InputDepot?.IsActive ?? false)
                     {
-                        dt.VerifyDepot(datdata, Inputs);
+                        DatTool.VerifyDepot(datdata, Inputs);
                     }
                     else
                     {
@@ -87,15 +84,15 @@ namespace SabreTools.Features
                         logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
-                            dt.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                            DatTool.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                         }
 
-                        dt.VerifyGeneric(datdata, hashOnly);
+                        DatTool.VerifyGeneric(datdata, hashOnly);
                     }
 
                     // Now write out if there are any items left
                     datdata.WriteStatsToConsole();
-                    dt.Write(datdata, OutputDir);
+                    DatTool.Write(datdata, OutputDir);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -107,7 +104,7 @@ namespace SabreTools.Features
                 DatFile datdata = DatFile.Create();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
+                    DatTool.ParseInto(datdata, datfile, int.MaxValue, keep: true);
                 }
 
                 // Perform additional processing steps
@@ -128,7 +125,7 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 if (Header.InputDepot?.IsActive ?? false)
                 {
-                    dt.VerifyDepot(datdata, Inputs);
+                    DatTool.VerifyDepot(datdata, Inputs);
                 }
                 else
                 {
@@ -136,15 +133,15 @@ namespace SabreTools.Features
                     logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
-                        dt.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                        DatTool.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                     }
 
-                    dt.VerifyGeneric(datdata, hashOnly);
+                    DatTool.VerifyGeneric(datdata, hashOnly);
                 }
 
                 // Now write out if there are any items left
                 datdata.WriteStatsToConsole();
-                dt.Write(datdata, OutputDir);
+                DatTool.Write(datdata, OutputDir);
             }
         }
     }

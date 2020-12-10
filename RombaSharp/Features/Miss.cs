@@ -33,14 +33,11 @@ namespace RombaSharp.Features
             // Create the new output directory if it doesn't exist
             DirectoryExtensions.Ensure(Path.Combine(Globals.ExeDir, "out"), create: true);
 
-            // Get the DatTool for parsing
-            DatTool dt = new DatTool();
-
             // Now that we have the dictionary, we can loop through and output to a new folder for each
             foreach (string key in foundDats.Keys)
             {
                 // Get the DAT file associated with the key
-                DatFile datFile = dt.CreateAndParse(Path.Combine(_dats, foundDats[key]));
+                DatFile datFile = DatTool.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
                 // Now loop through and see if all of the hash combinations exist in the database
                 /* ended here */

@@ -8,7 +8,6 @@ using SabreTools.IO;
 // This file represents all methods related to writing to a file
 namespace SabreTools.DatFiles
 {
-    // TODO: Re-evaluate if these should be made static instead of instanced
     public partial class DatTool
     {
         /// <summary>
@@ -21,7 +20,7 @@ namespace SabreTools.DatFiles
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DAT was written correctly, false otherwise</returns>
-        public bool Write(
+        public static bool Write(
             DatFile datFile,
             string outDir,
             bool overwrite = true,
@@ -47,7 +46,7 @@ namespace SabreTools.DatFiles
             }
 
             // Make sure that the three essential fields are filled in
-            EnsureHeaderFields();
+            EnsureHeaderFields(datFile);
 
             // Bucket roms by game name, if not already
             datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
@@ -90,7 +89,7 @@ namespace SabreTools.DatFiles
         /// Ensure that FileName, Name, and Description are filled with some value
         /// </summary>
         /// <param name="datFile">Current DatFile object to write from</param>
-        private void EnsureHeaderFields(DatFile datFile)
+        private static void EnsureHeaderFields(DatFile datFile)
         {
             // Empty FileName
             if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
@@ -127,7 +126,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="datFile">Current DatFile object to write from</param>
         /// <returns>True if there are any writable items, false otherwise</returns>
-        private bool HasWritable(DatFile datFile)
+        private static bool HasWritable(DatFile datFile)
         {
             // Force a statistics recheck, just in case
             datFile.Items.RecalculateStats();

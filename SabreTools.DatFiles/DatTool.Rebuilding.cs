@@ -13,7 +13,6 @@ using SabreTools.Skippers;
 // This file represents all methods related to rebuilding from a DatFile
 namespace SabreTools.DatFiles
 {
-    // TODO: Re-evaluate if these should be made static instead of instanced
     public partial class DatTool
     {
         /// <summary>
@@ -27,7 +26,7 @@ namespace SabreTools.DatFiles
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
-        public bool RebuildDepot(
+        public static bool RebuildDepot(
             DatFile datFile,
             List<string> inputs,
             string outDir,
@@ -163,7 +162,7 @@ namespace SabreTools.DatFiles
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>True if rebuilding was a success, false otherwise</returns>
-        public bool RebuildGeneric(
+        public static bool RebuildGeneric(
             DatFile datFile,
             List<string> inputs,
             string outDir,
@@ -255,7 +254,7 @@ namespace SabreTools.DatFiles
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="asFiles">TreatAsFiles representing special format scanning</param>
         /// <returns>True if the file was used to rebuild, false otherwise</returns>
-        private bool RebuildGenericHelper(
+        private static bool RebuildGenericHelper(
             DatFile datFile,
             string file,
             string outDir,
@@ -331,7 +330,7 @@ namespace SabreTools.DatFiles
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="isZip">True if the input file is an archive, false if the file is TGZ/TXZ, null otherwise</param>
         /// <returns>True if the file was able to be rebuilt, false otherwise</returns>
-        private bool RebuildIndividualFile(
+        private static bool RebuildIndividualFile(
             DatFile datFile,
             DatItem datItem,
             string file,
@@ -470,7 +469,7 @@ namespace SabreTools.DatFiles
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="dupes">Output list of duplicate items to rebuild to</param>
         /// <returns>True if the item should be rebuilt, false otherwise</returns>
-        private bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream stream, bool inverse, out List<DatItem> dupes)
+        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream stream, bool inverse, out List<DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
             dupes = datFile.Items.GetDuplicates(datItem);
@@ -526,7 +525,7 @@ namespace SabreTools.DatFiles
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="isZip">True if the input file is an archive, false if the file is TGZ, null otherwise</param>
         /// <returns>True if rebuilt properly, false otherwise</returns>
-        private bool RebuildTorrentGzip(DatFile datFile, DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
+        private static bool RebuildTorrentGzip(DatFile datFile, DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
         {
             // If we have a very specific TGZ->TGZ case, just copy it accordingly
             GZipArchive tgz = new GZipArchive(file);
@@ -570,7 +569,7 @@ namespace SabreTools.DatFiles
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <param name="isZip">True if the input file is an archive, false if the file is TXZ, null otherwise</param>
         /// <returns>True if rebuilt properly, false otherwise</returns>
-        private bool RebuildTorrentXz(DatFile datFile, DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
+        private static bool RebuildTorrentXz(DatFile datFile, DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
         {
             // If we have a very specific TGZ->TGZ case, just copy it accordingly
             XZArchive txz = new XZArchive(file);
@@ -612,7 +611,7 @@ namespace SabreTools.DatFiles
         /// <param name="isZip">Non-null if the input file is an archive</param>
         /// <param name="stream">Output stream representing the opened file</param>
         /// <returns>True if the stream opening succeeded, false otherwise</returns>
-        private bool GetFileStream(DatItem datItem, string file, bool? isZip, out Stream stream)
+        private static bool GetFileStream(DatItem datItem, string file, bool? isZip, out Stream stream)
         {
             // Get a generic stream for the file
             stream = null;
@@ -644,7 +643,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Get the default OutputFormat associated with each PackingFlag
         /// </summary>
-        private OutputFormat GetOutputFormat(PackingFlag packing)
+        private static OutputFormat GetOutputFormat(PackingFlag packing)
         {
 #if NET_FRAMEWORK
             switch (packing)
@@ -680,7 +679,7 @@ namespace SabreTools.DatFiles
         /// <param name="date">True if the date from the DAT should be used if available, false otherwise</param>
         /// <param name="outputFormat">Output format that files should be written to</param>
         /// <returns>Folder configured with proper flags</returns>
-        private Folder GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
+        private static Folder GetPreconfiguredFolder(DatFile datFile, bool date, OutputFormat outputFormat)
         {
             Folder outputArchive = Folder.Create(outputFormat);
             if (outputArchive is BaseArchive baseArchive && date)
@@ -700,7 +699,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="itemType">OutputFormat to get value from</param>
         /// <returns>String value corresponding to the OutputFormat</returns>
-        private string FromOutputFormat(OutputFormat itemType)
+        private static string FromOutputFormat(OutputFormat itemType)
         {
 #if NET_FRAMEWORK
             switch (itemType)

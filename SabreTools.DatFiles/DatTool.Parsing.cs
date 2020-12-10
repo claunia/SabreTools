@@ -8,7 +8,6 @@ using SabreTools.IO;
 // This file represents all methods related to parsing from a file
 namespace SabreTools.DatFiles
 {
-    // TODO: Re-evaluate if these should be made static instead of instanced
     public partial class DatTool
     {
         /// <summary>
@@ -16,7 +15,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public DatFile CreateAndParse(string filename, bool throwOnError = false)
+        public static DatFile CreateAndParse(string filename, bool throwOnError = false)
         {
             DatFile datFile = DatFile.Create();
             ParseInto(datFile, new ParentablePath(filename), throwOnError: throwOnError);
@@ -33,7 +32,7 @@ namespace SabreTools.DatFiles
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void ParseInto(
+        public static void ParseInto(
             DatFile datFile,
             string filename,
             int indexId = 0,
@@ -56,7 +55,7 @@ namespace SabreTools.DatFiles
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void ParseInto(
+        public static void ParseInto(
             DatFile datFile,
             ParentablePath input,
             int indexId = 0,
@@ -101,7 +100,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <returns>The DatFormat corresponding to the DAT</returns>
-        private DatFormat GetDatFormat(string filename)
+        private static DatFormat GetDatFormat(string filename)
         {
             // Limit the output formats based on extension
             if (!PathExtensions.HasValidDatExtension(filename))

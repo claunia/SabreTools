@@ -46,14 +46,11 @@ structure according to the original DAT master directory tree structure.";
             if (string.IsNullOrWhiteSpace(outdat))
                 outdat = "out";
 
-            // Get the DatTool for operations
-            DatTool dt = new DatTool();
-
             // Now that we have the dictionary, we can loop through and output to a new folder for each
             foreach (string key in foundDats.Keys)
             {
                 // Get the DAT file associated with the key
-                DatFile datFile = dt.CreateAndParse(Path.Combine(_dats, foundDats[key]));
+                DatFile datFile = DatTool.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
                 // Set the depot values
                 datFile.Header.InputDepot = new DepotInformation(true, 4);
@@ -67,11 +64,11 @@ structure according to the original DAT master directory tree structure.";
                 List<string> onlineDepots = _depots.Where(d => d.Value.Item2).Select(d => d.Key).ToList();
 
                 // Now scan all of those depots and rebuild
-                dt.RebuildDepot(
+                DatTool.RebuildDepot(
                     datFile,
                     onlineDepots,
                     outDir: outputFolder,
-                    outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip));
+                    outputFormat: copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip);
             }
         }
     }

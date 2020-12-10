@@ -1395,9 +1395,6 @@ namespace SabreTools.DatFiles
             string basepath = null;
             ItemDictionary dirStats = new ItemDictionary();
 
-            // Get the DatTool for parsing
-            DatTool dt = new DatTool();
-
             // Now process each of the input files
             foreach (ParentablePath file in files)
             {
@@ -1428,7 +1425,7 @@ namespace SabreTools.DatFiles
 
                 staticLogger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
                 List<string> games = new List<string>();
-                DatFile datdata = dt.CreateAndParse(file.CurrentPath);
+                DatFile datdata = DatTool.CreateAndParse(file.CurrentPath);
                 datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)

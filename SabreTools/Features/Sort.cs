@@ -84,16 +84,13 @@ namespace SabreTools.Features
             var datfiles = GetList(features, DatListValue);
             var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
-            // Get the DatTool for operations
-            DatTool dt = new DatTool();
-
             // If we are in individual mode, process each DAT on their own, appending the DAT name to the output dir
             if (GetBoolean(features, IndividualValue))
             {
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     DatFile datdata = DatFile.Create();
-                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
+                    DatTool.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -106,9 +103,9 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     bool success;
                     if (Header.InputDepot?.IsActive ?? false)
-                        success = dt.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
+                        success = DatTool.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
                     else
-                        success = dt.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = DatTool.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
@@ -117,7 +114,7 @@ namespace SabreTools.Features
                         datdata.Header.Name = $"fixDAT_{Header.Name}";
                         datdata.Header.Description = $"fixDAT_{Header.Description}";
                         datdata.Items.ClearMarked();
-                        dt.Write(datdata, OutputDir);
+                        DatTool.Write(datdata, OutputDir);
                     }
                 }
             }
@@ -131,7 +128,7 @@ namespace SabreTools.Features
                 DatFile datdata = DatFile.Create();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
+                    DatTool.ParseInto(datdata, datfile, int.MaxValue, keep: true);
                 }
 
                 // Set depot information
@@ -147,9 +144,9 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 bool success;
                 if (Header.InputDepot?.IsActive ?? false)
-                    success = dt.RebuildDepot(datdata, Inputs, OutputDir, date, delete, inverse, outputFormat);
+                    success = DatTool.RebuildDepot(datdata, Inputs, OutputDir, date, delete, inverse, outputFormat);
                 else
-                    success = dt.RebuildGeneric(datdata, Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+                    success = DatTool.RebuildGeneric(datdata, Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
 
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)
@@ -158,7 +155,7 @@ namespace SabreTools.Features
                     datdata.Header.Name = $"fixDAT_{Header.Name}";
                     datdata.Header.Description = $"fixDAT_{Header.Description}";
                     datdata.Items.ClearMarked();
-                    dt.Write(datdata, OutputDir);
+                    DatTool.Write(datdata, OutputDir);
                 }
             }
         }

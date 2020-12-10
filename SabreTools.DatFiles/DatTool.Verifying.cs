@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
-using SabreTools.DatFiles.Reports;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.IO;
@@ -12,7 +11,6 @@ using SabreTools.Logging;
 // This file represents all methods related to verifying with a DatFile
 namespace SabreTools.DatFiles
 {
-    // TODO: Re-evaluate if these should be made static instead of instanced
     public partial class DatTool
     {
         /// <summary>
@@ -21,7 +19,7 @@ namespace SabreTools.DatFiles
         /// <param name="datFile">Current DatFile object to verify against</param>
         /// <param name="inputs">List of input directories to compare against</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyDepot(DatFile datFile, List<string> inputs)
+        public static bool VerifyDepot(DatFile datFile, List<string> inputs)
         {
             bool success = true;
 
@@ -104,7 +102,7 @@ namespace SabreTools.DatFiles
         /// <param name="datFile">Current DatFile object to verify against</param>
         /// <param name="hashOnly">True if only hashes should be checked, false for full file information</param>
         /// <returns>True if verification was a success, false otherwise</returns>
-        public bool VerifyGeneric(DatFile datFile, bool hashOnly)
+        public static bool VerifyGeneric(DatFile datFile, bool hashOnly)
         {
             bool success = true;
 

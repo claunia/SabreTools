@@ -429,7 +429,6 @@ namespace SabreTools.DatFiles
         /// <returns>List of DatHeader objects representing headers</returns>
         public List<DatHeader> PopulateUserData(List<ParentablePath> inputs)
         {
-            DatTool dt = new DatTool();
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
 
@@ -439,7 +438,7 @@ namespace SabreTools.DatFiles
                 var input = inputs[i];
                 logger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = Create(Header.CloneFiltering());
-                dt.ParseInto(datFiles[i], input, i, keep: true);
+                DatTool.ParseInto(datFiles[i], input, i, keep: true);
             });
 
             watch.Stop();

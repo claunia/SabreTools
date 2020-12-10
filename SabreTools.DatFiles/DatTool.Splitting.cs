@@ -13,7 +13,6 @@ using NaturalSort;
 // This file represents all methods related to splitting a DatFile into multiple
 namespace SabreTools.DatFiles
 {
-    // TODO: Re-evaluate if these should be made static instead of instanced
     // TODO: Implement Level split
     public partial class DatTool
     {
@@ -24,7 +23,7 @@ namespace SabreTools.DatFiles
         /// <param name="extA">List of extensions to split on (first DAT)</param>
         /// <param name="extB">List of extensions to split on (second DAT)</param>
         /// <returns>Extension Set A and Extension Set B DatFiles</returns>
-        public (DatFile extADat, DatFile extBDat) SplitByExtension(DatFile datFile, List<string> extA, List<string> extB)
+        public static (DatFile extADat, DatFile extBDat) SplitByExtension(DatFile datFile, List<string> extA, List<string> extB)
         {
             // If roms is empty, return false
             if (datFile.Items.TotalCount == 0)
@@ -79,7 +78,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
         /// <returns>Dictionary of Field to DatFile mappings</returns>
-        public Dictionary<Field, DatFile> SplitByHash(DatFile datFile)
+        public static Dictionary<Field, DatFile> SplitByHash(DatFile datFile)
         {
             // Create each of the respective output DATs
             logger.User("Creating and populating new DATs");
@@ -219,7 +218,7 @@ namespace SabreTools.DatFiles
         /// <param name="shortname">True if short names should be used, false otherwise</param>
         /// <param name="basedat">True if original filenames should be used as the base for output filename, false otherwise</param>
         /// <returns>True if split succeeded, false otherwise</returns>
-        public bool SplitByLevel(DatFile datFile, string outDir, bool shortname, bool basedat)
+        public static bool SplitByLevel(DatFile datFile, string outDir, bool shortname, bool basedat)
         {
             // First, bucket by games so that we can do the right thing
             datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None, lower: false, norename: true);
@@ -264,7 +263,7 @@ namespace SabreTools.DatFiles
         /// <param name="a">First string to compare</param>
         /// <param name="b">Second string to compare</param>
         /// <returns>-1 for a coming before b, 0 for a == b, 1 for a coming after b</returns>
-        private int SplitByLevelSort(string a, string b)
+        private static int SplitByLevelSort(string a, string b)
         {
             NaturalComparer nc = new NaturalComparer();
             int adeep = a.Count(c => c == '/' || c == '\\');
@@ -284,7 +283,7 @@ namespace SabreTools.DatFiles
         /// <param name="outDir">Directory to write out to</param>
         /// <param name="shortname">True if short naming scheme should be used, false otherwise</param>
         /// <param name="restore">True if original filenames should be used as the base for output filename, false otherwise</param>
-        private void SplitByLevelHelper(DatFile datFile, DatFile newDatFile, string outDir, bool shortname, bool restore)
+        private static void SplitByLevelHelper(DatFile datFile, DatFile newDatFile, string outDir, bool shortname, bool restore)
         {
             // Get the name from the DAT to use separately
             string name = newDatFile.Header.Name;
@@ -313,7 +312,7 @@ namespace SabreTools.DatFiles
         /// <param name="datFile">Current DatFile object to split</param>
         /// <param name="radix">Long value representing the split point</param>
         /// <returns>Less Than and Greater Than DatFiles</returns>
-        public (DatFile lessThan, DatFile greaterThan) SplitBySize(DatFile datFile, long radix)
+        public static (DatFile lessThan, DatFile greaterThan) SplitBySize(DatFile datFile, long radix)
         {
             // Create each of the respective output DATs
             logger.User("Creating and populating new DATs");
@@ -361,7 +360,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>
         /// <returns>Dictionary of ItemType to DatFile mappings</returns>
-        public Dictionary<ItemType, DatFile> SplitByType(DatFile datFile)
+        public static Dictionary<ItemType, DatFile> SplitByType(DatFile datFile)
         {
             // Create each of the respective output DATs
             logger.User("Creating and populating new DATs");
@@ -403,7 +402,7 @@ namespace SabreTools.DatFiles
         /// <param name="indexDat">DatFile to add found items to</param>
         /// <param name="itemType">ItemType to retrieve items for</param>
         /// <returns>DatFile containing all items with the ItemType/returns>
-        private void FillWithItemType(DatFile datFile, DatFile indexDat, ItemType itemType)
+        private static void FillWithItemType(DatFile datFile, DatFile indexDat, ItemType itemType)
         {
             // Loop through and add the items for this index to the output
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>

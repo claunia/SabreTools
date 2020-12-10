@@ -55,19 +55,16 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 return;
             }
 
-            // Get the DatTool for opeations
-            DatTool dt = new DatTool();
-
             // Create the encapsulating datfile
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = name;
             datfile.Header.Description = description;
-            dt.ParseInto(datfile, olddat);
+            DatTool.ParseInto(datfile, olddat);
 
             // Diff against the new datfile
-            DatFile intDat = dt.CreateAndParse(newdat);
+            DatFile intDat = DatTool.CreateAndParse(newdat);
             datfile.DiffAgainst(intDat, false);
-            dt.Write(intDat, outdat);
+            DatTool.Write(intDat, outdat);
         }
     }
 }

@@ -63,9 +63,8 @@ namespace RombaSharp.Features
                 }
 
                 // Now rescan the depot itself
-                DatTool dt = new DatTool();
                 DatFile depot = DatFile.Create();
-                dt.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive);
+                DatTool.PopulateFromDir(depot, depotname, asFiles: TreatAsFile.NonArchive);
                 depot.Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
 
                 // Set the base queries to use

@@ -152,9 +152,6 @@ namespace SabreTools.Features
             List<ParentablePath> inputPaths = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
             List<ParentablePath> basePaths = DirectoryExtensions.GetFilesOnly(GetList(features, BaseDatListValue));
 
-            // Get the DatTool for parsing
-            DatTool dt = new DatTool();
-
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)
             {
@@ -164,7 +161,7 @@ namespace SabreTools.Features
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
                     logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
-                    dt.ParseInto(datFile, inputPath, keep: true,
+                    DatTool.ParseInto(datFile, inputPath, keep: true,
                         keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
@@ -179,7 +176,7 @@ namespace SabreTools.Features
                     string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file, overwriting only if it's not in the current directory
-                    dt.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
+                    DatTool.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
 
                 return;
@@ -219,7 +216,7 @@ namespace SabreTools.Features
                 DatFile dupeData = userInputDat.DiffDuplicates(inputPaths);
 
                 InternalStopwatch watch = new InternalStopwatch("Outputting duplicate DAT");
-                dt.Write(dupeData, OutputDir, overwrite: false);
+                DatTool.Write(dupeData, OutputDir, overwrite: false);
                 watch.Stop();
             }
 
@@ -229,7 +226,7 @@ namespace SabreTools.Features
                 DatFile outerDiffData = userInputDat.DiffNoDuplicates(inputPaths);
 
                 InternalStopwatch watch = new InternalStopwatch("Outputting no duplicate DAT");
-                dt.Write(outerDiffData, OutputDir, overwrite: false);
+                DatTool.Write(outerDiffData, OutputDir, overwrite: false);
                 watch.Stop();
             }
 
@@ -247,7 +244,7 @@ namespace SabreTools.Features
                     string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file
-                    dt.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
+                    DatTool.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
                 });
 
                 watch.Stop();
@@ -283,7 +280,7 @@ namespace SabreTools.Features
                     string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file
-                    dt.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
+                    DatTool.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
                 });
 
                 watch.Stop();
@@ -297,7 +294,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
-                    dt.ParseInto(repDat, inputPath, indexId: 1, keep: true);
+                    DatTool.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     repDat.ApplyExtras(Extras);
@@ -310,7 +307,7 @@ namespace SabreTools.Features
 
                     // Finally output the diffed DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
-                    dt.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
+                    DatTool.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
             }
 
@@ -322,7 +319,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
-                    dt.ParseInto(repDat, inputPath, indexId: 1, keep: true);
+                    DatTool.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     repDat.ApplyExtras(Extras);
@@ -335,7 +332,7 @@ namespace SabreTools.Features
 
                     // Finally output the replaced DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
-                    dt.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
+                    DatTool.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
             }
 
@@ -347,7 +344,7 @@ namespace SabreTools.Features
                 if (string.Equals(userInputDat.Header.Type, "SuperDAT", StringComparison.OrdinalIgnoreCase))
                     userInputDat.ApplySuperDAT(inputPaths);
 
-                dt.Write(userInputDat, OutputDir);
+                DatTool.Write(userInputDat, OutputDir);
             }
         }
     }

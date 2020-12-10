@@ -2,7 +2,6 @@ using SabreTools.Logging;
 
 // TODO: What sort of internal state should this have? Would a single DatFile be appropriate?
 // TODO: How much of the stuff currently in DatFile should be moved here?
-// TODO: Can things like CreateAndParse be moved here?
 namespace SabreTools.DatFiles
 {
     /// <summary>
@@ -15,7 +14,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Logging object
         /// </summary>
-        protected Logger logger;
+        private static readonly Logger logger = new Logger();
 
         #endregion
     }
