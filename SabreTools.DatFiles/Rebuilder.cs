@@ -13,8 +13,17 @@ using SabreTools.Skippers;
 // This file represents all methods related to rebuilding from a DatFile
 namespace SabreTools.DatFiles
 {
-    public partial class DatTool
+    public class Rebuilder
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Process the DAT and find all matches in input files and folders assuming they're a depot
         /// </summary>

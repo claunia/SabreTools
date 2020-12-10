@@ -103,9 +103,9 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     bool success;
                     if (Header.InputDepot?.IsActive ?? false)
-                        success = DatTool.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
+                        success = Rebuilder.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
                     else
-                        success = DatTool.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = Rebuilder.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
@@ -144,9 +144,9 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 bool success;
                 if (Header.InputDepot?.IsActive ?? false)
-                    success = DatTool.RebuildDepot(datdata, Inputs, OutputDir, date, delete, inverse, outputFormat);
+                    success = Rebuilder.RebuildDepot(datdata, Inputs, OutputDir, date, delete, inverse, outputFormat);
                 else
-                    success = DatTool.RebuildGeneric(datdata, Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+                    success = Rebuilder.RebuildGeneric(datdata, Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
 
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)

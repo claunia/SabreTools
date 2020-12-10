@@ -189,7 +189,7 @@ have a current entry in the DAT index.";
             }
 
             // Create the sorting object to use and rebuild the needed files
-            DatTool.RebuildGeneric(
+            Rebuilder.RebuildGeneric(
                 need,
                 onlyDirs,
                 outDir: _depots.Keys.ToList()[0],

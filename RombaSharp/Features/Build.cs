@@ -64,7 +64,7 @@ structure according to the original DAT master directory tree structure.";
                 List<string> onlineDepots = _depots.Where(d => d.Value.Item2).Select(d => d.Key).ToList();
 
                 // Now scan all of those depots and rebuild
-                DatTool.RebuildDepot(
+                Rebuilder.RebuildDepot(
                     datFile,
                     onlineDepots,
                     outDir: outputFolder,
