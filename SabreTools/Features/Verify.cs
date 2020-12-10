@@ -61,10 +61,10 @@ namespace SabreTools.Features
                     DatTool.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
-                    datdata.ApplyExtras(Extras);
-                    datdata.ApplySplitting(splitType, true);
-                    datdata.ApplyFilter(Filter);
-                    datdata.ApplyCleaning(Cleaner);
+                    DatTool.ApplyExtras(datdata, Extras);
+                    DatTool.ApplySplitting(datdata, splitType, true);
+                    DatTool.ApplyFilter(datdata, Filter);
+                    DatTool.ApplyCleaning(datdata, Cleaner);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -108,10 +108,10 @@ namespace SabreTools.Features
                 }
 
                 // Perform additional processing steps
-                datdata.ApplyExtras(Extras);
-                datdata.ApplySplitting(splitType, true);
-                datdata.ApplyFilter(Filter);
-                datdata.ApplyCleaning(Cleaner);
+                DatTool.ApplyExtras(datdata, Extras);
+                DatTool.ApplySplitting(datdata, splitType, true);
+                DatTool.ApplyFilter(datdata, Filter);
+                DatTool.ApplyCleaning(datdata, Cleaner);
 
                 // Set depot information
                 datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;

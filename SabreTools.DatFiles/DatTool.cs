@@ -1,7 +1,7 @@
 using SabreTools.Logging;
 
-// TODO: What sort of internal state should this have? Would a single DatFile be appropriate?
-// TODO: How much of the stuff currently in DatFile should be moved here?
+// TODO: Should each of the individual pieces of partial classes be their own classes?
+// TODO: Is a single, consistent internal state needed for this class at all?
 namespace SabreTools.DatFiles
 {
     /// <summary>

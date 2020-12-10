@@ -167,10 +167,10 @@ namespace SabreTools.Features
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
 
                     // Perform additional processing steps
-                    datFile.ApplyExtras(Extras);
-                    datFile.ApplySplitting(GetSplitType(features), false);
-                    datFile.ApplyFilter(Filter);
-                    datFile.ApplyCleaning(Cleaner);
+                    DatTool.ApplyExtras(datFile, Extras);
+                    DatTool.ApplySplitting(datFile, GetSplitType(features), false);
+                    DatTool.ApplyFilter(datFile, Filter);
+                    DatTool.ApplyCleaning(datFile, Cleaner);
 
                     // Get the correct output path
                     string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
@@ -205,10 +205,10 @@ namespace SabreTools.Features
                 datHeaders = DatTool.PopulateUserData(userInputDat, inputPaths);
 
             // Perform additional processing steps
-            userInputDat.ApplyExtras(Extras);
-            userInputDat.ApplySplitting(GetSplitType(features), false);
-            userInputDat.ApplyFilter(Filter);
-            userInputDat.ApplyCleaning(Cleaner);
+            DatTool.ApplyExtras(userInputDat, Extras);
+            DatTool.ApplySplitting(userInputDat, GetSplitType(features), false);
+            DatTool.ApplyFilter(userInputDat, Filter);
+            DatTool.ApplyCleaning(userInputDat, Cleaner);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
@@ -297,10 +297,10 @@ namespace SabreTools.Features
                     DatTool.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
-                    repDat.ApplyExtras(Extras);
-                    repDat.ApplySplitting(GetSplitType(features), false);
-                    repDat.ApplyFilter(Filter);
-                    repDat.ApplyCleaning(Cleaner);
+                    DatTool.ApplyExtras(repDat, Extras);
+                    DatTool.ApplySplitting(repDat, GetSplitType(features), false);
+                    DatTool.ApplyFilter(repDat, Filter);
+                    DatTool.ApplyCleaning(repDat, Cleaner);
 
                     // Now replace the fields from the base DatFile
                     DatTool.DiffAgainst(userInputDat, repDat, GetBoolean(Features, ByGameValue));
@@ -322,10 +322,10 @@ namespace SabreTools.Features
                     DatTool.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
-                    repDat.ApplyExtras(Extras);
-                    repDat.ApplySplitting(GetSplitType(features), false);
-                    repDat.ApplyFilter(Filter);
-                    repDat.ApplyCleaning(Cleaner);
+                    DatTool.ApplyExtras(repDat, Extras);
+                    DatTool.ApplySplitting(repDat, GetSplitType(features), false);
+                    DatTool.ApplyFilter(repDat, Filter);
+                    DatTool.ApplyCleaning(repDat, Cleaner);
 
                     // Now replace the fields from the base DatFile
                     DatTool.BaseReplace(userInputDat, repDat, updateFields, GetBoolean(features, OnlySameValue));
@@ -342,7 +342,7 @@ namespace SabreTools.Features
             {
                 // If we're in SuperDAT mode, prefix all games with their respective DATs
                 if (string.Equals(userInputDat.Header.Type, "SuperDAT", StringComparison.OrdinalIgnoreCase))
-                    userInputDat.ApplySuperDAT(inputPaths);
+                    DatTool.ApplySuperDAT(userInputDat, inputPaths);
 
                 DatTool.Write(userInputDat, OutputDir);
             }

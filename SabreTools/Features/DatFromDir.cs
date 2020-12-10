@@ -100,10 +100,10 @@ namespace SabreTools.Features
                     if (success)
                     {
                         // Perform additional processing steps
-                        datdata.ApplyExtras(Extras);
-                        datdata.ApplySplitting(splitType, false);
-                        datdata.ApplyFilter(Filter);
-                        datdata.ApplyCleaning(Cleaner);
+                        DatTool.ApplyExtras(datdata, Extras);
+                        DatTool.ApplySplitting(datdata, splitType, false);
+                        DatTool.ApplyFilter(datdata, Filter);
+                        DatTool.ApplyCleaning(datdata, Cleaner);
 
                         // Write out the file
                         DatTool.Write(datdata, OutputDir);
