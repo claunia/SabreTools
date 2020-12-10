@@ -62,11 +62,12 @@ have a current entry in the DAT index.";
             }
 
             // Then process all of the input directories into an internal DAT
+            DatTool dt = new DatTool();
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                df.PopulateFromDir(dir, asFiles: TreatAsFile.NonArchive);
-                df.PopulateFromDir(dir, asFiles: TreatAsFile.All);
+                dt.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive);
+                dt.PopulateFromDir(df, dir, asFiles: TreatAsFile.All);
             }
 
             // Create an empty Dat for files that need to be rebuilt

@@ -67,6 +67,7 @@ Reset the internal state:           reset();";
 
                     // Each batch file has its own state
                     int index = 0;
+                    DatTool dt = new DatTool();
                     DatFile datFile = DatFile.Create();
                     string outputDirectory = null;
 
@@ -153,7 +154,7 @@ Reset the internal state:           reset();";
                                 // Assume there could be multiple
                                 foreach (string input in command.Arguments)
                                 {
-                                    datFile.PopulateFromDir(input);
+                                    dt.PopulateFromDir(datFile, input);
                                 }
 
                                 // TODO: We might not want to remove higher order hashes in the future

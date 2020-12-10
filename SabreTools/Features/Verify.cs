@@ -51,6 +51,9 @@ namespace SabreTools.Features
             bool quickScan = GetBoolean(features, QuickValue);
             var splitType = GetSplitType(features);
 
+            // Get the DatTool for required operations
+            DatTool dt = new DatTool();
+
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
             {
@@ -84,7 +87,7 @@ namespace SabreTools.Features
                         logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
-                            datdata.PopulateFromDir(input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                            dt.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                         }
 
                         datdata.VerifyGeneric(hashOnly);
@@ -133,7 +136,7 @@ namespace SabreTools.Features
                     logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
-                        datdata.PopulateFromDir(input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                        dt.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                     }
 
                     datdata.VerifyGeneric(hashOnly);

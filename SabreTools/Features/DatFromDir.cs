@@ -73,6 +73,7 @@ namespace SabreTools.Features
                 Cleaner.ExcludeFields.Add(Field.DatItem_Date);
 
             // Create a new DATFromDir object and process the inputs
+            DatTool dt = new DatTool();
             DatFile basedat = DatFile.Create(Header);
             basedat.Header.Date = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -89,7 +90,8 @@ namespace SabreTools.Features
                     datdata.FillHeaderFromPath(basePath, noAutomaticDate);
 
                     // Now populate from the path
-                    bool success = datdata.PopulateFromDir(
+                    bool success = dt.PopulateFromDir(
+                        datdata,
                         basePath,
                         asFiles,
                         skipFileType,

@@ -50,10 +50,11 @@ namespace RombaSharp.Features
             }
 
             // Create and write the encapsulating datfile
+            DatTool dt = new DatTool();
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
-            datfile.PopulateFromDir(source, asFiles: TreatAsFile.NonArchive);
+            dt.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive);
             datfile.ApplyCleaning(new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
             datfile.Write(outdat);
         }

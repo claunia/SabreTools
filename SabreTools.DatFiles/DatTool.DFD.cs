@@ -9,22 +9,25 @@ using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.IO;
 
-// This file represents all methods related to creating a DatFile
+// This file represents all methods related to populating a DatFile
 // from a set of files and directories
 namespace SabreTools.DatFiles
 {
     // TODO: See if any of the methods can be broken up a bit more neatly
-    public abstract partial class DatFile
+    // TODO: See if any of this can be more stateful given the inputted DatFile
+    public partial class DatTool
     {
         /// <summary>
         /// Create a new Dat from a directory
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
         public bool PopulateFromDir(
+            DatFile datFile,
             string basePath,
             TreatAsFile asFiles = 0x00,
             SkipFileType skipFileType = SkipFileType.None,
@@ -56,14 +59,14 @@ namespace SabreTools.DatFiles
                 logger.User(totalSize, currentSize);
                 foreach (string item in files)
                 {
-                    CheckFileForHashes(item, basePath, asFiles, skipFileType, addBlanks, hashes);
+                    CheckFileForHashes(datFile, item, basePath, asFiles, skipFileType, addBlanks, hashes);
                     currentSize += new FileInfo(item).Length;
                     logger.User(totalSize, currentSize, item);
                 }
 
                 // Now find all folders that are empty, if we are supposed to
                 if (addBlanks)
-                    ProcessDirectoryBlanks(basePath);
+                    ProcessDirectoryBlanks(datFile, basePath);
             }
             else if (File.Exists(basePath))
             {
@@ -73,7 +76,7 @@ namespace SabreTools.DatFiles
                 logger.User(totalSize, currentSize);
 
                 string parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
-                CheckFileForHashes(basePath, parentPath, asFiles, skipFileType, addBlanks, hashes);
+                CheckFileForHashes(datFile, basePath, parentPath, asFiles, skipFileType, addBlanks, hashes);
                 logger.User(totalSize, totalSize, basePath);
             }
 
@@ -91,16 +94,24 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Check a given file for hashes, based on current settings
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">Filename of the item to be checked</param>
         /// <param name="basePath">Base folder to be used in creating the DAT</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
         /// <param name="skipFileType">Type of files that should be skipped</param>
         /// <param name="addBlanks">True if blank items should be created for empty folders, false otherwise</param>
         /// <param name="hashes">Hashes to include in the information</param>
-        private void CheckFileForHashes(string item, string basePath, TreatAsFile asFiles, SkipFileType skipFileType, bool addBlanks, Hash hashes)
+        private void CheckFileForHashes(
+            DatFile datFile,
+            string item,
+            string basePath,
+            TreatAsFile asFiles,
+            SkipFileType skipFileType,
+            bool addBlanks,
+            Hash hashes)
         {
             // If we're in depot mode, process it separately
-            if (CheckDepotFile(item))
+            if (CheckDepotFile(datFile, item))
                 return;
 
             // Initialize possible archive variables
@@ -131,17 +142,17 @@ namespace SabreTools.DatFiles
 
                     // If we have internal items to process, do so
                     if (extracted != null)
-                        ProcessArchive(item, basePath, extracted);
+                        ProcessArchive(datFile, item, basePath, extracted);
 
                     // Now find all folders that are empty, if we are supposed to
                     if (addBlanks)
-                        ProcessArchiveBlanks(item, basePath, archive);
+                        ProcessArchiveBlanks(datFile, item, basePath, archive);
                 }
 
                 // Process as file if we're treating archives as files
                 else
                 {
-                    ProcessFile(item, basePath, hashes, asFiles);
+                    ProcessFile(datFile, item, basePath, hashes, asFiles);
                 }
             }
 
@@ -154,19 +165,20 @@ namespace SabreTools.DatFiles
 
                 // Process as file
                 else
-                    ProcessFile(item, basePath, hashes, asFiles);
+                    ProcessFile(datFile, item, basePath, hashes, asFiles);
             }
         }
 
         /// <summary>
         /// Check an item as if it's supposed to be in a depot
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">Filename of the item to be checked</param>
         /// <returns>True if we checked a depot file, false otherwise</returns>
-        private bool CheckDepotFile(string item)
+        private bool CheckDepotFile(DatFile datFile, string item)
         {
             // If we're not in Depot mode, return false
-            if (Header.OutputDepot?.IsActive != true)
+            if (datFile.Header.OutputDepot?.IsActive != true)
                 return false;
 
             // Check the file as if it were in a depot
@@ -178,7 +190,7 @@ namespace SabreTools.DatFiles
             {
                 // Add the list if it doesn't exist already
                 Rom rom = new Rom(baseFile);
-                Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
+                datFile.Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
                 logger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
             else
@@ -193,10 +205,11 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Process a single file as an archive
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="extracted">List of BaseFiles representing the internal files</param>
-        private void ProcessArchive(string item, string basePath, List<BaseFile> extracted)
+        private void ProcessArchive(DatFile datFile, string item, string basePath, List<BaseFile> extracted)
         {
             // Get the parent path for all items
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
@@ -205,17 +218,18 @@ namespace SabreTools.DatFiles
             Parallel.ForEach(extracted, Globals.ParallelOptions, baseFile =>
             {
                 DatItem datItem = DatItem.Create(baseFile);
-                ProcessFileHelper(item, datItem, basePath, parent);
+                ProcessFileHelper(datFile, item, datItem, basePath, parent);
             });
         }
 
         /// <summary>
         /// Process blank folders in an archive
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">File containing the blanks</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="archive">BaseArchive to get blanks from</param>
-        private void ProcessArchiveBlanks(string item, string basePath, BaseArchive archive)
+        private void ProcessArchiveBlanks(DatFile datFile, string item, string basePath, BaseArchive archive)
         {
             List<string> empties = new List<string>();
 
@@ -230,18 +244,19 @@ namespace SabreTools.DatFiles
             Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
             {
                 Rom emptyRom = new Rom(Path.Combine(empty, "_"), item);
-                ProcessFileHelper(item, emptyRom, basePath, parent);
+                ProcessFileHelper(datFile, item, emptyRom, basePath, parent);
             });
         }
 
         /// <summary>
         /// Process blank folders in a directory
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="basePath">Path the represents the parent directory</param>
-        private void ProcessDirectoryBlanks(string basePath)
+        private void ProcessDirectoryBlanks(DatFile datFile, string basePath)
         {
             // If we're in depot mode, we don't process blanks
-            if (Header.OutputDepot?.IsActive == true)
+            if (datFile.Header.OutputDepot?.IsActive == true)
                 return;
 
             List<string> empties = DirectoryExtensions.ListEmpty(basePath);
@@ -255,7 +270,7 @@ namespace SabreTools.DatFiles
                 string romname = string.Empty;
 
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
-                if (Header.Type == "SuperDAT")
+                if (datFile.Header.Type == "SuperDAT")
                 {
                     gamename = fulldir.Remove(0, basePath.Length + 1);
                     romname = "_";
@@ -273,33 +288,35 @@ namespace SabreTools.DatFiles
                 romname = romname.Trim(Path.DirectorySeparatorChar);
 
                 logger.Verbose($"Adding blank empty folder: {gamename}");
-                Items["null"].Add(new Rom(romname, gamename));
+                datFile.Items["null"].Add(new Rom(romname, gamename));
             });
         }
 
         /// <summary>
         /// Process a single file as a file
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">File to be added</param>
         /// <param name="basePath">Path the represents the parent directory</param>
         /// <param name="hashes">Hashes to include in the information</param>
         /// <param name="asFiles">TreatAsFiles representing CHD and Archive scanning</param>
-        private void ProcessFile(string item, string basePath, Hash hashes, TreatAsFile asFiles)
+        private void ProcessFile(DatFile datFile, string item, string basePath, Hash hashes, TreatAsFile asFiles)
         {
             logger.Verbose($"'{Path.GetFileName(item)}' treated like a file");
-            BaseFile baseFile = BaseFile.GetInfo(item, header: Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
+            BaseFile baseFile = BaseFile.GetInfo(item, header: datFile.Header.HeaderSkipper, hashes: hashes, asFiles: asFiles);
             DatItem datItem = DatItem.Create(baseFile);
-            ProcessFileHelper(item, datItem, basePath, string.Empty);
+            ProcessFileHelper(datFile, item, datItem, basePath, string.Empty);
         }
 
         /// <summary>
         /// Process a single file as a file (with found Rom data)
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="item">File to be added</param>
         /// <param name="item">Rom data to be used to write to file</param>
         /// <param name="basepath">Path the represents the parent directory</param>
         /// <param name="parent">Parent game to be used</param>
-        private void ProcessFileHelper(string item, DatItem datItem, string basepath, string parent)
+        private void ProcessFileHelper(DatFile datFile, string item, DatItem datItem, string basepath, string parent)
         {
             // If we didn't get an accepted parsed type somehow, cancel out
             List<ItemType> parsed = new List<ItemType> { ItemType.Disk, ItemType.Media, ItemType.Rom };
@@ -316,11 +333,11 @@ namespace SabreTools.DatFiles
                 item = Path.GetFullPath(item);
 
                 // Process the item to sanitize names based on input
-                SetDatItemInfo(datItem, item, parent, basepath);
+                SetDatItemInfo(datFile, datItem, item, parent, basepath);
 
                 // Add the file information to the DAT
                 string key = datItem.GetKey(Field.DatItem_CRC);
-                Items.Add(key, datItem);
+                datFile.Items.Add(key, datItem);
 
                 logger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");
             }
@@ -334,11 +351,12 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Set proper Game and Rom names from user inputs
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="datItem">DatItem representing the input file</param>
         /// <param name="item">Item name to use</param>
         /// <param name="parent">Parent name to use</param>
         /// <param name="basepath">Base path to use</param>
-        private void SetDatItemInfo(DatItem datItem, string item, string parent, string basepath)
+        private void SetDatItemInfo(DatFile datFile, DatItem datItem, string item, string parent, string basepath)
         {
             // Get the data to be added as game and item names
             string machineName, itemName;
@@ -347,7 +365,7 @@ namespace SabreTools.DatFiles
             if (string.IsNullOrWhiteSpace(parent))
             {
                 // If we have a SuperDAT, we want anything that's not the base path as the game, and the file as the rom
-                if (Header.Type == "SuperDAT")
+                if (datFile.Header.Type == "SuperDAT")
                 {
                     machineName = Path.GetDirectoryName(item.Remove(0, basepath.Length));
                     itemName = Path.GetFileName(item);
@@ -365,7 +383,7 @@ namespace SabreTools.DatFiles
             else
             {
                 // If we have a SuperDAT, we want the archive name as the game, and the file as everything else (?)
-                if (Header.Type == "SuperDAT")
+                if (datFile.Header.Type == "SuperDAT")
                 {
                     machineName = parent;
                     itemName = datItem.GetName();
