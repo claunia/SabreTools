@@ -8,7 +8,7 @@ namespace SabreTools.FileTypes
     /// List of known blocks types
     /// </summary>
     /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Enums.cs" />
-    internal enum AaruBlockType : uint
+    public enum AaruBlockType : uint
     {
         /// <summary>Block containing data</summary>
         DataBlock = 0x4B4C4244,
@@ -45,7 +45,7 @@ namespace SabreTools.FileTypes
     }
 
     /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Enums.cs" />
-    internal enum AaruChecksumAlgorithm : byte
+    public enum AaruChecksumAlgorithm : byte
     {
         Invalid = 0, Md5 = 1, Sha1 = 2,
         Sha256 = 3, SpamSum = 4
@@ -55,7 +55,7 @@ namespace SabreTools.FileTypes
     /// List of known data types
     /// </summary>
     /// <see cref="https://github.com/aaru-dps/Aaru/blob/master/Aaru.Images/AaruFormat/Enums.cs" />
-    internal enum AaruDataType : ushort
+    public enum AaruDataType : ushort
     {
         /// <summary>No data</summary>
         NoData = 0,
