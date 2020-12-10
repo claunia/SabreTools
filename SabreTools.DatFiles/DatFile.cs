@@ -181,39 +181,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Add items from another DatFile to the existing DatFile
-        /// </summary>
-        /// <param name="datFile">DatFile to add from</param>
-        /// <param name="delete">If items should be deleted from the source DatFile</param>
-        public void AddFromExisting(DatFile datFile, bool delete = false)
-        {
-            // Get the list of keys from the DAT
-            var keys = datFile.Items.Keys.ToList();
-            foreach (string key in keys)
-            {
-                // Add everything from the key to the internal DAT
-                Items.AddRange(key, datFile.Items[key]);
-
-                // Now remove the key from the source DAT
-                if (delete)
-                    datFile.Items.Remove(key);
-            }
-
-            // Now remove the file dictionary from the source DAT
-            if (delete)
-                datFile.Items = null;
-        }
-
-        /// <summary>
-        /// Apply a DatHeader to an existing DatFile
-        /// </summary>
-        /// <param name="datHeader">DatHeader to get the values from</param>
-        public void ApplyDatHeader(DatHeader datHeader)
-        {
-            Header.ConditionalCopy(datHeader);
-        }
-
-        /// <summary>
         /// Fill the header values based on existing Header and path
         /// </summary>
         /// <param name="path">Path used for creating a name, if necessary</param>

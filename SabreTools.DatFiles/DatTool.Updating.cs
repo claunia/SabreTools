@@ -458,12 +458,37 @@ namespace SabreTools.DatFiles
             watch.Start("Populating internal DAT");
             for (int i = 0; i < inputs.Count; i++)
             {
-                datFile.AddFromExisting(datFiles[i], true);
+                AddFromExisting(datFile, datFiles[i], true);
             }
 
             watch.Stop();
 
             return datFiles.Select(d => d.Header).ToList();
+        }
+    
+        /// <summary>
+        /// Add items from another DatFile to the existing DatFile
+        /// </summary>
+        /// <param name="addTo">DatFile to add to</param>
+        /// <param name="addFrom">DatFile to add from</param>
+        /// <param name="delete">If items should be deleted from the source DatFile</param>
+        private static void AddFromExisting(DatFile addTo, DatFile addFrom, bool delete = false)
+        {
+            // Get the list of keys from the DAT
+            var keys = addFrom.Items.Keys.ToList();
+            foreach (string key in keys)
+            {
+                // Add everything from the key to the internal DAT
+                addTo.Items.AddRange(key, addFrom.Items[key]);
+
+                // Now remove the key from the source DAT
+                if (delete)
+                    addFrom.Items.Remove(key);
+            }
+
+            // Now remove the file dictionary from the source DAT
+            if (delete)
+                addFrom.Items = null;
         }
     }
 }

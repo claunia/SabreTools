@@ -41,7 +41,7 @@ namespace SabreTools.DatFiles.Formats
         /// 6331.sound-u8                            32 BAD CRC(1d298cb0) SHA1(bb0bb62365402543e3154b9a77be9c75010e6abc) BAD_DUMP
         /// 16v8h-blue.u24                          279 NO GOOD DUMP KNOWN
         /// </remarks>
-        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = FileExtensions.GetEncoding(filename);

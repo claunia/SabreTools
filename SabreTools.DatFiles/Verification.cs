@@ -11,8 +11,17 @@ using SabreTools.Logging;
 // This file represents all methods related to verifying with a DatFile
 namespace SabreTools.DatFiles
 {
-    public partial class DatTool
+    public class Verification
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+        
         /// <summary>
         /// Verify a DatFile against a set of depots, leaving only missing files
         /// </summary>

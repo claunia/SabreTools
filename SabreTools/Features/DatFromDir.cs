@@ -89,7 +89,7 @@ namespace SabreTools.Features
                     datdata.FillHeaderFromPath(basePath, noAutomaticDate);
 
                     // Now populate from the path
-                    bool success = DatTool.PopulateFromDir(
+                    bool success = DirFromDat.PopulateFromDir(
                         datdata,
                         basePath,
                         asFiles,

@@ -8,15 +8,24 @@ using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.IO;
+using SabreTools.Logging;
 
 // This file represents all methods related to populating a DatFile
 // from a set of files and directories
 namespace SabreTools.DatFiles
 {
     // TODO: See if any of the methods can be broken up a bit more neatly
-    // TODO: See if any of this can be more stateful given the inputted DatFile
-    public partial class DatTool
+    public class DirFromDat
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Create a new Dat from a directory
         /// </summary>

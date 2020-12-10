@@ -33,7 +33,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        protected override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
             {

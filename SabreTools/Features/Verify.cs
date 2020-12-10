@@ -76,7 +76,7 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     if (Header.InputDepot?.IsActive ?? false)
                     {
-                        DatTool.VerifyDepot(datdata, Inputs);
+                        Verification.VerifyDepot(datdata, Inputs);
                     }
                     else
                     {
@@ -84,10 +84,10 @@ namespace SabreTools.Features
                         logger.User("Processing files:\n");
                         foreach (string input in Inputs)
                         {
-                            DatTool.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                            DirFromDat.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                         }
 
-                        DatTool.VerifyGeneric(datdata, hashOnly);
+                        Verification.VerifyGeneric(datdata, hashOnly);
                     }
 
                     // Now write out if there are any items left
@@ -125,7 +125,7 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 if (Header.InputDepot?.IsActive ?? false)
                 {
-                    DatTool.VerifyDepot(datdata, Inputs);
+                    Verification.VerifyDepot(datdata, Inputs);
                 }
                 else
                 {
@@ -133,10 +133,10 @@ namespace SabreTools.Features
                     logger.User("Processing files:\n");
                     foreach (string input in Inputs)
                     {
-                        DatTool.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
+                        DirFromDat.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                     }
 
-                    DatTool.VerifyGeneric(datdata, hashOnly);
+                    Verification.VerifyGeneric(datdata, hashOnly);
                 }
 
                 // Now write out if there are any items left
