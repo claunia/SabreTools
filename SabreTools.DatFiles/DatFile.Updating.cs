@@ -387,31 +387,6 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Fill a DatFile with all items with a particular ItemType
-        /// </summary>
-        /// <param name="indexDat">DatFile to add found items to</param>
-        /// <param name="itemType">ItemType to retrieve items for</param>
-        /// <returns>DatFile containing all items with the ItemType/returns>
-        public void FillWithItemType(DatFile indexDat, ItemType itemType)
-        {
-            // Loop through and add the items for this index to the output
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
-            {
-                List<DatItem> items = DatItem.Merge(Items[key]);
-
-                // If the rom list is empty or null, just skip it
-                if (items == null || items.Count == 0)
-                    return;
-
-                foreach (DatItem item in items)
-                {
-                    if (item.ItemType == itemType)
-                        indexDat.Items.Add(key, item);
-                }
-            });
-        }
-
-        /// <summary>
         /// Fill a DatFile with all items with a particular source index ID
         /// </summary>
         /// <param name="indexDat">DatFile to add found items to</param>
