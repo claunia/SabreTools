@@ -160,7 +160,7 @@ Reset the internal state:           reset();";
                                 // TODO: We might not want to remove dates in the future
                                 Cleaner dfdCleaner = new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() };
                                 dfdCleaner.ExcludeFields.Add(Field.DatItem_Date);
-                                DatTool.ApplyCleaning(datFile, dfdCleaner);
+                                Modification.ApplyCleaning(datFile, dfdCleaner);
 
                                 break;
 
@@ -205,7 +205,7 @@ Reset the internal state:           reset();";
                                 filter.SetFilter(filterField, filterValue, filterRemove.Value);
 
                                 // Apply the filter blindly
-                                DatTool.ApplyFilter(datFile, filter, filterPerMachine.Value);
+                                Modification.ApplyFilter(datFile, filter, filterPerMachine.Value);
 
                                 // Cleanup after the filter
                                 // TODO: We might not want to remove immediately
@@ -247,7 +247,7 @@ Reset the internal state:           reset();";
                                 extraIni.Items.Add(extraIniItem);
 
                                 // Apply the extra INI blindly
-                                DatTool.ApplyExtras(datFile, extraIni);
+                                Modification.ApplyExtras(datFile, extraIni);
 
                                 break;
 
@@ -271,7 +271,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the merging flag
-                                DatTool.ApplySplitting(datFile, mergingFlag, false);
+                                Modification.ApplySplitting(datFile, mergingFlag, false);
 
                                 break;
 
@@ -285,7 +285,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the logic
-                                DatTool.MachineDescriptionToName(datFile);
+                                Modification.MachineDescriptionToName(datFile);
 
                                 break;
 
@@ -299,7 +299,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Run the 1G1R functionality
-                                DatTool.OneGamePerRegion(datFile, command.Arguments);
+                                Modification.OneGamePerRegion(datFile, command.Arguments);
 
                                 break;
 
@@ -313,7 +313,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the logic
-                                DatTool.OneRomPerGame(datFile);
+                                Modification.OneRomPerGame(datFile);
 
                                 break;
 
@@ -327,7 +327,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Run the removal functionality
-                                DatTool.RemoveFieldsFromItems(datFile, command.Arguments.Select(s => s.AsField()).ToList());
+                                Modification.RemoveFieldsFromItems(datFile, command.Arguments.Select(s => s.AsField()).ToList());
 
                                 break;
 
@@ -341,7 +341,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the logic
-                                DatTool.StripSceneDatesFromItems(datFile);
+                                Modification.StripSceneDatesFromItems(datFile);
 
                                 break;
 

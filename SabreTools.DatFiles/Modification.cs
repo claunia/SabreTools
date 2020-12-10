@@ -10,12 +10,22 @@ using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.Filtering;
 using SabreTools.IO;
+using SabreTools.Logging;
 
 // This file represents all methods related to the Filtering namespace
 namespace SabreTools.DatFiles
 {
-    public partial class DatTool
+    public class Modification
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Apply cleaning methods to the DatFile
         /// </summary>

@@ -54,7 +54,7 @@ namespace RombaSharp.Features
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
             DirFromDat.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive);
-            DatTool.ApplyCleaning(datfile, new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
+            Modification.ApplyCleaning(datfile, new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() });
             Writer.Write(datfile, outdat);
         }
     }

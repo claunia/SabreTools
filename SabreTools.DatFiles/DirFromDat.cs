@@ -10,11 +10,12 @@ using SabreTools.FileTypes;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-// This file represents all methods related to populating a DatFile
-// from a set of files and directories
 namespace SabreTools.DatFiles
 {
-    // TODO: See if any of the methods can be broken up a bit more neatly
+    /// <summary>
+    /// This file represents all methods related to populating a DatFile
+    /// from a set of files and directories
+    /// </summary>
     public class DirFromDat
     {
         #region Logging
