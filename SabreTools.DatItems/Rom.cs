@@ -71,7 +71,7 @@ namespace SabreTools.DatItems
         public string CRC
         {
             get { return _crc.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_crc); }
-            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(Sanitizer.CleanCRC32(value))); }
+            set { _crc = (value == "null" ? Constants.CRCZeroBytes : Utilities.StringToByteArray(CleanCRC32(value))); }
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace SabreTools.DatItems
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(Sanitizer.CleanMD5(value)); }
+            set { _md5 = Utilities.StringToByteArray(CleanMD5(value)); }
         }
 
 #if NET_FRAMEWORK
@@ -94,7 +94,7 @@ namespace SabreTools.DatItems
         public string RIPEMD160
         {
             get { return _ripemd160.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_ripemd160); }
-            set { _ripemd160 = Utilities.StringToByteArray(Sanitizer.CleanRIPEMD160(value)); }
+            set { _ripemd160 = Utilities.StringToByteArray(CleanRIPEMD160(value)); }
         }
 #endif
 
@@ -106,7 +106,7 @@ namespace SabreTools.DatItems
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(Sanitizer.CleanSHA1(value)); }
+            set { _sha1 = Utilities.StringToByteArray(CleanSHA1(value)); }
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace SabreTools.DatItems
         public string SHA256
         {
             get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
-            set { _sha256 = Utilities.StringToByteArray(Sanitizer.CleanSHA256(value)); }
+            set { _sha256 = Utilities.StringToByteArray(CleanSHA256(value)); }
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace SabreTools.DatItems
         public string SHA384
         {
             get { return _sha384.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha384); }
-            set { _sha384 = Utilities.StringToByteArray(Sanitizer.CleanSHA384(value)); }
+            set { _sha384 = Utilities.StringToByteArray(CleanSHA384(value)); }
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace SabreTools.DatItems
         public string SHA512
         {
             get { return _sha512.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha512); }
-            set { _sha512 = Utilities.StringToByteArray(Sanitizer.CleanSHA512(value)); }
+            set { _sha512 = Utilities.StringToByteArray(CleanSHA512(value)); }
         }
 
         /// <summary>
@@ -807,7 +807,7 @@ namespace SabreTools.DatItems
 
             // If we're stripping unicode characters, strip item name
             if (cleaner?.RemoveUnicode == true)
-                Name = Sanitizer.RemoveUnicodeCharacters(Name);
+                Name = RemoveUnicodeCharacters(Name);
 
             // If we are in NTFS trim mode, trim the game name
             if (cleaner?.Trim == true)

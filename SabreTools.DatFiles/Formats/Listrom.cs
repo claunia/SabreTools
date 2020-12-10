@@ -104,7 +104,7 @@ namespace SabreTools.DatFiles.Formats
                             Disk disk = new Disk()
                             {
                                 Name = romname,
-                                SHA1 = Sanitizer.CleanListromHashData(split[0]),
+                                SHA1 = CleanListromHashData(split[0]),
 
                                 Machine = new Machine
                                 {
@@ -127,7 +127,7 @@ namespace SabreTools.DatFiles.Formats
                             Disk disk = new Disk()
                             {
                                 Name = romname,
-                                SHA1 = Sanitizer.CleanListromHashData(split[1]),
+                                SHA1 = CleanListromHashData(split[1]),
                                 ItemStatus = ItemStatus.BadDump,
 
                                 Machine = new Machine
@@ -152,8 +152,8 @@ namespace SabreTools.DatFiles.Formats
                             {
                                 Name = romname,
                                 Size = Sanitizer.CleanLong(split[0]),
-                                CRC = Sanitizer.CleanListromHashData(split[1]),
-                                SHA1 = Sanitizer.CleanListromHashData(split[2]),
+                                CRC = CleanListromHashData(split[1]),
+                                SHA1 = CleanListromHashData(split[2]),
 
                                 Machine = new Machine
                                 {
@@ -200,8 +200,8 @@ namespace SabreTools.DatFiles.Formats
                             {
                                 Name = romname,
                                 Size = Sanitizer.CleanLong(split[0]),
-                                CRC = Sanitizer.CleanListromHashData(split[2]),
-                                SHA1 = Sanitizer.CleanListromHashData(split[3]),
+                                CRC = CleanListromHashData(split[2]),
+                                SHA1 = CleanListromHashData(split[3]),
                                 ItemStatus = ItemStatus.BadDump,
 
                                 Machine = new Machine

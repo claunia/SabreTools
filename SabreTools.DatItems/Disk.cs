@@ -44,7 +44,7 @@ namespace SabreTools.DatItems
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
-            set { _md5 = Utilities.StringToByteArray(Sanitizer.CleanMD5(value)); }
+            set { _md5 = Utilities.StringToByteArray(CleanMD5(value)); }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace SabreTools.DatItems
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
-            set { _sha1 = Utilities.StringToByteArray(Sanitizer.CleanSHA1(value)); }
+            set { _sha1 = Utilities.StringToByteArray(CleanSHA1(value)); }
         }
 
         /// <summary>
@@ -434,7 +434,7 @@ namespace SabreTools.DatItems
 
             // If we're stripping unicode characters, strip item name
             if (cleaner?.RemoveUnicode == true)
-                Name = Sanitizer.RemoveUnicodeCharacters(Name);
+                Name = RemoveUnicodeCharacters(Name);
 
             // If we are in NTFS trim mode, trim the game name
             if (cleaner?.Trim == true)

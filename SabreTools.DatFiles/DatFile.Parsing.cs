@@ -312,5 +312,48 @@ namespace SabreTools.DatFiles
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         protected abstract void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false);
+    
+        #region Input Sanitization
+
+        /// <summary>
+        /// Get a sanitized Date from an input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>Date as a string, if possible</returns>
+        protected string CleanDate(string input)
+        {
+            // Null in, null out
+            if (input == null)
+                return null;
+
+            string date = string.Empty;
+            if (input != null)
+            {
+                if (DateTime.TryParse(input, out DateTime dateTime))
+                    date = dateTime.ToString();
+                else
+                    date = input;
+            }
+
+            return date;
+        }
+    
+        /// <summary>
+        /// Clean a hash string from a Listrom DAT
+        /// </summary>
+        /// <param name="hash">Hash string to sanitize</param>
+        /// <returns>Cleaned string</returns>
+        protected string CleanListromHashData(string hash)
+        {
+            if (hash.StartsWith("CRC"))
+                return hash.Substring(4, 8).ToLowerInvariant();
+
+            else if (hash.StartsWith("SHA1"))
+                return hash.Substring(5, 40).ToLowerInvariant();
+
+            return hash;
+        }
+
+        #endregion
     }
 }

@@ -38,31 +38,12 @@ namespace RombaSharp.Features
             List<string> sha1 = new List<string>();
             foreach (string input in Inputs)
             {
-                string temp = string.Empty;
                 if (input.Length == Constants.CRCLength)
-                {
-                    temp = Sanitizer.CleanCRC32(input);
-                    if (!string.IsNullOrWhiteSpace(temp))
-                    {
-                        crc.Add(temp);
-                    }
-                }
+                    crc.Add(input);
                 else if (input.Length == Constants.MD5Length)
-                {
-                    temp = Sanitizer.CleanMD5(input);
-                    if (!string.IsNullOrWhiteSpace(temp))
-                    {
-                        md5.Add(temp);
-                    }
-                }
+                    md5.Add(input);
                 else if (input.Length == Constants.SHA1Length)
-                {
-                    temp = Sanitizer.CleanSHA1(input);
-                    if (!string.IsNullOrWhiteSpace(temp))
-                    {
-                        sha1.Add(temp);
-                    }
-                }
+                    sha1.Add(input);
             }
 
             SqliteConnection dbc = new SqliteConnection(_connectionString);

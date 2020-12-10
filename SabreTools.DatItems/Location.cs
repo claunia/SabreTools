@@ -146,7 +146,7 @@ namespace SabreTools.DatItems
 
             // If we're stripping unicode characters, strip item name
             if (cleaner?.RemoveUnicode == true)
-                Name = Sanitizer.RemoveUnicodeCharacters(Name);
+                Name = RemoveUnicodeCharacters(Name);
 
             // If we are in NTFS trim mode, trim the game name
             if (cleaner?.Trim == true)

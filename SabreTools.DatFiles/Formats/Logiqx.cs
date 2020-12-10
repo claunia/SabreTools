@@ -622,7 +622,7 @@ namespace SabreTools.DatFiles.Formats
                             SpamSum = reader.GetAttribute("spamsum"),
                             MergeTag = reader.GetAttribute("merge"),
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            Date = Sanitizer.CleanDate(reader.GetAttribute("date")),
+                            Date = CleanDate(reader.GetAttribute("date")),
                             Inverted = reader.GetAttribute("inverted").AsYesNo(),
 
                             Source = new Source
