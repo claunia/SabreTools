@@ -37,7 +37,7 @@ namespace RombaSharp.Features
             foreach (string key in foundDats.Keys)
             {
                 // Get the DAT file associated with the key
-                DatFile datFile = DatTool.CreateAndParse(Path.Combine(_dats, foundDats[key]));
+                DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
                 // Now loop through and see if all of the hash combinations exist in the database
                 /* ended here */

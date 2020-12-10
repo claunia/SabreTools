@@ -51,10 +51,10 @@ namespace RombaSharp.Features
             }
 
             // Create the encapsulating datfile
-            DatFile datfile = DatTool.CreateAndParse(olddat);
+            DatFile datfile = Parser.CreateAndParse(olddat);
 
             // Diff against the new datfile
-            DatFile intDat = DatTool.CreateAndParse(newdat);
+            DatFile intDat = Parser.CreateAndParse(newdat);
             DatTool.DiffAgainst(datfile, intDat, false);
             DatTool.Write(intDat, outdat);
         }

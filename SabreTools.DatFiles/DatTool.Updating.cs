@@ -450,7 +450,7 @@ namespace SabreTools.DatFiles
                 var input = inputs[i];
                 logger.User($"Adding DAT: {input.CurrentPath}");
                 datFiles[i] = DatFile.Create(datFile.Header.CloneFiltering());
-                ParseInto(datFiles[i], input, i, keep: true);
+                Parser.ParseInto(datFiles[i], input, i, keep: true);
             });
 
             watch.Stop();

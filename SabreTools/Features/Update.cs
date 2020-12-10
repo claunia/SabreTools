@@ -161,7 +161,7 @@ namespace SabreTools.Features
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
                     logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
-                    DatTool.ParseInto(datFile, inputPath, keep: true,
+                    Parser.ParseInto(datFile, inputPath, keep: true,
                         keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
@@ -294,7 +294,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
-                    DatTool.ParseInto(repDat, inputPath, indexId: 1, keep: true);
+                    Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     DatTool.ApplyExtras(repDat, Extras);
@@ -319,7 +319,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
-                    DatTool.ParseInto(repDat, inputPath, indexId: 1, keep: true);
+                    Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     DatTool.ApplyExtras(repDat, Extras);

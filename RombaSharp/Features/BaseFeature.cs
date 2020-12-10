@@ -705,7 +705,7 @@ CREATE TABLE IF NOT EXISTS dat (
 
             // Parse the Dat if possible
             logger.User($"Adding from '{dat.Name}'");
-            DatFile tempdat = DatTool.CreateAndParse(fullpath);
+            DatFile tempdat = Parser.CreateAndParse(fullpath);
 
             // If the Dat wasn't empty, add the information
             SqliteCommand slc = null;

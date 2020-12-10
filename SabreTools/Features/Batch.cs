@@ -133,7 +133,7 @@ Reset the internal state:           reset();";
                                 // Assume there could be multiple
                                 foreach (ParentablePath datFilePath in datFilePaths)
                                 {
-                                    DatTool.ParseInto(datFile, datFilePath, index++);
+                                    Parser.ParseInto(datFile, datFilePath, index++);
                                 }
 
                                 break;

@@ -4,12 +4,22 @@ using System.Text.RegularExpressions;
 
 using SabreTools.Core;
 using SabreTools.IO;
+using SabreTools.Logging;
 
 // This file represents all methods related to parsing from a file
 namespace SabreTools.DatFiles
 {
-    public partial class DatTool
+    public class Parser
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Create a DatFile and parse a file into it
         /// </summary>

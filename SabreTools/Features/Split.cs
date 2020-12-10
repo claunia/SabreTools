@@ -55,7 +55,7 @@ namespace SabreTools.Features
             {
                 // Create and fill the new DAT
                 DatFile internalDat = DatFile.Create(Header);
-                DatTool.ParseInto(internalDat, file);
+                Parser.ParseInto(internalDat, file);
 
                 // Get the output directory
                 OutputDir = file.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));

@@ -50,7 +50,7 @@ structure according to the original DAT master directory tree structure.";
             foreach (string key in foundDats.Keys)
             {
                 // Get the DAT file associated with the key
-                DatFile datFile = DatTool.CreateAndParse(Path.Combine(_dats, foundDats[key]));
+                DatFile datFile = Parser.CreateAndParse(Path.Combine(_dats, foundDats[key]));
 
                 // Set the depot values
                 datFile.Header.InputDepot = new DepotInformation(true, 4);

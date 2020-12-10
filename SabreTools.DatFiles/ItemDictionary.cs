@@ -1425,7 +1425,7 @@ namespace SabreTools.DatFiles
 
                 staticLogger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
                 List<string> games = new List<string>();
-                DatFile datdata = DatTool.CreateAndParse(file.CurrentPath);
+                DatFile datdata = Parser.CreateAndParse(file.CurrentPath);
                 datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)

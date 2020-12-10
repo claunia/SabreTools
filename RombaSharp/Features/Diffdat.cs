@@ -59,10 +59,10 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = name;
             datfile.Header.Description = description;
-            DatTool.ParseInto(datfile, olddat);
+            Parser.ParseInto(datfile, olddat);
 
             // Diff against the new datfile
-            DatFile intDat = DatTool.CreateAndParse(newdat);
+            DatFile intDat = Parser.CreateAndParse(newdat);
             DatTool.DiffAgainst(datfile, intDat, false);
             DatTool.Write(intDat, outdat);
         }
