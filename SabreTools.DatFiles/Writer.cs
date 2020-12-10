@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.DatFiles.Reports;
 using SabreTools.IO;
 using SabreTools.Logging;
 
@@ -93,6 +95,21 @@ namespace SabreTools.DatFiles
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Write the stats out to console for the current DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to write from</param>
+        public static void WriteStatsToConsole(DatFile datFile)
+        {
+            if (datFile.Items.RomCount + datFile.Items.DiskCount == 0)
+                datFile.Items.RecalculateStats();
+
+            datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
+
+            var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
+            consoleOutput.ReplaceStatistics(datFile.Header.FileName, datFile.Items.Keys.Count(), datFile.Items);
         }
 
         /// <summary>

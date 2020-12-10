@@ -91,7 +91,7 @@ namespace SabreTools.Features
                     }
 
                     // Now write out if there are any items left
-                    datdata.WriteStatsToConsole();
+                    Writer.WriteStatsToConsole(datdata);
                     Writer.Write(datdata, OutputDir);
                 }
             }
@@ -140,7 +140,7 @@ namespace SabreTools.Features
                 }
 
                 // Now write out if there are any items left
-                datdata.WriteStatsToConsole();
+                Writer.WriteStatsToConsole(datdata);
                 Writer.Write(datdata, OutputDir);
             }
         }

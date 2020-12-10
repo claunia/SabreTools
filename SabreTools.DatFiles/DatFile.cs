@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.DatFiles.Formats;
-using SabreTools.DatFiles.Reports;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
@@ -301,8 +300,6 @@ namespace SabreTools.DatFiles
             return key;
         }
 
-        #region Input Sanitization
-
         /// <summary>
         /// Get a sanitized Date from an input string
         /// </summary>
@@ -343,24 +340,8 @@ namespace SabreTools.DatFiles
         }
 
         #endregion
-
-        #endregion
     
         #region Writing
-
-        /// <summary>
-        /// Write the stats out to console for the current DatFile
-        /// </summary>
-        public void WriteStatsToConsole()
-        {
-            if (Items.RomCount + Items.DiskCount == 0)
-                Items.RecalculateStats();
-
-            Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
-
-            var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
-            consoleOutput.ReplaceStatistics(Header.FileName, Items.Keys.Count(), Items);
-        }
 
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
