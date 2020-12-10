@@ -13,11 +13,6 @@ namespace SabreTools.Core
         #region Public accessors
 
         /// <summary>
-        /// Command line arguments passed in to the parent program
-        /// </summary>
-        public static string CommandLineArgs => string.Join(" ", Environment.GetCommandLineArgs());
-
-        /// <summary>
         /// Directory path for the current executable
         /// </summary>
         public static string ExeDir => Path.GetDirectoryName(ExeName);
@@ -43,6 +38,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Temporary directory location
         /// </summary>
+        /// <remarks>TODO: Find a way to get rid of this as a global variable and put it in DatFile</remarks>
         public static string TempDir { get; set; } = Path.GetTempPath();
 
         #endregion

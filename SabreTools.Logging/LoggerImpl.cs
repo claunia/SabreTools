@@ -119,7 +119,7 @@ namespace SabreTools.Logging
                 };
 
                 _log.WriteLine($"Logging started {StartTime:yyyy-MM-dd HH:mm:ss}");
-                _log.WriteLine($"Command run: {Globals.CommandLineArgs}");
+                _log.WriteLine($"Command run: {string.Join(" ", Environment.GetCommandLineArgs())}");
             }
             catch
             {

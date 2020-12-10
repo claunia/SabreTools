@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Core;
-
 namespace SabreTools.FileTypes
 {
     /// <summary>

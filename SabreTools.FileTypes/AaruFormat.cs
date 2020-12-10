@@ -2,7 +2,6 @@
 using System.Text;
 
 using SabreTools.IO;
-using SabreTools.Core;
 using SabreTools.FileTypes.Aaru;
 
 namespace SabreTools.FileTypes
