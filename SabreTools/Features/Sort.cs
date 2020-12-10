@@ -84,13 +84,16 @@ namespace SabreTools.Features
             var datfiles = GetList(features, DatListValue);
             var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
+            // Get the DatTool for parsing
+            DatTool dt = new DatTool();
+
             // If we are in individual mode, process each DAT on their own, appending the DAT name to the output dir
             if (GetBoolean(features, IndividualValue))
             {
                 foreach (ParentablePath datfile in datfilePaths)
                 {
                     DatFile datdata = DatFile.Create();
-                    datdata.Parse(datfile, int.MaxValue, keep: true);
+                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -128,7 +131,7 @@ namespace SabreTools.Features
                 DatFile datdata = DatFile.Create();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    datdata.Parse(datfile, int.MaxValue, keep: true);
+                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
                 }
 
                 // Set depot information

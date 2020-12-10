@@ -50,12 +50,15 @@ namespace SabreTools.Features
             // Get only files from the inputs
             List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
 
+            // Get the DatTool for parsing
+            DatTool dt = new DatTool();
+
             // Loop over the input files
             foreach (ParentablePath file in files)
             {
                 // Create and fill the new DAT
                 DatFile internalDat = DatFile.Create(Header);
-                internalDat.Parse(file);
+                dt.ParseInto(internalDat, file);
 
                 // Get the output directory
                 OutputDir = file.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));

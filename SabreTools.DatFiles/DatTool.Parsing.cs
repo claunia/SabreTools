@@ -3,36 +3,38 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using SabreTools.Core;
-using SabreTools.DatItems;
 using SabreTools.IO;
 
 // This file represents all methods related to parsing from a file
 namespace SabreTools.DatFiles
 {
-    public abstract partial class DatFile
+    // TODO: Re-evaluate if these should be made static instead of instanced
+    public partial class DatTool
     {
         /// <summary>
         /// Create a DatFile and parse a file into it
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public static DatFile CreateAndParse(string filename, bool throwOnError = false)
+        public DatFile CreateAndParse(string filename, bool throwOnError = false)
         {
-            DatFile datFile = Create();
-            datFile.Parse(new ParentablePath(filename), throwOnError: throwOnError);
+            DatFile datFile = DatFile.Create();
+            ParseInto(datFile, new ParentablePath(filename), throwOnError: throwOnError);
             return datFile;
         }
 
         /// <summary>
         /// Parse a DAT and return all found games and roms within
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void Parse(
+        public void ParseInto(
+            DatFile datFile,
             string filename,
             int indexId = 0,
             bool keep = false,
@@ -41,19 +43,21 @@ namespace SabreTools.DatFiles
             bool throwOnError = false)
         {
             ParentablePath path = new ParentablePath(filename.Trim('"'));
-            Parse(path, indexId, keep, keepext, quotes, throwOnError);
+            ParseInto(datFile, path, indexId, keep, keepext, quotes, throwOnError);
         }
 
         /// <summary>
         /// Parse a DAT and return all found games and roms within
         /// </summary>
+        /// <param name="datFile">Current DatFile object to add to</param>
         /// <param name="input">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public void Parse(
+        public void ParseInto(
+            DatFile datFile,
             ParentablePath input,
             int indexId = 0,
             bool keep = false,
@@ -69,17 +73,21 @@ namespace SabreTools.DatFiles
                 return;
 
             // If the output filename isn't set already, get the internal filename
-            Header.FileName = (string.IsNullOrWhiteSpace(Header.FileName) ? (keepext ? Path.GetFileName(currentPath) : Path.GetFileNameWithoutExtension(currentPath)) : Header.FileName);
+            datFile.Header.FileName = string.IsNullOrWhiteSpace(datFile.Header.FileName)
+                ? (keepext
+                    ? Path.GetFileName(currentPath)
+                    : Path.GetFileNameWithoutExtension(currentPath))
+                : datFile.Header.FileName;
 
             // If the output type isn't set already, get the internal output type
             DatFormat currentPathFormat = GetDatFormat(currentPath);
-            Header.DatFormat = (Header.DatFormat == 0 ? currentPathFormat : Header.DatFormat);
-            Items.SetBucketedBy(Field.DatItem_CRC); // Setting this because it can reduce issues later
+            datFile.Header.DatFormat = datFile.Header.DatFormat == 0 ? currentPathFormat : datFile.Header.DatFormat;
+            datFile.Items.SetBucketedBy(Field.DatItem_CRC); // Setting this because it can reduce issues later
 
             // Now parse the correct type of DAT
             try
             {
-                Create(currentPathFormat, this, quotes)?.ParseFile(currentPath, indexId, keep, throwOnError);
+                DatFile.Create(currentPathFormat, datFile, quotes)?.ParseFile(currentPath, indexId, keep, throwOnError);
             }
             catch (Exception ex)
             {
@@ -93,7 +101,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <returns>The DatFormat corresponding to the DAT</returns>
-        protected DatFormat GetDatFormat(string filename)
+        private DatFormat GetDatFormat(string filename)
         {
             // Limit the output formats based on extension
             if (!PathExtensions.HasValidDatExtension(filename))
@@ -223,137 +231,5 @@ namespace SabreTools.DatFiles
             else
                 return DatFormat.ClrMamePro;
         }
-
-        /// <summary>
-        /// Add a rom to the Dat after checking
-        /// </summary>
-        /// <param name="item">Item data to check against</param>
-        /// <returns>The key for the item</returns>
-        protected string ParseAddHelper(DatItem item)
-        {
-            string key = string.Empty;
-
-            // If we have a Disk, Media, or Rom, clean the hash data
-            if (item.ItemType == ItemType.Disk)
-            {
-                Disk disk = item as Disk;
-
-                // If the file has aboslutely no hashes, skip and log
-                if (disk.ItemStatus != ItemStatus.Nodump
-                    && string.IsNullOrWhiteSpace(disk.MD5)
-                    && string.IsNullOrWhiteSpace(disk.SHA1))
-                {
-                    logger.Verbose($"Incomplete entry for '{disk.Name}' will be output as nodump");
-                    disk.ItemStatus = ItemStatus.Nodump;
-                }
-
-                item = disk;
-            }
-            else if (item.ItemType == ItemType.Rom)
-            {
-                Rom rom = item as Rom;
-
-                // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
-                if (rom.Size == null && !rom.HasHashes())
-                {
-                    // No-op, just catch it so it doesn't go further
-                    logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.Name}'");
-                }
-
-                // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
-                else if ((rom.Size == 0 || rom.Size == null)
-                    && (string.IsNullOrWhiteSpace(rom.CRC) || rom.HasZeroHash()))
-                {
-                    // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
-                    rom.Size = Constants.SizeZero;
-                    rom.CRC = Constants.CRCZero;
-                    rom.MD5 = Constants.MD5Zero;
-#if NET_FRAMEWORK
-                    rom.RIPEMD160 = null; // Constants.RIPEMD160Zero;
-#endif
-                    rom.SHA1 = Constants.SHA1Zero;
-                    rom.SHA256 = null; // Constants.SHA256Zero;
-                    rom.SHA384 = null; // Constants.SHA384Zero;
-                    rom.SHA512 = null; // Constants.SHA512Zero;
-                    rom.SpamSum = null; // Constants.SpamSumZero;
-                }
-
-                // If the file has no size and it's not the above case, skip and log
-                else if (rom.ItemStatus != ItemStatus.Nodump && (rom.Size == 0 || rom.Size == null))
-                {
-                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
-                    rom.ItemStatus = ItemStatus.Nodump;
-                }
-
-                // If the file has a size but aboslutely no hashes, skip and log
-                else if (rom.ItemStatus != ItemStatus.Nodump
-                    && rom.Size != null && rom.Size > 0
-                    && !rom.HasHashes())
-                {
-                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
-                    rom.ItemStatus = ItemStatus.Nodump;
-                }
-
-                item = rom;
-            }
-
-            // Get the key and add the file
-            key = item.GetKey(Field.Machine_Name);
-            Items.Add(key, item);
-
-            return key;
-        }
-
-        /// <summary>
-        /// Parse DatFile and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        protected abstract void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false);
-    
-        #region Input Sanitization
-
-        /// <summary>
-        /// Get a sanitized Date from an input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>Date as a string, if possible</returns>
-        protected string CleanDate(string input)
-        {
-            // Null in, null out
-            if (input == null)
-                return null;
-
-            string date = string.Empty;
-            if (input != null)
-            {
-                if (DateTime.TryParse(input, out DateTime dateTime))
-                    date = dateTime.ToString();
-                else
-                    date = input;
-            }
-
-            return date;
-        }
-    
-        /// <summary>
-        /// Clean a hash string from a Listrom DAT
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected string CleanListromHashData(string hash)
-        {
-            if (hash.StartsWith("CRC"))
-                return hash.Substring(4, 8).ToLowerInvariant();
-
-            else if (hash.StartsWith("SHA1"))
-                return hash.Substring(5, 40).ToLowerInvariant();
-
-            return hash;
-        }
-
-        #endregion
     }
 }

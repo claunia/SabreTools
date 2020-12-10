@@ -134,7 +134,7 @@ Reset the internal state:           reset();";
                                 // Assume there could be multiple
                                 foreach (ParentablePath datFilePath in datFilePaths)
                                 {
-                                    datFile.Parse(datFilePath, index++);
+                                    dt.ParseInto(datFile, datFilePath, index++);
                                 }
 
                                 break;

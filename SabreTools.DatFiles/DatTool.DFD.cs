@@ -15,6 +15,7 @@ namespace SabreTools.DatFiles
 {
     // TODO: See if any of the methods can be broken up a bit more neatly
     // TODO: See if any of this can be more stateful given the inputted DatFile
+    // TODO: Re-evaluate if these should be made static instead of instanced
     public partial class DatTool
     {
         /// <summary>

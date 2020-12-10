@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.DatFiles.Formats;
+using SabreTools.DatItems;
 using SabreTools.Logging;
 using Newtonsoft.Json;
 
@@ -149,7 +151,7 @@ namespace SabreTools.DatFiles
                     return new SabreXML(baseDat);
 
                 case DatFormat.SoftwareList:
-                    return new SoftwareList(baseDat);
+                    return new Formats.SoftwareList(baseDat);
 
                 case DatFormat.SSV:
                     return new SeparatedValue(baseDat, ';');
@@ -235,6 +237,142 @@ namespace SabreTools.DatFiles
                 Header.Description = Header.Name + (bare ? string.Empty : $" ({Header.Date})");
             }
         }
+
+        #endregion
+    
+        #region Parsing
+
+        /// <summary>
+        /// Parse DatFile and return all found games and roms within
+        /// </summary>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        public abstract void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false);
+
+        /// <summary>
+        /// Add a rom to the Dat after checking
+        /// </summary>
+        /// <param name="item">Item data to check against</param>
+        /// <returns>The key for the item</returns>
+        protected string ParseAddHelper(DatItem item)
+        {
+            string key = string.Empty;
+
+            // If we have a Disk, Media, or Rom, clean the hash data
+            if (item.ItemType == ItemType.Disk)
+            {
+                Disk disk = item as Disk;
+
+                // If the file has aboslutely no hashes, skip and log
+                if (disk.ItemStatus != ItemStatus.Nodump
+                    && string.IsNullOrWhiteSpace(disk.MD5)
+                    && string.IsNullOrWhiteSpace(disk.SHA1))
+                {
+                    logger.Verbose($"Incomplete entry for '{disk.Name}' will be output as nodump");
+                    disk.ItemStatus = ItemStatus.Nodump;
+                }
+
+                item = disk;
+            }
+            else if (item.ItemType == ItemType.Rom)
+            {
+                Rom rom = item as Rom;
+
+                // If we have the case where there is SHA-1 and nothing else, we don't fill in any other part of the data
+                if (rom.Size == null && !rom.HasHashes())
+                {
+                    // No-op, just catch it so it doesn't go further
+                    logger.Verbose($"{Header.FileName}: Entry with only SHA-1 found - '{rom.Name}'");
+                }
+
+                // If we have a rom and it's missing size AND the hashes match a 0-byte file, fill in the rest of the info
+                else if ((rom.Size == 0 || rom.Size == null)
+                    && (string.IsNullOrWhiteSpace(rom.CRC) || rom.HasZeroHash()))
+                {
+                    // TODO: All instances of Hash.DeepHashes should be made into 0x0 eventually
+                    rom.Size = Constants.SizeZero;
+                    rom.CRC = Constants.CRCZero;
+                    rom.MD5 = Constants.MD5Zero;
+#if NET_FRAMEWORK
+                    rom.RIPEMD160 = null; // Constants.RIPEMD160Zero;
+#endif
+                    rom.SHA1 = Constants.SHA1Zero;
+                    rom.SHA256 = null; // Constants.SHA256Zero;
+                    rom.SHA384 = null; // Constants.SHA384Zero;
+                    rom.SHA512 = null; // Constants.SHA512Zero;
+                    rom.SpamSum = null; // Constants.SpamSumZero;
+                }
+
+                // If the file has no size and it's not the above case, skip and log
+                else if (rom.ItemStatus != ItemStatus.Nodump && (rom.Size == 0 || rom.Size == null))
+                {
+                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
+                    rom.ItemStatus = ItemStatus.Nodump;
+                }
+
+                // If the file has a size but aboslutely no hashes, skip and log
+                else if (rom.ItemStatus != ItemStatus.Nodump
+                    && rom.Size != null && rom.Size > 0
+                    && !rom.HasHashes())
+                {
+                    logger.Verbose($"{Header.FileName}: Incomplete entry for '{rom.Name}' will be output as nodump");
+                    rom.ItemStatus = ItemStatus.Nodump;
+                }
+
+                item = rom;
+            }
+
+            // Get the key and add the file
+            key = item.GetKey(Field.Machine_Name);
+            Items.Add(key, item);
+
+            return key;
+        }
+
+        #region Input Sanitization
+
+        /// <summary>
+        /// Get a sanitized Date from an input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>Date as a string, if possible</returns>
+        protected string CleanDate(string input)
+        {
+            // Null in, null out
+            if (input == null)
+                return null;
+
+            string date = string.Empty;
+            if (input != null)
+            {
+                if (DateTime.TryParse(input, out DateTime dateTime))
+                    date = dateTime.ToString();
+                else
+                    date = input;
+            }
+
+            return date;
+        }
+    
+        /// <summary>
+        /// Clean a hash string from a Listrom DAT
+        /// </summary>
+        /// <param name="hash">Hash string to sanitize</param>
+        /// <returns>Cleaned string</returns>
+        protected string CleanListromHashData(string hash)
+        {
+            if (hash.StartsWith("CRC"))
+                return hash.Substring(4, 8).ToLowerInvariant();
+
+            else if (hash.StartsWith("SHA1"))
+                return hash.Substring(5, 40).ToLowerInvariant();
+
+            return hash;
+        }
+
+        #endregion
 
         #endregion
     }

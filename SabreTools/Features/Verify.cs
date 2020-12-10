@@ -61,7 +61,7 @@ namespace SabreTools.Features
                 {
                     // Parse in from the file
                     DatFile datdata = DatFile.Create();
-                    datdata.Parse(datfile, int.MaxValue, keep: true);
+                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
                     datdata.ApplyExtras(Extras);
@@ -107,7 +107,7 @@ namespace SabreTools.Features
                 DatFile datdata = DatFile.Create();
                 foreach (ParentablePath datfile in datfilePaths)
                 {
-                    datdata.Parse(datfile, int.MaxValue, keep: true);
+                    dt.ParseInto(datdata, datfile, int.MaxValue, keep: true);
                 }
 
                 // Perform additional processing steps

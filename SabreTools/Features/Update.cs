@@ -152,6 +152,9 @@ namespace SabreTools.Features
             List<ParentablePath> inputPaths = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
             List<ParentablePath> basePaths = DirectoryExtensions.GetFilesOnly(GetList(features, BaseDatListValue));
 
+            // Get the DatTool for parsing
+            DatTool dt = new DatTool();
+
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)
             {
@@ -161,7 +164,7 @@ namespace SabreTools.Features
                     // Create a new base DatFile
                     DatFile datFile = DatFile.Create(Header);
                     logger.User($"Processing '{Path.GetFileName(inputPath.CurrentPath)}'");
-                    datFile.Parse(inputPath, keep: true,
+                    dt.ParseInto(datFile, inputPath, keep: true,
                         keepext: datFile.Header.DatFormat.HasFlag(DatFormat.TSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.CSV)
                             || datFile.Header.DatFormat.HasFlag(DatFormat.SSV));
@@ -294,7 +297,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
-                    repDat.Parse(inputPath, indexId: 1, keep: true);
+                    dt.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     repDat.ApplyExtras(Extras);
@@ -319,7 +322,7 @@ namespace SabreTools.Features
                 {
                     // Parse the path to a new DatFile
                     DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
-                    repDat.Parse(inputPath, indexId: 1, keep: true);
+                    dt.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
                     repDat.ApplyExtras(Extras);
