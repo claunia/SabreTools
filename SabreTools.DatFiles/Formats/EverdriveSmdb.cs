@@ -7,24 +7,24 @@ using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
-    /// Represents parsing and writing of an AttractMode DAT
+    /// Represents parsing and writing of an Everdrive SMDB file
     /// </summary>
-    internal class AttractMode : DatFile
+    internal class EverdriveSMDB : DatFile
     {
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
-        public AttractMode(DatFile datFile)
+        public EverdriveSMDB(DatFile datFile)
             : base(datFile)
         {
         }
 
         /// <summary>
-        /// Parse an AttractMode DAT and return all found games within
+        /// Parse an Everdrive SMDB file and return all found games within
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
@@ -36,59 +36,50 @@ namespace SabreTools.DatFiles
             Encoding enc = FileExtensions.GetEncoding(filename);
             SeparatedValueReader svr = new SeparatedValueReader(File.OpenRead(filename), enc)
             {
-                Header = true,
+                Header = false,
                 Quotes = false,
-                Separator = ';',
-                VerifyFieldCount = true
+                Separator = '\t',
+                VerifyFieldCount = false,
             };
 
-            // If we're somehow at the end of the stream already, we can't do anything
-            if (svr.EndOfStream)
-                return;
-
-            // Read in the header
-            svr.ReadHeader();
-
-            // Header values should match
-            // #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-
-            // Loop through all of the data lines
             while (!svr.EndOfStream)
             {
                 try
                 {
-                    // Get the current line, split and parse
-                    svr.ReadNextLine();
+                    // If we can't read the next line, break
+                    if (!svr.ReadNextLine())
+                        break;
+
+                    // If the line returns null somehow, skip
+                    if (svr.Line == null)
+                        continue;
+
+                    /*
+                    The gameinfo order is as follows
+                    0 - SHA-256
+                    1 - Machine Name/Filename
+                    2 - SHA-1
+                    3 - MD5
+                    4 - CRC32
+                    */
+
+                    string[] fullname = svr.Line[1].Split('/');
 
                     Rom rom = new Rom
                     {
-                        Name = "-",
-                        Size = Constants.SizeZero,
-                        CRC = Constants.CRCZero,
-                        MD5 = Constants.MD5Zero,
-                        SHA1 = Constants.SHA1Zero,
+                        Name = svr.Line[1].Substring(fullname[0].Length + 1),
+                        Size = null, // No size provided, but we don't want the size being 0
+                        CRC = svr.Line[4],
+                        MD5 = svr.Line[3],
+                        SHA1 = svr.Line[2],
+                        SHA256 = svr.Line[0],
                         ItemStatus = ItemStatus.None,
 
                         Machine = new Machine
                         {
-                            Name = svr.Line[0], // #Name
-                            Description = svr.Line[1], // Title
-                            CloneOf = svr.Line[3], // CloneOf
-                            Year = svr.Line[4], // Year
-                            Manufacturer = svr.Line[5], // Manufacturer
-                            Category = svr.Line[6], // Category
-                            Players = svr.Line[7], // Players
-                            Rotation = svr.Line[8], // Rotation
-                            Control = svr.Line[9], // Control
-                            Status = svr.Line[10], // Status
-                            DisplayCount = svr.Line[11], // DisplayCount
-                            DisplayType = svr.Line[12], // DisplayType
-                            Comment = svr.Line[15], // Extra
-                            Buttons = svr.Line[16], // Buttons
+                            Name = fullname[0],
+                            Description = fullname[0],
                         },
-
-                        AltName = svr.Line[13], // AltRomname
-                        AltTitle = svr.Line[14], // AltTitle
 
                         Source = new Source
                         {
@@ -145,12 +136,9 @@ namespace SabreTools.DatFiles
                 SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
                 {
                     Quotes = false,
-                    Separator = ';',
+                    Separator = '\t',
                     VerifyFieldCount = true
                 };
-
-                // Write out the header
-                WriteHeader(svw);
 
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
@@ -192,43 +180,10 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Write out DAT header using the supplied StreamWriter
-        /// </summary>
-        /// <param name="svw">SeparatedValueWriter to output to</param>
-        private void WriteHeader(SeparatedValueWriter svw)
-        {
-            string[] headers = new string[]
-            {
-                "#Name",
-                "Title",
-                "Emulator",
-                "CloneOf",
-                "Year",
-                "Manufacturer",
-                "Category",
-                "Players",
-                "Rotation",
-                "Control",
-                "Status",
-                "DisplayCount",
-                "DisplayType",
-                "AltRomname",
-                "AltTitle",
-                "Extra",
-                "Buttons",
-            };
-
-            svw.WriteHeader(headers);
-
-            svw.Flush();
-        }
-
-        /// <summary>
         /// Write out Game start using the supplied StreamWriter
         /// </summary>
         /// <param name="svw">SeparatedValueWriter to output to</param>
         /// <param name="datItem">DatItem object to be output</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         private void WriteDatItem(SeparatedValueWriter svw, DatItem datItem)
         {
             // No game should start with a path separator
@@ -242,28 +197,19 @@ namespace SabreTools.DatFiles
             {
                 case ItemType.Rom:
                     var rom = datItem as Rom;
+
                     string[] fields = new string[]
                     {
-                            rom.Machine.Name,
-                            rom.Machine.Description,
-                            Header.FileName,
-                            rom.Machine.CloneOf,
-                            rom.Machine.Year,
-                            rom.Machine.Manufacturer,
-                            rom.Machine.Category,
-                            rom.Machine.Players,
-                            rom.Machine.Rotation,
-                            rom.Machine.Control,
-                            rom.ItemStatus.ToString(),
-                            rom.Machine.DisplayCount,
-                            rom.Machine.DisplayType,
-                            rom.AltName,
-                            rom.AltTitle,
-                            rom.Machine.Comment,
-                            rom.Machine.Buttons,
+                            rom.SHA256 ?? string.Empty,
+                            $"{rom.Machine.Name ?? string.Empty}/",
+                            rom.Name ?? string.Empty,
+                            rom.SHA1 ?? string.Empty,
+                            rom.MD5 ?? string.Empty,
+                            rom.CRC ?? string.Empty,
                     };
 
                     svw.WriteValues(fields);
+
                     break;
             }
 

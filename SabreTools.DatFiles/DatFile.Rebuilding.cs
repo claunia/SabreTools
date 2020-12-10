@@ -48,7 +48,7 @@ namespace SabreTools.DatFiles
 
             // Now we want to get forcepack flag if it's not overridden
             if (outputFormat == OutputFormat.Folder && Header.ForcePacking != PackingFlag.None)
-                outputFormat = Header.ForcePacking.AsOutputFormat();
+                outputFormat = GetOutputFormat(Header.ForcePacking);
 
             // Preload the Skipper list
             SkipperMatch.Init();
@@ -188,7 +188,7 @@ namespace SabreTools.DatFiles
 
             // Now we want to get forcepack flag if it's not overridden
             if (outputFormat == OutputFormat.Folder && Header.ForcePacking != PackingFlag.None)
-                outputFormat = Header.ForcePacking.AsOutputFormat();
+                outputFormat = GetOutputFormat(Header.ForcePacking);
 
             // Preload the Skipper list
             SkipperMatch.Init();
@@ -628,6 +628,38 @@ namespace SabreTools.DatFiles
                 stream.Seek(0, SeekOrigin.Begin);
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the default OutputFormat associated with each PackingFlag
+        /// </summary>
+        public OutputFormat GetOutputFormat(PackingFlag packing)
+        {
+#if NET_FRAMEWORK
+            switch (packing)
+            {
+                case PackingFlag.Zip:
+                    return OutputFormat.TorrentZip;
+                case PackingFlag.Unzip:
+                case PackingFlag.Partial:
+                    return OutputFormat.Folder;
+                case PackingFlag.Flat:
+                    return OutputFormat.ParentFolder;
+                case PackingFlag.None:
+                default:
+                    return OutputFormat.Folder;
+            }
+#else
+            return packing switch
+            {
+                PackingFlag.Zip => OutputFormat.TorrentZip,
+                PackingFlag.Unzip => OutputFormat.Folder,
+                PackingFlag.Partial => OutputFormat.Folder,
+                PackingFlag.Flat => OutputFormat.ParentFolder,
+                PackingFlag.None => OutputFormat.Folder,
+                _ => OutputFormat.Folder,
+            };
+#endif
         }
 
         /// <summary>

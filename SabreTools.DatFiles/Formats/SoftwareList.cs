@@ -12,7 +12,7 @@ using SabreTools.DatItems;
 using SabreTools.IO;
 
 // TODO: Use softwarelist.dtd and *try* to make this write more correctly
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents parsing and writing of a SoftwareList

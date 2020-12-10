@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// This holds all of the auxiliary types needed for proper parsing
 /// </summary>
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     #region DatHeader
 

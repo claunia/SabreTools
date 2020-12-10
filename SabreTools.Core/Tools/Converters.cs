@@ -67,28 +67,6 @@ namespace SabreTools.Core.Tools
             return fields;
         }
 
-        /// <summary>
-        /// Get the default OutputFormat associated with each PackingFlag
-        /// </summary>
-        /// <param name="packing"></param>
-        /// <returns></returns>
-        public static OutputFormat AsOutputFormat(this PackingFlag packing)
-        {
-            switch (packing)
-            {
-                case PackingFlag.Zip:
-                    return OutputFormat.TorrentZip;
-                case PackingFlag.Unzip:
-                case PackingFlag.Partial:
-                    return OutputFormat.Folder;
-                case PackingFlag.Flat:
-                    return OutputFormat.ParentFolder;
-                case PackingFlag.None:
-                default:
-                    return OutputFormat.Folder;
-            }
-        }
-
         #endregion
 
         #region String to Enum

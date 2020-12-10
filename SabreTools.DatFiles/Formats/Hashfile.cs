@@ -7,7 +7,7 @@ using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents parsing and writing of a hashfile such as an SFV, MD5, or SHA-1 file

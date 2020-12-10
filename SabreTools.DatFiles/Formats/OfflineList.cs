@@ -10,7 +10,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.IO;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents parsing and writing of an OfflineList XML DAT

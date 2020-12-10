@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles.Formats;
 using SabreTools.IO;
 using Newtonsoft.Json;
 

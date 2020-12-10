@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents parsing and writing of a reference SabreDAT JSON

@@ -5,7 +5,7 @@ using System.Text;
 
 using SabreTools.DatItems;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
     /// Represents parsing and writing of a Missfile
