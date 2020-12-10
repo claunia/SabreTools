@@ -406,7 +406,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Write out the dat with the current state
-                                datFile.Write(outputDirectory, overwrite: overwrite.Value);
+                                dt.Write(datFile, outputDirectory, overwrite: overwrite.Value);
                                 break;
 
                             // Reset the internal state

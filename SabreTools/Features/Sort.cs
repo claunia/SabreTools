@@ -117,7 +117,7 @@ namespace SabreTools.Features
                         datdata.Header.Name = $"fixDAT_{Header.Name}";
                         datdata.Header.Description = $"fixDAT_{Header.Description}";
                         datdata.Items.ClearMarked();
-                        datdata.Write(OutputDir);
+                        dt.Write(datdata, OutputDir);
                     }
                 }
             }
@@ -158,7 +158,7 @@ namespace SabreTools.Features
                     datdata.Header.Name = $"fixDAT_{Header.Name}";
                     datdata.Header.Description = $"fixDAT_{Header.Description}";
                     datdata.Items.ClearMarked();
-                    datdata.Write(OutputDir);
+                    dt.Write(datdata, OutputDir);
                 }
             }
         }

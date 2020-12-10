@@ -59,7 +59,7 @@ namespace RombaSharp.Features
             // Diff against the new datfile
             DatFile intDat = dt.CreateAndParse(newdat);
             datfile.DiffAgainst(intDat, false);
-            intDat.Write(outdat);
+            dt.Write(intDat, outdat);
         }
     }
 }

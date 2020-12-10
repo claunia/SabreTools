@@ -299,7 +299,8 @@ namespace SabreTools.DatFiles
             newDatFile.Header.Type = null;
 
             // Write out the temporary DAT to the proper directory
-            newDatFile.Write(outDir);
+            DatTool dt = new DatTool();
+            dt.Write(newDatFile, outDir);
         }
 
         /// <summary>

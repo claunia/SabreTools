@@ -71,8 +71,8 @@ namespace SabreTools.Features
                     InternalStopwatch watch = new InternalStopwatch("Outputting extension-split DATs");
 
                     // Output both possible DatFiles
-                    extADat.Write(OutputDir);
-                    extBDat.Write(OutputDir);
+                    dt.Write(extADat, OutputDir);
+                    dt.Write(extBDat, OutputDir);
 
                     watch.Stop();
                 }
@@ -87,7 +87,7 @@ namespace SabreTools.Features
                     // Loop through each type DatFile
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
                     {
-                        typeDats[itemType].Write(OutputDir);
+                        dt.Write(typeDats[itemType], OutputDir);
                     });
 
                     watch.Stop();
@@ -111,8 +111,8 @@ namespace SabreTools.Features
                     InternalStopwatch watch = new InternalStopwatch("Outputting size-split DATs");
 
                     // Output both possible DatFiles
-                    lessThan.Write(OutputDir);
-                    greaterThan.Write(OutputDir);
+                    dt.Write(lessThan, OutputDir);
+                    dt.Write(greaterThan, OutputDir);
 
                     watch.Stop();
                 }
@@ -127,7 +127,7 @@ namespace SabreTools.Features
                     // Loop through each type DatFile
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
                     {
-                        typeDats[itemType].Write(OutputDir);
+                        dt.Write(typeDats[itemType], OutputDir);
                     });
 
                     watch.Stop();

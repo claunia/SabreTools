@@ -55,7 +55,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
                 return;
             }
 
-            // Get the DatTool for parsing
+            // Get the DatTool for opeations
             DatTool dt = new DatTool();
 
             // Create the encapsulating datfile
@@ -67,7 +67,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             // Diff against the new datfile
             DatFile intDat = dt.CreateAndParse(newdat);
             datfile.DiffAgainst(intDat, false);
-            intDat.Write(outdat);
+            dt.Write(intDat, outdat);
         }
     }
 }

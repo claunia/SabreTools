@@ -95,7 +95,7 @@ namespace SabreTools.Features
 
                     // Now write out if there are any items left
                     datdata.WriteStatsToConsole();
-                    datdata.Write(OutputDir);
+                    dt.Write(datdata, OutputDir);
                 }
             }
             // Otherwise, process all DATs into the same output
@@ -144,7 +144,7 @@ namespace SabreTools.Features
 
                 // Now write out if there are any items left
                 datdata.WriteStatsToConsole();
-                datdata.Write(OutputDir);
+                dt.Write(datdata, OutputDir);
             }
         }
     }
