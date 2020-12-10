@@ -65,8 +65,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                DirFromDat.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive);
-                DirFromDat.PopulateFromDir(df, dir, asFiles: TreatAsFile.All);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All);
             }
 
             // Create an empty Dat for files that need to be rebuilt

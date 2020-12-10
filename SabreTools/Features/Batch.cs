@@ -153,7 +153,7 @@ Reset the internal state:           reset();";
                                 // Assume there could be multiple
                                 foreach (string input in command.Arguments)
                                 {
-                                    DirFromDat.PopulateFromDir(datFile, input);
+                                    DatFiles.DatFromDir.PopulateFromDir(datFile, input);
                                 }
 
                                 // TODO: We might not want to remove higher order hashes in the future

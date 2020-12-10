@@ -16,7 +16,7 @@ namespace SabreTools.DatFiles
     /// This file represents all methods related to populating a DatFile
     /// from a set of files and directories
     /// </summary>
-    public class DirFromDat
+    public class DatFromDir
     {
         #region Logging
 
