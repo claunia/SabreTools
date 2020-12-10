@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using SabreTools.Core;
-using SabreTools.IO;
+using SabreTools.IO.Readers;
 using SabreTools.Logging;
 
 namespace SabreTools.Filtering

@@ -6,7 +6,8 @@ using System.Text;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
-using SabreTools.IO;
+using SabreTools.IO.Readers;
+using SabreTools.IO.Writers;
 
 namespace SabreTools.DatFiles.Formats
 {
