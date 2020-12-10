@@ -84,7 +84,7 @@ namespace SabreTools.Features
             var datfiles = GetList(features, DatListValue);
             var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
 
-            // Get the DatTool for parsing
+            // Get the DatTool for operations
             DatTool dt = new DatTool();
 
             // If we are in individual mode, process each DAT on their own, appending the DAT name to the output dir
@@ -106,9 +106,9 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     bool success;
                     if (Header.InputDepot?.IsActive ?? false)
-                        success = datdata.RebuildDepot(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
+                        success = dt.RebuildDepot(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), date, delete, inverse, outputFormat);
                     else
-                        success = datdata.RebuildGeneric(Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
+                        success = dt.RebuildGeneric(datdata, Inputs, Path.Combine(OutputDir, datdata.Header.FileName), quickScan, date, delete, inverse, outputFormat, asFiles);
 
                     // If we have a success and we're updating the DAT, write it out
                     if (success && updateDat)
@@ -147,9 +147,9 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 bool success;
                 if (Header.InputDepot?.IsActive ?? false)
-                    success = datdata.RebuildDepot(Inputs, OutputDir, date, delete, inverse, outputFormat);
+                    success = dt.RebuildDepot(datdata, Inputs, OutputDir, date, delete, inverse, outputFormat);
                 else
-                    success = datdata.RebuildGeneric(Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
+                    success = dt.RebuildGeneric(datdata, Inputs, OutputDir, quickScan, date, delete, inverse, outputFormat, asFiles);
 
                 // If we have a success and we're updating the DAT, write it out
                 if (success && updateDat)

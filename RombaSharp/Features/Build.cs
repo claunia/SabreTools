@@ -46,7 +46,7 @@ structure according to the original DAT master directory tree structure.";
             if (string.IsNullOrWhiteSpace(outdat))
                 outdat = "out";
 
-            // Get the DatTool for parsing
+            // Get the DatTool for operations
             DatTool dt = new DatTool();
 
             // Now that we have the dictionary, we can loop through and output to a new folder for each
@@ -67,7 +67,8 @@ structure according to the original DAT master directory tree structure.";
                 List<string> onlineDepots = _depots.Where(d => d.Value.Item2).Select(d => d.Key).ToList();
 
                 // Now scan all of those depots and rebuild
-                datFile.RebuildDepot(
+                dt.RebuildDepot(
+                    datFile,
                     onlineDepots,
                     outDir: outputFolder,
                     outputFormat: (copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip));
