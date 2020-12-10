@@ -79,7 +79,7 @@ namespace SabreTools.Features
                     // If we have the depot flag, respect it
                     if (Header.InputDepot?.IsActive ?? false)
                     {
-                        datdata.VerifyDepot(Inputs);
+                        dt.VerifyDepot(datdata, Inputs);
                     }
                     else
                     {
@@ -90,7 +90,7 @@ namespace SabreTools.Features
                             dt.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                         }
 
-                        datdata.VerifyGeneric(hashOnly);
+                        dt.VerifyGeneric(datdata, hashOnly);
                     }
 
                     // Now write out if there are any items left
@@ -128,7 +128,7 @@ namespace SabreTools.Features
                 // If we have the depot flag, respect it
                 if (Header.InputDepot?.IsActive ?? false)
                 {
-                    datdata.VerifyDepot(Inputs);
+                    dt.VerifyDepot(datdata, Inputs);
                 }
                 else
                 {
@@ -139,7 +139,7 @@ namespace SabreTools.Features
                         dt.PopulateFromDir(datdata, input, asFiles: asFiles, hashes: quickScan ? Hash.CRC : Hash.Standard);
                     }
 
-                    datdata.VerifyGeneric(hashOnly);
+                    dt.VerifyGeneric(datdata, hashOnly);
                 }
 
                 // Now write out if there are any items left
