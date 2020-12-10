@@ -11,15 +11,16 @@ using SabreTools.Logging;
 // This file represents all methods related to converting and updating DatFiles
 namespace SabreTools.DatFiles
 {
-    public abstract partial class DatFile
+    public partial class DatTool
     {
         /// <summary>
         /// Replace item values from the base set represented by the current DAT
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="intDat">DatFile to replace the values in</param>
         /// <param name="updateFields">List of Fields representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public void BaseReplace(DatFile intDat, List<Field> updateFields, bool onlySame)
+        public static void BaseReplace(DatFile datFile, DatFile intDat, List<Field> updateFields, bool onlySame)
         {
             logger.User($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
 
@@ -27,7 +28,7 @@ namespace SabreTools.DatFiles
             if (updateFields.Intersect(DatItem.DatItemFields).Any())
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
-                Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
+                datFile.Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
                 intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
                 // Then we do a hashwise comparison against the base DAT
@@ -37,7 +38,7 @@ namespace SabreTools.DatFiles
                     List<DatItem> newDatItems = new List<DatItem>();
                     foreach (DatItem datItem in datItems)
                     {
-                        List<DatItem> dupes = Items.GetDuplicates(datItem, sorted: true);
+                        List<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
                         DatItem newDatItem = datItem.Clone() as DatItem;
 
                         // Replace fields from the first duplicate, if we have one
@@ -57,7 +58,7 @@ namespace SabreTools.DatFiles
             if (updateFields.Intersect(DatItem.MachineFields).Any())
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
-                Items.BucketBy(Field.Machine_Name, DedupeType.Full);
+                datFile.Items.BucketBy(Field.Machine_Name, DedupeType.Full);
                 intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
 
                 // Then we do a namewise comparison against the base DAT
@@ -68,8 +69,8 @@ namespace SabreTools.DatFiles
                     foreach (DatItem datItem in datItems)
                     {
                         DatItem newDatItem = datItem.Clone() as DatItem;
-                        if (Items.ContainsKey(key) && Items[key].Count() > 0)
-                            newDatItem.Machine.ReplaceFields(Items[key][0].Machine, updateFields, onlySame);
+                        if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count() > 0)
+                            newDatItem.Machine.ReplaceFields(datFile.Items[key][0].Machine, updateFields, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }
@@ -84,15 +85,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Output diffs against a base set represented by the current DAT
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="intDat">DatFile to replace the values in</param>
         /// <param name="useGames">True to diff using games, false to use hashes</param>
-        public void DiffAgainst(DatFile intDat, bool useGames)
+        public static void DiffAgainst(DatFile datFile, DatFile intDat, bool useGames)
         {
             // For comparison's sake, we want to use a base ordering
             if (useGames)
-                Items.BucketBy(Field.Machine_Name, DedupeType.None);
+                datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
             else
-                Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
+                datFile.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
             logger.User($"Comparing '{intDat.Header.FileName}' to base DAT");
 
@@ -110,11 +112,11 @@ namespace SabreTools.DatFiles
                 if (useGames)
                 {
                     // If the base DAT doesn't contain the key, keep it
-                    if (!Items.ContainsKey(key))
+                    if (!datFile.Items.ContainsKey(key))
                         return;
 
                     // If the number of items is different, then keep it
-                    if (Items[key].Count != intDat.Items[key].Count)
+                    if (datFile.Items[key].Count != intDat.Items[key].Count)
                         return;
 
                     // Otherwise, compare by name and hash the remaining files
@@ -122,7 +124,7 @@ namespace SabreTools.DatFiles
                     foreach (DatItem item in intDat.Items[key])
                     {
                         // TODO: Make this granular to name as well
-                        if (!Items[key].Contains(item))
+                        if (!datFile.Items[key].Contains(item))
                         {
                             exactMatch = false;
                             break;
@@ -141,7 +143,7 @@ namespace SabreTools.DatFiles
                     List<DatItem> keepDatItems = new List<DatItem>();
                     foreach (DatItem datItem in datItems)
                     {
-                        if (!Items.HasDuplicates(datItem, true))
+                        if (!datFile.Items.HasDuplicates(datItem, true))
                             keepDatItems.Add(datItem);
                     }
 
@@ -155,15 +157,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Output cascading diffs
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="datHeaders">Dat headers used optionally</param>
         /// <returns>List of DatFiles representing the individually indexed items</returns>
-        public List<DatFile> DiffCascade(List<DatHeader> datHeaders)
+        public static List<DatFile> DiffCascade(DatFile datFile, List<DatHeader> datHeaders)
         {
             // Create a list of DatData objects representing output files
             List<DatFile> outDats = new List<DatFile>();
 
             // Ensure the current DatFile is sorted optimally
-            Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
+            datFile.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
 
             // Loop through each of the inputs and get or create a new DatData object
             InternalStopwatch watch = new InternalStopwatch("Initializing and filling all output DATs");
@@ -172,9 +175,9 @@ namespace SabreTools.DatFiles
             DatFile[] outDatsArray = new DatFile[datHeaders.Count];
             Parallel.For(0, datHeaders.Count, Globals.ParallelOptions, j =>
             {
-                DatFile diffData = Create(datHeaders[j]);
+                DatFile diffData = DatFile.Create(datHeaders[j]);
                 diffData.Items = new ItemDictionary();
-                FillWithSourceIndex(diffData, j);
+                FillWithSourceIndex(datFile, diffData, j);
                 outDatsArray[j] = diffData;
             });
 
@@ -187,33 +190,35 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Output duplicate item diff
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">List of inputs to write out from</param>
-        public DatFile DiffDuplicates(List<string> inputs)
+        public static DatFile DiffDuplicates(DatFile datFile, List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            return DiffDuplicates(paths);
+            return DiffDuplicates(datFile, paths);
         }
 
         /// <summary>
         /// Output duplicate item diff
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">List of inputs to write out from</param>
-        public DatFile DiffDuplicates(List<ParentablePath> inputs)
+        public static DatFile DiffDuplicates(DatFile datFile, List<ParentablePath> inputs)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing duplicate DAT");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrWhiteSpace(Header.FileName))
-                Header.FileName = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+                datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(Header.Name))
-                Header.Name = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.Name))
+                datFile.Header.Name = "datFile.All DATs";
 
-            if (string.IsNullOrWhiteSpace(Header.Description))
-                Header.Description = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.Description))
+                datFile.Header.Description = "datFile.All DATs";
 
             string post = " (Duplicates)";
-            DatFile dupeData = Create(Header);
+            DatFile dupeData = DatFile.Create(datFile.Header);
             dupeData.Header.FileName += post;
             dupeData.Header.Name += post;
             dupeData.Header.Description += post;
@@ -224,9 +229,9 @@ namespace SabreTools.DatFiles
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating duplicate DAT");
 
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -253,30 +258,32 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Output non-cascading diffs
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">List of inputs to write out from</param>
-        public List<DatFile> DiffIndividuals(List<string> inputs)
+        public static List<DatFile> DiffIndividuals(DatFile datFile, List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            return DiffIndividuals(paths);
+            return DiffIndividuals(datFile, paths);
         }
 
         /// <summary>
         /// Output non-cascading diffs
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">List of inputs to write out from</param>
-        public List<DatFile> DiffIndividuals(List<ParentablePath> inputs)
+        public static List<DatFile> DiffIndividuals(DatFile datFile, List<ParentablePath> inputs)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing all individual DATs");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrWhiteSpace(Header.FileName))
-                Header.FileName = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+                datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(Header.Name))
-                Header.Name = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.Name))
+                datFile.Header.Name = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(Header.Description))
-                Header.Description = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.Description))
+                datFile.Header.Description = "All DATs";
 
             // Loop through each of the inputs and get or create a new DatData object
             DatFile[] outDatsArray = new DatFile[inputs.Count];
@@ -284,7 +291,7 @@ namespace SabreTools.DatFiles
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, j =>
             {
                 string innerpost = $" ({j} - {inputs[j].GetNormalizedFileName(true)} Only)";
-                DatFile diffData = Create(Header);
+                DatFile diffData = DatFile.Create(datFile.Header);
                 diffData.Header.FileName += innerpost;
                 diffData.Header.Name += innerpost;
                 diffData.Header.Description += innerpost;
@@ -300,9 +307,9 @@ namespace SabreTools.DatFiles
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating all individual DATs");
 
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -324,33 +331,35 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Output non-duplicate item diff
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">List of inputs to write out from</param>
-        public DatFile DiffNoDuplicates(List<string> inputs)
+        public static DatFile DiffNoDuplicates(DatFile datFile, List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            return DiffNoDuplicates(paths);
+            return DiffNoDuplicates(datFile, paths);
         }
 
         /// <summary>
         /// Output non-duplicate item diff
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">List of inputs to write out from</param>
-        public DatFile DiffNoDuplicates(List<ParentablePath> inputs)
+        public static DatFile DiffNoDuplicates(DatFile datFile, List<ParentablePath> inputs)
         {
             InternalStopwatch watch = new InternalStopwatch("Initializing no duplicate DAT");
 
             // Fill in any information not in the base DAT
-            if (string.IsNullOrWhiteSpace(Header.FileName))
-                Header.FileName = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
+                datFile.Header.FileName = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(Header.Name))
-                Header.Name = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.Name))
+                datFile.Header.Name = "All DATs";
 
-            if (string.IsNullOrWhiteSpace(Header.Description))
-                Header.Description = "All DATs";
+            if (string.IsNullOrWhiteSpace(datFile.Header.Description))
+                datFile.Header.Description = "All DATs";
 
             string post = " (No Duplicates)";
-            DatFile outerDiffData = Create(Header);
+            DatFile outerDiffData = DatFile.Create(datFile.Header);
             outerDiffData.Header.FileName += post;
             outerDiffData.Header.Name += post;
             outerDiffData.Header.Description += post;
@@ -361,9 +370,9 @@ namespace SabreTools.DatFiles
             // Now, loop through the dictionary and populate the correct DATs
             watch.Start("Populating no duplicate DAT");
 
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -389,15 +398,16 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Fill a DatFile with all items with a particular source index ID
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="indexDat">DatFile to add found items to</param>
         /// <param name="index">Source index ID to retrieve items for</param>
         /// <returns>DatFile containing all items with the source index ID/returns>
-        public void FillWithSourceIndex(DatFile indexDat, int index)
+        public static void FillWithSourceIndex(DatFile datFile, DatFile indexDat, int index)
         {
             // Loop through and add the items for this index to the output
-            Parallel.ForEach(Items.Keys, Globals.ParallelOptions, key =>
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(Items[key]);
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -414,20 +424,22 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Populate from multiple paths while returning the invividual headers
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">Paths to DATs to parse</param>
         /// <returns>List of DatHeader objects representing headers</returns>
-        public List<DatHeader> PopulateUserData(List<string> inputs)
+        public static List<DatHeader> PopulateUserData(DatFile datFile, List<string> inputs)
         {
             List<ParentablePath> paths = inputs.Select(i => new ParentablePath(i)).ToList();
-            return PopulateUserData(paths);
+            return PopulateUserData(datFile, paths);
         }
 
         /// <summary>
         /// Populate from multiple paths while returning the invividual headers
         /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
         /// <param name="inputs">Paths to DATs to parse</param>
         /// <returns>List of DatHeader objects representing headers</returns>
-        public List<DatHeader> PopulateUserData(List<ParentablePath> inputs)
+        public static List<DatHeader> PopulateUserData(DatFile datFile, List<ParentablePath> inputs)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
             InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
@@ -437,8 +449,8 @@ namespace SabreTools.DatFiles
             {
                 var input = inputs[i];
                 logger.User($"Adding DAT: {input.CurrentPath}");
-                datFiles[i] = Create(Header.CloneFiltering());
-                DatTool.ParseInto(datFiles[i], input, i, keep: true);
+                datFiles[i] = DatFile.Create(datFile.Header.CloneFiltering());
+                ParseInto(datFiles[i], input, i, keep: true);
             });
 
             watch.Stop();
@@ -446,7 +458,7 @@ namespace SabreTools.DatFiles
             watch.Start("Populating internal DAT");
             for (int i = 0; i < inputs.Count; i++)
             {
-                AddFromExisting(datFiles[i], true);
+                datFile.AddFromExisting(datFiles[i], true);
             }
 
             watch.Stop();
