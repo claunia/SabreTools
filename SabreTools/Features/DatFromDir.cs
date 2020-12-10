@@ -106,7 +106,7 @@ namespace SabreTools.Features
                         DatTool.ApplyCleaning(datdata, Cleaner);
 
                         // Write out the file
-                        DatTool.Write(datdata, OutputDir);
+                        Writer.Write(datdata, OutputDir);
                     }
                     else
                     {

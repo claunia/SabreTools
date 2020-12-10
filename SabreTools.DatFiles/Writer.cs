@@ -4,12 +4,22 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.IO;
+using SabreTools.Logging;
 
 // This file represents all methods related to writing to a file
 namespace SabreTools.DatFiles
 {
-    public partial class DatTool
+    public class Writer
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static readonly Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Create and open an output file for writing direct from a dictionary
         /// </summary>

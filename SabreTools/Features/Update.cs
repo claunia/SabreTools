@@ -176,7 +176,7 @@ namespace SabreTools.Features
                     string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file, overwriting only if it's not in the current directory
-                    DatTool.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
+                    Writer.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
 
                 return;
@@ -216,7 +216,7 @@ namespace SabreTools.Features
                 DatFile dupeData = DatTool.DiffDuplicates(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new InternalStopwatch("Outputting duplicate DAT");
-                DatTool.Write(dupeData, OutputDir, overwrite: false);
+                Writer.Write(dupeData, OutputDir, overwrite: false);
                 watch.Stop();
             }
 
@@ -226,7 +226,7 @@ namespace SabreTools.Features
                 DatFile outerDiffData = DatTool.DiffNoDuplicates(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new InternalStopwatch("Outputting no duplicate DAT");
-                DatTool.Write(outerDiffData, OutputDir, overwrite: false);
+                Writer.Write(outerDiffData, OutputDir, overwrite: false);
                 watch.Stop();
             }
 
@@ -244,7 +244,7 @@ namespace SabreTools.Features
                     string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file
-                    DatTool.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
+                    Writer.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
                 });
 
                 watch.Stop();
@@ -280,7 +280,7 @@ namespace SabreTools.Features
                     string path = inputPaths[j].GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
 
                     // Try to output the file
-                    DatTool.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
+                    Writer.Write(datFiles[j], path, overwrite: GetBoolean(features, InplaceValue));
                 });
 
                 watch.Stop();
@@ -307,7 +307,7 @@ namespace SabreTools.Features
 
                     // Finally output the diffed DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
-                    DatTool.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
+                    Writer.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
             }
 
@@ -332,7 +332,7 @@ namespace SabreTools.Features
 
                     // Finally output the replaced DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
-                    DatTool.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
+                    Writer.Write(repDat, interOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
             }
 
@@ -344,7 +344,7 @@ namespace SabreTools.Features
                 if (string.Equals(userInputDat.Header.Type, "SuperDAT", StringComparison.OrdinalIgnoreCase))
                     DatTool.ApplySuperDAT(userInputDat, inputPaths);
 
-                DatTool.Write(userInputDat, OutputDir);
+                Writer.Write(userInputDat, OutputDir);
             }
         }
     }
