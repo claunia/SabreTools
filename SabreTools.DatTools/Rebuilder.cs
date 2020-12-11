@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
@@ -13,7 +14,7 @@ using SabreTools.Logging;
 using SabreTools.Skippers;
 
 // This file represents all methods related to rebuilding from a DatFile
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     public class Rebuilder
     {

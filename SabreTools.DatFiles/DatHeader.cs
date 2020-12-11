@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
-using SabreTools.IO;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatFiles
@@ -1061,7 +1060,7 @@ namespace SabreTools.DatFiles
             string filename = string.IsNullOrWhiteSpace(FileName) ? Description : FileName;
 
             // Strip off the extension if it's a holdover from the DAT
-            if (Parser.HasValidDatExtension(filename))
+            if (Utilities.HasValidDatExtension(filename))
                 filename = Path.GetFileNameWithoutExtension(filename);
 
             string outfile = $"{outDir}{filename}{extension}";

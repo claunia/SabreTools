@@ -16,17 +16,8 @@ namespace SabreTools.DatFiles
     /// <summary>
     /// Represents a format-agnostic DAT
     /// </summary>
-    /// <remarks>
-    /// The fact that this one class could be separated into as many partial
-    /// classes as it did means that the functionality here should probably
-    /// be split out into either separate classes or even an entirely separate
-    /// namespace. Also, with that in mind, each of the individual DatFile types
-    /// probably should only need to inherit from a thin abstract class and
-    /// should not be exposed as part of the library, instead being taken care
-    /// of behind the scenes as part of the reading and writing.
-    /// </remarks>
     [JsonObject("datfile"), XmlRoot("datfile")]
-    public abstract partial class DatFile
+    public abstract class DatFile
     {
         #region Fields
 

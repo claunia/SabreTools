@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.IO;
@@ -153,7 +154,7 @@ Reset the internal state:           reset();";
                                 // Assume there could be multiple
                                 foreach (string input in command.Arguments)
                                 {
-                                    DatFiles.DatFromDir.PopulateFromDir(datFile, input);
+                                    DatTools.DatFromDir.PopulateFromDir(datFile, input);
                                 }
 
                                 // TODO: We might not want to remove higher order hashes in the future

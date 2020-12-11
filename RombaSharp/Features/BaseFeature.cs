@@ -9,6 +9,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
+using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Help;
 using SabreTools.Logging;

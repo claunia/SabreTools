@@ -7,13 +7,14 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Filtering;
 using SabreTools.IO;
 using SabreTools.Logging;
 
 // This file represents all methods related to the Filtering namespace
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     public class Modification
     {

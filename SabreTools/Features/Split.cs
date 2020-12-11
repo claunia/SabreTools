@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;

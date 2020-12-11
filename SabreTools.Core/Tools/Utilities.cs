@@ -146,6 +146,39 @@ namespace SabreTools.Core.Tools
             return path;
         }
 
+        /// <summary>
+        /// Get if the given path has a valid DAT extension
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>True if the extension is valid, false otherwise</returns>
+        public static bool HasValidDatExtension(string path)
+        {
+            // Get the extension from the path, if possible
+            string ext = Path.GetExtension(path).TrimStart('.');
+
+            // Check against the list of known DAT extensions
+            switch (ext)
+            {
+                case "csv":
+                case "dat":
+                case "json":
+                case "md5":
+                case "ripemd160":
+                case "sfv":
+                case "sha1":
+                case "sha256":
+                case "sha384":
+                case "sha512":
+                case "ssv":
+                case "tsv":
+                case "txt":
+                case "xml":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         /// Indicates whether the specified array is null or has a length of zero
         /// </summary>
         /// <param name="array">The array to test</param>

@@ -4,7 +4,9 @@ using System.IO;
 
 using SabreTools.Core;
 using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using SabreTools.Help;
+
 namespace SabreTools.Features
 {
     internal class DatFromDir : BaseFeature
@@ -89,7 +91,7 @@ namespace SabreTools.Features
                     datdata.FillHeaderFromPath(basePath, noAutomaticDate);
 
                     // Now populate from the path
-                    bool success = DatFiles.DatFromDir.PopulateFromDir(
+                    bool success = DatTools.DatFromDir.PopulateFromDir(
                         datdata,
                         basePath,
                         asFiles,

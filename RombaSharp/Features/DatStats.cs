@@ -2,7 +2,7 @@
 using System.IO;
 
 using SabreTools.Core;
-using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using SabreTools.Help;
 
 namespace RombaSharp.Features
@@ -30,7 +30,7 @@ namespace RombaSharp.Features
                 Inputs = new List<string> { Path.GetFullPath(_dats) };
 
             // Now output the stats for all inputs
-            ItemDictionary.OutputStats(Inputs, "rombasharp-datstats", null /* outDir */, true /* single */, true /* baddumpCol */, true /* nodumpCol */, StatReportFormat.Textfile);
+            Statistics.OutputStats(Inputs, "rombasharp-datstats", null /* outDir */, true /* single */, true /* baddumpCol */, true /* nodumpCol */, StatReportFormat.Textfile);
         }
     }
 }

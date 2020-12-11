@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.DatFiles;
+using SabreTools.DatTools;
 using SabreTools.Help;
 
 namespace SabreTools.Features
@@ -55,7 +55,7 @@ The stats that are outputted are as follows:
                 filename = Path.GetFileName(filename);
             }
 
-            ItemDictionary.OutputStats(
+            Statistics.OutputStats(
                 Inputs,
                 filename,
                 OutputDir,

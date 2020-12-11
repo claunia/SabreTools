@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-// TODO: Should each of the individual pieces of partial classes be their own classes?
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     // This file represents all methods related to converting and updating DatFiles
     public class DatTool

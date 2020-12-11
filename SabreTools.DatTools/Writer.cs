@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.DatFiles.Reports;
 using SabreTools.IO;
 using SabreTools.Logging;
 
 // This file represents all methods related to writing to a file
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     public class Writer
     {

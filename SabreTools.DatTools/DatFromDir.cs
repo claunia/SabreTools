@@ -5,13 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-namespace SabreTools.DatFiles
+namespace SabreTools.DatTools
 {
     /// <summary>
     /// This file represents all methods related to populating a DatFile
