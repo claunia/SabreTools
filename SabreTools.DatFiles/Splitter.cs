@@ -63,11 +63,11 @@ namespace SabreTools.DatFiles
                 List<DatItem> items = datFile.Items[key];
                 foreach (DatItem item in items)
                 {
-                    if (newExtA.Contains(PathExtensions.GetNormalizedExtension(item.GetName() ?? string.Empty)))
+                    if (newExtA.Contains((item.GetName() ?? string.Empty).GetNormalizedExtension()))
                     {
                         extADat.Items.Add(key, item);
                     }
-                    else if (newExtB.Contains(PathExtensions.GetNormalizedExtension(item.GetName() ?? string.Empty)))
+                    else if (newExtB.Contains((item.GetName() ?? string.Empty).GetNormalizedExtension()))
                     {
                         extBDat.Items.Add(key, item);
                     }

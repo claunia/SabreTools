@@ -337,7 +337,7 @@ namespace SabreTools.FileTypes
             baseFile = GetInfo(inputStream, keepReadOpen: true);
 
             // Get the output file name
-            string outfile = Path.Combine(outDir, PathExtensions.GetDepotPath(Utilities.ByteArrayToString(baseFile.SHA1), Depth));
+            string outfile = Path.Combine(outDir, Utilities.GetDepotPath(Utilities.ByteArrayToString(baseFile.SHA1), Depth));
             outfile = outfile.Replace(".gz", ".xz");
 
             // Check to see if the folder needs to be created

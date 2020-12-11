@@ -35,7 +35,7 @@ namespace RombaSharp.Features
             string newdat = GetString(features, NewStringValue);
 
             // Ensure the output directory
-            DirectoryExtensions.Ensure(outdat, create: true);
+            outdat.Ensure(create: true);
 
             // Check that all required files exist
             if (!File.Exists(olddat))

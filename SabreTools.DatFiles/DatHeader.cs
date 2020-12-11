@@ -1058,10 +1058,10 @@ namespace SabreTools.DatFiles
         /// <returns>String containing the new filename</returns>
         private string CreateOutFileNamesHelper(string outDir, string extension, bool overwrite)
         {
-            string filename = (string.IsNullOrWhiteSpace(FileName) ? Description : FileName);
+            string filename = string.IsNullOrWhiteSpace(FileName) ? Description : FileName;
 
             // Strip off the extension if it's a holdover from the DAT
-            if (PathExtensions.HasValidDatExtension(filename))
+            if (Parser.HasValidDatExtension(filename))
                 filename = Path.GetFileNameWithoutExtension(filename);
 
             string outfile = $"{outDir}{filename}{extension}";

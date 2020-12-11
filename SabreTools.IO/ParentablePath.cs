@@ -71,7 +71,7 @@ namespace SabreTools.IO
         public string GetOutputPath(string outDir, bool inplace)
         {
             // First, we need to ensure the output directory
-            outDir = DirectoryExtensions.Ensure(outDir);
+            outDir = outDir.Ensure();
 
             // Check if we have a split path or not
             bool splitpath = !string.IsNullOrWhiteSpace(ParentPath);

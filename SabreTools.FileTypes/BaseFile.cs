@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Skippers;
@@ -207,7 +208,7 @@ namespace SabreTools.FileTypes
                 return outFileType;
 
             // First line of defense is going to be the extension, for better or worse
-            if (!PathExtensions.HasValidArchiveExtension(input))
+            if (!HasValidArchiveExtension(input))
                 return outFileType;
 
             // Read the first bytes of the file and get the magic number
@@ -448,6 +449,48 @@ namespace SabreTools.FileTypes
                     input.Dispose();
                 else
                     input.SeekIfPossible();
+            }
+        }
+
+        /// <summary>
+        /// Get if the given path has a valid DAT extension
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>True if the extension is valid, false otherwise</returns>
+        private static bool HasValidArchiveExtension(string path)
+        {
+            // Get the extension from the path, if possible
+            string ext = path.GetNormalizedExtension();
+
+            // Check against the list of known archive extensions
+            switch (ext)
+            {
+                // Aaruformat
+                case "aaru":
+                case "aaruf":
+                case "aaruformat":
+                case "aif":
+                case "dicf":
+
+                // Archives
+                case "7z":
+                case "gz":
+                case "lzma":
+                case "rar":
+                case "rev":
+                case "r00":
+                case "r01":
+                case "tar":
+                case "tgz":
+                case "tlz":
+                case "zip":
+                case "zipx":
+
+                // CHD
+                case "chd":
+                    return true;
+                default:
+                    return false;
             }
         }
 

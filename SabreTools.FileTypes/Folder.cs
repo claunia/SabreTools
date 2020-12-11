@@ -201,7 +201,7 @@ namespace SabreTools.FileTypes
                 Directory.CreateDirectory(outDir);
 
                 // Get all files from the input directory
-                List<string> files = DirectoryExtensions.GetFilesOrdered(this.Filename);
+                List<string> files = PathTool.GetFilesOrdered(this.Filename);
 
                 // Now sort through to find the first file that matches
                 string match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
@@ -239,7 +239,7 @@ namespace SabreTools.FileTypes
                 Directory.CreateDirectory(this.Filename);
 
                 // Get all files from the input directory
-                List<string> files = DirectoryExtensions.GetFilesOrdered(this.Filename);
+                List<string> files = PathTool.GetFilesOrdered(this.Filename);
 
                 // Now sort through to find the first file that matches
                 string match = files.Where(s => s.EndsWith(entryName)).FirstOrDefault();
@@ -296,7 +296,7 @@ namespace SabreTools.FileTypes
         /// <returns>List of empty folders in the folder</returns>
         public virtual List<string> GetEmptyFolders()
         {
-            return DirectoryExtensions.ListEmpty(this.Filename);
+            return this.Filename.ListEmpty();
         }
 
         #endregion

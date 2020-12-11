@@ -45,7 +45,7 @@ namespace SabreTools.DatFiles
             Hash hashes = Hash.Standard)
         {
             // Clean the temp directory path
-            Globals.TempDir = DirectoryExtensions.Ensure(Globals.TempDir, temp: true);
+            Globals.TempDir = Globals.TempDir.Ensure(temp: true);
 
             // Set the progress variables
             long totalSize = 0;
@@ -269,7 +269,7 @@ namespace SabreTools.DatFiles
             if (datFile.Header.OutputDepot?.IsActive == true)
                 return;
 
-            List<string> empties = DirectoryExtensions.ListEmpty(basePath);
+            List<string> empties = basePath.ListEmpty();
             Parallel.ForEach(empties, Globals.ParallelOptions, dir =>
             {
                 // Get the full path for the directory

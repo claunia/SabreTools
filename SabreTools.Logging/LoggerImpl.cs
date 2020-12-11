@@ -87,7 +87,7 @@ namespace SabreTools.Logging
         {
             // Set and create the output
             if (addDate)
-                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{PathExtensions.GetNormalizedExtension(filename)}";
+                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{filename.GetNormalizedExtension()}";
             else
                 Filename = filename;
         }

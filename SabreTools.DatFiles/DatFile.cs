@@ -5,9 +5,9 @@ using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
-using SabreTools.IO;
 using SabreTools.Logging;
 using Newtonsoft.Json;
 
@@ -467,7 +467,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
-                        name = PathExtensions.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
+                        name = Utilities.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
                         item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" } );
                     }
                 }
@@ -478,7 +478,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(media.SHA1))
                     {
-                        name = PathExtensions.GetDepotPath(media.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
+                        name = Utilities.GetDepotPath(media.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
                         item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" });
                     }
                 }
@@ -489,7 +489,7 @@ namespace SabreTools.DatFiles
                     // We can only write out if there's a SHA-1
                     if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
-                        name = PathExtensions.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
+                        name = Utilities.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
                         item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" });
                     }
                 }

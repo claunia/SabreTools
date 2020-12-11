@@ -48,7 +48,7 @@ namespace SabreTools.Features
                 return;
 
             // Get only files from the inputs
-            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
+            List<ParentablePath> files = PathTool.GetFilesOnly(Inputs, appendparent: true);
 
             // Loop over the input files
             foreach (ParentablePath file in files)

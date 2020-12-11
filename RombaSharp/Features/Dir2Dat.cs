@@ -40,7 +40,7 @@ namespace RombaSharp.Features
             string outdat = GetString(features, OutStringValue);
 
             // Ensure the output directory
-            DirectoryExtensions.Ensure(outdat, create: true);
+            outdat.Ensure(create: true);
 
             // Check that all required directories exist
             if (!Directory.Exists(source))

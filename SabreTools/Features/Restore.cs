@@ -41,7 +41,7 @@ The following systems have headers that this program can work with:
             base.ProcessFeatures(features);
 
             // Get only files from the inputs
-            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(Inputs);
+            List<ParentablePath> files = PathTool.GetFilesOnly(Inputs);
             foreach (ParentablePath file in files)
             {
                 RestoreHeader(file.CurrentPath, OutputDir);

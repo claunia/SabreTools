@@ -58,7 +58,7 @@ structure according to the original DAT master directory tree structure.";
 
                 // Create the new output directory if it doesn't exist
                 string outputFolder = Path.Combine(outdat, Path.GetFileNameWithoutExtension(foundDats[key]));
-                DirectoryExtensions.Ensure(outputFolder, create: true);
+                outputFolder.Ensure(create: true);
 
                 // Get all online depots
                 List<string> onlineDepots = _depots.Where(d => d.Value.Item2).Select(d => d.Key).ToList();

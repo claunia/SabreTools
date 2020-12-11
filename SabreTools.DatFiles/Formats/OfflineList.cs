@@ -898,7 +898,7 @@ namespace SabreTools.DatFiles.Formats
             if (datItem.ItemType == ItemType.Rom)
             {
                 var rom = datItem as Rom;
-                string tempext = "." + PathExtensions.GetNormalizedExtension(rom.Name);
+                string tempext = "." + rom.Name.GetNormalizedExtension();
 
                 xtw.WriteStartElement("files");
                 if (!string.IsNullOrWhiteSpace(rom.CRC))

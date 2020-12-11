@@ -78,7 +78,7 @@ namespace SabreTools.DatFiles
             string currentPath = input.CurrentPath;
 
             // Check the file extension first as a safeguard
-            if (!PathExtensions.HasValidDatExtension(currentPath))
+            if (!HasValidDatExtension(currentPath))
                 return;
 
             // If the output filename isn't set already, get the internal filename
@@ -106,6 +106,39 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Get if the given path has a valid DAT extension
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>True if the extension is valid, false otherwise</returns>
+        public static bool HasValidDatExtension(string path)
+        {
+            // Get the extension from the path, if possible
+            string ext = path.GetNormalizedExtension();
+
+            // Check against the list of known DAT extensions
+            switch (ext)
+            {
+                case "csv":
+                case "dat":
+                case "json":
+                case "md5":
+                case "ripemd160":
+                case "sfv":
+                case "sha1":
+                case "sha256":
+                case "sha384":
+                case "sha512":
+                case "ssv":
+                case "tsv":
+                case "txt":
+                case "xml":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
         /// Get what type of DAT the input file is
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
@@ -113,11 +146,11 @@ namespace SabreTools.DatFiles
         private static DatFormat GetDatFormat(string filename)
         {
             // Limit the output formats based on extension
-            if (!PathExtensions.HasValidDatExtension(filename))
+            if (!HasValidDatExtension(filename))
                 return 0;
 
             // Get the extension from the filename
-            string ext = PathExtensions.GetNormalizedExtension(filename);
+            string ext = filename.GetNormalizedExtension();
 
             // Check if file exists
             if (!File.Exists(filename))

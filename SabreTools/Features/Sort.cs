@@ -82,7 +82,7 @@ namespace SabreTools.Features
 
             // Get a list of files from the input datfiles
             var datfiles = GetList(features, DatListValue);
-            var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
+            var datfilePaths = PathTool.GetFilesOnly(datfiles);
 
             // If we are in individual mode, process each DAT on their own, appending the DAT name to the output dir
             if (GetBoolean(features, IndividualValue))

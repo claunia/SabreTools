@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
-using SabreTools.IO;
 using SabreTools.Logging;
 
 // This file represents all methods related to verifying with a DatFile
@@ -64,7 +64,7 @@ namespace SabreTools.DatFiles
                 logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string subpath = PathExtensions.GetDepotPath(hash, datFile.Header.InputDepot.Depth);
+                string subpath = Utilities.GetDepotPath(hash, datFile.Header.InputDepot.Depth);
 
                 // Find the first depot that includes the hash
                 string foundpath = null;

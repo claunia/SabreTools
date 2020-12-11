@@ -149,8 +149,8 @@ namespace SabreTools.Features
                 updateFields = new List<Field>() { Field.DatItem_Name };
 
             // Ensure we only have files in the inputs
-            List<ParentablePath> inputPaths = DirectoryExtensions.GetFilesOnly(Inputs, appendparent: true);
-            List<ParentablePath> basePaths = DirectoryExtensions.GetFilesOnly(GetList(features, BaseDatListValue));
+            List<ParentablePath> inputPaths = PathTool.GetFilesOnly(Inputs, appendparent: true);
+            List<ParentablePath> basePaths = PathTool.GetFilesOnly(GetList(features, BaseDatListValue));
 
             // If we're in standard update mode, run through all of the inputs
             if (updateMode == UpdateMode.None)

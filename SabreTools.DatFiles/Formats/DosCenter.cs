@@ -37,7 +37,7 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
-            Encoding enc = FileExtensions.GetEncoding(filename);
+            Encoding enc = filename.GetEncoding();
             ClrMameProReader cmpr = new ClrMameProReader(File.OpenRead(filename), enc)
             {
                 DosCenter = true

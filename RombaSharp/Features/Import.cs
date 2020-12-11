@@ -29,7 +29,7 @@ namespace RombaSharp.Features
             logger.Error("This feature is not yet implemented: import");
 
             // First ensure the inputs and database connection
-            Inputs = DirectoryExtensions.GetFilesOnly(Inputs).Select(p => p.CurrentPath).ToList();
+            Inputs = PathTool.GetFilesOnly(Inputs).Select(p => p.CurrentPath).ToList();
             SqliteConnection dbc = new SqliteConnection(_connectionString);
             SqliteCommand slc = new SqliteCommand();
             dbc.Open();

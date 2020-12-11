@@ -1369,13 +1369,13 @@ namespace SabreTools.DatFiles
                 reportName = "report";
 
             // Get the proper output directory name
-            outDir = DirectoryExtensions.Ensure(outDir);
+            outDir = outDir.Ensure();
 
             // Get the dictionary of desired output report names
             Dictionary<StatReportFormat, string> outputs = CreateOutStatsNames(outDir, statDatFormat, reportName);
 
             // Make sure we have all files and then order them
-            List<ParentablePath> files = DirectoryExtensions.GetFilesOnly(inputs);
+            List<ParentablePath> files = PathTool.GetFilesOnly(inputs);
             files = files
                 .OrderBy(i => Path.GetDirectoryName(i.CurrentPath))
                 .ThenBy(i => Path.GetFileName(i.CurrentPath))

@@ -116,6 +116,36 @@ namespace SabreTools.Core.Tools
                 (int)((msDosDateTime >> 11) & 0x1F), (int)((msDosDateTime >> 5) & 0x3F), (int)((msDosDateTime & 0x1F) * 2));
         }
 
+        /// <summary>
+        /// Get a proper romba sub path
+        /// </summary>
+        /// <param name="hash">SHA-1 hash to get the path for</param>
+        /// <param name="depth">Positive value representing the depth of the depot</param>
+        /// <returns>Subfolder path for the given hash</returns>
+        public static string GetDepotPath(string hash, int depth)
+        {
+            // If the hash isn't the right size, then we return null
+            if (hash.Length != Constants.SHA1Length)
+                return null;
+
+            // Cap the depth between 0 and 20, for now
+            if (depth < 0)
+                depth = 0;
+            else if (depth > Constants.SHA1ZeroBytes.Length)
+                depth = Constants.SHA1ZeroBytes.Length;
+
+            // Loop through and generate the subdirectory
+            string path = string.Empty;
+            for (int i = 0; i < depth; i++)
+            {
+                path += hash.Substring(i * 2, 2) + Path.DirectorySeparatorChar;
+            }
+
+            // Now append the filename
+            path += $"{hash}.gz";
+            return path;
+        }
+
         /// Indicates whether the specified array is null or has a length of zero
         /// </summary>
         /// <param name="array">The array to test</param>
@@ -123,7 +153,7 @@ namespace SabreTools.Core.Tools
         /// <link>https://stackoverflow.com/questions/8560106/isnullorempty-equivalent-for-array-c-sharp</link>
         public static bool IsNullOrEmpty(this Array array)
         {
-            return (array == null || array.Length == 0);
+            return array == null || array.Length == 0;
         }
     
         /// <summary>
@@ -135,6 +165,34 @@ namespace SabreTools.Core.Tools
         {
             List<char> invalidPath = Path.GetInvalidPathChars().ToList();
             return new string(s.Where(c => !invalidPath.Contains(c)).ToArray());
+        }
+    
+        /// <summary>
+        /// Returns if the first byte array starts with the second array
+        /// </summary>
+        /// <param name="arr1">First byte array to compare</param>
+        /// <param name="arr2">Second byte array to compare</param>
+        /// <param name="exact">True if the input arrays should match exactly, false otherwise (default)</param>
+        /// <returns>True if the first byte array starts with the second, false otherwise</returns>
+        public static bool StartsWith(this byte[] arr1, byte[] arr2, bool exact = false)
+        {
+            // If we have any invalid inputs, we return false
+            if (arr1 == null || arr2 == null
+                || arr1.Length == 0 || arr2.Length == 0
+                || arr2.Length > arr1.Length
+                || (exact && arr1.Length != arr2.Length))
+            {
+                return false;
+            }
+
+            // Otherwise, loop through and see
+            for (int i = 0; i < arr2.Length; i++)
+            {
+                if (arr1[i] != arr2[i])
+                    return false;
+            }
+
+            return true;
         }
     }
 }

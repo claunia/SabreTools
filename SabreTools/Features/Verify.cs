@@ -43,7 +43,7 @@ namespace SabreTools.Features
 
             // Get a list of files from the input datfiles
             var datfiles = GetList(features, DatListValue);
-            var datfilePaths = DirectoryExtensions.GetFilesOnly(datfiles);
+            var datfilePaths = PathTool.GetFilesOnly(datfiles);
 
             // Get feature flags
             TreatAsFile asFiles = GetTreatAsFiles(features);

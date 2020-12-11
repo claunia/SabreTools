@@ -48,7 +48,7 @@ namespace SabreTools.DatFiles
             }
 
             // Ensure the output directory is set and created
-            outDir = DirectoryExtensions.Ensure(outDir, create: true);
+            outDir = outDir.Ensure(create: true);
 
             // If the DAT has no output format, default to XML
             if (datFile.Header.DatFormat == 0)

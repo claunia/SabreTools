@@ -128,7 +128,7 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Get only files from inputs
-                                List<ParentablePath> datFilePaths = DirectoryExtensions.GetFilesOnly(command.Arguments);
+                                List<ParentablePath> datFilePaths = PathTool.GetFilesOnly(command.Arguments);
 
                                 // Assume there could be multiple
                                 foreach (ParentablePath datFilePath in datFilePaths)

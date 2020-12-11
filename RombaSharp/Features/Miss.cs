@@ -31,7 +31,7 @@ namespace RombaSharp.Features
             Dictionary<string, string> foundDats = GetValidDats(Inputs);
 
             // Create the new output directory if it doesn't exist
-            DirectoryExtensions.Ensure(Path.Combine(Globals.ExeDir, "out"), create: true);
+            Path.Combine(Globals.ExeDir, "out").Ensure(create: true);
 
             // Now that we have the dictionary, we can loop through and output to a new folder for each
             foreach (string key in foundDats.Keys)

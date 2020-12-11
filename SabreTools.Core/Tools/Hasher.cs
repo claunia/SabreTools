@@ -3,9 +3,8 @@ using System.Linq;
 using System.Security.Cryptography;
 
 using Aaru.Checksums;
-using SabreTools.Core;
 
-namespace SabreTools.IO
+namespace SabreTools.Core.Tools
 {
     /// <summary>
     /// Async hashing class wraper

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
 using SabreTools.IO;
@@ -54,7 +55,7 @@ namespace SabreTools.DatFiles
             }
 
             // Check that the output directory exists
-            outDir = DirectoryExtensions.Ensure(outDir, create: true);
+            outDir = outDir.Ensure(create: true);
 
             // Now we want to get forcepack flag if it's not overridden
             if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking != PackingFlag.None)
@@ -102,7 +103,7 @@ namespace SabreTools.DatFiles
                 logger.User($"Checking hash '{hash}'");
 
                 // Get the extension path for the hash
-                string subpath = PathExtensions.GetDepotPath(hash, datFile.Header.InputDepot.Depth);
+                string subpath = Utilities.GetDepotPath(hash, datFile.Header.InputDepot.Depth);
 
                 // Find the first depot that includes the hash
                 string foundpath = null;
@@ -542,7 +543,7 @@ namespace SabreTools.DatFiles
                 // Get the proper output path
                 string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentGzipRomba)
-                    outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, datFile.Header.OutputDepot.Depth));
+                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot.Depth));
                 else
                     outDir = Path.Combine(outDir, sha1 + ".gz");
 
@@ -586,7 +587,7 @@ namespace SabreTools.DatFiles
                 // Get the proper output path
                 string sha1 = (datItem as Rom).SHA1 ?? string.Empty;
                 if (outputFormat == OutputFormat.TorrentXZRomba)
-                    outDir = Path.Combine(outDir, PathExtensions.GetDepotPath(sha1, datFile.Header.OutputDepot.Depth)).Replace(".gz", ".xz");
+                    outDir = Path.Combine(outDir, Utilities.GetDepotPath(sha1, datFile.Header.OutputDepot.Depth)).Replace(".gz", ".xz");
                 else
                     outDir = Path.Combine(outDir, sha1 + ".xz");
 
