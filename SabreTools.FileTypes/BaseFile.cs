@@ -295,6 +295,7 @@ namespace SabreTools.FileTypes
             // Try to match the supplied header skipper
             if (header != null)
             {
+                SkipperMatch.Init();
                 var rule = SkipperMatch.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
 
                 // If there's a match, transform the stream before getting info

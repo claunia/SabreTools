@@ -60,9 +60,6 @@ namespace SabreTools.DatFiles
             if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking != PackingFlag.None)
                 outputFormat = GetOutputFormat(datFile.Header.ForcePacking);
 
-            // Preload the Skipper list
-            SkipperMatch.Init();
-
             #endregion
 
             bool success = true;
@@ -202,8 +199,6 @@ namespace SabreTools.DatFiles
             if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking != PackingFlag.None)
                 outputFormat = GetOutputFormat(datFile.Header.ForcePacking);
 
-            // Preload the Skipper list
-            SkipperMatch.Init();
 
             #endregion
 
@@ -419,6 +414,7 @@ namespace SabreTools.DatFiles
             if (datFile.Header.HeaderSkipper != null)
             {
                 // Check to see if we have a matching header first
+                SkipperMatch.Init();
                 SkipperRule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.HeaderSkipper));
 
                 // If there's a match, create the new file to write

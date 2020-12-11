@@ -26,7 +26,7 @@ namespace SabreTools.Skippers
         /// <summary>
         /// Header skippers represented by a list of skipper objects
         /// </summary>
-        private static List<SkipperFile> List;
+        private static List<SkipperFile> Skippers = null;
 
         /// <summary>
         /// Local paths
@@ -45,13 +45,24 @@ namespace SabreTools.Skippers
         /// <summary>
         /// Initialize static fields
         /// </summary>
-        public static void Init()
+        /// <param name="experimental">True to enable internal header skipper generation, false to use file-based generation (default)</param>
+        public static void Init(bool experimental = false)
         {
-            PopulateSkippers();
+            // If the list is populated, don't add to it
+            if (Skippers != null)
+                return;
+
+            // If we're using internal skipper generation
+            if (experimental)
+                PopulateSkippersInternal();
+
+            // If we're using file-based skipper generation
+            else
+                PopulateSkippers();
         }
 
         /// <summary>
-        /// Populate the entire list of header Skippers
+        /// Populate the entire list of header skippers from physical files
         /// </summary>
         /// <remarks>
         /// http://mamedev.emulab.it/clrmamepro/docs/xmlheaders.txt
@@ -60,18 +71,18 @@ namespace SabreTools.Skippers
         private static void PopulateSkippers()
         {
             // Ensure the list exists
-            if (List == null)
-                List = new List<SkipperFile>();
+            if (Skippers == null)
+                Skippers = new List<SkipperFile>();
 
             // Get skippers for each known header type
             foreach (string skipperFile in Directory.EnumerateFiles(LocalPath, "*", SearchOption.AllDirectories))
             {
-                List.Add(new SkipperFile(Path.GetFullPath(skipperFile)));
+                Skippers.Add(new SkipperFile(Path.GetFullPath(skipperFile)));
             }
         }
 
         /// <summary>
-        /// Populate the entire list of header skippers
+        /// Populate the entire list of header skippers from generated objects
         /// </summary>
         /// <remarks>
         /// http://mamedev.emulab.it/clrmamepro/docs/xmlheaders.txt
@@ -80,19 +91,19 @@ namespace SabreTools.Skippers
         private static void PopulateSkippersInternal()
         {
             // Ensure the list exists
-            if (List == null)
-                List = new List<SkipperFile>();
+            if (Skippers == null)
+                Skippers = new List<SkipperFile>();
 
             // Get skippers for each known header type
-            List.Add(GetAtari7800());
-            List.Add(GetAtariLynx());
-            List.Add(GetCommodorePSID());
-            List.Add(GetNECPCEngine());
-            List.Add(GetNintendo64());
-            List.Add(GetNintendoEntertainmentSystem());
-            List.Add(GetNintendoFamicomDiskSystem());
-            List.Add(GetSuperNintendoEntertainmentSystem());
-            List.Add(GetSuperFamicomSPC());
+            Skippers.Add(GetAtari7800());
+            Skippers.Add(GetAtariLynx());
+            Skippers.Add(GetCommodorePSID());
+            Skippers.Add(GetNECPCEngine());
+            Skippers.Add(GetNintendo64());
+            Skippers.Add(GetNintendoEntertainmentSystem());
+            Skippers.Add(GetNintendoFamicomDiskSystem());
+            Skippers.Add(GetSuperNintendoEntertainmentSystem());
+            Skippers.Add(GetSuperFamicomSPC());
         }
 
         /// <summary>
@@ -132,7 +143,7 @@ namespace SabreTools.Skippers
             // Loop through and find a Skipper that has the right name
             logger.Verbose("Beginning search for matching header skip rules");
             List<SkipperFile> tempList = new List<SkipperFile>();
-            tempList.AddRange(List);
+            tempList.AddRange(Skippers);
 
             // Loop through all known SkipperFiles
             foreach (SkipperFile skipper in tempList)

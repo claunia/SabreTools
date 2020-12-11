@@ -69,6 +69,7 @@ The following systems have headers that this program can work with:
             logger.User($"\nGetting skipper information for '{file}'");
 
             // Get the skipper rule that matches the file, if any
+            SkipperMatch.Init();
             SkipperRule rule = SkipperMatch.GetMatchingRule(file, string.Empty);
 
             // If we have an empty rule, return false
