@@ -8,7 +8,7 @@ using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Readers;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.Archives
 {
     /// <summary>
     /// Represents a TorrentRAR archive for reading and writing

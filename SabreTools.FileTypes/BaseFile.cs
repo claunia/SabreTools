@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.FileTypes.Aaru;
+using SabreTools.FileTypes.CHD;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Skippers;

@@ -9,7 +9,7 @@ using Compress;
 using Compress.ZipFile;
 using NaturalSort;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.Archives
 {
     /// <summary>
     /// Represents a Zip archive for reading and writing

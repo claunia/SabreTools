@@ -8,7 +8,7 @@ using SabreTools.Core.Tools;
 using SabreTools.IO;
 using SharpCompress.Compressors.Xz;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.Archives
 {
     /// <summary>
     /// Represents a TorrentXZ archive for reading and writing

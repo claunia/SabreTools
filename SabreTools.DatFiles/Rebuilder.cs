@@ -7,6 +7,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
+using SabreTools.FileTypes.Archives;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Skippers;

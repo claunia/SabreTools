@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.FileTypes.Archives;
+
 namespace SabreTools.FileTypes
 {
     public abstract class BaseArchive : Folder

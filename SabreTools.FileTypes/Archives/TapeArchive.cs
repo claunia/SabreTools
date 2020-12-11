@@ -12,7 +12,7 @@ using SharpCompress.Common;
 using SharpCompress.Readers;
 using SharpCompress.Writers;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.Archives
 {
     /// <summary>
     /// Represents a Tape archive for reading and writing

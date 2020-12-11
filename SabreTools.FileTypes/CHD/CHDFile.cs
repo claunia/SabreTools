@@ -3,9 +3,8 @@ using System.IO;
 using System.Text;
 
 using SabreTools.IO;
-using SabreTools.FileTypes.CHD;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.CHD
 {
     /// <summary>
     /// This is code adapted from chd.h and chd.cpp in MAME

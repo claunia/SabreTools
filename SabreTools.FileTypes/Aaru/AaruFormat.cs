@@ -3,9 +3,8 @@ using System.Text;
 
 using SabreTools.Core.Tools;
 using SabreTools.IO;
-using SabreTools.FileTypes.Aaru;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.Aaru
 {
     /// <summary>
     /// AaruFormat code is based on the Aaru project

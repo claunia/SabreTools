@@ -11,7 +11,7 @@ using Compress;
 using Compress.gZip;
 using Compress.ZipFile.ZLib;
 
-namespace SabreTools.FileTypes
+namespace SabreTools.FileTypes.Archives
 {
     /// <summary>
     /// Represents a TorrentGZip archive for reading and writing

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.FileTypes;
+using SabreTools.FileTypes.Archives;
 using SabreTools.IO;
 using SabreTools.Logging;
 
