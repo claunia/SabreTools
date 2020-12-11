@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.DatFiles;
-using SabreTools.DatFiles.Reports;
 using SabreTools.IO;
 using SabreTools.Logging;
+using SabreTools.Reports;
 
 // This file represents all methods related to writing to a file
 namespace SabreTools.DatTools

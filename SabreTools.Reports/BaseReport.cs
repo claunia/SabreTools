@@ -2,9 +2,10 @@
 using System.IO;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
+using SabreTools.Reports.Formats;
 
-// TODO: Reports namespace no longer is circular with DatFiles
-namespace SabreTools.DatFiles.Reports
+namespace SabreTools.Reports
 {
     /// <summary>
     /// Base class for a report output format
