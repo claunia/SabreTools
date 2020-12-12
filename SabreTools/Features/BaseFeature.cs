@@ -9,6 +9,7 @@ using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
+using SabreTools.Reports;
 using Microsoft.Data.Sqlite;
 
 namespace SabreTools.Features

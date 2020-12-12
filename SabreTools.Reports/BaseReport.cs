@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.Reports.Formats;
 

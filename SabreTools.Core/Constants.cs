@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Reflection;
-
-namespace SabreTools.Core
+﻿namespace SabreTools.Core
 {
     /// <summary>
     /// Constants that are used throughout the library
