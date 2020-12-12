@@ -5,6 +5,7 @@ using System.IO;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
+using SabreTools.FileTypes;
 using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.IO;

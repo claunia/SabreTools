@@ -1005,32 +1005,4 @@ namespace SabreTools.Core
     }
 
     #endregion
-
-    #region FileTypes
-
-    /// <summary>
-    /// Output format for rebuilt files
-    /// </summary>
-    public enum OutputFormat
-    {
-        // Currently implemented
-        Folder,
-        ParentFolder,
-        TorrentZip,
-        TorrentGzip,
-        TorrentGzipRomba,
-        TorrentXZ,
-        TorrentXZRomba,
-        TapeArchive,
-
-        // Currently unimplemented fully
-        Torrent7Zip,
-        TorrentRar,
-        TorrentLRZip,
-        TorrentLZ4,
-        TorrentZstd,
-        TorrentZPAQ,
-    }
-
-    #endregion
 }
