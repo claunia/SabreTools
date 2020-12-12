@@ -2226,7 +2226,6 @@ namespace SabreTools.Core.Tools
 
         #region Enum to String
 
-        // TODO: DatFormat -> string
         // TODO: Field -> string
 
         /// <summary>
