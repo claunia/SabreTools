@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text;
 
-using SabreTools.Core;
 using SabreTools.IO;
 
 namespace SabreTools.Logging
@@ -28,7 +27,7 @@ namespace SabreTools.Logging
         /// Optional output log directory
         /// </summary>
         /// TODO: Make this either passed in or optional
-        public static string LogDirectory { get; set; } = Path.Combine(Globals.ExeDir, "logs") + Path.DirectorySeparatorChar;
+        public static string LogDirectory { get; set; } = Path.Combine(PathTool.GetRuntimeDirectory(), "logs") + Path.DirectorySeparatorChar;
 
         /// <summary>
         /// Determines the lowest log level to output

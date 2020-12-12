@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.Help;
@@ -32,7 +31,7 @@ namespace RombaSharp.Features
             Dictionary<string, string> foundDats = GetValidDats(Inputs);
 
             // Create the new output directory if it doesn't exist
-            Path.Combine(Globals.ExeDir, "out").Ensure(create: true);
+            Path.Combine(PathTool.GetRuntimeDirectory(), "out").Ensure(create: true);
 
             // Now that we have the dictionary, we can loop through and output to a new folder for each
             foreach (string key in foundDats.Keys)

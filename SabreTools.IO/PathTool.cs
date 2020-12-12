@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using NaturalSort;
 
@@ -165,6 +167,15 @@ namespace SabreTools.IO
 
             // Return the new list
             return infiles;
+        }
+    
+        /// <summary>
+        /// Get the current runtime directory
+        /// </summary>
+        public static string GetRuntimeDirectory()
+        {
+            string exeName = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
+            return Path.GetDirectoryName(exeName);
         }
     }
 }

@@ -16,18 +16,12 @@ namespace SabreTools.IO
         /// </summary>
         /// <param name="dir">Directory to check</param>
         /// <param name="create">True if the directory should be created, false otherwise (default)</param>
-        /// <param name="temp">True if this is a temp directory, false otherwise</param>
         /// <returns>Full path to the directory</returns>
-        public static string Ensure(this string dir, bool create = false, bool temp = false)
+        public static string Ensure(this string dir, bool create = false)
         {
             // If the output directory is invalid
             if (string.IsNullOrWhiteSpace(dir))
-            {
-                if (temp)
-                    dir = Path.GetTempPath();
-                else
-                    dir = Environment.CurrentDirectory;
-            }
+                dir = PathTool.GetRuntimeDirectory();
 
             // Get the full path for the output directory
             dir = Path.GetFullPath(dir);

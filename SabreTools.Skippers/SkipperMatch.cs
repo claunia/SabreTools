@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Core;
+using SabreTools.IO;
 using SabreTools.Logging;
 
 namespace SabreTools.Skippers
@@ -31,7 +31,7 @@ namespace SabreTools.Skippers
         /// <summary>
         /// Local paths
         /// </summary>
-        private static readonly string LocalPath = Path.Combine(Globals.ExeDir, "Skippers") + Path.DirectorySeparatorChar;
+        private static readonly string LocalPath = Path.Combine(PathTool.GetRuntimeDirectory(), "Skippers") + Path.DirectorySeparatorChar;
 
         #region Logging
 

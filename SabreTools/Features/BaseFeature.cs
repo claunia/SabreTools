@@ -7,6 +7,7 @@ using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.Filtering;
 using SabreTools.Help;
+using SabreTools.IO;
 using SabreTools.Logging;
 using Microsoft.Data.Sqlite;
 
@@ -73,7 +74,7 @@ namespace SabreTools.Features
 
         #region Constants
 
-        public static string HeadererFileName = Path.Combine(Globals.ExeDir, "Headerer.sqlite");
+        public static string HeadererFileName = Path.Combine(PathTool.GetRuntimeDirectory(), "Headerer.sqlite");
         public static string HeadererConnectionString = $"Data Source={HeadererFileName};Version = 3;";
 
         #region Byte (1000-based) size comparisons
@@ -2297,20 +2298,6 @@ Some special strings that can be used:
             }
         }
 
-        internal const string TempStringValue = "temp";
-        internal static Feature TempStringInput
-        {
-            get
-            {
-                return new Feature(
-                    TempStringValue,
-                    new List<string>() { "-t", "--temp" },
-                    "Set the temporary directory to use",
-                    ParameterType.String,
-                    longDescription: "Optionally, a temp folder can be supplied in the case the default temp directory is not preferred.");
-            }
-        }
-
         internal const string UrlStringValue = "url";
         internal static Feature UrlStringInput
         {
@@ -2476,10 +2463,6 @@ Some special strings that can be used:
             // Set threading flag, if necessary
             if (features.ContainsKey(ThreadsInt32Value))
                 Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
-
-            // Set temp path, if necessary
-            if (features.ContainsKey(TempStringValue))
-                Globals.TempDir = GetString(features, TempStringValue);
         }
 
         #region Protected Specific Extraction

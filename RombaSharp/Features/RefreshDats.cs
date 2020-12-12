@@ -6,6 +6,7 @@ using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatTools;
 using SabreTools.Help;
+using SabreTools.IO;
 using SabreTools.Logging;
 using Microsoft.Data.Sqlite;
 
@@ -54,7 +55,7 @@ contents of any changed dats.";
             if (string.IsNullOrWhiteSpace(_dats))
                 _dats = "dats";
 
-            _dats = Path.Combine(Globals.ExeDir, _dats);
+            _dats = Path.Combine(PathTool.GetRuntimeDirectory(), _dats);
 
             // Make sure the folder exists
             if (!Directory.Exists(_dats))

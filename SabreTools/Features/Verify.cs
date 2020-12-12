@@ -25,7 +25,6 @@ namespace SabreTools.Features
             AddFeature(DatListInput);
             AddFeature(DepotFlag);
             this[DepotFlag].AddFeature(DepotDepthInt32Input);
-            AddFeature(TempStringInput);
             AddFeature(OutputDirStringInput);
             AddFeature(HashOnlyFlag);
             AddFeature(QuickFlag);

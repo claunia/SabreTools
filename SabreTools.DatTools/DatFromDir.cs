@@ -46,9 +46,6 @@ namespace SabreTools.DatTools
             bool addBlanks = false,
             Hash hashes = Hash.Standard)
         {
-            // Clean the temp directory path
-            Globals.TempDir = Globals.TempDir.Ensure(temp: true);
-
             // Set the progress variables
             long totalSize = 0;
             long currentSize = 0;
@@ -90,14 +87,6 @@ namespace SabreTools.DatTools
                 string parentPath = Path.GetDirectoryName(Path.GetDirectoryName(basePath));
                 CheckFileForHashes(datFile, basePath, parentPath, asFiles, skipFileType, addBlanks, hashes);
                 logger.User(totalSize, totalSize, basePath);
-            }
-
-            // Now that we're done, delete the temp folder (if it's not the default)
-            logger.User("Cleaning temp folder");
-            if (Globals.TempDir != Path.GetTempPath())
-            {
-                if (Directory.Exists(Globals.TempDir))
-                    Directory.Delete(Globals.TempDir, true);
             }
 
             return true;

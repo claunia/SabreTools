@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace SabreTools.Core
@@ -11,16 +9,6 @@ namespace SabreTools.Core
     public class Globals
     {
         #region Public accessors
-
-        /// <summary>
-        /// Directory path for the current executable
-        /// </summary>
-        public static string ExeDir => Path.GetDirectoryName(ExeName);
-
-        /// <summary>
-        /// File path for the current executable
-        /// </summary>
-        public static string ExeName => new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
 
         /// <summary>
         /// Maximum threads to use during parallel operations
@@ -34,12 +22,6 @@ namespace SabreTools.Core
         {
             MaxDegreeOfParallelism = MaxThreads
         };
-
-        /// <summary>
-        /// Temporary directory location
-        /// </summary>
-        /// <remarks>TODO: Find a way to get rid of this as a global variable and put it in DatFile</remarks>
-        public static string TempDir { get; set; } = Path.GetTempPath();
 
         #endregion
     }

@@ -416,10 +416,6 @@ Options:
 		  This can allow for more advanced set-building, especially in
 		  arcade-based sets.
 
-	  -t=, --temp=				Set the temporary directory to use
-		  Optionally, a temp folder can be supplied in the case the default
-		  temp directory is not preferred.
-
 	  -out=, --output-dir=		Set output directory
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
@@ -1182,10 +1178,6 @@ Options:
 		  --depd, --depot-depth		Set depth of depot for inputs
 			Optionally, set the depth of input depots. Defaults to 4 deep
 			otherwise.
-
-	  -t=, --temp=				Set the temporary directory to use
-		  Optionally, a temp folder can be supplied in the case the default
-		  temp directory is not preferred.
 
 	  -out=, --output-dir=		Set output directory
 		  This sets an output folder to be used when the files are created. If

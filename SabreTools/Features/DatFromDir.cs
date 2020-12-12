@@ -49,7 +49,6 @@ namespace SabreTools.Features
             AddFeature(HeaderStringInput);
             AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
-            AddFeature(TempStringInput);
             AddFeature(OutputDirStringInput);
             AddFeature(ThreadsInt32Input);
         }
