@@ -5,6 +5,7 @@ using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatTools;
+using SabreTools.FileTypes;
 using SabreTools.Help;
 using Microsoft.Data.Sqlite;
 

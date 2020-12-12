@@ -601,31 +601,6 @@ namespace SabreTools.Core
         Flat,
     }
 
-    /// <summary>
-    /// Determines which files should be skipped in DFD
-    /// </summary>
-    public enum SkipFileType
-    {
-        None = 0,
-        Archive,
-        File,
-    }
-
-    /// <summary>
-    /// Determines what sort of files get externally hashed
-    /// </summary>
-    /// TODO: Can FileType be used instead?
-    [Flags]
-    public enum TreatAsFile
-    {
-        CHD = 1 << 0,
-        Archive = 1 << 1,
-        AaruFormat = 1 << 2,
-
-        NonArchive = CHD | AaruFormat,
-        All = CHD | Archive | AaruFormat,
-    }
-
     #endregion
 
     #region DatItems
