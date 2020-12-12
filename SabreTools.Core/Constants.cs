@@ -8,13 +8,6 @@ namespace SabreTools.Core
     /// </summary>
     public static class Constants
     {
-        /// <summary>
-        /// The current toolset version to be used by all child applications
-        /// </summary>
-        //public readonly static string Version = $"v1.0.4";
-        public readonly static string Version = $"v1.0.4-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
-        public const int HeaderHeight = 3;
-
         #region 0-byte file constants
 
         public const long SizeZero = 0;
