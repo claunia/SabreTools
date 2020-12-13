@@ -339,6 +339,32 @@ namespace SabreTools.Filtering
 
                 Field filterField = filterFieldString.AsField();
                 SetFilter(filterField, filterValue, negate);
+
+                // Set DatHeader filters
+                DatHeaderField datHeaderField= filterFieldString.AsDatHeaderField();
+                if (datHeaderField != DatHeaderField.NULL)
+                {
+                    SetFilter(datHeaderField, filterValue, negate);
+                    continue;
+                }
+
+                // Set Machine filters
+                MachineField machineField= filterFieldString.AsMachineField();
+                if (machineField != MachineField.NULL)
+                {
+                    SetFilter(machineField, filterValue, negate);
+                    continue;
+                }
+
+                // Set DatItem filters
+                DatItemField datItemField= filterFieldString.AsDatItemField();
+                if (datItemField != DatItemField.NULL)
+                {
+                    SetFilter(datItemField, filterValue, negate);
+                    continue;
+                }
+
+                // TODO: Add log here if it all falls through
             }
         }
 
@@ -349,6 +375,48 @@ namespace SabreTools.Filtering
         /// <param name="values">List of values for the filter</param>
         /// <param name="negate">True if negative filter, false otherwise</param>
         public void SetFilter(Field key, List<string> values, bool negate)
+        {
+            foreach (string value in values)
+            {
+                SetFilter(key, value, negate);
+            }
+        }
+
+        /// <summary>
+        /// Set multiple filters from key
+        /// </summary>
+        /// <param name="key">Key for the filter to be set</param>
+        /// <param name="values">List of values for the filter</param>
+        /// <param name="negate">True if negative filter, false otherwise</param>
+        public void SetFilter(DatHeaderField key, List<string> values, bool negate)
+        {
+            foreach (string value in values)
+            {
+                SetFilter(key, value, negate);
+            }
+        }
+
+        /// <summary>
+        /// Set multiple filters from key
+        /// </summary>
+        /// <param name="key">Key for the filter to be set</param>
+        /// <param name="values">List of values for the filter</param>
+        /// <param name="negate">True if negative filter, false otherwise</param>
+        public void SetFilter(MachineField key, List<string> values, bool negate)
+        {
+            foreach (string value in values)
+            {
+                SetFilter(key, value, negate);
+            }
+        }
+
+        /// <summary>
+        /// Set multiple filters from key
+        /// </summary>
+        /// <param name="key">Key for the filter to be set</param>
+        /// <param name="values">List of values for the filter</param>
+        /// <param name="negate">True if negative filter, false otherwise</param>
+        public void SetFilter(DatItemField key, List<string> values, bool negate)
         {
             foreach (string value in values)
             {
@@ -1082,6 +1150,753 @@ namespace SabreTools.Filtering
                 #endregion // Item-Specific
 
                 #endregion // DatItem Filters
+            }
+        }
+
+        /// <summary>
+        /// Set a single filter from key
+        /// </summary>
+        /// <param name="key">Key for the filter to be set</param>
+        /// <param name="value">Value of the filter</param>
+        /// <param name="negate">True if negative filter, false otherwise</param>
+        public void SetFilter(DatHeaderField key, string value, bool negate)
+        {
+            switch (key)
+            {
+                // TODO: Add DatHeader filters
+            }
+        }
+
+        /// <summary>
+        /// Set a single filter from key
+        /// </summary>
+        /// <param name="key">Key for the filter to be set</param>
+        /// <param name="value">Value of the filter</param>
+        /// <param name="negate">True if negative filter, false otherwise</param>
+        public void SetFilter(MachineField key, string value, bool negate)
+        {
+            switch (key)
+            {
+                #region Common
+
+                case MachineField.Name:
+                    SetStringFilter(Machine_Name, value, negate);
+                    break;
+
+                case MachineField.Comment:
+                    SetStringFilter(Machine_Comment, value, negate);
+                    break;
+
+                case MachineField.Description:
+                    SetStringFilter(Machine_Description, value, negate);
+                    break;
+
+                case MachineField.Year:
+                    SetStringFilter(Machine_Year, value, negate);
+                    break;
+
+                case MachineField.Manufacturer:
+                    SetStringFilter(Machine_Manufacturer, value, negate);
+                    break;
+
+                case MachineField.Publisher:
+                    SetStringFilter(Machine_Publisher, value, negate);
+                    break;
+
+                case MachineField.Category:
+                    SetStringFilter(Machine_Category, value, negate);
+                    break;
+
+                case MachineField.RomOf:
+                    SetStringFilter(Machine_RomOf, value, negate);
+                    break;
+
+                case MachineField.CloneOf:
+                    SetStringFilter(Machine_CloneOf, value, negate);
+                    break;
+
+                case MachineField.SampleOf:
+                    SetStringFilter(Machine_SampleOf, value, negate);
+                    break;
+
+                case MachineField.Type:
+                    if (negate)
+                        Machine_Type.Negative |= value.AsMachineType();
+                    else
+                        Machine_Type.Positive |= value.AsMachineType();
+                    break;
+
+                #endregion
+
+                #region AttractMode
+
+                case MachineField.Players:
+                    SetStringFilter(Machine_Players, value, negate);
+                    break;
+
+                case MachineField.Rotation:
+                    SetStringFilter(Machine_Rotation, value, negate);
+                    break;
+
+                case MachineField.Control:
+                    SetStringFilter(Machine_Control, value, negate);
+                    break;
+
+                case MachineField.Status:
+                    SetStringFilter(Machine_Status, value, negate);
+                    break;
+
+                case MachineField.DisplayCount:
+                    SetStringFilter(Machine_DisplayCount, value, negate);
+                    break;
+
+                case MachineField.DisplayType:
+                    SetStringFilter(Machine_DisplayType, value, negate);
+                    break;
+
+                case MachineField.Buttons:
+                    SetStringFilter(Machine_Buttons, value, negate);
+                    break;
+
+                #endregion
+
+                #region ListXML
+
+                case MachineField.SourceFile:
+                    SetStringFilter(Machine_SourceFile, value, negate);
+                    break;
+
+                case MachineField.Runnable:
+                    if (negate)
+                        Machine_Runnable.Negative |= value.AsRunnable();
+                    else
+                        Machine_Runnable.Positive |= value.AsRunnable();
+                    break;          
+
+                #endregion
+
+                #region Logiqx
+
+                case MachineField.Board:
+                    SetStringFilter(Machine_Board, value, negate);
+                    break;
+
+                case MachineField.RebuildTo:
+                    SetStringFilter(Machine_RebuildTo, value, negate);
+                    break;
+
+                #endregion
+
+                #region Logiqx EmuArc
+
+                case MachineField.TitleID:
+                    SetStringFilter(Machine_TitleID, value, negate);
+                    break;
+
+                case MachineField.Developer:
+                    SetStringFilter(Machine_Developer, value, negate);
+                    break;
+
+                case MachineField.Genre:
+                    SetStringFilter(Machine_Genre, value, negate);
+                    break;
+
+                case MachineField.Subgenre:
+                    SetStringFilter(Machine_Subgenre, value, negate);
+                    break;
+
+                case MachineField.Ratings:
+                    SetStringFilter(Machine_Ratings, value, negate);
+                    break;
+
+                case MachineField.Score:
+                    SetStringFilter(Machine_Score, value, negate);
+                    break;
+
+                case MachineField.Enabled:
+                    SetStringFilter(Machine_Enabled, value, negate);
+                    break;
+
+                case MachineField.CRC:
+                    SetBooleanFilter(Machine_CRC, value, negate);
+                    break;
+
+                case MachineField.RelatedTo:
+                    SetStringFilter(Machine_RelatedTo, value, negate);
+                    break;
+
+                #endregion
+
+                #region OpenMSX
+
+                case MachineField.GenMSXID:
+                    SetStringFilter(Machine_GenMSXID, value, negate);
+                    break;
+
+                case MachineField.System:
+                    SetStringFilter(Machine_System, value, negate);
+                    break;
+
+                case MachineField.Country:
+                    SetStringFilter(Machine_Country, value, negate);
+                    break;
+
+                #endregion
+
+                #region SoftwareList
+
+                case MachineField.Supported:
+                    if (negate)
+                        Machine_Supported.Negative |= value.AsSupported();
+                    else
+                        Machine_Supported.Positive |= value.AsSupported();
+                    break;
+
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// Set a single filter from key
+        /// </summary>
+        /// <param name="key">Key for the filter to be set</param>
+        /// <param name="value">Value of the filter</param>
+        /// <param name="negate">True if negative filter, false otherwise</param>
+        public void SetFilter(DatItemField key, string value, bool negate)
+        {
+            switch (key)
+            {
+                #region Common
+
+                case DatItemField.Type:
+                    if (value.AsItemType() == null)
+                        return;
+
+                    SetStringFilter(DatItem_Type, value, negate);
+                    break;
+
+                #endregion
+
+                #region Item-Specific
+
+                #region Actionable
+
+                // Rom
+                case DatItemField.Name:
+                    SetStringFilter(DatItem_Name, value, negate);
+                    break;
+
+                case DatItemField.Bios:
+                    SetStringFilter(DatItem_Bios, value, negate);
+                    break;
+
+                case DatItemField.Size:
+                    SetLongFilter(DatItem_Size, value, negate);
+                    break;
+
+                case DatItemField.CRC:
+                    SetStringFilter(DatItem_CRC, value, negate);
+                    break;
+
+                case DatItemField.MD5:
+                    SetStringFilter(DatItem_MD5, value, negate);
+                    break;
+
+#if NET_FRAMEWORK
+                case DatItemField.RIPEMD160:
+                    SetStringFilter(DatItem_RIPEMD160, value, negate);
+                    break;
+#endif
+
+                case DatItemField.SHA1:
+                    SetStringFilter(DatItem_SHA1, value, negate);
+                    break;
+
+                case DatItemField.SHA256:
+                    SetStringFilter(DatItem_SHA256, value, negate);
+                    break;
+
+                case DatItemField.SHA384:
+                    SetStringFilter(DatItem_SHA384, value, negate);
+                    break;
+
+                case DatItemField.SHA512:
+                    SetStringFilter(DatItem_SHA512, value, negate);
+                    break;
+
+                case DatItemField.SpamSum:
+                    SetStringFilter(DatItem_SpamSum, value, negate);
+                    break;
+
+                case DatItemField.Merge:
+                    SetStringFilter(DatItem_Merge, value, negate);
+                    break;
+
+                case DatItemField.Region:
+                    SetStringFilter(DatItem_Region, value, negate);
+                    break;
+
+                case DatItemField.Offset:
+                    SetStringFilter(DatItem_Offset, value, negate);
+                    break;
+
+                case DatItemField.Date:
+                    SetStringFilter(DatItem_Date, value, negate);
+                    break;
+
+                case DatItemField.Status:
+                    if (negate)
+                        DatItem_Status.Negative |= value.AsItemStatus();
+                    else
+                        DatItem_Status.Positive |= value.AsItemStatus();
+                    break;
+
+                case DatItemField.Optional:
+                    SetBooleanFilter(DatItem_Optional, value, negate);
+                    break;
+
+                case DatItemField.Inverted:
+                    SetBooleanFilter(DatItem_Inverted, value, negate);
+                    break;
+
+                // Rom (AttractMode)
+                case DatItemField.AltName:
+                    SetStringFilter(DatItem_AltName, value, negate);
+                    break;
+
+                case DatItemField.AltTitle:
+                    SetStringFilter(DatItem_AltTitle, value, negate);
+                    break;
+
+                // Rom (OpenMSX)
+                case DatItemField.Original:
+                    SetStringFilter(DatItem_Original, value, negate);
+                    break;
+
+                case DatItemField.OpenMSXSubType:
+                    if (negate)
+                        DatItem_OpenMSXSubType.Negative |= value.AsOpenMSXSubType();
+                    else
+                        DatItem_OpenMSXSubType.Positive |= value.AsOpenMSXSubType();
+                    break;
+
+                case DatItemField.OpenMSXType:
+                    SetStringFilter(DatItem_OpenMSXType, value, negate);
+                    break;
+
+                case DatItemField.Remark:
+                    SetStringFilter(DatItem_Remark, value, negate);
+                    break;
+
+                case DatItemField.Boot:
+                    SetStringFilter(DatItem_Boot, value, negate);
+                    break;
+
+                // Rom (SoftwareList)
+                case DatItemField.LoadFlag:
+                    if (negate)
+                        DatItem_LoadFlag.Negative |= value.AsLoadFlag();
+                    else
+                        DatItem_LoadFlag.Positive |= value.AsLoadFlag();
+                    break;
+
+                case DatItemField.Value:
+                    SetStringFilter(DatItem_Value, value, negate);
+                    break;
+
+                // Disk
+                case DatItemField.Index:
+                    SetStringFilter(DatItem_Index, value, negate);
+                    break;
+
+                case DatItemField.Writable:
+                    SetBooleanFilter(DatItem_Writable, value, negate);
+                    break;
+
+                #endregion
+
+                #region Auxiliary
+
+                // Adjuster
+                case DatItemField.Default:
+                    SetBooleanFilter(DatItem_Default, value, negate);
+                    break;
+
+                // Analog
+                case DatItemField.Analog_Mask:
+                    SetStringFilter(DatItem_Analog_Mask, value, negate);
+                    break;
+
+                // BiosSet
+                case DatItemField.Description:
+                    SetStringFilter(DatItem_Description, value, negate);
+                    break;
+
+                // Chip
+                case DatItemField.Tag:
+                    SetStringFilter(DatItem_Tag, value, negate);
+                    break;
+
+                case DatItemField.ChipType:
+                    if (negate)
+                        DatItem_ChipType.Negative |= value.AsChipType();
+                    else
+                        DatItem_ChipType.Positive |= value.AsChipType();
+                    break;
+
+                case DatItemField.Clock:
+                    SetLongFilter(DatItem_Clock, value, negate);
+                    break;
+
+                // Condition
+                case DatItemField.Mask:
+                    SetStringFilter(DatItem_Mask, value, negate);
+                    break;
+
+                case DatItemField.Relation:
+                    if (negate)
+                        DatItem_Relation.Negative |= value.AsRelation();
+                    else
+                        DatItem_Relation.Positive |= value.AsRelation();
+                    break;
+
+                case DatItemField.Condition_Tag:
+                    SetStringFilter(DatItem_Condition_Tag, value, negate);
+                    break;
+
+                case DatItemField.Condition_Mask:
+                    SetStringFilter(DatItem_Condition_Mask, value, negate);
+                    break;
+
+                case DatItemField.Condition_Relation:
+                    if (negate)
+                        DatItem_Condition_Relation.Negative |= value.AsRelation();
+                    else
+                        DatItem_Condition_Relation.Positive |= value.AsRelation();
+                    break;
+
+                case DatItemField.Condition_Value:
+                    SetStringFilter(DatItem_Condition_Value, value, negate);
+                    break;
+
+                // Control
+                case DatItemField.Control_Type:
+
+                    if (negate)
+                        DatItem_Control_Type.Negative |= value.AsControlType();
+                    else
+                        DatItem_Control_Type.Positive |= value.AsControlType();
+                    break;
+
+                case DatItemField.Control_Player:
+                    SetLongFilter(DatItem_Control_Player, value, negate);
+                    break;
+
+                case DatItemField.Control_Buttons:
+                    SetLongFilter(DatItem_Control_Buttons, value, negate);
+                    break;
+
+                case DatItemField.Control_RequiredButtons:
+                    SetLongFilter(DatItem_Control_ReqButtons, value, negate);
+                    break;
+
+                case DatItemField.Control_Minimum:
+                    SetLongFilter(DatItem_Control_Minimum, value, negate);
+                    break;
+
+                case DatItemField.Control_Maximum:
+                    SetLongFilter(DatItem_Control_Maximum, value, negate);
+                    break;
+
+                case DatItemField.Control_Sensitivity:
+                    SetLongFilter(DatItem_Control_Sensitivity, value, negate);
+                    break;
+
+                case DatItemField.Control_KeyDelta:
+                    SetLongFilter(DatItem_Control_KeyDelta, value, negate);
+                    break;
+
+                case DatItemField.Control_Reverse:
+                    SetBooleanFilter(DatItem_Control_Reverse, value, negate);
+                    break;
+
+                case DatItemField.Control_Ways:
+                    SetStringFilter(DatItem_Control_Ways, value, negate);
+                    break;
+
+                case DatItemField.Control_Ways2:
+                    SetStringFilter(DatItem_Control_Ways2, value, negate);
+                    break;
+
+                case DatItemField.Control_Ways3:
+                    SetStringFilter(DatItem_Control_Ways3, value, negate);
+                    break;
+
+                // DataArea
+                case DatItemField.AreaName:
+                    SetStringFilter(DatItem_AreaName, value, negate);
+                    break;
+
+                case DatItemField.AreaSize:
+                    SetLongFilter(DatItem_AreaSize, value, negate);
+                    break;
+
+                case DatItemField.AreaWidth:
+                    SetLongFilter(DatItem_AreaWidth, value, negate);
+                    break;
+
+                case DatItemField.AreaEndianness:
+                    if (negate)
+                        DatItem_AreaEndianness.Negative |= value.AsEndianness();
+                    else
+                        DatItem_AreaEndianness.Positive |= value.AsEndianness();
+                    break;
+
+                // Device
+                case DatItemField.DeviceType:
+                    if (negate)
+                        DatItem_DeviceType.Negative |= value.AsDeviceType();
+                    else
+                        DatItem_DeviceType.Positive |= value.AsDeviceType();
+                    break;
+
+                case DatItemField.FixedImage:
+                    SetStringFilter(DatItem_FixedImage, value, negate);
+                    break;
+
+                case DatItemField.Mandatory:
+                    SetLongFilter(DatItem_Mandatory, value, negate);
+                    break;
+
+                case DatItemField.Interface:
+                    SetStringFilter(DatItem_Interface, value, negate);
+                    break;
+
+                // Display
+                case DatItemField.DisplayType:
+                    if (negate)
+                        DatItem_DisplayType.Negative |= value.AsDisplayType();
+                    else
+                        DatItem_DisplayType.Positive |= value.AsDisplayType();
+                    break;
+
+                case DatItemField.Rotate:
+                    SetLongFilter(DatItem_Rotate, value, negate);
+                    break;
+
+                case DatItemField.FlipX:
+                    SetBooleanFilter(DatItem_FlipX, value, negate);
+                    break;
+
+                case DatItemField.Width:
+                    SetLongFilter(DatItem_Width, value, negate);
+                    break;
+
+                case DatItemField.Height:
+                    SetLongFilter(DatItem_Height, value, negate);
+                    break;
+
+                case DatItemField.Refresh:
+                    SetDoubleFilter(DatItem_Refresh, value, negate);
+                    break;
+
+                case DatItemField.PixClock:
+                    SetLongFilter(DatItem_PixClock, value, negate);
+                    break;
+
+                case DatItemField.HTotal:
+                    SetLongFilter(DatItem_HTotal, value, negate);
+                    break;
+
+                case DatItemField.HBEnd:
+                    SetLongFilter(DatItem_HBEnd, value, negate);
+                    break;
+
+                case DatItemField.HBStart:
+                    SetLongFilter(DatItem_HBStart, value, negate);
+                    break;
+
+                case DatItemField.VTotal:
+                    SetLongFilter(DatItem_VTotal, value, negate);
+                    break;
+
+                case DatItemField.VBEnd:
+                    SetLongFilter(DatItem_VBEnd, value, negate);
+                    break;
+
+                case DatItemField.VBStart:
+                    SetLongFilter(DatItem_VBStart, value, negate);
+                    break;
+
+                // Driver
+                case DatItemField.SupportStatus:
+                    if (negate)
+                        DatItem_SupportStatus.Negative |= value.AsSupportStatus();
+                    else
+                        DatItem_SupportStatus.Positive |= value.AsSupportStatus();
+                    break;
+
+                case DatItemField.EmulationStatus:
+                    if (negate)
+                        DatItem_EmulationStatus.Negative |= value.AsSupportStatus();
+                    else
+                        DatItem_EmulationStatus.Positive |= value.AsSupportStatus();
+                    break;
+
+                case DatItemField.CocktailStatus:
+                    if (negate)
+                        DatItem_CocktailStatus.Negative |= value.AsSupportStatus();
+                    else
+                        DatItem_CocktailStatus.Positive |= value.AsSupportStatus();
+                    break;
+
+                case DatItemField.SaveStateStatus:
+                    if (negate)
+                        DatItem_SaveStateStatus.Negative |= value.AsSupported();
+                    else
+                        DatItem_SaveStateStatus.Positive |= value.AsSupported();
+                    break;
+
+                // Extension
+                case DatItemField.Extension_Name:
+                    SetStringFilter(DatItem_Extension_Name, value, negate);
+                    break;
+
+                // Feature
+                case DatItemField.FeatureType:
+                    if (negate)
+                        DatItem_FeatureType.Negative |= value.AsFeatureType();
+                    else
+                        DatItem_FeatureType.Positive |= value.AsFeatureType();
+                    break;
+
+                case DatItemField.FeatureStatus:
+                    if (negate)
+                        DatItem_FeatureStatus.Negative |= value.AsFeatureStatus();
+                    else
+                        DatItem_FeatureStatus.Positive |= value.AsFeatureStatus();
+                    break;
+
+                case DatItemField.FeatureOverall:
+                    if (negate)
+                        DatItem_FeatureOverall.Negative |= value.AsFeatureStatus();
+                    else
+                        DatItem_FeatureOverall.Positive |= value.AsFeatureStatus();
+                    break;
+
+                // Input
+                case DatItemField.Service:
+                    SetBooleanFilter(DatItem_Service, value, negate);
+                    break;
+
+                case DatItemField.Tilt:
+                    SetBooleanFilter(DatItem_Tilt, value, negate);
+                    break;
+
+                case DatItemField.Players:
+                    SetLongFilter(DatItem_Players, value, negate);
+                    break;
+
+                case DatItemField.Coins:
+                    SetLongFilter(DatItem_Coins, value, negate);
+                    break;
+
+                // Instance
+                case DatItemField.Instance_Name:
+                    SetStringFilter(DatItem_Instance_Name, value, negate);
+                    break;
+
+                case DatItemField.Instance_BriefName:
+                    SetStringFilter(DatItem_Instance_BriefName, value, negate);
+                    break;
+
+                // Location
+                case DatItemField.Location_Name:
+                    SetStringFilter(DatItem_Location_Name, value, negate);
+                    break;
+
+                case DatItemField.Location_Number:
+                    SetLongFilter(DatItem_Location_Number, value, negate);
+                    break;
+
+                case DatItemField.Location_Inverted:
+                    SetBooleanFilter(DatItem_Location_Inverted, value, negate);
+                    break;
+
+                // Part
+                case DatItemField.Part_Name:
+                    SetStringFilter(DatItem_Part_Name, value, negate);
+                    break;
+
+                case DatItemField.Part_Interface:
+                    SetStringFilter(DatItem_Part_Interface, value, negate);
+                    break;
+
+                // PartFeature
+                case DatItemField.Part_Feature_Name:
+                    SetStringFilter(DatItem_Part_Feature_Name, value, negate);
+                    break;
+
+                case DatItemField.Part_Feature_Value:
+                    SetStringFilter(DatItem_Part_Feature_Value, value, negate);
+                    break;
+
+                // RamOption
+                case DatItemField.Content:
+                    SetStringFilter(DatItem_Content, value, negate);
+                    break;
+
+                // Release
+                case DatItemField.Language:
+                    SetStringFilter(DatItem_Language, value, negate);
+                    break;
+
+                // Setting
+                case DatItemField.Setting_Name:
+                    SetStringFilter(DatItem_Setting_Name, value, negate);
+                    break;
+
+                case DatItemField.Setting_Value:
+                    SetStringFilter(DatItem_Setting_Value, value, negate);
+                    break;
+
+                case DatItemField.Setting_Default:
+                    SetBooleanFilter(DatItem_Setting_Default, value, negate);
+                    break;
+
+                // SlotOption
+                case DatItemField.SlotOption_Name:
+                    SetStringFilter(DatItem_SlotOption_Name, value, negate);
+                    break;
+
+                case DatItemField.SlotOption_DeviceName:
+                    SetStringFilter(DatItem_SlotOption_DeviceName, value, negate);
+                    break;
+
+                case DatItemField.SlotOption_Default:
+                    SetBooleanFilter(DatItem_SlotOption_Default, value, negate);
+                    break;
+
+                // SoftwareList
+                case DatItemField.SoftwareListStatus:
+                    if (negate)
+                        DatItem_SoftwareListStatus.Negative |= value.AsSoftwareListStatus();
+                    else
+                        DatItem_SoftwareListStatus.Positive |= value.AsSoftwareListStatus();
+                    break;
+
+                case DatItemField.Filter:
+                    SetStringFilter(DatItem_Filter, value, negate);
+                    break;
+
+                // Sound
+                case DatItemField.Channels:
+                    SetLongFilter(DatItem_Channels, value, negate);
+                    break;
+
+                #endregion
+
+                #endregion // Item-Specific
             }
         }
 
