@@ -891,7 +891,7 @@ namespace SabreTools.Core
 
         #region Common
 
-        DatItem_Type,
+        Type,
 
         #endregion
 
@@ -900,172 +900,172 @@ namespace SabreTools.Core
         #region Actionable
 
         // Rom
-        DatItem_Name,
-        DatItem_Bios,
-        DatItem_Size,
-        DatItem_CRC,
-        DatItem_MD5,
+        Name,
+        Bios,
+        Size,
+        CRC,
+        MD5,
 #if NET_FRAMEWORK
-        DatItem_RIPEMD160,
+        RIPEMD160,
 #endif
-        DatItem_SHA1,
-        DatItem_SHA256,
-        DatItem_SHA384,
-        DatItem_SHA512,
-        DatItem_SpamSum,
-        DatItem_Merge,
-        DatItem_Region,
-        DatItem_Offset,
-        DatItem_Date,
-        DatItem_Status,
-        DatItem_Optional,
-        DatItem_Inverted,
+        SHA1,
+        SHA256,
+        SHA384,
+        SHA512,
+        SpamSum,
+        Merge,
+        Region,
+        Offset,
+        Date,
+        Status,
+        Optional,
+        Inverted,
 
         // Rom (AttractMode)
-        DatItem_AltName,
-        DatItem_AltTitle,
+        AltName,
+        AltTitle,
 
         // Rom (OpenMSX)
-        DatItem_Original,
-        DatItem_OpenMSXSubType,
-        DatItem_OpenMSXType,
-        DatItem_Remark,
-        DatItem_Boot,
+        Original,
+        OpenMSXSubType,
+        OpenMSXType,
+        Remark,
+        Boot,
 
         // Rom (SoftwareList)
-        DatItem_LoadFlag,
-        DatItem_Value,
+        LoadFlag,
+        Value,
 
         // Disk
-        DatItem_Index,
-        DatItem_Writable,
+        Index,
+        Writable,
 
         #endregion
 
         #region Auxiliary
 
         // Adjuster
-        DatItem_Default,
+        Default,
 
         // Analog
-        DatItem_Analog_Mask,
+        Analog_Mask,
 
         // BiosSet
-        DatItem_Description,
+        Description,
 
         // Chip
-        DatItem_Tag,
-        DatItem_ChipType,
-        DatItem_Clock,
+        Tag,
+        ChipType,
+        Clock,
 
         // Condition
-        DatItem_Mask,
-        DatItem_Relation,
-        DatItem_Condition_Tag,
-        DatItem_Condition_Mask,
-        DatItem_Condition_Relation,
-        DatItem_Condition_Value,
+        Mask,
+        Relation,
+        Condition_Tag,
+        Condition_Mask,
+        Condition_Relation,
+        Condition_Value,
 
         // Control
-        DatItem_Control_Type,
-        DatItem_Control_Player,
-        DatItem_Control_Buttons,
-        DatItem_Control_RequiredButtons,
-        DatItem_Control_Minimum,
-        DatItem_Control_Maximum,
-        DatItem_Control_Sensitivity,
-        DatItem_Control_KeyDelta,
-        DatItem_Control_Reverse,
-        DatItem_Control_Ways,
-        DatItem_Control_Ways2,
-        DatItem_Control_Ways3,
+        Control_Type,
+        Control_Player,
+        Control_Buttons,
+        Control_RequiredButtons,
+        Control_Minimum,
+        Control_Maximum,
+        Control_Sensitivity,
+        Control_KeyDelta,
+        Control_Reverse,
+        Control_Ways,
+        Control_Ways2,
+        Control_Ways3,
 
         // DataArea
-        DatItem_AreaName,
-        DatItem_AreaSize,
-        DatItem_AreaWidth,
-        DatItem_AreaEndianness,
+        AreaName,
+        AreaSize,
+        AreaWidth,
+        AreaEndianness,
 
         // Device
-        DatItem_DeviceType,
-        DatItem_FixedImage,
-        DatItem_Mandatory,
-        DatItem_Interface,
+        DeviceType,
+        FixedImage,
+        Mandatory,
+        Interface,
 
         // Display
-        DatItem_DisplayType,
-        DatItem_Rotate,
-        DatItem_FlipX,
-        DatItem_Width,
-        DatItem_Height,
-        DatItem_Refresh,
-        DatItem_PixClock,
-        DatItem_HTotal,
-        DatItem_HBEnd,
-        DatItem_HBStart,
-        DatItem_VTotal,
-        DatItem_VBEnd,
-        DatItem_VBStart,
+        DisplayType,
+        Rotate,
+        FlipX,
+        Width,
+        Height,
+        Refresh,
+        PixClock,
+        HTotal,
+        HBEnd,
+        HBStart,
+        VTotal,
+        VBEnd,
+        VBStart,
 
         // Driver
-        DatItem_SupportStatus,
-        DatItem_EmulationStatus,
-        DatItem_CocktailStatus,
-        DatItem_SaveStateStatus,
+        SupportStatus,
+        EmulationStatus,
+        CocktailStatus,
+        SaveStateStatus,
 
         // Extension
-        DatItem_Extension_Name,
+        Extension_Name,
 
         // Feature
-        DatItem_FeatureType,
-        DatItem_FeatureStatus,
-        DatItem_FeatureOverall,
+        FeatureType,
+        FeatureStatus,
+        FeatureOverall,
 
         // Input
-        DatItem_Service,
-        DatItem_Tilt,
-        DatItem_Players,
-        DatItem_Coins,
+        Service,
+        Tilt,
+        Players,
+        Coins,
 
         // Instance
-        DatItem_Instance_Name,
-        DatItem_Instance_BriefName,
+        Instance_Name,
+        Instance_BriefName,
 
         // Location
-        DatItem_Location_Name,
-        DatItem_Location_Number,
-        DatItem_Location_Inverted,
+        Location_Name,
+        Location_Number,
+        Location_Inverted,
 
         // Part
-        DatItem_Part_Name,
-        DatItem_Part_Interface,
+        Part_Name,
+        Part_Interface,
 
         // PartFeature
-        DatItem_Part_Feature_Name,
-        DatItem_Part_Feature_Value,
+        Part_Feature_Name,
+        Part_Feature_Value,
 
         // RamOption
-        DatItem_Content,
+        Content,
 
         // Release
-        DatItem_Language,
+        Language,
 
         // Setting
-        DatItem_Setting_Name,
-        DatItem_Setting_Value,
-        DatItem_Setting_Default,
+        Setting_Name,
+        Setting_Value,
+        Setting_Default,
 
         // SlotOption
-        DatItem_SlotOption_Name,
-        DatItem_SlotOption_DeviceName,
-        DatItem_SlotOption_Default,
+        SlotOption_Name,
+        SlotOption_DeviceName,
+        SlotOption_Default,
 
         // SoftwareList
-        DatItem_SoftwareListStatus,
-        DatItem_Filter,
+        SoftwareListStatus,
+        Filter,
 
         // Sound
-        DatItem_Channels,
+        Channels,
 
         #endregion
 

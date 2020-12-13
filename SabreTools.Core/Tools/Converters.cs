@@ -134,6 +134,675 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
+        /// Get DatHeaderField value from input string
+        /// </summary>
+        /// <param name="DatHeaderField">String to get value from</param>
+        /// <returns>DatHeaderField value corresponding to the string</returns>
+        public static DatHeaderField AsDatHeaderField(this string input)
+        {
+            // If the input is empty, we return null
+            if (string.IsNullOrEmpty(input))
+                return DatHeaderField.NULL;
+
+            // Normalize the input
+            input = input.ToLowerInvariant();
+
+            // Create regex
+            string headerRegex = @"^(dat|header|datheader)[.\-_\s]";
+
+            // If we don't have a header field, skip
+            if (!Regex.IsMatch(input, headerRegex))
+                return DatHeaderField.NULL;
+
+            // Replace the match and re-normalize
+            string headerInput = Regex.Replace(input, headerRegex, string.Empty)
+                .Replace(' ', '_')
+                .Replace('-', '_')
+                .Replace('.', '_');
+
+            switch (headerInput)
+            {
+                #region Common
+
+                case "file":
+                case "filename":
+                case "file_name":
+                    return DatHeaderField.FileName;
+
+                case "dat":
+                case "datname":
+                case "dat_name":
+                case "internalname":
+                case "internal_name":
+                    return DatHeaderField.Name;
+
+                case "desc":
+                case "description":
+                    return DatHeaderField.Description;
+
+                case "root":
+                case "rootdir":
+                case "root_dir":
+                case "rootdirectory":
+                case "root_directory":
+                    return DatHeaderField.RootDir;
+
+                case "category":
+                    return DatHeaderField.Category;
+
+                case "version":
+                    return DatHeaderField.Version;
+
+                case "date":
+                case "timestamp":
+                case "time_stamp":
+                    return DatHeaderField.Date;
+
+                case "author":
+                    return DatHeaderField.Author;
+
+                case "email":
+                case "e_mail":
+                    return DatHeaderField.Email;
+
+                case "homepage":
+                case "home_page":
+                    return DatHeaderField.Homepage;
+
+                case "url":
+                    return DatHeaderField.Url;
+
+                case "comment":
+                    return DatHeaderField.Comment;
+
+                case "header":
+                case "headerskipper":
+                case "header_skipper":
+                case "skipper":
+                    return DatHeaderField.HeaderSkipper;
+
+                case "dattype":
+                case "type":
+                case "superdat":
+                    return DatHeaderField.Type;
+
+                case "forcemerging":
+                case "force_merging":
+                    return DatHeaderField.ForceMerging;
+
+                case "forcenodump":
+                case "force_nodump":
+                    return DatHeaderField.ForceNodump;
+
+                case "forcepacking":
+                case "force_packing":
+                    return DatHeaderField.ForcePacking;
+
+                #endregion
+
+                #region ListXML
+
+                case "debug":
+                    return DatHeaderField.Debug;
+
+                case "mameconfig":
+                case "mame_config":
+                    return DatHeaderField.MameConfig;
+
+                #endregion
+
+                #region Logiqx
+
+                case "build":
+                    return DatHeaderField.Build;
+
+                case "rommode":
+                case "rom_mode":
+                    return DatHeaderField.RomMode;
+
+                case "biosmode":
+                case "bios_mode":
+                    return DatHeaderField.BiosMode;
+
+                case "samplemode":
+                case "sample_mode":
+                    return DatHeaderField.SampleMode;
+
+                case "lockrommode":
+                case "lockrom_mode":
+                case "lock_rommode":
+                case "lock_rom_mode":
+                    return DatHeaderField.LockRomMode;
+
+                case "lockbiosmode":
+                case "lockbios_mode":
+                case "lock_biosmode":
+                case "lock_bios_mode":
+                    return DatHeaderField.LockBiosMode;
+
+                case "locksamplemode":
+                case "locksample_mode":
+                case "lock_samplemode":
+                case "lock_sample_mode":
+                    return DatHeaderField.LockSampleMode;
+
+                #endregion
+
+                #region OfflineList
+
+                case "system":
+                case "plugin": // Used with RomCenter
+                    return DatHeaderField.System;
+
+                case "screenshotwidth":
+                case "screenshotswidth":
+                case "screenshot_width":
+                case "screenshots_width":
+                    return DatHeaderField.ScreenshotsWidth;
+
+                case "screenshotheight":
+                case "screenshotsheight":
+                case "screenshot_height":
+                case "screenshots_height":
+                    return DatHeaderField.ScreenshotsHeight;
+
+                case "info_name":
+                case "infos_name":
+                    return DatHeaderField.Info_Name;
+
+                case "info_visible":
+                case "infos_visible":
+                    return DatHeaderField.Info_Visible;
+
+                case "info_isnamingoption":
+                case "info_is_naming_option":
+                case "infos_isnamingoption":
+                case "infos_is_naming_option":
+                    return DatHeaderField.Info_IsNamingOption;
+
+                case "info_default":
+                case "infos_default":
+                    return DatHeaderField.Info_Default;
+
+                case "canopen":
+                case "can_open":
+                    return DatHeaderField.CanOpen;
+
+                case "romtitle":
+                case "rom_title":
+                    return DatHeaderField.RomTitle;
+
+                #endregion
+
+                #region RomCenter
+
+                case "rcversion":
+                case "rc_version":
+                case "romcenterversion":
+                case "romcenter_version":
+                case "rom_center_version":
+                    return DatHeaderField.RomCenterVersion;
+
+                #endregion
+
+                default:
+                    return DatHeaderField.NULL;
+            }
+        }
+
+        /// <summary>
+        /// Get DatItemField value from input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>DatItemField value corresponding to the string</returns>
+        public static DatItemField AsDatItemField(this string input)
+        {
+            // If the input is empty, we return null
+            if (string.IsNullOrEmpty(input))
+                return DatItemField.NULL;
+
+            // Normalize the input
+            input = input.ToLowerInvariant();
+
+            // Create regex
+            string datItemRegex = @"^(item|datitem)[.\-_\s]";
+
+            // If we don't have an item field, skip
+            if (!Regex.IsMatch(input, datItemRegex))
+                return DatItemField.NULL;
+
+            // Replace the match and re-normalize
+            string itemInput = Regex.Replace(input, datItemRegex, string.Empty)
+                .Replace(' ', '_')
+                .Replace('-', '_')
+                .Replace('.', '_');
+
+            switch (itemInput)
+            {
+                #region Common
+
+                case "type":
+                    return DatItemField.Type;
+
+                #endregion
+
+                #region Item-Specific
+
+                #region Actionable
+
+                // Rom
+                case "name":
+                    return DatItemField.Name;
+
+                case "bios":
+                    return DatItemField.Bios;
+
+                case "size":
+                    return DatItemField.Size;
+
+                case "crc":
+                case "crc32":
+                    return DatItemField.CRC;
+
+                case "md5":
+                case "md5_hash":
+                    return DatItemField.MD5;
+
+#if NET_FRAMEWORK
+                case "ripemd160":
+                case "ripemd160_hash":
+                    return DatItemField.RIPEMD160;
+#endif
+
+                case "sha1":
+                case "sha_1":
+                case "sha1hash":
+                case "sha1_hash":
+                case "sha_1hash":
+                case "sha_1_hash":
+                    return DatItemField.SHA1;
+
+                case "sha256":
+                case "sha_256":
+                case "sha256hash":
+                case "sha256_hash":
+                case "sha_256hash":
+                case "sha_256_hash":
+                    return DatItemField.SHA256;
+
+                case "sha384":
+                case "sha_384":
+                case "sha384hash":
+                case "sha384_hash":
+                case "sha_384hash":
+                case "sha_384_hash":
+                    return DatItemField.SHA384;
+
+                case "sha512":
+                case "sha_512":
+                case "sha512hash":
+                case "sha512_hash":
+                case "sha_512hash":
+                case "sha_512_hash":
+                    return DatItemField.SHA512;
+                    
+                case "spamsum":
+                case "spam_sum":
+                    return DatItemField.SpamSum;
+
+                case "merge":
+                case "mergetag":
+                case "merge_tag":
+                    return DatItemField.Merge;
+
+                case "region":
+                    return DatItemField.Region;
+
+                case "offset":
+                    return DatItemField.Offset;
+
+                case "date":
+                    return DatItemField.Date;
+
+                case "status":
+                    return DatItemField.Status;
+
+                case "optional":
+                    return DatItemField.Optional;
+
+                case "inverted":
+                    return DatItemField.Inverted;
+
+                // Rom (AttractMode)
+                case "altname":
+                case "alt name":
+                case "alt-name":
+                case "altromname":
+                case "alt romname":
+                case "alt-romname":
+                    return DatItemField.AltName;
+
+                case "alttitle":
+                case "alt title":
+                case "alt-title":
+                case "altromtitle":
+                case "alt romtitle":
+                case "alt-romtitle":
+                    return DatItemField.AltTitle;
+
+                // Rom (OpenMSX)
+                case "original":
+                    return DatItemField.Original;
+
+                case "subtype":
+                case "sub_type":
+                case "openmsxsubtype":
+                case "openmsx_subtype":
+                    return DatItemField.OpenMSXSubType;
+
+                case "openmsxtype":
+                case "openmsx_type":
+                    return DatItemField.OpenMSXType;
+
+                case "remark":
+                    return DatItemField.Remark;
+
+                case "boot":
+                    return DatItemField.Boot;
+
+                // Rom (SoftwareList)
+                case "areaname":
+                case "area_name":
+                    return DatItemField.AreaName;
+
+                case "areasize":
+                case "area_size":
+                    return DatItemField.AreaSize;
+
+                case "areawidth":
+                case "area_width":
+                    return DatItemField.AreaWidth;
+
+                case "areaendinanness":
+                case "area_endianness":
+                    return DatItemField.AreaEndianness;
+
+                case "loadflag":
+                case "load_flag":
+                    return DatItemField.LoadFlag;
+
+                case "partname":
+                case "part_name":
+                    return DatItemField.Part_Name;
+
+                case "partinterface":
+                case "part_interface":
+                    return DatItemField.Part_Interface;
+
+                case "part_feature_name":
+                    return DatItemField.Part_Feature_Name;
+
+                case "part_feature_value":
+                    return DatItemField.Part_Feature_Value;
+
+                case "value":
+                    return DatItemField.Value;
+
+                // Disk
+                case "index":
+                    return DatItemField.Index;
+
+                case "writable":
+                    return DatItemField.Writable;
+
+                #endregion
+
+                #region Auxiliary
+
+                // Adjuster
+                case "default":
+                    return DatItemField.Default;
+
+                // Analog
+                case "analog_mask":
+                    return DatItemField.Analog_Mask;
+
+                // BiosSet
+                case "description":
+                case "biosdescription":
+                case "bios_description":
+                    return DatItemField.Description;
+
+                // Chip
+                case "tag":
+                    return DatItemField.Tag;
+
+                case "chiptype":
+                case "chip_type":
+                    return DatItemField.ChipType;
+
+                case "clock":
+                    return DatItemField.Clock;
+
+                // Condition
+                case "mask":
+                    return DatItemField.Mask;
+
+                case "relation":
+                    return DatItemField.Relation;
+
+                case "condition_tag":
+                    return DatItemField.Condition_Tag;
+
+                case "condition_mask":
+                    return DatItemField.Condition_Mask;
+
+                case "condition_relation":
+                    return DatItemField.Condition_Relation;
+
+                case "condition_value":
+                    return DatItemField.Condition_Value;
+
+                // Control
+                case "control_type":
+                    return DatItemField.Control_Type;
+
+                case "control_player":
+                    return DatItemField.Control_Player;
+
+                case "control_buttons":
+                    return DatItemField.Control_Buttons;
+
+                case "control_reqbuttons":
+                    return DatItemField.Control_RequiredButtons;
+
+                case "control_minimum":
+                    return DatItemField.Control_Minimum;
+
+                case "control_maximum":
+                    return DatItemField.Control_Maximum;
+
+                case "control_sensitivity":
+                    return DatItemField.Control_Sensitivity;
+
+                case "control_keydelta":
+                    return DatItemField.Control_KeyDelta;
+
+                case "control_reverse":
+                    return DatItemField.Control_Reverse;
+
+                case "control_ways":
+                    return DatItemField.Control_Ways;
+
+                case "control_ways2":
+                    return DatItemField.Control_Ways2;
+
+                case "control_ways3":
+                    return DatItemField.Control_Ways3;
+
+                // Device
+                case "devicetype":
+                    return DatItemField.DeviceType;
+
+                case "fixedimage":
+                    return DatItemField.FixedImage;
+
+                case "mandatory":
+                    return DatItemField.Mandatory;
+
+                case "interface":
+                    return DatItemField.Interface;
+
+                // Display
+                case "displaytype":
+                    return DatItemField.DisplayType;
+
+                case "rotate":
+                    return DatItemField.Rotate;
+
+                case "flipx":
+                    return DatItemField.FlipX;
+
+                case "width":
+                    return DatItemField.Width;
+
+                case "height":
+                    return DatItemField.Height;
+
+                case "refresh":
+                    return DatItemField.Refresh;
+
+                case "pixclock":
+                    return DatItemField.PixClock;
+
+                case "htotal":
+                    return DatItemField.HTotal;
+
+                case "hbend":
+                    return DatItemField.HBEnd;
+
+                case "hbstart":
+                    return DatItemField.HBStart;
+
+                case "vtotal":
+                    return DatItemField.VTotal;
+
+                case "vbend":
+                    return DatItemField.VBEnd;
+
+                case "vbstart":
+                    return DatItemField.VBStart;
+
+                // Driver
+                case "supportstatus":
+                    return DatItemField.SupportStatus;
+
+                case "emulationstatus":
+                    return DatItemField.EmulationStatus;
+
+                case "cocktailstatus":
+                    return DatItemField.CocktailStatus;
+
+                case "savestatestatus":
+                    return DatItemField.SaveStateStatus;
+
+                // Extension
+                case "extension_name":
+                    return DatItemField.Extension_Name;
+
+                // Feature
+                case "featuretype":
+                    return DatItemField.FeatureType;
+
+                case "featurestatus":
+                    return DatItemField.FeatureStatus;
+
+                case "featureoverall":
+                    return DatItemField.FeatureOverall;
+
+                // Input
+                case "service":
+                    return DatItemField.Service;
+
+                case "tilt":
+                    return DatItemField.Tilt;
+
+                case "players":
+                    return DatItemField.Players;
+
+                case "coins":
+                    return DatItemField.Coins;
+
+                // Instance
+                case "instance_name":
+                    return DatItemField.Instance_Name;
+
+                case "instance_briefname":
+                    return DatItemField.Instance_BriefName;
+
+                // Location
+                case "location_name":
+                    return DatItemField.Location_Name;
+
+                case "location_number":
+                    return DatItemField.Location_Number;
+
+                case "location_inverted":
+                    return DatItemField.Location_Inverted;
+
+                // RamOption
+                case "content":
+                    return DatItemField.Content;
+
+                // Release
+                case "language":
+                    return DatItemField.Language;
+
+                // Setting
+                case "setting_name":
+                case "value_name":
+                    return DatItemField.Setting_Name;
+
+                case "setting_value":
+                case "value_value":
+                    return DatItemField.Setting_Value;
+
+                case "setting_default":
+                case "value_default":
+                    return DatItemField.Setting_Default;
+
+                // SlotOption
+                case "slotoption_name":
+                    return DatItemField.SlotOption_Name;
+
+                case "slotoption_devicename":
+                    return DatItemField.SlotOption_DeviceName;
+
+                case "slotoption_default":
+                    return DatItemField.SlotOption_Default;
+
+                // SoftwareList
+                case "softwareliststatus":
+                case "softwarelist_status":
+                    return DatItemField.SoftwareListStatus;
+
+                case "filter":
+                    return DatItemField.Filter;
+
+                // Sound
+                case "channels":
+                    return DatItemField.Channels;
+
+                #endregion
+
+                #endregion // Item-Specific
+
+                default:
+                    return DatItemField.NULL;
+            }
+        }
+
+        /// <summary>
         /// Get DeviceType value from input string
         /// </summary>
         /// <param name="deviceType">String to get value from</param>
@@ -1853,6 +2522,194 @@ namespace SabreTools.Core.Tools
 #endif
         }
 
+         /// <summary>
+        /// Get MachineField value from input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>MachineField value corresponding to the string</returns>
+        public static MachineField AsMachineField(this string input)
+        {
+            // If the input is empty, we return null
+            if (string.IsNullOrEmpty(input))
+                return MachineField.NULL;
+
+            // Normalize the input
+            input = input.ToLowerInvariant();
+
+            // Create regex
+            string machineRegex = @"^(game|machine)[.\-_\s]";
+
+            // If we don't have a machine field, skip
+            if (!Regex.IsMatch(input, machineRegex))
+                return MachineField.NULL;
+
+            // Replace the match and re-normalize
+            string machineInput = Regex.Replace(input, machineRegex, string.Empty)
+                .Replace(' ', '_')
+                .Replace('-', '_')
+                .Replace('.', '_');
+
+            switch (machineInput)
+            {
+                #region Common
+
+                case "name":
+                    return MachineField.Name;
+
+                case "comment":
+                case "extra": // Used with AttractMode
+                    return MachineField.Comment;
+
+                case "desc":
+                case "description":
+                    return MachineField.Description;
+
+                case "year":
+                    return MachineField.Year;
+
+                case "manufacturer":
+                    return MachineField.Manufacturer;
+
+                case "publisher":
+                    return MachineField.Publisher;
+
+                case "category":
+                    return MachineField.Category;
+
+                case "romof":
+                case "rom_of":
+                    return MachineField.RomOf;
+
+                case "cloneof":
+                case "clone_of":
+                    return MachineField.CloneOf;
+
+                case "sampleof":
+                case "sample_of":
+                    return MachineField.SampleOf;
+
+                case "type":
+                    return MachineField.Type;
+
+                #endregion
+
+                #region AttractMode
+
+                case "players":
+                    return MachineField.Players;
+
+                case "rotation":
+                    return MachineField.Rotation;
+
+                case "control":
+                    return MachineField.Control;
+
+                case "amstatus":
+                case "am_status":
+                case "gamestatus":
+                case "supportstatus":
+                case "support_status":
+                    return MachineField.Status;
+
+                case "displaycount":
+                    return MachineField.DisplayCount;
+
+                case "displaytype":
+                    return MachineField.DisplayType;
+
+                case "buttons":
+                    return MachineField.Buttons;
+
+                #endregion
+
+                #region ListXML
+
+                case "sourcefile":
+                case "source_file":
+                    return MachineField.SourceFile;
+
+                case "runnable":
+                    return MachineField.Runnable;                    
+
+                #endregion
+
+                #region Logiqx
+
+                case "board":
+                    return MachineField.Board;
+
+                case "rebuildto":
+                case "rebuild_to":
+                    return MachineField.RebuildTo;
+
+                #endregion
+
+                #region Logiqx EmuArc
+
+                case "titleid":
+                case "title_id":
+                    return MachineField.TitleID;
+
+                case "developer":
+                    return MachineField.Developer;
+
+                case "genre":
+                    return MachineField.Genre;
+
+                case "subgenre":
+                case "sub_genre":
+                    return MachineField.Subgenre;
+
+                case "ratings":
+                    return MachineField.Ratings;
+
+                case "score":
+                    return MachineField.Score;
+
+                case "enabled":
+                    return MachineField.Enabled;
+
+                case "crc":
+                case "hascrc":
+                case "has_crc":
+                    return MachineField.CRC;
+
+                case "relatedto":
+                case "related_to":
+                    return MachineField.RelatedTo;
+
+                #endregion
+
+                #region OpenMSX
+
+                case "genmsxid":
+                case "genmsx_id":
+                case "gen_msxid":
+                case "gen_msx_id":
+                    return MachineField.GenMSXID;
+
+                case "system":
+                case "msxsystem":
+                case "msx_system":
+                    return MachineField.System;
+
+                case "country":
+                    return MachineField.Country;
+
+                #endregion
+
+                #region SoftwareList
+
+                case "supported":
+                    return MachineField.Supported;
+
+                #endregion
+
+                default:
+                    return MachineField.NULL;
+            }
+        }
+
         /// <summary>
         /// Get MachineType value from input string
         /// </summary>
@@ -2225,8 +3082,6 @@ namespace SabreTools.Core.Tools
         #endregion
 
         #region Enum to String
-
-        // TODO: Field -> string
 
         /// <summary>
         /// Get string value from input ChipType
