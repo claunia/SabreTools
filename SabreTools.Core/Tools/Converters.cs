@@ -8,7 +8,7 @@ namespace SabreTools.Core.Tools
         #region Enum to Enum
 
         /// <summary>
-        /// Get the fields associated with each hash type
+        /// Get the Fields associated with each hash type
         /// </summary>
         public static List<Field> AsFields(this Hash hash)
         {
@@ -32,6 +32,35 @@ namespace SabreTools.Core.Tools
                 fields.Add(Field.DatItem_SHA512);
             if (hash.HasFlag(Hash.SpamSum))
                 fields.Add(Field.DatItem_SpamSum);
+
+            return fields;
+        }
+
+        /// <summary>
+        /// Get the DatItemFields associated with each hash type
+        /// </summary>
+        public static List<DatItemField> AsDatItemFields(this Hash hash)
+        {
+            List<DatItemField> fields = new List<DatItemField>();
+
+            if (hash.HasFlag(Hash.CRC))
+                fields.Add(DatItemField.CRC);
+            if (hash.HasFlag(Hash.MD5))
+                fields.Add(DatItemField.MD5);
+#if NET_FRAMEWORK
+            if (hash.HasFlag(Hash.RIPEMD160))
+                fields.Add(DatItemField.RIPEMD160);
+#endif
+            if (hash.HasFlag(Hash.SHA1))
+                fields.Add(DatItemField.SHA1);
+            if (hash.HasFlag(Hash.SHA256))
+                fields.Add(DatItemField.SHA256);
+            if (hash.HasFlag(Hash.SHA384))
+                fields.Add(DatItemField.SHA384);
+            if (hash.HasFlag(Hash.SHA512))
+                fields.Add(DatItemField.SHA512);
+            if (hash.HasFlag(Hash.SpamSum))
+                fields.Add(DatItemField.SpamSum);
 
             return fields;
         }
