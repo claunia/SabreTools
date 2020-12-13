@@ -64,7 +64,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Modification.ApplyExtras(datdata, Extras);
                     Modification.ApplySplitting(datdata, splitType, true);
-                    Modification.ApplyFilter(datdata, Filter);
+                    Modification.ApplyFilters(datdata, Cleaner);
                     Modification.ApplyCleaning(datdata, Cleaner);
 
                     // Set depot information
@@ -111,7 +111,7 @@ namespace SabreTools.Features
                 // Perform additional processing steps
                 Modification.ApplyExtras(datdata, Extras);
                 Modification.ApplySplitting(datdata, splitType, true);
-                Modification.ApplyFilter(datdata, Filter);
+                Modification.ApplyFilters(datdata, Cleaner);
                 Modification.ApplyCleaning(datdata, Cleaner);
 
                 // Set depot information

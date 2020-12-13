@@ -103,275 +103,7 @@ namespace SabreTools.DatItems
         [JsonIgnore, XmlIgnore]
         public bool Remove { get; set; }
 
-        #endregion
-
-        #region Static Values
-
-        /// <summary>
-        /// Fields unique to a DatItem
-        /// </summary>
-        public static readonly List<Field> DatItemFields = new List<Field>()
-        {
-            #region Common
-
-            Field.DatItem_Type,
-
-            #endregion
-
-            #region Item-Specific
-
-            #region Actionable
-
-            // Rom
-            Field.DatItem_Name,
-            Field.DatItem_Bios,
-            Field.DatItem_Size,
-            Field.DatItem_CRC,
-            Field.DatItem_MD5,
-#if NET_FRAMEWORK
-            Field.DatItem_RIPEMD160,
-#endif
-            Field.DatItem_SHA1,
-            Field.DatItem_SHA256,
-            Field.DatItem_SHA384,
-            Field.DatItem_SHA512,
-            Field.DatItem_SpamSum,
-            Field.DatItem_Merge,
-            Field.DatItem_Region,
-            Field.DatItem_Offset,
-            Field.DatItem_Date,
-            Field.DatItem_Status,
-            Field.DatItem_Optional,
-            Field.DatItem_Inverted,
-
-            // Rom (AttractMode)
-            Field.DatItem_AltName,
-            Field.DatItem_AltTitle,
-
-            // Rom (OpenMSX)
-            Field.DatItem_Original,
-            Field.DatItem_OpenMSXSubType,
-            Field.DatItem_OpenMSXType,
-            Field.DatItem_Remark,
-            Field.DatItem_Boot,
-
-            // Rom (SoftwareList)
-            Field.DatItem_LoadFlag,
-            Field.DatItem_Value,
-
-            // Disk
-            Field.DatItem_Index,
-            Field.DatItem_Writable,
-
-            #endregion
-
-            #region Auxiliary
-
-            // Adjuster
-            Field.DatItem_Default,
-
-            // Analog
-            Field.DatItem_Analog_Mask,
-
-            // BiosSet
-            Field.DatItem_Description,
-
-            // Chip
-            Field.DatItem_Tag,
-            Field.DatItem_ChipType,
-            Field.DatItem_Clock,
-
-            // Condition
-            Field.DatItem_Mask,
-            Field.DatItem_Relation,
-            Field.DatItem_Condition_Tag,
-            Field.DatItem_Condition_Mask,
-            Field.DatItem_Condition_Relation,
-            Field.DatItem_Condition_Value,
-
-            // Control
-            Field.DatItem_Control_Type,
-            Field.DatItem_Control_Player,
-            Field.DatItem_Control_Buttons,
-            Field.DatItem_Control_RequiredButtons,
-            Field.DatItem_Control_Minimum,
-            Field.DatItem_Control_Maximum,
-            Field.DatItem_Control_Sensitivity,
-            Field.DatItem_Control_KeyDelta,
-            Field.DatItem_Control_Reverse,
-            Field.DatItem_Control_Ways,
-            Field.DatItem_Control_Ways2,
-            Field.DatItem_Control_Ways3,
-
-            // DataArea
-            Field.DatItem_AreaName,
-            Field.DatItem_AreaSize,
-            Field.DatItem_AreaWidth,
-            Field.DatItem_AreaEndianness,
-
-            // Device
-            Field.DatItem_DeviceType,
-            Field.DatItem_FixedImage,
-            Field.DatItem_Mandatory,
-            Field.DatItem_Interface,
-
-            // Display
-            Field.DatItem_DisplayType,
-            Field.DatItem_Rotate,
-            Field.DatItem_FlipX,
-            Field.DatItem_Width,
-            Field.DatItem_Height,
-            Field.DatItem_Refresh,
-            Field.DatItem_PixClock,
-            Field.DatItem_HTotal,
-            Field.DatItem_HBEnd,
-            Field.DatItem_HBStart,
-            Field.DatItem_VTotal,
-            Field.DatItem_VBEnd,
-            Field.DatItem_VBStart,
-
-            // Driver
-            Field.DatItem_SupportStatus,
-            Field.DatItem_EmulationStatus,
-            Field.DatItem_CocktailStatus,
-            Field.DatItem_SaveStateStatus,
-
-            // Extension
-            Field.DatItem_Extension_Name,
-
-            // Feature
-            Field.DatItem_FeatureType,
-            Field.DatItem_FeatureStatus,
-            Field.DatItem_FeatureOverall,
-
-            // Input
-            Field.DatItem_Service,
-            Field.DatItem_Tilt,
-            Field.DatItem_Players,
-            Field.DatItem_Coins,
-
-            // Instance
-            Field.DatItem_Instance_Name,
-            Field.DatItem_Instance_BriefName,
-
-            // Location
-            Field.DatItem_Location_Name,
-            Field.DatItem_Location_Number,
-            Field.DatItem_Location_Inverted,
-
-            // Part
-            Field.DatItem_Part_Name,
-            Field.DatItem_Part_Interface,
-
-            // PartFeature
-            Field.DatItem_Part_Feature_Name,
-            Field.DatItem_Part_Feature_Value,
-
-            // RamOption
-            Field.DatItem_Content,
-
-            // Release
-            Field.DatItem_Language,
-
-            // Setting
-            Field.DatItem_Setting_Name,
-            Field.DatItem_Setting_Value,
-            Field.DatItem_Setting_Default,
-
-            // SlotOption
-            Field.DatItem_SlotOption_Name,
-            Field.DatItem_SlotOption_DeviceName,
-            Field.DatItem_SlotOption_Default,
-
-            // SoftwareList
-            Field.DatItem_SoftwareListStatus,
-            Field.DatItem_Filter,
-
-            // Sound
-            Field.DatItem_Channels,
-
-            #endregion
-
-            #endregion // Item-Specific
-        };
-
-        /// <summary>
-        /// Fields unique to a Machine
-        /// </summary>
-        public static readonly List<Field> MachineFields = new List<Field>()
-        {
-            #region Common
-
-            Field.Machine_Name,
-            Field.Machine_Comment,
-            Field.Machine_Description,
-            Field.Machine_Year,
-            Field.Machine_Manufacturer,
-            Field.Machine_Publisher,
-            Field.Machine_Category,
-            Field.Machine_RomOf,
-            Field.Machine_CloneOf,
-            Field.Machine_SampleOf,
-            Field.Machine_Type,
-
-            #endregion
-
-            #region AttractMode
-
-            Field.Machine_Players,
-            Field.Machine_Rotation,
-            Field.Machine_Control,
-            Field.Machine_Status,
-            Field.Machine_DisplayCount,
-            Field.Machine_DisplayType,
-            Field.Machine_Buttons,
-
-            #endregion
-
-            #region ListXML
-
-            Field.Machine_SourceFile,
-            Field.Machine_Runnable,
-
-            #endregion
-
-            #region Logiqx
-
-            Field.Machine_Board,
-            Field.Machine_RebuildTo,
-
-            #endregion
-
-            #region Logiqx EmuArc
-
-            Field.Machine_TitleID,
-            Field.Machine_Developer,
-            Field.Machine_Genre,
-            Field.Machine_Subgenre,
-            Field.Machine_Ratings,
-            Field.Machine_Score,
-            Field.Machine_Enabled,
-            Field.Machine_CRC,
-            Field.Machine_RelatedTo,
-
-            #endregion
-
-            #region OpenMSX
-
-            Field.Machine_GenMSXID,
-            Field.Machine_System,
-            Field.Machine_Country,
-
-            #endregion
-
-            #region SoftwareList
-
-            Field.Machine_Supported,
-
-            #endregion
-        };
-
-        #endregion
+        #endregion // Metadata information
 
         #endregion
         
@@ -407,14 +139,18 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Set fields with given values
         /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public virtual void SetFields(Dictionary<Field, string> mappings)
+        /// <param name="datItemMappings">DatItem mappings dictionary</param>
+        /// <param name="machineMappings">Machine mappings dictionary</param>
+        /// TODO: Fix case where datItemMappings is null
+        public virtual void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set machine fields
             if (Machine == null)
                 Machine = new Machine();
 
-            Machine.SetFields(mappings);
+            Machine.SetFields(machineMappings);
         }
 
         #endregion
@@ -746,20 +482,20 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Check to see if a DatItem passes the filter
         /// </summary>
-        /// <param name="filter">Filter to check against</param>
+        /// <param name="cleaner">Cleaner containing filters to check against</param>
         /// <param name="sub">True if this is a subitem, false otherwise</param>
         /// <returns>True if the item passed the filter, false otherwise</returns>
-        public virtual bool PassesFilter(Filter filter, bool sub = false)
+        public virtual bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Filter on machine fields
-            if (!Machine.PassesFilter(filter))
+            if (!Machine.PassesFilter(cleaner))
                 return false;
 
             // Filters for if we're a top-level item
             if (!sub)
             {
                 // Filter on item type
-                if (!filter.PassStringFilter(filter.DatItem_Type, ItemType.ToString()))
+                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Type, ItemType.ToString()))
                     return false;
             }
 
@@ -769,11 +505,15 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Remove fields from the DatItem
         /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public virtual void RemoveFields(List<Field> fields)
+        /// <param name="datItemFields">DatItem fields to remove</param>
+        /// <param name="machineFields">Machine fields to remove</param>
+        /// TODO: Fix case where datItemFields is null
+        public virtual void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove machine fields
-            Machine.RemoveFields(fields);
+            Machine.RemoveFields(machineFields);
         }
 
         /// <summary>
@@ -1135,9 +875,19 @@ namespace SabreTools.DatItems
         /// Replace fields from another item
         /// </summary>
         /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public virtual void ReplaceFields(DatItem item, List<Field> fields)
+        /// <param name="datItemFields">DatItem fields to remove</param>
+        /// <param name="machineFields">Machine fields to remove</param>
+        /// TODO: Fix case where datItemFields is null
+        public virtual void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
+            if (Machine == null)
+                Machine = new Machine();
+
+            // TODO: Figure out why this wasn't here
+            // Machine.ReplaceFields(item.Machine, machineFields)
         }
 
         #endregion
@@ -1248,14 +998,14 @@ namespace SabreTools.DatItems
                         {
                             saveditem.Source = file.Source.Clone() as Source;
                             saveditem.CopyMachineInformation(file);
-                            saveditem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = file.GetName() });
+                            saveditem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = file.GetName() }, null);
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
                         if (saveditem.Machine.CloneOf == file.Machine.Name || saveditem.Machine.RomOf == file.Machine.Name)
                         {
                             saveditem.CopyMachineInformation(file);
-                            saveditem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = file.GetName() });
+                            saveditem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = file.GetName() }, null);
                         }
 
                         break;
@@ -1351,7 +1101,7 @@ namespace SabreTools.DatItems
                     }
 
                     // Set the item name back to the datItem
-                    datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = datItemName });
+                    datItem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = datItemName }, null);
 
                     output.Add(datItem);
                 }

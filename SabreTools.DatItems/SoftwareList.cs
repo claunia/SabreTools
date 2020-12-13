@@ -57,24 +57,23 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle SoftwareList-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                Name = datItemMappings[DatItemField.Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_SoftwareListStatus))
-                Status = mappings[Field.DatItem_SoftwareListStatus].AsSoftwareListStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.SoftwareListStatus))
+                Status = datItemMappings[DatItemField.SoftwareListStatus].AsSoftwareListStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_Filter))
-                Filter = mappings[Field.DatItem_Filter];
+            if (datItemMappings.Keys.Contains(DatItemField.Filter))
+                Filter = datItemMappings[DatItemField.Filter];
         }
 
         #endregion
@@ -161,52 +160,46 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
+            if (!Filtering.Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
                 return false;
 
             // Filter on status
-            if (filter.DatItem_SoftwareListStatus.MatchesPositive(SoftwareListStatus.NULL, Status) == false)
+            if (cleaner.DatItemFilter.SoftwareListStatus.MatchesPositive(SoftwareListStatus.NULL, Status) == false)
                 return false;
-            if (filter.DatItem_SoftwareListStatus.MatchesNegative(SoftwareListStatus.NULL, Status) == true)
+            if (cleaner.DatItemFilter.SoftwareListStatus.MatchesNegative(SoftwareListStatus.NULL, Status) == true)
                 return false;
 
             // Filter on filter
-            if (!filter.PassStringFilter(filter.DatItem_Filter, Filter))
+            if (!Filtering.Filter.PassStringFilter(cleaner.DatItemFilter.Filter, Filter))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_SoftwareListStatus))
+            if (datItemFields.Contains(DatItemField.SoftwareListStatus))
                 Status = SoftwareListStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_Filter))
+            if (datItemFields.Contains(DatItemField.Filter))
                 Filter = null;
         }
 
@@ -224,15 +217,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a SoftwareList to replace from, ignore specific fields
             if (item.ItemType != ItemType.SoftwareList)
@@ -242,13 +234,13 @@ namespace SabreTools.DatItems
             SoftwareList newItem = item as SoftwareList;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_SoftwareListStatus))
+            if (datItemFields.Contains(DatItemField.SoftwareListStatus))
                 Status = newItem.Status;
 
-            if (fields.Contains(Field.DatItem_Filter))
+            if (datItemFields.Contains(DatItemField.Filter))
                 Filter = newItem.Filter;
         }
 

@@ -68,27 +68,26 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Chip-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                Name = datItemMappings[DatItemField.Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Tag))
-                Tag = mappings[Field.DatItem_Tag];
+            if (datItemMappings.Keys.Contains(DatItemField.Tag))
+                Tag = datItemMappings[DatItemField.Tag];
 
-            if (mappings.Keys.Contains(Field.DatItem_ChipType))
-                ChipType = mappings[Field.DatItem_ChipType].AsChipType();
+            if (datItemMappings.Keys.Contains(DatItemField.ChipType))
+                ChipType = datItemMappings[DatItemField.ChipType].AsChipType();
 
-            if (mappings.Keys.Contains(Field.DatItem_Clock))
-                Clock = Utilities.CleanLong(mappings[Field.DatItem_Clock]);
+            if (datItemMappings.Keys.Contains(DatItemField.Clock))
+                Clock = Utilities.CleanLong(datItemMappings[DatItemField.Clock]);
         }
 
         #endregion
@@ -177,59 +176,53 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
                 return false;
 
             // DatItem_Tag
-            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
                 return false;
 
             // DatItem_ChipType
-            if (filter.DatItem_ChipType.MatchesPositive(ChipType.NULL, ChipType) == false)
+            if (cleaner.DatItemFilter.ChipType.MatchesPositive(ChipType.NULL, ChipType) == false)
                 return false;
-            if (filter.DatItem_ChipType.MatchesNegative(ChipType.NULL, ChipType) == true)
+            if (cleaner.DatItemFilter.ChipType.MatchesNegative(ChipType.NULL, ChipType) == true)
                 return false;
 
             // DatItem_Clock
-            if (!filter.PassLongFilter(filter.DatItem_Clock, Clock))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Clock, Clock))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Tag))
+            if (datItemFields.Contains(DatItemField.Tag))
                 Tag = null;
 
-            if (fields.Contains(Field.DatItem_ChipType))
+            if (datItemFields.Contains(DatItemField.ChipType))
                 ChipType = ChipType.NULL;
 
-            if (fields.Contains(Field.DatItem_Clock))
+            if (datItemFields.Contains(DatItemField.Clock))
                 Clock = null;
         }
 
@@ -247,15 +240,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Chip to replace from, ignore specific fields
             if (item.ItemType != ItemType.Chip)
@@ -265,16 +257,16 @@ namespace SabreTools.DatItems
             Chip newItem = item as Chip;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Tag))
+            if (datItemFields.Contains(DatItemField.Tag))
                 Tag = newItem.Tag;
 
-            if (fields.Contains(Field.DatItem_ChipType))
+            if (datItemFields.Contains(DatItemField.ChipType))
                 ChipType = newItem.ChipType;
 
-            if (fields.Contains(Field.DatItem_Clock))
+            if (datItemFields.Contains(DatItemField.Clock))
                 Clock = newItem.Clock;
         }
 

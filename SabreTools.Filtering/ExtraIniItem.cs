@@ -12,9 +12,14 @@ namespace SabreTools.Filtering
         #region Fields
 
         /// <summary>
-        /// Field to update with INI information
+        /// MachineField to update with INI information
         /// </summary>
-        public Field Field { get; set; }
+        public MachineField MachineField { get; set; } = MachineField.NULL;
+
+        /// <summary>
+        /// DatItemField to update with INI information
+        /// </summary>
+        public DatItemField DatItemField { get; set; } = DatItemField.NULL;
 
         /// <summary>
         /// Mappings from value to machine name

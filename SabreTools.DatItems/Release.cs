@@ -69,30 +69,29 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Release-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                Name = datItemMappings[DatItemField.Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Region))
-                Region = mappings[Field.DatItem_Region];
+            if (datItemMappings.Keys.Contains(DatItemField.Region))
+                Region = datItemMappings[DatItemField.Region];
 
-            if (mappings.Keys.Contains(Field.DatItem_Language))
-                Language = mappings[Field.DatItem_Language];
+            if (datItemMappings.Keys.Contains(DatItemField.Language))
+                Language = datItemMappings[DatItemField.Language];
 
-            if (mappings.Keys.Contains(Field.DatItem_Date))
-                Date = mappings[Field.DatItem_Date];
+            if (datItemMappings.Keys.Contains(DatItemField.Date))
+                Date = datItemMappings[DatItemField.Date];
 
-            if (mappings.Keys.Contains(Field.DatItem_Default))
-                Default = mappings[Field.DatItem_Default].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Default))
+                Default = datItemMappings[DatItemField.Default].AsYesNo();
         }
 
         #endregion
@@ -187,64 +186,58 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
                 return false;
 
             // Filter on region
-            if (!filter.PassStringFilter(filter.DatItem_Region, Region))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Region, Region))
                 return false;
 
             // Filter on language
-            if (!filter.PassStringFilter(filter.DatItem_Language, Language))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Language, Language))
                 return false;
 
             // Filter on date
-            if (!filter.PassStringFilter(filter.DatItem_Date, Date))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Date, Date))
                 return false;
 
             // Filter on default
-            if (!filter.PassBoolFilter(filter.DatItem_Default, Default))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Default, Default))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Region))
+            if (datItemFields.Contains(DatItemField.Region))
                 Region = null;
 
-            if (fields.Contains(Field.DatItem_Language))
+            if (datItemFields.Contains(DatItemField.Language))
                 Language = null;
 
-            if (fields.Contains(Field.DatItem_Date))
+            if (datItemFields.Contains(DatItemField.Date))
                 Date = null;
 
-            if (fields.Contains(Field.DatItem_Default))
+            if (datItemFields.Contains(DatItemField.Default))
                 Default = null;
         }
 
@@ -262,15 +255,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Release to replace from, ignore specific fields
             if (item.ItemType != ItemType.Release)
@@ -280,19 +272,19 @@ namespace SabreTools.DatItems
             Release newItem = item as Release;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Region))
+            if (datItemFields.Contains(DatItemField.Region))
                 Region = newItem.Region;
 
-            if (fields.Contains(Field.DatItem_Language))
+            if (datItemFields.Contains(DatItemField.Language))
                 Language = newItem.Language;
 
-            if (fields.Contains(Field.DatItem_Date))
+            if (datItemFields.Contains(DatItemField.Date))
                 Date = newItem.Date;
 
-            if (fields.Contains(Field.DatItem_Default))
+            if (datItemFields.Contains(DatItemField.Default))
                 Default = newItem.Default;
         }
 

@@ -65,27 +65,47 @@ namespace SabreTools.DatFiles.Formats
                     // Get the current line, split and parse
                     svr.ReadNextLine();
 
-                    // Create mapping dictionary
-                    var mappings = new Dictionary<Field, string>();
+                    // Create mapping dictionaries
+                    var datHeaderMappings = new Dictionary<DatHeaderField, string>();
+                    var machineMappings = new Dictionary<MachineField, string>();
+                    var datItemMappings = new Dictionary<DatItemField, string>();
 
                     // Now we loop through and get values for everything
                     for (int i = 0; i < svr.HeaderValues.Count; i++)
                     {
-                        Field key = svr.HeaderValues[i].AsField();
                         string value = svr.Line[i];
-                        mappings[key] = value;
+                        DatHeaderField dhf = svr.HeaderValues[i].AsDatHeaderField();
+                        if (dhf != DatHeaderField.NULL)
+                        {
+                            datHeaderMappings[dhf] = value;
+                            continue;
+                        }
+
+                        MachineField mf = svr.HeaderValues[i].AsMachineField();
+                        if (mf != MachineField.NULL)
+                        {
+                            machineMappings[mf] = value;
+                            continue;
+                        }
+
+                        DatItemField dif = svr.HeaderValues[i].AsDatItemField();
+                        if (dif != DatItemField.NULL)
+                        {
+                            datItemMappings[dif] = value;
+                            continue;
+                        }
                     }
 
                     // Set DatHeader fields
                     DatHeader header = new DatHeader();
-                    header.SetFields(mappings);
+                    header.SetFields(datHeaderMappings);
                     Header.ConditionalCopy(header);
 
                     // Set Machine and DatItem fields
-                    if (mappings.ContainsKey(Field.DatItem_Type))
+                    if (datItemMappings.ContainsKey(DatItemField.Type))
                     {
-                        DatItem datItem = DatItem.Create(mappings[Field.DatItem_Type].AsItemType());
-                        datItem.SetFields(mappings);
+                        DatItem datItem = DatItem.Create(datItemMappings[DatItemField.Type].AsItemType());
+                        datItem.SetFields(datItemMappings, machineMappings);
                         datItem.Source = new Source(indexId, filename);
                         ParseAddHelper(datItem);
                     }

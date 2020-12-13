@@ -39,18 +39,17 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle DiskArea-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_AreaName))
-                Name = mappings[Field.DatItem_AreaName];
+            if (datItemMappings.Keys.Contains(DatItemField.AreaName))
+                Name = datItemMappings[DatItemField.AreaName];
         }
 
         #endregion
@@ -133,36 +132,30 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on area name
-            if (!filter.PassStringFilter(filter.DatItem_AreaName, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.AreaName, Name))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_AreaName))
+            if (datItemFields.Contains(DatItemField.AreaName))
                 Name = null;
         }
 
@@ -180,15 +173,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a DiskArea to replace from, ignore specific fields
             if (item.ItemType != ItemType.DiskArea)
@@ -198,7 +190,7 @@ namespace SabreTools.DatItems
             DiskArea newItem = item as DiskArea;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_AreaName))
+            if (datItemFields.Contains(DatItemField.AreaName))
                 Name = newItem.Name;
         }
 

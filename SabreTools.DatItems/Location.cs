@@ -58,24 +58,23 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Location-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Location_Name))
-                Name = mappings[Field.DatItem_Location_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Location_Name))
+                Name = datItemMappings[DatItemField.Location_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Location_Number))
-                Number = Utilities.CleanLong(mappings[Field.DatItem_Location_Number]);
+            if (datItemMappings.Keys.Contains(DatItemField.Location_Number))
+                Number = Utilities.CleanLong(datItemMappings[DatItemField.Location_Number]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Location_Inverted))
-                Inverted = mappings[Field.DatItem_Location_Inverted].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Location_Inverted))
+                Inverted = datItemMappings[DatItemField.Location_Inverted].AsYesNo();
         }
 
         #endregion
@@ -162,50 +161,44 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Location_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Location_Name, Name))
                 return false;
 
             // Filter on number
-            if (!filter.PassLongFilter(filter.DatItem_Location_Number, Number))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Location_Number, Number))
                 return false;
 
             // Filter on inverted
-            if (!filter.PassBoolFilter(filter.DatItem_Location_Inverted, Inverted))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Location_Inverted, Inverted))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Location_Name))
+            if (datItemFields.Contains(DatItemField.Location_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Location_Number))
+            if (datItemFields.Contains(DatItemField.Location_Number))
                 Number = null;
 
-            if (fields.Contains(Field.DatItem_Location_Inverted))
+            if (datItemFields.Contains(DatItemField.Location_Inverted))
                 Inverted = null;
         }
 
@@ -223,15 +216,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Location to replace from, ignore specific fields
             if (item.ItemType != ItemType.Location)
@@ -241,13 +233,13 @@ namespace SabreTools.DatItems
             Location newItem = item as Location;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Location_Name))
+            if (datItemFields.Contains(DatItemField.Location_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Location_Number))
+            if (datItemFields.Contains(DatItemField.Location_Number))
                 Number = newItem.Number;
 
-            if (fields.Contains(Field.DatItem_Location_Inverted))
+            if (datItemFields.Contains(DatItemField.Location_Inverted))
                 Inverted = newItem.Inverted;
         }
 

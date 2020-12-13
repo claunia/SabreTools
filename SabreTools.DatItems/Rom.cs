@@ -352,125 +352,124 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Rom-specific fields
 
             #region Common
 
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                Name = datItemMappings[DatItemField.Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Bios))
-                Bios = mappings[Field.DatItem_Bios];
+            if (datItemMappings.Keys.Contains(DatItemField.Bios))
+                Bios = datItemMappings[DatItemField.Bios];
 
-            if (mappings.Keys.Contains(Field.DatItem_Size))
-                Size = Utilities.CleanLong(mappings[Field.DatItem_Size]);
+            if (datItemMappings.Keys.Contains(DatItemField.Size))
+                Size = Utilities.CleanLong(datItemMappings[DatItemField.Size]);
 
-            if (mappings.Keys.Contains(Field.DatItem_CRC))
-                CRC = mappings[Field.DatItem_CRC];
+            if (datItemMappings.Keys.Contains(DatItemField.CRC))
+                CRC = datItemMappings[DatItemField.CRC];
 
-            if (mappings.Keys.Contains(Field.DatItem_MD5))
-                MD5 = mappings[Field.DatItem_MD5];
+            if (datItemMappings.Keys.Contains(DatItemField.MD5))
+                MD5 = datItemMappings[DatItemField.MD5];
 
 #if NET_FRAMEWORK
-            if (mappings.Keys.Contains(Field.DatItem_RIPEMD160))
-                RIPEMD160 = mappings[Field.DatItem_RIPEMD160];
+            if (datItemMappings.Keys.Contains(DatItemField.RIPEMD160))
+                RIPEMD160 = datItemMappings[DatItemField.RIPEMD160];
 #endif
 
-            if (mappings.Keys.Contains(Field.DatItem_SHA1))
-                SHA1 = mappings[Field.DatItem_SHA1];
+            if (datItemMappings.Keys.Contains(DatItemField.SHA1))
+                SHA1 = datItemMappings[DatItemField.SHA1];
 
-            if (mappings.Keys.Contains(Field.DatItem_SHA256))
-                SHA256 = mappings[Field.DatItem_SHA256];
+            if (datItemMappings.Keys.Contains(DatItemField.SHA256))
+                SHA256 = datItemMappings[DatItemField.SHA256];
 
-            if (mappings.Keys.Contains(Field.DatItem_SHA384))
-                SHA384 = mappings[Field.DatItem_SHA384];
+            if (datItemMappings.Keys.Contains(DatItemField.SHA384))
+                SHA384 = datItemMappings[DatItemField.SHA384];
 
-            if (mappings.Keys.Contains(Field.DatItem_SHA512))
-                SHA512 = mappings[Field.DatItem_SHA512];
+            if (datItemMappings.Keys.Contains(DatItemField.SHA512))
+                SHA512 = datItemMappings[DatItemField.SHA512];
 
-            if (mappings.Keys.Contains(Field.DatItem_SpamSum))
-                SpamSum = mappings[Field.DatItem_SpamSum];
+            if (datItemMappings.Keys.Contains(DatItemField.SpamSum))
+                SpamSum = datItemMappings[DatItemField.SpamSum];
 
-            if (mappings.Keys.Contains(Field.DatItem_Merge))
-                MergeTag = mappings[Field.DatItem_Merge];
+            if (datItemMappings.Keys.Contains(DatItemField.Merge))
+                MergeTag = datItemMappings[DatItemField.Merge];
 
-            if (mappings.Keys.Contains(Field.DatItem_Region))
-                Region = mappings[Field.DatItem_Region];
+            if (datItemMappings.Keys.Contains(DatItemField.Region))
+                Region = datItemMappings[DatItemField.Region];
 
-            if (mappings.Keys.Contains(Field.DatItem_Offset))
-                Offset = mappings[Field.DatItem_Offset];
+            if (datItemMappings.Keys.Contains(DatItemField.Offset))
+                Offset = datItemMappings[DatItemField.Offset];
 
-            if (mappings.Keys.Contains(Field.DatItem_Date))
-                Date = mappings[Field.DatItem_Date];
+            if (datItemMappings.Keys.Contains(DatItemField.Date))
+                Date = datItemMappings[DatItemField.Date];
 
-            if (mappings.Keys.Contains(Field.DatItem_Status))
-                ItemStatus = mappings[Field.DatItem_Status].AsItemStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.Status))
+                ItemStatus = datItemMappings[DatItemField.Status].AsItemStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_Optional))
-                Optional = mappings[Field.DatItem_Optional].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Optional))
+                Optional = datItemMappings[DatItemField.Optional].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.DatItem_Inverted))
-                Inverted = mappings[Field.DatItem_Optional].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Inverted))
+                Inverted = datItemMappings[DatItemField.Optional].AsYesNo();
 
             #endregion
 
             #region AttractMode
 
-            if (mappings.Keys.Contains(Field.DatItem_AltName))
-                AltName = mappings[Field.DatItem_AltName];
+            if (datItemMappings.Keys.Contains(DatItemField.AltName))
+                AltName = datItemMappings[DatItemField.AltName];
 
-            if (mappings.Keys.Contains(Field.DatItem_AltTitle))
-                AltTitle = mappings[Field.DatItem_AltTitle];
+            if (datItemMappings.Keys.Contains(DatItemField.AltTitle))
+                AltTitle = datItemMappings[DatItemField.AltTitle];
 
             #endregion
 
             #region OpenMSX
 
-            if (mappings.Keys.Contains(Field.DatItem_Original))
-                Original = new Original() { Content = mappings[Field.DatItem_Original] };
+            if (datItemMappings.Keys.Contains(DatItemField.Original))
+                Original = new Original() { Content = datItemMappings[DatItemField.Original] };
 
-            if (mappings.Keys.Contains(Field.DatItem_OpenMSXSubType))
-                OpenMSXSubType = mappings[Field.DatItem_OpenMSXSubType].AsOpenMSXSubType();
+            if (datItemMappings.Keys.Contains(DatItemField.OpenMSXSubType))
+                OpenMSXSubType = datItemMappings[DatItemField.OpenMSXSubType].AsOpenMSXSubType();
 
-            if (mappings.Keys.Contains(Field.DatItem_OpenMSXType))
-                OpenMSXType = mappings[Field.DatItem_OpenMSXType];
+            if (datItemMappings.Keys.Contains(DatItemField.OpenMSXType))
+                OpenMSXType = datItemMappings[DatItemField.OpenMSXType];
 
-            if (mappings.Keys.Contains(Field.DatItem_Remark))
-                Remark = mappings[Field.DatItem_Remark];
+            if (datItemMappings.Keys.Contains(DatItemField.Remark))
+                Remark = datItemMappings[DatItemField.Remark];
 
-            if (mappings.Keys.Contains(Field.DatItem_Boot))
-                Boot = mappings[Field.DatItem_Boot];
+            if (datItemMappings.Keys.Contains(DatItemField.Boot))
+                Boot = datItemMappings[DatItemField.Boot];
 
             #endregion
 
             #region SoftwareList
 
-            if (mappings.Keys.Contains(Field.DatItem_LoadFlag))
-                LoadFlag = mappings[Field.DatItem_LoadFlag].AsLoadFlag();
+            if (datItemMappings.Keys.Contains(DatItemField.LoadFlag))
+                LoadFlag = datItemMappings[DatItemField.LoadFlag].AsLoadFlag();
 
-            if (mappings.Keys.Contains(Field.DatItem_Value))
-                Value = mappings[Field.DatItem_Value];
+            if (datItemMappings.Keys.Contains(DatItemField.Value))
+                Value = datItemMappings[DatItemField.Value];
 
             // Handle DataArea-specific fields
             if (DataArea == null)
                 DataArea = new DataArea();
 
-            DataArea.SetFields(mappings);
+            DataArea.SetFields(datItemMappings, machineMappings);
 
             // Handle Part-specific fields
             if (Part == null)
                 Part = new Part();
 
-            Part.SetFields(mappings);
+            Part.SetFields(datItemMappings, machineMappings);
 
             #endregion
         }
@@ -823,94 +822,89 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             #region Common
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
                 return false;
 
             // Filter on bios
-            if (!filter.PassStringFilter(filter.DatItem_Bios, Bios))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Bios, Bios))
                 return false;
 
             // Filter on rom size
-            if (!filter.PassLongFilter(filter.DatItem_Size, Size))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Size, Size))
                 return false;
 
             // Filter on CRC
-            if (!filter.PassStringFilter(filter.DatItem_CRC, CRC))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.CRC, CRC))
                 return false;
 
             // Filter on MD5
-            if (!filter.PassStringFilter(filter.DatItem_MD5, MD5))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.MD5, MD5))
                 return false;
 
 #if NET_FRAMEWORK
             // Filter on RIPEMD160
-            if (!filter.PassStringFilter(filter.DatItem_RIPEMD160, RIPEMD160))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.RIPEMD160, RIPEMD160))
                 return false;
 #endif
 
             // Filter on SHA-1
-            if (!filter.PassStringFilter(filter.DatItem_SHA1, SHA1))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA1, SHA1))
                 return false;
 
             // Filter on SHA-256
-            if (!filter.PassStringFilter(filter.DatItem_SHA256, SHA256))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA256, SHA256))
                 return false;
 
             // Filter on SHA-384
-            if (!filter.PassStringFilter(filter.DatItem_SHA384, SHA384))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA384, SHA384))
                 return false;
 
             // Filter on SHA-512
-            if (!filter.PassStringFilter(filter.DatItem_SHA512, SHA512))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA512, SHA512))
                 return false;
 
             // Filter on SpamSum
-            if (!filter.PassStringFilter(filter.DatItem_SpamSum, SpamSum))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SpamSum, SpamSum))
                 return false;
 
             // Filter on merge tag
-            if (!filter.PassStringFilter(filter.DatItem_Merge, MergeTag))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Merge, MergeTag))
                 return false;
 
             // Filter on region
-            if (!filter.PassStringFilter(filter.DatItem_Region, Region))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Region, Region))
                 return false;
 
             // Filter on offset
-            if (!filter.PassStringFilter(filter.DatItem_Offset, Offset))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Offset, Offset))
                 return false;
 
             // Filter on date
-            if (!filter.PassStringFilter(filter.DatItem_Date, Date))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Date, Date))
                 return false;
 
             // Filter on status
-            if (filter.DatItem_Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
+            if (cleaner.DatItemFilter.Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
                 return false;
-            if (filter.DatItem_Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
+            if (cleaner.DatItemFilter.Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
                 return false;
 
             // Filter on optional
-            if (!filter.PassBoolFilter(filter.DatItem_Optional, Optional))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Optional, Optional))
                 return false;
 
             // Filter on inverted
-            if (!filter.PassBoolFilter(filter.DatItem_Inverted, Inverted))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Inverted, Inverted))
                 return false;
 
             #endregion
@@ -918,11 +912,11 @@ namespace SabreTools.DatItems
             #region AttractMode
 
             // Filter on alt name
-            if (!filter.PassStringFilter(filter.DatItem_AltName, AltName))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.AltName, AltName))
                 return false;
 
             // Filter on alt title
-            if (!filter.PassStringFilter(filter.DatItem_AltTitle, AltTitle))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.AltTitle, AltTitle))
                 return false;
 
             #endregion
@@ -930,25 +924,25 @@ namespace SabreTools.DatItems
             #region OpenMSX
 
             // Filter on original
-            if (!filter.PassStringFilter(filter.DatItem_Original, Original?.Content))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Original, Original?.Content))
                 return false;
 
             // Filter on OpenMSX subtype
-            if (filter.DatItem_OpenMSXSubType.MatchesPositive(OpenMSXSubType.NULL, OpenMSXSubType) == false)
+            if (cleaner.DatItemFilter.OpenMSXSubType.MatchesPositive(OpenMSXSubType.NULL, OpenMSXSubType) == false)
                 return false;
-            if (filter.DatItem_OpenMSXSubType.MatchesNegative(OpenMSXSubType.NULL, OpenMSXSubType) == true)
+            if (cleaner.DatItemFilter.OpenMSXSubType.MatchesNegative(OpenMSXSubType.NULL, OpenMSXSubType) == true)
                 return false;
 
             // Filter on OpenMSX type
-            if (!filter.PassStringFilter(filter.DatItem_OpenMSXType, OpenMSXType))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.OpenMSXType, OpenMSXType))
                 return false;
 
             // Filter on remark
-            if (!filter.PassStringFilter(filter.DatItem_Remark, Remark))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Remark, Remark))
                 return false;
 
             // Filter on boot
-            if (!filter.PassStringFilter(filter.DatItem_Boot, Boot))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Boot, Boot))
                 return false;
 
             #endregion
@@ -956,26 +950,26 @@ namespace SabreTools.DatItems
             #region SoftwareList
 
             // Filter on load flag
-            if (filter.DatItem_LoadFlag.MatchesPositive(LoadFlag.NULL, LoadFlag) == false)
+            if (cleaner.DatItemFilter.LoadFlag.MatchesPositive(LoadFlag.NULL, LoadFlag) == false)
                 return false;
-            if (filter.DatItem_LoadFlag.MatchesNegative(LoadFlag.NULL, LoadFlag) == true)
+            if (cleaner.DatItemFilter.LoadFlag.MatchesNegative(LoadFlag.NULL, LoadFlag) == true)
                 return false;
 
             // Filter on value
-            if (!filter.PassStringFilter(filter.DatItem_Value, Value))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Value, Value))
                 return false;
 
             // Filter on DataArea
             if (DataAreaSpecified)
             {
-                if (!DataArea.PassesFilter(filter, true))
+                if (!DataArea.PassesFilter(cleaner, true))
                     return false;
             }
 
             // Filter on Part
             if (PartSpecified)
             {
-                if (!Part.PassesFilter(filter, true))
+                if (!Part.PassesFilter(cleaner, true))
                     return false;
             }
 
@@ -984,119 +978,118 @@ namespace SabreTools.DatItems
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
 
             #region Common
 
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Bios))
+            if (datItemFields.Contains(DatItemField.Bios))
                 Bios = null;
 
-            if (fields.Contains(Field.DatItem_Size))
+            if (datItemFields.Contains(DatItemField.Size))
                 Size = 0;
 
-            if (fields.Contains(Field.DatItem_CRC))
+            if (datItemFields.Contains(DatItemField.CRC))
                 CRC = null;
 
-            if (fields.Contains(Field.DatItem_MD5))
+            if (datItemFields.Contains(DatItemField.MD5))
                 MD5 = null;
 
 #if NET_FRAMEWORK
-            if (fields.Contains(Field.DatItem_RIPEMD160))
+            if (datItemFields.Contains(DatItemField.RIPEMD160))
                 RIPEMD160 = null;
 #endif
 
-            if (fields.Contains(Field.DatItem_SHA1))
+            if (datItemFields.Contains(DatItemField.SHA1))
                 SHA1 = null;
 
-            if (fields.Contains(Field.DatItem_SHA256))
+            if (datItemFields.Contains(DatItemField.SHA256))
                 SHA256 = null;
 
-            if (fields.Contains(Field.DatItem_SHA384))
+            if (datItemFields.Contains(DatItemField.SHA384))
                 SHA384 = null;
 
-            if (fields.Contains(Field.DatItem_SHA512))
+            if (datItemFields.Contains(DatItemField.SHA512))
                 SHA512 = null;
 
-            if (fields.Contains(Field.DatItem_SpamSum))
+            if (datItemFields.Contains(DatItemField.SpamSum))
                 SpamSum = null;
 
-            if (fields.Contains(Field.DatItem_Merge))
+            if (datItemFields.Contains(DatItemField.Merge))
                 MergeTag = null;
 
-            if (fields.Contains(Field.DatItem_Region))
+            if (datItemFields.Contains(DatItemField.Region))
                 Region = null;
 
-            if (fields.Contains(Field.DatItem_Offset))
+            if (datItemFields.Contains(DatItemField.Offset))
                 Offset = null;
 
-            if (fields.Contains(Field.DatItem_Date))
+            if (datItemFields.Contains(DatItemField.Date))
                 Date = null;
 
-            if (fields.Contains(Field.DatItem_Status))
+            if (datItemFields.Contains(DatItemField.Status))
                 ItemStatus = ItemStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_Optional))
+            if (datItemFields.Contains(DatItemField.Optional))
                 Optional = null;
 
-            if (fields.Contains(Field.DatItem_Inverted))
+            if (datItemFields.Contains(DatItemField.Inverted))
                 Inverted = null;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(Field.DatItem_AltName))
+            if (datItemFields.Contains(DatItemField.AltName))
                 AltName = null;
 
-            if (fields.Contains(Field.DatItem_AltTitle))
+            if (datItemFields.Contains(DatItemField.AltTitle))
                 AltTitle = null;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(Field.DatItem_Original))
+            if (datItemFields.Contains(DatItemField.Original))
                 Original = null;
 
-            if (fields.Contains(Field.DatItem_OpenMSXSubType))
+            if (datItemFields.Contains(DatItemField.OpenMSXSubType))
                 OpenMSXSubType = OpenMSXSubType.NULL;
 
-            if (fields.Contains(Field.DatItem_OpenMSXType))
+            if (datItemFields.Contains(DatItemField.OpenMSXType))
                 OpenMSXType = null;
 
-            if (fields.Contains(Field.DatItem_Remark))
+            if (datItemFields.Contains(DatItemField.Remark))
                 Remark = null;
 
-            if (fields.Contains(Field.DatItem_Boot))
+            if (datItemFields.Contains(DatItemField.Boot))
                 Boot = null;
 
             #endregion
 
             #region SoftwareList
 
-            if (fields.Contains(Field.DatItem_LoadFlag))
+            if (datItemFields.Contains(DatItemField.LoadFlag))
                 LoadFlag = LoadFlag.NULL;
 
-            if (fields.Contains(Field.DatItem_Value))
+            if (datItemFields.Contains(DatItemField.Value))
                 Value = null;
 
             if (DataAreaSpecified)
-                DataArea.RemoveFields(fields);
+                DataArea.RemoveFields(datItemFields, machineFields);
 
             if (PartSpecified)
-                Part.RemoveFields(fields);
+                Part.RemoveFields(datItemFields, machineFields);
 
             #endregion
         }
@@ -1176,15 +1169,14 @@ namespace SabreTools.DatItems
             return key;
         }
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Rom to replace from, ignore specific fields
             if (item.ItemType != ItemType.Rom)
@@ -1197,130 +1189,130 @@ namespace SabreTools.DatItems
 
             #region Common
 
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Bios))
+            if (datItemFields.Contains(DatItemField.Bios))
                 Bios = newItem.Bios;
 
-            if (fields.Contains(Field.DatItem_Size))
+            if (datItemFields.Contains(DatItemField.Size))
                 Size = newItem.Size;
 
-            if (fields.Contains(Field.DatItem_CRC))
+            if (datItemFields.Contains(DatItemField.CRC))
             {
                 if (string.IsNullOrEmpty(CRC) && !string.IsNullOrEmpty(newItem.CRC))
                     CRC = newItem.CRC;
             }
 
-            if (fields.Contains(Field.DatItem_MD5))
+            if (datItemFields.Contains(DatItemField.MD5))
             {
                 if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
                     MD5 = newItem.MD5;
             }
 
 #if NET_FRAMEWORK
-            if (fields.Contains(Field.DatItem_RIPEMD160))
+            if (datItemFields.Contains(DatItemField.RIPEMD160))
             {
                 if (string.IsNullOrEmpty(RIPEMD160) && !string.IsNullOrEmpty(newItem.RIPEMD160))
                     RIPEMD160 = newItem.RIPEMD160;
             }
 #endif
 
-            if (fields.Contains(Field.DatItem_SHA1))
+            if (datItemFields.Contains(DatItemField.SHA1))
             {
                 if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
                     SHA1 = newItem.SHA1;
             }
 
-            if (fields.Contains(Field.DatItem_SHA256))
+            if (datItemFields.Contains(DatItemField.SHA256))
             {
                 if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
                     SHA256 = newItem.SHA256;
             }
 
-            if (fields.Contains(Field.DatItem_SHA384))
+            if (datItemFields.Contains(DatItemField.SHA384))
             {
                 if (string.IsNullOrEmpty(SHA384) && !string.IsNullOrEmpty(newItem.SHA384))
                     SHA384 = newItem.SHA384;
             }
 
-            if (fields.Contains(Field.DatItem_SHA512))
+            if (datItemFields.Contains(DatItemField.SHA512))
             {
                 if (string.IsNullOrEmpty(SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
                     SHA512 = newItem.SHA512;
             }
 
-            if (fields.Contains(Field.DatItem_SpamSum))
+            if (datItemFields.Contains(DatItemField.SpamSum))
             {
                 if (string.IsNullOrEmpty(SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
                     SpamSum = newItem.SpamSum;
             }
 
-            if (fields.Contains(Field.DatItem_Merge))
+            if (datItemFields.Contains(DatItemField.Merge))
                 MergeTag = newItem.MergeTag;
 
-            if (fields.Contains(Field.DatItem_Region))
+            if (datItemFields.Contains(DatItemField.Region))
                 Region = newItem.Region;
 
-            if (fields.Contains(Field.DatItem_Offset))
+            if (datItemFields.Contains(DatItemField.Offset))
                 Offset = newItem.Offset;
 
-            if (fields.Contains(Field.DatItem_Date))
+            if (datItemFields.Contains(DatItemField.Date))
                 Date = newItem.Date;
 
-            if (fields.Contains(Field.DatItem_Status))
+            if (datItemFields.Contains(DatItemField.Status))
                 ItemStatus = newItem.ItemStatus;
 
-            if (fields.Contains(Field.DatItem_Optional))
+            if (datItemFields.Contains(DatItemField.Optional))
                 Optional = newItem.Optional;
 
-            if (fields.Contains(Field.DatItem_Inverted))
+            if (datItemFields.Contains(DatItemField.Inverted))
                 Inverted = newItem.Inverted;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(Field.DatItem_AltName))
+            if (datItemFields.Contains(DatItemField.AltName))
                 AltName = newItem.AltName;
 
-            if (fields.Contains(Field.DatItem_AltTitle))
+            if (datItemFields.Contains(DatItemField.AltTitle))
                 AltTitle = newItem.AltTitle;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(Field.DatItem_Original))
+            if (datItemFields.Contains(DatItemField.Original))
                 Original = newItem.Original;
 
-            if (fields.Contains(Field.DatItem_OpenMSXSubType))
+            if (datItemFields.Contains(DatItemField.OpenMSXSubType))
                 OpenMSXSubType = newItem.OpenMSXSubType;
 
-            if (fields.Contains(Field.DatItem_OpenMSXType))
+            if (datItemFields.Contains(DatItemField.OpenMSXType))
                 OpenMSXType = newItem.OpenMSXType;
 
-            if (fields.Contains(Field.DatItem_Remark))
+            if (datItemFields.Contains(DatItemField.Remark))
                 Remark = newItem.Remark;
 
-            if (fields.Contains(Field.DatItem_Boot))
+            if (datItemFields.Contains(DatItemField.Boot))
                 Boot = newItem.Boot;
 
             #endregion
 
             #region SoftwareList
 
-            if (fields.Contains(Field.DatItem_LoadFlag))
+            if (datItemFields.Contains(DatItemField.LoadFlag))
                 LoadFlag = newItem.LoadFlag;
 
-            if (fields.Contains(Field.DatItem_Value))
+            if (datItemFields.Contains(DatItemField.Value))
                 Value = newItem.Value;
 
             if (DataAreaSpecified && newItem.DataAreaSpecified)
-                DataArea.ReplaceFields(newItem.DataArea, fields);
+                DataArea.ReplaceFields(newItem.DataArea, datItemFields, machineFields);
 
             if (PartSpecified && newItem.PartSpecified)
-                Part.ReplaceFields(newItem.Part, fields);
+                Part.ReplaceFields(newItem.Part, datItemFields, machineFields);
 
             #endregion
         }

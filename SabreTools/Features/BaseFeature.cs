@@ -2346,11 +2346,6 @@ Some special strings that can be used:
         protected ExtraIni Extras { get; set; }
 
         /// <summary>
-        /// Pre-configured Filter
-        /// </summary>
-        protected Filter Filter { get; set; }
-
-        /// <summary>
         /// Pre-configured DatHeader
         /// </summary>
         protected DatHeader Header { get; set; }
@@ -2459,7 +2454,6 @@ Some special strings that can be used:
             // Generic feature flags
             Cleaner = GetCleaner(features);
             Extras = GetExtras(features);
-            Filter = GetFilter(features);
             Header = GetDatHeader(features);
             OutputDir = GetString(features, OutputDirStringValue);
 
@@ -2612,68 +2606,83 @@ Some special strings that can be used:
         }
 
         /// <summary>
-        /// Get update fields from feature list
+        /// Get update DatItem fields from feature list
         /// </summary>
-        protected List<Field> GetUpdateFields(Dictionary<string, Feature> features)
+        protected List<DatItemField> GetUpdateDatItemFields(Dictionary<string, Feature> features)
         {
-            List<Field> updateFields = new List<Field>();
-
-            if (GetBoolean(features, UpdateDescriptionValue))
-            {
-                logger.User($"This flag '{(UpdateDescriptionValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Machine_Description);
-            }
-
-            if (GetBoolean(features, UpdateGameTypeValue))
-            {
-                logger.User($"This flag '{(UpdateGameTypeValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Machine_Type);
-            }
+            List<DatItemField> updateFields = new List<DatItemField>();
 
             if (GetBoolean(features, UpdateHashesValue))
             {
                 logger.User($"This flag '{(UpdateHashesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.DatItem_CRC);
-                updateFields.Add(Field.DatItem_MD5);
+                updateFields.Add(DatItemField.CRC);
+                updateFields.Add(DatItemField.MD5);
 #if NET_FRAMEWORK
-                updateFields.Add(Field.DatItem_RIPEMD160);
+                updateFields.Add(DatItemField.RIPEMD160);
 #endif
-                updateFields.Add(Field.DatItem_SHA1);
-                updateFields.Add(Field.DatItem_SHA256);
-                updateFields.Add(Field.DatItem_SHA384);
-                updateFields.Add(Field.DatItem_SHA512);
-                updateFields.Add(Field.DatItem_SpamSum);
-            }
-
-            if (GetBoolean(features, UpdateManufacturerValue))
-            {
-                logger.User($"This flag '{(UpdateManufacturerValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Machine_Manufacturer);
+                updateFields.Add(DatItemField.SHA1);
+                updateFields.Add(DatItemField.SHA256);
+                updateFields.Add(DatItemField.SHA384);
+                updateFields.Add(DatItemField.SHA512);
+                updateFields.Add(DatItemField.SpamSum);
             }
 
             if (GetBoolean(features, UpdateNamesValue))
             {
                 logger.User($"This flag '{(UpdateNamesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.DatItem_Name);
+                updateFields.Add(DatItemField.Name);
+            }
+
+            foreach (string fieldName in GetList(features, UpdateFieldListValue))
+            {
+                updateFields.Add(fieldName.AsDatItemField());
+            }
+
+            return updateFields;
+        }
+
+        /// <summary>
+        /// Get update Machine fields from feature list
+        /// </summary>
+        protected List<MachineField> GetUpdateMachineFields(Dictionary<string, Feature> features)
+        {
+            List<MachineField> updateFields = new List<MachineField>();
+
+            if (GetBoolean(features, UpdateDescriptionValue))
+            {
+                logger.User($"This flag '{(UpdateDescriptionValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                updateFields.Add(MachineField.Description);
+            }
+
+            if (GetBoolean(features, UpdateGameTypeValue))
+            {
+                logger.User($"This flag '{(UpdateGameTypeValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                updateFields.Add(MachineField.Type);
+            }
+
+            if (GetBoolean(features, UpdateManufacturerValue))
+            {
+                logger.User($"This flag '{(UpdateManufacturerValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                updateFields.Add(MachineField.Manufacturer);
             }
 
             if (GetBoolean(features, UpdateParentsValue))
             {
                 logger.User($"This flag '{(UpdateParentsValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Machine_CloneOf);
-                updateFields.Add(Field.Machine_RomOf);
-                updateFields.Add(Field.Machine_SampleOf);
+                updateFields.Add(MachineField.CloneOf);
+                updateFields.Add(MachineField.RomOf);
+                updateFields.Add(MachineField.SampleOf);
             }
 
             if (GetBoolean(features, UpdateYearValue))
             {
                 logger.User($"This flag '{(UpdateYearValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(Field.Machine_Year);
+                updateFields.Add(MachineField.Year);
             }
 
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
-                updateFields.Add(fieldName.AsField());
+                updateFields.Add(fieldName.AsMachineField());
             }
 
             return updateFields;
@@ -2730,6 +2739,10 @@ Some special strings that can be used:
         {
             Cleaner cleaner = new Cleaner()
             {
+                DatHeaderFilter = new DatHeaderFilter(),
+                DatItemFilter = new DatItemFilter(),
+                MachineFilter = new MachineFilter(),
+
                 Clean = GetBoolean(features, CleanValue),
                 DedupeRoms = GetDedupeType(features),
                 DescriptionAsName = GetBoolean(features, DescriptionAsNameValue),
@@ -2744,9 +2757,223 @@ Some special strings that can be used:
                 Trim = GetBoolean(features, TrimValue),
             };
 
+            // Add field exclusions
             foreach (string fieldName in GetList(features, ExcludeFieldListValue))
             {
-                cleaner.ExcludeFields.Add(fieldName.AsField());
+                cleaner.ExcludeDatHeaderFields.Add(fieldName.AsDatHeaderField());
+                cleaner.ExcludeMachineFields.Add(fieldName.AsMachineField());
+                cleaner.ExcludeDatItemFields.Add(fieldName.AsDatItemField());
+            }
+
+            // Populate filters
+            List<string> filterPairs = GetList(features, FilterListValue);
+            cleaner.DatHeaderFilter.PopulateFromList(filterPairs);
+            cleaner.DatItemFilter.PopulateFromList(filterPairs);
+            cleaner.MachineFilter.PopulateFromList(filterPairs);
+
+            // Include 'of" in game filters
+            cleaner.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
+
+            // Category
+            if (features.ContainsKey(NotCategoryListValue))
+            {
+                logger.User($"This flag '{(NotCategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Category, GetList(features, NotCategoryListValue), true);
+            }
+            if (features.ContainsKey(CategoryListValue))
+            {
+                logger.User($"This flag '{(CategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Category, GetList(features, CategoryListValue), false);
+            }
+
+            // CRC
+            if (features.ContainsKey(NotCrcListValue))
+            {
+                logger.User($"This flag '{(NotCrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.CRC, GetList(features, NotCrcListValue), true);
+            }
+            if (features.ContainsKey(CrcListValue))
+            {
+                logger.User($"This flag '{(CrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.CRC, GetList(features, NotCrcListValue), false);
+            }
+
+            // Item name
+            if (features.ContainsKey(NotItemNameListValue))
+            {
+                logger.User($"This flag '{(NotItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.Name, GetList(features, NotItemNameListValue), true);
+            }
+            if (features.ContainsKey(ItemNameListValue))
+            {
+                logger.User($"This flag '{(ItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.Name, GetList(features, ItemNameListValue), false);
+            }
+
+            // Item status
+            if (features.ContainsKey(NotStatusListValue))
+            {
+                logger.User($"This flag '{(NotStatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.Status, GetList(features, NotStatusListValue), true);
+            }
+            if (features.ContainsKey(StatusListValue))
+            {
+                logger.User($"This flag '{(StatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.Status, GetList(features, StatusListValue), false);
+            }
+
+            // Item type
+            if (features.ContainsKey(NotItemTypeListValue))
+            {
+                logger.User($"This flag '{(NotItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.Type, GetList(features, NotItemTypeListValue), true);
+            }
+            if (features.ContainsKey(ItemTypeListValue))
+            {
+                logger.User($"This flag '{(ItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.Type, GetList(features, ItemTypeListValue), false);
+            }
+
+            // Machine description
+            if (features.ContainsKey(NotGameDescriptionListValue))
+            {
+                logger.User($"This flag '{(NotGameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Description, GetList(features, NotGameDescriptionListValue), true);
+            }
+            if (features.ContainsKey(GameDescriptionListValue))
+            {
+                logger.User($"This flag '{(GameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Description, GetList(features, GameDescriptionListValue), false);
+            }
+
+            // Machine name
+            if (features.ContainsKey(NotGameNameListValue))
+            {
+                logger.User($"This flag '{(NotGameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Name, GetList(features, NotGameNameListValue), true);
+            }
+            if (features.ContainsKey(GameNameListValue))
+            {
+                logger.User($"This flag '{(GameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Name, GetList(features, GameNameListValue), false);
+            }
+
+            // Machine type
+            if (features.ContainsKey(NotGameTypeListValue))
+            {
+                logger.User($"This flag '{(NotGameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Type, GetList(features, NotGameTypeListValue), true);
+            }
+            if (features.ContainsKey(GameTypeListValue))
+            {
+                logger.User($"This flag '{(GameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Type, GetList(features, GameTypeListValue), false);
+            }
+
+            // MD5
+            if (features.ContainsKey(NotMd5ListValue))
+            {
+                logger.User($"This flag '{(NotMd5ListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.MD5, GetList(features, NotMd5ListValue), true);
+            }
+            if (features.ContainsKey(Md5ListValue))
+            {
+                logger.User($"This flag '{Md5ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.MD5, GetList(features, Md5ListValue), false);
+            }
+
+#if NET_FRAMEWORK
+            // RIPEMD160
+            if (features.ContainsKey(NotRipeMd160ListValue))
+            {
+                logger.User($"This flag '{NotRipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.RIPEMD160, GetList(features, NotRipeMd160ListValue), true);
+            }
+            if (features.ContainsKey(RipeMd160ListValue))
+            {
+                logger.User($"This flag '{RipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.RIPEMD160, GetList(features, RipeMd160ListValue), false);
+            }
+#endif
+
+            // Runnable
+            if (features.ContainsKey(NotRunnableValue))
+            {
+                logger.User($"This flag '{NotRunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Runnable, string.Empty, true);
+            }
+            if (features.ContainsKey(RunnableValue))
+            {
+                logger.User($"This flag '{RunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.MachineFilter.SetFilter(MachineField.Runnable, string.Empty, false);
+            }
+
+            // SHA1
+            if (features.ContainsKey(NotSha1ListValue))
+            {
+                logger.User($"This flag '{NotSha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA1, GetList(features, NotSha1ListValue), true);
+            }
+            if (features.ContainsKey(Sha1ListValue))
+            {
+                logger.User($"This flag '{Sha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA1, GetList(features, Sha1ListValue), false);
+            }
+
+            // SHA256
+            if (features.ContainsKey(NotSha256ListValue))
+            {
+                logger.User($"This flag '{NotSha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA256, GetList(features, NotSha256ListValue), true);
+            }
+            if (features.ContainsKey(Sha256ListValue))
+            {
+                logger.User($"This flag '{Sha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA256, GetList(features, Sha256ListValue), false);
+            }
+
+            // SHA384
+            if (features.ContainsKey(NotSha384ListValue))
+            {
+                logger.User($"This flag '{NotSha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA384, GetList(features, NotSha384ListValue), true);
+            }
+            if (features.ContainsKey(Sha384ListValue))
+            {
+                logger.User($"This flag '{Sha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA384, GetList(features, Sha384ListValue), false);
+            }
+
+            // SHA512
+            if (features.ContainsKey(NotSha512ListValue))
+            {
+                logger.User($"This flag '{NotSha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA512, GetList(features, NotSha512ListValue), true);
+            }
+            if (features.ContainsKey(Sha512ListValue))
+            {
+                logger.User($"This flag '{Sha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                cleaner.DatItemFilter.SetFilter(DatItemField.SHA512, GetList(features, Sha512ListValue), false);
+            }
+
+            // Size
+            if (features.ContainsKey(LessStringValue))
+            {
+                logger.User($"This flag '{LessStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                var value = ToSize(GetString(features, LessStringValue));
+                cleaner.DatItemFilter.SetFilter(DatItemField.Size, $"<{value}", false);
+            }
+            if (features.ContainsKey(EqualStringValue))
+            {
+                logger.User($"This flag '{EqualStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                var value = ToSize(GetString(features, EqualStringValue));
+                cleaner.DatItemFilter.SetFilter(DatItemField.Size, $"={value}", false);
+            }
+            if (features.ContainsKey(GreaterStringValue))
+            {
+                logger.User($"This flag '{GreaterStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
+                var value = ToSize(GetString(features, GreaterStringValue));
+                cleaner.DatItemFilter.SetFilter(DatItemField.Size, $">{value}", false);
             }
 
             return cleaner;
@@ -2829,233 +3056,6 @@ Some special strings that can be used:
             ExtraIni extraIni = new ExtraIni();
             extraIni.PopulateFromList(GetList(features, ExtraIniListValue));
             return extraIni;
-        }
-
-        /// <summary>
-        /// Get Filter from feature list
-        /// </summary>
-        private Filter GetFilter(Dictionary<string, Feature> features)
-        {
-            Filter filter = new Filter();
-
-            // Use the Filter flag first
-            List<string> filterPairs = GetList(features, FilterListValue);
-            filter.PopulateFromList(filterPairs);
-
-            #region Obsoleted Inputs
-
-            // Category
-            if (features.ContainsKey(NotCategoryListValue))
-            {
-                logger.User($"This flag '{(NotCategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Category, GetList(features, NotCategoryListValue), true);
-            }
-            if (features.ContainsKey(CategoryListValue))
-            {
-                logger.User($"This flag '{(CategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Category, GetList(features, CategoryListValue), false);
-            }
-
-            // CRC
-            if (features.ContainsKey(NotCrcListValue))
-            {
-                logger.User($"This flag '{(NotCrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_CRC, GetList(features, NotCrcListValue), true);
-            }
-            if (features.ContainsKey(CrcListValue))
-            {
-                logger.User($"This flag '{(CrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_CRC, GetList(features, NotCrcListValue), false);
-            }
-
-            // Item name
-            if (features.ContainsKey(NotItemNameListValue))
-            {
-                logger.User($"This flag '{(NotItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_Name, GetList(features, NotItemNameListValue), true);
-            }
-            if (features.ContainsKey(ItemNameListValue))
-            {
-                logger.User($"This flag '{(ItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_Name, GetList(features, ItemNameListValue), false);
-            }
-
-            // Item status
-            if (features.ContainsKey(NotStatusListValue))
-            {
-                logger.User($"This flag '{(NotStatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_Status, GetList(features, NotStatusListValue), true);
-            }
-            if (features.ContainsKey(StatusListValue))
-            {
-                logger.User($"This flag '{(StatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_Status, GetList(features, StatusListValue), false);
-            }
-
-            // Item type
-            if (features.ContainsKey(NotItemTypeListValue))
-            {
-                logger.User($"This flag '{(NotItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_Type, GetList(features, NotItemTypeListValue), true);
-            }
-            if (features.ContainsKey(ItemTypeListValue))
-            {
-                logger.User($"This flag '{(ItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_Type, GetList(features, ItemTypeListValue), false);
-            }
-
-            // Machine description
-            if (features.ContainsKey(NotGameDescriptionListValue))
-            {
-                logger.User($"This flag '{(NotGameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Description, GetList(features, NotGameDescriptionListValue), true);
-            }
-            if (features.ContainsKey(GameDescriptionListValue))
-            {
-                logger.User($"This flag '{(GameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Description, GetList(features, GameDescriptionListValue), false);
-            }
-
-            // Machine name
-            if (features.ContainsKey(NotGameNameListValue))
-            {
-                logger.User($"This flag '{(NotGameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Name, GetList(features, NotGameNameListValue), true);
-            }
-            if (features.ContainsKey(GameNameListValue))
-            {
-                logger.User($"This flag '{(GameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Name, GetList(features, GameNameListValue), false);
-            }
-
-            // Machine type
-            if (features.ContainsKey(NotGameTypeListValue))
-            {
-                logger.User($"This flag '{(NotGameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Type, GetList(features, NotGameTypeListValue), true);
-            }
-            if (features.ContainsKey(GameTypeListValue))
-            {
-                logger.User($"This flag '{(GameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Type, GetList(features, GameTypeListValue), false);
-            }
-
-            // MD5
-            if (features.ContainsKey(NotMd5ListValue))
-            {
-                logger.User($"This flag '{(NotMd5ListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_MD5, GetList(features, NotMd5ListValue), true);
-            }
-            if (features.ContainsKey(Md5ListValue))
-            {
-                logger.User($"This flag '{Md5ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_MD5, GetList(features, Md5ListValue), false);
-            }
-
-#if NET_FRAMEWORK
-            // RIPEMD160
-            if (features.ContainsKey(NotRipeMd160ListValue))
-            {
-                logger.User($"This flag '{NotRipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_RIPEMD160, GetList(features, NotRipeMd160ListValue), true);
-            }
-            if (features.ContainsKey(RipeMd160ListValue))
-            {
-                logger.User($"This flag '{RipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_RIPEMD160, GetList(features, RipeMd160ListValue), false);
-            }
-#endif
-
-            // Runnable
-            if (features.ContainsKey(NotRunnableValue))
-            {
-                logger.User($"This flag '{NotRunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Runnable, string.Empty, true);
-            }
-            if (features.ContainsKey(RunnableValue))
-            {
-                logger.User($"This flag '{RunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.Machine_Runnable, string.Empty, false);
-            }
-
-            // SHA1
-            if (features.ContainsKey(NotSha1ListValue))
-            {
-                logger.User($"This flag '{NotSha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA1, GetList(features, NotSha1ListValue), true);
-            }
-            if (features.ContainsKey(Sha1ListValue))
-            {
-                logger.User($"This flag '{Sha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA1, GetList(features, Sha1ListValue), false);
-            }
-
-            // SHA256
-            if (features.ContainsKey(NotSha256ListValue))
-            {
-                logger.User($"This flag '{NotSha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA256, GetList(features, NotSha256ListValue), true);
-            }
-            if (features.ContainsKey(Sha256ListValue))
-            {
-                logger.User($"This flag '{Sha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA256, GetList(features, Sha256ListValue), false);
-            }
-
-            // SHA384
-            if (features.ContainsKey(NotSha384ListValue))
-            {
-                logger.User($"This flag '{NotSha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA384, GetList(features, NotSha384ListValue), true);
-            }
-            if (features.ContainsKey(Sha384ListValue))
-            {
-                logger.User($"This flag '{Sha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA384, GetList(features, Sha384ListValue), false);
-            }
-
-            // SHA512
-            if (features.ContainsKey(NotSha512ListValue))
-            {
-                logger.User($"This flag '{NotSha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA512, GetList(features, NotSha512ListValue), true);
-            }
-            if (features.ContainsKey(Sha512ListValue))
-            {
-                logger.User($"This flag '{Sha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                filter.SetFilter(Field.DatItem_SHA512, GetList(features, Sha512ListValue), false);
-            }
-
-            // Size
-            if (features.ContainsKey(LessStringValue))
-            {
-                logger.User($"This flag '{LessStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                var value = ToSize(GetString(features, LessStringValue));
-                filter.SetFilter(Field.DatItem_Size, $"<{value}", false);
-            }
-            if (features.ContainsKey(EqualStringValue))
-            {
-                logger.User($"This flag '{EqualStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                var value = ToSize(GetString(features, EqualStringValue));
-                filter.SetFilter(Field.DatItem_Size, $"={value}", false);
-            }
-            if (features.ContainsKey(GreaterStringValue))
-            {
-                logger.User($"This flag '{GreaterStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                var value = ToSize(GetString(features, GreaterStringValue));
-                filter.SetFilter(Field.DatItem_Size, $">{value}", false);
-            }
-
-            #endregion
-
-            #region Additional Filter flags
-
-            // Include 'of" in game filters
-            filter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
-
-            #endregion
-
-            return filter;
         }
 
         #endregion

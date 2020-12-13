@@ -161,60 +161,59 @@ namespace SabreTools.DatItems
 
         #region Accessors
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Display-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Tag))
-                Tag = mappings[Field.DatItem_Tag];
+            if (datItemMappings.Keys.Contains(DatItemField.Tag))
+                Tag = datItemMappings[DatItemField.Tag];
 
-            if (mappings.Keys.Contains(Field.DatItem_DisplayType))
-                DisplayType = mappings[Field.DatItem_DisplayType].AsDisplayType();
+            if (datItemMappings.Keys.Contains(DatItemField.DisplayType))
+                DisplayType = datItemMappings[DatItemField.DisplayType].AsDisplayType();
 
-            if (mappings.Keys.Contains(Field.DatItem_Rotate))
-                Rotate = Utilities.CleanLong(mappings[Field.DatItem_Rotate]);
+            if (datItemMappings.Keys.Contains(DatItemField.Rotate))
+                Rotate = Utilities.CleanLong(datItemMappings[DatItemField.Rotate]);
 
-            if (mappings.Keys.Contains(Field.DatItem_FlipX))
-                FlipX = mappings[Field.DatItem_FlipX].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.FlipX))
+                FlipX = datItemMappings[DatItemField.FlipX].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.DatItem_Width))
-                Width = Utilities.CleanLong(mappings[Field.DatItem_Width]);
+            if (datItemMappings.Keys.Contains(DatItemField.Width))
+                Width = Utilities.CleanLong(datItemMappings[DatItemField.Width]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Height))
-                Height = Utilities.CleanLong(mappings[Field.DatItem_Height]);
+            if (datItemMappings.Keys.Contains(DatItemField.Height))
+                Height = Utilities.CleanLong(datItemMappings[DatItemField.Height]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Refresh))
+            if (datItemMappings.Keys.Contains(DatItemField.Refresh))
             {
-                if (Double.TryParse(mappings[Field.DatItem_Refresh], out double refresh))
+                if (Double.TryParse(datItemMappings[DatItemField.Refresh], out double refresh))
                     Refresh = refresh;
             }
 
-            if (mappings.Keys.Contains(Field.DatItem_PixClock))
-                PixClock = Utilities.CleanLong(mappings[Field.DatItem_PixClock]);
+            if (datItemMappings.Keys.Contains(DatItemField.PixClock))
+                PixClock = Utilities.CleanLong(datItemMappings[DatItemField.PixClock]);
 
-            if (mappings.Keys.Contains(Field.DatItem_HTotal))
-                HTotal = Utilities.CleanLong(mappings[Field.DatItem_HTotal]);
+            if (datItemMappings.Keys.Contains(DatItemField.HTotal))
+                HTotal = Utilities.CleanLong(datItemMappings[DatItemField.HTotal]);
 
-            if (mappings.Keys.Contains(Field.DatItem_HBEnd))
-                HBEnd = Utilities.CleanLong(mappings[Field.DatItem_HBEnd]);
+            if (datItemMappings.Keys.Contains(DatItemField.HBEnd))
+                HBEnd = Utilities.CleanLong(datItemMappings[DatItemField.HBEnd]);
 
-            if (mappings.Keys.Contains(Field.DatItem_HBStart))
-                HBStart = Utilities.CleanLong(mappings[Field.DatItem_HBStart]);
+            if (datItemMappings.Keys.Contains(DatItemField.HBStart))
+                HBStart = Utilities.CleanLong(datItemMappings[DatItemField.HBStart]);
 
-            if (mappings.Keys.Contains(Field.DatItem_VTotal))
-                VTotal = Utilities.CleanLong(mappings[Field.DatItem_VTotal]);
+            if (datItemMappings.Keys.Contains(DatItemField.VTotal))
+                VTotal = Utilities.CleanLong(datItemMappings[DatItemField.VTotal]);
 
-            if (mappings.Keys.Contains(Field.DatItem_VBEnd))
-                VBEnd = Utilities.CleanLong(mappings[Field.DatItem_VBEnd]);
+            if (datItemMappings.Keys.Contains(DatItemField.VBEnd))
+                VBEnd = Utilities.CleanLong(datItemMappings[DatItemField.VBEnd]);
 
-            if (mappings.Keys.Contains(Field.DatItem_VBStart))
-                VBStart = Utilities.CleanLong(mappings[Field.DatItem_VBStart]);
+            if (datItemMappings.Keys.Contains(DatItemField.VBStart))
+                VBStart = Utilities.CleanLong(datItemMappings[DatItemField.VBStart]);
         }
 
         #endregion
@@ -295,129 +294,123 @@ namespace SabreTools.DatItems
 
         #region Filtering
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on tag
-            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
                 return false;
 
             // Filter on display type
-            if (filter.DatItem_DisplayType.MatchesPositive(DisplayType.NULL, DisplayType) == false)
+            if (cleaner.DatItemFilter.DisplayType.MatchesPositive(DisplayType.NULL, DisplayType) == false)
                 return false;
-            if (filter.DatItem_DisplayType.MatchesNegative(DisplayType.NULL, DisplayType) == true)
+            if (cleaner.DatItemFilter.DisplayType.MatchesNegative(DisplayType.NULL, DisplayType) == true)
                 return false;
 
             // Filter on rotation
-            if (!filter.PassLongFilter(filter.DatItem_Rotate, Rotate))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Rotate, Rotate))
                 return false;
 
             // Filter on flipx
-            if (!filter.PassBoolFilter(filter.DatItem_FlipX, FlipX))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.FlipX, FlipX))
                 return false;
 
             // Filter on width
-            if (!filter.PassLongFilter(filter.DatItem_Width, Width))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Width, Width))
                 return false;
 
             // Filter on height
-            if (!filter.PassLongFilter(filter.DatItem_Height, Height))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Height, Height))
                 return false;
 
             // Filter on refresh
-            if (!filter.PassDoubleFilter(filter.DatItem_Refresh, Refresh))
+            if (!Filter.PassDoubleFilter(cleaner.DatItemFilter.Refresh, Refresh))
                 return false;
 
             // Filter on pixclock
-            if (!filter.PassLongFilter(filter.DatItem_PixClock, PixClock))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.PixClock, PixClock))
                 return false;
 
             // Filter on htotal
-            if (!filter.PassLongFilter(filter.DatItem_HTotal, HTotal))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.HTotal, HTotal))
                 return false;
 
             // Filter on hbend
-            if (!filter.PassLongFilter(filter.DatItem_HBEnd, HBEnd))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.HBEnd, HBEnd))
                 return false;
 
             // Filter on hbstart
-            if (!filter.PassLongFilter(filter.DatItem_HBStart, HBStart))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.HBStart, HBStart))
                 return false;
 
             // Filter on vtotal
-            if (!filter.PassLongFilter(filter.DatItem_VTotal, VTotal))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.VTotal, VTotal))
                 return false;
 
             // Filter on vbend
-            if (!filter.PassLongFilter(filter.DatItem_VBEnd, VBEnd))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.VBEnd, VBEnd))
                 return false;
 
             // Filter on vbstart
-            if (!filter.PassLongFilter(filter.DatItem_VBStart, VBStart))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.VBStart, VBStart))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Tag))
+            if (datItemFields.Contains(DatItemField.Tag))
                 Tag = null;
 
-            if (fields.Contains(Field.DatItem_DisplayType))
+            if (datItemFields.Contains(DatItemField.DisplayType))
                 DisplayType = DisplayType.NULL;
 
-            if (fields.Contains(Field.DatItem_Rotate))
+            if (datItemFields.Contains(DatItemField.Rotate))
                 Rotate = null;
 
-            if (fields.Contains(Field.DatItem_FlipX))
+            if (datItemFields.Contains(DatItemField.FlipX))
                 FlipX = null;
 
-            if (fields.Contains(Field.DatItem_Width))
+            if (datItemFields.Contains(DatItemField.Width))
                 Width = null;
 
-            if (fields.Contains(Field.DatItem_Height))
+            if (datItemFields.Contains(DatItemField.Height))
                 Height = null;
 
-            if (fields.Contains(Field.DatItem_Refresh))
+            if (datItemFields.Contains(DatItemField.Refresh))
                 Refresh = null;
 
-            if (fields.Contains(Field.DatItem_PixClock))
+            if (datItemFields.Contains(DatItemField.PixClock))
                 PixClock = null;
 
-            if (fields.Contains(Field.DatItem_HTotal))
+            if (datItemFields.Contains(DatItemField.HTotal))
                 HTotal = null;
 
-            if (fields.Contains(Field.DatItem_HBEnd))
+            if (datItemFields.Contains(DatItemField.HBEnd))
                 HBEnd = null;
 
-            if (fields.Contains(Field.DatItem_HBStart))
+            if (datItemFields.Contains(DatItemField.HBStart))
                 HBStart = null;
 
-            if (fields.Contains(Field.DatItem_VTotal))
+            if (datItemFields.Contains(DatItemField.VTotal))
                 VTotal = null;
 
-            if (fields.Contains(Field.DatItem_VBEnd))
+            if (datItemFields.Contains(DatItemField.VBEnd))
                 VBEnd = null;
 
-            if (fields.Contains(Field.DatItem_VBStart))
+            if (datItemFields.Contains(DatItemField.VBStart))
                 VBStart = null;
         }
 
@@ -425,15 +418,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Display to replace from, ignore specific fields
             if (item.ItemType != ItemType.Display)
@@ -443,46 +435,46 @@ namespace SabreTools.DatItems
             Display newItem = item as Display;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Tag))
+            if (datItemFields.Contains(DatItemField.Tag))
                 Tag = newItem.Tag;
 
-            if (fields.Contains(Field.DatItem_DisplayType))
+            if (datItemFields.Contains(DatItemField.DisplayType))
                 DisplayType = newItem.DisplayType;
 
-            if (fields.Contains(Field.DatItem_Rotate))
+            if (datItemFields.Contains(DatItemField.Rotate))
                 Rotate = newItem.Rotate;
 
-            if (fields.Contains(Field.DatItem_FlipX))
+            if (datItemFields.Contains(DatItemField.FlipX))
                 FlipX = newItem.FlipX;
 
-            if (fields.Contains(Field.DatItem_Width))
+            if (datItemFields.Contains(DatItemField.Width))
                 Width = newItem.Width;
 
-            if (fields.Contains(Field.DatItem_Height))
+            if (datItemFields.Contains(DatItemField.Height))
                 Height = newItem.Height;
 
-            if (fields.Contains(Field.DatItem_Refresh))
+            if (datItemFields.Contains(DatItemField.Refresh))
                 Refresh = newItem.Refresh;
 
-            if (fields.Contains(Field.DatItem_PixClock))
+            if (datItemFields.Contains(DatItemField.PixClock))
                 PixClock = newItem.PixClock;
 
-            if (fields.Contains(Field.DatItem_HTotal))
+            if (datItemFields.Contains(DatItemField.HTotal))
                 HTotal = newItem.HTotal;
 
-            if (fields.Contains(Field.DatItem_HBEnd))
+            if (datItemFields.Contains(DatItemField.HBEnd))
                 HBEnd = newItem.HBEnd;
 
-            if (fields.Contains(Field.DatItem_HBStart))
+            if (datItemFields.Contains(DatItemField.HBStart))
                 HBStart = newItem.HBStart;
 
-            if (fields.Contains(Field.DatItem_VTotal))
+            if (datItemFields.Contains(DatItemField.VTotal))
                 VTotal = newItem.VTotal;
 
-            if (fields.Contains(Field.DatItem_VBEnd))
+            if (datItemFields.Contains(DatItemField.VBEnd))
                 VBEnd = newItem.VBEnd;
 
-            if (fields.Contains(Field.DatItem_VBStart))
+            if (datItemFields.Contains(DatItemField.VBStart))
                 VBStart = newItem.VBStart;
         }
 

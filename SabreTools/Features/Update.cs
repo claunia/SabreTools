@@ -103,7 +103,8 @@ namespace SabreTools.Features
             base.ProcessFeatures(features);
 
             // Get feature flags
-            var updateFields = GetUpdateFields(features);
+            var updateDatItemFields = GetUpdateDatItemFields(features);
+            var updateMachineFields = GetUpdateMachineFields(features);
             var updateMode = GetUpdateMode(features);
 
             // Normalize the extensions
@@ -146,8 +147,8 @@ namespace SabreTools.Features
             }
 
             // If no update fields are set, default to Names
-            if (updateFields == null || updateFields.Count == 0)
-                updateFields = new List<Field>() { Field.DatItem_Name };
+            if (updateDatItemFields == null || updateDatItemFields.Count == 0)
+                updateDatItemFields = new List<DatItemField>() { DatItemField.Name };
 
             // Ensure we only have files in the inputs
             List<ParentablePath> inputPaths = PathTool.GetFilesOnly(Inputs, appendparent: true);
@@ -170,7 +171,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Modification.ApplyExtras(datFile, Extras);
                     Modification.ApplySplitting(datFile, GetSplitType(features), false);
-                    Modification.ApplyFilter(datFile, Filter);
+                    Modification.ApplyFilters(datFile, Cleaner);
                     Modification.ApplyCleaning(datFile, Cleaner);
 
                     // Get the correct output path
@@ -208,7 +209,7 @@ namespace SabreTools.Features
             // Perform additional processing steps
             Modification.ApplyExtras(userInputDat, Extras);
             Modification.ApplySplitting(userInputDat, GetSplitType(features), false);
-            Modification.ApplyFilter(userInputDat, Filter);
+            Modification.ApplyFilters(userInputDat, Cleaner);
             Modification.ApplyCleaning(userInputDat, Cleaner);
 
             // Output only DatItems that are duplicated across inputs
@@ -300,7 +301,7 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Modification.ApplyExtras(repDat, Extras);
                     Modification.ApplySplitting(repDat, GetSplitType(features), false);
-                    Modification.ApplyFilter(repDat, Filter);
+                    Modification.ApplyFilters(repDat, Cleaner);
                     Modification.ApplyCleaning(repDat, Cleaner);
 
                     // Now replace the fields from the base DatFile
@@ -325,11 +326,16 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Modification.ApplyExtras(repDat, Extras);
                     Modification.ApplySplitting(repDat, GetSplitType(features), false);
-                    Modification.ApplyFilter(repDat, Filter);
+                    Modification.ApplyFilters(repDat, Cleaner);
                     Modification.ApplyCleaning(repDat, Cleaner);
 
                     // Now replace the fields from the base DatFile
-                    DatTool.BaseReplace(userInputDat, repDat, updateFields, GetBoolean(features, OnlySameValue));
+                    DatTool.BaseReplace(
+                        userInputDat,
+                        repDat,
+                        updateMachineFields,
+                        updateDatItemFields,
+                        GetBoolean(features, OnlySameValue));
 
                     // Finally output the replaced DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));

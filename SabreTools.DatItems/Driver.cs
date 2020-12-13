@@ -66,27 +66,26 @@ namespace SabreTools.DatItems
 
         #region Accessors
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Feature-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_SupportStatus))
-                Status = mappings[Field.DatItem_SupportStatus].AsSupportStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.SupportStatus))
+                Status = datItemMappings[DatItemField.SupportStatus].AsSupportStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_EmulationStatus))
-                Emulation = mappings[Field.DatItem_EmulationStatus].AsSupportStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.EmulationStatus))
+                Emulation = datItemMappings[DatItemField.EmulationStatus].AsSupportStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_CocktailStatus))
-                Cocktail = mappings[Field.DatItem_CocktailStatus].AsSupportStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.CocktailStatus))
+                Cocktail = datItemMappings[DatItemField.CocktailStatus].AsSupportStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_SaveStateStatus))
-                SaveState = mappings[Field.DatItem_SaveStateStatus].AsSupported();
+            if (datItemMappings.Keys.Contains(DatItemField.SaveStateStatus))
+                SaveState = datItemMappings[DatItemField.SaveStateStatus].AsSupported();
         }
 
         #endregion
@@ -147,65 +146,59 @@ namespace SabreTools.DatItems
 
         #region Filtering
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on status
-            if (filter.DatItem_SupportStatus.MatchesPositive(SupportStatus.NULL, Status) == false)
+            if (cleaner.DatItemFilter.SupportStatus.MatchesPositive(SupportStatus.NULL, Status) == false)
                 return false;
-            if (filter.DatItem_SupportStatus.MatchesNegative(SupportStatus.NULL, Status) == true)
+            if (cleaner.DatItemFilter.SupportStatus.MatchesNegative(SupportStatus.NULL, Status) == true)
                 return false;
 
             // Filter on emulation
-            if (filter.DatItem_EmulationStatus.MatchesPositive(SupportStatus.NULL, Emulation) == false)
+            if (cleaner.DatItemFilter.EmulationStatus.MatchesPositive(SupportStatus.NULL, Emulation) == false)
                 return false;
-            if (filter.DatItem_EmulationStatus.MatchesNegative(SupportStatus.NULL, Emulation) == true)
+            if (cleaner.DatItemFilter.EmulationStatus.MatchesNegative(SupportStatus.NULL, Emulation) == true)
                 return false;
 
             // Filter on cocktail
-            if (filter.DatItem_CocktailStatus.MatchesPositive(SupportStatus.NULL, Cocktail) == false)
+            if (cleaner.DatItemFilter.CocktailStatus.MatchesPositive(SupportStatus.NULL, Cocktail) == false)
                 return false;
-            if (filter.DatItem_CocktailStatus.MatchesNegative(SupportStatus.NULL, Cocktail) == true)
+            if (cleaner.DatItemFilter.CocktailStatus.MatchesNegative(SupportStatus.NULL, Cocktail) == true)
                 return false;
 
             // Filter on savestate
-            if (filter.DatItem_SaveStateStatus.MatchesPositive(Supported.NULL, SaveState) == false)
+            if (cleaner.DatItemFilter.SaveStateStatus.MatchesPositive(Supported.NULL, SaveState) == false)
                 return false;
-            if (filter.DatItem_SaveStateStatus.MatchesNegative(Supported.NULL, SaveState) == true)
+            if (cleaner.DatItemFilter.SaveStateStatus.MatchesNegative(Supported.NULL, SaveState) == true)
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_SupportStatus))
+            if (datItemFields.Contains(DatItemField.SupportStatus))
                 Status = SupportStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_EmulationStatus))
+            if (datItemFields.Contains(DatItemField.EmulationStatus))
                 Emulation = SupportStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_CocktailStatus))
+            if (datItemFields.Contains(DatItemField.CocktailStatus))
                 Cocktail = SupportStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_SaveStateStatus))
+            if (datItemFields.Contains(DatItemField.SaveStateStatus))
                 SaveState = Supported.NULL;
         }
 
@@ -213,15 +206,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Driver to replace from, ignore specific fields
             if (item.ItemType != ItemType.Driver)
@@ -231,16 +223,16 @@ namespace SabreTools.DatItems
             Driver newItem = item as Driver;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_SupportStatus))
+            if (datItemFields.Contains(DatItemField.SupportStatus))
                 Status = newItem.Status;
 
-            if (fields.Contains(Field.DatItem_EmulationStatus))
+            if (datItemFields.Contains(DatItemField.EmulationStatus))
                 Emulation = newItem.Emulation;
 
-            if (fields.Contains(Field.DatItem_CocktailStatus))
+            if (datItemFields.Contains(DatItemField.CocktailStatus))
                 Cocktail = newItem.Cocktail;
 
-            if (fields.Contains(Field.DatItem_SaveStateStatus))
+            if (datItemFields.Contains(DatItemField.SaveStateStatus))
                 SaveState = newItem.SaveState;
         }
 

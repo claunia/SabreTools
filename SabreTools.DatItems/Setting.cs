@@ -65,30 +65,29 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Setting-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Setting_Name))
-                Name = mappings[Field.DatItem_Setting_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Setting_Name))
+                Name = datItemMappings[DatItemField.Setting_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Setting_Value))
-                Value = mappings[Field.DatItem_Setting_Value];
+            if (datItemMappings.Keys.Contains(DatItemField.Setting_Value))
+                Value = datItemMappings[DatItemField.Setting_Value];
 
-            if (mappings.Keys.Contains(Field.DatItem_Setting_Default))
-                Default = mappings[Field.DatItem_Setting_Default].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Setting_Default))
+                Default = datItemMappings[DatItemField.Setting_Default].AsYesNo();
 
             if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
-                    condition.SetFields(mappings, true);
+                    condition.SetFields(datItemMappings, machineMappings, true);
                 }
             }
         }
@@ -191,28 +190,23 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Setting_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Setting_Name, Name))
                 return false;
 
             // Filter on value
-            if (!filter.PassStringFilter(filter.DatItem_Setting_Value, Value))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Setting_Value, Value))
                 return false;
 
             // Filter on default
-            if (!filter.PassBoolFilter(filter.DatItem_Setting_Default, Default))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Setting_Default, Default))
                 return false;
 
             // Filter on individual conditions
@@ -220,7 +214,7 @@ namespace SabreTools.DatItems
             {
                 foreach (Condition condition in Conditions)
                 {
-                    if (!condition.PassesFilter(filter, true))
+                    if (!condition.PassesFilter(cleaner, true))
                         return false;
                 }
             }
@@ -228,30 +222,29 @@ namespace SabreTools.DatItems
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Setting_Name))
+            if (datItemFields.Contains(DatItemField.Setting_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Setting_Value))
+            if (datItemFields.Contains(DatItemField.Setting_Value))
                 Value = null;
 
-            if (fields.Contains(Field.DatItem_Setting_Default))
+            if (datItemFields.Contains(DatItemField.Setting_Default))
                 Default = null;
 
             if (ConditionsSpecified)
             {
                 foreach (Condition condition in Conditions)
                 {
-                    condition.RemoveFields(fields, true);
+                    condition.RemoveFields(datItemFields, machineFields, true);
                 }
             }
         }
@@ -270,15 +263,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Setting to replace from, ignore specific fields
             if (item.ItemType != ItemType.Setting)
@@ -288,13 +280,13 @@ namespace SabreTools.DatItems
             Setting newItem = item as Setting;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Setting_Name))
+            if (datItemFields.Contains(DatItemField.Setting_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Setting_Value))
+            if (datItemFields.Contains(DatItemField.Setting_Value))
                 Value = newItem.Value;
 
-            if (fields.Contains(Field.DatItem_Setting_Default))
+            if (datItemFields.Contains(DatItemField.Setting_Default))
                 Default = newItem.Default;
 
             // DatItem_Condition_* doesn't make sense here

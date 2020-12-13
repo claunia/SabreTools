@@ -308,7 +308,7 @@ namespace SabreTools.DatFiles.Formats
 
                             // Regular attributes
                             case "name":
-                                item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = attrVal } );
+                                item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = attrVal }, null);
                                 break;
 
                             case "size":

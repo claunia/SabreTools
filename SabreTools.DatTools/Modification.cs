@@ -64,8 +64,11 @@ namespace SabreTools.DatTools
                     OneRomPerGame(datFile);
 
                 // If we are removing fields, do that now
-                if (cleaner.ExcludeFields != null && cleaner.ExcludeFields.Any())
-                    RemoveFieldsFromItems(datFile, cleaner.ExcludeFields);
+                if ((cleaner.ExcludeMachineFields != null && cleaner.ExcludeMachineFields.Any())
+                    || cleaner.ExcludeDatItemFields != null && cleaner.ExcludeDatItemFields.Any())
+                {
+                    RemoveFieldsFromItems(datFile, cleaner.ExcludeDatItemFields, cleaner.ExcludeMachineFields);
+                }
 
                 // Remove all marked items
                 datFile.Items.ClearMarked();
@@ -99,7 +102,8 @@ namespace SabreTools.DatTools
                 datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
 
                 // Create a new set of mappings based on the items
-                var map = new Dictionary<string, Dictionary<Field, string>>();
+                var machineMap = new Dictionary<string, Dictionary<MachineField, string>>();
+                var datItemMap = new Dictionary<string, Dictionary<DatItemField, string>>();
 
                 // Loop through each of the extras
                 foreach (ExtraIniItem item in extras.Items)
@@ -112,27 +116,53 @@ namespace SabreTools.DatTools
                         // Loop through the machines and add the new mappings
                         foreach (string machine in machineNames)
                         {
-                            if (!map.ContainsKey(machine))
-                                map[machine] = new Dictionary<Field, string>();
+                            if (item.MachineField != MachineField.NULL)
+                            {
+                                if (!machineMap.ContainsKey(machine))
+                                    machineMap[machine] = new Dictionary<MachineField, string>();
 
-                            map[machine][item.Field] = key;
+                                machineMap[machine][item.MachineField] = key;
+                            }
+                            else if (item.DatItemField != DatItemField.NULL)
+                            {
+                                if (!datItemMap.ContainsKey(machine))
+                                    datItemMap[machine] = new Dictionary<DatItemField, string>();
+
+                                datItemMap[machine][item.DatItemField] = key;
+                            }
                         }
                     }
                 }
 
-                // Now apply the new set of mappings
-                foreach (string key in map.Keys)
+                // Now apply the new set of Machine mappings
+                foreach (string key in machineMap.Keys)
                 {
                     // If the key doesn't exist, continue
                     if (!datFile.Items.ContainsKey(key))
                         continue;
 
                     List<DatItem> datItems = datFile.Items[key];
-                    var mappings = map[key];
+                    var mappings = machineMap[key];
 
                     foreach (var datItem in datItems)
                     {
-                        datItem.SetFields(mappings);
+                        datItem.SetFields(null, mappings);
+                    }
+                }
+
+                // Now apply the new set of DatItem mappings
+                foreach (string key in datItemMap.Keys)
+                {
+                    // If the key doesn't exist, continue
+                    if (!datFile.Items.ContainsKey(key))
+                        continue;
+
+                    List<DatItem> datItems = datFile.Items[key];
+                    var mappings = datItemMap[key];
+
+                    foreach (var datItem in datItems)
+                    {
+                        datItem.SetFields(mappings, null);
                     }
                 }
             }
@@ -147,17 +177,17 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
-        /// Apply a Filter on the DatFile
+        /// Apply a set of Filters on the DatFile
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
-        /// <param name="filter">Filter to use</param>
+        /// <param name="cleaner">Cleaner to use</param>
         /// <param name="perMachine">True if entire machines are considered, false otherwise (default)</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DatFile was filtered, false on error</returns>
-        public static bool ApplyFilter(DatFile datFile, Filter filter, bool perMachine = false, bool throwOnError = false)
+        public static bool ApplyFilters(DatFile datFile, Cleaner cleaner, bool perMachine = false, bool throwOnError = false)
         {
-            // If we have a null filter, return false
-            if (filter == null)
+            // If we have a null cleaner or filters, return false
+            if (cleaner == null || cleaner.DatHeaderFilter == null || cleaner.MachineFilter == null || cleaner.DatItemFilter == null)
                 return false;
 
             // If we're filtering per machine, bucket by machine first
@@ -184,7 +214,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         // If the rom doesn't pass the filter, mark for removal
-                        if (!item.PassesFilter(filter))
+                        if (!item.PassesFilter(cleaner))
                         {
                             item.Remove = true;
 
@@ -472,12 +502,18 @@ namespace SabreTools.DatTools
         /// Remove fields as per the header
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
-        /// <param name="fields">List of fields to use</param>
-        public static void RemoveFieldsFromItems(DatFile datFile, List<Field> fields)
+        /// <param name="datItemFields">DatItem fields to remove</param>
+        /// <param name="machineFields">Machine fields to remove</param>
+        public static void RemoveFieldsFromItems(
+            DatFile datFile,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // If we have null field list, make it empty
-            if (fields == null)
-                fields = new List<Field>();
+            if (datItemFields == null)
+                datItemFields = new List<DatItemField>();
+            if (machineFields == null)
+                machineFields = new List<MachineField>();
 
             // Output the logging statement
             logger.User("Removing filtered fields");
@@ -488,7 +524,7 @@ namespace SabreTools.DatTools
                 List<DatItem> items = datFile.Items[key];
                 for (int j = 0; j < items.Count; j++)
                 {
-                    items[j].RemoveFields(fields);
+                    items[j].RemoveFields(datItemFields, machineFields);
                 }
 
                 datFile.Items.Remove(key);
@@ -997,7 +1033,7 @@ namespace SabreTools.DatTools
                     else if (!datFile.Items[parent].Contains(item))
                     {
                         if (subfolder)
-                            item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{item.Machine.Name}\\{item.GetName()}" });
+                            item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = $"{item.Machine.Name}\\{item.GetName()}" }, null);
 
                         item.CopyMachineInformation(copyFrom);
                         datFile.Items.Add(parent, item);

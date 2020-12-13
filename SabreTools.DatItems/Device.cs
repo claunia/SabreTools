@@ -85,36 +85,35 @@ namespace SabreTools.DatItems
 
         #region Accessors
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Device-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_DeviceType))
-                DeviceType = mappings[Field.DatItem_DeviceType].AsDeviceType();
+            if (datItemMappings.Keys.Contains(DatItemField.DeviceType))
+                DeviceType = datItemMappings[DatItemField.DeviceType].AsDeviceType();
 
-            if (mappings.Keys.Contains(Field.DatItem_Tag))
-                Tag = mappings[Field.DatItem_Tag];
+            if (datItemMappings.Keys.Contains(DatItemField.Tag))
+                Tag = datItemMappings[DatItemField.Tag];
 
-            if (mappings.Keys.Contains(Field.DatItem_FixedImage))
-                FixedImage = mappings[Field.DatItem_FixedImage];
+            if (datItemMappings.Keys.Contains(DatItemField.FixedImage))
+                FixedImage = datItemMappings[DatItemField.FixedImage];
 
-            if (mappings.Keys.Contains(Field.DatItem_Mandatory))
-                Mandatory = Utilities.CleanLong(mappings[Field.DatItem_Mandatory]);
+            if (datItemMappings.Keys.Contains(DatItemField.Mandatory))
+                Mandatory = Utilities.CleanLong(datItemMappings[DatItemField.Mandatory]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Interface))
-                Interface = mappings[Field.DatItem_Interface];
+            if (datItemMappings.Keys.Contains(DatItemField.Interface))
+                Interface = datItemMappings[DatItemField.Interface];
 
             if (InstancesSpecified)
             {
                 foreach (Instance instance in Instances)
                 {
-                    instance.SetFields(mappings);
+                    instance.SetFields(datItemMappings, machineMappings);
                 }
             }
 
@@ -122,7 +121,7 @@ namespace SabreTools.DatItems
             {
                 foreach (Extension extension in Extensions)
                 {
-                    extension.SetFields(mappings);
+                    extension.SetFields(datItemMappings, machineMappings);
                 }
             }
         }
@@ -211,38 +210,33 @@ namespace SabreTools.DatItems
 
         #region Filtering
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on device type
-            if (filter.DatItem_DeviceType.MatchesPositive(DeviceType.NULL, DeviceType) == false)
+            if (cleaner.DatItemFilter.DeviceType.MatchesPositive(DeviceType.NULL, DeviceType) == false)
                 return false;
-            if (filter.DatItem_DeviceType.MatchesNegative(DeviceType.NULL, DeviceType) == true)
+            if (cleaner.DatItemFilter.DeviceType.MatchesNegative(DeviceType.NULL, DeviceType) == true)
                 return false;
 
             // Filter on tag
-            if (!filter.PassStringFilter(filter.DatItem_Tag, Tag))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
                 return false;
 
             // Filter on fixed image
-            if (!filter.PassStringFilter(filter.DatItem_FixedImage, FixedImage))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.FixedImage, FixedImage))
                 return false;
 
             // Filter on mandatory
-            if (!filter.PassLongFilter(filter.DatItem_Mandatory, Mandatory))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Mandatory, Mandatory))
                 return false;
 
             // Filter on interface
-            if (!filter.PassStringFilter(filter.DatItem_Interface, Interface))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Interface, Interface))
                 return false;
 
             // Filter on individual instances
@@ -250,7 +244,7 @@ namespace SabreTools.DatItems
             {
                 foreach (Instance instance in Instances)
                 {
-                    if (!instance.PassesFilter(filter, true))
+                    if (!instance.PassesFilter(cleaner, true))
                         return false;
                 }
             }
@@ -260,7 +254,7 @@ namespace SabreTools.DatItems
             {
                 foreach (Extension extension in Extensions)
                 {
-                    if (!extension.PassesFilter(filter, true))
+                    if (!extension.PassesFilter(cleaner, true))
                         return false;
                 }
             }
@@ -268,36 +262,35 @@ namespace SabreTools.DatItems
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_DeviceType))
+            if (datItemFields.Contains(DatItemField.DeviceType))
                 DeviceType = DeviceType.NULL;
 
-            if (fields.Contains(Field.DatItem_Tag))
+            if (datItemFields.Contains(DatItemField.Tag))
                 Tag = null;
 
-            if (fields.Contains(Field.DatItem_FixedImage))
+            if (datItemFields.Contains(DatItemField.FixedImage))
                 FixedImage = null;
 
-            if (fields.Contains(Field.DatItem_Mandatory))
+            if (datItemFields.Contains(DatItemField.Mandatory))
                 Mandatory = null;
 
-            if (fields.Contains(Field.DatItem_Interface))
+            if (datItemFields.Contains(DatItemField.Interface))
                 Interface = null;
 
             if (InstancesSpecified)
             {
                 foreach (Instance instance in Instances)
                 {
-                    instance.RemoveFields(fields);
+                    instance.RemoveFields(datItemFields, machineFields);
                 }
             }
 
@@ -305,7 +298,7 @@ namespace SabreTools.DatItems
             {
                 foreach (Extension extension in Extensions)
                 {
-                    extension.RemoveFields(fields);
+                    extension.RemoveFields(datItemFields, machineFields);
                 }
             }
         }
@@ -314,15 +307,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Device to replace from, ignore specific fields
             if (item.ItemType != ItemType.Device)
@@ -332,19 +324,19 @@ namespace SabreTools.DatItems
             Device newItem = item as Device;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_DeviceType))
+            if (datItemFields.Contains(DatItemField.DeviceType))
                 DeviceType = newItem.DeviceType;
 
-            if (fields.Contains(Field.DatItem_Tag))
+            if (datItemFields.Contains(DatItemField.Tag))
                 Tag = newItem.Tag;
 
-            if (fields.Contains(Field.DatItem_FixedImage))
+            if (datItemFields.Contains(DatItemField.FixedImage))
                 FixedImage = newItem.FixedImage;
 
-            if (fields.Contains(Field.DatItem_Mandatory))
+            if (datItemFields.Contains(DatItemField.Mandatory))
                 Mandatory = newItem.Mandatory;
 
-            if (fields.Contains(Field.DatItem_Interface))
+            if (datItemFields.Contains(DatItemField.Interface))
                 Interface = newItem.Interface;
 
             // DatItem_Instance_* doesn't make sense here

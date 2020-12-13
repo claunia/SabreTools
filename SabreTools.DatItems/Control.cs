@@ -135,51 +135,50 @@ namespace SabreTools.DatItems
 
         #region Accessors
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Control-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Control_Type))
-                ControlType = mappings[Field.DatItem_Control_Type].AsControlType();
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Type))
+                ControlType = datItemMappings[DatItemField.Control_Type].AsControlType();
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Player))
-                Player = Utilities.CleanLong(mappings[Field.DatItem_Control_Player]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Player))
+                Player = Utilities.CleanLong(datItemMappings[DatItemField.Control_Player]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Buttons))
-                Buttons = Utilities.CleanLong(mappings[Field.DatItem_Control_Buttons]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Buttons))
+                Buttons = Utilities.CleanLong(datItemMappings[DatItemField.Control_Buttons]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_RequiredButtons))
-                RequiredButtons = Utilities.CleanLong(mappings[Field.DatItem_Control_RequiredButtons]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_RequiredButtons))
+                RequiredButtons = Utilities.CleanLong(datItemMappings[DatItemField.Control_RequiredButtons]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Minimum))
-                Minimum = Utilities.CleanLong(mappings[Field.DatItem_Control_Minimum]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Minimum))
+                Minimum = Utilities.CleanLong(datItemMappings[DatItemField.Control_Minimum]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Maximum))
-                Maximum = Utilities.CleanLong(mappings[Field.DatItem_Control_Maximum]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Maximum))
+                Maximum = Utilities.CleanLong(datItemMappings[DatItemField.Control_Maximum]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Sensitivity))
-                Sensitivity = Utilities.CleanLong(mappings[Field.DatItem_Control_Sensitivity]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Sensitivity))
+                Sensitivity = Utilities.CleanLong(datItemMappings[DatItemField.Control_Sensitivity]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_KeyDelta))
-                KeyDelta = Utilities.CleanLong(mappings[Field.DatItem_Control_KeyDelta]);
+            if (datItemMappings.Keys.Contains(DatItemField.Control_KeyDelta))
+                KeyDelta = Utilities.CleanLong(datItemMappings[DatItemField.Control_KeyDelta]);
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Reverse))
-                Reverse = mappings[Field.DatItem_Control_Reverse].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Reverse))
+                Reverse = datItemMappings[DatItemField.Control_Reverse].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Ways))
-                Ways = mappings[Field.DatItem_Control_Ways];
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Ways))
+                Ways = datItemMappings[DatItemField.Control_Ways];
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Ways2))
-                Ways2 = mappings[Field.DatItem_Control_Ways2];
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Ways2))
+                Ways2 = datItemMappings[DatItemField.Control_Ways2];
 
-            if (mappings.Keys.Contains(Field.DatItem_Control_Ways3))
-                Ways3 = mappings[Field.DatItem_Control_Ways3];
+            if (datItemMappings.Keys.Contains(DatItemField.Control_Ways3))
+                Ways3 = datItemMappings[DatItemField.Control_Ways3];
         }
 
         #endregion
@@ -256,115 +255,109 @@ namespace SabreTools.DatItems
 
         #region Filtering
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on control type
-            if (filter.DatItem_Control_Type.MatchesPositive(ControlType.NULL, ControlType) == false)
+            if (cleaner.DatItemFilter.Control_Type.MatchesPositive(ControlType.NULL, ControlType) == false)
                 return false;
-            if (filter.DatItem_Control_Type.MatchesNegative(ControlType.NULL, ControlType) == true)
+            if (cleaner.DatItemFilter.Control_Type.MatchesNegative(ControlType.NULL, ControlType) == true)
                 return false;
 
             // Filter on player
-            if (!filter.PassLongFilter(filter.DatItem_Control_Player, Player))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Player, Player))
                 return false;
 
             // Filter on buttons
-            if (!filter.PassLongFilter(filter.DatItem_Control_Buttons, Buttons))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Buttons, Buttons))
                 return false;
 
             // Filter on reqbuttons
-            if (!filter.PassLongFilter(filter.DatItem_Control_ReqButtons, RequiredButtons))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_ReqButtons, RequiredButtons))
                 return false;
 
             // Filter on minimum
-            if (!filter.PassLongFilter(filter.DatItem_Control_Minimum, Minimum))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Minimum, Minimum))
                 return false;
 
             // Filter on maximum
-            if (!filter.PassLongFilter(filter.DatItem_Control_Maximum, Maximum))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Maximum, Maximum))
                 return false;
 
             // Filter on sensitivity
-            if (!filter.PassLongFilter(filter.DatItem_Control_Sensitivity, Sensitivity))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Sensitivity, Sensitivity))
                 return false;
 
             // Filter on keydelta
-            if (!filter.PassLongFilter(filter.DatItem_Control_KeyDelta, KeyDelta))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_KeyDelta, KeyDelta))
                 return false;
 
             // Filter on reverse
-            if (!filter.PassBoolFilter(filter.DatItem_Control_Reverse, Reverse))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Control_Reverse, Reverse))
                 return false;
 
             // Filter on ways
-            if (!filter.PassStringFilter(filter.DatItem_Control_Ways, Ways))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Control_Ways, Ways))
                 return false;
 
             // Filter on ways2
-            if (!filter.PassStringFilter(filter.DatItem_Control_Ways2, Ways2))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Control_Ways2, Ways2))
                 return false;
 
             // Filter on ways3
-            if (!filter.PassStringFilter(filter.DatItem_Control_Ways3, Ways3))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Control_Ways3, Ways3))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Control_Type))
+            if (datItemFields.Contains(DatItemField.Control_Type))
                 ControlType = ControlType.NULL;
 
-            if (fields.Contains(Field.DatItem_Control_Player))
+            if (datItemFields.Contains(DatItemField.Control_Player))
                 Player = null;
 
-            if (fields.Contains(Field.DatItem_Control_Buttons))
+            if (datItemFields.Contains(DatItemField.Control_Buttons))
                 Buttons = null;
 
-            if (fields.Contains(Field.DatItem_Control_RequiredButtons))
+            if (datItemFields.Contains(DatItemField.Control_RequiredButtons))
                 RequiredButtons = null;
 
-            if (fields.Contains(Field.DatItem_Control_Minimum))
+            if (datItemFields.Contains(DatItemField.Control_Minimum))
                 Minimum = null;
 
-            if (fields.Contains(Field.DatItem_Control_Maximum))
+            if (datItemFields.Contains(DatItemField.Control_Maximum))
                 Maximum = null;
 
-            if (fields.Contains(Field.DatItem_Control_Sensitivity))
+            if (datItemFields.Contains(DatItemField.Control_Sensitivity))
                 Sensitivity = null;
 
-            if (fields.Contains(Field.DatItem_Control_KeyDelta))
+            if (datItemFields.Contains(DatItemField.Control_KeyDelta))
                 KeyDelta = null;
 
-            if (fields.Contains(Field.DatItem_Control_Reverse))
+            if (datItemFields.Contains(DatItemField.Control_Reverse))
                 Reverse = null;
 
-            if (fields.Contains(Field.DatItem_Control_Ways))
+            if (datItemFields.Contains(DatItemField.Control_Ways))
                 Ways = null;
 
-            if (fields.Contains(Field.DatItem_Control_Ways2))
+            if (datItemFields.Contains(DatItemField.Control_Ways2))
                 Ways2 = null;
 
-            if (fields.Contains(Field.DatItem_Control_Ways3))
+            if (datItemFields.Contains(DatItemField.Control_Ways3))
                 Ways3 = null;
         }
 
@@ -372,15 +365,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Control to replace from, ignore specific fields
             if (item.ItemType != ItemType.Control)
@@ -390,40 +382,40 @@ namespace SabreTools.DatItems
             Control newItem = item as Control;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Control_Type))
+            if (datItemFields.Contains(DatItemField.Control_Type))
                 ControlType = newItem.ControlType;
 
-            if (fields.Contains(Field.DatItem_Control_Player))
+            if (datItemFields.Contains(DatItemField.Control_Player))
                 Player = newItem.Player;
 
-            if (fields.Contains(Field.DatItem_Control_Buttons))
+            if (datItemFields.Contains(DatItemField.Control_Buttons))
                 Buttons = newItem.Buttons;
 
-            if (fields.Contains(Field.DatItem_Control_RequiredButtons))
+            if (datItemFields.Contains(DatItemField.Control_RequiredButtons))
                 RequiredButtons = newItem.RequiredButtons;
 
-            if (fields.Contains(Field.DatItem_Control_Minimum))
+            if (datItemFields.Contains(DatItemField.Control_Minimum))
                 Minimum = newItem.Minimum;
 
-            if (fields.Contains(Field.DatItem_Control_Maximum))
+            if (datItemFields.Contains(DatItemField.Control_Maximum))
                 Maximum = newItem.Maximum;
 
-            if (fields.Contains(Field.DatItem_Control_Sensitivity))
+            if (datItemFields.Contains(DatItemField.Control_Sensitivity))
                 Sensitivity = newItem.Sensitivity;
 
-            if (fields.Contains(Field.DatItem_Control_KeyDelta))
+            if (datItemFields.Contains(DatItemField.Control_KeyDelta))
                 KeyDelta = newItem.KeyDelta;
 
-            if (fields.Contains(Field.DatItem_Control_Reverse))
+            if (datItemFields.Contains(DatItemField.Control_Reverse))
                 Reverse = newItem.Reverse;
 
-            if (fields.Contains(Field.DatItem_Control_Ways))
+            if (datItemFields.Contains(DatItemField.Control_Ways))
                 Ways = newItem.Ways;
 
-            if (fields.Contains(Field.DatItem_Control_Ways2))
+            if (datItemFields.Contains(DatItemField.Control_Ways2))
                 Ways2 = newItem.Ways2;
 
-            if (fields.Contains(Field.DatItem_Control_Ways3))
+            if (datItemFields.Contains(DatItemField.Control_Ways3))
                 Ways3 = newItem.Ways3;
         }
 

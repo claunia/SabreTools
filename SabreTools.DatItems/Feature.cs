@@ -55,24 +55,23 @@ namespace SabreTools.DatItems
 
         #region Accessors
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Feature-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_FeatureType))
-                Type = mappings[Field.DatItem_FeatureType].AsFeatureType();
+            if (datItemMappings.Keys.Contains(DatItemField.FeatureType))
+                Type = datItemMappings[DatItemField.FeatureType].AsFeatureType();
 
-            if (mappings.Keys.Contains(Field.DatItem_FeatureStatus))
-                Status = mappings[Field.DatItem_FeatureStatus].AsFeatureStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.FeatureStatus))
+                Status = datItemMappings[DatItemField.FeatureStatus].AsFeatureStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_FeatureOverall))
-                Overall = mappings[Field.DatItem_FeatureOverall].AsFeatureStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.FeatureOverall))
+                Overall = datItemMappings[DatItemField.FeatureOverall].AsFeatureStatus();
         }
 
         #endregion
@@ -129,56 +128,50 @@ namespace SabreTools.DatItems
 
         #region Filtering
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on type
-            if (filter.DatItem_FeatureType.MatchesPositive(FeatureType.NULL, Type) == false)
+            if (cleaner.DatItemFilter.FeatureType.MatchesPositive(FeatureType.NULL, Type) == false)
                 return false;
-            if (filter.DatItem_FeatureType.MatchesNegative(FeatureType.NULL, Type) == true)
+            if (cleaner.DatItemFilter.FeatureType.MatchesNegative(FeatureType.NULL, Type) == true)
                 return false;
 
             // Filter on status
-            if (filter.DatItem_FeatureStatus.MatchesPositive(FeatureStatus.NULL, Status) == false)
+            if (cleaner.DatItemFilter.FeatureStatus.MatchesPositive(FeatureStatus.NULL, Status) == false)
                 return false;
-            if (filter.DatItem_FeatureStatus.MatchesNegative(FeatureStatus.NULL, Status) == true)
+            if (cleaner.DatItemFilter.FeatureStatus.MatchesNegative(FeatureStatus.NULL, Status) == true)
                 return false;
 
             // Filter on overall
-            if (filter.DatItem_FeatureOverall.MatchesPositive(FeatureStatus.NULL, Overall) == false)
+            if (cleaner.DatItemFilter.FeatureOverall.MatchesPositive(FeatureStatus.NULL, Overall) == false)
                 return false;
-            if (filter.DatItem_FeatureOverall.MatchesNegative(FeatureStatus.NULL, Overall) == true)
+            if (cleaner.DatItemFilter.FeatureOverall.MatchesNegative(FeatureStatus.NULL, Overall) == true)
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_FeatureType))
+            if (datItemFields.Contains(DatItemField.FeatureType))
                 Type = FeatureType.NULL;
 
-            if (fields.Contains(Field.DatItem_FeatureStatus))
+            if (datItemFields.Contains(DatItemField.FeatureStatus))
                 Status = FeatureStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_FeatureOverall))
+            if (datItemFields.Contains(DatItemField.FeatureOverall))
                 Overall = FeatureStatus.NULL;
         }
 
@@ -186,15 +179,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Feature to replace from, ignore specific fields
             if (item.ItemType != ItemType.Feature)
@@ -204,13 +196,13 @@ namespace SabreTools.DatItems
             Feature newItem = item as Feature;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_FeatureType))
+            if (datItemFields.Contains(DatItemField.FeatureType))
                 Type = newItem.Type;
 
-            if (fields.Contains(Field.DatItem_FeatureStatus))
+            if (datItemFields.Contains(DatItemField.FeatureStatus))
                 Status = newItem.Status;
 
-            if (fields.Contains(Field.DatItem_FeatureOverall))
+            if (datItemFields.Contains(DatItemField.FeatureOverall))
                 Overall = newItem.Overall;
         }
 

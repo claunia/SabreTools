@@ -441,7 +441,7 @@ namespace SabreTools.DatTools
                             {
                                 // Create a headered item to use as well
                                 datItem.CopyMachineInformation(item);
-                                datItem.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{datItem.GetName()}_{crc}" });
+                                datItem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = $"{datItem.GetName()}_{crc}" }, null);
 
                                 // Get the output archive, if possible
                                 Folder outputArchive = GetPreconfiguredFolder(datFile, date, outputFormat);

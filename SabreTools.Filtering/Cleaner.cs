@@ -9,6 +9,27 @@ namespace SabreTools.Filtering
     /// </summary>
     public class Cleaner
     {
+        #region Filter Fields
+
+        /// <summary>
+        /// Filter for DatHeader fields
+        /// </summary>
+        public DatHeaderFilter DatHeaderFilter { get; set; }
+
+        /// <summary>
+        /// Filter for DatItem fields
+        /// </summary>
+        public DatItemFilter DatItemFilter { get; set; }
+
+        /// <summary>
+        /// Filter for Machine fields
+        /// </summary>
+        public MachineFilter MachineFilter { get; set; }
+
+        #endregion
+
+        #region Flag Fields
+
         /// <summary>
         /// Clean all names to WoD standards
         /// </summary>
@@ -25,9 +46,19 @@ namespace SabreTools.Filtering
         public bool DescriptionAsName { get; set; }
 
         /// <summary>
-        /// Dictionary of fields in machine and items to exclude from writing
+        /// Dictionary of DatHeader fields to exclude from writing
         /// </summary>
-        public List<Field> ExcludeFields { get; set; } = new List<Field>();
+        public List<DatHeaderField> ExcludeDatHeaderFields { get; set; } = new List<DatHeaderField>();
+
+        /// <summary>
+        /// Dictionary of DatItem fields to exclude from writing
+        /// </summary>
+        public List<DatItemField> ExcludeDatItemFields { get; set; } = new List<DatItemField>();
+
+        /// <summary>
+        /// Dictionary of Machine fields to exclude from writing
+        /// </summary>
+        public List<MachineField> ExcludeMachineFields { get; set; } = new List<MachineField>();
 
         /// <summary>
         /// Keep machines that don't contain any items
@@ -73,5 +104,7 @@ namespace SabreTools.Filtering
         /// Trim total machine and item name to not exceed NTFS limits
         /// </summary>
         public bool Trim { get; set; }
+    
+        #endregion
     }
 }

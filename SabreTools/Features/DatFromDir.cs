@@ -68,11 +68,11 @@ namespace SabreTools.Features
             var splitType = GetSplitType(features);
 
             // Apply the specialized field removals to the cleaner
-            if (Cleaner.ExcludeFields == null)
-                Cleaner.ExcludeFields = new List<Field>();
+            if (Cleaner.ExcludeDatItemFields == null)
+                Cleaner.ExcludeDatItemFields = new List<DatItemField>();
 
             if (!addFileDates)
-                Cleaner.ExcludeFields.Add(Field.DatItem_Date);
+                Cleaner.ExcludeDatItemFields.Add(DatItemField.Date);
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header);
@@ -104,7 +104,7 @@ namespace SabreTools.Features
                         // Perform additional processing steps
                         Modification.ApplyExtras(datdata, Extras);
                         Modification.ApplySplitting(datdata, splitType, false);
-                        Modification.ApplyFilter(datdata, Filter);
+                        Modification.ApplyFilters(datdata, Cleaner);
                         Modification.ApplyCleaning(datdata, Cleaner);
 
                         // Write out the file

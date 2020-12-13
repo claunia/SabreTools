@@ -164,54 +164,53 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Disk-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                Name = datItemMappings[DatItemField.Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_MD5))
-                MD5 = mappings[Field.DatItem_MD5];
+            if (datItemMappings.Keys.Contains(DatItemField.MD5))
+                MD5 = datItemMappings[DatItemField.MD5];
 
-            if (mappings.Keys.Contains(Field.DatItem_SHA1))
-                SHA1 = mappings[Field.DatItem_SHA1];
+            if (datItemMappings.Keys.Contains(DatItemField.SHA1))
+                SHA1 = datItemMappings[DatItemField.SHA1];
 
-            if (mappings.Keys.Contains(Field.DatItem_Merge))
-                MergeTag = mappings[Field.DatItem_Merge];
+            if (datItemMappings.Keys.Contains(DatItemField.Merge))
+                MergeTag = datItemMappings[DatItemField.Merge];
 
-            if (mappings.Keys.Contains(Field.DatItem_Region))
-                Region = mappings[Field.DatItem_Region];
+            if (datItemMappings.Keys.Contains(DatItemField.Region))
+                Region = datItemMappings[DatItemField.Region];
 
-            if (mappings.Keys.Contains(Field.DatItem_Index))
-                Index = mappings[Field.DatItem_Index];
+            if (datItemMappings.Keys.Contains(DatItemField.Index))
+                Index = datItemMappings[DatItemField.Index];
 
-            if (mappings.Keys.Contains(Field.DatItem_Writable))
-                Writable = mappings[Field.DatItem_Writable].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Writable))
+                Writable = datItemMappings[DatItemField.Writable].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.DatItem_Status))
-                ItemStatus = mappings[Field.DatItem_Status].AsItemStatus();
+            if (datItemMappings.Keys.Contains(DatItemField.Status))
+                ItemStatus = datItemMappings[DatItemField.Status].AsItemStatus();
 
-            if (mappings.Keys.Contains(Field.DatItem_Optional))
-                Optional = mappings[Field.DatItem_Optional].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Optional))
+                Optional = datItemMappings[DatItemField.Optional].AsYesNo();
 
             // Handle DiskArea-specific fields
             if (DiskArea == null)
                 DiskArea = new DiskArea();
 
-            DiskArea.SetFields(mappings);
+            DiskArea.SetFields(datItemMappings, machineMappings);
 
             // Handle Part-specific fields
             if (Part == null)
                 Part = new Part();
 
-            Part.SetFields(mappings);
+            Part.SetFields(datItemMappings, machineMappings);
         }
 
         #endregion
@@ -450,56 +449,51 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             #region Common
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
                 return false;
 
             // Filter on MD5
-            if (!filter.PassStringFilter(filter.DatItem_MD5, MD5))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.MD5, MD5))
                 return false;
 
             // Filter on SHA-1
-            if (!filter.PassStringFilter(filter.DatItem_SHA1, SHA1))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA1, SHA1))
                 return false;
 
             // Filter on merge tag
-            if (!filter.PassStringFilter(filter.DatItem_Merge, MergeTag))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Merge, MergeTag))
                 return false;
 
             // Filter on region
-            if (!filter.PassStringFilter(filter.DatItem_Region, Region))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Region, Region))
                 return false;
 
             // Filter on index
-            if (!filter.PassStringFilter(filter.DatItem_Index, Index))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Index, Index))
                 return false;
 
             // Filter on writable
-            if (!filter.PassBoolFilter(filter.DatItem_Writable, Writable))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Writable, Writable))
                 return false;
 
             // Filter on status
-            if (filter.DatItem_Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
+            if (cleaner.DatItemFilter.Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
                 return false;
-            if (filter.DatItem_Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
+            if (cleaner.DatItemFilter.Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
                 return false;
 
             // Filter on optional
-            if (!filter.PassBoolFilter(filter.DatItem_Optional, Optional))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Optional, Optional))
                 return false;
 
             #endregion
@@ -509,14 +503,14 @@ namespace SabreTools.DatItems
             // Filter on DiskArea
             if (DiskAreaSpecified)
             {
-                if (!DiskArea.PassesFilter(filter, true))
+                if (!DiskArea.PassesFilter(cleaner, true))
                     return false;
             }
 
             // Filter on Part
             if (PartSpecified)
             {
-                if (!Part.PassesFilter(filter, true))
+                if (!Part.PassesFilter(cleaner, true))
                     return false;
             }
 
@@ -525,44 +519,43 @@ namespace SabreTools.DatItems
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
 
             #region Common
 
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_MD5))
+            if (datItemFields.Contains(DatItemField.MD5))
                 MD5 = null;
 
-            if (fields.Contains(Field.DatItem_SHA1))
+            if (datItemFields.Contains(DatItemField.SHA1))
                 SHA1 = null;
 
-            if (fields.Contains(Field.DatItem_Merge))
+            if (datItemFields.Contains(DatItemField.Merge))
                 MergeTag = null;
 
-            if (fields.Contains(Field.DatItem_Region))
+            if (datItemFields.Contains(DatItemField.Region))
                 Region = null;
 
-            if (fields.Contains(Field.DatItem_Index))
+            if (datItemFields.Contains(DatItemField.Index))
                 Index = null;
 
-            if (fields.Contains(Field.DatItem_Writable))
+            if (datItemFields.Contains(DatItemField.Writable))
                 Writable = null;
 
-            if (fields.Contains(Field.DatItem_Status))
+            if (datItemFields.Contains(DatItemField.Status))
                 ItemStatus = ItemStatus.NULL;
 
-            if (fields.Contains(Field.DatItem_Optional))
+            if (datItemFields.Contains(DatItemField.Optional))
                 Optional = null;
 
             #endregion
@@ -570,10 +563,10 @@ namespace SabreTools.DatItems
             #region SoftwareList
 
             if (DiskAreaSpecified)
-                DiskArea.RemoveFields(fields);
+                DiskArea.RemoveFields(datItemFields, machineFields);
 
             if (PartSpecified)
-                Part.RemoveFields(fields);
+                Part.RemoveFields(datItemFields, machineFields);
 
             #endregion
         }
@@ -627,15 +620,14 @@ namespace SabreTools.DatItems
             return key;
         }
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Disk to replace from, ignore specific fields
             if (item.ItemType != ItemType.Disk)
@@ -648,37 +640,37 @@ namespace SabreTools.DatItems
 
             #region Common
 
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_MD5))
+            if (datItemFields.Contains(DatItemField.MD5))
             {
                 if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
                     MD5 = newItem.MD5;
             }
 
-            if (fields.Contains(Field.DatItem_SHA1))
+            if (datItemFields.Contains(DatItemField.SHA1))
             {
                 if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
                     SHA1 = newItem.SHA1;
             }
 
-            if (fields.Contains(Field.DatItem_Merge))
+            if (datItemFields.Contains(DatItemField.Merge))
                 MergeTag = newItem.MergeTag;
 
-            if (fields.Contains(Field.DatItem_Region))
+            if (datItemFields.Contains(DatItemField.Region))
                 Region = newItem.Region;
 
-            if (fields.Contains(Field.DatItem_Index))
+            if (datItemFields.Contains(DatItemField.Index))
                 Index = newItem.Index;
 
-            if (fields.Contains(Field.DatItem_Writable))
+            if (datItemFields.Contains(DatItemField.Writable))
                 Writable = newItem.Writable;
 
-            if (fields.Contains(Field.DatItem_Status))
+            if (datItemFields.Contains(DatItemField.Status))
                 ItemStatus = newItem.ItemStatus;
 
-            if (fields.Contains(Field.DatItem_Optional))
+            if (datItemFields.Contains(DatItemField.Optional))
                 Optional = newItem.Optional;
 
             #endregion
@@ -686,10 +678,10 @@ namespace SabreTools.DatItems
             #region SoftwareList
 
             if (DiskAreaSpecified && newItem.DiskAreaSpecified)
-                DiskArea.ReplaceFields(newItem.DiskArea, fields);
+                DiskArea.ReplaceFields(newItem.DiskArea, datItemFields, machineFields);
 
             if (PartSpecified && newItem.PartSpecified)
-                Part.ReplaceFields(newItem.Part, fields);
+                Part.ReplaceFields(newItem.Part, datItemFields, machineFields);
 
             #endregion
         }

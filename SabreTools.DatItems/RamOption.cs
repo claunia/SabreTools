@@ -55,24 +55,23 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle BiosSet-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Name))
-                Name = mappings[Field.DatItem_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                Name = datItemMappings[DatItemField.Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Default))
-                Default = mappings[Field.DatItem_Default].AsYesNo();
+            if (datItemMappings.Keys.Contains(DatItemField.Default))
+                Default = datItemMappings[DatItemField.Default].AsYesNo();
 
-            if (mappings.Keys.Contains(Field.DatItem_Content))
-                Content = mappings[Field.DatItem_Content];
+            if (datItemMappings.Keys.Contains(DatItemField.Content))
+                Content = datItemMappings[DatItemField.Content];
         }
 
         #endregion
@@ -157,50 +156,44 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on item name
-            if (!filter.PassStringFilter(filter.DatItem_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
                 return false;
 
             // Filter on default
-            if (!filter.PassBoolFilter(filter.DatItem_Default, Default))
+            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Default, Default))
                 return false;
 
             // Filter on content
-            if (!filter.PassStringFilter(filter.DatItem_Content, Content))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Content, Content))
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Default))
+            if (datItemFields.Contains(DatItemField.Default))
                 Default = null;
 
-            if (fields.Contains(Field.DatItem_Content))
+            if (datItemFields.Contains(DatItemField.Content))
                 Content = null;
         }
 
@@ -218,15 +211,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a RamOption to replace from, ignore specific fields
             if (item.ItemType != ItemType.RamOption)
@@ -236,13 +228,13 @@ namespace SabreTools.DatItems
             RamOption newItem = item as RamOption;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Name))
+            if (datItemFields.Contains(DatItemField.Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Default))
+            if (datItemFields.Contains(DatItemField.Default))
                 Default = newItem.Default;
 
-            if (fields.Contains(Field.DatItem_Content))
+            if (datItemFields.Contains(DatItemField.Content))
                 Content = newItem.Content;
         }
 

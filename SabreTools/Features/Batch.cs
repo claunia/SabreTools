@@ -104,18 +104,18 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Read in the individual arguments
-                                Field field = command.Arguments[0].AsField();
+                                DatHeaderField field = command.Arguments[0].AsDatHeaderField();
                                 string value = command.Arguments[1];
 
                                 // If we had an invalid input, log and continue
-                                if (field == Field.NULL)
+                                if (field == DatHeaderField.NULL)
                                 {
                                     logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
                                 }
 
                                 // Set the header field
-                                datFile.Header.SetFields(new Dictionary<Field, string> { [field] = value });
+                                datFile.Header.SetFields(new Dictionary<DatHeaderField, string> { [field] = value });
 
                                 break;
 
@@ -159,8 +159,8 @@ Reset the internal state:           reset();";
 
                                 // TODO: We might not want to remove higher order hashes in the future
                                 // TODO: We might not want to remove dates in the future
-                                Cleaner dfdCleaner = new Cleaner() { ExcludeFields = Hash.DeepHashes.AsFields() };
-                                dfdCleaner.ExcludeFields.Add(Field.DatItem_Date);
+                                Cleaner dfdCleaner = new Cleaner() { ExcludeDatItemFields = Hash.DeepHashes.AsDatItemFields() };
+                                dfdCleaner.ExcludeDatItemFields.Add(DatItemField.Date);
                                 Modification.ApplyCleaning(datFile, dfdCleaner);
 
                                 break;
@@ -201,12 +201,21 @@ Reset the internal state:           reset();";
                                     continue;
                                 }
 
-                                // Create a filter with this new set of fields
-                                Filter filter = new Filter();
-                                filter.SetFilter(filterField, filterValue, filterRemove.Value);
+                                // Create cleaner to run filters from
+                                Cleaner cleaner = new Cleaner
+                                {
+                                    DatHeaderFilter = new DatHeaderFilter(),
+                                    MachineFilter = new MachineFilter(),
+                                    DatItemFilter = new DatItemFilter(),
+                                };
 
-                                // Apply the filter blindly
-                                Modification.ApplyFilter(datFile, filter, filterPerMachine.Value);
+                                // Set the possible filters
+                                cleaner.DatHeaderFilter.SetFilter(command.Arguments[0].AsDatHeaderField(), filterValue, filterRemove.Value);
+                                cleaner.MachineFilter.SetFilter(command.Arguments[0].AsMachineField(), filterValue, filterRemove.Value);
+                                cleaner.DatItemFilter.SetFilter(command.Arguments[0].AsDatItemField(), filterValue, filterRemove.Value);
+
+                                // Apply the filters blindly
+                                Modification.ApplyFilters(datFile, cleaner, filterPerMachine.Value);
 
                                 // Cleanup after the filter
                                 // TODO: We might not want to remove immediately
@@ -244,7 +253,8 @@ Reset the internal state:           reset();";
                                 ExtraIni extraIni = new ExtraIni();
                                 ExtraIniItem extraIniItem = new ExtraIniItem();
                                 extraIniItem.PopulateFromFile(extraFile);
-                                extraIniItem.Field = extraField;
+                                extraIniItem.MachineField = command.Arguments[0].AsMachineField();
+                                extraIniItem.DatItemField = command.Arguments[0].AsDatItemField();
                                 extraIni.Items.Add(extraIniItem);
 
                                 // Apply the extra INI blindly
@@ -328,7 +338,9 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Run the removal functionality
-                                Modification.RemoveFieldsFromItems(datFile, command.Arguments.Select(s => s.AsField()).ToList());
+                                var removeDatItemFields = command.Arguments.Select(s => s.AsDatItemField()).ToList();
+                                var removeMachineFields = command.Arguments.Select(s => s.AsMachineField()).ToList();
+                                Modification.RemoveFieldsFromItems(datFile, removeDatItemFields, removeMachineFields);
 
                                 break;
 

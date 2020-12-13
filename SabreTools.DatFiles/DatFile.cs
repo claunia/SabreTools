@@ -459,7 +459,7 @@ namespace SabreTools.DatFiles
                     if (!string.IsNullOrWhiteSpace(disk.SHA1))
                     {
                         name = Utilities.GetDepotPath(disk.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
-                        item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" } );
+                        item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = $"{pre}{name}{post}" }, null);
                     }
                 }
                 else if (item.ItemType == ItemType.Media)
@@ -470,7 +470,7 @@ namespace SabreTools.DatFiles
                     if (!string.IsNullOrWhiteSpace(media.SHA1))
                     {
                         name = Utilities.GetDepotPath(media.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
-                        item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" });
+                        item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = $"{pre}{name}{post}" }, null);
                     }
                 }
                 else if (item.ItemType == ItemType.Rom)
@@ -481,7 +481,7 @@ namespace SabreTools.DatFiles
                     if (!string.IsNullOrWhiteSpace(rom.SHA1))
                     {
                         name = Utilities.GetDepotPath(rom.SHA1, Header.OutputDepot.Depth).Replace('\\', '/');
-                        item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = $"{pre}{name}{post}" });
+                        item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = $"{pre}{name}{post}" }, null);
                     }
                 }
 
@@ -505,7 +505,7 @@ namespace SabreTools.DatFiles
                 name = Path.Combine(item.Machine.Name, name);
 
             // Now assign back the item name
-            item.SetFields(new Dictionary<Field, string> { [Field.DatItem_Name] = pre + name + post });
+            item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = pre + name + post }, null);
 
             // Restore all relevant values
             if (forceRemoveQuotes)

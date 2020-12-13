@@ -60,7 +60,8 @@ namespace SabreTools.Filtering
                 string fieldString = inputTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
                 string fileString = inputTrimmed.Substring(fieldString.Length + 1).Trim('"', ' ', '\t');
 
-                item.Field = fieldString.AsField();
+                item.DatItemField = fieldString.AsDatItemField();
+                item.MachineField = fieldString.AsMachineField();
                 if (item.PopulateFromFile(fileString))
                     Items.Add(item);
             }

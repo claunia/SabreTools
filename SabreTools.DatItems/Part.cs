@@ -47,28 +47,27 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle Part-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_Part_Name))
-                Name = mappings[Field.DatItem_Part_Name];
+            if (datItemMappings.Keys.Contains(DatItemField.Part_Name))
+                Name = datItemMappings[DatItemField.Part_Name];
 
-            if (mappings.Keys.Contains(Field.DatItem_Part_Interface))
-                Interface = mappings[Field.DatItem_Part_Interface];
+            if (datItemMappings.Keys.Contains(DatItemField.Part_Interface))
+                Interface = datItemMappings[DatItemField.Part_Interface];
 
             // Handle Feature-specific fields
             if (FeaturesSpecified)
             {
                 foreach (PartFeature partFeature in Features)
                 {
-                    partFeature.SetFields(mappings);
+                    partFeature.SetFields(datItemMappings, machineMappings);
                 }
             }
         }
@@ -169,24 +168,19 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on part name
-            if (!filter.PassStringFilter(filter.DatItem_Part_Name, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Part_Name, Name))
                 return false;
 
             // Filter on part interface
-            if (!filter.PassStringFilter(filter.DatItem_Part_Interface, Interface))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Part_Interface, Interface))
                 return false;
 
             // Filter on features
@@ -194,7 +188,7 @@ namespace SabreTools.DatItems
             {
                 foreach (PartFeature partFeature in Features)
                 {
-                    if (!partFeature.PassesFilter(filter, true))
+                    if (!partFeature.PassesFilter(cleaner, true))
                         return false;
                 }
             }
@@ -202,27 +196,26 @@ namespace SabreTools.DatItems
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_Part_Name))
+            if (datItemFields.Contains(DatItemField.Part_Name))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_Part_Interface))
+            if (datItemFields.Contains(DatItemField.Part_Interface))
                 Interface = null;
 
             if (FeaturesSpecified)
             {
                 foreach (PartFeature partFeature in Features)
                 {
-                    partFeature.RemoveFields(fields);
+                    partFeature.RemoveFields(datItemFields, machineFields);
                 }
             }
         }
@@ -241,15 +234,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a Part to replace from, ignore specific fields
             if (item.ItemType != ItemType.Part)
@@ -259,10 +251,10 @@ namespace SabreTools.DatItems
             Part newItem = item as Part;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_Part_Name))
+            if (datItemFields.Contains(DatItemField.Part_Name))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_Part_Interface))
+            if (datItemFields.Contains(DatItemField.Part_Interface))
                 Interface = newItem.Interface;
 
             // DatItem_Part_Feature_* doesn't make sense here

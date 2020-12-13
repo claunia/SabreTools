@@ -70,27 +70,26 @@ namespace SabreTools.DatItems
             return Name;
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="mappings">Mappings dictionary</param>
-        public override void SetFields(Dictionary<Field, string> mappings)
+        /// <inheritdoc/>
+        public override void SetFields(
+            Dictionary<DatItemField, string> datItemMappings,
+            Dictionary<MachineField, string> machineMappings)
         {
             // Set base fields
-            base.SetFields(mappings);
+            base.SetFields(datItemMappings, machineMappings);
 
             // Handle DataArea-specific fields
-            if (mappings.Keys.Contains(Field.DatItem_AreaName))
-                Name = mappings[Field.DatItem_AreaName];
+            if (datItemMappings.Keys.Contains(DatItemField.AreaName))
+                Name = datItemMappings[DatItemField.AreaName];
 
-            if (mappings.Keys.Contains(Field.DatItem_AreaSize))
-                Size = Utilities.CleanLong(mappings[Field.DatItem_AreaSize]);
+            if (datItemMappings.Keys.Contains(DatItemField.AreaSize))
+                Size = Utilities.CleanLong(datItemMappings[DatItemField.AreaSize]);
 
-            if (mappings.Keys.Contains(Field.DatItem_AreaWidth))
-                Width = Utilities.CleanLong(mappings[Field.DatItem_AreaWidth]);
+            if (datItemMappings.Keys.Contains(DatItemField.AreaWidth))
+                Width = Utilities.CleanLong(datItemMappings[DatItemField.AreaWidth]);
 
-            if (mappings.Keys.Contains(Field.DatItem_AreaEndianness))
-                Endianness = mappings[Field.DatItem_AreaEndianness].AsEndianness();
+            if (datItemMappings.Keys.Contains(DatItemField.AreaEndianness))
+                Endianness = datItemMappings[DatItemField.AreaEndianness].AsEndianness();
         }
 
         #endregion
@@ -179,59 +178,53 @@ namespace SabreTools.DatItems
             }
         }
 
-        /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="filter">Filter to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public override bool PassesFilter(Filter filter, bool sub = false)
+        /// <inheritdoc/>
+        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
         {
             // Check common fields first
-            if (!base.PassesFilter(filter, sub))
+            if (!base.PassesFilter(cleaner, sub))
                 return false;
 
             // Filter on area name
-            if (!filter.PassStringFilter(filter.DatItem_AreaName, Name))
+            if (!Filter.PassStringFilter(cleaner.DatItemFilter.AreaName, Name))
                 return false;
 
             // Filter on area size
-            if (!filter.PassLongFilter(filter.DatItem_AreaSize, Size))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.AreaSize, Size))
                 return false;
 
             // Filter on area width
-            if (!filter.PassLongFilter(filter.DatItem_AreaWidth, Width))
+            if (!Filter.PassLongFilter(cleaner.DatItemFilter.AreaWidth, Width))
                 return false;
 
             // Filter on area endianness
-            if (filter.DatItem_AreaEndianness.MatchesPositive(Endianness.NULL, Endianness) == false)
+            if (cleaner.DatItemFilter.AreaEndianness.MatchesPositive(Endianness.NULL, Endianness) == false)
                 return false;
-            if (filter.DatItem_AreaEndianness.MatchesNegative(Endianness.NULL, Endianness) == true)
+            if (cleaner.DatItemFilter.AreaEndianness.MatchesNegative(Endianness.NULL, Endianness) == true)
                 return false;
 
             return true;
         }
 
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="fields">List of Fields to remove</param>
-        public override void RemoveFields(List<Field> fields)
+        /// <inheritdoc/>
+        public override void RemoveFields(
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Remove common fields first
-            base.RemoveFields(fields);
+            base.RemoveFields(datItemFields, machineFields);
 
             // Remove the fields
-            if (fields.Contains(Field.DatItem_AreaName))
+            if (datItemFields.Contains(DatItemField.AreaName))
                 Name = null;
 
-            if (fields.Contains(Field.DatItem_AreaSize))
+            if (datItemFields.Contains(DatItemField.AreaSize))
                 Size = null;
 
-            if (fields.Contains(Field.DatItem_AreaWidth))
+            if (datItemFields.Contains(DatItemField.AreaWidth))
                 Width = null;
 
-            if (fields.Contains(Field.DatItem_AreaEndianness))
+            if (datItemFields.Contains(DatItemField.AreaEndianness))
                 Endianness = Endianness.NULL;
         }
 
@@ -249,15 +242,14 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="fields">List of Fields representing what should be updated</param>
-        public override void ReplaceFields(DatItem item, List<Field> fields)
+        /// <inheritdoc/>
+        public override void ReplaceFields(
+            DatItem item,
+            List<DatItemField> datItemFields,
+            List<MachineField> machineFields)
         {
             // Replace common fields first
-            base.ReplaceFields(item, fields);
+            base.ReplaceFields(item, datItemFields, machineFields);
 
             // If we don't have a DataArea to replace from, ignore specific fields
             if (item.ItemType != ItemType.DataArea)
@@ -267,16 +259,16 @@ namespace SabreTools.DatItems
             DataArea newItem = item as DataArea;
 
             // Replace the fields
-            if (fields.Contains(Field.DatItem_AreaName))
+            if (datItemFields.Contains(DatItemField.AreaName))
                 Name = newItem.Name;
 
-            if (fields.Contains(Field.DatItem_AreaSize))
+            if (datItemFields.Contains(DatItemField.AreaSize))
                 Size = newItem.Size;
 
-            if (fields.Contains(Field.DatItem_AreaWidth))
+            if (datItemFields.Contains(DatItemField.AreaWidth))
                 Width = newItem.Width;
 
-            if (fields.Contains(Field.DatItem_AreaEndianness))
+            if (datItemFields.Contains(DatItemField.AreaEndianness))
                 Endianness = newItem.Endianness;
         }
 
