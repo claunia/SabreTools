@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
@@ -12,7 +11,7 @@ namespace SabreTools.Filtering
     /// </summary>
     /// TODO: Can clever use of Filtering allow for easier external splitting methods?
     /// TODO: Investigate how to reduce the amount of hardcoded filter statements
-    public class DatItemFilter
+    public class DatItemFilter : Filter
     {
         #region Fields
 
@@ -200,15 +199,6 @@ namespace SabreTools.Filtering
 
         #endregion // Fields
 
-        #region Logging
-
-        /// <summary>
-        /// Logging object
-        /// </summary>
-        private readonly Logger logger;
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -227,29 +217,18 @@ namespace SabreTools.Filtering
         /// Populate the filters object using a set of key:value filters
         /// </summary>
         /// <param name="filters">List of key:value where ~key/!key is negated</param>
-        public void PopulateFromList(List<string> filters)
+        public override void PopulateFromList(List<string> filters)
         {
             foreach (string filterPair in filters)
             {
+                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
+                
                 // If we don't even have a possible filter pair
-                if (!filterPair.Contains(":"))
-                {
-                    logger.Warning($"'{filterPair}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                if (field == null && value == null)
                     continue;
-                }
 
-                string filterPairTrimmed = filterPair.Trim('"', ' ', '\t');
-                bool negate = filterPairTrimmed.StartsWith("!")
-                    || filterPairTrimmed.StartsWith("~")
-                    || filterPairTrimmed.StartsWith("not-");
-                filterPairTrimmed = filterPairTrimmed.TrimStart('!', '~');
-                filterPairTrimmed = filterPairTrimmed.StartsWith("not-") ? filterPairTrimmed.Substring(4) : filterPairTrimmed;
-
-                string filterFieldString = filterPairTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
-                string filterValue = filterPairTrimmed.Substring(filterFieldString.Length + 1).Trim('"', ' ', '\t');
-
-                DatItemField filterField = filterFieldString.AsDatItemField();
-                SetFilter(filterField, filterValue, negate);
+                DatItemField filterField = field.AsDatItemField();
+                SetFilter(filterField, value, negate);
             }
         }
 
@@ -810,5 +789,7 @@ namespace SabreTools.Filtering
                 #endregion // Item-Specific
             }
         }
+    
+        #endregion
     }
 }
