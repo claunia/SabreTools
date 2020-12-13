@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using SabreTools.Filtering;
 using SabreTools.Logging;
 using NaturalSort;
 using Newtonsoft.Json;
@@ -134,6 +132,14 @@ namespace SabreTools.DatItems
         public virtual string GetName()
         {
             return null;
+        }
+
+        /// <summary>
+        /// Sets the name to use for a DatItem
+        /// </summary>
+        /// <param name="name">Name to set for the item</param>
+        public virtual void SetName(string name)
+        {
         }
 
         /// <summary>
@@ -455,31 +461,6 @@ namespace SabreTools.DatItems
         #region Filtering
 
         /// <summary>
-        /// Clean a DatItem according to the cleaner
-        /// </summary>
-        /// <param name="cleaner">Cleaner to implement</param>
-        public virtual void Clean(Cleaner cleaner)
-        {
-            // If we're stripping unicode characters, strip machine name and description
-            if (cleaner?.RemoveUnicode == true)
-            {
-                Machine.Name = RemoveUnicodeCharacters(Machine.Name);
-                Machine.Description = RemoveUnicodeCharacters(Machine.Description);
-            }
-
-            // If we're in cleaning mode, sanitize machine name and description
-            if (cleaner?.Clean == true)
-            {
-                Machine.Name = CleanGameName(Machine.Name);
-                Machine.Description = CleanGameName(Machine.Description);
-            }
-
-            // If we are in single game mode, rename the machine
-            if (cleaner?.Single == true)
-                Machine.Name = "!";
-        }
-
-        /// <summary>
         /// Check to see if a DatItem passes the filter
         /// </summary>
         /// <param name="cleaner">Cleaner containing filters to check against</param>
@@ -521,23 +502,6 @@ namespace SabreTools.DatItems
         /// </summary>
         public virtual void SetOneRomPerGame()
         {
-        }
-
-        /// <summary>
-        /// Clean a game (or rom) name to the WoD standard
-        /// </summary>
-        /// <param name="game">Name of the game to be cleaned</param>
-        /// <returns>The cleaned name</returns>
-        protected string CleanGameName(string game)
-        {
-            ///Run the name through the filters to make sure that it's correct
-            game = NormalizeChars(game);
-            game = RussianToLatin(game);
-            game = SearchPattern(game);
-
-            game = new Regex(@"(([[(].*[\)\]] )?([^([]+))").Match(game).Groups[1].Value;
-            game = game.TrimStart().TrimEnd();
-            return game;
         }
 
         /// <summary>
@@ -613,16 +577,6 @@ namespace SabreTools.DatItems
         }
 
         /// <summary>
-        /// Remove all unicode-specific chars from a string
-        /// </summary>
-        /// <param name="s">Input string to clean</param>
-        /// <returns>Cleaned string</returns>
-        protected string RemoveUnicodeCharacters(string s)
-        {
-            return new string(s.Where(c => c <= 255).ToArray());
-        }  
-
-        /// <summary>
         /// Clean a hash string and pad to the correct size
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
@@ -663,135 +617,6 @@ namespace SabreTools.DatItems
             }
 
             return hash;
-        }
-
-        /// <summary>
-        /// Replace accented characters
-        /// </summary>
-        /// <param name="input">String to be parsed</param>
-        /// <returns>String with characters replaced</returns>
-        private string NormalizeChars(string input)
-        {
-            string[,] charmap = {
-                { "Á", "A" },   { "á", "a" },
-                { "À", "A" },   { "à", "a" },
-                { "Â", "A" },   { "â", "a" },
-                { "Ä", "Ae" },  { "ä", "ae" },
-                { "Ã", "A" },   { "ã", "a" },
-                { "Å", "A" },   { "å", "a" },
-                { "Æ", "Ae" },  { "æ", "ae" },
-                { "Ç", "C" },   { "ç", "c" },
-                { "Ð", "D" },   { "ð", "d" },
-                { "É", "E" },   { "é", "e" },
-                { "È", "E" },   { "è", "e" },
-                { "Ê", "E" },   { "ê", "e" },
-                { "Ë", "E" },   { "ë", "e" },
-                { "ƒ", "f" },
-                { "Í", "I" },   { "í", "i" },
-                { "Ì", "I" },   { "ì", "i" },
-                { "Î", "I" },   { "î", "i" },
-                { "Ï", "I" },   { "ï", "i" },
-                { "Ñ", "N" },   { "ñ", "n" },
-                { "Ó", "O" },   { "ó", "o" },
-                { "Ò", "O" },   { "ò", "o" },
-                { "Ô", "O" },   { "ô", "o" },
-                { "Ö", "Oe" },  { "ö", "oe" },
-                { "Õ", "O" },   { "õ", "o" },
-                { "Ø", "O" },   { "ø", "o" },
-                { "Š", "S" },   { "š", "s" },
-                { "ß", "ss" },
-                { "Þ", "B" },   { "þ", "b" },
-                { "Ú", "U" },   { "ú", "u" },
-                { "Ù", "U" },   { "ù", "u" },
-                { "Û", "U" },   { "û", "u" },
-                { "Ü", "Ue" },  { "ü", "ue" },
-                { "ÿ", "y" },
-                { "Ý", "Y" },   { "ý", "y" },
-                { "Ž", "Z" },   { "ž", "z" },
-            };
-
-            for (int i = 0; i < charmap.GetLength(0); i++)
-            {
-                input = input.Replace(charmap[i, 0], charmap[i, 1]);
-            }
-
-            return input;
-        }
-
-        /// <summary>
-        /// Convert Cyrillic lettering to Latin lettering
-        /// </summary>
-        /// <param name="input">String to be parsed</param>
-        /// <returns>String with characters replaced</returns>
-        private string RussianToLatin(string input)
-        {
-            string[,] charmap = {
-                    { "А", "A" }, { "Б", "B" }, { "В", "V" }, { "Г", "G" }, { "Д", "D" },
-                    { "Е", "E" }, { "Ё", "Yo" }, { "Ж", "Zh" }, { "З", "Z" }, { "И", "I" },
-                    { "Й", "J" }, { "К", "K" }, { "Л", "L" }, { "М", "M" }, { "Н", "N" },
-                    { "О", "O" }, { "П", "P" }, { "Р", "R" }, { "С", "S" }, { "Т", "T" },
-                    { "У", "U" }, { "Ф", "f" }, { "Х", "Kh" }, { "Ц", "Ts" }, { "Ч", "Ch" },
-                    { "Ш", "Sh" }, { "Щ", "Sch" }, { "Ъ", string.Empty }, { "Ы", "y" }, { "Ь", string.Empty },
-                    { "Э", "e" }, { "Ю", "yu" }, { "Я", "ya" }, { "а", "a" }, { "б", "b" },
-                    { "в", "v" }, { "г", "g" }, { "д", "d" }, { "е", "e" }, { "ё", "yo" },
-                    { "ж", "zh" }, { "з", "z" }, { "и", "i" }, { "й", "j" }, { "к", "k" },
-                    { "л", "l" }, { "м", "m" }, { "н", "n" }, { "о", "o" }, { "п", "p" },
-                    { "р", "r" }, { "с", "s" }, { "т", "t" }, { "у", "u" }, { "ф", "f" },
-                    { "х", "kh" }, { "ц", "ts" }, { "ч", "ch" }, { "ш", "sh" }, { "щ", "sch" },
-                    { "ъ", string.Empty }, { "ы", "y" }, { "ь", string.Empty }, { "э", "e" }, { "ю", "yu" },
-                    { "я", "ya" },
-            };
-
-            for (int i = 0; i < charmap.GetLength(0); i++)
-            {
-                input = input.Replace(charmap[i, 0], charmap[i, 1]);
-            }
-
-            return input;
-        }
-
-        /// <summary>
-        /// Replace special characters and patterns
-        /// </summary>
-        /// <param name="input">String to be parsed</param>
-        /// <returns>String with characters replaced</returns>
-        private string SearchPattern(string input)
-        {
-            string[,] charmap = {
-                { @"~", " - " },
-                { @"_", " " },
-                { @":", " " },
-                { @">", ")" },
-                { @"<", "(" },
-                { @"\|", "-" },
-                { "\"", "'" },
-                { @"\*", "." },
-                { @"\\", "-" },
-                { @"/", "-" },
-                { @"\?", " " },
-                { @"\(([^)(]*)\(([^)]*)\)([^)(]*)\)", " " },
-                { @"\(([^)]+)\)", " " },
-                { @"\[([^]]+)\]", " " },
-                { @"\{([^}]+)\}", " " },
-                { @"(ZZZJUNK|ZZZ-UNK-|ZZZ-UNK |zzz unknow |zzz unk |Copy of |[.][a-z]{3}[.][a-z]{3}[.]|[.][a-z]{3}[.])", " " },
-                { @" (r|rev|v|ver)\s*[\d\.]+[^\s]*", " " },
-                { @"(( )|(\A))(\d{6}|\d{8})(( )|(\Z))", " " },
-                { @"(( )|(\A))(\d{1,2})-(\d{1,2})-(\d{4}|\d{2})", " " },
-                { @"(( )|(\A))(\d{4}|\d{2})-(\d{1,2})-(\d{1,2})", " " },
-                { @"[-]+", "-" },
-                { @"\A\s*\)", " " },
-                { @"\A\s*(,|-)", " " },
-                { @"\s+", " " },
-                { @"\s+,", "," },
-                { @"\s*(,|-)\s*\Z", " " },
-            };
-
-            for (int i = 0; i < charmap.GetLength(0); i++)
-            {
-                input = Regex.Replace(input, charmap[i, 0], charmap[i, 1]);
-            }
-
-            return input;
         }
 
         #endregion

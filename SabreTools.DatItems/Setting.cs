@@ -56,13 +56,16 @@ namespace SabreTools.DatItems
 
         #region Accessors
 
-        /// <summary>
-        /// Gets the name to use for a DatItem
-        /// </summary>
-        /// <returns>Name if available, null otherwise</returns>
+        /// <inheritdoc/>
         public override string GetName()
         {
             return Name;
+        }
+
+        /// <inheritdoc/>
+        public override void SetName(string name)
+        {
+            Name = name;
         }
 
         /// <inheritdoc/>
@@ -162,33 +165,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <summary>
-        /// Clean a DatItem according to the cleaner
-        /// </summary>
-        /// <param name="cleaner">Cleaner to implement</param>
-        public override void Clean(Cleaner cleaner)
-        {
-            // Clean common items first
-            base.Clean(cleaner);
-
-            // If we're stripping unicode characters, strip item name
-            if (cleaner?.RemoveUnicode == true)
-                Name = RemoveUnicodeCharacters(Name);
-
-            // If we are in NTFS trim mode, trim the game name
-            if (cleaner?.Trim == true)
-            {
-                // Windows max name length is 260
-                int usableLength = 260 - Machine.Name.Length - (cleaner.Root?.Length ?? 0);
-                if (Name.Length > usableLength)
-                {
-                    string ext = Path.GetExtension(Name);
-                    Name = Name.Substring(0, usableLength - ext.Length);
-                    Name += ext;
-                }
-            }
-        }
 
         /// <inheritdoc/>
         public override bool PassesFilter(Cleaner cleaner, bool sub = false)

@@ -584,7 +584,7 @@ namespace SabreTools.DatTools
                         continue;
 
                     // Run cleaning per item
-                    item.Clean(cleaner);
+                    cleaner.CleanDatItem(item);
                 }
 
                 // Assign back for caution
