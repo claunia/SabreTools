@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -92,31 +91,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Media-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Name))
-                Name = datItemMappings[DatItemField.Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.MD5))
-                MD5 = datItemMappings[DatItemField.MD5];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SHA1))
-                SHA1 = datItemMappings[DatItemField.SHA1];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SHA256))
-                SHA256 = datItemMappings[DatItemField.SHA256];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SpamSum))
-                SpamSum = datItemMappings[DatItemField.SpamSum];
         }
 
         #endregion

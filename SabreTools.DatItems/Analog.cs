@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
@@ -21,23 +20,6 @@ namespace SabreTools.DatItems
         [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("mask")]
         public string Mask { get; set; }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Analog-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Analog_Mask))
-                Mask = datItemMappings[DatItemField.Analog_Mask];
-        }
 
         #endregion
 

@@ -142,18 +142,6 @@ namespace SabreTools.DatItems
         {
         }
 
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="datItemMappings">DatItem mappings dictionary</param>
-        /// <param name="machineMappings">Machine mappings dictionary</param>
-        /// TODO: Fix case where datItemMappings is null
-        public virtual void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-        }
-
         #endregion
 
         #region Constructors
@@ -774,14 +762,14 @@ namespace SabreTools.DatItems
                         {
                             saveditem.Source = file.Source.Clone() as Source;
                             saveditem.CopyMachineInformation(file);
-                            saveditem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = file.GetName() }, null);
+                            saveditem.SetName(file.GetName());
                         }
 
                         // If the current machine is a child of the new machine, use the new machine instead
                         if (saveditem.Machine.CloneOf == file.Machine.Name || saveditem.Machine.RomOf == file.Machine.Name)
                         {
                             saveditem.CopyMachineInformation(file);
-                            saveditem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = file.GetName() }, null);
+                            saveditem.SetName(file.GetName());
                         }
 
                         break;
@@ -877,7 +865,7 @@ namespace SabreTools.DatItems
                     }
 
                     // Set the item name back to the datItem
-                    datItem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = datItemName }, null);
+                    datItem.SetName(datItemName);
 
                     output.Add(datItem);
                 }

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -26,23 +23,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool ChannelsSpecified { get { return Channels != null; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Sound-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Channels))
-                Channels = Utilities.CleanLong(datItemMappings[DatItemField.Channels]);
-        }
 
         #endregion
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
@@ -163,55 +162,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Disk-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Name))
-                Name = datItemMappings[DatItemField.Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.MD5))
-                MD5 = datItemMappings[DatItemField.MD5];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SHA1))
-                SHA1 = datItemMappings[DatItemField.SHA1];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Merge))
-                MergeTag = datItemMappings[DatItemField.Merge];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Region))
-                Region = datItemMappings[DatItemField.Region];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Index))
-                Index = datItemMappings[DatItemField.Index];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Writable))
-                Writable = datItemMappings[DatItemField.Writable].AsYesNo();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Status))
-                ItemStatus = datItemMappings[DatItemField.Status].AsItemStatus();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Optional))
-                Optional = datItemMappings[DatItemField.Optional].AsYesNo();
-
-            // Handle DiskArea-specific fields
-            if (DiskArea == null)
-                DiskArea = new DiskArea();
-
-            DiskArea.SetFields(datItemMappings, machineMappings);
-
-            // Handle Part-specific fields
-            if (Part == null)
-                Part = new Part();
-
-            Part.SetFields(datItemMappings, machineMappings);
         }
 
         #endregion

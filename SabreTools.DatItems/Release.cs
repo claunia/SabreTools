@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -68,31 +66,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Release-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Name))
-                Name = datItemMappings[DatItemField.Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Region))
-                Region = datItemMappings[DatItemField.Region];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Language))
-                Language = datItemMappings[DatItemField.Language];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Date))
-                Date = datItemMappings[DatItemField.Date];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Default))
-                Default = datItemMappings[DatItemField.Default].AsYesNo();
         }
 
         #endregion

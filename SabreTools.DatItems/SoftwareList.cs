@@ -58,25 +58,6 @@ namespace SabreTools.DatItems
             Name = name;
         }
 
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle SoftwareList-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Name))
-                Name = datItemMappings[DatItemField.Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SoftwareListStatus))
-                Status = datItemMappings[DatItemField.SoftwareListStatus].AsSoftwareListStatus();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Filter))
-                Filter = datItemMappings[DatItemField.Filter];
-        }
-
         #endregion
 
         #region Constructors

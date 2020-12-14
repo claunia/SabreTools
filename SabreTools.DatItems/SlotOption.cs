@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -54,25 +52,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle SlotOption-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.SlotOption_Name))
-                Name = datItemMappings[DatItemField.SlotOption_Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SlotOption_DeviceName))
-                DeviceName = datItemMappings[DatItemField.SlotOption_DeviceName];
-
-            if (datItemMappings.Keys.Contains(DatItemField.SlotOption_Default))
-                Default = datItemMappings[DatItemField.SlotOption_Default].AsYesNo();
         }
 
         #endregion

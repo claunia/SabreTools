@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -49,29 +47,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool OverallSpecified { get { return Overall != FeatureStatus.NULL; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Feature-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.FeatureType))
-                Type = datItemMappings[DatItemField.FeatureType].AsFeatureType();
-
-            if (datItemMappings.Keys.Contains(DatItemField.FeatureStatus))
-                Status = datItemMappings[DatItemField.FeatureStatus].AsFeatureStatus();
-
-            if (datItemMappings.Keys.Contains(DatItemField.FeatureOverall))
-                Overall = datItemMappings[DatItemField.FeatureOverall].AsFeatureStatus();
-        }
 
         #endregion
 

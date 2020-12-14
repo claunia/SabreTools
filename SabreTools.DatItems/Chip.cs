@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -67,28 +64,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Chip-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Name))
-                Name = datItemMappings[DatItemField.Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Tag))
-                Tag = datItemMappings[DatItemField.Tag];
-
-            if (datItemMappings.Keys.Contains(DatItemField.ChipType))
-                ChipType = datItemMappings[DatItemField.ChipType].AsChipType();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Clock))
-                Clock = Utilities.CleanLong(datItemMappings[DatItemField.Clock]);
         }
 
         #endregion

@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -48,63 +46,6 @@ namespace SabreTools.DatItems
         [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("value")]
         public string Value { get; set; }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            SetFields(datItemMappings, machineMappings, false);
-        }
-
-        /// <summary>
-        /// Set fields with given values
-        /// </summary>
-        /// <param name="datItemMappings">DatItem mappings dictionary</param>
-        /// <param name="machineMappings">Machine mappings dictionary</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        public void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings,
-            bool sub)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Condition-specific fields
-            if (sub)
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.Condition_Tag))
-                    Tag = datItemMappings[DatItemField.Condition_Tag];
-
-                if (datItemMappings.Keys.Contains(DatItemField.Condition_Mask))
-                    Mask = datItemMappings[DatItemField.Condition_Mask];
-
-                if (datItemMappings.Keys.Contains(DatItemField.Condition_Relation))
-                    Relation = datItemMappings[DatItemField.Condition_Relation].AsRelation();
-
-                if (datItemMappings.Keys.Contains(DatItemField.Condition_Value))
-                    Value = datItemMappings[DatItemField.Condition_Value];
-            }
-            else
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.Tag))
-                    Tag = datItemMappings[DatItemField.Tag];
-
-                if (datItemMappings.Keys.Contains(DatItemField.Mask))
-                    Mask = datItemMappings[DatItemField.Mask];
-
-                if (datItemMappings.Keys.Contains(DatItemField.Relation))
-                    Relation = datItemMappings[DatItemField.Relation].AsRelation();
-
-                if (datItemMappings.Keys.Contains(DatItemField.Value))
-                    Value = datItemMappings[DatItemField.Value];
-            }
-        }
 
         #endregion
 

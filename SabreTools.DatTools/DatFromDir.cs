@@ -434,7 +434,7 @@ namespace SabreTools.DatTools
             }
 
             // Set the item name back
-            datItem.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = itemName }, null);
+            DatItemTool.SetFields(datItem, new Dictionary<DatItemField, string> { [DatItemField.Name] = itemName });
         }
     }
 }

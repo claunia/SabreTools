@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -129,56 +126,6 @@ namespace SabreTools.DatItems
         [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("ways3")]
         public string Ways3 { get; set; }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Control-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Type))
-                ControlType = datItemMappings[DatItemField.Control_Type].AsControlType();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Player))
-                Player = Utilities.CleanLong(datItemMappings[DatItemField.Control_Player]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Buttons))
-                Buttons = Utilities.CleanLong(datItemMappings[DatItemField.Control_Buttons]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_RequiredButtons))
-                RequiredButtons = Utilities.CleanLong(datItemMappings[DatItemField.Control_RequiredButtons]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Minimum))
-                Minimum = Utilities.CleanLong(datItemMappings[DatItemField.Control_Minimum]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Maximum))
-                Maximum = Utilities.CleanLong(datItemMappings[DatItemField.Control_Maximum]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Sensitivity))
-                Sensitivity = Utilities.CleanLong(datItemMappings[DatItemField.Control_Sensitivity]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_KeyDelta))
-                KeyDelta = Utilities.CleanLong(datItemMappings[DatItemField.Control_KeyDelta]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Reverse))
-                Reverse = datItemMappings[DatItemField.Control_Reverse].AsYesNo();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Ways))
-                Ways = datItemMappings[DatItemField.Control_Ways];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Ways2))
-                Ways2 = datItemMappings[DatItemField.Control_Ways2];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Control_Ways3))
-                Ways3 = datItemMappings[DatItemField.Control_Ways3];
-        }
 
         #endregion
 

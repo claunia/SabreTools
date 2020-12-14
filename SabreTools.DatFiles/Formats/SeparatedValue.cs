@@ -105,7 +105,7 @@ namespace SabreTools.DatFiles.Formats
                     if (datItemMappings.ContainsKey(DatItemField.Type))
                     {
                         DatItem datItem = DatItem.Create(datItemMappings[DatItemField.Type].AsItemType());
-                        datItem.SetFields(datItemMappings, machineMappings);
+                        DatItemTool.SetFields(datItem, datItemMappings, machineMappings);
                         datItem.Source = new Source(indexId, filename);
                         ParseAddHelper(datItem);
                     }

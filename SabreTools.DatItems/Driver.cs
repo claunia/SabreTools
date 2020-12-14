@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -60,32 +58,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool SaveStateSpecified { get { return SaveState != Supported.NULL; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Feature-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.SupportStatus))
-                Status = datItemMappings[DatItemField.SupportStatus].AsSupportStatus();
-
-            if (datItemMappings.Keys.Contains(DatItemField.EmulationStatus))
-                Emulation = datItemMappings[DatItemField.EmulationStatus].AsSupportStatus();
-
-            if (datItemMappings.Keys.Contains(DatItemField.CocktailStatus))
-                Cocktail = datItemMappings[DatItemField.CocktailStatus].AsSupportStatus();
-
-            if (datItemMappings.Keys.Contains(DatItemField.SaveStateStatus))
-                SaveState = datItemMappings[DatItemField.SaveStateStatus].AsSupported();
-        }
 
         #endregion
 

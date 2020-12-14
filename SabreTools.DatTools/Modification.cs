@@ -162,7 +162,7 @@ namespace SabreTools.DatTools
 
                     foreach (var datItem in datItems)
                     {
-                        datItem.SetFields(mappings, null);
+                        DatItemTool.SetFields(datItem, mappings, null);
                     }
                 }
             }
@@ -1033,7 +1033,7 @@ namespace SabreTools.DatTools
                     else if (!datFile.Items[parent].Contains(item))
                     {
                         if (subfolder)
-                            item.SetFields(new Dictionary<DatItemField, string> { [DatItemField.Name] = $"{item.Machine.Name}\\{item.GetName()}" }, null);
+                            item.SetName($"{item.Machine.Name}\\{item.GetName()}");
 
                         item.CopyMachineInformation(copyFrom);
                         datFile.Items.Add(parent, item);

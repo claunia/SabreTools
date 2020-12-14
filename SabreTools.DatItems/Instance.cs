@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
@@ -43,22 +42,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Instance-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Instance_Name))
-                Name = datItemMappings[DatItemField.Instance_Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Instance_BriefName))
-                BriefName = datItemMappings[DatItemField.Instance_BriefName];
         }
 
         #endregion

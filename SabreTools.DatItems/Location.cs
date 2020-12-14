@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -57,25 +55,6 @@ namespace SabreTools.DatItems
         public override void SetName(string name)
         {
             Name = name;
-        }
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Location-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Location_Name))
-                Name = datItemMappings[DatItemField.Location_Name];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Location_Number))
-                Number = Utilities.CleanLong(datItemMappings[DatItemField.Location_Number]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Location_Inverted))
-                Inverted = datItemMappings[DatItemField.Location_Inverted].AsYesNo();
         }
 
         #endregion

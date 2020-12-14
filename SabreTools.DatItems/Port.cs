@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
@@ -31,31 +30,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool AnalogsSpecified { get { return Analogs != null && Analogs.Count > 0; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Port-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Tag))
-                Tag = datItemMappings[DatItemField.Tag];
-
-            if (AnalogsSpecified)
-            {
-                foreach (Analog analog in Analogs)
-                {
-                    analog.SetFields(datItemMappings, machineMappings);
-                }
-            }
-        }
 
         #endregion
 

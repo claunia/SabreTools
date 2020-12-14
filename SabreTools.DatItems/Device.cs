@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -79,51 +77,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool ExtensionsSpecified { get { return Extensions != null && Extensions.Count > 0; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Device-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.DeviceType))
-                DeviceType = datItemMappings[DatItemField.DeviceType].AsDeviceType();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Tag))
-                Tag = datItemMappings[DatItemField.Tag];
-
-            if (datItemMappings.Keys.Contains(DatItemField.FixedImage))
-                FixedImage = datItemMappings[DatItemField.FixedImage];
-
-            if (datItemMappings.Keys.Contains(DatItemField.Mandatory))
-                Mandatory = Utilities.CleanLong(datItemMappings[DatItemField.Mandatory]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Interface))
-                Interface = datItemMappings[DatItemField.Interface];
-
-            if (InstancesSpecified)
-            {
-                foreach (Instance instance in Instances)
-                {
-                    instance.SetFields(datItemMappings, machineMappings);
-                }
-            }
-
-            if (ExtensionsSpecified)
-            {
-                foreach (Extension extension in Extensions)
-                {
-                    extension.SetFields(datItemMappings, machineMappings);
-                }
-            }
-        }
 
         #endregion
 

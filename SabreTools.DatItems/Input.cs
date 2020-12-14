@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -66,40 +63,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool ControlsSpecified { get { return Controls != null && Controls.Count > 0; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Input-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Service))
-                Service = datItemMappings[DatItemField.Service].AsYesNo();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Tilt))
-                Tilt = datItemMappings[DatItemField.Tilt].AsYesNo();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Players))
-                Players = Utilities.CleanLong(datItemMappings[DatItemField.Players]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Coins))
-                Coins = Utilities.CleanLong(datItemMappings[DatItemField.Coins]);
-
-            if (ControlsSpecified)
-            {
-                foreach (Control control in Controls)
-                {
-                    control.SetFields(datItemMappings, machineMappings);
-                }
-            }
-        }
 
         #endregion
 

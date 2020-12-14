@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -155,65 +152,6 @@ namespace SabreTools.DatItems
 
         [JsonIgnore]
         public bool VBStartSpecified { get { return VBStart != null; } }
-
-        #endregion
-
-        #region Accessors
-
-        /// <inheritdoc/>
-        public override void SetFields(
-            Dictionary<DatItemField, string> datItemMappings,
-            Dictionary<MachineField, string> machineMappings)
-        {
-            // Set base fields
-            base.SetFields(datItemMappings, machineMappings);
-
-            // Handle Display-specific fields
-            if (datItemMappings.Keys.Contains(DatItemField.Tag))
-                Tag = datItemMappings[DatItemField.Tag];
-
-            if (datItemMappings.Keys.Contains(DatItemField.DisplayType))
-                DisplayType = datItemMappings[DatItemField.DisplayType].AsDisplayType();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Rotate))
-                Rotate = Utilities.CleanLong(datItemMappings[DatItemField.Rotate]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.FlipX))
-                FlipX = datItemMappings[DatItemField.FlipX].AsYesNo();
-
-            if (datItemMappings.Keys.Contains(DatItemField.Width))
-                Width = Utilities.CleanLong(datItemMappings[DatItemField.Width]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Height))
-                Height = Utilities.CleanLong(datItemMappings[DatItemField.Height]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.Refresh))
-            {
-                if (Double.TryParse(datItemMappings[DatItemField.Refresh], out double refresh))
-                    Refresh = refresh;
-            }
-
-            if (datItemMappings.Keys.Contains(DatItemField.PixClock))
-                PixClock = Utilities.CleanLong(datItemMappings[DatItemField.PixClock]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.HTotal))
-                HTotal = Utilities.CleanLong(datItemMappings[DatItemField.HTotal]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.HBEnd))
-                HBEnd = Utilities.CleanLong(datItemMappings[DatItemField.HBEnd]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.HBStart))
-                HBStart = Utilities.CleanLong(datItemMappings[DatItemField.HBStart]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.VTotal))
-                VTotal = Utilities.CleanLong(datItemMappings[DatItemField.VTotal]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.VBEnd))
-                VBEnd = Utilities.CleanLong(datItemMappings[DatItemField.VBEnd]);
-
-            if (datItemMappings.Keys.Contains(DatItemField.VBStart))
-                VBStart = Utilities.CleanLong(datItemMappings[DatItemField.VBStart]);
-        }
 
         #endregion
 
