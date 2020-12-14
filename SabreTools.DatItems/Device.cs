@@ -4,7 +4,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -209,58 +208,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on device type
-            if (cleaner.DatItemFilter.DeviceType.MatchesPositive(DeviceType.NULL, DeviceType) == false)
-                return false;
-            if (cleaner.DatItemFilter.DeviceType.MatchesNegative(DeviceType.NULL, DeviceType) == true)
-                return false;
-
-            // Filter on tag
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
-                return false;
-
-            // Filter on fixed image
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.FixedImage, FixedImage))
-                return false;
-
-            // Filter on mandatory
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Mandatory, Mandatory))
-                return false;
-
-            // Filter on interface
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Interface, Interface))
-                return false;
-
-            // Filter on individual instances
-            if (InstancesSpecified)
-            {
-                foreach (Instance instance in Instances)
-                {
-                    if (!instance.PassesFilter(cleaner, true))
-                        return false;
-                }
-            }
-
-            // Filter on individual extensions
-            if (ExtensionsSpecified)
-            {
-                foreach (Extension extension in Extensions)
-                {
-                    if (!extension.PassesFilter(cleaner, true))
-                        return false;
-                }
-            }
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

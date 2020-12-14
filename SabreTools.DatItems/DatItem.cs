@@ -461,29 +461,6 @@ namespace SabreTools.DatItems
         #region Filtering
 
         /// <summary>
-        /// Check to see if a DatItem passes the filter
-        /// </summary>
-        /// <param name="cleaner">Cleaner containing filters to check against</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public virtual bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Filter on machine fields
-            if (!Machine.PassesFilter(cleaner))
-                return false;
-
-            // Filters for if we're a top-level item
-            if (!sub)
-            {
-                // Filter on item type
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Type, ItemType.ToString()))
-                    return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Remove fields from the DatItem
         /// </summary>
         /// <param name="datItemFields">DatItem fields to remove</param>

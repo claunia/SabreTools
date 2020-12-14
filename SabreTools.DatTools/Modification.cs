@@ -214,7 +214,7 @@ namespace SabreTools.DatTools
                             continue;
 
                         // If the rom doesn't pass the filter, mark for removal
-                        if (!item.PassesFilter(cleaner))
+                        if (!cleaner.PassesFilters(item))
                         {
                             item.Remove = true;
 

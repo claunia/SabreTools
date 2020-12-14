@@ -4,7 +4,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -164,57 +163,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            if (sub)
-            {
-                // Filter on tag
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Condition_Tag, Tag))
-                    return false;
-
-                // Filter on mask
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Condition_Mask, Mask))
-                    return false;
-
-                // Filter on relation
-                if (cleaner.DatItemFilter.Condition_Relation.MatchesPositive(Relation.NULL, Relation) == false)
-                    return false;
-                if (cleaner.DatItemFilter.Condition_Relation.MatchesNegative(Relation.NULL, Relation) == true)
-                    return false;
-
-                // Filter on value
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Condition_Value, Value))
-                    return false;
-            }
-            else
-            {
-                // Filter on tag
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
-                    return false;
-
-                // Filter on mask
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Mask, Mask))
-                    return false;
-
-                // Filter on relation
-                if (cleaner.DatItemFilter.Relation.MatchesPositive(Relation.NULL, Relation) == false)
-                    return false;
-                if (cleaner.DatItemFilter.Relation.MatchesNegative(Relation.NULL, Relation) == true)
-                    return false;
-
-                // Filter on value
-                if (!Filter.PassStringFilter(cleaner.DatItemFilter.Value, Value))
-                    return false;
-            }
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

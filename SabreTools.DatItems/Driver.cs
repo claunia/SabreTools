@@ -4,7 +4,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -145,40 +144,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on status
-            if (cleaner.DatItemFilter.SupportStatus.MatchesPositive(SupportStatus.NULL, Status) == false)
-                return false;
-            if (cleaner.DatItemFilter.SupportStatus.MatchesNegative(SupportStatus.NULL, Status) == true)
-                return false;
-
-            // Filter on emulation
-            if (cleaner.DatItemFilter.EmulationStatus.MatchesPositive(SupportStatus.NULL, Emulation) == false)
-                return false;
-            if (cleaner.DatItemFilter.EmulationStatus.MatchesNegative(SupportStatus.NULL, Emulation) == true)
-                return false;
-
-            // Filter on cocktail
-            if (cleaner.DatItemFilter.CocktailStatus.MatchesPositive(SupportStatus.NULL, Cocktail) == false)
-                return false;
-            if (cleaner.DatItemFilter.CocktailStatus.MatchesNegative(SupportStatus.NULL, Cocktail) == true)
-                return false;
-
-            // Filter on savestate
-            if (cleaner.DatItemFilter.SaveStateStatus.MatchesPositive(Supported.NULL, SaveState) == false)
-                return false;
-            if (cleaner.DatItemFilter.SaveStateStatus.MatchesNegative(Supported.NULL, SaveState) == true)
-                return false;
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

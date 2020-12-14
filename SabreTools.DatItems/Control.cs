@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -254,66 +253,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on control type
-            if (cleaner.DatItemFilter.Control_Type.MatchesPositive(ControlType.NULL, ControlType) == false)
-                return false;
-            if (cleaner.DatItemFilter.Control_Type.MatchesNegative(ControlType.NULL, ControlType) == true)
-                return false;
-
-            // Filter on player
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Player, Player))
-                return false;
-
-            // Filter on buttons
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Buttons, Buttons))
-                return false;
-
-            // Filter on reqbuttons
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_ReqButtons, RequiredButtons))
-                return false;
-
-            // Filter on minimum
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Minimum, Minimum))
-                return false;
-
-            // Filter on maximum
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Maximum, Maximum))
-                return false;
-
-            // Filter on sensitivity
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_Sensitivity, Sensitivity))
-                return false;
-
-            // Filter on keydelta
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Control_KeyDelta, KeyDelta))
-                return false;
-
-            // Filter on reverse
-            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Control_Reverse, Reverse))
-                return false;
-
-            // Filter on ways
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Control_Ways, Ways))
-                return false;
-
-            // Filter on ways2
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Control_Ways2, Ways2))
-                return false;
-
-            // Filter on ways3
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Control_Ways3, Ways3))
-                return false;
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -293,74 +292,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on tag
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
-                return false;
-
-            // Filter on display type
-            if (cleaner.DatItemFilter.DisplayType.MatchesPositive(DisplayType.NULL, DisplayType) == false)
-                return false;
-            if (cleaner.DatItemFilter.DisplayType.MatchesNegative(DisplayType.NULL, DisplayType) == true)
-                return false;
-
-            // Filter on rotation
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Rotate, Rotate))
-                return false;
-
-            // Filter on flipx
-            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.FlipX, FlipX))
-                return false;
-
-            // Filter on width
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Width, Width))
-                return false;
-
-            // Filter on height
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Height, Height))
-                return false;
-
-            // Filter on refresh
-            if (!Filter.PassDoubleFilter(cleaner.DatItemFilter.Refresh, Refresh))
-                return false;
-
-            // Filter on pixclock
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.PixClock, PixClock))
-                return false;
-
-            // Filter on htotal
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.HTotal, HTotal))
-                return false;
-
-            // Filter on hbend
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.HBEnd, HBEnd))
-                return false;
-
-            // Filter on hbstart
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.HBStart, HBStart))
-                return false;
-
-            // Filter on vtotal
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.VTotal, VTotal))
-                return false;
-
-            // Filter on vbend
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.VBEnd, VBEnd))
-                return false;
-
-            // Filter on vbstart
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.VBStart, VBStart))
-                return false;
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

@@ -92,20 +92,6 @@ namespace SabreTools.DatItems
         #region Filtering
 
         /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on mask
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Analog_Mask, Mask))
-                return false;
-
-            return true;
-        }
-
-        /// <inheritdoc/>
         public override void RemoveFields(
             List<DatItemField> datItemFields,
             List<MachineField> machineFields)

@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -151,34 +150,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on item name
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
-                return false;
-
-            // DatItem_Tag
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
-                return false;
-
-            // DatItem_ChipType
-            if (cleaner.DatItemFilter.ChipType.MatchesPositive(ChipType.NULL, ChipType) == false)
-                return false;
-            if (cleaner.DatItemFilter.ChipType.MatchesNegative(ChipType.NULL, ChipType) == true)
-                return false;
-
-            // DatItem_Clock
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Clock, Clock))
-                return false;
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

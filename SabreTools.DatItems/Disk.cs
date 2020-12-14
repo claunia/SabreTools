@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -424,76 +423,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            #region Common
-
-            // Filter on item name
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
-                return false;
-
-            // Filter on MD5
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.MD5, MD5))
-                return false;
-
-            // Filter on SHA-1
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA1, SHA1))
-                return false;
-
-            // Filter on merge tag
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Merge, MergeTag))
-                return false;
-
-            // Filter on region
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Region, Region))
-                return false;
-
-            // Filter on index
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Index, Index))
-                return false;
-
-            // Filter on writable
-            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Writable, Writable))
-                return false;
-
-            // Filter on status
-            if (cleaner.DatItemFilter.Status.MatchesPositive(ItemStatus.NULL, ItemStatus) == false)
-                return false;
-            if (cleaner.DatItemFilter.Status.MatchesNegative(ItemStatus.NULL, ItemStatus) == true)
-                return false;
-
-            // Filter on optional
-            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Optional, Optional))
-                return false;
-
-            #endregion
-
-            #region SoftwareList
-
-            // Filter on DiskArea
-            if (DiskAreaSpecified)
-            {
-                if (!DiskArea.PassesFilter(cleaner, true))
-                    return false;
-            }
-
-            // Filter on Part
-            if (PartSpecified)
-            {
-                if (!Part.PassesFilter(cleaner, true))
-                    return false;
-            }
-
-            #endregion
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

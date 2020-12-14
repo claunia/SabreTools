@@ -5,7 +5,6 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -173,42 +172,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on service
-            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Service, Service))
-                return false;
-
-            // Filter on tilt
-            if (!Filter.PassBoolFilter(cleaner.DatItemFilter.Tilt, Tilt))
-                return false;
-
-            // Filter on players
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Players, Players))
-                return false;
-
-            // Filter on coins
-            if (!Filter.PassLongFilter(cleaner.DatItemFilter.Coins, Coins))
-                return false;
-
-            // Filter on individual controls
-            if (ControlsSpecified)
-            {
-                foreach (Control control in Controls)
-                {
-                    if (!control.PassesFilter(cleaner, true))
-                        return false;
-                }
-            }
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

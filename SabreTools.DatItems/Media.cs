@@ -7,7 +7,6 @@ using System.Xml.Serialization;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -323,36 +322,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on item name
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
-                return false;
-
-            // Filter on MD5
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.MD5, MD5))
-                return false;
-
-            // Filter on SHA-1
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA1, SHA1))
-                return false;
-
-            // Filter on SHA-256
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SHA256, SHA256))
-                return false;
-
-            // Filter on SpamSum
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.SpamSum, SpamSum))
-                return false;
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(

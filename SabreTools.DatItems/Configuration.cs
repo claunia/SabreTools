@@ -4,7 +4,6 @@ using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
-using SabreTools.Filtering;
 using Newtonsoft.Json;
 
 namespace SabreTools.DatItems
@@ -217,58 +216,6 @@ namespace SabreTools.DatItems
         #endregion
 
         #region Filtering
-
-        /// <inheritdoc/>
-        public override bool PassesFilter(Cleaner cleaner, bool sub = false)
-        {
-            // Check common fields first
-            if (!base.PassesFilter(cleaner, sub))
-                return false;
-
-            // Filter on item name
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Name, Name))
-                return false;
-
-            // Filter on tag
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Tag, Tag))
-                return false;
-
-            // Filter on mask
-            if (!Filter.PassStringFilter(cleaner.DatItemFilter.Mask, Mask))
-                return false;
-
-            // Filter on individual conditions
-            if (ConditionsSpecified)
-            {
-                foreach (Condition condition in Conditions)
-                {
-                    if (!condition.PassesFilter(cleaner, true))
-                        return false;
-                }
-            }
-
-            // Filter on individual locations
-            if (LocationsSpecified)
-            {
-                foreach (Location location in Locations)
-                {
-                    if (!location.PassesFilter(cleaner, true))
-                        return false;
-                }
-            }
-
-            // Filter on individual conditions
-            if (SettingsSpecified)
-            {
-                foreach (Setting setting in Settings)
-                {
-                    if (!setting.PassesFilter(cleaner, true))
-                        return false;
-                }
-            }
-
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void RemoveFields(
