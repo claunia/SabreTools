@@ -152,11 +152,6 @@ namespace SabreTools.DatItems
             Dictionary<DatItemField, string> datItemMappings,
             Dictionary<MachineField, string> machineMappings)
         {
-            // Set machine fields
-            if (Machine == null)
-                Machine = new Machine();
-
-            Machine.SetFields(machineMappings);
         }
 
         #endregion
@@ -470,8 +465,6 @@ namespace SabreTools.DatItems
             List<DatItemField> datItemFields,
             List<MachineField> machineFields)
         {
-            // Remove machine fields
-            Machine.RemoveFields(machineFields);
         }
 
         /// <summary>

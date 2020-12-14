@@ -146,7 +146,7 @@ namespace SabreTools.DatTools
 
                     foreach (var datItem in datItems)
                     {
-                        datItem.SetFields(null, mappings);
+                        Cleaner.SetFields(datItem.Machine, mappings);
                     }
                 }
 
@@ -524,7 +524,8 @@ namespace SabreTools.DatTools
                 List<DatItem> items = datFile.Items[key];
                 for (int j = 0; j < items.Count; j++)
                 {
-                    items[j].RemoveFields(datItemFields, machineFields);
+                    items[j].RemoveFields(datItemFields, null);
+                    Cleaner.RemoveFields(items[j].Machine, machineFields);
                 }
 
                 datFile.Items.Remove(key);

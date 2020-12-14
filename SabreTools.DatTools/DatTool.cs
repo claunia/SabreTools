@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
+using SabreTools.Filtering;
 using SabreTools.IO;
 using SabreTools.Logging;
 
@@ -86,7 +87,7 @@ namespace SabreTools.DatTools
                     {
                         DatItem newDatItem = datItem.Clone() as DatItem;
                         if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count() > 0)
-                            newDatItem.Machine.ReplaceFields(datFile.Items[key][0].Machine, machineFields, onlySame);
+                            Cleaner.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }
