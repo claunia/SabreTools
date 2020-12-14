@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
+    <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
     <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
     <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />

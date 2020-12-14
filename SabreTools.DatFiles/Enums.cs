@@ -159,4 +159,25 @@ namespace SabreTools.DatFiles
         // Specialty combinations
         ALL = Int32.MaxValue,
     }
+
+    /// <summary>
+    /// Determines the DAT deduplication type
+    /// </summary>
+    public enum DedupeType
+    {
+        None = 0,
+        Full,
+
+        // Force only deduping with certain types
+        Game,
+        CRC,
+        MD5,
+#if NET_FRAMEWORK
+        RIPEMD160,
+#endif
+        SHA1,
+        SHA256,
+        SHA384,
+        SHA512,
+    }
 }
