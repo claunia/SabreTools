@@ -129,18 +129,13 @@ namespace SabreTools.DatItems
         /// Gets the name to use for a DatItem
         /// </summary>
         /// <returns>Name if available, null otherwise</returns>
-        public virtual string GetName()
-        {
-            return null;
-        }
+        public virtual string GetName() => null;
 
         /// <summary>
         /// Sets the name to use for a DatItem
         /// </summary>
         /// <param name="name">Name to set for the item</param>
-        public virtual void SetName(string name)
-        {
-        }
+        public virtual void SetName(string name) { }
 
         #endregion
 

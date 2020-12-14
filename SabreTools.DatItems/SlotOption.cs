@@ -43,16 +43,10 @@ namespace SabreTools.DatItems
         #region Accessors
 
         /// <inheritdoc/>
-        public override string GetName()
-        {
-            return Name;
-        }
+        public override string GetName() => Name;
 
         /// <inheritdoc/>
-        public override void SetName(string name)
-        {
-            Name = name;
-        }
+        public override void SetName(string name) => Name = name;
 
         #endregion
 
