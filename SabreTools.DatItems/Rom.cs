@@ -625,14 +625,8 @@ namespace SabreTools.DatItems
 
         #region Sorting and Merging
 
-        /// <summary>
-        /// Get the dictionary key that should be used for a given item and bucketing type
-        /// </summary>
-        /// <param name="bucketedBy">Field enum representing what key to get</param>
-        /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
-        /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
-        /// <returns>String representing the key to be used for the DatItem</returns>
-        public override string GetKey(Field bucketedBy, bool lower = true, bool norename = true)
+        /// <inheritdoc/>
+        public override string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string key = string.Empty;
@@ -640,31 +634,31 @@ namespace SabreTools.DatItems
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)
             {
-                case Field.DatItem_CRC:
+                case ItemKey.CRC:
                     key = CRC;
                     break;
 
-                case Field.DatItem_MD5:
+                case ItemKey.MD5:
                     key = MD5;
                     break;
 
-                case Field.DatItem_SHA1:
+                case ItemKey.SHA1:
                     key = SHA1;
                     break;
 
-                case Field.DatItem_SHA256:
+                case ItemKey.SHA256:
                     key = SHA256;
                     break;
 
-                case Field.DatItem_SHA384:
+                case ItemKey.SHA384:
                     key = SHA384;
                     break;
 
-                case Field.DatItem_SHA512:
+                case ItemKey.SHA512:
                     key = SHA512;
                     break;
 
-                case Field.DatItem_SpamSum:
+                case ItemKey.SpamSum:
                     key = SpamSum;
                     break;
 

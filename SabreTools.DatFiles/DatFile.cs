@@ -277,7 +277,7 @@ namespace SabreTools.DatFiles
             }
 
             // Get the key and add the file
-            key = item.GetKey(Field.Machine_Name);
+            key = item.GetKey(ItemKey.Machine);
             Items.Add(key, item);
 
             return key;

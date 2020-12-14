@@ -337,7 +337,7 @@ namespace SabreTools.DatTools
                 SetDatItemInfo(datFile, datItem, item, parent, basepath);
 
                 // Add the file information to the DAT
-                string key = datItem.GetKey(Field.DatItem_CRC);
+                string key = datItem.GetKey(ItemKey.CRC);
                 datFile.Items.Add(key, datItem);
 
                 logger.Verbose($"File added: {datItem.GetName() ?? string.Empty}");

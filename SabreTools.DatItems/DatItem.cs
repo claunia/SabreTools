@@ -429,12 +429,12 @@ namespace SabreTools.DatItems
         /// <summary>
         /// Get the dictionary key that should be used for a given item and bucketing type
         /// </summary>
-        /// <param name="bucketedBy">Field value representing what key to get</param>
+        /// <param name="bucketedBy">ItemKey value representing what key to get</param>
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns>String representing the key to be used for the DatItem</returns>
         /// TODO: What other fields can we reasonably allow bucketing on?
-        public virtual string GetKey(Field bucketedBy, bool lower = true, bool norename = true)
+        public virtual string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
             string key = string.Empty;
@@ -442,11 +442,11 @@ namespace SabreTools.DatItems
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)
             {
-                case Field.DatItem_CRC:
+                case ItemKey.CRC:
                     key = Constants.CRCZero;
                     break;
 
-                case Field.Machine_Name:
+                case ItemKey.Machine:
                     key = (norename ? string.Empty
                         : Source.Index.ToString().PadLeft(10, '0')
                             + "-")
@@ -461,27 +461,27 @@ namespace SabreTools.DatItems
 
                     break;
 
-                case Field.DatItem_MD5:
+                case ItemKey.MD5:
                     key = Constants.MD5Zero;
                     break;
 
-                case Field.DatItem_SHA1:
+                case ItemKey.SHA1:
                     key = Constants.SHA1Zero;
                     break;
 
-                case Field.DatItem_SHA256:
+                case ItemKey.SHA256:
                     key = Constants.SHA256Zero;
                     break;
 
-                case Field.DatItem_SHA384:
+                case ItemKey.SHA384:
                     key = Constants.SHA384Zero;
                     break;
 
-                case Field.DatItem_SHA512:
+                case ItemKey.SHA512:
                     key = Constants.SHA512Zero;
                     break;
 
-                case Field.DatItem_SpamSum:
+                case ItemKey.SpamSum:
                     key = Constants.SpamSumZero;
                     break;
             }
