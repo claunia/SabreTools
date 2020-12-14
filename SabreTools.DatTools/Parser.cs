@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
 
@@ -93,7 +93,7 @@ namespace SabreTools.DatTools
             // If the output type isn't set already, get the internal output type
             DatFormat currentPathFormat = GetDatFormat(currentPath);
             datFile.Header.DatFormat = datFile.Header.DatFormat == 0 ? currentPathFormat : datFile.Header.DatFormat;
-            datFile.Items.SetBucketedBy(Field.DatItem_CRC); // Setting this because it can reduce issues later
+            datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
 
             // Now parse the correct type of DAT
             try

@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 
-using SabreTools.Core;
 using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Reports;
@@ -107,7 +107,7 @@ namespace SabreTools.DatTools
                 logger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
                 List<string> games = new List<string>();
                 DatFile datdata = Parser.CreateAndParse(file.CurrentPath);
-                datdata.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
+                datdata.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
                 logger.User($"Adding stats for file '{file.CurrentPath}'\n");

@@ -92,7 +92,7 @@ namespace SabreTools.DatTools
                 return success;
 
             // Now that we have a list of depots, we want to bucket the input DAT by SHA-1
-            datFile.Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
+            datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
             // Then we want to loop through each of the hashes and see if we can rebuild
             var keys = datFile.Items.SortedKeys.ToList();
@@ -131,7 +131,7 @@ namespace SabreTools.DatTools
                     continue;
 
                 // Ensure we are sorted correctly (some other calls can change this)
-                datFile.Items.BucketBy(Field.DatItem_SHA1, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.SHA1, DedupeType.None);
 
                 // If there are no items in the hash, we continue
                 if (datFile.Items[hash] == null || datFile.Items[hash].Count == 0)
@@ -390,7 +390,7 @@ namespace SabreTools.DatTools
                 if (outputFormat == OutputFormat.Folder && datFile.Header.ForcePacking == PackingFlag.Partial)
                 {
                     shouldCheck = true;
-                    datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None, lower: false);
+                    datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false);
                 }
 
                 // Now loop through the list and rebuild accordingly

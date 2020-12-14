@@ -191,7 +191,7 @@ namespace SabreTools.DatTools
             {
                 // Add the list if it doesn't exist already
                 Rom rom = new Rom(baseFile);
-                datFile.Items.Add(rom.GetKey(Field.DatItem_CRC), rom);
+                datFile.Items.Add(rom.GetKey(ItemKey.CRC), rom);
                 logger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
             else

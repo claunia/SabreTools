@@ -43,9 +43,9 @@ namespace SabreTools.DatTools
 
                 // Bucket and dedupe according to the flag
                 if (cleaner?.DedupeRoms == DedupeType.Full)
-                    datFile.Items.BucketBy(Field.DatItem_CRC, cleaner.DedupeRoms);
+                    datFile.Items.BucketBy(ItemKey.CRC, cleaner.DedupeRoms);
                 else if (cleaner?.DedupeRoms == DedupeType.Game)
-                    datFile.Items.BucketBy(Field.Machine_Name, cleaner.DedupeRoms);
+                    datFile.Items.BucketBy(ItemKey.Machine, cleaner.DedupeRoms);
 
                 // Process description to machine name
                 if (cleaner?.DescriptionAsName == true)
@@ -99,7 +99,7 @@ namespace SabreTools.DatTools
             try
             {
                 // Bucket by game first
-                datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Create a new set of mappings based on the items
                 var machineMap = new Dictionary<string, Dictionary<MachineField, string>>();
@@ -192,7 +192,7 @@ namespace SabreTools.DatTools
 
             // If we're filtering per machine, bucket by machine first
             if (perMachine)
-                datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
             try
             {
@@ -415,7 +415,7 @@ namespace SabreTools.DatTools
                 regions = new List<string>();
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Then we want to get a mapping of all machines to parents
             Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
@@ -610,7 +610,7 @@ namespace SabreTools.DatTools
             logger.User("Creating device non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (AddRomsFromDevices(datFile, false, false)) ;
@@ -630,7 +630,7 @@ namespace SabreTools.DatTools
             logger.User("Creating fully non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             while (AddRomsFromDevices(datFile, true, true)) ;
@@ -654,7 +654,7 @@ namespace SabreTools.DatTools
             logger.User("Creating merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddRomsFromChildren(datFile);
@@ -677,7 +677,7 @@ namespace SabreTools.DatTools
             logger.User("Creating non-merged sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             AddRomsFromParent(datFile);
@@ -700,7 +700,7 @@ namespace SabreTools.DatTools
             logger.User("Creating split sets from the DAT");
 
             // For sake of ease, the first thing we want to do is bucket by game
-            datFile.Items.BucketBy(Field.Machine_Name, mergeroms, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, mergeroms, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
             RemoveRomsFromChild(datFile);

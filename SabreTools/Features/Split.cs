@@ -78,7 +78,7 @@ namespace SabreTools.Features
                 // Hash splitting
                 if (splittingMode.HasFlag(SplittingMode.Hash))
                 {
-                    Dictionary<Field, DatFile> typeDats = Splitter.SplitByHash(internalDat);
+                    Dictionary<DatItemField, DatFile> typeDats = Splitter.SplitByHash(internalDat);
 
                     InternalStopwatch watch = new InternalStopwatch("Outputting hash-split DATs");
 

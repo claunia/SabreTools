@@ -44,8 +44,8 @@ namespace SabreTools.DatTools
             if (datItemFields.Any())
             {
                 // For comparison's sake, we want to use CRC as the base bucketing
-                datFile.Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
-                intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
+                intDat.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
                 // Then we do a hashwise comparison against the base DAT
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
@@ -74,8 +74,8 @@ namespace SabreTools.DatTools
             if (machineFields.Any())
             {
                 // For comparison's sake, we want to use Machine Name as the base bucketing
-                datFile.Items.BucketBy(Field.Machine_Name, DedupeType.Full);
-                intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.Full);
+                intDat.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
                 // Then we do a namewise comparison against the base DAT
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
@@ -108,17 +108,17 @@ namespace SabreTools.DatTools
         {
             // For comparison's sake, we want to use a base ordering
             if (useGames)
-                datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
             else
-                datFile.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
+                datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
             logger.User($"Comparing '{intDat.Header.FileName}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
-                intDat.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+                intDat.Items.BucketBy(ItemKey.Machine, DedupeType.None);
             else
-                intDat.Items.BucketBy(Field.DatItem_CRC, DedupeType.Full);
+                intDat.Items.BucketBy(ItemKey.CRC, DedupeType.Full);
 
             // Then we compare against the base DAT
             List<string> keys = intDat.Items.Keys.ToList();
@@ -182,7 +182,7 @@ namespace SabreTools.DatTools
             List<DatFile> outDats = new List<DatFile>();
 
             // Ensure the current DatFile is sorted optimally
-            datFile.Items.BucketBy(Field.DatItem_CRC, DedupeType.None);
+            datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
             // Loop through each of the inputs and get or create a new DatData object
             InternalStopwatch watch = new InternalStopwatch("Initializing and filling all output DATs");

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Reports;
@@ -62,7 +63,7 @@ namespace SabreTools.DatTools
             EnsureHeaderFields(datFile);
 
             // Bucket roms by game name, if not already
-            datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None);
+            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
             // Output the number of items we're going to be writing
             logger.User($"A total of {datFile.Items.TotalCount - datFile.Items.RemovedCount} items will be written out to '{datFile.Header.FileName}'");
@@ -107,7 +108,7 @@ namespace SabreTools.DatTools
             if (datFile.Items.RomCount + datFile.Items.DiskCount == 0)
                 datFile.Items.RecalculateStats();
 
-            datFile.Items.BucketBy(Field.Machine_Name, DedupeType.None, norename: true);
+            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             var consoleOutput = BaseReport.Create(StatReportFormat.None, null, true, true);
             consoleOutput.ReplaceStatistics(datFile.Header.FileName, datFile.Items.Keys.Count(), datFile.Items);
