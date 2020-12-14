@@ -220,7 +220,6 @@ namespace SabreTools.DatFiles.Formats
                     "Size",
                     "CRC",
                     "MD5",
-                    //"RIPEMD160",
                     "SHA1",
                     "SHA256",
                     //"SHA384",
@@ -298,7 +297,6 @@ namespace SabreTools.DatFiles.Formats
                     fields[8] = rom.Size?.ToString();
                     fields[9] = rom.CRC?.ToLowerInvariant();
                     fields[10] = rom.MD5?.ToLowerInvariant();
-                    //fields[11] = rom.RIPEMD160?.ToLowerInvariant();
                     fields[11] = rom.SHA1?.ToLowerInvariant();
                     fields[12] = rom.SHA256?.ToLowerInvariant();
                     //fields[13] = rom.SHA384?.ToLowerInvariant();

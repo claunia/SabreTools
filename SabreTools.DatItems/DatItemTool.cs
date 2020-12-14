@@ -708,11 +708,6 @@ namespace SabreTools.DatItems
                 if (datItemFields.Contains(DatItemField.MD5))
                     rom.MD5 = null;
 
-    #if NET_FRAMEWORK
-                if (datItemFields.Contains(DatItemField.RIPEMD160))
-                    rom.RIPEMD160 = null;
-    #endif
-
                 if (datItemFields.Contains(DatItemField.SHA1))
                     rom.SHA1 = null;
 
@@ -1754,14 +1749,6 @@ namespace SabreTools.DatItems
                     if (string.IsNullOrEmpty(rom.MD5) && !string.IsNullOrEmpty(newItem.MD5))
                         rom.MD5 = newItem.MD5;
                 }
-
-#if NET_FRAMEWORK
-                if (datItemFields.Contains(DatItemField.RIPEMD160))
-                {
-                    if (string.IsNullOrEmpty(rom.RIPEMD160) && !string.IsNullOrEmpty(newItem.RIPEMD160))
-                        rom.RIPEMD160 = newItem.RIPEMD160;
-                }
-#endif
 
                 if (datItemFields.Contains(DatItemField.SHA1))
                 {
@@ -2828,11 +2815,6 @@ namespace SabreTools.DatItems
 
                 if (datItemMappings.Keys.Contains(DatItemField.MD5))
                     rom.MD5 = datItemMappings[DatItemField.MD5];
-
-#if NET_FRAMEWORK
-                if (datItemMappings.Keys.Contains(DatItemField.RIPEMD160))
-                    rom.RIPEMD160 = datItemMappings[DatItemField.RIPEMD160];
-#endif
 
                 if (datItemMappings.Keys.Contains(DatItemField.SHA1))
                     rom.SHA1 = datItemMappings[DatItemField.SHA1];

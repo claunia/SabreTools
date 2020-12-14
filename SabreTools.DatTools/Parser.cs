@@ -134,10 +134,6 @@ namespace SabreTools.DatTools
                     return DatFormat.SabreJSON;
                 case "md5":
                     return DatFormat.RedumpMD5;
-#if NET_FRAMEWORK
-                case "ripemd160":
-                    return DatFormat.RedumpRIPEMD160;
-#endif
                 case "sfv":
                     return DatFormat.RedumpSFV;
                 case "sha1":

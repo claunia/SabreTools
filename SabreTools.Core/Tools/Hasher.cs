@@ -35,12 +35,6 @@ namespace SabreTools.Core.Tools
                     _hasher = MD5.Create();
                     break;
 
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-                    _hasher = RIPEMD160.Create();
-                    break;
-#endif
-
                 case Hash.SHA1:
                     _hasher = SHA1.Create();
                     break;
@@ -80,9 +74,6 @@ namespace SabreTools.Core.Tools
                     break;
 
                 case Hash.MD5:
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-#endif
                 case Hash.SHA1:
                 case Hash.SHA256:
                 case Hash.SHA384:
@@ -109,9 +100,6 @@ namespace SabreTools.Core.Tools
                     break;
 
                 case Hash.MD5:
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-#endif
                 case Hash.SHA1:
                 case Hash.SHA256:
                 case Hash.SHA384:
@@ -136,9 +124,6 @@ namespace SabreTools.Core.Tools
                     return BitConverter.GetBytes((_hasher as OptimizedCRC.OptimizedCRC).Value).Reverse().ToArray();
 
                 case Hash.MD5:
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-#endif
                 case Hash.SHA1:
                 case Hash.SHA256:
                 case Hash.SHA384:

@@ -55,7 +55,6 @@ namespace SabreTools.DatFiles.Formats
                     <!ATTLIST rom size CDATA #IMPLIED>
                     <!ATTLIST rom crc CDATA #IMPLIED>
                     <!ATTLIST rom md5 CDATA #IMPLIED>
-                    <!ATTLIST rom ripemd160 CDATA #IMPLIED>
                     <!ATTLIST rom sha1 CDATA #IMPLIED>
                     <!ATTLIST rom sha256 CDATA #IMPLIED>
                     <!ATTLIST rom sha384 CDATA #IMPLIED>
@@ -69,11 +68,7 @@ namespace SabreTools.DatFiles.Formats
                 <!ELEMENT disk EMPTY>
                     <!ATTLIST disk name CDATA #REQUIRED>
                     <!ATTLIST disk md5 CDATA #IMPLIED>
-                    <!ATTLIST disk ripemd160 CDATA #IMPLIED>
                     <!ATTLIST disk sha1 CDATA #IMPLIED>
-                    <!ATTLIST disk sha256 CDATA #IMPLIED>
-                    <!ATTLIST disk sha384 CDATA #IMPLIED>
-                    <!ATTLIST disk sha512 CDATA #IMPLIED>
                     <!ATTLIST disk status (baddump|nodump|good) string.Emptygoodstring.Empty>
                     <!ATTLIST disk writeable (yes|no) string.Emptynostring.Empty>
             <!ELEMENT dipswitch (dipvalue*)>
@@ -846,9 +841,6 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                     xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
-#if NET_FRAMEWORK
-                    xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
-#endif
                     xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());

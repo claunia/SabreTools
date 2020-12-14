@@ -21,9 +21,6 @@ namespace SabreTools.DatItems
 
         private byte[] _crc; // 8 bytes
         private byte[] _md5; // 16 bytes
-#if NET_FRAMEWORK
-        private byte[] _ripemd160; // 20 bytes
-#endif
         private byte[] _sha1; // 20 bytes
         private byte[] _sha256; // 32 bytes
         private byte[] _sha384; // 48 bytes
@@ -81,19 +78,6 @@ namespace SabreTools.DatItems
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
             set { _md5 = Utilities.StringToByteArray(CleanMD5(value)); }
         }
-
-#if NET_FRAMEWORK
-        /// <summary>
-        /// File RIPEMD160 hash
-        /// </summary>
-        [JsonProperty("ripemd160", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("ripemd160")]
-        public string RIPEMD160
-        {
-            get { return _ripemd160.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_ripemd160); }
-            set { _ripemd160 = Utilities.StringToByteArray(CleanRIPEMD160(value)); }
-        }
-#endif
 
         /// <summary>
         /// File SHA-1 hash
@@ -391,9 +375,6 @@ namespace SabreTools.DatItems
             Size = baseFile.Size;
             _crc = baseFile.CRC;
             _md5 = baseFile.MD5;
-#if NET_FRAMEWORK
-            _ripemd160 = baseFile.RIPEMD160;
-#endif
             _sha1 = baseFile.SHA1;
             _sha256 = baseFile.SHA256;
             _sha384 = baseFile.SHA384;
@@ -426,9 +407,6 @@ namespace SabreTools.DatItems
                 Size = this.Size,
                 _crc = this._crc,
                 _md5 = this._md5,
-#if NET_FRAMEWORK
-                _ripemd160 = this._ripemd160,
-#endif
                 _sha1 = this._sha1,
                 _sha256 = this._sha256,
                 _sha384 = this._sha384,
@@ -471,9 +449,6 @@ namespace SabreTools.DatItems
                 Size = this.Size,
                 CRC = this._crc,
                 MD5 = this._md5,
-#if NET_FRAMEWORK
-                RIPEMD160 = this._ripemd160,
-#endif
                 SHA1 = this._sha1,
                 SHA256 = this._sha256,
                 SHA384 = this._sha384,
@@ -535,11 +510,6 @@ namespace SabreTools.DatItems
             if (_md5.IsNullOrEmpty() && !other._md5.IsNullOrEmpty())
                 _md5 = other._md5;
 
-#if NET_FRAMEWORK
-            if (_ripemd160.IsNullOrEmpty() && !other._ripemd160.IsNullOrEmpty())
-                _ripemd160 = other._ripemd160;
-#endif
-
             if (_sha1.IsNullOrEmpty() && !other._sha1.IsNullOrEmpty())
                 _sha1 = other._sha1;
 
@@ -588,9 +558,6 @@ namespace SabreTools.DatItems
         {
             return !_crc.IsNullOrEmpty()
                 || !_md5.IsNullOrEmpty()
-#if NET_FRAMEWORK
-                || !_ripemd160.IsNullOrEmpty()
-#endif
                 || !_sha1.IsNullOrEmpty()
                 || !_sha256.IsNullOrEmpty()
                 || !_sha384.IsNullOrEmpty()
@@ -606,9 +573,6 @@ namespace SabreTools.DatItems
         {
             return (_crc != null && _crc.SequenceEqual(Constants.CRCZeroBytes))
                 || (_md5 != null && _md5.SequenceEqual(Constants.MD5ZeroBytes))
-#if NET_FRAMEWORK
-                || (_ripemd160 != null && _ripemd160.SequenceEqual(Constants.RIPEMD160ZeroBytes))
-#endif
                 || (_sha1 != null && _sha1.SequenceEqual(Constants.SHA1ZeroBytes))
                 || (_sha256 != null && _sha256.SequenceEqual(Constants.SHA256ZeroBytes))
                 || (_sha384 != null && _sha384.SequenceEqual(Constants.SHA384ZeroBytes))
@@ -625,9 +589,6 @@ namespace SabreTools.DatItems
         {
             return !(_crc.IsNullOrEmpty() ^ other._crc.IsNullOrEmpty())
                 || !(_md5.IsNullOrEmpty() ^ other._md5.IsNullOrEmpty())
-#if NET_FRAMEWORK
-                || !(_ripemd160.IsNullOrEmpty() || other._ripemd160.IsNullOrEmpty())
-#endif
                 || !(_sha1.IsNullOrEmpty() ^ other._sha1.IsNullOrEmpty())
                 || !(_sha256.IsNullOrEmpty() ^ other._sha256.IsNullOrEmpty())
                 || !(_sha384.IsNullOrEmpty() ^ other._sha384.IsNullOrEmpty())
@@ -653,9 +614,6 @@ namespace SabreTools.DatItems
             // Return if all hashes match according to merge rules
             return ConditionalHashEquals(_crc, other._crc)
                 && ConditionalHashEquals(_md5, other._md5)
-#if NET_FRAMEWORK
-                && ConditionalHashEquals(_ripemd160, other._ripemd160)
-#endif
                 && ConditionalHashEquals(_sha1, other._sha1)
                 && ConditionalHashEquals(_sha256, other._sha256)
                 && ConditionalHashEquals(_sha384, other._sha384)
@@ -689,12 +647,6 @@ namespace SabreTools.DatItems
                 case Field.DatItem_MD5:
                     key = MD5;
                     break;
-
-#if NET_FRAMEWORK
-                case Field.DatItem_RIPEMD160:
-                    key = RIPEMD160;
-                    break;
-#endif
 
                 case Field.DatItem_SHA1:
                     key = SHA1;

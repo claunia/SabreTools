@@ -330,13 +330,6 @@ namespace SabreTools.DatFiles.Formats
                                     (item as Rom).MD5 = attrVal;
 
                                 break;
-#if NET_FRAMEWORK
-                            case "ripemd160":
-                                if (item.ItemType == ItemType.Rom)
-                                    (item as Rom).RIPEMD160 = attrVal;
-
-                                break;
-#endif
                             case "sha1":
                                 if (item.ItemType == ItemType.Disk)
                                     (item as Disk).SHA1 = attrVal;
@@ -670,9 +663,6 @@ namespace SabreTools.DatFiles.Formats
                     cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString());
                     cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                     cmpw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
-#if NET_FRAMEWORK
-                    cmpw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
-#endif
                     cmpw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
                     cmpw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
                     cmpw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());

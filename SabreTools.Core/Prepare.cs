@@ -12,8 +12,8 @@ namespace SabreTools.Core
         /// <summary>
         /// The current toolset version to be used by all child applications
         /// </summary>
-        public readonly static string Version = $"v1.0.5";
-        //public readonly static string Version = $"v1.0.5-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
+        //public readonly static string Version = $"v1.0.5";
+        public readonly static string Version = $"v1.0.5-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
  
         /// <summary>
         /// Readies the console and outputs the header
@@ -33,7 +33,7 @@ namespace SabreTools.Core
                 // Set the console to ready state
                 ConsoleColor formertext = ConsoleColor.White;
                 ConsoleColor formerback = ConsoleColor.Black;
-                if (!MonoOrCoreEnvironment)
+                if (!CoreEnvironment)
                 {
                     Console.SetBufferSize(Console.BufferWidth, 999);
                     formertext = Console.ForegroundColor;
@@ -51,7 +51,7 @@ namespace SabreTools.Core
                 Console.WriteLine();
 
                 // Return the console to the original text and background colors
-                if (!MonoOrCoreEnvironment)
+                if (!CoreEnvironment)
                 {
                     Console.ForegroundColor = formertext;
                     Console.BackgroundColor = formerback;
@@ -60,18 +60,14 @@ namespace SabreTools.Core
         }
 
         /// <summary>
-        /// Returns true if running in a Mono or .NET Core environment
+        /// Returns true if running in a .NET Core environment
         /// </summary>
         /// TODO: Investigate if this is needed when removing .NET Framework 4.8 support
-        private static bool MonoOrCoreEnvironment
+        private static bool CoreEnvironment
         {
             get
             {
-#if NET_FRAMEWORK
-                return Type.GetType("Mono.Runtime") != null;
-#else
                 return true;
-#endif
             }
         }
     }

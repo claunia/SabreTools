@@ -111,11 +111,6 @@ namespace SabreTools.DatFiles
                 case DatFormat.RedumpMD5:
                     return new Hashfile(baseDat, Hash.MD5);
 
-#if NET_FRAMEWORK
-                case DatFormat.RedumpRIPEMD160:
-                    return new Hashfile(baseDat, Hash.RIPEMD160);
-#endif
-
                 case DatFormat.RedumpSFV:
                     return new Hashfile(baseDat, Hash.CRC);
 
@@ -255,9 +250,6 @@ namespace SabreTools.DatFiles
                     rom.Size = Constants.SizeZero;
                     rom.CRC = Constants.CRCZero;
                     rom.MD5 = Constants.MD5Zero;
-#if NET_FRAMEWORK
-                    rom.RIPEMD160 = null; // Constants.RIPEMD160Zero;
-#endif
                     rom.SHA1 = Constants.SHA1Zero;
                     rom.SHA256 = null; // Constants.SHA256Zero;
                     rom.SHA384 = null; // Constants.SHA384Zero;
@@ -357,7 +349,6 @@ namespace SabreTools.DatFiles
                 name = item.GetName() ?? item.ItemType.ToString(),
                 crc = string.Empty,
                 md5 = string.Empty,
-                ripemd160 = string.Empty,
                 sha1 = string.Empty,
                 sha256 = string.Empty,
                 sha384 = string.Empty,
@@ -390,9 +381,6 @@ namespace SabreTools.DatFiles
             {
                 crc = (item as Rom).CRC ?? string.Empty;
                 md5 = (item as Rom).MD5 ?? string.Empty;
-#if NET_FRAMEWORK
-                ripemd160 = (item as Rom).RIPEMD160 ?? string.Empty;
-#endif
                 sha1 = (item as Rom).SHA1 ?? string.Empty;
                 sha256 = (item as Rom).SHA256 ?? string.Empty;
                 sha384 = (item as Rom).SHA384 ?? string.Empty;
@@ -411,7 +399,6 @@ namespace SabreTools.DatFiles
                 .Replace("%category%", item.Machine.Category ?? string.Empty)
                 .Replace("%crc%", crc)
                 .Replace("%md5%", md5)
-                .Replace("%ripemd160%", ripemd160)
                 .Replace("%sha1%", sha1)
                 .Replace("%sha256%", sha256)
                 .Replace("%sha384%", sha384)
@@ -538,9 +525,6 @@ namespace SabreTools.DatFiles
                 rom.Size = Constants.SizeZero;
                 rom.CRC = rom.CRC == "null" ? Constants.CRCZero : null;
                 rom.MD5 = rom.MD5 == "null" ? Constants.MD5Zero : null;
-#if NET_FRAMEWORK
-                rom.RIPEMD160 = rom.RIPEMD160 == "null" ? Constants.RIPEMD160Zero : null;
-#endif
                 rom.SHA1 = rom.SHA1 == "null" ? Constants.SHA1Zero : null;
                 rom.SHA256 = rom.SHA256 == "null" ? Constants.SHA256Zero : null;
                 rom.SHA384 = rom.SHA384 == "null" ? Constants.SHA384Zero : null;

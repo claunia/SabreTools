@@ -41,12 +41,7 @@ namespace SabreTools.Reports.Formats
     Roms found:              " + _stats.RomCount + @"
     Disks found:             " + _stats.DiskCount + @"
     Roms with CRC:           " + _stats.CRCCount + @"
-    Roms with MD5:           " + _stats.MD5Count
-#if NET_FRAMEWORK
-+ @"
-    Roms with RIPEMD160:     " + _stats.RIPEMD160Count
-#endif
-+ @"
+    Roms with MD5:           " + _stats.MD5Count + @"
     Roms with SHA-1:         " + _stats.SHA1Count + @"
     Roms with SHA-256:       " + _stats.SHA256Count + @"
     Roms with SHA-384:       " + _stats.SHA384Count + @"

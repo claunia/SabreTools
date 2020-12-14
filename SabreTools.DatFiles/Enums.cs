@@ -122,37 +122,30 @@ namespace SabreTools.DatFiles
         /// </summary>
         RedumpMD5 = 1 << 19,
 
-#if NET_FRAMEWORK
-        /// <summary>
-        /// RIPEMD160 hash list
-        /// </summary>
-        RedumpRIPEMD160 = 1 << 20,
-#endif
-
         /// <summary>
         /// SHA-1 hash list
         /// </summary>
-        RedumpSHA1 = 1 << 21,
+        RedumpSHA1 = 1 << 20,
 
         /// <summary>
         /// SHA-256 hash list
         /// </summary>
-        RedumpSHA256 = 1 << 22,
+        RedumpSHA256 = 1 << 21,
 
         /// <summary>
         /// SHA-384 hash list
         /// </summary>
-        RedumpSHA384 = 1 << 23,
+        RedumpSHA384 = 1 << 22,
 
         /// <summary>
         /// SHA-512 hash list
         /// </summary>
-        RedumpSHA512 = 1 << 24,
+        RedumpSHA512 = 1 << 23,
 
         /// <summary>
         /// SpamSum hash list
         /// </summary>
-        RedumpSpamSum = 1 << 25,
+        RedumpSpamSum = 1 << 24,
 
         #endregion
 
@@ -172,9 +165,6 @@ namespace SabreTools.DatFiles
         Game,
         CRC,
         MD5,
-#if NET_FRAMEWORK
-        RIPEMD160,
-#endif
         SHA1,
         SHA256,
         SHA384,

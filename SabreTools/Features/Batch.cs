@@ -175,7 +175,9 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Read in the individual arguments
-                                Field filterField = command.Arguments[0].AsField();
+                                DatHeaderField filterDatHeaderField = command.Arguments[0].AsDatHeaderField();
+                                MachineField filterMachineField = command.Arguments[0].AsMachineField();
+                                DatItemField filterDatItemField = command.Arguments[0].AsDatItemField();
                                 string filterValue = command.Arguments[1];
                                 bool? filterRemove = false;
                                 if (command.Arguments.Count >= 3)
@@ -185,7 +187,9 @@ Reset the internal state:           reset();";
                                     filterPerMachine = command.Arguments[3].AsYesNo();
 
                                 // If we had an invalid input, log and continue
-                                if (filterField == Field.NULL)
+                                if (filterDatHeaderField == DatHeaderField.NULL
+                                    && filterMachineField == MachineField.NULL
+                                    && filterDatItemField == DatItemField.NULL)
                                 {
                                     logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
@@ -210,9 +214,9 @@ Reset the internal state:           reset();";
                                 };
 
                                 // Set the possible filters
-                                cleaner.DatHeaderFilter.SetFilter(command.Arguments[0].AsDatHeaderField(), filterValue, filterRemove.Value);
-                                cleaner.MachineFilter.SetFilter(command.Arguments[0].AsMachineField(), filterValue, filterRemove.Value);
-                                cleaner.DatItemFilter.SetFilter(command.Arguments[0].AsDatItemField(), filterValue, filterRemove.Value);
+                                cleaner.DatHeaderFilter.SetFilter(filterDatHeaderField, filterValue, filterRemove.Value);
+                                cleaner.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
+                                cleaner.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
 
                                 // Apply the filters blindly
                                 Modification.ApplyFilters(datFile, cleaner, filterPerMachine.Value);
@@ -234,11 +238,13 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Read in the individual arguments
-                                Field extraField = command.Arguments[0].AsField();
+                                MachineField extraMachineField = command.Arguments[0].AsMachineField();
+                                DatItemField extraDatItemField = command.Arguments[0].AsDatItemField();
                                 string extraFile = command.Arguments[1];
 
                                 // If we had an invalid input, log and continue
-                                if (extraField == Field.NULL)
+                                if (extraMachineField == MachineField.NULL
+                                    && extraDatItemField == DatItemField.NULL)
                                 {
                                     logger.User($"{command.Arguments[0]} was an invalid field name");
                                     continue;
@@ -253,8 +259,8 @@ Reset the internal state:           reset();";
                                 ExtraIni extraIni = new ExtraIni();
                                 ExtraIniItem extraIniItem = new ExtraIniItem();
                                 extraIniItem.PopulateFromFile(extraFile);
-                                extraIniItem.MachineField = command.Arguments[0].AsMachineField();
-                                extraIniItem.DatItemField = command.Arguments[0].AsDatItemField();
+                                extraIniItem.MachineField = extraMachineField;
+                                extraIniItem.DatItemField = extraDatItemField;
                                 extraIni.Items.Add(extraIniItem);
 
                                 // Apply the extra INI blindly

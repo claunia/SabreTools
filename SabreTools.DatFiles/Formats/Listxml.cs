@@ -48,7 +48,6 @@ namespace SabreTools.DatFiles.Formats
             <!ATTLIST rom size CDATA #REQUIRED>
             <!ATTLIST rom crc CDATA #IMPLIED>
             <!ATTLIST rom md5 CDATA #IMPLIED>
-            <!ATTLIST rom ripemd160 CDATA #IMPLIED>
             <!ATTLIST rom sha1 CDATA #IMPLIED>
             <!ATTLIST rom sha256 CDATA #IMPLIED>
             <!ATTLIST rom sha384 CDATA #IMPLIED>
@@ -61,11 +60,7 @@ namespace SabreTools.DatFiles.Formats
         <!ELEMENT disk EMPTY>
             <!ATTLIST disk name CDATA #REQUIRED>
             <!ATTLIST disk md5 CDATA #IMPLIED>
-            <!ATTLIST disk ripemd160 CDATA #IMPLIED>
             <!ATTLIST disk sha1 CDATA #IMPLIED>
-            <!ATTLIST disk sha256 CDATA #IMPLIED>
-            <!ATTLIST disk sha384 CDATA #IMPLIED>
-            <!ATTLIST disk sha512 CDATA #IMPLIED>
             <!ATTLIST disk merge CDATA #IMPLIED>
             <!ATTLIST disk region CDATA #IMPLIED>
             <!ATTLIST disk index CDATA #IMPLIED>

@@ -87,13 +87,6 @@ namespace SabreTools.FileTypes
         /// </summary>
         public byte[] MD5 { get; set; } = null;
 
-#if NET_FRAMEWORK
-        /// <summary>
-        /// RIPEMD160 hash of the file
-        /// </summary>
-        public byte[] RIPEMD160 { get; set; } = null;
-#endif
-
         /// <summary>
         /// SHA-1 hash of the file
         /// </summary>
@@ -148,9 +141,6 @@ namespace SabreTools.FileTypes
                     this.Date = temp.Date;
                     this.CRC = temp.CRC;
                     this.MD5 = temp.MD5;
-#if NET_FRAMEWORK
-                    this.RIPEMD160 = temp.RIPEMD160;
-#endif
                     this.SHA1 = temp.SHA1;
                     this.SHA256 = temp.SHA256;
                     this.SHA384 = temp.SHA384;
@@ -179,9 +169,6 @@ namespace SabreTools.FileTypes
                     this.Date = temp.Date;
                     this.CRC = temp.CRC;
                     this.MD5 = temp.MD5;
-#if NET_FRAMEWORK
-                    this.RIPEMD160 = temp.RIPEMD160;
-#endif
                     this.SHA1 = temp.SHA1;
                     this.SHA256 = temp.SHA256;
                     this.SHA384 = temp.SHA384;
@@ -355,10 +342,6 @@ namespace SabreTools.FileTypes
                     hashers.Add(new Hasher(Hash.CRC));
                 if (hashes.HasFlag(Hash.MD5))
                     hashers.Add(new Hasher(Hash.MD5));
-#if NET_FRAMEWORK
-                if (hashes.HasFlag(Hash.RIPEMD160))
-                    hashers.Add(new Hasher(Hash.RIPEMD160));
-#endif
                 if (hashes.HasFlag(Hash.SHA1))
                     hashers.Add(new Hasher(Hash.SHA1));
                 if (hashes.HasFlag(Hash.SHA256))
@@ -424,9 +407,6 @@ namespace SabreTools.FileTypes
                     Size = size,
                     CRC = hashes.HasFlag(Hash.CRC) ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
                     MD5 = hashes.HasFlag(Hash.MD5) ? hashers.First(h => h.HashType == Hash.MD5).GetHash() : null,
-#if NET_FRAMEWORK
-                    RIPEMD160 = hashes.HasFlag(Hash.RIPEMD160) ? hashers.First(h => h.HashType == Hash.RIPEMD160).GetHash() : null,
-#endif
                     SHA1 = hashes.HasFlag(Hash.SHA1) ? hashers.First(h => h.HashType == Hash.SHA1).GetHash() : null,
                     SHA256 = hashes.HasFlag(Hash.SHA256) ? hashers.First(h => h.HashType == Hash.SHA256).GetHash() : null,
                     SHA384 = hashes.HasFlag(Hash.SHA384) ? hashers.First(h => h.HashType == Hash.SHA384).GetHash() : null,

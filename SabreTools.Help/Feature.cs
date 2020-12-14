@@ -238,11 +238,7 @@ namespace SabreTools.Help
                             output = CreatePadding(pre + 4);
                         }
 
-#if NET_FRAMEWORK
-                        output += subsplit[subsplit.Length - 1];
-#else
                         output += subsplit[^1];
-#endif
                         continue;
                     }
 
@@ -376,11 +372,7 @@ namespace SabreTools.Help
                             output = CreatePadding(preAdjusted + 4);
                         }
 
-#if NET_FRAMEWORK
-                        output += subsplit[subsplit.Length - 1];
-#else
                         output += subsplit[^1];
-#endif
                         continue;
                     }
 
@@ -577,23 +569,6 @@ namespace SabreTools.Help
         /// <returns>True if the feature is enabled, false otherwise</returns>
         public bool IsEnabled()
         {
-#if NET_FRAMEWORK
-            switch (_featureType)
-            {
-                case ParameterType.Flag:
-                    return (_value as bool?) == true;
-                case ParameterType.String:
-                    return (_value as string) != null;
-                case ParameterType.Int32:
-                    return (_value as int?).HasValue && (_value as int?).Value != int.MinValue;
-                case ParameterType.Int64:
-                    return (_value as long?).HasValue && (_value as long?).Value != long.MinValue;
-                case ParameterType.List:
-                    return (_value as List<string>) != null;
-                default:
-                    return false;
-            }
-#else
             return _featureType switch
             {
                 ParameterType.Flag => (_value as bool?) == true,
@@ -603,7 +578,6 @@ namespace SabreTools.Help
                 ParameterType.List => (_value as List<string>) != null,
                 _ => false,
             };
-#endif
         }
 
         #endregion

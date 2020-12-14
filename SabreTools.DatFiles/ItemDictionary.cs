@@ -297,14 +297,6 @@ namespace SabreTools.DatFiles
         [JsonIgnore, XmlIgnore]
         public long MD5Count { get; private set; } = 0;
 
-#if NET_FRAMEWORK
-        /// <summary>
-        /// Number of items with a RIPEMD160 hash
-        /// </summary>
-        [JsonIgnore, XmlIgnore]
-        public long RIPEMD160Count { get; private set; } = 0;
-#endif
-
         /// <summary>
         /// Number of items with a SHA-1 hash
         /// </summary>
@@ -479,9 +471,6 @@ namespace SabreTools.DatFiles
             // Individual hash counts
             CRCCount += stats.CRCCount;
             MD5Count += stats.MD5Count;
-#if NET_FRAMEWORK
-            RIPEMD160Count += stats.RIPEMD160Count;
-#endif
             SHA1Count += stats.SHA1Count;
             SHA256Count += stats.SHA256Count;
             SHA384Count += stats.SHA384Count;
@@ -746,9 +735,6 @@ namespace SabreTools.DatFiles
                             TotalSize += (item as Rom).Size ?? 0;
                             CRCCount += (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
                             MD5Count += (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
-#if NET_FRAMEWORK
-                            RIPEMD160Count += (string.IsNullOrWhiteSpace((item as Rom).RIPEMD160) ? 0 : 1);
-#endif
                             SHA1Count += (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
                             SHA256Count += (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
                             SHA384Count += (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
@@ -905,9 +891,6 @@ namespace SabreTools.DatFiles
                             TotalSize -= (item as Rom).Size ?? 0;
                             CRCCount -= (string.IsNullOrWhiteSpace((item as Rom).CRC) ? 0 : 1);
                             MD5Count -= (string.IsNullOrWhiteSpace((item as Rom).MD5) ? 0 : 1);
-#if NET_FRAMEWORK
-                        RIPEMD160Count -= (string.IsNullOrWhiteSpace((item as Rom).RIPEMD160) ? 0 : 1);
-#endif
                             SHA1Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA1) ? 0 : 1);
                             SHA256Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA256) ? 0 : 1);
                             SHA384Count -= (string.IsNullOrWhiteSpace((item as Rom).SHA384) ? 0 : 1);
@@ -1209,9 +1192,6 @@ namespace SabreTools.DatFiles
 
             CRCCount = 0;
             MD5Count = 0;
-#if NET_FRAMEWORK
-            RIPEMD160Count = 0;
-#endif
             SHA1Count = 0;
             SHA256Count = 0;
             SHA384Count = 0;
@@ -1245,12 +1225,6 @@ namespace SabreTools.DatFiles
             // If all items are supposed to have a SHA-1, we bucket by that
             else if (DiskCount + MediaCount + RomCount - NodumpCount == SHA1Count)
                 return Field.DatItem_SHA1;
-
-#if NET_FRAMEWORK
-            // If all items are supposed to have a RIPEMD160, we bucket by that
-            else if (DiskCount + MediaCount + RomCount - NodumpCount == RIPEMD160Count)
-                return Field.DatItem_RIPEMD160;
-#endif
 
             // If all items are supposed to have a MD5, we bucket by that
             else if (DiskCount + MediaCount + RomCount - NodumpCount == MD5Count)

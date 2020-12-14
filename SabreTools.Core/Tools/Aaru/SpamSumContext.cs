@@ -506,13 +506,7 @@ namespace Aaru.Checksums
                 count++;
             }
 
-#if NET_FRAMEWORK
-            byte[] newString = new byte[count];
-            Array.Copy(cString, newString, count);
-            return newString;
-#else
             return new ReadOnlySpan<byte>(cString, 0, count).ToArray();
-#endif
         }
 
         public void Dispose()

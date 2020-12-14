@@ -980,22 +980,6 @@ namespace SabreTools.Features
             }
         }
 
-#if NET_FRAMEWORK
-        internal const string SkipRipeMd160Value = "skip-ripemd160";
-        internal static Feature SkipRipeMd160Flag
-        {
-            get
-            {
-                return new Feature(
-                    SkipRipeMd160Value,
-                    new List<string>() { "-nr160", "--skip-ripemd160" },
-                    "Include RIPEMD160 in output", // TODO: This needs to be inverted later
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to include calculating the RIPEMD160 for each of the files.");
-            }
-        }
-#endif
-
         internal const string SkipSha1Value = "skip-sha1";
         internal static Feature SkipSha1Flag
         {
@@ -1668,22 +1652,6 @@ Possible values are: None, Bios, Device, Mechanical");
             }
         }
 
-#if NET_FRAMEWORK
-        internal const string NotRipeMd160ListValue = "not-ripemd160";
-        internal static Feature NotRipeMd160ListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotRipeMd160ListValue,
-                    new List<string>() { "-nripemd160", "--not-ripemd160" },
-                    "Filter by not RIPEMD160 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this RIPEMD160 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-#endif
-
         internal const string NotSha1ListValue = "not-sha1";
         internal static Feature NotSha1ListInput
         {
@@ -1779,12 +1747,7 @@ Possible values are:
     md5              - MD5
     msx, openmsx     - openMSX Software List
     ol, offlinelist  - OfflineList XML
-    rc, romcenter    - RomCenter"
-#if NET_FRAMEWORK
-+ @"
-    ripemd160        - RIPEMD160"
-#endif
-+ @"
+    rc, romcenter    - RomCenter
     sj, sabrejson    - SabreJSON
     sx, sabrexml     - SabreDAT XML
     sfv              - SFV
@@ -1836,22 +1799,6 @@ Possible values are:
     tsv              - Standardized Tab-Separated Value");
             }
         }
-
-#if NET_FRAMEWORK
-        internal const string RipeMd160ListValue = "ripemd160";
-        internal static Feature RipeMd160ListInput
-        {
-            get
-            {
-                return new Feature(
-                    RipeMd160ListValue,
-                    new List<string>() { "-ripemd160", "--ripemd160" },
-                    "Filter by RIPEMD160 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this RIPEMD160 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-#endif
 
         internal const string Sha1ListValue = "sha1";
         internal static Feature Sha1ListInput
@@ -2217,12 +2164,7 @@ Some special strings that can be used:
 - %publisher% - Replaced with game Publisher
 - %category% - Replaced with game Category
 - %crc% - Replaced with the CRC
-- %md5% - Replaced with the MD5"
-#if NET_FRAMEWORK
-+ @"
-- %ripemd160% - Replaced with the RIPEMD160"
-#endif
-+ @"
+- %md5% - Replaced with the MD5
 - %sha1% - Replaced with the SHA-1
 - %sha256% - Replaced with the SHA-256
 - %sha384% - Replaced with the SHA-384
@@ -2383,10 +2325,6 @@ Some special strings that can be used:
             AddFeature(NotCrcListInput);
             AddFeature(Md5ListInput);
             AddFeature(NotMd5ListInput);
-#if NET_FRAMEWORK
-            AddFeature(RipeMd160ListInput);
-            AddFeature(NotRipeMd160ListInput);
-#endif
             AddFeature(Sha1ListInput);
             AddFeature(NotSha1ListInput);
             AddFeature(Sha256ListInput);
@@ -2473,10 +2411,6 @@ Some special strings that can be used:
 
             if (GetBoolean(features, SkipMd5Value))
                 includeInScan &= ~Hash.MD5;
-#if NET_FRAMEWORK
-            if (GetBoolean(features, SkipRipeMd160Value))
-                includeInScan |= Hash.RIPEMD160; // TODO: This needs to be inverted later
-#endif
             if (GetBoolean(features, SkipSha1Value))
                 includeInScan &= ~Hash.SHA1;
             if (GetBoolean(features, SkipSha256Value))
@@ -2617,9 +2551,6 @@ Some special strings that can be used:
                 logger.User($"This flag '{(UpdateHashesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
                 updateFields.Add(DatItemField.CRC);
                 updateFields.Add(DatItemField.MD5);
-#if NET_FRAMEWORK
-                updateFields.Add(DatItemField.RIPEMD160);
-#endif
                 updateFields.Add(DatItemField.SHA1);
                 updateFields.Add(DatItemField.SHA256);
                 updateFields.Add(DatItemField.SHA384);
@@ -2882,20 +2813,6 @@ Some special strings that can be used:
                 cleaner.DatItemFilter.SetFilter(DatItemField.MD5, GetList(features, Md5ListValue), false);
             }
 
-#if NET_FRAMEWORK
-            // RIPEMD160
-            if (features.ContainsKey(NotRipeMd160ListValue))
-            {
-                logger.User($"This flag '{NotRipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.RIPEMD160, GetList(features, NotRipeMd160ListValue), true);
-            }
-            if (features.ContainsKey(RipeMd160ListValue))
-            {
-                logger.User($"This flag '{RipeMd160ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.RIPEMD160, GetList(features, RipeMd160ListValue), false);
-            }
-#endif
-
             // Runnable
             if (features.ContainsKey(NotRunnableValue))
             {
@@ -3138,10 +3055,6 @@ CREATE TABLE IF NOT EXISTS data (
                 case "rc":
                 case "romcenter":
                     return DatFormat.RomCenter;
-#if NET_FRAMEWORK
-                case "ripemd160":
-                    return DatFormat.RedumpRIPEMD160;
-#endif
                 case "sd":
                 case "sabredat":
                 case "sx":
@@ -3185,25 +3098,6 @@ CREATE TABLE IF NOT EXISTS data (
         /// <returns>StatReportFormat value corresponding to the string</returns>
         private static StatReportFormat GetStatReportFormat(string input)
         {
-#if NET_FRAMEWORK
-            switch (input?.Trim().ToLowerInvariant())
-            {
-                case "all":
-                    return StatReportFormat.All;
-                case "csv":
-                    return StatReportFormat.CSV;
-                case "html":
-                    return StatReportFormat.HTML;
-                case "ssv":
-                    return StatReportFormat.SSV;
-                case "text":
-                    return StatReportFormat.Textfile;
-                case "tsv":
-                    return StatReportFormat.TSV;
-                default:
-                    return 0x0;
-            }
-#else
             return input?.Trim().ToLowerInvariant() switch
             {
                 "all" => StatReportFormat.All,
@@ -3214,7 +3108,6 @@ CREATE TABLE IF NOT EXISTS data (
                 "tsv" => StatReportFormat.TSV,
                 _ => 0x0,
             };
-#endif
         }
 
         /// <summary>

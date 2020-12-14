@@ -1206,12 +1206,6 @@ namespace SabreTools.Filtering
                 if (!Filter.PassStringFilter(DatItemFilter.MD5, rom.MD5))
                     return false;
 
-    #if NET_FRAMEWORK
-                // Filter on RIPEMD160
-                if (!Filter.PassStringFilter(DatItemFilter.RIPEMD160, rom.RIPEMD160))
-                    return false;
-    #endif
-
                 // Filter on SHA-1
                 if (!Filter.PassStringFilter(DatItemFilter.SHA1, rom.SHA1))
                     return false;

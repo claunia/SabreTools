@@ -137,18 +137,10 @@ The following systems have headers that this program can work with:
             if (!File.Exists(input))
                 return;
 
-#if NET_FRAMEWORK
-            using (FileStream fsr = File.OpenRead(input))
-            using (FileStream fsw = File.OpenWrite(output))
-            {
-#else
             using FileStream fsr = File.OpenRead(input);
             using FileStream fsw = File.OpenWrite(output);
-#endif
-                AppendBytes(fsr, fsw, bytesToAddToHead, bytesToAddToTail);
-#if NET_FRAMEWORK
-            }
-#endif
+            
+            AppendBytes(fsr, fsw, bytesToAddToHead, bytesToAddToTail);
         }
 
         /// <summary>

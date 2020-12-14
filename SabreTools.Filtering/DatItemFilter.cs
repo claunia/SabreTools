@@ -31,9 +31,6 @@ namespace SabreTools.Filtering
         public FilterItem<long?> Size { get; private set; } = new FilterItem<long?>() { Positive = null, Negative = null, Neutral = null };
         public FilterItem<string> CRC { get; private set; } = new FilterItem<string>();
         public FilterItem<string> MD5 { get; private set; } = new FilterItem<string>();
-#if NET_FRAMEWORK
-        public FilterItem<string> RIPEMD160 { get; private set; } = new FilterItem<string>();
-#endif
         public FilterItem<string> SHA1 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> SHA256 { get; private set; } = new FilterItem<string>();
         public FilterItem<string> SHA384 { get; private set; } = new FilterItem<string>();
@@ -291,12 +288,6 @@ namespace SabreTools.Filtering
                 case DatItemField.MD5:
                     SetStringFilter(MD5, value, negate);
                     break;
-
-#if NET_FRAMEWORK
-                case DatItemField.RIPEMD160:
-                    SetStringFilter(RIPEMD160, value, negate);
-                    break;
-#endif
 
                 case DatItemField.SHA1:
                     SetStringFilter(SHA1, value, negate);

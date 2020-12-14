@@ -93,7 +93,6 @@ namespace SabreTools.DatFiles.Formats
             <!ATTLIST rom size CDATA #REQUIRED>
             <!ATTLIST rom crc CDATA #IMPLIED>
             <!ATTLIST rom md5 CDATA #IMPLIED>
-            <!ATTLIST rom ripemd160 CDATA #IMPLIED>
             <!ATTLIST rom sha1 CDATA #IMPLIED>
             <!ATTLIST rom sha256 CDATA #IMPLIED>
             <!ATTLIST rom sha384 CDATA #IMPLIED>
@@ -104,11 +103,7 @@ namespace SabreTools.DatFiles.Formats
         <!ELEMENT disk EMPTY>
             <!ATTLIST disk name CDATA #REQUIRED>
             <!ATTLIST disk md5 CDATA #IMPLIED>
-            <!ATTLIST disk ripemd160 CDATA #IMPLIED>
             <!ATTLIST disk sha1 CDATA #IMPLIED>
-            <!ATTLIST disk sha256 CDATA #IMPLIED>
-            <!ATTLIST disk sha384 CDATA #IMPLIED>
-            <!ATTLIST disk sha512 CDATA #IMPLIED>
             <!ATTLIST disk merge CDATA #IMPLIED>
             <!ATTLIST disk status (baddump|nodump|good|verified) string.Emptygoodstring.Empty>
         <!ELEMENT sample EMPTY>
@@ -612,9 +607,6 @@ namespace SabreTools.DatFiles.Formats
                             Size = Utilities.CleanLong(reader.GetAttribute("size")),
                             CRC = reader.GetAttribute("crc"),
                             MD5 = reader.GetAttribute("md5"),
-#if NET_FRAMEWORK
-                            RIPEMD160 = reader.GetAttribute("ripemd160"),
-#endif
                             SHA1 = reader.GetAttribute("sha1"),
                             SHA256 = reader.GetAttribute("sha256"),
                             SHA384 = reader.GetAttribute("sha384"),
@@ -1099,9 +1091,6 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteAttributeString("size", rom.Size?.ToString());
                     xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
-#if NET_FRAMEWORK
-                    xtw.WriteOptionalAttributeString("ripemd160", rom.RIPEMD160?.ToLowerInvariant());
-#endif
                     xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());

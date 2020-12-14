@@ -83,18 +83,10 @@ The following systems have headers that this program can work with:
             try
             {
                 // Extract the header as a string for the database
-#if NET_FRAMEWORK
-                using (var fs = File.OpenRead(file))
-                {
-#else
                 using var fs = File.OpenRead(file);
-#endif
                 byte[] hbin = new byte[(int)rule.StartOffset];
                 fs.Read(hbin, 0, (int)rule.StartOffset);
                 hstr = Utilities.ByteArrayToString(hbin);
-#if NET_FRAMEWORK
-                }
-#endif
             }
             catch
             {

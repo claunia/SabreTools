@@ -47,9 +47,6 @@ namespace SabreTools.Reports.Formats
                     + "\"" + _stats.DiskCount + "\"{0}"
                     + "\"" + _stats.CRCCount + "\"{0}"
                     + "\"" + _stats.MD5Count + "\"{0}"
-#if NET_FRAMEWORK
-                    + "\"" + _stats.RIPEMD160Count + "\"{0}"
-#endif
                     + "\"" + _stats.SHA1Count + "\"{0}"
                     + "\"" + _stats.SHA256Count + "\"{0}"
                     + "\"" + _stats.SHA384Count + "\"{0}"

@@ -13,24 +13,16 @@ namespace SabreTools.Core
     {
         CRC = 1 << 0,
         MD5 = 1 << 1,
-#if NET_FRAMEWORK
-        RIPEMD160 = 1 << 2,
-#endif
-        SHA1 = 1 << 3,
-        SHA256 = 1 << 4,
-        SHA384 = 1 << 5,
-        SHA512 = 1 << 6,
-        SpamSum = 1 << 7,
+        SHA1 = 1 << 2,
+        SHA256 = 1 << 3,
+        SHA384 = 1 << 4,
+        SHA512 = 1 << 5,
+        SpamSum = 1 << 6,
 
         // Special combinations
         Standard = CRC | MD5 | SHA1,
-#if NET_FRAMEWORK
-        DeepHashes = RIPEMD160 | SHA256 | SHA384 | SHA512 | SpamSum,
-        SecureHashes = MD5 | RIPEMD160 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
-#else
         DeepHashes = SHA256 | SHA384 | SHA512 | SpamSum,
         SecureHashes = MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
-#endif
     }
 
     /// <summary>
@@ -621,9 +613,6 @@ namespace SabreTools.Core
         DatItem_Size,
         DatItem_CRC,
         DatItem_MD5,
-#if NET_FRAMEWORK
-        DatItem_RIPEMD160,
-#endif
         DatItem_SHA1,
         DatItem_SHA256,
         DatItem_SHA384,
@@ -884,9 +873,6 @@ namespace SabreTools.Core
         Size,
         CRC,
         MD5,
-#if NET_FRAMEWORK
-        RIPEMD160,
-#endif
         SHA1,
         SHA256,
         SHA384,

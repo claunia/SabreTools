@@ -653,21 +653,6 @@ namespace SabreTools.DatTools
         /// </summary>
         private static OutputFormat GetOutputFormat(PackingFlag packing)
         {
-#if NET_FRAMEWORK
-            switch (packing)
-            {
-                case PackingFlag.Zip:
-                    return OutputFormat.TorrentZip;
-                case PackingFlag.Unzip:
-                case PackingFlag.Partial:
-                    return OutputFormat.Folder;
-                case PackingFlag.Flat:
-                    return OutputFormat.ParentFolder;
-                case PackingFlag.None:
-                default:
-                    return OutputFormat.Folder;
-            }
-#else
             return packing switch
             {
                 PackingFlag.Zip => OutputFormat.TorrentZip,
@@ -677,7 +662,6 @@ namespace SabreTools.DatTools
                 PackingFlag.None => OutputFormat.Folder,
                 _ => OutputFormat.Folder,
             };
-#endif
         }
 
         /// <summary>
@@ -709,32 +693,6 @@ namespace SabreTools.DatTools
         /// <returns>String value corresponding to the OutputFormat</returns>
         private static string FromOutputFormat(OutputFormat itemType)
         {
-#if NET_FRAMEWORK
-            switch (itemType)
-            {
-                case OutputFormat.Folder:
-                case OutputFormat.ParentFolder:
-                    return "directory";
-                case OutputFormat.TapeArchive:
-                    return "TAR";
-                case OutputFormat.Torrent7Zip:
-                    return "Torrent7Z";
-                case OutputFormat.TorrentGzip:
-                case OutputFormat.TorrentGzipRomba:
-                    return "TorrentGZ";
-                case OutputFormat.TorrentLRZip:
-                    return "TorrentLRZ";
-                case OutputFormat.TorrentRar:
-                    return "TorrentRAR";
-                case OutputFormat.TorrentXZ:
-                case OutputFormat.TorrentXZRomba:
-                    return "TorrentXZ";
-                case OutputFormat.TorrentZip:
-                    return "TorrentZip";
-                default:
-                    return null;
-            }
-#else
             return itemType switch
             {
                 OutputFormat.Folder => "directory",
@@ -750,7 +708,6 @@ namespace SabreTools.DatTools
                 OutputFormat.TorrentZip => "TorrentZip",
                 _ => null,
             };
-#endif
         }
     }
 }

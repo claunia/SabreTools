@@ -55,23 +55,6 @@ namespace SabreTools.Skippers
         /// <remarks>The Stream is assumed to be in the proper position for a given test</remarks>
         public bool Passes(Stream input)
         {
-#if NET_FRAMEWORK
-            switch (Type)
-            {
-                case HeaderSkipTest.And:
-                    return CheckAnd(input);
-                case HeaderSkipTest.Data:
-                    return CheckData(input);
-                case HeaderSkipTest.File:
-                    return CheckFile(input);
-                case HeaderSkipTest.Or:
-                    return CheckOr(input);
-                case HeaderSkipTest.Xor:
-                    return CheckXor(input);
-                default:
-                    return true;
-            }
-#else
             return Type switch
             {
                 HeaderSkipTest.And => CheckAnd(input),
@@ -81,7 +64,6 @@ namespace SabreTools.Skippers
                 HeaderSkipTest.Xor => CheckXor(input),
                 _ => true,
             };
-#endif
         }
 
         #region Checking Helpers

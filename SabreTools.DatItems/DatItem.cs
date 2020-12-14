@@ -156,124 +156,6 @@ namespace SabreTools.DatItems
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
         public static DatItem Create(ItemType? itemType)
         {
-#if NET_FRAMEWORK
-            switch (itemType)
-            {
-                case ItemType.Adjuster:
-                    return new Adjuster();
-
-                case ItemType.Analog:
-                    return new Analog();
-
-                case ItemType.Archive:
-                    return new Archive();
-
-                case ItemType.BiosSet:
-                    return new BiosSet();
-
-                case ItemType.Blank:
-                    return new Blank();
-
-                case ItemType.Chip:
-                    return new Chip();
-
-                case ItemType.Condition:
-                    return new Condition();
-
-                case ItemType.Configuration:
-                    return new Configuration();
-                
-                case ItemType.Control:
-                    return new Control();
-
-                case ItemType.DataArea:
-                    return new DataArea();
-
-                case ItemType.Device:
-                    return new Device();
-
-                case ItemType.DeviceReference:
-                    return new DeviceReference();
-
-                case ItemType.DipSwitch:
-                    return new DipSwitch();
-
-                case ItemType.Disk:
-                    return new Disk();
-
-                case ItemType.DiskArea:
-                    return new DiskArea();
-
-                case ItemType.Display:
-                    return new Display();
-
-                case ItemType.Driver:
-                    return new Driver();
-
-                case ItemType.Extension:
-                    return new Extension();
-
-                case ItemType.Feature:
-                    return new Feature();
-
-                case ItemType.Info:
-                    return new Info();
-
-                case ItemType.Input:
-                    return new Input();
-
-                case ItemType.Instance:
-                    return new Instance();
-
-                case ItemType.Location:
-                    return new Location();
-
-                case ItemType.Media:
-                    return new Media();
-
-                case ItemType.Part:
-                    return new Part();
-
-                case ItemType.PartFeature:
-                    return new PartFeature();
-
-                case ItemType.Port:
-                    return new Port();
-
-                case ItemType.RamOption:
-                    return new RamOption();
-
-                case ItemType.Release:
-                    return new Release();
-
-                case ItemType.Rom:
-                    return new Rom();
-
-                case ItemType.Sample:
-                    return new Sample();
-
-                case ItemType.Setting:
-                    return new Setting();
-
-                case ItemType.SharedFeature:
-                    return new SharedFeature();
-
-                case ItemType.Slot:
-                    return new Slot();
-
-                case ItemType.SlotOption:
-                    return new SlotOption();
-
-                case ItemType.SoftwareList:
-                    return new SoftwareList();
-
-                case ItemType.Sound:
-                    return new Sound();
-
-                default:
-                    return new Rom();
-            }
-#else
             return itemType switch
             {
                 ItemType.Adjuster => new Adjuster(),
@@ -309,7 +191,6 @@ namespace SabreTools.DatItems
                 ItemType.Sound => new Sound(),
                 _ => new Rom(),
             };
-#endif
         }
 
         /// <summary>
@@ -458,18 +339,6 @@ namespace SabreTools.DatItems
             return CleanHashData(hash, Constants.MD5Length);
         }
 
-#if NET_FRAMEWORK
-        /// <summary>
-        /// Clean a RIPEMD160 string and pad to the correct size
-        /// </summary>
-        /// <param name="hash">Hash string to sanitize</param>
-        /// <returns>Cleaned string</returns>
-        protected string CleanRIPEMD160(string hash)
-        {
-            return CleanHashData(hash, Constants.RIPEMD160Length);
-        }
-#endif
-
         /// <summary>
         /// Clean a SHA1 string and pad to the correct size
         /// </summary>
@@ -595,12 +464,6 @@ namespace SabreTools.DatItems
                 case Field.DatItem_MD5:
                     key = Constants.MD5Zero;
                     break;
-
-#if NET_FRAMEWORK
-                case Field.DatItem_RIPEMD160:
-                    key = Constants.RIPEMD160Zero;
-                    break;
-#endif
 
                 case Field.DatItem_SHA1:
                     key = Constants.SHA1Zero;
@@ -819,11 +682,7 @@ namespace SabreTools.DatItems
                     if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
                     {
                         datItemName += GetDuplicateSuffix(datItem);
-#if NET_FRAMEWORK
-                        lastrenamed = lastrenamed ?? datItemName;
-#else
                         lastrenamed ??= datItemName;
-#endif
                     }
 
                     // If we have a conflict with the last renamed item, do the right thing

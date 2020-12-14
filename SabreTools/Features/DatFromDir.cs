@@ -25,9 +25,6 @@ namespace SabreTools.Features
 
             // Hash Features
             AddFeature(SkipMd5Flag);
-#if NET_FRAMEWORK
-            AddFeature(SkipRipeMd160Flag);
-#endif
             AddFeature(SkipSha1Flag);
             AddFeature(SkipSha256Flag);
             AddFeature(SkipSha384Flag);

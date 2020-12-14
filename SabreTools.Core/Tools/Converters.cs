@@ -18,10 +18,6 @@ namespace SabreTools.Core.Tools
                 fields.Add(DatItemField.CRC);
             if (hash.HasFlag(Hash.MD5))
                 fields.Add(DatItemField.MD5);
-#if NET_FRAMEWORK
-            if (hash.HasFlag(Hash.RIPEMD160))
-                fields.Add(DatItemField.RIPEMD160);
-#endif
             if (hash.HasFlag(Hash.SHA1))
                 fields.Add(DatItemField.SHA1);
             if (hash.HasFlag(Hash.SHA256))
@@ -47,24 +43,12 @@ namespace SabreTools.Core.Tools
         /// <returns>ChipType value corresponding to the string</returns>
         public static ChipType AsChipType(this string chipType)
         {
-#if NET_FRAMEWORK
-            switch (chipType?.ToLowerInvariant())
-            {
-                case "cpu":
-                    return ChipType.CPU;
-                case "audio":
-                    return ChipType.Audio;
-                default:
-                    return ChipType.NULL;
-            }
-#else
             return chipType?.ToLowerInvariant() switch
             {
                 "cpu" => ChipType.CPU,
                 "audio" => ChipType.Audio,
                 _ => ChipType.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -74,43 +58,6 @@ namespace SabreTools.Core.Tools
         /// <returns>ControlType value corresponding to the string</returns>
         public static ControlType AsControlType(this string controlType)
         {
-#if NET_FRAMEWORK
-            switch (controlType?.ToLowerInvariant())
-            {
-                case "joy":
-                    return ControlType.Joy;
-                case "stick":
-                    return ControlType.Stick;
-                case "paddle":
-                    return ControlType.Paddle;
-                case "pedal":
-                    return ControlType.Pedal;
-                case "lightgun":
-                    return ControlType.Lightgun;
-                case "positional":
-                    return ControlType.Positional;
-                case "dial":
-                    return ControlType.Dial;
-                case "trackball":
-                    return ControlType.Trackball;
-                case "mouse":
-                    return ControlType.Mouse;
-                case "only_buttons":
-                    return ControlType.OnlyButtons;
-                case "keypad":
-                    return ControlType.Keypad;
-                case "keyboard":
-                    return ControlType.Keyboard;
-                case "mahjong":
-                    return ControlType.Mahjong;
-                case "hanafuda":
-                    return ControlType.Hanafuda;
-                case "gambling":
-                    return ControlType.Gambling;
-                default:
-                    return ControlType.NULL;
-            }
-#else
             return controlType?.ToLowerInvariant() switch
             {
                 "joy" => ControlType.Joy,
@@ -130,7 +77,6 @@ namespace SabreTools.Core.Tools
                 "gambling" => ControlType.Gambling,
                 _ => ControlType.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -407,12 +353,6 @@ namespace SabreTools.Core.Tools
                 case "md5":
                 case "md5_hash":
                     return DatItemField.MD5;
-
-#if NET_FRAMEWORK
-                case "ripemd160":
-                case "ripemd160_hash":
-                    return DatItemField.RIPEMD160;
-#endif
 
                 case "sha1":
                 case "sha_1":
@@ -809,55 +749,6 @@ namespace SabreTools.Core.Tools
         /// <returns>DeviceType value corresponding to the string</returns>
         public static DeviceType AsDeviceType(this string deviceType)
         {
-#if NET_FRAMEWORK
-            switch (deviceType?.ToLowerInvariant())
-            {
-                case "unknown":
-                    return DeviceType.Unknown;
-                case "cartridge":
-                    return DeviceType.Cartridge;
-                case "floppydisk":
-                    return DeviceType.FloppyDisk;
-                case "harddisk":
-                    return DeviceType.HardDisk;
-                case "cylinder":
-                    return DeviceType.Cylinder;
-                case "cassette":
-                    return DeviceType.Cassette;
-                case "punchcard":
-                    return DeviceType.PunchCard;
-                case "punchtape":
-                    return DeviceType.PunchTape;
-                case "printout":
-                    return DeviceType.Printout;
-                case "serial":
-                    return DeviceType.Serial;
-                case "parallel":
-                    return DeviceType.Parallel;
-                case "snapshot":
-                    return DeviceType.Snapshot;
-                case "quickload":
-                    return DeviceType.QuickLoad;
-                case "memcard":
-                    return DeviceType.MemCard;
-                case "cdrom":
-                    return DeviceType.CDROM;
-                case "magtape":
-                    return DeviceType.MagTape;
-                case "romimage":
-                    return DeviceType.ROMImage;
-                case "midiin":
-                    return DeviceType.MIDIIn;
-                case "midiout":
-                    return DeviceType.MIDIOut;
-                case "picture":
-                    return DeviceType.Picture;
-                case "vidfile":
-                    return DeviceType.VidFile;
-                default:
-                    return DeviceType.NULL;
-            }
-#else
             return deviceType?.ToLowerInvariant() switch
             {
                 "unknown" => DeviceType.Unknown,
@@ -883,7 +774,6 @@ namespace SabreTools.Core.Tools
                 "vidfile" => DeviceType.VidFile,
                 _ => DeviceType.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -893,23 +783,6 @@ namespace SabreTools.Core.Tools
         /// <returns>DisplayType value corresponding to the string</returns>
         public static DisplayType AsDisplayType(this string displayType)
         {
-#if NET_FRAMEWORK
-            switch (displayType?.ToLowerInvariant())
-            {
-                case "raster":
-                    return DisplayType.Raster;
-                case "vector":
-                    return DisplayType.Vector;
-                case "lcd":
-                    return DisplayType.LCD;
-                case "svg":
-                    return DisplayType.SVG;
-                case "unknown":
-                    return DisplayType.Unknown;
-                default:
-                    return DisplayType.NULL;
-            }
-#else
             return displayType?.ToLowerInvariant() switch
             {
                 "raster" => DisplayType.Raster,
@@ -919,7 +792,6 @@ namespace SabreTools.Core.Tools
                 "unknown" => DisplayType.Unknown,
                 _ => DisplayType.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -929,24 +801,12 @@ namespace SabreTools.Core.Tools
         /// <returns>Endianness value corresponding to the string</returns>
         public static Endianness AsEndianness(this string endianness)
         {
-#if NET_FRAMEWORK
-            switch (endianness?.ToLowerInvariant())
-            {
-                case "big":
-                    return Endianness.Big;
-                case "little":
-                    return Endianness.Little;
-                default:
-                    return Endianness.NULL;
-            }
-#else
             return endianness?.ToLowerInvariant() switch
             {
                 "big" => Endianness.Big,
                 "little" => Endianness.Little,
                 _ => Endianness.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -956,24 +816,12 @@ namespace SabreTools.Core.Tools
         /// <returns>FeatureStatus value corresponding to the string</returns>
         public static FeatureStatus AsFeatureStatus(this string featureStatus)
         {
-#if NET_FRAMEWORK
-            switch (featureStatus?.ToLowerInvariant())
-            {
-                case "unemulated":
-                    return FeatureStatus.Unemulated;
-                case "imperfect":
-                    return FeatureStatus.Imperfect;
-                default:
-                    return FeatureStatus.NULL;
-            }
-#else
             return featureStatus?.ToLowerInvariant() switch
             {
                 "unemulated" => FeatureStatus.Unemulated,
                 "imperfect" => FeatureStatus.Imperfect,
                 _ => FeatureStatus.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -983,41 +831,6 @@ namespace SabreTools.Core.Tools
         /// <returns>FeatureType value corresponding to the string</returns>
         public static FeatureType AsFeatureType(this string featureType)
         {
-#if NET_FRAMEWORK
-            switch (featureType?.ToLowerInvariant())
-            {
-                case "protection":
-                    return FeatureType.Protection;
-                case "palette":
-                    return FeatureType.Palette;
-                case "graphics":
-                    return FeatureType.Graphics;
-                case "sound":
-                    return FeatureType.Sound;
-                case "controls":
-                    return FeatureType.Controls;
-                case "keyboard":
-                    return FeatureType.Keyboard;
-                case "mouse":
-                    return FeatureType.Mouse;
-                case "microphone":
-                    return FeatureType.Microphone;
-                case "camera":
-                    return FeatureType.Camera;
-                case "disk":
-                    return FeatureType.Disk;
-                case "printer":
-                    return FeatureType.Printer;
-                case "lan":
-                    return FeatureType.Lan;
-                case "wan":
-                    return FeatureType.Wan;
-                case "timing":
-                    return FeatureType.Timing;
-                default:
-                    return FeatureType.NULL;
-            }
-#else
             return featureType?.ToLowerInvariant() switch
             {
                 "protection" => FeatureType.Protection,
@@ -1036,1254 +849,6 @@ namespace SabreTools.Core.Tools
                 "timing" => FeatureType.Timing,
                 _ => FeatureType.NULL,
             };
-#endif
-        }
-
-        /// <summary>
-        /// Get Field value from input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>Field value corresponding to the string</returns>
-        public static Field AsField(this string input)
-        {
-            // If the input is null, we return null
-            if (input == null)
-                return Field.NULL;
-
-            // Normalize the input
-            input = input.ToLowerInvariant();
-
-            // Create regex strings
-            string headerRegex = @"^(dat|header|datheader)[.\-_\s]";
-            string machineRegex = @"^(game|machine)[.\-_\s]";
-            string datItemRegex = @"^(item|datitem)[.\-_\s]";
-
-            // If we have a header field
-            if (Regex.IsMatch(input, headerRegex))
-            {
-                // Replace the match and re-normalize
-                string headerInput = Regex.Replace(input, headerRegex, string.Empty)
-                    .Replace(' ', '_')
-                    .Replace('-', '_')
-                    .Replace('.', '_');
-
-                switch (headerInput)
-                {
-                    #region Common
-
-                    case "file":
-                    case "filename":
-                    case "file_name":
-                        return Field.DatHeader_FileName;
-
-                    case "dat":
-                    case "datname":
-                    case "dat_name":
-                    case "internalname":
-                    case "internal_name":
-                        return Field.DatHeader_Name;
-
-                    case "desc":
-                    case "description":
-                        return Field.DatHeader_Description;
-
-                    case "root":
-                    case "rootdir":
-                    case "root_dir":
-                    case "rootdirectory":
-                    case "root_directory":
-                        return Field.DatHeader_RootDir;
-
-                    case "category":
-                        return Field.DatHeader_Category;
-
-                    case "version":
-                        return Field.DatHeader_Version;
-
-                    case "date":
-                    case "timestamp":
-                    case "time_stamp":
-                        return Field.DatHeader_Date;
-
-                    case "author":
-                        return Field.DatHeader_Author;
-
-                    case "email":
-                    case "e_mail":
-                        return Field.DatHeader_Email;
-
-                    case "homepage":
-                    case "home_page":
-                        return Field.DatHeader_Homepage;
-
-                    case "url":
-                        return Field.DatHeader_Url;
-
-                    case "comment":
-                        return Field.DatHeader_Comment;
-
-                    case "header":
-                    case "headerskipper":
-                    case "header_skipper":
-                    case "skipper":
-                        return Field.DatHeader_HeaderSkipper;
-
-                    case "dattype":
-                    case "type":
-                    case "superdat":
-                        return Field.DatHeader_Type;
-
-                    case "forcemerging":
-                    case "force_merging":
-                        return Field.DatHeader_ForceMerging;
-
-                    case "forcenodump":
-                    case "force_nodump":
-                        return Field.DatHeader_ForceNodump;
-
-                    case "forcepacking":
-                    case "force_packing":
-                        return Field.DatHeader_ForcePacking;
-
-                    #endregion
-
-                    #region ListXML
-
-                    case "debug":
-                        return Field.DatHeader_Debug;
-
-                    case "mameconfig":
-                    case "mame_config":
-                        return Field.DatHeader_MameConfig;
-
-                    #endregion
-
-                    #region Logiqx
-
-                    case "build":
-                        return Field.DatHeader_Build;
-
-                    case "rommode":
-                    case "rom_mode":
-                        return Field.DatHeader_RomMode;
-
-                    case "biosmode":
-                    case "bios_mode":
-                        return Field.DatHeader_BiosMode;
-
-                    case "samplemode":
-                    case "sample_mode":
-                        return Field.DatHeader_SampleMode;
-
-                    case "lockrommode":
-                    case "lockrom_mode":
-                    case "lock_rommode":
-                    case "lock_rom_mode":
-                        return Field.DatHeader_LockRomMode;
-
-                    case "lockbiosmode":
-                    case "lockbios_mode":
-                    case "lock_biosmode":
-                    case "lock_bios_mode":
-                        return Field.DatHeader_LockBiosMode;
-
-                    case "locksamplemode":
-                    case "locksample_mode":
-                    case "lock_samplemode":
-                    case "lock_sample_mode":
-                        return Field.DatHeader_LockSampleMode;
-
-                    #endregion
-
-                    #region OfflineList
-
-                    case "system":
-                    case "plugin": // Used with RomCenter
-                        return Field.DatHeader_System;
-
-                    case "screenshotwidth":
-                    case "screenshotswidth":
-                    case "screenshot_width":
-                    case "screenshots_width":
-                        return Field.DatHeader_ScreenshotsWidth;
-
-                    case "screenshotheight":
-                    case "screenshotsheight":
-                    case "screenshot_height":
-                    case "screenshots_height":
-                        return Field.DatHeader_ScreenshotsHeight;
-
-                    case "info_name":
-                    case "infos_name":
-                        return Field.DatHeader_Info_Name;
-
-                    case "info_visible":
-                    case "infos_visible":
-                        return Field.DatHeader_Info_Visible;
-
-                    case "info_isnamingoption":
-                    case "info_is_naming_option":
-                    case "infos_isnamingoption":
-                    case "infos_is_naming_option":
-                        return Field.DatHeader_Info_IsNamingOption;
-
-                    case "info_default":
-                    case "infos_default":
-                        return Field.DatHeader_Info_Default;
-
-                    case "canopen":
-                    case "can_open":
-                        return Field.DatHeader_CanOpen;
-
-                    case "romtitle":
-                    case "rom_title":
-                        return Field.DatHeader_RomTitle;
-
-                    #endregion
-
-                    #region RomCenter
-
-                    case "rcversion":
-                    case "rc_version":
-                    case "romcenterversion":
-                    case "romcenter_version":
-                    case "rom_center_version":
-                        return Field.DatHeader_RomCenterVersion;
-
-                    #endregion
-                }
-            }
-
-            // If we have a machine field
-            else if (Regex.IsMatch(input, machineRegex))
-            {
-                // Replace the match and re-normalize
-                string machineInput = Regex.Replace(input, machineRegex, string.Empty)
-                    .Replace(' ', '_')
-                    .Replace('-', '_')
-                    .Replace('.', '_');
-
-                switch (machineInput)
-                {
-                    #region Common
-
-                    case "name":
-                        return Field.Machine_Name;
-
-                    case "comment":
-                    case "extra": // Used with AttractMode
-                        return Field.Machine_Comment;
-
-                    case "desc":
-                    case "description":
-                        return Field.Machine_Description;
-
-                    case "year":
-                        return Field.Machine_Year;
-
-                    case "manufacturer":
-                        return Field.Machine_Manufacturer;
-
-                    case "publisher":
-                        return Field.Machine_Publisher;
-
-                    case "category":
-                        return Field.Machine_Category;
-
-                    case "romof":
-                    case "rom_of":
-                        return Field.Machine_RomOf;
-
-                    case "cloneof":
-                    case "clone_of":
-                        return Field.Machine_CloneOf;
-
-                    case "sampleof":
-                    case "sample_of":
-                        return Field.Machine_SampleOf;
-
-                    case "type":
-                        return Field.Machine_Type;
-
-                    #endregion
-
-                    #region AttractMode
-
-                    case "players":
-                        return Field.Machine_Players;
-
-                    case "rotation":
-                        return Field.Machine_Rotation;
-
-                    case "control":
-                        return Field.Machine_Control;
-
-                    case "amstatus":
-                    case "am_status":
-                    case "gamestatus":
-                    case "supportstatus":
-                    case "support_status":
-                        return Field.Machine_Status;
-
-                    case "displaycount":
-                        return Field.Machine_DisplayCount;
-
-                    case "displaytype":
-                        return Field.Machine_DisplayType;
-
-                    case "buttons":
-                        return Field.Machine_Buttons;
-
-                    #endregion
-
-                    #region ListXML
-
-                    case "sourcefile":
-                    case "source_file":
-                        return Field.Machine_SourceFile;
-
-                    case "runnable":
-                        return Field.Machine_Runnable;                    
-
-                    #endregion
-
-                    #region Logiqx
-
-                    case "board":
-                        return Field.Machine_Board;
-
-                    case "rebuildto":
-                    case "rebuild_to":
-                        return Field.Machine_RebuildTo;
-
-                    #endregion
-
-                    #region Logiqx EmuArc
-
-                    case "titleid":
-                    case "title_id":
-                        return Field.Machine_TitleID;
-
-                    case "developer":
-                        return Field.Machine_Developer;
-
-                    case "genre":
-                        return Field.Machine_Genre;
-
-                    case "subgenre":
-                    case "sub_genre":
-                        return Field.Machine_Subgenre;
-
-                    case "ratings":
-                        return Field.Machine_Ratings;
-
-                    case "score":
-                        return Field.Machine_Score;
-
-                    case "enabled":
-                        return Field.Machine_Enabled;
-
-                    case "crc":
-                    case "hascrc":
-                    case "has_crc":
-                        return Field.Machine_CRC;
-
-                    case "relatedto":
-                    case "related_to":
-                        return Field.Machine_RelatedTo;
-
-                    #endregion
-
-                    #region OpenMSX
-
-                    case "genmsxid":
-                    case "genmsx_id":
-                    case "gen_msxid":
-                    case "gen_msx_id":
-                        return Field.Machine_GenMSXID;
-
-                    case "system":
-                    case "msxsystem":
-                    case "msx_system":
-                        return Field.Machine_System;
-
-                    case "country":
-                        return Field.Machine_Country;
-
-                    #endregion
-
-                    #region SoftwareList
-
-                    case "supported":
-                        return Field.Machine_Supported;
-
-                    #endregion
-                }
-            }
-
-            // If we have a datitem field
-            else if (Regex.IsMatch(input, datItemRegex))
-            {
-                // Replace the match and re-normalize
-                string itemInput = Regex.Replace(input, datItemRegex, string.Empty)
-                    .Replace(' ', '_')
-                    .Replace('-', '_')
-                    .Replace('.', '_');
-
-                switch (itemInput)
-                {
-                    #region Common
-
-                    case "type":
-                        return Field.DatItem_Type;
-
-                    #endregion
-
-                    #region Item-Specific
-
-                    #region Actionable
-
-                    // Rom
-                    case "name":
-                        return Field.DatItem_Name;
-
-                    case "bios":
-                        return Field.DatItem_Bios;
-
-                    case "size":
-                        return Field.DatItem_Size;
-
-                    case "crc":
-                    case "crc32":
-                        return Field.DatItem_CRC;
-
-                    case "md5":
-                    case "md5_hash":
-                        return Field.DatItem_MD5;
-
-#if NET_FRAMEWORK
-                    case "ripemd160":
-                    case "ripemd160_hash":
-                        return Field.DatItem_RIPEMD160;
-#endif
-
-                    case "sha1":
-                    case "sha_1":
-                    case "sha1hash":
-                    case "sha1_hash":
-                    case "sha_1hash":
-                    case "sha_1_hash":
-                        return Field.DatItem_SHA1;
-
-                    case "sha256":
-                    case "sha_256":
-                    case "sha256hash":
-                    case "sha256_hash":
-                    case "sha_256hash":
-                    case "sha_256_hash":
-                        return Field.DatItem_SHA256;
-
-                    case "sha384":
-                    case "sha_384":
-                    case "sha384hash":
-                    case "sha384_hash":
-                    case "sha_384hash":
-                    case "sha_384_hash":
-                        return Field.DatItem_SHA384;
-
-                    case "sha512":
-                    case "sha_512":
-                    case "sha512hash":
-                    case "sha512_hash":
-                    case "sha_512hash":
-                    case "sha_512_hash":
-                        return Field.DatItem_SHA512;
-                        
-                    case "spamsum":
-                    case "spam_sum":
-                        return Field.DatItem_SpamSum;
-
-                    case "merge":
-                    case "mergetag":
-                    case "merge_tag":
-                        return Field.DatItem_Merge;
-
-                    case "region":
-                        return Field.DatItem_Region;
-
-                    case "offset":
-                        return Field.DatItem_Offset;
-
-                    case "date":
-                        return Field.DatItem_Date;
-
-                    case "status":
-                        return Field.DatItem_Status;
-
-                    case "optional":
-                        return Field.DatItem_Optional;
-
-                    case "inverted":
-                        return Field.DatItem_Inverted;
-
-                    // Rom (AttractMode)
-                    case "altname":
-                    case "alt name":
-                    case "alt-name":
-                    case "altromname":
-                    case "alt romname":
-                    case "alt-romname":
-                        return Field.DatItem_AltName;
-
-                    case "alttitle":
-                    case "alt title":
-                    case "alt-title":
-                    case "altromtitle":
-                    case "alt romtitle":
-                    case "alt-romtitle":
-                        return Field.DatItem_AltTitle;
-
-                    // Rom (OpenMSX)
-                    case "original":
-                        return Field.DatItem_Original;
-
-                    case "subtype":
-                    case "sub_type":
-                    case "openmsxsubtype":
-                    case "openmsx_subtype":
-                        return Field.DatItem_OpenMSXSubType;
-
-                    case "openmsxtype":
-                    case "openmsx_type":
-                        return Field.DatItem_OpenMSXType;
-
-                    case "remark":
-                        return Field.DatItem_Remark;
-
-                    case "boot":
-                        return Field.DatItem_Boot;
-
-                    // Rom (SoftwareList)
-                    case "areaname":
-                    case "area_name":
-                        return Field.DatItem_AreaName;
-
-                    case "areasize":
-                    case "area_size":
-                        return Field.DatItem_AreaSize;
-
-                    case "areawidth":
-                    case "area_width":
-                        return Field.DatItem_AreaWidth;
-
-                    case "areaendinanness":
-                    case "area_endianness":
-                        return Field.DatItem_AreaEndianness;
-
-                    case "loadflag":
-                    case "load_flag":
-                        return Field.DatItem_LoadFlag;
-
-                    case "partname":
-                    case "part_name":
-                        return Field.DatItem_Part_Name;
-
-                    case "partinterface":
-                    case "part_interface":
-                        return Field.DatItem_Part_Interface;
-
-                    case "part_feature_name":
-                        return Field.DatItem_Part_Feature_Name;
-
-                    case "part_feature_value":
-                        return Field.DatItem_Part_Feature_Value;
-
-                    case "value":
-                        return Field.DatItem_Value;
-
-                    // Disk
-                    case "index":
-                        return Field.DatItem_Index;
-
-                    case "writable":
-                        return Field.DatItem_Writable;
-
-                    #endregion
-
-                    #region Auxiliary
-
-                    // Adjuster
-                    case "default":
-                        return Field.DatItem_Default;
-
-                    // Analog
-                    case "analog_mask":
-                        return Field.DatItem_Analog_Mask;
-
-                    // BiosSet
-                    case "description":
-                    case "biosdescription":
-                    case "bios_description":
-                        return Field.DatItem_Description;
-
-                    // Chip
-                    case "tag":
-                        return Field.DatItem_Tag;
-
-                    case "chiptype":
-                    case "chip_type":
-                        return Field.DatItem_ChipType;
-
-                    case "clock":
-                        return Field.DatItem_Clock;
-
-                    // Condition
-                    case "mask":
-                        return Field.DatItem_Mask;
-
-                    case "relation":
-                        return Field.DatItem_Relation;
-
-                    case "condition_tag":
-                        return Field.DatItem_Condition_Tag;
-
-                    case "condition_mask":
-                        return Field.DatItem_Condition_Mask;
-
-                    case "condition_relation":
-                        return Field.DatItem_Condition_Relation;
-
-                    case "condition_value":
-                        return Field.DatItem_Condition_Value;
-
-                    // Control
-                    case "control_type":
-                        return Field.DatItem_Control_Type;
-
-                    case "control_player":
-                        return Field.DatItem_Control_Player;
-
-                    case "control_buttons":
-                        return Field.DatItem_Control_Buttons;
-
-                    case "control_reqbuttons":
-                        return Field.DatItem_Control_RequiredButtons;
-
-                    case "control_minimum":
-                        return Field.DatItem_Control_Minimum;
-
-                    case "control_maximum":
-                        return Field.DatItem_Control_Maximum;
-
-                    case "control_sensitivity":
-                        return Field.DatItem_Control_Sensitivity;
-
-                    case "control_keydelta":
-                        return Field.DatItem_Control_KeyDelta;
-
-                    case "control_reverse":
-                        return Field.DatItem_Control_Reverse;
-
-                    case "control_ways":
-                        return Field.DatItem_Control_Ways;
-
-                    case "control_ways2":
-                        return Field.DatItem_Control_Ways2;
-
-                    case "control_ways3":
-                        return Field.DatItem_Control_Ways3;
-
-                    // Device
-                    case "devicetype":
-                        return Field.DatItem_DeviceType;
-
-                    case "fixedimage":
-                        return Field.DatItem_FixedImage;
-
-                    case "mandatory":
-                        return Field.DatItem_Mandatory;
-
-                    case "interface":
-                        return Field.DatItem_Interface;
-
-                    // Display
-                    case "displaytype":
-                        return Field.DatItem_DisplayType;
-
-                    case "rotate":
-                        return Field.DatItem_Rotate;
-
-                    case "flipx":
-                        return Field.DatItem_FlipX;
-
-                    case "width":
-                        return Field.DatItem_Width;
-
-                    case "height":
-                        return Field.DatItem_Height;
-
-                    case "refresh":
-                        return Field.DatItem_Refresh;
-
-                    case "pixclock":
-                        return Field.DatItem_PixClock;
-
-                    case "htotal":
-                        return Field.DatItem_HTotal;
-
-                    case "hbend":
-                        return Field.DatItem_HBEnd;
-
-                    case "hbstart":
-                        return Field.DatItem_HBStart;
-
-                    case "vtotal":
-                        return Field.DatItem_VTotal;
-
-                    case "vbend":
-                        return Field.DatItem_VBEnd;
-
-                    case "vbstart":
-                        return Field.DatItem_VBStart;
-
-                    // Driver
-                    case "supportstatus":
-                        return Field.DatItem_SupportStatus;
-
-                    case "emulationstatus":
-                        return Field.DatItem_EmulationStatus;
-
-                    case "cocktailstatus":
-                        return Field.DatItem_CocktailStatus;
-
-                    case "savestatestatus":
-                        return Field.DatItem_SaveStateStatus;
-
-                    // Extension
-                    case "extension_name":
-                        return Field.DatItem_Extension_Name;
-
-                    // Feature
-                    case "featuretype":
-                        return Field.DatItem_FeatureType;
-
-                    case "featurestatus":
-                        return Field.DatItem_FeatureStatus;
-
-                    case "featureoverall":
-                        return Field.DatItem_FeatureOverall;
-
-                    // Input
-                    case "service":
-                        return Field.DatItem_Service;
-
-                    case "tilt":
-                        return Field.DatItem_Tilt;
-
-                    case "players":
-                        return Field.DatItem_Players;
-
-                    case "coins":
-                        return Field.DatItem_Coins;
-
-                    // Instance
-                    case "instance_name":
-                        return Field.DatItem_Instance_Name;
-
-                    case "instance_briefname":
-                        return Field.DatItem_Instance_BriefName;
-
-                    // Location
-                    case "location_name":
-                        return Field.DatItem_Location_Name;
-
-                    case "location_number":
-                        return Field.DatItem_Location_Number;
-
-                    case "location_inverted":
-                        return Field.DatItem_Location_Inverted;
-
-                    // RamOption
-                    case "content":
-                        return Field.DatItem_Content;
-
-                    // Release
-                    case "language":
-                        return Field.DatItem_Language;
-
-                    // Setting
-                    case "setting_name":
-                    case "value_name":
-                        return Field.DatItem_Setting_Name;
-
-                    case "setting_value":
-                    case "value_value":
-                        return Field.DatItem_Setting_Value;
-
-                    case "setting_default":
-                    case "value_default":
-                        return Field.DatItem_Setting_Default;
-
-                    // SlotOption
-                    case "slotoption_name":
-                        return Field.DatItem_SlotOption_Name;
-
-                    case "slotoption_devicename":
-                        return Field.DatItem_SlotOption_DeviceName;
-
-                    case "slotoption_default":
-                        return Field.DatItem_SlotOption_Default;
-
-                    // SoftwareList
-                    case "softwareliststatus":
-                    case "softwarelist_status":
-                        return Field.DatItem_SoftwareListStatus;
-
-                    case "filter":
-                        return Field.DatItem_Filter;
-
-                    // Sound
-                    case "channels":
-                        return Field.DatItem_Channels;
-
-                    #endregion
-
-                    #endregion // Item-Specific
-                }
-            }
-
-            // Else, we fall back on the old matching
-            // TODO: Remove this entirely
-            // TODO: Normalize space replacement
-            switch (input)
-            {
-                #region Machine
-
-                #region Common
-
-                case "game":
-                case "gamename":
-                case "game-name":
-                case "machine":
-                case "machinename":
-                case "machine-name":
-                    return Field.Machine_Name;
-
-                case "comment":
-                case "extra":
-                    return Field.Machine_Comment;
-
-                case "desc":
-                case "description":
-                case "gamedesc":
-                case "gamedescription":
-                case "game-description":
-                case "game description":
-                case "machinedesc":
-                case "machinedescription":
-                case "machine-description":
-                case "machine description":
-                    return Field.Machine_Description;
-
-                case "year":
-                    return Field.Machine_Year;
-
-                case "manufacturer":
-                    return Field.Machine_Manufacturer;
-
-                case "publisher":
-                    return Field.Machine_Publisher;
-
-                case "category":
-                case "gamecategory":
-                case "game-category":
-                case "machinecategory":
-                case "machine-category":
-                    return Field.Machine_Category;
-
-                case "romof":
-                    return Field.Machine_RomOf;
-
-                case "cloneof":
-                    return Field.Machine_CloneOf;
-
-                case "sampleof":
-                    return Field.Machine_SampleOf;
-
-                case "gametype":
-                case "game type":
-                case "game-type":
-                case "machinetype":
-                case "machine type":
-                case "machine-type":
-                    return Field.Machine_Type;
-
-                #endregion
-
-                #region AttractMode
-
-                case "players":
-                    return Field.Machine_Players;
-
-                case "rotation":
-                    return Field.Machine_Rotation;
-
-                case "control":
-                    return Field.Machine_Control;
-
-                case "amstatus":
-                case "am-status":
-                case "gamestatus":
-                case "game-status":
-                case "machinestatus":
-                case "machine-status":
-                case "supportstatus":
-                case "support-status":
-                    return Field.Machine_Status;
-
-                case "displaycount":
-                case "display-count":
-                case "displays":
-                    return Field.Machine_DisplayCount;
-
-                case "displaytype":
-                case "display-type":
-                    return Field.Machine_DisplayType;
-
-                case "buttons":
-                    return Field.Machine_Buttons;
-
-                #endregion
-
-                #region ListXML
-
-                case "sourcefile":
-                case "source file":
-                case "source-file":
-                    return Field.Machine_SourceFile;
-
-                case "runnable":
-                    return Field.Machine_Runnable;
-
-                #endregion
-
-                #region Logiqx
-
-                case "board":
-                    return Field.Machine_Board;
-
-                case "rebuildto":
-                case "rebuild to":
-                case "rebuild-to":
-                    return Field.Machine_RebuildTo;
-
-                #endregion
-
-                #region Logiqx EmuArc
-
-                case "titleid":
-                case "title id":
-                case "title-id":
-                    return Field.Machine_TitleID;
-
-                case "developer":
-                    return Field.Machine_Developer;
-
-                case "genre":
-                    return Field.Machine_Genre;
-
-                case "subgenre":
-                    return Field.Machine_Subgenre;
-
-                case "ratings":
-                    return Field.Machine_Ratings;
-
-                case "score":
-                    return Field.Machine_Score;
-
-                case "enabled":
-                    return Field.Machine_Enabled;
-
-                case "hascrc":
-                case "has crc":
-                case "has-crc":
-                    return Field.Machine_CRC;
-
-                case "relatedto":
-                case "related to":
-                case "related-to":
-                    return Field.Machine_RelatedTo;
-
-                #endregion
-
-                #region OpenMSX
-
-                case "genmsxid":
-                case "genmsx id":
-                case "genmsx-id":
-                case "gen msx id":
-                case "gen-msx-id":
-                    return Field.Machine_GenMSXID;
-
-                case "system":
-                case "msxsystem":
-                case "msx system":
-                case "msx-system":
-                    return Field.Machine_System;
-
-                case "country":
-                    return Field.Machine_Country;
-
-                #endregion
-
-                #region SoftwareList
-
-                case "supported":
-                    return Field.Machine_Supported;
-
-                #endregion
-
-                #endregion // Machine
-
-                #region DatItem
-
-                #region Common
-
-                case "itemname":
-                case "item-name":
-                case "name":
-                    return Field.DatItem_Name;
-                case "itemtype":
-                case "item-type":
-                case "type":
-                    return Field.DatItem_Type;
-
-                #endregion
-
-                #region AttractMode
-
-                case "altname":
-                case "alt name":
-                case "alt-name":
-                case "altromname":
-                case "alt romname":
-                case "alt-romname":
-                    return Field.DatItem_AltName;
-                case "alttitle":
-                case "alt title":
-                case "alt-title":
-                case "altromtitle":
-                case "alt romtitle":
-                case "alt-romtitle":
-                    return Field.DatItem_AltTitle;
-
-                #endregion
-
-                #region OpenMSX
-
-                case "original":
-                    return Field.DatItem_Original;
-                case "subtype":
-                case "sub type":
-                case "sub-type":
-                case "openmsx_subtype":
-                    return Field.DatItem_OpenMSXSubType;
-                case "openmsx_type":
-                    return Field.DatItem_OpenMSXType;
-                case "remark":
-                    return Field.DatItem_Remark;
-                case "boot":
-                    return Field.DatItem_Boot;
-
-                #endregion
-
-                #region SoftwareList
-
-                case "partname":
-                case "part name":
-                case "part-name":
-                    return Field.DatItem_Part_Name;
-                case "partinterface":
-                case "part interface":
-                case "part-interface":
-                    return Field.DatItem_Part_Interface;
-                case "areaname":
-                case "area name":
-                case "area-name":
-                    return Field.DatItem_AreaName;
-                case "areasize":
-                case "area size":
-                case "area-size":
-                    return Field.DatItem_AreaSize;
-                case "areawidth":
-                case "area width":
-                case "area-width":
-                    return Field.DatItem_AreaWidth;
-                case "areaendinanness":
-                case "area endianness":
-                case "area-endianness":
-                    return Field.DatItem_AreaEndianness;
-                case "value":
-                    return Field.DatItem_Value;
-                case "loadflag":
-                case "load flag":
-                case "load-flag":
-                    return Field.DatItem_LoadFlag;
-
-                #endregion
-
-                #region Item-Specific
-
-                #region Actionable
-
-                // Rom
-                case "bios":
-                    return Field.DatItem_Bios;
-
-                case "equal":
-                case "greater":
-                case "less":
-                case "size":
-                    return Field.DatItem_Size;
-
-                case "crc":
-                case "crc32":
-                    return Field.DatItem_CRC;
-
-                case "md5":
-                case "md5_hash":
-                    return Field.DatItem_MD5;
-
-#if NET_FRAMEWORK
-                case "ripemd160":
-                case "ripemd160_hash":
-                    return Field.DatItem_RIPEMD160;
-#endif
-
-                case "sha1":
-                case "sha_1":
-                case "sha1hash":
-                case "sha1_hash":
-                case "sha_1hash":
-                case "sha_1_hash":
-                    return Field.DatItem_SHA1;
-
-                case "sha256":
-                case "sha_256":
-                case "sha256hash":
-                case "sha256_hash":
-                case "sha_256hash":
-                case "sha_256_hash":
-                    return Field.DatItem_SHA256;
-
-                case "sha384":
-                case "sha_384":
-                case "sha384hash":
-                case "sha384_hash":
-                case "sha_384hash":
-                case "sha_384_hash":
-                    return Field.DatItem_SHA384;
-
-                case "sha512":
-                case "sha_512":
-                case "sha512hash":
-                case "sha512_hash":
-                case "sha_512hash":
-                case "sha_512_hash":
-                    return Field.DatItem_SHA512;
-
-                case "spamsum":
-                case "spam_sum":
-                    return Field.DatItem_SpamSum;
-
-                case "merge":
-                case "mergetag":
-                case "merge_tag":
-                    return Field.DatItem_Merge;
-
-                case "region":
-                    return Field.DatItem_Region;
-
-                case "offset":
-                    return Field.DatItem_Offset;
-
-                case "date":
-                    return Field.DatItem_Date;
-
-                case "itemtatus":
-                case "item-status":
-                case "status":
-                    return Field.DatItem_Status;
-
-                case "optional":
-                    return Field.DatItem_Optional;
-
-                case "inverted":
-                    return Field.DatItem_Inverted;
-
-                // Disk
-                case "index":
-                    return Field.DatItem_Index;
-
-                case "writable":
-                    return Field.DatItem_Writable;
-
-                #endregion
-
-                #region Auxiliary
-
-                // Adjuster
-                case "default":
-                    return Field.DatItem_Default;
-
-                case "condition_tag":
-                    return Field.DatItem_Condition_Tag;
-
-                case "condition_mask":
-                    return Field.DatItem_Condition_Mask;
-
-                case "condition_relation":
-                    return Field.DatItem_Condition_Relation;
-
-                case "condition_value":
-                    return Field.DatItem_Condition_Value;
-
-                // BiosSet
-                case "biosdescription":
-                case "bios-description":
-                case "biossetdescription":
-                case "biosset-description":
-                case "bios-set-description":
-                    return Field.DatItem_Description;
-
-                // Chip
-                case "tag":
-                    return Field.DatItem_Tag;
-
-                case "chiptype":
-                case "chip_type":
-                    return Field.DatItem_ChipType;
-
-                case "clock":
-                    return Field.DatItem_Clock;
-                    
-                // Ram Option
-                case "content":
-                    return Field.DatItem_Content;
-
-                // Release
-                case "language":
-                    return Field.DatItem_Language;
-
-                #endregion
-
-                #endregion // Item-Specific
-
-                #endregion
-
-                default:
-                    return Field.NULL;
-            }
         }
 
         /// <summary>
@@ -2293,24 +858,6 @@ namespace SabreTools.Core.Tools
         /// <returns>ItemStatus value corresponding to the string</returns>
         public static ItemStatus AsItemStatus(this string status)
         {
-#if NET_FRAMEWORK
-            switch (status?.ToLowerInvariant())
-            {
-                case "good":
-                    return ItemStatus.Good;
-                case "baddump":
-                    return ItemStatus.BadDump;
-                case "nodump":
-                case "yes":
-                    return ItemStatus.Nodump;
-                case "verified":
-                    return ItemStatus.Verified;
-                case "none":
-                case "no":
-                default:
-                    return ItemStatus.None;
-            }
-#else
             return status?.ToLowerInvariant() switch
             {
                 "good" => ItemStatus.Good,
@@ -2322,7 +869,6 @@ namespace SabreTools.Core.Tools
                 "no" => ItemStatus.None,
                 _ => ItemStatus.None,
             };
-#endif
         }
 
         /// <summary>
@@ -2332,88 +878,6 @@ namespace SabreTools.Core.Tools
         /// <returns>ItemType? value corresponding to the string</returns>
         public static ItemType? AsItemType(this string itemType)
         {
-#if NET_FRAMEWORK
-            switch (itemType?.ToLowerInvariant())
-            {
-                case "adjuster":
-                    return ItemType.Adjuster;
-                case "analog":
-                    return ItemType.Analog;
-                case "archive":
-                    return ItemType.Archive;
-                case "biosset":
-                    return ItemType.BiosSet;
-                case "blank":
-                    return ItemType.Blank;
-                case "chip":
-                    return ItemType.Chip;
-                case "condition":
-                    return ItemType.Condition;
-                case "configuration":
-                    return ItemType.Configuration;
-                case "control":
-                    return ItemType.Control;
-                case "dataarea":
-                    return ItemType.DataArea;
-                case "device":
-                    return ItemType.Device;
-                case "device_ref":
-                    return ItemType.DeviceReference;
-                case "dipswitch":
-                    return ItemType.DipSwitch;
-                case "disk":
-                    return ItemType.Disk;
-                case "diskarea":
-                    return ItemType.DiskArea;
-                case "display":
-                    return ItemType.Display;
-                case "driver":
-                    return ItemType.Driver;
-                case "extension":
-                    return ItemType.Extension;
-                case "feature":
-                    return ItemType.Feature;
-                case "info":
-                    return ItemType.Info;
-                case "input":
-                    return ItemType.Input;
-                case "instance":
-                    return ItemType.Instance;
-                case "location":
-                    return ItemType.Location;
-                case "media":
-                    return ItemType.Media;
-                case "part":
-                    return ItemType.Part;
-                case "partfeature":
-                case "part_feature":
-                    return ItemType.PartFeature;
-                case "port":
-                    return ItemType.Port;
-                case "ramoption":
-                    return ItemType.RamOption;
-                case "release":
-                    return ItemType.Release;
-                case "rom":
-                    return ItemType.Rom;
-                case "sample":
-                    return ItemType.Sample;
-                case "setting":
-                    return ItemType.Setting;
-                case "sharedfeat":
-                    return ItemType.SharedFeature;
-                case "slot":
-                    return ItemType.Slot;
-                case "slotoption":
-                    return ItemType.SlotOption;
-                case "softwarelist":
-                    return ItemType.SoftwareList;
-                case "sound":
-                    return ItemType.Sound;
-                default:
-                    return null;
-            }
-#else
             return itemType?.ToLowerInvariant() switch
             {
                 "adjuster" => ItemType.Adjuster,
@@ -2456,7 +920,6 @@ namespace SabreTools.Core.Tools
                 "sound" => ItemType.Sound,
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -2466,41 +929,6 @@ namespace SabreTools.Core.Tools
         /// <returns>LoadFlag value corresponding to the string</returns>
         public static LoadFlag AsLoadFlag(this string loadFlag)
         {
-#if NET_FRAMEWORK
-            switch (loadFlag?.ToLowerInvariant())
-            {
-                case "load16_byte":
-                    return LoadFlag.Load16Byte;
-                case "load16_word":
-                    return LoadFlag.Load16Word;
-                case "load16_word_swap":
-                    return LoadFlag.Load16WordSwap;
-                case "load32_byte":
-                    return LoadFlag.Load32Byte;
-                case "load32_word":
-                    return LoadFlag.Load32Word;
-                case "load32_word_swap":
-                    return LoadFlag.Load32WordSwap;
-                case "load32_dword":
-                    return LoadFlag.Load32DWord;
-                case "load64_word":
-                    return LoadFlag.Load64Word;
-                case "load64_word_swap":
-                    return LoadFlag.Load64WordSwap;
-                case "reload":
-                    return LoadFlag.Reload;
-                case "fill":
-                    return LoadFlag.Fill;
-                case "continue":
-                    return LoadFlag.Continue;
-                case "reload_plain":
-                    return LoadFlag.ReloadPlain;
-                case "ignore":
-                    return LoadFlag.Ignore;
-                default:
-                    return LoadFlag.NULL;
-            }
-#else
             return loadFlag?.ToLowerInvariant() switch
             {
                 "load16_byte" => LoadFlag.Load16Byte,
@@ -2519,7 +947,6 @@ namespace SabreTools.Core.Tools
                 "ignore" => LoadFlag.Ignore,
                 _ => LoadFlag.NULL,
             };
-#endif
         }
 
          /// <summary>
@@ -2717,22 +1144,6 @@ namespace SabreTools.Core.Tools
         /// <returns>MachineType value corresponding to the string</returns>
         public static MachineType AsMachineType(this string gametype)
         {
-#if NET_FRAMEWORK
-            switch (gametype?.ToLowerInvariant())
-            {
-                case "bios":
-                    return MachineType.Bios;
-                case "dev":
-                case "device":
-                    return MachineType.Device;
-                case "mech":
-                case "mechanical":
-                    return MachineType.Mechanical;
-                case "none":
-                default:
-                    return MachineType.NULL;
-            }
-#else
             return gametype?.ToLowerInvariant() switch
             {
                 "bios" => MachineType.Bios,
@@ -2743,7 +1154,6 @@ namespace SabreTools.Core.Tools
                 "none" => MachineType.NULL,
                 _ => MachineType.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -2753,25 +1163,6 @@ namespace SabreTools.Core.Tools
         /// <returns>MergingFlag value corresponding to the string</returns>
         public static MergingFlag AsMergingFlag(this string merging)
         {
-#if NET_FRAMEWORK
-            switch (merging?.ToLowerInvariant())
-            {
-                case "split":
-                    return MergingFlag.Split;
-                case "merged":
-                    return MergingFlag.Merged;
-                case "nonmerged":
-                case "unmerged":
-                    return MergingFlag.NonMerged;
-                case "full":
-                    return MergingFlag.Full;
-                case "device":
-                    return MergingFlag.Device;
-                case "none":
-                default:
-                    return MergingFlag.None;
-            }
-#else
             return merging?.ToLowerInvariant() switch
             {
                 "split" => MergingFlag.Split,
@@ -2782,7 +1173,6 @@ namespace SabreTools.Core.Tools
                 "none" => MergingFlag.None,
                 _ => MergingFlag.None,
             };
-#endif
         }
 
         /// <summary>
@@ -2792,20 +1182,6 @@ namespace SabreTools.Core.Tools
         /// <returns>NodumpFlag value corresponding to the string</returns>
         public static NodumpFlag AsNodumpFlag(this string nodump)
         {
-#if NET_FRAMEWORK
-            switch (nodump?.ToLowerInvariant())
-            {
-                case "obsolete":
-                    return NodumpFlag.Obsolete;
-                case "required":
-                    return NodumpFlag.Required;
-                case "ignore":
-                    return NodumpFlag.Ignore;
-                case "none":
-                default:
-                    return NodumpFlag.None;
-            }
-#else
             return nodump?.ToLowerInvariant() switch
             {
                 "obsolete" => NodumpFlag.Obsolete,
@@ -2814,7 +1190,6 @@ namespace SabreTools.Core.Tools
                 "none" => NodumpFlag.None,
                 _ => NodumpFlag.None,
             };
-#endif
         }
 
         /// <summary>
@@ -2824,19 +1199,6 @@ namespace SabreTools.Core.Tools
         /// <returns>OpenMSXSubType value corresponding to the string</returns>
         public static OpenMSXSubType AsOpenMSXSubType(this string itemType)
         {
-#if NET_FRAMEWORK
-            switch (itemType?.ToLowerInvariant())
-            {
-                case "rom":
-                    return OpenMSXSubType.Rom;
-                case "megarom":
-                    return OpenMSXSubType.MegaRom;
-                case "sccpluscart":
-                    return OpenMSXSubType.SCCPlusCart;
-                default:
-                    return OpenMSXSubType.NULL;
-            }
-#else
             return itemType?.ToLowerInvariant() switch
             {
                 "rom" => OpenMSXSubType.Rom,
@@ -2844,7 +1206,6 @@ namespace SabreTools.Core.Tools
                 "sccpluscart" => OpenMSXSubType.SCCPlusCart,
                 _ => OpenMSXSubType.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -2854,24 +1215,6 @@ namespace SabreTools.Core.Tools
         /// <returns>PackingFlag value corresponding to the string</returns>
         public static PackingFlag AsPackingFlag(this string packing)
         {
-#if NET_FRAMEWORK
-            switch (packing?.ToLowerInvariant())
-            {
-                case "yes":
-                case "zip":
-                    return PackingFlag.Zip;
-                case "no":
-                case "unzip":
-                    return PackingFlag.Unzip;
-                case "partial":
-                    return PackingFlag.Partial;
-                case "flat":
-                    return PackingFlag.Flat;
-                case "none":
-                default:
-                    return PackingFlag.None;
-            }
-#else
             return packing?.ToLowerInvariant() switch
             {
                 "yes" => PackingFlag.Zip,
@@ -2883,7 +1226,6 @@ namespace SabreTools.Core.Tools
                 "none" => PackingFlag.None,
                 _ => PackingFlag.None,
             };
-#endif
         }
 
         /// <summary>
@@ -2893,25 +1235,6 @@ namespace SabreTools.Core.Tools
         /// <returns>Relation value corresponding to the string</returns>
         public static Relation AsRelation(this string relation)
         {
-#if NET_FRAMEWORK
-            switch (relation?.ToLowerInvariant())
-            {
-                case "eq":
-                    return Relation.Equal;
-                case "ne":
-                    return Relation.NotEqual;
-                case "gt":
-                    return Relation.GreaterThan;
-                case "le":
-                    return Relation.LessThanOrEqual;
-                case "lt":
-                    return Relation.LessThan;
-                case "ge":
-                    return Relation.GreaterThanOrEqual;
-                default:
-                    return Relation.NULL;
-            }
-#else
             return relation?.ToLowerInvariant() switch
             {
                 "eq" => Relation.Equal,
@@ -2922,7 +1245,6 @@ namespace SabreTools.Core.Tools
                 "ge" => Relation.GreaterThanOrEqual,
                 _ => Relation.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -2932,19 +1254,6 @@ namespace SabreTools.Core.Tools
         /// <returns>Runnable value corresponding to the string</returns>
         public static Runnable AsRunnable(this string runnable)
         {
-#if NET_FRAMEWORK
-            switch (runnable?.ToLowerInvariant())
-            {
-                case "no":
-                    return Runnable.No;
-                case "partial":
-                    return Runnable.Partial;
-                case "yes":
-                    return Runnable.Yes;
-                default:
-                    return Runnable.NULL;
-            }
-#else
             return runnable?.ToLowerInvariant() switch
             {
                 "no" => Runnable.No,
@@ -2952,7 +1261,6 @@ namespace SabreTools.Core.Tools
                 "yes" => Runnable.Yes,
                 _ => Runnable.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -2962,18 +1270,6 @@ namespace SabreTools.Core.Tools
         /// <returns>SoftwareListStatus value corresponding to the string</returns>
         public static SoftwareListStatus AsSoftwareListStatus(this string status)
         {
-#if NET_FRAMEWORK
-            switch (status?.ToLowerInvariant())
-            {
-                case "original":
-                    return SoftwareListStatus.Original;
-                case "compatible":
-                    return SoftwareListStatus.Compatible;
-                case "none":
-                default:
-                    return SoftwareListStatus.NULL;
-            }
-#else
             return status?.ToLowerInvariant() switch
             {
                 "original" => SoftwareListStatus.Original,
@@ -2981,7 +1277,6 @@ namespace SabreTools.Core.Tools
                 "none" => SoftwareListStatus.NULL,
                 _ => SoftwareListStatus.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -2991,21 +1286,6 @@ namespace SabreTools.Core.Tools
         /// <returns>Supported value corresponding to the string</returns>
         public static Supported AsSupported(this string supported)
         {
-#if NET_FRAMEWORK
-            switch (supported?.ToLowerInvariant())
-            {
-                case "no":
-                case "unsupported":
-                    return Supported.No;
-                case "partial":
-                    return Supported.Partial;
-                case "yes":
-                case "supported":
-                    return Supported.Yes;
-                default:
-                    return Supported.NULL;
-            }
-#else
             return supported?.ToLowerInvariant() switch
             {
                 "no" => Supported.No,
@@ -3015,7 +1295,6 @@ namespace SabreTools.Core.Tools
                 "supported" => Supported.Yes,
                 _ => Supported.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -3025,19 +1304,6 @@ namespace SabreTools.Core.Tools
         /// <returns>SupportStatus value corresponding to the string</returns>
         public static SupportStatus AsSupportStatus(this string supportStatus)
         {
-#if NET_FRAMEWORK
-            switch (supportStatus?.ToLowerInvariant())
-            {
-                case "good":
-                    return SupportStatus.Good;
-                case "imperfect":
-                    return SupportStatus.Imperfect;
-                case "preliminary":
-                    return SupportStatus.Preliminary;
-                default:
-                    return SupportStatus.NULL;
-            }
-#else
             return supportStatus?.ToLowerInvariant() switch
             {
                 "good" => SupportStatus.Good,
@@ -3045,7 +1311,6 @@ namespace SabreTools.Core.Tools
                 "preliminary" => SupportStatus.Preliminary,
                 _ => SupportStatus.NULL,
             };
-#endif
         }
 
         /// <summary>
@@ -3055,19 +1320,6 @@ namespace SabreTools.Core.Tools
         /// <returns>bool? corresponding to the string</returns>
         public static bool? AsYesNo(this string yesno)
         {
-#if NET_FRAMEWORK
-            switch (yesno?.ToLowerInvariant())
-            {
-                case "yes":
-                case "true":
-                    return true;
-                case "no":
-                case "false":
-                    return false;
-                default:
-                    return null;
-            }
-#else
             return yesno?.ToLowerInvariant() switch
             {
                 "yes" => true,
@@ -3076,7 +1328,6 @@ namespace SabreTools.Core.Tools
                 "false" => false,
                 _ => null,
             };
-#endif
         }
 
         #endregion
@@ -3090,24 +1341,12 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the ChipType</returns>
         public static string FromChipType(this ChipType chipType)
         {
-#if NET_FRAMEWORK
-            switch (chipType)
-            {
-                case ChipType.CPU:
-                    return "cpu";
-                case ChipType.Audio:
-                    return "audio";
-                default:
-                    return null;
-            }
-#else
             return chipType switch
             {
                 ChipType.CPU => "cpu",
                 ChipType.Audio => "audio",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3117,43 +1356,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the ControlType</returns>
         public static string FromControlType(this ControlType controlType)
         {
-#if NET_FRAMEWORK
-            switch (controlType)
-            {
-                case ControlType.Joy:
-                    return "joy";
-                case ControlType.Stick:
-                    return "stick";
-                case ControlType.Paddle:
-                    return "paddle";
-                case ControlType.Pedal:
-                    return "pedal";
-                case ControlType.Lightgun:
-                    return "lightgun";
-                case ControlType.Positional:
-                    return "positional";
-                case ControlType.Dial:
-                    return "dial";
-                case ControlType.Trackball:
-                    return "trackball";
-                case ControlType.Mouse:
-                    return "mouse";
-                case ControlType.OnlyButtons:
-                    return "only_buttons";
-                case ControlType.Keypad:
-                    return "keypad";
-                case ControlType.Keyboard:
-                    return "keyboard";
-                case ControlType.Mahjong:
-                    return "mahjong";
-                case ControlType.Hanafuda:
-                    return "hanafuda";
-                case ControlType.Gambling:
-                    return "gambling";
-                default:
-                    return null;
-            }
-#else
             return controlType switch
             {
                 ControlType.Joy => "joy",
@@ -3173,7 +1375,6 @@ namespace SabreTools.Core.Tools
                 ControlType.Gambling => "gambling",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3183,55 +1384,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the DeviceType</returns>
         public static string FromDeviceType(this DeviceType deviceType)
         {
-#if NET_FRAMEWORK
-            switch (deviceType)
-            {
-                case DeviceType.Unknown:
-                    return "unknown";
-                case DeviceType.Cartridge:
-                    return "cartridge";
-                case DeviceType.FloppyDisk:
-                    return "floppydisk";
-                case DeviceType.HardDisk:
-                    return "harddisk";
-                case DeviceType.Cylinder:
-                    return "cylinder";
-                case DeviceType.Cassette:
-                    return "cassette";
-                case DeviceType.PunchCard:
-                    return "punchcard";
-                case DeviceType.PunchTape:
-                    return "punchtape";
-                case DeviceType.Printout:
-                    return "printout";
-                case DeviceType.Serial:
-                    return "serial";
-                case DeviceType.Parallel:
-                    return "parallel";
-                case DeviceType.Snapshot:
-                    return "snapshot";
-                case DeviceType.QuickLoad:
-                    return "quickload";
-                case DeviceType.MemCard:
-                    return "memcard";
-                case DeviceType.CDROM:
-                    return "cdrom";
-                case DeviceType.MagTape:
-                    return "magtape";
-                case DeviceType.ROMImage:
-                    return "romimage";
-                case DeviceType.MIDIIn:
-                    return "midiin";
-                case DeviceType.MIDIOut:
-                    return "midiout";
-                case DeviceType.Picture:
-                    return "picture";
-                case DeviceType.VidFile:
-                    return "vidfile";
-                default:
-                    return null;
-            }
-#else
             return deviceType switch
             {
                 DeviceType.Unknown => "unknown",
@@ -3257,7 +1409,6 @@ namespace SabreTools.Core.Tools
                 DeviceType.VidFile => "vidfile",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3267,23 +1418,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the DisplayType</returns>
         public static string FromDisplayType(this DisplayType displayType)
         {
-#if NET_FRAMEWORK
-            switch (displayType)
-            {
-                case DisplayType.Raster:
-                    return "raster";
-                case DisplayType.Vector:
-                    return "vector";
-                case DisplayType.LCD:
-                    return "lcd";
-                case DisplayType.SVG:
-                    return "svg";
-                case DisplayType.Unknown:
-                    return "unknown";
-                default:
-                    return null;
-            }
-#else
             return displayType switch
             {
                 DisplayType.Raster => "raster",
@@ -3293,7 +1427,6 @@ namespace SabreTools.Core.Tools
                 DisplayType.Unknown => "unknown",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3303,24 +1436,12 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the Endianness</returns>
         public static string FromEndianness(this Endianness endianness)
         {
-#if NET_FRAMEWORK
-            switch (endianness)
-            {
-                case Endianness.Big:
-                    return "big";
-                case Endianness.Little:
-                    return "little";
-                default:
-                    return null;
-            }
-#else
             return endianness switch
             {
                 Endianness.Big => "big",
                 Endianness.Little => "little",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3330,24 +1451,12 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the FeatureStatus</returns>
         public static string FromFeatureStatus(this FeatureStatus featureStatus)
         {
-#if NET_FRAMEWORK
-            switch (featureStatus)
-            {
-                case FeatureStatus.Unemulated:
-                    return "unemulated";
-                case FeatureStatus.Imperfect:
-                    return "imperfect";
-                default:
-                    return null;
-            }
-#else
             return featureStatus switch
             {
                 FeatureStatus.Unemulated => "unemulated",
                 FeatureStatus.Imperfect => "imperfect",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3357,41 +1466,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the FeatureType</returns>
         public static string FromFeatureType(this FeatureType featureType)
         {
-#if NET_FRAMEWORK
-            switch (featureType)
-            {
-                case FeatureType.Protection:
-                    return "protection";
-                case FeatureType.Palette:
-                    return "palette";
-                case FeatureType.Graphics:
-                    return "graphics";
-                case FeatureType.Sound:
-                    return "sound";
-                case FeatureType.Controls:
-                    return "controls";
-                case FeatureType.Keyboard:
-                    return "keyboard";
-                case FeatureType.Mouse:
-                    return "mouse";
-                case FeatureType.Microphone:
-                    return "microphone";
-                case FeatureType.Camera:
-                    return "camera";
-                case FeatureType.Disk:
-                    return "disk";
-                case FeatureType.Printer:
-                    return "printer";
-                case FeatureType.Lan:
-                    return "lan";
-                case FeatureType.Wan:
-                    return "wan";
-                case FeatureType.Timing:
-                    return "timing";
-                default:
-                    return null;
-            }
-#else
             return featureType switch
             {
                 FeatureType.Protection => "protection",
@@ -3410,7 +1484,6 @@ namespace SabreTools.Core.Tools
                 FeatureType.Timing => "timing",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3421,21 +1494,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the ItemStatus</returns>
         public static string FromItemStatus(this ItemStatus status, bool yesno)
         {
-#if NET_FRAMEWORK
-            switch (status)
-            {
-                case ItemStatus.Good:
-                    return "good";
-                case ItemStatus.BadDump:
-                    return "baddump";
-                case ItemStatus.Nodump:
-                    return yesno ? "yes" : "nodump";
-                case ItemStatus.Verified:
-                    return "verified";
-                default:
-                    return null;
-            }
-#else
             return status switch
             {
                 ItemStatus.Good => "good",
@@ -3444,7 +1502,6 @@ namespace SabreTools.Core.Tools
                 ItemStatus.Verified => "verified",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3454,41 +1511,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the LoadFlag</returns>
         public static string FromLoadFlag(this LoadFlag loadFlag)
         {
-#if NET_FRAMEWORK
-            switch (loadFlag)
-            {
-                case LoadFlag.Load16Byte:
-                    return "load16_byte";
-                case LoadFlag.Load16Word:
-                    return "load16_word";
-                case LoadFlag.Load16WordSwap:
-                    return "load16_word_swap";
-                case LoadFlag.Load32Byte:
-                    return "load32_byte";
-                case LoadFlag.Load32Word:
-                    return "load32_word";
-                case LoadFlag.Load32WordSwap:
-                    return "load32_word_swap";
-                case LoadFlag.Load32DWord:
-                    return "load32_dword";
-                case LoadFlag.Load64Word:
-                    return "load64_word";
-                case LoadFlag.Load64WordSwap:
-                    return "load64_word_swap";
-                case LoadFlag.Reload:
-                    return "reload";
-                case LoadFlag.Fill:
-                    return "fill";
-                case LoadFlag.Continue:
-                    return "continue";
-                case LoadFlag.ReloadPlain:
-                    return "reload_plain";
-                case LoadFlag.Ignore:
-                    return "sccpluscart";
-                default:
-                    return null;
-            }
-#else
             return loadFlag switch
             {
                 LoadFlag.Load16Byte => "load16_byte",
@@ -3507,7 +1529,6 @@ namespace SabreTools.Core.Tools
                 LoadFlag.Ignore => "ignore",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3517,87 +1538,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the ItemType?</returns>
         public static string FromItemType(this ItemType? itemType)
         {
-#if NET_FRAMEWORK
-            switch (itemType)
-            {
-                case ItemType.Adjuster:
-                    return "adjuster";
-                case ItemType.Analog:
-                    return "analog";
-                case ItemType.Archive:
-                    return "archive";
-                case ItemType.BiosSet:
-                    return "biosset";
-                case ItemType.Blank:
-                    return "blank";
-                case ItemType.Chip:
-                    return "chip";
-                case ItemType.Condition:
-                    return "condition";
-                case ItemType.Configuration:
-                    return "configuration";
-                case ItemType.Control:
-                    return "control";
-                case ItemType.DataArea:
-                    return "dataarea";
-                case ItemType.Device:
-                    return "device";
-                case ItemType.DeviceReference:
-                    return "device_ref";
-                case ItemType.DipSwitch:
-                    return "dipswitch";
-                case ItemType.Disk:
-                    return "disk";
-                case ItemType.DiskArea:
-                    return "diskarea";
-                case ItemType.Display:
-                    return "display";
-                case ItemType.Driver:
-                    return "driver";
-                case ItemType.Extension:
-                    return "extension";
-                case ItemType.Feature:
-                    return "feature";
-                case ItemType.Info:
-                    return "info";
-                case ItemType.Input:
-                    return "input";
-                case ItemType.Instance:
-                    return "instance";
-                case ItemType.Location:
-                    return "location";
-                case ItemType.Media:
-                    return "media";
-                case ItemType.Part:
-                    return "part";
-                case ItemType.PartFeature:
-                    return "part_feature";
-                case ItemType.Port:
-                    return "port";
-                case ItemType.RamOption:
-                    return "ramoption";
-                case ItemType.Release:
-                    return "release";
-                case ItemType.Rom:
-                    return "rom";
-                case ItemType.Sample:
-                    return "sample";
-                case ItemType.Setting:
-                    return "setting";
-                case ItemType.SharedFeature:
-                    return "sharedfeat";
-                case ItemType.Slot:
-                    return "slot";
-                case ItemType.SlotOption:
-                    return "slotoption";
-                case ItemType.SoftwareList:
-                    return "softwarelist";
-                case ItemType.Sound:
-                    return "sound";
-                default:
-                    return null;
-            }
-#else
             return itemType switch
             {
                 ItemType.Adjuster => "adjuster",
@@ -3639,7 +1579,6 @@ namespace SabreTools.Core.Tools
                 ItemType.Sound => "sound",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3650,19 +1589,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the MachineType</returns>
         public static string FromMachineType(this MachineType gametype, bool old)
         {
-#if NET_FRAMEWORK
-            switch (gametype)
-            {
-                case MachineType.Bios:
-                    return "bios";
-                case MachineType.Device:
-                    return old ? "dev" : "device";
-                case MachineType.Mechanical:
-                    return old ? "mech" : "mechanical";
-                default:
-                    return null;
-            }
-#else
             return gametype switch
             {
                 MachineType.Bios => "bios",
@@ -3670,7 +1596,6 @@ namespace SabreTools.Core.Tools
                 MachineType.Mechanical => old ? "mech" : "mechanical",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3681,23 +1606,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the MergingFlag</returns>
         public static string FromMergingFlag(this MergingFlag merging, bool romCenter)
         {
-#if NET_FRAMEWORK
-            switch (merging)
-            {
-                case MergingFlag.Split:
-                    return "split";
-                case MergingFlag.Merged:
-                    return "merged";
-                case MergingFlag.NonMerged:
-                    return romCenter ? "unmerged" : "nonmerged";
-                case MergingFlag.Full:
-                    return "full";
-                case MergingFlag.Device:
-                    return "device";
-                default:
-                    return null;
-            }
-#else
             return merging switch
             {
                 MergingFlag.Split => "split",
@@ -3707,7 +1615,6 @@ namespace SabreTools.Core.Tools
                 MergingFlag.Device => "device",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3717,19 +1624,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the NodumpFlag</returns>
         public static string FromNodumpFlag(this NodumpFlag nodump)
         {
-#if NET_FRAMEWORK
-            switch (nodump)
-            {
-                case NodumpFlag.Obsolete:
-                    return "obsolete";
-                case NodumpFlag.Required:
-                    return "required";
-                case NodumpFlag.Ignore:
-                    return "ignore";
-                default:
-                    return null;
-            }
-#else
             return nodump switch
             {
                 NodumpFlag.Obsolete => "obsolete",
@@ -3737,7 +1631,6 @@ namespace SabreTools.Core.Tools
                 NodumpFlag.Ignore => "ignore",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3747,19 +1640,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the OpenMSXSubType</returns>
         public static string FromOpenMSXSubType(this OpenMSXSubType itemType)
         {
-#if NET_FRAMEWORK
-            switch (itemType)
-            {
-                case OpenMSXSubType.Rom:
-                    return "rom";
-                case OpenMSXSubType.MegaRom:
-                    return "megarom";
-                case OpenMSXSubType.SCCPlusCart:
-                    return "sccpluscart";
-                default:
-                    return null;
-            }
-#else
             return itemType switch
             {
                 OpenMSXSubType.Rom => "rom",
@@ -3767,7 +1647,6 @@ namespace SabreTools.Core.Tools
                 OpenMSXSubType.SCCPlusCart => "sccpluscart",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3778,21 +1657,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the PackingFlag</returns>
         public static string FromPackingFlag(this PackingFlag packing, bool yesno)
         {
-#if NET_FRAMEWORK
-            switch (packing)
-            {
-                case PackingFlag.Zip:
-                    return yesno ? "yes" : "zip";
-                case PackingFlag.Unzip:
-                    return yesno ? "no" : "unzip";
-                case PackingFlag.Partial:
-                    return "partial";
-                case PackingFlag.Flat:
-                    return "flat";
-                default:
-                    return null;
-            }
-#else
             return packing switch
             {
                 PackingFlag.Zip => yesno ? "yes" : "zip",
@@ -3801,7 +1665,6 @@ namespace SabreTools.Core.Tools
                 PackingFlag.Flat => "flat",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3811,25 +1674,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the Relation</returns>
         public static string FromRelation(this Relation relation)
         {
-#if NET_FRAMEWORK
-            switch (relation)
-            {
-                case Relation.Equal:
-                    return "eq";
-                case Relation.NotEqual:
-                    return "ne";
-                case Relation.GreaterThan:
-                    return "gt";
-                case Relation.LessThanOrEqual:
-                    return "le";
-                case Relation.LessThan:
-                    return "lt";
-                case Relation.GreaterThanOrEqual:
-                    return "ge";
-                default:
-                    return null;
-            }
-#else
             return relation switch
             {
                 Relation.Equal => "eq",
@@ -3840,7 +1684,6 @@ namespace SabreTools.Core.Tools
                 Relation.GreaterThanOrEqual => "ge",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3850,19 +1693,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the Runnable</returns>
         public static string FromRunnable(this Runnable runnable)
         {
-#if NET_FRAMEWORK
-            switch (runnable)
-            {
-                case Runnable.No:
-                    return "no";
-                case Runnable.Partial:
-                    return "partial";
-                case Runnable.Yes:
-                    return "yes";
-                default:
-                    return null;
-            }
-#else
             return runnable switch
             {
                 Runnable.No => "no",
@@ -3870,7 +1700,6 @@ namespace SabreTools.Core.Tools
                 Runnable.Yes => "yes",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3880,24 +1709,12 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the SoftwareListStatus</returns>
         public static string FromSoftwareListStatus(this SoftwareListStatus status)
         {
-#if NET_FRAMEWORK
-            switch (status)
-            {
-                case SoftwareListStatus.Original:
-                    return "original";
-                case SoftwareListStatus.Compatible:
-                    return "compatible";
-                default:
-                    return null;
-            }
-#else
             return status switch
             {
                 SoftwareListStatus.Original => "original",
                 SoftwareListStatus.Compatible => "compatible",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3908,19 +1725,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the Supported</returns>
         public static string FromSupported(this Supported supported, bool verbose)
         {
-#if NET_FRAMEWORK
-            switch (supported)
-            {
-                case Supported.No:
-                    return verbose ? "unsupported" : "no";
-                case Supported.Partial:
-                    return "partial";
-                case Supported.Yes:
-                    return verbose ? "supported" : "yes";
-                default:
-                    return null;
-            }
-#else
             return supported switch
             {
                 Supported.No => "no",
@@ -3928,7 +1732,6 @@ namespace SabreTools.Core.Tools
                 Supported.Yes => "yes",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3938,19 +1741,6 @@ namespace SabreTools.Core.Tools
         /// <returns>String value corresponding to the SupportStatus</returns>
         public static string FromSupportStatus(this SupportStatus supportStatus)
         {
-#if NET_FRAMEWORK
-            switch (supportStatus)
-            {
-                case SupportStatus.Good:
-                    return "good";
-                case SupportStatus.Imperfect:
-                    return "imperfect";
-                case SupportStatus.Preliminary:
-                    return "preliminary";
-                default:
-                    return null;
-            }
-#else
             return supportStatus switch
             {
                 SupportStatus.Good => "good",
@@ -3958,7 +1748,6 @@ namespace SabreTools.Core.Tools
                 SupportStatus.Preliminary => "preliminary",
                 _ => null,
             };
-#endif
         }
 
         /// <summary>
@@ -3968,24 +1757,12 @@ namespace SabreTools.Core.Tools
         /// <returns>String corresponding to the bool?</returns>
         public static string FromYesNo(this bool? yesno)
         {
-#if NET_FRAMEWORK
-            switch (yesno)
-            {
-                case true:
-                    return "yes";
-                case false:
-                    return "no";
-                default:
-                    return null;
-            }
-#else
             return yesno switch
             {
                 true => "yes",
                 false => "no",
                 _ => null,
             };
-#endif
         }
 
         #endregion

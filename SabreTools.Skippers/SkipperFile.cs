@@ -336,29 +336,13 @@ namespace SabreTools.Skippers
                 if (xtr.GetAttribute("operator") != null)
                 {
                     string oper = xtr.GetAttribute("operator");
-#if NET_FRAMEWORK
-                    switch (oper.ToLowerInvariant())
+                    test.Operator = oper.ToLowerInvariant() switch
                     {
-                        case "less":
-                            test.Operator = HeaderSkipTestFileOperator.Less;
-                            break;
-                        case "greater":
-                            test.Operator = HeaderSkipTestFileOperator.Greater;
-                            break;
-                        case "equal":
-                        default:
-                            test.Operator = HeaderSkipTestFileOperator.Equal;
-                            break;
-                    }
-#else
-                            test.Operator = oper.ToLowerInvariant() switch
-                            {
-                                "less" => HeaderSkipTestFileOperator.Less,
-                                "greater" => HeaderSkipTestFileOperator.Greater,
-                                "equal" => HeaderSkipTestFileOperator.Equal,
-                                _ => HeaderSkipTestFileOperator.Equal,
-                            };
-#endif
+                        "less" => HeaderSkipTestFileOperator.Less,
+                        "greater" => HeaderSkipTestFileOperator.Greater,
+                        "equal" => HeaderSkipTestFileOperator.Equal,
+                        _ => HeaderSkipTestFileOperator.Equal,
+                    };
                 }
 
                 return test;

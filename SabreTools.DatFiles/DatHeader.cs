@@ -797,19 +797,6 @@ namespace SabreTools.DatFiles
 
             #endregion
 
-#if NET_FRAMEWORK
-            #region .ripemd160
-
-            // Redump RIPEMD160
-            if (DatFormat.HasFlag(DatFormat.RedumpRIPEMD160))
-            {
-                outfileNames.Add(DatFormat.RedumpRIPEMD160, CreateOutFileNamesHelper(outDir, ".ripemd160", overwrite));
-                usedExtensions.Add(".ripemd160");
-            };
-
-            #endregion
-#endif
-
             #region .sfv
 
             // Redump SFV

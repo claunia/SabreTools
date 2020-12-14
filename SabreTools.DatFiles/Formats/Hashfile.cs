@@ -72,9 +72,6 @@ namespace SabreTools.DatFiles.Formats
                         Size = null,
                         CRC = (_hash.HasFlag(Hash.CRC) ? hash : null),
                         MD5 = (_hash.HasFlag(Hash.MD5) ? hash : null),
-#if NET_FRAMEWORK
-                        RIPEMD160 = (_hash.HasFlag(Hash.RIPEMD160) ? hash : null),
-#endif
                         SHA1 = (_hash.HasFlag(Hash.SHA1) ? hash : null),
                         SHA256 = (_hash.HasFlag(Hash.SHA256) ? hash : null),
                         SHA384 = (_hash.HasFlag(Hash.SHA384) ? hash : null),
@@ -264,19 +261,6 @@ namespace SabreTools.DatFiles.Formats
 
                     break;
 
-#if NET_FRAMEWORK
-                case Hash.RIPEMD160:
-                    switch (datItem.ItemType)
-                    {
-                        case ItemType.Rom:
-                            var rom = datItem as Rom;
-                            fields[0] = rom.RIPEMD160;
-                            fields[1] = name;
-                            break;
-                    }
-
-                    break;
-#endif
                 case Hash.SHA1:
                     switch (datItem.ItemType)
                     {

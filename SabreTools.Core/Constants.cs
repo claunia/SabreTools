@@ -15,14 +15,6 @@
                                                               0x8f, 0x00, 0xb2, 0x04,
                                                               0xe9, 0x80, 0x09, 0x98,
                                                               0xec, 0xf8, 0x42, 0x7e };
-#if NET_FRAMEWORK
-        public const string RIPEMD160Zero = "9c1185a5c5e9fc54612808977ee8f548b2258d31";
-        public static readonly byte[] RIPEMD160ZeroBytes =  { 0x9c, 0x11, 0x85, 0xa5,
-                                                              0xc5, 0xe9, 0xfc, 0x54,
-                                                              0x61, 0x28, 0x08, 0x97,
-                                                              0x7e, 0xe8, 0xf5, 0x48,
-                                                              0xb2, 0x25, 0x8d, 0x31 };
-#endif
         public const string SHA1Zero = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
         public static readonly byte[] SHA1ZeroBytes =       { 0xda, 0x39, 0xa3, 0xee,
                                                               0x5e, 0x6b, 0x4b, 0x0d,
@@ -77,9 +69,6 @@
 
         public const int CRCLength = 8;
         public const int MD5Length = 32;
-#if NET_FRAMEWORK
-        public const int RIPEMD160Length = 40;
-#endif
         public const int SHA1Length = 40;
         public const int SHA256Length = 64;
         public const int SHA384Length = 96;

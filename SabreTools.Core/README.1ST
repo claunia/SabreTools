@@ -209,10 +209,6 @@ Options:
 		  This allows the user to skip calculating the MD5 for each of the
 		  files which will speed up the creation of the DAT.
 
-	  -nr160, --skip-ripemd160	Include RIPEMD160 in output
-		  This allows the user to include calculating the RIPEMD160 for each of
-		  the files. .NET Framework 4.8 only.
-
 	  -ns, --skip-sha1			Don't include SHA-1 in output
 		  This allows the user to skip calculating the SHA-1 for each of the
 		  files which will speed up the creation of the DAT.
@@ -269,7 +265,6 @@ Options:
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
-		  ripemd160         - RIPEMD160 (.NET Framework 4.8 only)
 		  sj, sabrejson     - SabreJSON
 		  sx, sabrexml      - SabreDAT XML
 		  sfv				- SFV
@@ -632,7 +627,6 @@ Options:
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
-		  ripemd160			- RIPEMD160 (.NET Framework 4.8 only)
 		  sj, sabrejson     - SabreJSON
 		  sx, sabrexml      - SabreDAT XML
 		  sfv				- SFV
@@ -787,7 +781,6 @@ Options:
 		  msx, openmsx		- openMSX Software List
 		  ol, offlinelist	- OfflineList XML
 		  rc, romcenter		- RomCenter
-		  ripemd160			- RIPEMD160 (.NET Framework 4.8 only)
 		  sj, sabrejson     - SabreJSON
 		  sx, sabrexml      - SabreDAT XML
 		  sfv				- SFV
@@ -816,7 +809,6 @@ Options:
 			  - %category% - Replaced with game Category
 			  - %crc% - Replaced with the CRC
 			  - %md5% - Replaced with the MD5
-			  - %ripemd160% - Replaced with the RIPEMD160 (.NET Framework 4.8 only)
 			  - %sha1% - Replaced with the SHA-1
 			  - %sha256% - Replaced with the SHA-256
 			  - %sha384% - Replaced with the SHA-384
@@ -1404,7 +1396,6 @@ has been a new stable release.
 -ool, --output-ol -> -ot=ol, --output-type=offlinelist
 -ool, --output-offlinelist -> -ot=ol, --output-type=offlinelist
 -or, --output-rc -> -ot=rc, --output-type=romcenter
--oripemd160, --output-ripemd160 -> -ot=ripemd160, --output-type=ripemd160
 -or, --output-romcenter -> -ot=rc, --output-type=romcenter
 -os, --output-sd -> -ot=sd, --output-type=sabredat
 -os, --output-sabredat -> -ot=sd, --output-type=sabredat
@@ -1449,11 +1440,10 @@ has been a new stable release.
 -udd, --update-desc -> -uf=machine.description, --update-field=machine.description
 -udd, --update-description -> -uf=machine.description, --update-field=machine.description
 -ugt, --update-game-type -> -uf=machine.type, --update-field=machine.type
--uh, --update-hashes -> (-uf=item.crc -uf=item.md5 -uf=item.ripemd160
-	-uf=item.sha1 -uf=item.sha256 -uf=item.sha384 -uf=item.sha512 -uf=item.spamsum),
-	(--update-field=item.crc --update-field=item.md5 --update-field=item.ripemd160
-	--update-field=item.sha1 --update-field=item.sha256 --update-field=item.sha384
-	--update-field=item.sha512 --update-field=item.spamsum)
+-uh, --update-hashes -> (-uf=item.crc -uf=item.md5 -uf=item.sha1 -uf=item.sha256
+	-uf=item.sha384 -uf=item.sha512 -uf=item.spamsum), (--update-field=item.crc
+	--update-field=item.md5 --update-field=item.sha1 --update-field=item.sha256
+	--update-field=item.sha384 --update-field=item.sha512 --update-field=item.spamsum)
 -um, --update-manu -> -uf=machine.manufacturer, --update-field=machine.manufacturer
 -um, --update-manufacturer -> -uf=machine.manufacturer, --update-field=machine.manufacturer
 -un, --update-names -> -uf=item.name, --update-field=item.name

@@ -123,13 +123,6 @@ namespace SabreTools.DatTools
             fieldDats[Field.DatItem_SHA1].Header.Name += " (SHA-1)";
             fieldDats[Field.DatItem_SHA1].Header.Description += " (SHA-1)";
 
-#if NET_FRAMEWORK
-            fieldDats[Field.DatItem_RIPEMD160] = DatFile.Create(datFile.Header.CloneStandard());
-            fieldDats[Field.DatItem_RIPEMD160].Header.FileName += " (RIPEMD160)";
-            fieldDats[Field.DatItem_RIPEMD160].Header.Name += " (RIPEMD160)";
-            fieldDats[Field.DatItem_RIPEMD160].Header.Description += " (RIPEMD160)";
-#endif
-
             fieldDats[Field.DatItem_MD5] = DatFile.Create(datFile.Header.CloneStandard());
             fieldDats[Field.DatItem_MD5].Header.FileName += " (MD5)";
             fieldDats[Field.DatItem_MD5].Header.Name += " (MD5)";
@@ -188,14 +181,6 @@ namespace SabreTools.DatTools
                     {
                         fieldDats[Field.DatItem_SHA1].Items.Add(key, item);
                     }
-
-#if NET_FRAMEWORK
-                    // If the file has a RIPEMD160
-                    else if ((item.ItemType == ItemType.Rom && !string.IsNullOrWhiteSpace((item as Rom).RIPEMD160)))
-                    {
-                        fieldDats[Field.DatItem_RIPEMD160].Items.Add(key, item);
-                    }
-#endif
 
                     // If the file has an MD5
                     else if ((item.ItemType == ItemType.Disk && !string.IsNullOrWhiteSpace((item as Disk).MD5))

@@ -163,7 +163,6 @@ namespace SabreTools.Core.Tools
                 case "dat":
                 case "json":
                 case "md5":
-                case "ripemd160":
                 case "sfv":
                 case "sha1":
                 case "sha256":
