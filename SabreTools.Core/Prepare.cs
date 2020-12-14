@@ -12,8 +12,8 @@ namespace SabreTools.Core
         /// <summary>
         /// The current toolset version to be used by all child applications
         /// </summary>
-        //public readonly static string Version = $"v1.0.4";
-        public readonly static string Version = $"v1.0.4-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
+        public readonly static string Version = $"v1.0.5";
+        //public readonly static string Version = $"v1.0.5-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
  
         /// <summary>
         /// Readies the console and outputs the header
@@ -62,6 +62,7 @@ namespace SabreTools.Core
         /// <summary>
         /// Returns true if running in a Mono or .NET Core environment
         /// </summary>
+        /// TODO: Investigate if this is needed when removing .NET Framework 4.8 support
         private static bool MonoOrCoreEnvironment
         {
             get
