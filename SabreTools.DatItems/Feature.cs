@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -96,37 +95,6 @@ namespace SabreTools.DatItems
 
             // If the Feature information matches
             return (Type == newOther.Type && Status == newOther.Status && Overall == newOther.Overall);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Feature to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Feature)
-                return;
-
-            // Cast for easier access
-            Feature newItem = item as Feature;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.FeatureType))
-                Type = newItem.Type;
-
-            if (datItemFields.Contains(DatItemField.FeatureStatus))
-                Status = newItem.Status;
-
-            if (datItemFields.Contains(DatItemField.FeatureOverall))
-                Overall = newItem.Overall;
         }
 
         #endregion

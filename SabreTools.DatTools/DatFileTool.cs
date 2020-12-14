@@ -60,7 +60,7 @@ namespace SabreTools.DatTools
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
-                            newDatItem.ReplaceFields(dupes.First(), datItemFields, null);
+                            DatItemTool.ReplaceFields(newDatItem, dupes.First(), datItemFields);
 
                         newDatItems.Add(newDatItem);
                     }

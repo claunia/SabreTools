@@ -630,25 +630,6 @@ namespace SabreTools.DatItems
             return key;
         }
 
-        /// <summary>
-        /// Replace fields from another item
-        /// </summary>
-        /// <param name="item">DatItem to pull new information from</param>
-        /// <param name="datItemFields">DatItem fields to remove</param>
-        /// <param name="machineFields">Machine fields to remove</param>
-        /// TODO: Fix case where datItemFields is null
-        public virtual void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            if (Machine == null)
-                Machine = new Machine();
-
-            // TODO: Figure out why this wasn't here
-            // Machine.ReplaceFields(item.Machine, machineFields)
-        }
-
         #endregion
 
         #endregion // Instance Methods

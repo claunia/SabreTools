@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -113,40 +112,6 @@ namespace SabreTools.DatItems
                 && Tag == newOther.Tag
                 && ChipType == newOther.ChipType
                 && Clock == newOther.Clock);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Chip to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Chip)
-                return;
-
-            // Cast for easier access
-            Chip newItem = item as Chip;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = newItem.Tag;
-
-            if (datItemFields.Contains(DatItemField.ChipType))
-                ChipType = newItem.ChipType;
-
-            if (datItemFields.Contains(DatItemField.Clock))
-                Clock = newItem.Clock;
         }
 
         #endregion

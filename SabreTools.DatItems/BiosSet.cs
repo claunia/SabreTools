@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -99,37 +98,6 @@ namespace SabreTools.DatItems
             return (Name == newOther.Name
                 && Description == newOther.Description
                 && Default == newOther.Default);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a BiosSet to replace from, ignore specific fields
-            if (item.ItemType != ItemType.BiosSet)
-                return;
-
-            // Cast for easier access
-            BiosSet newItem = item as BiosSet;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.Description))
-                Description = newItem.Description;
-
-            if (datItemFields.Contains(DatItemField.Default))
-                Default = newItem.Default;
         }
 
         #endregion

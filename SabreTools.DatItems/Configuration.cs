@@ -163,48 +163,5 @@ namespace SabreTools.DatItems
         }
 
         #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Configuration to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Configuration)
-                return;
-
-            // Cast for easier access
-            Configuration newItem = item as Configuration;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = newItem.Tag;
-
-            if (datItemFields.Contains(DatItemField.Mask))
-                Mask = newItem.Mask;
-
-            // DatItem_Condition_* doesn't make sense here
-            // since not every condition under the other item
-            // can replace every condition under this item
-
-            // DatItem_Location_* doesn't make sense here
-            // since not every location under the other item
-            // can replace every location under this item
-
-            // DatItem_Setting_* doesn't make sense here
-            // since not every setting under the other item
-            // can replace every setting under this item
-        }
-
-        #endregion
     }
 }

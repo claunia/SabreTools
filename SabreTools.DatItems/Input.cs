@@ -133,43 +133,5 @@ namespace SabreTools.DatItems
         }
 
         #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Input to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Input)
-                return;
-
-            // Cast for easier access
-            Input newItem = item as Input;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Service))
-                Service = newItem.Service;
-
-            if (datItemFields.Contains(DatItemField.Tilt))
-                Tilt = newItem.Tilt;
-
-            if (datItemFields.Contains(DatItemField.Players))
-                Players = newItem.Players;
-
-            if (datItemFields.Contains(DatItemField.Coins))
-                Coins = newItem.Coins;
-
-            // DatItem_Control_* doesn't make sense here
-            // since not every control under the other item
-            // can replace every control under this item
-        }
-
-        #endregion
     }
 }

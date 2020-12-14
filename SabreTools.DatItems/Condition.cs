@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -99,48 +98,6 @@ namespace SabreTools.DatItems
                 && Mask == newOther.Mask
                 && Relation == newOther.Relation
                 && Value == newOther.Value);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Condition to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Condition)
-                return;
-
-            // Cast for easier access
-            Condition newItem = item as Condition;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = newItem.Tag;
-            else if (datItemFields.Contains(DatItemField.Condition_Tag))
-                Tag = newItem.Tag;
-
-            if (datItemFields.Contains(DatItemField.Mask))
-                Mask = newItem.Mask;
-            else if (datItemFields.Contains(DatItemField.Condition_Mask))
-                Mask = newItem.Mask;
-
-            if (datItemFields.Contains(DatItemField.Relation))
-                Relation = newItem.Relation;
-            else if (datItemFields.Contains(DatItemField.Condition_Relation))
-                Relation = newItem.Relation;
-
-            if (datItemFields.Contains(DatItemField.Value))
-                Value = newItem.Value;
-            else if (datItemFields.Contains(DatItemField.Condition_Value))
-                Value = newItem.Value;
         }
 
         #endregion

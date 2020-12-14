@@ -1053,10 +1053,929 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="datItem">DatItem to replace fields in</param>
         /// <param name="repMachine">DatItem to pull new information from</param>
-        /// <param name="fields">List of fields representing what should be updated</param>
-        public static void ReplaceFields(DatItem datItem, DatItem repDatItem, List<DatItemField> fields)
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        /// TODO: Extract out setting name to common
+        public static void ReplaceFields(DatItem datItem, DatItem repDatItem, List<DatItemField> datItemFields)
         {
+            if (datItem == null || repDatItem == null || datItemFields == null)
+                return;
 
+            if (datItem.ItemType != repDatItem.ItemType)
+                return;
+
+            #region Adjuster
+
+            if (datItem is Adjuster adjuster)
+            {
+                Adjuster newItem = repDatItem as Adjuster;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    adjuster.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Default))
+                    adjuster.Default = newItem.Default;
+
+                // Condition_* doesn't make sense here
+                // since not every condition under the other item
+                // can replace every condition under this item
+            }
+
+            #endregion
+
+            #region Analog
+
+            else if (datItem is Analog analog)
+            {
+                Analog newItem = repDatItem as Analog;
+
+                if (datItemFields.Contains(DatItemField.Analog_Mask))
+                    analog.Mask = newItem.Mask;
+            }
+
+            #endregion
+
+            #region Archive
+
+            else if (datItem is Archive archive)
+            {
+                Archive newItem = repDatItem as Archive;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    archive.Name = newItem.Name;
+            }
+
+            #endregion
+
+            #region BiosSet
+
+            else if (datItem is BiosSet biosSet)
+            {
+                BiosSet newItem = repDatItem as BiosSet;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    biosSet.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Description))
+                    biosSet.Description = newItem.Description;
+
+                if (datItemFields.Contains(DatItemField.Default))
+                    biosSet.Default = newItem.Default;
+            }
+
+            #endregion
+
+            #region Chip
+
+            else if (datItem is Chip chip)
+            {
+                Chip newItem = repDatItem as Chip;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    chip.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Tag))
+                    chip.Tag = newItem.Tag;
+
+                if (datItemFields.Contains(DatItemField.ChipType))
+                    chip.ChipType = newItem.ChipType;
+
+                if (datItemFields.Contains(DatItemField.Clock))
+                    chip.Clock = newItem.Clock;
+            }
+
+            #endregion
+
+            #region Condition
+
+            else if (datItem is Condition condition)
+            {
+                Condition newItem = repDatItem as Condition;
+
+                if (datItemFields.Contains(DatItemField.Tag))
+                    condition.Tag = newItem.Tag;
+                else if (datItemFields.Contains(DatItemField.Condition_Tag))
+                    condition.Tag = newItem.Tag;
+
+                if (datItemFields.Contains(DatItemField.Mask))
+                    condition.Mask = newItem.Mask;
+                else if (datItemFields.Contains(DatItemField.Condition_Mask))
+                    condition.Mask = newItem.Mask;
+
+                if (datItemFields.Contains(DatItemField.Relation))
+                    condition.Relation = newItem.Relation;
+                else if (datItemFields.Contains(DatItemField.Condition_Relation))
+                    condition.Relation = newItem.Relation;
+
+                if (datItemFields.Contains(DatItemField.Value))
+                    condition.Value = newItem.Value;
+                else if (datItemFields.Contains(DatItemField.Condition_Value))
+                    condition.Value = newItem.Value;
+            }
+
+            #endregion
+
+            #region Configuration
+
+            else if (datItem is Configuration configuration)
+            {
+                Configuration newItem = repDatItem as Configuration;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    configuration.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Tag))
+                    configuration.Tag = newItem.Tag;
+
+                if (datItemFields.Contains(DatItemField.Mask))
+                    configuration.Mask = newItem.Mask;
+
+                // Condition_* doesn't make sense here
+                // since not every condition under the other item
+                // can replace every condition under this item
+
+                // Location_* doesn't make sense here
+                // since not every location under the other item
+                // can replace every location under this item
+
+                // Setting_* doesn't make sense here
+                // since not every setting under the other item
+                // can replace every setting under this item
+            }
+
+            #endregion
+
+            #region Control
+
+            else if (datItem is Control control)
+            {
+                Control newItem = repDatItem as Control;
+
+                if (datItemFields.Contains(DatItemField.Control_Type))
+                    control.ControlType = newItem.ControlType;
+
+                if (datItemFields.Contains(DatItemField.Control_Player))
+                    control.Player = newItem.Player;
+
+                if (datItemFields.Contains(DatItemField.Control_Buttons))
+                    control.Buttons = newItem.Buttons;
+
+                if (datItemFields.Contains(DatItemField.Control_RequiredButtons))
+                    control.RequiredButtons = newItem.RequiredButtons;
+
+                if (datItemFields.Contains(DatItemField.Control_Minimum))
+                    control.Minimum = newItem.Minimum;
+
+                if (datItemFields.Contains(DatItemField.Control_Maximum))
+                    control.Maximum = newItem.Maximum;
+
+                if (datItemFields.Contains(DatItemField.Control_Sensitivity))
+                    control.Sensitivity = newItem.Sensitivity;
+
+                if (datItemFields.Contains(DatItemField.Control_KeyDelta))
+                    control.KeyDelta = newItem.KeyDelta;
+
+                if (datItemFields.Contains(DatItemField.Control_Reverse))
+                    control.Reverse = newItem.Reverse;
+
+                if (datItemFields.Contains(DatItemField.Control_Ways))
+                    control.Ways = newItem.Ways;
+
+                if (datItemFields.Contains(DatItemField.Control_Ways2))
+                    control.Ways2 = newItem.Ways2;
+
+                if (datItemFields.Contains(DatItemField.Control_Ways3))
+                    control.Ways3 = newItem.Ways3;
+            }
+
+            #endregion
+
+            #region DataArea
+
+            else if (datItem is DataArea dataArea)
+            {
+                DataArea newItem = repDatItem as DataArea;
+
+                if (datItemFields.Contains(DatItemField.AreaName))
+                    dataArea.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.AreaSize))
+                    dataArea.Size = newItem.Size;
+
+                if (datItemFields.Contains(DatItemField.AreaWidth))
+                    dataArea.Width = newItem.Width;
+
+                if (datItemFields.Contains(DatItemField.AreaEndianness))
+                    dataArea.Endianness = newItem.Endianness;
+            }
+
+            #endregion
+
+            #region Device
+
+            else if (datItem is Device device)
+            {
+                Device newItem = repDatItem as Device;
+
+                if (datItemFields.Contains(DatItemField.DeviceType))
+                    device.DeviceType = newItem.DeviceType;
+
+                if (datItemFields.Contains(DatItemField.Tag))
+                    device.Tag = newItem.Tag;
+
+                if (datItemFields.Contains(DatItemField.FixedImage))
+                    device.FixedImage = newItem.FixedImage;
+
+                if (datItemFields.Contains(DatItemField.Mandatory))
+                    device.Mandatory = newItem.Mandatory;
+
+                if (datItemFields.Contains(DatItemField.Interface))
+                    device.Interface = newItem.Interface;
+
+                // Instance_* doesn't make sense here
+                // since not every instance under the other item
+                // can replace every instance under this item
+
+                // Extension_* doesn't make sense here
+                // since not every extension under the other item
+                // can replace every extension under this item
+            }
+
+            #endregion
+
+            #region DeviceReference
+
+            else if (datItem is DeviceReference deviceReference)
+            {
+                DeviceReference newItem = repDatItem as DeviceReference;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    deviceReference.Name = newItem.Name;
+            }
+
+            #endregion
+        
+            #region DipSwitch
+
+            else if (datItem is DipSwitch dipSwitch)
+            {
+                DipSwitch newItem = repDatItem as DipSwitch;
+
+                #region Common
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    dipSwitch.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Tag))
+                    dipSwitch.Tag = newItem.Tag;
+
+                if (datItemFields.Contains(DatItemField.Mask))
+                    dipSwitch.Mask = newItem.Mask;
+
+                // Condition_* doesn't make sense here
+                // since not every condition under the other item
+                // can replace every condition under this item
+
+                // Location_* doesn't make sense here
+                // since not every location under the other item
+                // can replace every location under this item
+
+                // Setting_* doesn't make sense here
+                // since not every value under the other item
+                // can replace every value under this item
+
+                #endregion
+
+                #region SoftwareList
+
+                if (dipSwitch.PartSpecified && newItem.PartSpecified)
+                    ReplaceFields(dipSwitch.Part, newItem.Part, datItemFields);
+
+                #endregion
+            }
+
+            #endregion
+
+            #region Disk
+
+            else if (datItem is Disk disk)
+            {
+                Disk newItem = repDatItem as Disk;
+
+                #region Common
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    disk.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.MD5))
+                {
+                    if (string.IsNullOrEmpty(disk.MD5) && !string.IsNullOrEmpty(newItem.MD5))
+                        disk.MD5 = newItem.MD5;
+                }
+
+                if (datItemFields.Contains(DatItemField.SHA1))
+                {
+                    if (string.IsNullOrEmpty(disk.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
+                        disk.SHA1 = newItem.SHA1;
+                }
+
+                if (datItemFields.Contains(DatItemField.Merge))
+                    disk.MergeTag = newItem.MergeTag;
+
+                if (datItemFields.Contains(DatItemField.Region))
+                    disk.Region = newItem.Region;
+
+                if (datItemFields.Contains(DatItemField.Index))
+                    disk.Index = newItem.Index;
+
+                if (datItemFields.Contains(DatItemField.Writable))
+                    disk.Writable = newItem.Writable;
+
+                if (datItemFields.Contains(DatItemField.Status))
+                    disk.ItemStatus = newItem.ItemStatus;
+
+                if (datItemFields.Contains(DatItemField.Optional))
+                    disk.Optional = newItem.Optional;
+
+                #endregion
+
+                #region SoftwareList
+
+                if (disk.DiskAreaSpecified && newItem.DiskAreaSpecified)
+                    ReplaceFields(disk.DiskArea, newItem.DiskArea, datItemFields);
+
+                if (disk.PartSpecified && newItem.PartSpecified)
+                    ReplaceFields(disk.Part, newItem.Part, datItemFields);
+
+                #endregion
+            }
+
+            #endregion
+
+            #region DiskArea
+
+            else if (datItem is DiskArea diskArea)
+            {
+                DiskArea newItem = repDatItem as DiskArea;
+
+                if (datItemFields.Contains(DatItemField.AreaName))
+                    diskArea.Name = newItem.Name;
+            }
+
+            #endregion
+
+            #region Display
+
+            else if (datItem is Display display)
+            {
+                Display newItem = repDatItem as Display;
+
+                if (datItemFields.Contains(DatItemField.Tag))
+                    display.Tag = newItem.Tag;
+
+                if (datItemFields.Contains(DatItemField.DisplayType))
+                    display.DisplayType = newItem.DisplayType;
+
+                if (datItemFields.Contains(DatItemField.Rotate))
+                    display.Rotate = newItem.Rotate;
+
+                if (datItemFields.Contains(DatItemField.FlipX))
+                    display.FlipX = newItem.FlipX;
+
+                if (datItemFields.Contains(DatItemField.Width))
+                    display.Width = newItem.Width;
+
+                if (datItemFields.Contains(DatItemField.Height))
+                    display.Height = newItem.Height;
+
+                if (datItemFields.Contains(DatItemField.Refresh))
+                    display.Refresh = newItem.Refresh;
+
+                if (datItemFields.Contains(DatItemField.PixClock))
+                    display.PixClock = newItem.PixClock;
+
+                if (datItemFields.Contains(DatItemField.HTotal))
+                    display.HTotal = newItem.HTotal;
+
+                if (datItemFields.Contains(DatItemField.HBEnd))
+                    display.HBEnd = newItem.HBEnd;
+
+                if (datItemFields.Contains(DatItemField.HBStart))
+                    display.HBStart = newItem.HBStart;
+
+                if (datItemFields.Contains(DatItemField.VTotal))
+                    display.VTotal = newItem.VTotal;
+
+                if (datItemFields.Contains(DatItemField.VBEnd))
+                    display.VBEnd = newItem.VBEnd;
+
+                if (datItemFields.Contains(DatItemField.VBStart))
+                    display.VBStart = newItem.VBStart;
+            }
+
+            #endregion
+
+            #region Driver
+
+            else if (datItem is Driver driver)
+            {
+                Driver newItem = repDatItem as Driver;
+
+                if (datItemFields.Contains(DatItemField.SupportStatus))
+                    driver.Status = newItem.Status;
+
+                if (datItemFields.Contains(DatItemField.EmulationStatus))
+                    driver.Emulation = newItem.Emulation;
+
+                if (datItemFields.Contains(DatItemField.CocktailStatus))
+                    driver.Cocktail = newItem.Cocktail;
+
+                if (datItemFields.Contains(DatItemField.SaveStateStatus))
+                    driver.SaveState = newItem.SaveState;
+            }
+
+            #endregion
+
+            #region Extension
+
+            else if (datItem is Extension extension)
+            {
+                Extension newItem = repDatItem as Extension;
+
+                if (datItemFields.Contains(DatItemField.Extension_Name))
+                    extension.Name = newItem.Name;
+            }
+
+            #endregion
+
+            #region Feature
+
+            else if (datItem is Feature feature)
+            {
+                Feature newItem = repDatItem as Feature;
+
+                if (datItemFields.Contains(DatItemField.FeatureType))
+                    feature.Type = newItem.Type;
+
+                if (datItemFields.Contains(DatItemField.FeatureStatus))
+                    feature.Status = newItem.Status;
+
+                if (datItemFields.Contains(DatItemField.FeatureOverall))
+                    feature.Overall = newItem.Overall;
+            }
+
+            #endregion
+
+            #region Info
+
+            else if (datItem is Info info)
+            {
+                Info newItem = repDatItem as Info;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    info.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Value))
+                    info.Value = newItem.Value;
+            }
+
+            #endregion
+
+            #region Input
+
+            else if (datItem is Input input)
+            {
+                Input newItem = repDatItem as Input;
+
+                if (datItemFields.Contains(DatItemField.Service))
+                    input.Service = newItem.Service;
+
+                if (datItemFields.Contains(DatItemField.Tilt))
+                    input.Tilt = newItem.Tilt;
+
+                if (datItemFields.Contains(DatItemField.Players))
+                    input.Players = newItem.Players;
+
+                if (datItemFields.Contains(DatItemField.Coins))
+                    input.Coins = newItem.Coins;
+
+                // Control_* doesn't make sense here
+                // since not every control under the other item
+                // can replace every control under this item
+            }
+
+            #endregion
+
+            #region Instance
+
+            else if (datItem is Instance instance)
+            {
+                Instance newItem = repDatItem as Instance;
+
+                if (datItemFields.Contains(DatItemField.Instance_Name))
+                    instance.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Instance_BriefName))
+                    instance.BriefName = newItem.BriefName;
+            }
+
+            #endregion
+
+            #region Location
+
+            else if (datItem is Location location)
+            {
+                Location newItem = repDatItem as Location;
+
+                if (datItemFields.Contains(DatItemField.Location_Name))
+                    location.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Location_Number))
+                    location.Number = newItem.Number;
+
+                if (datItemFields.Contains(DatItemField.Location_Inverted))
+                    location.Inverted = newItem.Inverted;
+            }
+
+            #endregion
+
+            #region Media
+
+            else if (datItem is Media media)
+            {
+                Media newItem = repDatItem as Media;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    media.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.MD5))
+                {
+                    if (string.IsNullOrEmpty(media.MD5) && !string.IsNullOrEmpty(newItem.MD5))
+                        media.MD5 = newItem.MD5;
+                }
+
+                if (datItemFields.Contains(DatItemField.SHA1))
+                {
+                    if (string.IsNullOrEmpty(media.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
+                        media.SHA1 = newItem.SHA1;
+                }
+
+                if (datItemFields.Contains(DatItemField.SHA256))
+                {
+                    if (string.IsNullOrEmpty(media.SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
+                        media.SHA256 = newItem.SHA256;
+                }
+
+                if (datItemFields.Contains(DatItemField.SpamSum))
+                {
+                    if (string.IsNullOrEmpty(media.SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
+                        media.SpamSum = newItem.SpamSum;
+                }
+            }
+
+            #endregion
+
+            #region Part
+
+            else if (datItem is Part part)
+            {
+                Part newItem = repDatItem as Part;
+
+                if (datItemFields.Contains(DatItemField.Part_Name))
+                    part.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Part_Interface))
+                    part.Interface = newItem.Interface;
+
+                // Part_Feature_* doesn't make sense here
+                // since not every part feature under the other item
+                // can replace every part feature under this item
+            }
+
+            #endregion
+
+            #region PartFeature
+
+            else if (datItem is PartFeature partFeature)
+            {
+                PartFeature newItem = repDatItem as PartFeature;
+
+                if (datItemFields.Contains(DatItemField.Part_Feature_Name))
+                    partFeature.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Part_Feature_Value))
+                    partFeature.Value = newItem.Value;
+            }
+
+            #endregion
+
+            #region Port
+
+            else if (datItem is Port port)
+            {
+                Port newItem = repDatItem as Port;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    port.Tag = newItem.Tag;
+
+                // Analog_* doesn't make sense here
+                // since not every analog under the other item
+                // can replace every analog under this item
+            }
+
+            #endregion
+
+            #region RamOption
+
+            else if (datItem is RamOption ramOption)
+            {
+                RamOption newItem = repDatItem as RamOption;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    ramOption.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Default))
+                    ramOption.Default = newItem.Default;
+
+                if (datItemFields.Contains(DatItemField.Content))
+                    ramOption.Content = newItem.Content;
+            }
+
+            #endregion
+
+            #region Release
+
+            else if (datItem is Release release)
+            {
+                Release newItem = repDatItem as Release;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    release.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Region))
+                    release.Region = newItem.Region;
+
+                if (datItemFields.Contains(DatItemField.Language))
+                    release.Language = newItem.Language;
+
+                if (datItemFields.Contains(DatItemField.Date))
+                    release.Date = newItem.Date;
+
+                if (datItemFields.Contains(DatItemField.Default))
+                    release.Default = newItem.Default;
+            }
+
+            #endregion
+
+            #region Rom
+
+            else if (datItem is Rom rom)
+            {
+                Rom newItem = repDatItem as Rom;
+
+                #region Common
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    rom.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Bios))
+                    rom.Bios = newItem.Bios;
+
+                if (datItemFields.Contains(DatItemField.Size))
+                    rom.Size = newItem.Size;
+
+                if (datItemFields.Contains(DatItemField.CRC))
+                {
+                    if (string.IsNullOrEmpty(rom.CRC) && !string.IsNullOrEmpty(newItem.CRC))
+                        rom.CRC = newItem.CRC;
+                }
+
+                if (datItemFields.Contains(DatItemField.MD5))
+                {
+                    if (string.IsNullOrEmpty(rom.MD5) && !string.IsNullOrEmpty(newItem.MD5))
+                        rom.MD5 = newItem.MD5;
+                }
+
+#if NET_FRAMEWORK
+                if (datItemFields.Contains(DatItemField.RIPEMD160))
+                {
+                    if (string.IsNullOrEmpty(rom.RIPEMD160) && !string.IsNullOrEmpty(newItem.RIPEMD160))
+                        rom.RIPEMD160 = newItem.RIPEMD160;
+                }
+#endif
+
+                if (datItemFields.Contains(DatItemField.SHA1))
+                {
+                    if (string.IsNullOrEmpty(rom.SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
+                        rom.SHA1 = newItem.SHA1;
+                }
+
+                if (datItemFields.Contains(DatItemField.SHA256))
+                {
+                    if (string.IsNullOrEmpty(rom.SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
+                        rom.SHA256 = newItem.SHA256;
+                }
+
+                if (datItemFields.Contains(DatItemField.SHA384))
+                {
+                    if (string.IsNullOrEmpty(rom.SHA384) && !string.IsNullOrEmpty(newItem.SHA384))
+                        rom.SHA384 = newItem.SHA384;
+                }
+
+                if (datItemFields.Contains(DatItemField.SHA512))
+                {
+                    if (string.IsNullOrEmpty(rom.SHA512) && !string.IsNullOrEmpty(newItem.SHA512))
+                        rom.SHA512 = newItem.SHA512;
+                }
+
+                if (datItemFields.Contains(DatItemField.SpamSum))
+                {
+                    if (string.IsNullOrEmpty(rom.SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
+                        rom.SpamSum = newItem.SpamSum;
+                }
+
+                if (datItemFields.Contains(DatItemField.Merge))
+                    rom.MergeTag = newItem.MergeTag;
+
+                if (datItemFields.Contains(DatItemField.Region))
+                    rom.Region = newItem.Region;
+
+                if (datItemFields.Contains(DatItemField.Offset))
+                    rom.Offset = newItem.Offset;
+
+                if (datItemFields.Contains(DatItemField.Date))
+                    rom.Date = newItem.Date;
+
+                if (datItemFields.Contains(DatItemField.Status))
+                    rom.ItemStatus = newItem.ItemStatus;
+
+                if (datItemFields.Contains(DatItemField.Optional))
+                    rom.Optional = newItem.Optional;
+
+                if (datItemFields.Contains(DatItemField.Inverted))
+                    rom.Inverted = newItem.Inverted;
+
+                #endregion
+
+                #region AttractMode
+
+                if (datItemFields.Contains(DatItemField.AltName))
+                    rom.AltName = newItem.AltName;
+
+                if (datItemFields.Contains(DatItemField.AltTitle))
+                    rom.AltTitle = newItem.AltTitle;
+
+                #endregion
+
+                #region OpenMSX
+
+                if (datItemFields.Contains(DatItemField.Original))
+                    rom.Original = newItem.Original;
+
+                if (datItemFields.Contains(DatItemField.OpenMSXSubType))
+                    rom.OpenMSXSubType = newItem.OpenMSXSubType;
+
+                if (datItemFields.Contains(DatItemField.OpenMSXType))
+                    rom.OpenMSXType = newItem.OpenMSXType;
+
+                if (datItemFields.Contains(DatItemField.Remark))
+                    rom.Remark = newItem.Remark;
+
+                if (datItemFields.Contains(DatItemField.Boot))
+                    rom.Boot = newItem.Boot;
+
+                #endregion
+
+                #region SoftwareList
+
+                if (datItemFields.Contains(DatItemField.LoadFlag))
+                    rom.LoadFlag = newItem.LoadFlag;
+
+                if (datItemFields.Contains(DatItemField.Value))
+                    rom.Value = newItem.Value;
+
+                if (rom.DataAreaSpecified && newItem.DataAreaSpecified)
+                    ReplaceFields(rom.DataArea, newItem.DataArea, datItemFields);
+
+                if (rom.PartSpecified && newItem.PartSpecified)
+                    ReplaceFields(rom.Part, newItem.Part, datItemFields);
+
+                #endregion
+            }
+
+            #endregion
+
+            #region Sample
+
+            else if (datItem is Sample sample)
+            {
+                Sample newItem = repDatItem as Sample;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    sample.Name = newItem.Name;
+            }
+
+            #endregion
+
+            #region Setting
+
+            else if (datItem is Setting setting)
+            {
+                Setting newItem = repDatItem as Setting;
+
+                if (datItemFields.Contains(DatItemField.Setting_Name))
+                    setting.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Setting_Value))
+                    setting.Value = newItem.Value;
+
+                if (datItemFields.Contains(DatItemField.Setting_Default))
+                    setting.Default = newItem.Default;
+
+                // Condition_* doesn't make sense here
+                // since not every condition under the other item
+                // can replace every condition under this item
+            }
+
+            #endregion
+
+            #region SharedFeature
+
+            else if (datItem is SharedFeature sharedFeature)
+            {
+                SharedFeature newItem = repDatItem as SharedFeature;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    sharedFeature.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.Value))
+                    sharedFeature.Value = newItem.Value;
+            }
+
+            #endregion
+
+            #region Slot
+
+            else if (datItem is Slot slot)
+            {
+                Slot newItem = repDatItem as Slot;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    slot.Name = newItem.Name;
+
+                // SlotOption_* doesn't make sense here
+                // since not every slot option under the other item
+                // can replace every slot option under this item
+            }
+
+            #endregion
+
+            #region SlotOption
+
+            else if (datItem is SlotOption slotOption)
+            {
+                SlotOption newItem = repDatItem as SlotOption;
+
+                if (datItemFields.Contains(DatItemField.SlotOption_Name))
+                    slotOption.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.SlotOption_DeviceName))
+                    slotOption.DeviceName = newItem.DeviceName;
+
+                if (datItemFields.Contains(DatItemField.SlotOption_Default))
+                    slotOption.Default = newItem.Default;
+            }
+
+            #endregion
+
+            #region SoftwareList
+
+            else if (datItem is SoftwareList softwareList)
+            {
+                SoftwareList newItem = repDatItem as SoftwareList;
+
+                if (datItemFields.Contains(DatItemField.Name))
+                    softwareList.Name = newItem.Name;
+
+                if (datItemFields.Contains(DatItemField.SoftwareListStatus))
+                    softwareList.Status = newItem.Status;
+
+                if (datItemFields.Contains(DatItemField.Filter))
+                    softwareList.Filter = newItem.Filter;
+            }
+
+            #endregion
+
+            #region Sound
+
+            else if (datItem is Sound sound)
+            {
+                Sound newItem = repDatItem as Sound;
+
+                if (datItemFields.Contains(DatItemField.Channels))
+                    sound.Channels = newItem.Channels;
+            }
+
+            #endregion
         }
 
         /// <summary>
@@ -1064,142 +1983,142 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="machine">Machine to replace fields in</param>
         /// <param name="repMachine">Machine to pull new information from</param>
-        /// <param name="fields">List of fields representing what should be updated</param>
+        /// <param name="machineFields">List of fields representing what should be updated</param>
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
-        public static void ReplaceFields(Machine machine, Machine repMachine, List<MachineField> fields, bool onlySame)
+        public static void ReplaceFields(Machine machine, Machine repMachine, List<MachineField> machineFields, bool onlySame)
         {
             #region Common
 
-            if (fields.Contains(MachineField.Name))
+            if (machineFields.Contains(MachineField.Name))
                 machine.Name = repMachine.Name;
 
-            if (fields.Contains(MachineField.Comment))
+            if (machineFields.Contains(MachineField.Comment))
                 machine.Comment = repMachine.Comment;
 
-            if (fields.Contains(MachineField.Description))
+            if (machineFields.Contains(MachineField.Description))
             {
                 if (!onlySame || (onlySame && machine.Name == machine.Description))
                     machine.Description = repMachine.Description;
             }
 
-            if (fields.Contains(MachineField.Year))
+            if (machineFields.Contains(MachineField.Year))
                 machine.Year = repMachine.Year;
 
-            if (fields.Contains(MachineField.Manufacturer))
+            if (machineFields.Contains(MachineField.Manufacturer))
                 machine.Manufacturer = repMachine.Manufacturer;
 
-            if (fields.Contains(MachineField.Publisher))
+            if (machineFields.Contains(MachineField.Publisher))
                 machine.Publisher = repMachine.Publisher;
 
-            if (fields.Contains(MachineField.Category))
+            if (machineFields.Contains(MachineField.Category))
                 machine.Category = repMachine.Category;
 
-            if (fields.Contains(MachineField.RomOf))
+            if (machineFields.Contains(MachineField.RomOf))
                 machine.RomOf = repMachine.RomOf;
 
-            if (fields.Contains(MachineField.CloneOf))
+            if (machineFields.Contains(MachineField.CloneOf))
                 machine.CloneOf = repMachine.CloneOf;
 
-            if (fields.Contains(MachineField.SampleOf))
+            if (machineFields.Contains(MachineField.SampleOf))
                 machine.SampleOf = repMachine.SampleOf;
 
-            if (fields.Contains(MachineField.Type))
+            if (machineFields.Contains(MachineField.Type))
                 machine.MachineType = repMachine.MachineType;
 
             #endregion
 
             #region AttractMode
 
-            if (fields.Contains(MachineField.Players))
+            if (machineFields.Contains(MachineField.Players))
                 machine.Players = repMachine.Players;
 
-            if (fields.Contains(MachineField.Rotation))
+            if (machineFields.Contains(MachineField.Rotation))
                 machine.Rotation = repMachine.Rotation;
 
-            if (fields.Contains(MachineField.Control))
+            if (machineFields.Contains(MachineField.Control))
                 machine.Control = repMachine.Control;
 
-            if (fields.Contains(MachineField.Status))
+            if (machineFields.Contains(MachineField.Status))
                 machine.Status = repMachine.Status;
 
-            if (fields.Contains(MachineField.DisplayCount))
+            if (machineFields.Contains(MachineField.DisplayCount))
                 machine.DisplayCount = repMachine.DisplayCount;
 
-            if (fields.Contains(MachineField.DisplayType))
+            if (machineFields.Contains(MachineField.DisplayType))
                 machine.DisplayType = repMachine.DisplayType;
 
-            if (fields.Contains(MachineField.Buttons))
+            if (machineFields.Contains(MachineField.Buttons))
                 machine.Buttons = repMachine.Buttons;
 
             #endregion
 
             #region ListXML
 
-            if (fields.Contains(MachineField.SourceFile))
+            if (machineFields.Contains(MachineField.SourceFile))
                 machine.SourceFile = repMachine.SourceFile;
 
-            if (fields.Contains(MachineField.Runnable))
+            if (machineFields.Contains(MachineField.Runnable))
                 machine.Runnable = repMachine.Runnable;
 
             #endregion
 
             #region Logiqx
 
-            if (fields.Contains(MachineField.Board))
+            if (machineFields.Contains(MachineField.Board))
                 machine.Board = repMachine.Board;
 
-            if (fields.Contains(MachineField.RebuildTo))
+            if (machineFields.Contains(MachineField.RebuildTo))
                 machine.RebuildTo = repMachine.RebuildTo;
 
             #endregion
 
             #region Logiqx EmuArc
 
-            if (fields.Contains(MachineField.TitleID))
+            if (machineFields.Contains(MachineField.TitleID))
                 machine.TitleID = repMachine.TitleID;
 
-            if (fields.Contains(MachineField.Developer))
+            if (machineFields.Contains(MachineField.Developer))
                 machine.Developer = repMachine.Developer;
 
-            if (fields.Contains(MachineField.Genre))
+            if (machineFields.Contains(MachineField.Genre))
                 machine.Genre = repMachine.Genre;
 
-            if (fields.Contains(MachineField.Subgenre))
+            if (machineFields.Contains(MachineField.Subgenre))
                 machine.Subgenre = repMachine.Subgenre;
 
-            if (fields.Contains(MachineField.Ratings))
+            if (machineFields.Contains(MachineField.Ratings))
                 machine.Ratings = repMachine.Ratings;
 
-            if (fields.Contains(MachineField.Score))
+            if (machineFields.Contains(MachineField.Score))
                 machine.Score = repMachine.Score;
 
-            if (fields.Contains(MachineField.Enabled))
+            if (machineFields.Contains(MachineField.Enabled))
                 machine.Enabled = repMachine.Enabled;
 
-            if (fields.Contains(MachineField.CRC))
+            if (machineFields.Contains(MachineField.CRC))
                 machine.Crc = repMachine.Crc;
 
-            if (fields.Contains(MachineField.RelatedTo))
+            if (machineFields.Contains(MachineField.RelatedTo))
                 machine.RelatedTo = repMachine.RelatedTo;
 
             #endregion
 
             #region OpenMSX
 
-            if (fields.Contains(MachineField.GenMSXID))
+            if (machineFields.Contains(MachineField.GenMSXID))
                 machine.GenMSXID = repMachine.GenMSXID;
 
-            if (fields.Contains(MachineField.System))
+            if (machineFields.Contains(MachineField.System))
                 machine.System = repMachine.System;
 
-            if (fields.Contains(MachineField.Country))
+            if (machineFields.Contains(MachineField.Country))
                 machine.Country = repMachine.Country;
 
             #endregion
 
             #region SoftwareList
 
-            if (fields.Contains(MachineField.Supported))
+            if (machineFields.Contains(MachineField.Supported))
                 machine.Supported = repMachine.Supported;
 
             #endregion

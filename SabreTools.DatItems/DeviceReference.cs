@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -78,31 +77,6 @@ namespace SabreTools.DatItems
 
             // If the device reference information matches
             return (Name == newOther.Name);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a DeviceReference to replace from, ignore specific fields
-            if (item.ItemType != ItemType.DeviceReference)
-                return;
-
-            // Cast for easier access
-            DeviceReference newItem = item as DeviceReference;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = newItem.Name;
         }
 
         #endregion

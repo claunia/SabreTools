@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
@@ -400,72 +399,6 @@ namespace SabreTools.DatItems
                 key = string.Empty;
 
             return key;
-        }
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Disk to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Disk)
-                return;
-
-            // Cast for easier access
-            Disk newItem = item as Disk;
-
-            // Replace the fields
-
-            #region Common
-
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.MD5))
-            {
-                if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
-                    MD5 = newItem.MD5;
-            }
-
-            if (datItemFields.Contains(DatItemField.SHA1))
-            {
-                if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
-                    SHA1 = newItem.SHA1;
-            }
-
-            if (datItemFields.Contains(DatItemField.Merge))
-                MergeTag = newItem.MergeTag;
-
-            if (datItemFields.Contains(DatItemField.Region))
-                Region = newItem.Region;
-
-            if (datItemFields.Contains(DatItemField.Index))
-                Index = newItem.Index;
-
-            if (datItemFields.Contains(DatItemField.Writable))
-                Writable = newItem.Writable;
-
-            if (datItemFields.Contains(DatItemField.Status))
-                ItemStatus = newItem.ItemStatus;
-
-            if (datItemFields.Contains(DatItemField.Optional))
-                Optional = newItem.Optional;
-
-            #endregion
-
-            #region SoftwareList
-
-            if (DiskAreaSpecified && newItem.DiskAreaSpecified)
-                DiskArea.ReplaceFields(newItem.DiskArea, datItemFields, machineFields);
-
-            if (PartSpecified && newItem.PartSpecified)
-                Part.ReplaceFields(newItem.Part, datItemFields, machineFields);
-
-            #endregion
         }
 
         #endregion

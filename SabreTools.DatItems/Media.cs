@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
@@ -331,51 +330,6 @@ namespace SabreTools.DatItems
                 key = string.Empty;
 
             return key;
-        }
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Media to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Media)
-                return;
-
-            // Cast for easier access
-            Media newItem = item as Media;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = newItem.Name;
-
-            if (datItemFields.Contains(DatItemField.MD5))
-            {
-                if (string.IsNullOrEmpty(MD5) && !string.IsNullOrEmpty(newItem.MD5))
-                    MD5 = newItem.MD5;
-            }
-
-            if (datItemFields.Contains(DatItemField.SHA1))
-            {
-                if (string.IsNullOrEmpty(SHA1) && !string.IsNullOrEmpty(newItem.SHA1))
-                    SHA1 = newItem.SHA1;
-            }
-
-            if (datItemFields.Contains(DatItemField.SHA256))
-            {
-                if (string.IsNullOrEmpty(SHA256) && !string.IsNullOrEmpty(newItem.SHA256))
-                    SHA256 = newItem.SHA256;
-            }
-
-            if (datItemFields.Contains(DatItemField.SpamSum))
-            {
-                if (string.IsNullOrEmpty(SpamSum) && !string.IsNullOrEmpty(newItem.SpamSum))
-                    SpamSum = newItem.SpamSum;
-            }
         }
 
         #endregion

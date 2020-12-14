@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -111,40 +110,6 @@ namespace SabreTools.DatItems
                 && Emulation == newOther.Emulation
                 && Cocktail == newOther.Cocktail
                 && SaveState == newOther.SaveState);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Driver to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Driver)
-                return;
-
-            // Cast for easier access
-            Driver newItem = item as Driver;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.SupportStatus))
-                Status = newItem.Status;
-
-            if (datItemFields.Contains(DatItemField.EmulationStatus))
-                Emulation = newItem.Emulation;
-
-            if (datItemFields.Contains(DatItemField.CocktailStatus))
-                Cocktail = newItem.Cocktail;
-
-            if (datItemFields.Contains(DatItemField.SaveStateStatus))
-                SaveState = newItem.SaveState;
         }
 
         #endregion

@@ -159,50 +159,5 @@ namespace SabreTools.DatItems
         }
 
         #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Device to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Device)
-                return;
-
-            // Cast for easier access
-            Device newItem = item as Device;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.DeviceType))
-                DeviceType = newItem.DeviceType;
-
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = newItem.Tag;
-
-            if (datItemFields.Contains(DatItemField.FixedImage))
-                FixedImage = newItem.FixedImage;
-
-            if (datItemFields.Contains(DatItemField.Mandatory))
-                Mandatory = newItem.Mandatory;
-
-            if (datItemFields.Contains(DatItemField.Interface))
-                Interface = newItem.Interface;
-
-            // DatItem_Instance_* doesn't make sense here
-            // since not every instance under the other item
-            // can replace every instance under this item
-
-            // DatItem_Extension_* doesn't make sense here
-            // since not every extension under the other item
-            // can replace every extension under this item
-        }
-
-        #endregion
     }
 }

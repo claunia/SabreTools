@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -70,31 +69,6 @@ namespace SabreTools.DatItems
 
             // If the Sound information matches
             return (Channels == newOther.Channels);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Sound to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Sound)
-                return;
-
-            // Cast for easier access
-            Sound newItem = item as Sound;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Channels))
-                Channels = newItem.Channels;
         }
 
         #endregion

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -225,70 +224,6 @@ namespace SabreTools.DatItems
                 && VTotal == newOther.VTotal
                 && VBEnd == newOther.VBEnd
                 && VBStart == newOther.VBStart);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Display to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Display)
-                return;
-
-            // Cast for easier access
-            Display newItem = item as Display;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = newItem.Tag;
-
-            if (datItemFields.Contains(DatItemField.DisplayType))
-                DisplayType = newItem.DisplayType;
-
-            if (datItemFields.Contains(DatItemField.Rotate))
-                Rotate = newItem.Rotate;
-
-            if (datItemFields.Contains(DatItemField.FlipX))
-                FlipX = newItem.FlipX;
-
-            if (datItemFields.Contains(DatItemField.Width))
-                Width = newItem.Width;
-
-            if (datItemFields.Contains(DatItemField.Height))
-                Height = newItem.Height;
-
-            if (datItemFields.Contains(DatItemField.Refresh))
-                Refresh = newItem.Refresh;
-
-            if (datItemFields.Contains(DatItemField.PixClock))
-                PixClock = newItem.PixClock;
-
-            if (datItemFields.Contains(DatItemField.HTotal))
-                HTotal = newItem.HTotal;
-
-            if (datItemFields.Contains(DatItemField.HBEnd))
-                HBEnd = newItem.HBEnd;
-
-            if (datItemFields.Contains(DatItemField.HBStart))
-                HBStart = newItem.HBStart;
-
-            if (datItemFields.Contains(DatItemField.VTotal))
-                VTotal = newItem.VTotal;
-
-            if (datItemFields.Contains(DatItemField.VBEnd))
-                VBEnd = newItem.VBEnd;
-
-            if (datItemFields.Contains(DatItemField.VBStart))
-                VBStart = newItem.VBStart;
         }
 
         #endregion

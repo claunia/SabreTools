@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using SabreTools.Core;
 using Newtonsoft.Json;
@@ -195,64 +194,6 @@ namespace SabreTools.DatItems
                 && Ways == newOther.Ways
                 && Ways2 == newOther.Ways2
                 && Ways3 == newOther.Ways3);
-        }
-
-        #endregion
-
-        #region Sorting and Merging
-
-        /// <inheritdoc/>
-        public override void ReplaceFields(
-            DatItem item,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Replace common fields first
-            base.ReplaceFields(item, datItemFields, machineFields);
-
-            // If we don't have a Control to replace from, ignore specific fields
-            if (item.ItemType != ItemType.Control)
-                return;
-
-            // Cast for easier access
-            Control newItem = item as Control;
-
-            // Replace the fields
-            if (datItemFields.Contains(DatItemField.Control_Type))
-                ControlType = newItem.ControlType;
-
-            if (datItemFields.Contains(DatItemField.Control_Player))
-                Player = newItem.Player;
-
-            if (datItemFields.Contains(DatItemField.Control_Buttons))
-                Buttons = newItem.Buttons;
-
-            if (datItemFields.Contains(DatItemField.Control_RequiredButtons))
-                RequiredButtons = newItem.RequiredButtons;
-
-            if (datItemFields.Contains(DatItemField.Control_Minimum))
-                Minimum = newItem.Minimum;
-
-            if (datItemFields.Contains(DatItemField.Control_Maximum))
-                Maximum = newItem.Maximum;
-
-            if (datItemFields.Contains(DatItemField.Control_Sensitivity))
-                Sensitivity = newItem.Sensitivity;
-
-            if (datItemFields.Contains(DatItemField.Control_KeyDelta))
-                KeyDelta = newItem.KeyDelta;
-
-            if (datItemFields.Contains(DatItemField.Control_Reverse))
-                Reverse = newItem.Reverse;
-
-            if (datItemFields.Contains(DatItemField.Control_Ways))
-                Ways = newItem.Ways;
-
-            if (datItemFields.Contains(DatItemField.Control_Ways2))
-                Ways2 = newItem.Ways2;
-
-            if (datItemFields.Contains(DatItemField.Control_Ways3))
-                Ways3 = newItem.Ways3;
         }
 
         #endregion
