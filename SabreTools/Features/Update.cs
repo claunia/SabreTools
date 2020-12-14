@@ -202,9 +202,9 @@ namespace SabreTools.Features
             // Populate using the correct set
             List<DatHeader> datHeaders;
             if (updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace))
-                datHeaders = DatTool.PopulateUserData(userInputDat, basePaths);
+                datHeaders = DatFileTool.PopulateUserData(userInputDat, basePaths);
             else
-                datHeaders = DatTool.PopulateUserData(userInputDat, inputPaths);
+                datHeaders = DatFileTool.PopulateUserData(userInputDat, inputPaths);
 
             // Perform additional processing steps
             Modification.ApplyExtras(userInputDat, Extras);
@@ -215,7 +215,7 @@ namespace SabreTools.Features
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
             {
-                DatFile dupeData = DatTool.DiffDuplicates(userInputDat, inputPaths);
+                DatFile dupeData = DatFileTool.DiffDuplicates(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new InternalStopwatch("Outputting duplicate DAT");
                 Writer.Write(dupeData, OutputDir, overwrite: false);
@@ -225,7 +225,7 @@ namespace SabreTools.Features
             // Output only DatItems that are not duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffNoDupesOnly))
             {
-                DatFile outerDiffData = DatTool.DiffNoDuplicates(userInputDat, inputPaths);
+                DatFile outerDiffData = DatFileTool.DiffNoDuplicates(userInputDat, inputPaths);
 
                 InternalStopwatch watch = new InternalStopwatch("Outputting no duplicate DAT");
                 Writer.Write(outerDiffData, OutputDir, overwrite: false);
@@ -236,7 +236,7 @@ namespace SabreTools.Features
             if (updateMode.HasFlag(UpdateMode.DiffIndividualsOnly))
             {
                 // Get all of the output DatFiles
-                List<DatFile> datFiles = DatTool.DiffIndividuals(userInputDat, inputPaths);
+                List<DatFile> datFiles = DatFileTool.DiffIndividuals(userInputDat, inputPaths);
 
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new InternalStopwatch("Outputting all individual DATs");
@@ -271,7 +271,7 @@ namespace SabreTools.Features
                 });
 
                 // Get all of the output DatFiles
-                List<DatFile> datFiles = DatTool.DiffCascade(userInputDat, datHeaders);
+                List<DatFile> datFiles = DatFileTool.DiffCascade(userInputDat, datHeaders);
 
                 // Loop through and output the new DatFiles
                 InternalStopwatch watch = new InternalStopwatch("Outputting all created DATs");
@@ -305,7 +305,7 @@ namespace SabreTools.Features
                     Modification.ApplyCleaning(repDat, Cleaner);
 
                     // Now replace the fields from the base DatFile
-                    DatTool.DiffAgainst(userInputDat, repDat, GetBoolean(Features, ByGameValue));
+                    DatFileTool.DiffAgainst(userInputDat, repDat, GetBoolean(Features, ByGameValue));
 
                     // Finally output the diffed DatFile
                     string interOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
@@ -330,7 +330,7 @@ namespace SabreTools.Features
                     Modification.ApplyCleaning(repDat, Cleaner);
 
                     // Now replace the fields from the base DatFile
-                    DatTool.BaseReplace(
+                    DatFileTool.BaseReplace(
                         userInputDat,
                         repDat,
                         updateMachineFields,

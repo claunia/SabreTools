@@ -64,7 +64,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
 
             // Diff against the new datfile
             DatFile intDat = Parser.CreateAndParse(newdat);
-            DatTool.DiffAgainst(datfile, intDat, false);
+            DatFileTool.DiffAgainst(datfile, intDat, false);
             Writer.Write(intDat, outdat);
         }
     }

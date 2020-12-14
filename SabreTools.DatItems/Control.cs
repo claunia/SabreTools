@@ -252,56 +252,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (datItemFields.Contains(DatItemField.Control_Type))
-                ControlType = ControlType.NULL;
-
-            if (datItemFields.Contains(DatItemField.Control_Player))
-                Player = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Buttons))
-                Buttons = null;
-
-            if (datItemFields.Contains(DatItemField.Control_RequiredButtons))
-                RequiredButtons = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Minimum))
-                Minimum = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Maximum))
-                Maximum = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Sensitivity))
-                Sensitivity = null;
-
-            if (datItemFields.Contains(DatItemField.Control_KeyDelta))
-                KeyDelta = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Reverse))
-                Reverse = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Ways))
-                Ways = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Ways2))
-                Ways2 = null;
-
-            if (datItemFields.Contains(DatItemField.Control_Ways3))
-                Ways3 = null;
-        }
-
-        #endregion
-
         #region Sorting and Merging
 
         /// <inheritdoc/>

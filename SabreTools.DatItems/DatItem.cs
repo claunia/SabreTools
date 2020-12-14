@@ -456,25 +456,6 @@ namespace SabreTools.DatItems
         #region Filtering
 
         /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="datItemFields">DatItem fields to remove</param>
-        /// <param name="machineFields">Machine fields to remove</param>
-        /// TODO: Fix case where datItemFields is null
-        public virtual void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-        }
-
-        /// <summary>
-        /// Set internal names to match One Rom Per Game (ORPG) logic
-        /// </summary>
-        public virtual void SetOneRomPerGame()
-        {
-        }
-
-        /// <summary>
         /// Clean a CRC32 string and pad to the correct size
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>

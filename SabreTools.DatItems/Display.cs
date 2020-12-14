@@ -291,62 +291,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = null;
-
-            if (datItemFields.Contains(DatItemField.DisplayType))
-                DisplayType = DisplayType.NULL;
-
-            if (datItemFields.Contains(DatItemField.Rotate))
-                Rotate = null;
-
-            if (datItemFields.Contains(DatItemField.FlipX))
-                FlipX = null;
-
-            if (datItemFields.Contains(DatItemField.Width))
-                Width = null;
-
-            if (datItemFields.Contains(DatItemField.Height))
-                Height = null;
-
-            if (datItemFields.Contains(DatItemField.Refresh))
-                Refresh = null;
-
-            if (datItemFields.Contains(DatItemField.PixClock))
-                PixClock = null;
-
-            if (datItemFields.Contains(DatItemField.HTotal))
-                HTotal = null;
-
-            if (datItemFields.Contains(DatItemField.HBEnd))
-                HBEnd = null;
-
-            if (datItemFields.Contains(DatItemField.HBStart))
-                HBStart = null;
-
-            if (datItemFields.Contains(DatItemField.VTotal))
-                VTotal = null;
-
-            if (datItemFields.Contains(DatItemField.VBEnd))
-                VBEnd = null;
-
-            if (datItemFields.Contains(DatItemField.VBStart))
-                VBStart = null;
-        }
-
-        #endregion
-
         #region Sorting and Merging
 
         /// <inheritdoc/>

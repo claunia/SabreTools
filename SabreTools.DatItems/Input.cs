@@ -171,40 +171,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (datItemFields.Contains(DatItemField.Service))
-                Service = null;
-
-            if (datItemFields.Contains(DatItemField.Tilt))
-                Tilt = null;
-
-            if (datItemFields.Contains(DatItemField.Players))
-                Players = 0;
-
-            if (datItemFields.Contains(DatItemField.Coins))
-                Coins = null;
-
-            if (ControlsSpecified)
-            {
-                foreach (Control control in Controls)
-                {
-                    control.RemoveFields(datItemFields, machineFields);
-                }
-            }
-        }
-
-        #endregion
-
         #region Sorting and Merging
 
         /// <inheritdoc/>

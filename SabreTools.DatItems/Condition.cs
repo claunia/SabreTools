@@ -162,63 +162,6 @@ namespace SabreTools.DatItems
 
         #endregion
 
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            RemoveFields(datItemFields, machineFields, false);
-        }
-
-        /// <summary>
-        /// Remove fields from the DatItem
-        /// </summary>
-        /// <param name="datItemMappings">DatItem fields to remove</param>
-        /// <param name="machineMappings">Machine fields to remove</param>
-        /// <param name="sub">True if this is a subitem, false otherwise</param>
-        public void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields,
-            bool sub)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (sub)
-            {
-                if (datItemFields.Contains(DatItemField.Condition_Tag))
-                    Tag = null;
-
-                if (datItemFields.Contains(DatItemField.Condition_Mask))
-                    Mask = null;
-
-                if (datItemFields.Contains(DatItemField.Condition_Relation))
-                    Relation = Relation.NULL;
-
-                if (datItemFields.Contains(DatItemField.Condition_Value))
-                    Value = null;
-            }
-            else
-            {
-                if (datItemFields.Contains(DatItemField.Tag))
-                    Tag = null;
-
-                if (datItemFields.Contains(DatItemField.Mask))
-                    Mask = null;
-
-                if (datItemFields.Contains(DatItemField.Relation))
-                    Relation = Relation.NULL;
-
-                if (datItemFields.Contains(DatItemField.Value))
-                    Value = null;
-            }
-        }
-
-        #endregion
-
         #region Sorting and Merging
 
         /// <inheritdoc/>

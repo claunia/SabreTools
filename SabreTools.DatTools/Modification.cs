@@ -146,7 +146,7 @@ namespace SabreTools.DatTools
 
                     foreach (var datItem in datItems)
                     {
-                        Cleaner.SetFields(datItem.Machine, mappings);
+                        DatItemTool.SetFields(datItem.Machine, mappings);
                     }
                 }
 
@@ -493,7 +493,7 @@ namespace SabreTools.DatTools
                 List<DatItem> items = datFile.Items[key];
                 for (int i = 0; i < items.Count; i++)
                 {
-                    items[i].SetOneRomPerGame();
+                    DatItemTool.SetOneRomPerGame(items[i]);
                 }
             });
         }
@@ -524,8 +524,7 @@ namespace SabreTools.DatTools
                 List<DatItem> items = datFile.Items[key];
                 for (int j = 0; j < items.Count; j++)
                 {
-                    items[j].RemoveFields(datItemFields, null);
-                    Cleaner.RemoveFields(items[j].Machine, machineFields);
+                    DatItemTool.RemoveFields(items[j], datItemFields, machineFields);
                 }
 
                 datFile.Items.Remove(key);

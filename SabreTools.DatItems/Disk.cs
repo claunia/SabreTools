@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -418,72 +417,6 @@ namespace SabreTools.DatItems
             // Return if all hashes match according to merge rules
             return ConditionalHashEquals(_md5, other._md5)
                 && ConditionalHashEquals(_sha1, other._sha1);
-        }
-
-        #endregion
-
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-
-            #region Common
-
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = null;
-
-            if (datItemFields.Contains(DatItemField.MD5))
-                MD5 = null;
-
-            if (datItemFields.Contains(DatItemField.SHA1))
-                SHA1 = null;
-
-            if (datItemFields.Contains(DatItemField.Merge))
-                MergeTag = null;
-
-            if (datItemFields.Contains(DatItemField.Region))
-                Region = null;
-
-            if (datItemFields.Contains(DatItemField.Index))
-                Index = null;
-
-            if (datItemFields.Contains(DatItemField.Writable))
-                Writable = null;
-
-            if (datItemFields.Contains(DatItemField.Status))
-                ItemStatus = ItemStatus.NULL;
-
-            if (datItemFields.Contains(DatItemField.Optional))
-                Optional = null;
-
-            #endregion
-
-            #region SoftwareList
-
-            if (DiskAreaSpecified)
-                DiskArea.RemoveFields(datItemFields, machineFields);
-
-            if (PartSpecified)
-                Part.RemoveFields(datItemFields, machineFields);
-
-            #endregion
-        }
-
-        /// <summary>
-        /// Set internal names to match One Rom Per Game (ORPG) logic
-        /// </summary>
-        public override void SetOneRomPerGame()
-        {
-            string[] splitname = Name.Split('.');
-            Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
-            Name = Path.GetFileName(Name);
         }
 
         #endregion

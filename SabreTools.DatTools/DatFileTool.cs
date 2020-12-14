@@ -13,7 +13,7 @@ using SabreTools.Logging;
 namespace SabreTools.DatTools
 {
     // This file represents all methods related to converting and updating DatFiles
-    public class DatTool
+    public class DatFileTool
     {
         #region Logging
 
@@ -87,7 +87,7 @@ namespace SabreTools.DatTools
                     {
                         DatItem newDatItem = datItem.Clone() as DatItem;
                         if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count() > 0)
-                            Cleaner.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
+                            DatItemTool.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }

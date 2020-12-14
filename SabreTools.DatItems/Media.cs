@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -317,45 +316,6 @@ namespace SabreTools.DatItems
             return ConditionalHashEquals(_md5, other._md5)
                 && ConditionalHashEquals(_sha1, other._sha1)
                 && ConditionalHashEquals(_spamsum, other._spamsum);
-        }
-
-        #endregion
-
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = null;
-
-            if (datItemFields.Contains(DatItemField.MD5))
-                MD5 = null;
-
-            if (datItemFields.Contains(DatItemField.SHA1))
-                SHA1 = null;
-
-            if (datItemFields.Contains(DatItemField.SHA256))
-                SHA256 = null;
-
-            if (datItemFields.Contains(DatItemField.SpamSum))
-                SpamSum = null;
-        }
-
-        /// <summary>
-        /// Set internal names to match One Rom Per Game (ORPG) logic
-        /// </summary>
-        public override void SetOneRomPerGame()
-        {
-            string[] splitname = Name.Split('.');
-            Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
-            Name = Path.GetFileName(Name);
         }
 
         #endregion

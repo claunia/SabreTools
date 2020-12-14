@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -211,63 +210,6 @@ namespace SabreTools.DatItems
             }
 
             return match;
-        }
-
-        #endregion
-
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (datItemFields.Contains(DatItemField.Name))
-                Name = null;
-
-            if (datItemFields.Contains(DatItemField.Tag))
-                Tag = null;
-
-            if (datItemFields.Contains(DatItemField.Mask))
-                Mask = null;
-
-            if (ConditionsSpecified)
-            {
-                foreach (Condition condition in Conditions)
-                {
-                    condition.RemoveFields(datItemFields, machineFields, true);
-                }
-            }
-
-            if (LocationsSpecified)
-            {
-                foreach (Location location in Locations)
-                {
-                    location.RemoveFields(datItemFields, machineFields);
-                }
-            }
-
-            if (SettingsSpecified)
-            {
-                foreach (Setting setting in Settings)
-                {
-                    setting.RemoveFields(datItemFields, machineFields);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Set internal names to match One Rom Per Game (ORPG) logic
-        /// </summary>
-        public override void SetOneRomPerGame()
-        {
-            string[] splitname = Name.Split('.');
-            Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
-            Name = Path.GetFileName(Name);
         }
 
         #endregion

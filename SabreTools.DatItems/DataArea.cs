@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -147,42 +146,6 @@ namespace SabreTools.DatItems
                 && Size == newOther.Size
                 && Width == newOther.Width
                 && Endianness == newOther.Endianness);
-        }
-
-        #endregion
-
-        #region Filtering
-
-        /// <inheritdoc/>
-        public override void RemoveFields(
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // Remove common fields first
-            base.RemoveFields(datItemFields, machineFields);
-
-            // Remove the fields
-            if (datItemFields.Contains(DatItemField.AreaName))
-                Name = null;
-
-            if (datItemFields.Contains(DatItemField.AreaSize))
-                Size = null;
-
-            if (datItemFields.Contains(DatItemField.AreaWidth))
-                Width = null;
-
-            if (datItemFields.Contains(DatItemField.AreaEndianness))
-                Endianness = Endianness.NULL;
-        }
-
-        /// <summary>
-        /// Set internal names to match One Rom Per Game (ORPG) logic
-        /// </summary>
-        public override void SetOneRomPerGame()
-        {
-            string[] splitname = Name.Split('.');
-            Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
-            Name = Path.GetFileName(Name);
         }
 
         #endregion
