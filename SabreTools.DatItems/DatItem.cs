@@ -433,7 +433,6 @@ namespace SabreTools.DatItems
         /// <param name="lower">True if the key should be lowercased (default), false otherwise</param>
         /// <param name="norename">True if games should only be compared on game and file name, false if system and source are counted</param>
         /// <returns>String representing the key to be used for the DatItem</returns>
-        /// TODO: What other fields can we reasonably allow bucketing on?
         public virtual string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string

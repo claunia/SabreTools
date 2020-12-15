@@ -337,7 +337,6 @@ namespace SabreTools.Filtering
         /// <param name="datItem">DatItem to check</param>
         /// <param name="sub">True if this is a subitem, false otherwise</param>
         /// <returns>True if the item passed the filter, false otherwise</returns>
-        /// TODO: Split this somehow
         /// TODO: Name can be made into a common one if name exists
         public bool PassesFilters(DatItem datItem, bool sub = false)
         {

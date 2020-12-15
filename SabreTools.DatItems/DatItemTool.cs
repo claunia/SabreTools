@@ -11,7 +11,6 @@ namespace SabreTools.DatItems
     /// <summary>
     /// Manipulate DatItems
     /// </summary>
-    /// TODO: Use these instead of the baked in ones
     public static class DatItemTool
     {
         /// <summary>
@@ -21,7 +20,6 @@ namespace SabreTools.DatItems
         /// <param name="datItemFields">DatItem fields to remove</param>
         /// <param name="machineFields">Machine fields to remove</param>
         /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// TODO: Extract out setting name to common
         public static void RemoveFields(
             DatItem datItem,
             List<DatItemField> datItemFields = null,
@@ -39,15 +37,15 @@ namespace SabreTools.DatItems
             if (datItemFields == null)
                 return;
 
+            if (datItemFields.Contains(DatItemField.Name))
+                datItem.SetName(null);
+
             #endregion
 
             #region Adjuster
 
             if (datItem is Adjuster adjuster)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    adjuster.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Default))
                     adjuster.Default = null;
 
@@ -72,23 +70,10 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Archive
-
-            else if (datItem is Archive archive)
-            {
-                if (datItemFields.Contains(DatItemField.Name))
-                    archive.Name = null;
-            }
-
-            #endregion
-
             #region BiosSet
 
             else if (datItem is BiosSet biosSet)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    biosSet.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Description))
                     biosSet.Description = null;
 
@@ -102,9 +87,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Chip chip)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    chip.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Tag))
                     chip.Tag = null;
 
@@ -157,9 +139,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Configuration configuration)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    configuration.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Tag))
                     configuration.Tag = null;
 
@@ -292,25 +271,12 @@ namespace SabreTools.DatItems
             }
 
             #endregion
-
-            #region DeviceReference
-
-            else if (datItem is DeviceReference deviceReference)
-            {
-                if (datItemFields.Contains(DatItemField.Name))
-                    deviceReference.Name = null;
-            }
-
-            #endregion
         
             #region DipSwitch
 
             else if (datItem is DipSwitch dipSwitch)
             {
                 #region Common
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    dipSwitch.Name = null;
 
                 if (datItemFields.Contains(DatItemField.Tag))
                     dipSwitch.Tag = null;
@@ -359,9 +325,6 @@ namespace SabreTools.DatItems
             else if (datItem is Disk disk)
             {
                 #region Common
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    disk.Name = null;
 
                 if (datItemFields.Contains(DatItemField.MD5))
                     disk.MD5 = null;
@@ -510,9 +473,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Info info)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    info.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Value))
                     info.Value = null;
             }
@@ -579,9 +539,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Media media)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    media.Name = null;
-
                 if (datItemFields.Contains(DatItemField.MD5))
                     media.MD5 = null;
 
@@ -653,9 +610,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is RamOption ramOption)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    ramOption.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Default))
                     ramOption.Default = null;
 
@@ -669,9 +623,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Release release)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    release.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Region))
                     release.Region = null;
 
@@ -692,9 +643,6 @@ namespace SabreTools.DatItems
             else if (datItem is Rom rom)
             {
                 #region Common
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    rom.Name = null;
 
                 if (datItemFields.Contains(DatItemField.Bios))
                     rom.Bios = null;
@@ -794,16 +742,6 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Sample
-
-            else if (datItem is Sample sample)
-            {
-                if (datItemFields.Contains(DatItemField.Name))
-                    sample.Name = null;
-            }
-
-            #endregion
-
             #region Setting
 
             else if (datItem is Setting setting)
@@ -832,9 +770,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is SharedFeature sharedFeature)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    sharedFeature.Name = null;
-
                 if (datItemFields.Contains(DatItemField.Value))
                     sharedFeature.Value = null;
             }
@@ -845,9 +780,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Slot slot)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    slot.Name = null;
-
                 if (slot.SlotOptionsSpecified)
                 {
                     foreach (SlotOption subSlotOption in slot.SlotOptions)
@@ -879,9 +811,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is SoftwareList softwareList)
             {
-                if (datItemFields.Contains(DatItemField.Name))
-                    softwareList.Name = null;
-
                 if (datItemFields.Contains(DatItemField.SoftwareListStatus))
                     softwareList.Status = SoftwareListStatus.NULL;
 
@@ -1049,23 +978,26 @@ namespace SabreTools.DatItems
         /// <param name="datItem">DatItem to replace fields in</param>
         /// <param name="repMachine">DatItem to pull new information from</param>
         /// <param name="datItemFields">List of fields representing what should be updated</param>
-        /// TODO: Extract out setting name to common
         public static void ReplaceFields(DatItem datItem, DatItem repDatItem, List<DatItemField> datItemFields)
         {
             if (datItem == null || repDatItem == null || datItemFields == null)
                 return;
 
+            #region Common
+
             if (datItem.ItemType != repDatItem.ItemType)
                 return;
+
+            if (datItemFields.Contains(DatItemField.Name))
+                datItem.SetName(repDatItem.GetName());
+
+            #endregion
 
             #region Adjuster
 
             if (datItem is Adjuster adjuster)
             {
                 Adjuster newItem = repDatItem as Adjuster;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    adjuster.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Default))
                     adjuster.Default = newItem.Default;
@@ -1089,26 +1021,11 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Archive
-
-            else if (datItem is Archive archive)
-            {
-                Archive newItem = repDatItem as Archive;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    archive.Name = newItem.Name;
-            }
-
-            #endregion
-
             #region BiosSet
 
             else if (datItem is BiosSet biosSet)
             {
                 BiosSet newItem = repDatItem as BiosSet;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    biosSet.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Description))
                     biosSet.Description = newItem.Description;
@@ -1124,9 +1041,6 @@ namespace SabreTools.DatItems
             else if (datItem is Chip chip)
             {
                 Chip newItem = repDatItem as Chip;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    chip.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Tag))
                     chip.Tag = newItem.Tag;
@@ -1174,9 +1088,6 @@ namespace SabreTools.DatItems
             else if (datItem is Configuration configuration)
             {
                 Configuration newItem = repDatItem as Configuration;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    configuration.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Tag))
                     configuration.Tag = newItem.Tag;
@@ -1296,18 +1207,6 @@ namespace SabreTools.DatItems
             }
 
             #endregion
-
-            #region DeviceReference
-
-            else if (datItem is DeviceReference deviceReference)
-            {
-                DeviceReference newItem = repDatItem as DeviceReference;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    deviceReference.Name = newItem.Name;
-            }
-
-            #endregion
         
             #region DipSwitch
 
@@ -1316,9 +1215,6 @@ namespace SabreTools.DatItems
                 DipSwitch newItem = repDatItem as DipSwitch;
 
                 #region Common
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    dipSwitch.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Tag))
                     dipSwitch.Tag = newItem.Tag;
@@ -1357,9 +1253,6 @@ namespace SabreTools.DatItems
                 Disk newItem = repDatItem as Disk;
 
                 #region Common
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    disk.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.MD5))
                 {
@@ -1526,9 +1419,6 @@ namespace SabreTools.DatItems
             {
                 Info newItem = repDatItem as Info;
 
-                if (datItemFields.Contains(DatItemField.Name))
-                    info.Name = newItem.Name;
-
                 if (datItemFields.Contains(DatItemField.Value))
                     info.Value = newItem.Value;
             }
@@ -1599,9 +1489,6 @@ namespace SabreTools.DatItems
             {
                 Media newItem = repDatItem as Media;
 
-                if (datItemFields.Contains(DatItemField.Name))
-                    media.Name = newItem.Name;
-
                 if (datItemFields.Contains(DatItemField.MD5))
                 {
                     if (string.IsNullOrEmpty(media.MD5) && !string.IsNullOrEmpty(newItem.MD5))
@@ -1665,13 +1552,8 @@ namespace SabreTools.DatItems
 
             #region Port
 
-            else if (datItem is Port port)
+            else if (datItem is Port)
             {
-                Port newItem = repDatItem as Port;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    port.Tag = newItem.Tag;
-
                 // Analog_* doesn't make sense here
                 // since not every analog under the other item
                 // can replace every analog under this item
@@ -1684,9 +1566,6 @@ namespace SabreTools.DatItems
             else if (datItem is RamOption ramOption)
             {
                 RamOption newItem = repDatItem as RamOption;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    ramOption.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Default))
                     ramOption.Default = newItem.Default;
@@ -1702,9 +1581,6 @@ namespace SabreTools.DatItems
             else if (datItem is Release release)
             {
                 Release newItem = repDatItem as Release;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    release.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Region))
                     release.Region = newItem.Region;
@@ -1728,9 +1604,6 @@ namespace SabreTools.DatItems
                 Rom newItem = repDatItem as Rom;
 
                 #region Common
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    rom.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.Bios))
                     rom.Bios = newItem.Bios;
@@ -1851,18 +1724,6 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Sample
-
-            else if (datItem is Sample sample)
-            {
-                Sample newItem = repDatItem as Sample;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    sample.Name = newItem.Name;
-            }
-
-            #endregion
-
             #region Setting
 
             else if (datItem is Setting setting)
@@ -1891,9 +1752,6 @@ namespace SabreTools.DatItems
             {
                 SharedFeature newItem = repDatItem as SharedFeature;
 
-                if (datItemFields.Contains(DatItemField.Name))
-                    sharedFeature.Name = newItem.Name;
-
                 if (datItemFields.Contains(DatItemField.Value))
                     sharedFeature.Value = newItem.Value;
             }
@@ -1902,13 +1760,8 @@ namespace SabreTools.DatItems
 
             #region Slot
 
-            else if (datItem is Slot slot)
+            else if (datItem is Slot)
             {
-                Slot newItem = repDatItem as Slot;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    slot.Name = newItem.Name;
-
                 // SlotOption_* doesn't make sense here
                 // since not every slot option under the other item
                 // can replace every slot option under this item
@@ -1939,9 +1792,6 @@ namespace SabreTools.DatItems
             else if (datItem is SoftwareList softwareList)
             {
                 SoftwareList newItem = repDatItem as SoftwareList;
-
-                if (datItemFields.Contains(DatItemField.Name))
-                    softwareList.Name = newItem.Name;
 
                 if (datItemFields.Contains(DatItemField.SoftwareListStatus))
                     softwareList.Status = newItem.Status;
@@ -2118,7 +1968,6 @@ namespace SabreTools.DatItems
         /// <param name="datItemMappings">DatItem mappings dictionary</param>
         /// <param name="machineMappings">Machine mappings dictionary</param>
         /// <param name="sub">True if this is a subitem, false otherwise</param>
-        /// TODO: Extract out setting name to common
         public static void SetFields(
             DatItem datItem,
             Dictionary<DatItemField, string> datItemMappings,
@@ -2136,15 +1985,15 @@ namespace SabreTools.DatItems
             if (datItemMappings == null)
                 return;
 
+            if (datItemMappings.Keys.Contains(DatItemField.Name))
+                datItem.SetName(datItemMappings[DatItemField.Name]);
+
             #endregion
 
             #region Adjuster
 
             if (datItem is Adjuster adjuster)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    adjuster.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Default))
                     adjuster.Default = datItemMappings[DatItemField.Default].AsYesNo();
 
@@ -2170,23 +2019,10 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Archive
-
-            else if (datItem is Archive archive)
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    archive.Name = datItemMappings[DatItemField.Name];
-            }
-
-            #endregion
-
             #region BiosSet
 
             else if (datItem is BiosSet biosSet)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    biosSet.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Description))
                     biosSet.Description = datItemMappings[DatItemField.Description];
 
@@ -2200,9 +2036,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Chip chip)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    chip.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Tag))
                     chip.Tag = datItemMappings[DatItemField.Tag];
 
@@ -2255,9 +2088,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Configuration configuration)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    configuration.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Tag))
                     configuration.Tag = datItemMappings[DatItemField.Tag];
 
@@ -2338,9 +2168,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is DataArea dataArea)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.AreaName))
-                    dataArea.Name = datItemMappings[DatItemField.AreaName];
-
                 if (datItemMappings.Keys.Contains(DatItemField.AreaSize))
                     dataArea.Size = Utilities.CleanLong(datItemMappings[DatItemField.AreaSize]);
 
@@ -2390,25 +2217,12 @@ namespace SabreTools.DatItems
             }
 
             #endregion
-
-            #region DeviceReference
-
-            else if (datItem is DeviceReference deviceReference)
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    deviceReference.Name = datItemMappings[DatItemField.Name];
-            }
-
-            #endregion
         
             #region DipSwitch
 
             else if (datItem is DipSwitch dipSwitch)
             {
                 #region Common
-
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    dipSwitch.Name = datItemMappings[DatItemField.Name];
 
                 if (datItemMappings.Keys.Contains(DatItemField.Tag))
                     dipSwitch.Tag = datItemMappings[DatItemField.Tag];
@@ -2461,9 +2275,6 @@ namespace SabreTools.DatItems
             {
                 #region Common
                 
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    disk.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.MD5))
                     disk.MD5 = datItemMappings[DatItemField.MD5];
 
@@ -2503,16 +2314,6 @@ namespace SabreTools.DatItems
                 SetFields(disk.Part, datItemMappings, machineMappings);
 
                 #endregion
-            }
-
-            #endregion
-
-            #region DiskArea
-
-            else if (datItem is DiskArea diskArea)
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.AreaName))
-                    diskArea.Name = datItemMappings[DatItemField.AreaName];
             }
 
             #endregion
@@ -2588,16 +2389,6 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Extension
-
-            else if (datItem is Extension extension)
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.Extension_Name))
-                    extension.Name = datItemMappings[DatItemField.Extension_Name];
-            }
-
-            #endregion
-
             #region Feature
 
             else if (datItem is Feature feature)
@@ -2618,9 +2409,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Info info)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    info.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Value))
                     info.Value = datItemMappings[DatItemField.Value];
             }
@@ -2658,9 +2446,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Instance instance)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Instance_Name))
-                    instance.Name = datItemMappings[DatItemField.Instance_Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Instance_BriefName))
                     instance.BriefName = datItemMappings[DatItemField.Instance_BriefName];
             }
@@ -2671,9 +2456,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Location location)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Location_Name))
-                    location.Name = datItemMappings[DatItemField.Location_Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Location_Number))
                     location.Number = Utilities.CleanLong(datItemMappings[DatItemField.Location_Number]);
 
@@ -2687,9 +2469,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Media media)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    media.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.MD5))
                     media.MD5 = datItemMappings[DatItemField.MD5];
 
@@ -2761,9 +2540,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is RamOption ramOption)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    ramOption.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Default))
                     ramOption.Default = datItemMappings[DatItemField.Default].AsYesNo();
 
@@ -2777,9 +2553,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Release release)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    release.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Region))
                     release.Region = datItemMappings[DatItemField.Region];
 
@@ -2800,9 +2573,6 @@ namespace SabreTools.DatItems
             else if (datItem is Rom rom)
             {
                 #region Common
-
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    rom.Name = datItemMappings[DatItemField.Name];
 
                 if (datItemMappings.Keys.Contains(DatItemField.Bios))
                     rom.Bios = datItemMappings[DatItemField.Bios];
@@ -2906,16 +2676,6 @@ namespace SabreTools.DatItems
 
             #endregion
 
-            #region Sample
-
-            else if (datItem is Sample sample)
-            {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    sample.Name = datItemMappings[DatItemField.Name];
-            }
-
-            #endregion
-
             #region Setting
 
             else if (datItem is Setting setting)
@@ -2944,9 +2704,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is SharedFeature sharedFeature)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    sharedFeature.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.Value))
                     sharedFeature.Value = datItemMappings[DatItemField.Value];
             }
@@ -2957,9 +2714,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is Slot slot)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    slot.Name = datItemMappings[DatItemField.Name];
-
                 if (slot.SlotOptionsSpecified)
                 {
                     foreach (SlotOption subSlotOption in slot.SlotOptions)
@@ -2991,9 +2745,6 @@ namespace SabreTools.DatItems
 
             else if (datItem is SoftwareList softwareList)
             {
-                if (datItemMappings.Keys.Contains(DatItemField.Name))
-                    softwareList.Name = datItemMappings[DatItemField.Name];
-
                 if (datItemMappings.Keys.Contains(DatItemField.SoftwareListStatus))
                     softwareList.Status = datItemMappings[DatItemField.SoftwareListStatus].AsSoftwareListStatus();
 

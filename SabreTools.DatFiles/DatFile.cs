@@ -355,9 +355,6 @@ namespace SabreTools.DatFiles
                 .Replace("%size%", size)
                 .Replace("%spamsum%", spamsum);
 
-            // TODO: Add GameName logic here too?
-            // TODO: Figure out what I meant by the above ^
-
             return fix;
         }
 

@@ -721,7 +721,6 @@ namespace SabreTools.DatFiles
             List<string> usedExtensions = new List<string>();
 
             // Get the extensions from the output type
-            // TODO: Can the system of adding be more automated?
 
             #region .csv
 

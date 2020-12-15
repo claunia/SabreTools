@@ -91,7 +91,8 @@ namespace SabreTools.Skippers
             }
 
             // Create the output directory if it doesn't already
-            Ensure(Path.GetDirectoryName(output));
+            if (!Directory.Exists(Path.GetDirectoryName(output)))
+                Directory.CreateDirectory(Path.GetDirectoryName(output));
 
             //logger.User($"Attempting to apply rule to '{input}'");
             bool success = TransformStream(File.OpenRead(input), File.Create(output));
@@ -237,38 +238,5 @@ namespace SabreTools.Skippers
 
             return success;
         }
-
-        // TODO: Remove this region once IO namespace is separated out properly
-        #region TEMPORARY - REMOVEME
-
-        /// <summary>
-        /// Ensure the output directory is a proper format and can be created
-        /// </summary>
-        /// <param name="dir">Directory to check</param>
-        /// <param name="create">True if the directory should be created, false otherwise (default)</param>
-        /// <param name="temp">True if this is a temp directory, false otherwise</param>
-        /// <returns>Full path to the directory</returns>
-        public static string Ensure(string dir, bool create = false, bool temp = false)
-        {
-            // If the output directory is invalid
-            if (string.IsNullOrWhiteSpace(dir))
-            {
-                if (temp)
-                    dir = Path.GetTempPath();
-                else
-                    dir = Environment.CurrentDirectory;
-            }
-
-            // Get the full path for the output directory
-            dir = Path.GetFullPath(dir);
-
-            // If we're creating the output folder, do so
-            if (create)
-                Directory.CreateDirectory(dir);
-
-            return dir;
-        }
-
-        #endregion
     }
 }

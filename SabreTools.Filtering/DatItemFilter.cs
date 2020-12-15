@@ -9,8 +9,6 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the filtering operations that need to be performed on a set of items, usually a DAT
     /// </summary>
-    /// TODO: Can clever use of Filtering allow for easier external splitting methods?
-    /// TODO: Investigate how to reduce the amount of hardcoded filter statements
     public class DatItemFilter : Filter
     {
         #region Fields

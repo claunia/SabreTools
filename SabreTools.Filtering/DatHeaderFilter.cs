@@ -9,8 +9,6 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the filtering operations that need to be performed on a DatHeader
     /// </summary>
-    /// TODO: Investigate how to reduce the amount of hardcoded filter statements
-    /// TODO: Add DatHeader filters
     public class DatHeaderFilter : Filter
     {
         #region Constructors
