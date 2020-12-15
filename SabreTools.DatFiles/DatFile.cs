@@ -70,88 +70,37 @@ namespace SabreTools.DatFiles
         /// <returns>DatFile of the specific internal type that corresponds to the inputs</returns>
         public static DatFile Create(DatFormat? datFormat = null, DatFile baseDat = null, bool quotes = true)
         {
-            switch (datFormat)
+            return datFormat switch
             {
-                case DatFormat.AttractMode:
-                    return new AttractMode(baseDat);
-
-                case DatFormat.ClrMamePro:
-                    return new ClrMamePro(baseDat, quotes);
-
-                case DatFormat.CSV:
-                    return new Formats.SeparatedValue(baseDat, ',');
-
-                case DatFormat.DOSCenter:
-                    return new DosCenter(baseDat);
-
-                case DatFormat.EverdriveSMDB:
-                    return new EverdriveSMDB(baseDat);
-
-                case DatFormat.Listrom:
-                    return new Listrom(baseDat);
-
-                case DatFormat.Listxml:
-                    return new Listxml(baseDat);
-
-                case DatFormat.Logiqx:
-                    return new Logiqx(baseDat, false);
-
-                case DatFormat.LogiqxDeprecated:
-                    return new Logiqx(baseDat, true);
-
-                case DatFormat.MissFile:
-                    return new Missfile(baseDat);
-
-                case DatFormat.OfflineList:
-                    return new OfflineList(baseDat);
-
-                case DatFormat.OpenMSX:
-                    return new OpenMSX(baseDat);
-
-                case DatFormat.RedumpMD5:
-                    return new Hashfile(baseDat, Hash.MD5);
-
-                case DatFormat.RedumpSFV:
-                    return new Hashfile(baseDat, Hash.CRC);
-
-                case DatFormat.RedumpSHA1:
-                    return new Hashfile(baseDat, Hash.SHA1);
-
-                case DatFormat.RedumpSHA256:
-                    return new Hashfile(baseDat, Hash.SHA256);
-
-                case DatFormat.RedumpSHA384:
-                    return new Hashfile(baseDat, Hash.SHA384);
-
-                case DatFormat.RedumpSHA512:
-                    return new Hashfile(baseDat, Hash.SHA512);
-
-                case DatFormat.RedumpSpamSum:
-                    return new Hashfile(baseDat, Hash.SpamSum);
-
-                case DatFormat.RomCenter:
-                    return new RomCenter(baseDat);
-
-                case DatFormat.SabreJSON:
-                    return new SabreJSON(baseDat);
-
-                case DatFormat.SabreXML:
-                    return new SabreXML(baseDat);
-
-                case DatFormat.SoftwareList:
-                    return new Formats.SoftwareList(baseDat);
-
-                case DatFormat.SSV:
-                    return new Formats.SeparatedValue(baseDat, ';');
-
-                case DatFormat.TSV:
-                    return new Formats.SeparatedValue(baseDat, '\t');
-
+                DatFormat.AttractMode => new AttractMode(baseDat),
+                DatFormat.ClrMamePro => new ClrMamePro(baseDat, quotes),
+                DatFormat.CSV => new SeparatedValue(baseDat, ','),
+                DatFormat.DOSCenter => new DosCenter(baseDat),
+                DatFormat.EverdriveSMDB => new EverdriveSMDB(baseDat),
+                DatFormat.Listrom => new Listrom(baseDat),
+                DatFormat.Listxml => new Listxml(baseDat),
+                DatFormat.Logiqx => new Logiqx(baseDat, false),
+                DatFormat.LogiqxDeprecated => new Logiqx(baseDat, true),
+                DatFormat.MissFile => new Missfile(baseDat),
+                DatFormat.OfflineList => new OfflineList(baseDat),
+                DatFormat.OpenMSX => new OpenMSX(baseDat),
+                DatFormat.RedumpMD5 => new Hashfile(baseDat, Hash.MD5),
+                DatFormat.RedumpSFV => new Hashfile(baseDat, Hash.CRC),
+                DatFormat.RedumpSHA1 => new Hashfile(baseDat, Hash.SHA1),
+                DatFormat.RedumpSHA256 => new Hashfile(baseDat, Hash.SHA256),
+                DatFormat.RedumpSHA384 => new Hashfile(baseDat, Hash.SHA384),
+                DatFormat.RedumpSHA512 => new Hashfile(baseDat, Hash.SHA512),
+                DatFormat.RedumpSpamSum => new Hashfile(baseDat, Hash.SpamSum),
+                DatFormat.RomCenter => new RomCenter(baseDat),
+                DatFormat.SabreJSON => new SabreJSON(baseDat),
+                DatFormat.SabreXML => new SabreXML(baseDat),
+                DatFormat.SoftwareList => new Formats.SoftwareList(baseDat),
+                DatFormat.SSV => new SeparatedValue(baseDat, ';'),
+                DatFormat.TSV => new SeparatedValue(baseDat, '\t'),
+                
                 // We use new-style Logiqx as a backup for generic DatFile
-                case null:
-                default:
-                    return new Logiqx(baseDat, false);
-            }
+                _ => new Logiqx(baseDat, false),
+            };
         }
 
         /// <summary>
@@ -213,7 +162,7 @@ namespace SabreTools.DatFiles
         /// <returns>The key for the item</returns>
         protected string ParseAddHelper(DatItem item)
         {
-            string key = string.Empty;
+            string key;
 
             // If we have a Disk, Media, or Rom, clean the hash data
             if (item.ItemType == ItemType.Disk)
@@ -344,7 +293,7 @@ namespace SabreTools.DatFiles
         protected string CreatePrefixPostfix(DatItem item, bool prefix)
         {
             // Initialize strings
-            string fix = string.Empty,
+            string fix,
                 game = item.Machine.Name,
                 name = item.GetName() ?? item.ItemType.ToString(),
                 crc = string.Empty,

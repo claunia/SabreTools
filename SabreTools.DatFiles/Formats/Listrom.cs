@@ -93,7 +93,7 @@ namespace SabreTools.DatFiles.Formats
                             logger.Warning($"Possibly malformed line: '{line}'");
 
                         string romname = split[0];
-                        line = line.Substring(romname.Length);
+                        line = line[romname.Length..];
 
                         // Next we separate the ROM into pieces
                         split = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);

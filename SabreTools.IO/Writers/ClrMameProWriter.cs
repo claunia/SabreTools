@@ -59,7 +59,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Internal stream writer
         /// </summary>
-        private StreamWriter sw;
+        private readonly StreamWriter sw;
 
         /// <summary>
         /// Stack for tracking current node

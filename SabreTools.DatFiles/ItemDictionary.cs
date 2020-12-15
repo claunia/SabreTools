@@ -34,7 +34,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Internal dictionary for the class
         /// </summary>
-        private ConcurrentDictionary<string, List<DatItem>> items;
+        private readonly ConcurrentDictionary<string, List<DatItem>> items;
 
         /// <summary>
         /// Lock for statistics calculation
@@ -44,12 +44,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Logging object
         /// </summary>
-        private Logger logger;
-
-        /// <summary>
-        /// Static logger for static methods
-        /// </summary>
-        private static Logger staticLogger = new Logger();
+        private readonly Logger logger;
 
         #endregion
 

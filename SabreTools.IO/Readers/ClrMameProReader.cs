@@ -125,7 +125,7 @@ namespace SabreTools.IO.Readers
             // Standalone (special case for DC dats)
             if (CurrentLine.StartsWith("Name:"))
             {
-                string temp = CurrentLine.Substring("Name:".Length).Trim();
+                string temp = CurrentLine["Name:".Length..].Trim();
                 CurrentLine = $"Name: {temp}";
             }
 

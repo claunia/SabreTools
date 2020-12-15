@@ -99,26 +99,15 @@ namespace SabreTools.FileTypes
         /// <returns>Archive object representing the inputs</returns>
         public static BaseArchive Create(FileType archiveType)
         {
-            switch (archiveType)
+            return archiveType switch
             {
-                case FileType.GZipArchive:
-                    return new GZipArchive();
-
-                case FileType.RarArchive:
-                    return new RarArchive();
-
-                case FileType.SevenZipArchive:
-                    return new SevenZipArchive();
-
-                case FileType.TapeArchive:
-                    return new TapeArchive();
-
-                case FileType.ZipArchive:
-                    return new ZipArchive();
-
-                default:
-                    return null;
-            }
+                FileType.GZipArchive => new GZipArchive(),
+                FileType.RarArchive => new RarArchive(),
+                FileType.SevenZipArchive => new SevenZipArchive(),
+                FileType.TapeArchive => new TapeArchive(),
+                FileType.ZipArchive => new ZipArchive(),
+                _ => null,
+            };
         }
 
         #endregion

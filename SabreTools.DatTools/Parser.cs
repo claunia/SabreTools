@@ -158,23 +158,21 @@ namespace SabreTools.DatTools
 
             try
             {
-                using (StreamReader sr = File.OpenText(filename))
+                using StreamReader sr = File.OpenText(filename);
+                first = sr.ReadLine().ToLowerInvariant();
+                while ((string.IsNullOrWhiteSpace(first) || first.StartsWith("<!--"))
+                    && !sr.EndOfStream)
                 {
                     first = sr.ReadLine().ToLowerInvariant();
-                    while ((string.IsNullOrWhiteSpace(first) || first.StartsWith("<!--"))
+                }
+
+                if (!sr.EndOfStream)
+                {
+                    second = sr.ReadLine().ToLowerInvariant();
+                    while (string.IsNullOrWhiteSpace(second) || second.StartsWith("<!--")
                         && !sr.EndOfStream)
                     {
-                        first = sr.ReadLine().ToLowerInvariant();
-                    }
-
-                    if (!sr.EndOfStream)
-                    {
                         second = sr.ReadLine().ToLowerInvariant();
-                        while (string.IsNullOrWhiteSpace(second) || second.StartsWith("<!--")
-                            && !sr.EndOfStream)
-                        {
-                            second = sr.ReadLine().ToLowerInvariant();
-                        }
                     }
                 }
             }

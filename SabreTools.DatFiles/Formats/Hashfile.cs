@@ -222,7 +222,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             // Get the hash field and set final fields
-            string hash = string.Empty;
+            string hash;
             switch (_hash)
             {
                 case Hash.CRC:

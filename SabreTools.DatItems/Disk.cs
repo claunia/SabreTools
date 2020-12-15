@@ -370,7 +370,7 @@ namespace SabreTools.DatItems
         public override string GetKey(ItemKey bucketedBy, bool lower = true, bool norename = true)
         {
             // Set the output key as the default blank string
-            string key = string.Empty;
+            string key;
 
             // Now determine what the key should be based on the bucketedBy value
             switch (bucketedBy)

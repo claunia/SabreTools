@@ -536,7 +536,7 @@ namespace SabreTools.DatFiles.Formats
                 return base.CreateProperties(type, memberSerialization)
                     .OrderBy(p => BaseTypesAndSelf(p.DeclaringType).Count()).ToList();
 
-                IEnumerable<Type> BaseTypesAndSelf(Type t)
+                static IEnumerable<Type> BaseTypesAndSelf(Type t)
                 {
                     while (t != null)
                     {

@@ -69,7 +69,7 @@ namespace SabreTools.DatFiles.Formats
 
                     Rom rom = new Rom
                     {
-                        Name = svr.Line[1].Substring(fullname[0].Length + 1),
+                        Name = svr.Line[1][(fullname[0].Length + 1)..],
                         Size = null, // No size provided, but we don't want the size being 0
                         CRC = svr.Line[4],
                         MD5 = svr.Line[3],

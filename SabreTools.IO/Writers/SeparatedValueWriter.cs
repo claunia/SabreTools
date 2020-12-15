@@ -9,7 +9,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Internal stream writer for outputting
         /// </summary>
-        private StreamWriter sw;
+        private readonly StreamWriter sw;
 
         /// <summary>
         /// Internal value if we've written a header before

@@ -183,10 +183,8 @@ namespace SabreTools.FileTypes.Archives
                     // Otherwise, use the stream directly
                     else
                     {
-                        using (Stream entryStream = entry.OpenEntryStream())
-                        {
-                            tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashes);
-                        }
+                        using Stream entryStream = entry.OpenEntryStream();
+                        tarEntryRom = GetInfo(entryStream, size: entry.Size, hashes: this.AvailableHashes);
                     }
 
                     // Fill in comon details and add to the list

@@ -1727,9 +1727,9 @@ namespace SabreTools.Core.Tools
         {
             return supported switch
             {
-                Supported.No => "no",
+                Supported.No => verbose ? "unsupported" : "no",
                 Supported.Partial => "partial",
-                Supported.Yes => "yes",
+                Supported.Yes => verbose ? "supported" : "yes",
                 _ => null,
             };
         }

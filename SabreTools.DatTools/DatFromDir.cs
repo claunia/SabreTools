@@ -415,22 +415,22 @@ namespace SabreTools.DatTools
             // If we have a Disk, then the ".chd" extension needs to be removed
             if (datItem.ItemType == ItemType.Disk && itemName.EndsWith(".chd"))
             {
-                itemName = itemName.Substring(0, itemName.Length - 4);
+                itemName = itemName[0..^4];
             }
 
             // If we have a Media, then the extension needs to be removed
             else if (datItem.ItemType == ItemType.Media)
             {
                 if (itemName.EndsWith(".dicf"))
-                    itemName = itemName.Substring(0, itemName.Length - 5);
+                    itemName = itemName[0..^5];
                 else if (itemName.EndsWith(".aaru"))
-                    itemName = itemName.Substring(0, itemName.Length - 5);
+                    itemName = itemName[0..^5];
                 else if (itemName.EndsWith(".aaruformat"))
-                    itemName = itemName.Substring(0, itemName.Length - 11);
+                    itemName = itemName[0..^11];
                 else if (itemName.EndsWith(".aaruf"))
-                    itemName = itemName.Substring(0, itemName.Length - 6);
+                    itemName = itemName[0..^6];
                 else if (itemName.EndsWith(".aif"))
-                    itemName = itemName.Substring(0, itemName.Length - 4);
+                    itemName = itemName[0..^4];
             }
 
             // Set the item name back

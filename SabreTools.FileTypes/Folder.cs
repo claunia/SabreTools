@@ -32,7 +32,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
         /// </summary>
-        private bool writeToParent = false;
+        private readonly bool writeToParent = false;
 
         #endregion
 

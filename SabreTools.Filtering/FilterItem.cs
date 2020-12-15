@@ -153,9 +153,8 @@ namespace SabreTools.Filtering
             {
                 if (straw is string)
                 {
-                    string needleString = needle as string;
                     string strawString = straw as string;
-                    if (!string.IsNullOrWhiteSpace(strawString) && needleString != null)
+                    if (!string.IsNullOrWhiteSpace(strawString) && needle is string needleString)
                     {
                         string regexStraw = strawString;
 

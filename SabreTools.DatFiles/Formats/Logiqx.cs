@@ -398,8 +398,6 @@ namespace SabreTools.DatFiles.Formats
             // Otherwise, add what is possible
             reader.MoveToContent();
 
-            string key = string.Empty;
-            string temptype = reader.Name;
             bool containsItems = false;
 
             // Create a new machine
@@ -497,7 +495,7 @@ namespace SabreTools.DatFiles.Formats
                         archive.CopyMachineInformation(machine);
 
                         // Now process and add the archive
-                        key = ParseAddHelper(archive);
+                        ParseAddHelper(archive);
 
                         reader.Read();
                         break;
@@ -521,7 +519,7 @@ namespace SabreTools.DatFiles.Formats
                         biosSet.CopyMachineInformation(machine);
 
                         // Now process and add the biosSet
-                        key = ParseAddHelper(biosSet);
+                        ParseAddHelper(biosSet);
 
                         reader.Read();
                         break;
@@ -547,7 +545,7 @@ namespace SabreTools.DatFiles.Formats
                         disk.CopyMachineInformation(machine);
 
                         // Now process and add the disk
-                        key = ParseAddHelper(disk);
+                        ParseAddHelper(disk);
 
                         reader.Read();
                         break;
@@ -573,7 +571,7 @@ namespace SabreTools.DatFiles.Formats
                         media.CopyMachineInformation(machine);
 
                         // Now process and add the media
-                        key = ParseAddHelper(media);
+                        ParseAddHelper(media);
 
                         reader.Read();
                         break;
@@ -593,7 +591,7 @@ namespace SabreTools.DatFiles.Formats
                         release.CopyMachineInformation(machine);
 
                         // Now process and add the release
-                        key = ParseAddHelper(release);
+                        ParseAddHelper(release);
 
                         reader.Read();
                         break;
@@ -627,7 +625,7 @@ namespace SabreTools.DatFiles.Formats
                         rom.CopyMachineInformation(machine);
 
                         // Now process and add the rom
-                        key = ParseAddHelper(rom);
+                        ParseAddHelper(rom);
 
                         reader.Read();
                         break;
@@ -649,7 +647,7 @@ namespace SabreTools.DatFiles.Formats
                         sample.CopyMachineInformation(machine);
 
                         // Now process and add the sample
-                        key = ParseAddHelper(sample);
+                        ParseAddHelper(sample);
 
                         reader.Read();
                         break;

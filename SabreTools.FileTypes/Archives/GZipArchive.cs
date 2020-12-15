@@ -227,12 +227,11 @@ namespace SabreTools.FileTypes.Archives
                         if (this.AvailableHashes == Hash.CRC)
                         {
                             gzipEntryRom.Filename = gamename;
-                            using (BinaryReader br = new BinaryReader(File.OpenRead(this.Filename)))
-                            {
-                                br.BaseStream.Seek(-8, SeekOrigin.End);
-                                gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
-                                gzipEntryRom.Size = br.ReadInt32BigEndian();
-                            }
+                            
+                            using BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+                            br.BaseStream.Seek(-8, SeekOrigin.End);
+                            gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
+                            gzipEntryRom.Size = br.ReadInt32BigEndian();
                         }
                         // Otherwise, use the stream directly
                         else

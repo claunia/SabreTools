@@ -8,9 +8,9 @@ namespace SabreTools.Help
     {
         #region Private variables
 
-        private List<string> _header;
+        private readonly List<string> _header;
         private Dictionary<string, Feature> _features;
-        private static string _barrier = "-----------------------------------------";
+        private const string _barrier = "-----------------------------------------";
 
         #endregion
 
@@ -155,16 +155,18 @@ namespace SabreTools.Help
         /// </summary>
         public void OutputCredits()
         {
-            List<string> credits = new List<string>();
-            credits.Add(_barrier);
-            credits.Add("Credits");
-            credits.Add(_barrier);
-            credits.Add(string.Empty);
-            credits.Add("Programmer / Lead:	Matt Nadareski (darksabre76)");
-            credits.Add("Additional code:	emuLOAD, @tractivo, motoschifo");
-            credits.Add("Testing:		emuLOAD, @tractivo, Kludge, Obiwantje, edc");
-            credits.Add("Suggestions:		edc, AcidX, Amiga12, EliUmniCk");
-            credits.Add("Based on work by:	The Wizard of DATz");
+            List<string> credits = new List<string>
+            {
+                _barrier,
+                "Credits",
+                _barrier,
+                string.Empty,
+                "Programmer / Lead:	Matt Nadareski (darksabre76)",
+                "Additional code:	emuLOAD, @tractivo, motoschifo",
+                "Testing:		emuLOAD, @tractivo, Kludge, Obiwantje, edc",
+                "Suggestions:		edc, AcidX, Amiga12, EliUmniCk",
+                "Based on work by:	The Wizard of DATz"
+            };
             WriteOutWithPauses(credits);
         }
 
