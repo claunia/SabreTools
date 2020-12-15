@@ -31,16 +31,13 @@ namespace SabreTools.Core
             if (!Console.IsOutputRedirected)
             {
                 // Set the console to ready state
-                ConsoleColor formertext = ConsoleColor.White;
-                ConsoleColor formerback = ConsoleColor.Black;
-                if (!CoreEnvironment)
-                {
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                     Console.SetBufferSize(Console.BufferWidth, 999);
-                    formertext = Console.ForegroundColor;
-                    formerback = Console.BackgroundColor;
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.BackgroundColor = ConsoleColor.Blue;
-                }
+
+                ConsoleColor formertext = Console.ForegroundColor;
+                ConsoleColor formerback = Console.BackgroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.BackgroundColor = ConsoleColor.Blue;
 
                 Console.Title = $"{program} {Version}";
 
@@ -51,23 +48,8 @@ namespace SabreTools.Core
                 Console.WriteLine();
 
                 // Return the console to the original text and background colors
-                if (!CoreEnvironment)
-                {
-                    Console.ForegroundColor = formertext;
+                Console.ForegroundColor = formertext;
                     Console.BackgroundColor = formerback;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Returns true if running in a .NET Core environment
-        /// </summary>
-        /// TODO: Investigate if this is needed when removing .NET Framework 4.8 support
-        private static bool CoreEnvironment
-        {
-            get
-            {
-                return true;
             }
         }
     }
