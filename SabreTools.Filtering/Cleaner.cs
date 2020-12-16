@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
+using SabreTools.Logging;
 
 namespace SabreTools.Filtering
 {
@@ -114,6 +116,15 @@ namespace SabreTools.Filtering
         /// </summary>
         public bool Trim { get; set; }
     
+        #endregion
+
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private Logger logger = new Logger();
+
         #endregion
     
         #region Cleaning
@@ -330,6 +341,80 @@ namespace SabreTools.Filtering
         #endregion
 
         #region Filtering
+
+        /// <summary>
+        /// Populate the filters objects using a set of key:value filters
+        /// </summary>
+        /// <param name="filters">List of key:value where ~key/!key is negated</param>
+        public void PopulateFromList(List<string> filters)
+        {
+            // Instantiate the filters, if necessary
+            DatHeaderFilter ??= new DatHeaderFilter();
+            MachineFilter ??= new MachineFilter();
+            DatItemFilter ??= new DatItemFilter();
+
+            foreach (string filterPair in filters)
+            {
+                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
+                
+                // If we don't even have a possible filter pair
+                if (field == null && value == null)
+                    continue;
+
+                // DatHeader fields
+                DatHeaderField datHeaderField = field.AsDatHeaderField();
+                if (datHeaderField != DatHeaderField.NULL)
+                {
+                    DatHeaderFilter.SetFilter(datHeaderField, value, negate);
+                    continue;
+                }
+
+                // Machine fields
+                MachineField machineField = field.AsMachineField();
+                if (machineField != MachineField.NULL)
+                {
+                    MachineFilter.SetFilter(machineField, value, negate);
+                    continue;
+                }
+
+                // DatItem fields
+                DatItemField datItemField = field.AsDatItemField();
+                if (datItemField != DatItemField.NULL)
+                {
+                    DatItemFilter.SetFilter(datItemField, value, negate);
+                    continue;
+                }
+
+                // If we didn't match anything, log an error
+                logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
+            }
+        }
+
+        /// <summary>
+        /// Split the parts of a filter statement
+        /// </summary>
+        /// <param name="filter">key:value where ~key/!key is negated</param>
+        private (string field, string value, bool negate) ProcessFilterPair(string filter)
+        {
+            // If we don't even have a possible filter pair
+            if (!filter.Contains(":"))
+            {
+                logger.Warning($"'{filter}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
+                return (null, null, false);
+            }
+
+            string filterTrimmed = filter.Trim('"', ' ', '\t');
+            bool negate = filterTrimmed.StartsWith("!")
+                || filterTrimmed.StartsWith("~")
+                || filterTrimmed.StartsWith("not-");
+            filterTrimmed = filterTrimmed.TrimStart('!', '~');
+            filterTrimmed = filterTrimmed.StartsWith("not-") ? filterTrimmed[4..] : filterTrimmed;
+
+            string filterFieldString = filterTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
+            string filterValue = filterTrimmed[(filterFieldString.Length + 1)..].Trim('"', ' ', '\t');
+        
+            return (filterFieldString, filterValue, negate);
+        }
 
         /// <summary>
         /// Check to see if a DatItem passes the filters

@@ -26,25 +26,6 @@ namespace SabreTools.Filtering
         #region Filter Population
 
         /// <summary>
-        /// Populate the filters object using a set of key:value filters
-        /// </summary>
-        /// <param name="filters">List of key:value where ~key/!key is negated</param>
-        public override void PopulateFromList(List<string> filters)
-        {
-            foreach (string filterPair in filters)
-            {
-                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
-                
-                // If we don't even have a possible filter pair
-                if (field == null && value == null)
-                    continue;
-
-                DatHeaderField filterField = field.AsDatHeaderField();
-                SetFilter(filterField, value, negate);
-            }
-        }
-
-        /// <summary>
         /// Set multiple filters from key
         /// </summary>
         /// <param name="key">Key for the filter to be set</param>

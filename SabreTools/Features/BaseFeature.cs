@@ -2698,9 +2698,7 @@ Some special strings that can be used:
 
             // Populate filters
             List<string> filterPairs = GetList(features, FilterListValue);
-            cleaner.DatHeaderFilter.PopulateFromList(filterPairs);
-            cleaner.DatItemFilter.PopulateFromList(filterPairs);
-            cleaner.MachineFilter.PopulateFromList(filterPairs);
+            cleaner.PopulateFromList(filterPairs);
 
             // Include 'of" in game filters
             cleaner.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);

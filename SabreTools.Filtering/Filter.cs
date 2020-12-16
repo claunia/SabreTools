@@ -34,12 +34,6 @@ namespace SabreTools.Filtering
         #region Filter Population
 
         /// <summary>
-        /// Populate the filters object using a set of key:value filters
-        /// </summary>
-        /// <param name="filters">List of key:value where ~key/!key is negated</param>
-        public abstract void PopulateFromList(List<string> filters);
-
-        /// <summary>
         /// Split the parts of a filter statement
         /// </summary>
         /// <param name="filter">key:value where ~key/!key is negated</param>
