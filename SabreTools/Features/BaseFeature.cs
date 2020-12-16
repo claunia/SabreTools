@@ -2688,17 +2688,13 @@ Some special strings that can be used:
                 Trim = GetBoolean(features, TrimValue),
             };
 
-            // Add field exclusions
-            foreach (string fieldName in GetList(features, ExcludeFieldListValue))
-            {
-                cleaner.ExcludeDatHeaderFields.Add(fieldName.AsDatHeaderField());
-                cleaner.ExcludeMachineFields.Add(fieldName.AsMachineField());
-                cleaner.ExcludeDatItemFields.Add(fieldName.AsDatItemField());
-            }
+            // Populate field exclusions
+            List<string> exclusionFields = GetList(features, ExcludeFieldListValue);
+            cleaner.PopulateExclusionsFromList(exclusionFields);
 
             // Populate filters
             List<string> filterPairs = GetList(features, FilterListValue);
-            cleaner.PopulateFromList(filterPairs);
+            cleaner.PopulateFiltersFromList(filterPairs);
 
             // Include 'of" in game filters
             cleaner.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);

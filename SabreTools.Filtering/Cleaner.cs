@@ -126,6 +126,104 @@ namespace SabreTools.Filtering
         private Logger logger = new Logger();
 
         #endregion
+
+        #region Population
+
+        /// <summary>
+        /// Populate the exclusion objects using a set of field names
+        /// </summary>
+        /// <param name="fields">List of field names</param>
+        public void PopulateExclusionsFromList(List<string> fields)
+        {
+            // Instantiate the lists, if necessary
+            ExcludeDatHeaderFields ??= new List<DatHeaderField>();
+            ExcludeMachineFields ??= new List<MachineField>();
+            ExcludeDatItemFields ??= new List<DatItemField>();
+
+            foreach (string field in fields)
+            {                
+                // If we don't even have a possible field name
+                if (field == null)
+                    continue;
+
+                // DatHeader fields
+                DatHeaderField datHeaderField = field.AsDatHeaderField();
+                if (datHeaderField != DatHeaderField.NULL)
+                {
+                    ExcludeDatHeaderFields.Add(datHeaderField);
+                    continue;
+                }
+
+                // Machine fields
+                MachineField machineField = field.AsMachineField();
+                if (machineField != MachineField.NULL)
+                {
+                    ExcludeMachineFields.Add(machineField);
+                    continue;
+                }
+
+                // DatItem fields
+                DatItemField datItemField = field.AsDatItemField();
+                if (datItemField != DatItemField.NULL)
+                {
+                    ExcludeDatItemFields.Add(datItemField);
+                    continue;
+                }
+
+                // If we didn't match anything, log an error
+                logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
+            }
+        }
+
+        /// <summary>
+        /// Populate the filters objects using a set of key:value filters
+        /// </summary>
+        /// <param name="filters">List of key:value where ~key/!key is negated</param>
+        public void PopulateFiltersFromList(List<string> filters)
+        {
+            // Instantiate the filters, if necessary
+            DatHeaderFilter ??= new DatHeaderFilter();
+            MachineFilter ??= new MachineFilter();
+            DatItemFilter ??= new DatItemFilter();
+
+            foreach (string filterPair in filters)
+            {
+                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
+                
+                // If we don't even have a possible filter pair
+                if (field == null && value == null)
+                    continue;
+
+                // DatHeader fields
+                DatHeaderField datHeaderField = field.AsDatHeaderField();
+                if (datHeaderField != DatHeaderField.NULL)
+                {
+                    DatHeaderFilter.SetFilter(datHeaderField, value, negate);
+                    continue;
+                }
+
+                // Machine fields
+                MachineField machineField = field.AsMachineField();
+                if (machineField != MachineField.NULL)
+                {
+                    MachineFilter.SetFilter(machineField, value, negate);
+                    continue;
+                }
+
+                // DatItem fields
+                DatItemField datItemField = field.AsDatItemField();
+                if (datItemField != DatItemField.NULL)
+                {
+                    DatItemFilter.SetFilter(datItemField, value, negate);
+                    continue;
+                }
+
+                // If we didn't match anything, log an error
+                logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
+            }
+        }
+
+        #endregion
     
         #region Cleaning
 
@@ -341,54 +439,6 @@ namespace SabreTools.Filtering
         #endregion
 
         #region Filtering
-
-        /// <summary>
-        /// Populate the filters objects using a set of key:value filters
-        /// </summary>
-        /// <param name="filters">List of key:value where ~key/!key is negated</param>
-        public void PopulateFromList(List<string> filters)
-        {
-            // Instantiate the filters, if necessary
-            DatHeaderFilter ??= new DatHeaderFilter();
-            MachineFilter ??= new MachineFilter();
-            DatItemFilter ??= new DatItemFilter();
-
-            foreach (string filterPair in filters)
-            {
-                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
-                
-                // If we don't even have a possible filter pair
-                if (field == null && value == null)
-                    continue;
-
-                // DatHeader fields
-                DatHeaderField datHeaderField = field.AsDatHeaderField();
-                if (datHeaderField != DatHeaderField.NULL)
-                {
-                    DatHeaderFilter.SetFilter(datHeaderField, value, negate);
-                    continue;
-                }
-
-                // Machine fields
-                MachineField machineField = field.AsMachineField();
-                if (machineField != MachineField.NULL)
-                {
-                    MachineFilter.SetFilter(machineField, value, negate);
-                    continue;
-                }
-
-                // DatItem fields
-                DatItemField datItemField = field.AsDatItemField();
-                if (datItemField != DatItemField.NULL)
-                {
-                    DatItemFilter.SetFilter(datItemField, value, negate);
-                    continue;
-                }
-
-                // If we didn't match anything, log an error
-                logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
-            }
-        }
 
         /// <summary>
         /// Split the parts of a filter statement
