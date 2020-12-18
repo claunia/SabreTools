@@ -9,8 +9,6 @@ environment:
   EnableNuGetPackageRestore: true
 
 # msbuild configuration
-platform:
-- x64
 configuration:
 - Debug
 
@@ -39,8 +37,7 @@ after_build:
 # testing step
 test:
   assemblies:
-    - SabreTools\SabreTools.Test\bin\Debug\netcoreapp3.1\SabreTools.Test.dll
-    - SabreTools\SabreTools.Test\bin\Debug\net5.0\SabreTools.Test.dll
+    - SabreTools.Test.dll
 
 # artifact linking
 artifacts:
