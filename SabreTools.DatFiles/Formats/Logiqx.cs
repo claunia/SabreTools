@@ -132,13 +132,7 @@ namespace SabreTools.DatFiles.Formats
             _deprecated = deprecated;
         }
 
-        /// <summary>
-        /// Parse a Logiqx XML DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
@@ -179,8 +173,8 @@ namespace SabreTools.DatFiles.Formats
                     {
                         // The datafile tag can have some attributes
                         case "datafile":
-                            Header.Build = Header.Build ?? xtr.GetAttribute("build");
-                            Header.Debug = Header.Debug ?? xtr.GetAttribute("debug").AsYesNo();
+                            Header.Build ??= xtr.GetAttribute("build");
+                            Header.Debug ??= xtr.GetAttribute("debug").AsYesNo();
                             xtr.Read();
                             break;
 
@@ -261,57 +255,57 @@ namespace SabreTools.DatFiles.Formats
                 {
                     case "name":
                         content = reader.ReadElementContentAsString();
-                        Header.Name = Header.Name ?? content;
-                        superdat = superdat || content.Contains(" - SuperDAT");
+                        Header.Name ??= content;
+                        superdat |= content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = Header.Type ?? "SuperDAT";
+                            Header.Type ??= "SuperDAT";
                         }
                         break;
 
                     case "description":
                         content = reader.ReadElementContentAsString();
-                        Header.Description = Header.Description ?? content;
+                        Header.Description ??= content;
                         break;
 
                     case "rootdir": // This is exclusive to TruRip XML
                         content = reader.ReadElementContentAsString();
-                        Header.RootDir = Header.RootDir ?? content;
+                        Header.RootDir ??= content;
                         break;
 
                     case "category":
                         content = reader.ReadElementContentAsString();
-                        Header.Category = Header.Category ?? content;
+                        Header.Category ??= content;
                         break;
 
                     case "version":
                         content = reader.ReadElementContentAsString();
-                        Header.Version = Header.Version ?? content;
+                        Header.Version ??= content;
                         break;
 
                     case "date":
                         content = reader.ReadElementContentAsString();
-                        Header.Date = Header.Date ?? content.Replace(".", "/");
+                        Header.Date ??= content.Replace(".", "/");
                         break;
 
                     case "author":
                         content = reader.ReadElementContentAsString();
-                        Header.Author = Header.Author ?? content;
+                        Header.Author ??= content;
                         break;
 
                     case "email":
                         content = reader.ReadElementContentAsString();
-                        Header.Email = Header.Email ?? content;
+                        Header.Email ??= content;
                         break;
 
                     case "homepage":
                         content = reader.ReadElementContentAsString();
-                        Header.Homepage = Header.Homepage ?? content;
+                        Header.Homepage ??= content;
                         break;
 
                     case "url":
                         content = reader.ReadElementContentAsString();
-                        Header.Url = Header.Url ?? content;
+                        Header.Url ??= content;
                         break;
 
                     case "comment":
@@ -321,8 +315,8 @@ namespace SabreTools.DatFiles.Formats
 
                     case "type": // This is exclusive to TruRip XML
                         content = reader.ReadElementContentAsString();
-                        Header.Type = Header.Type ?? content;
-                        superdat = superdat || content.Contains("SuperDAT");
+                        Header.Type ??= content;
+                        superdat |= content.Contains("SuperDAT");
                         break;
 
                     case "clrmamepro":
@@ -781,13 +775,7 @@ namespace SabreTools.DatFiles.Formats
             };
         }
 
-        /// <summary>
-        /// Create and open an output file for writing direct from a dictionary
-        /// </summary>
-        /// <param name="outfile">Name of the file to write to</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try

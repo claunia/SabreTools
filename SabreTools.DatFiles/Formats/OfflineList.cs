@@ -26,13 +26,7 @@ namespace SabreTools.DatFiles.Formats
         {
         }
 
-        /// <summary>
-        /// Parse an OfflineList XML DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
@@ -132,34 +126,34 @@ namespace SabreTools.DatFiles.Formats
                 {
                     case "datname":
                         content = reader.ReadElementContentAsString();
-                        Header.Name = Header.Name ?? content;
-                        superdat = superdat || content.Contains(" - SuperDAT");
+                        Header.Name ??= content;
+                        superdat |= content.Contains(" - SuperDAT");
                         if (keep && superdat)
                         {
-                            Header.Type = Header.Type ?? "SuperDAT";
+                            Header.Type ??= "SuperDAT";
                         }
                         break;
 
                     case "datversion":
                         content = reader.ReadElementContentAsString();
-                        Header.Version = Header.Version ?? content;
+                        Header.Version ??= content;
                         break;
 
                     case "system":
                         content = reader.ReadElementContentAsString();
-                        Header.System = Header.System ?? content;
+                        Header.System ??= content;
                         break;
 
                     // TODO: Int32?
                     case "screenshotswidth":
                         content = reader.ReadElementContentAsString();
-                        Header.ScreenshotsWidth = Header.ScreenshotsWidth ?? content;
+                        Header.ScreenshotsWidth ??= content;
                         break;
 
                     // TODO: Int32?
                     case "screenshotsheight":
                         content = reader.ReadElementContentAsString();
-                        Header.ScreenshotsHeight = Header.ScreenshotsHeight ?? content;
+                        Header.ScreenshotsHeight ??= content;
                         break;
 
                     case "infos":
@@ -194,7 +188,7 @@ namespace SabreTools.DatFiles.Formats
 
                     case "romtitle":
                         content = reader.ReadElementContentAsString();
-                        Header.RomTitle = Header.RomTitle ?? content;
+                        Header.RomTitle ??= content;
                         break;
 
                     default:
@@ -674,13 +668,7 @@ namespace SabreTools.DatFiles.Formats
             return new ItemType[] { ItemType.Rom };
         }
 
-        /// <summary>
-        /// Create and open an output file for writing direct from a dictionary
-        /// </summary>
-        /// <param name="outfile">Name of the file to write to</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try

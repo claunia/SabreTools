@@ -190,13 +190,7 @@ namespace SabreTools.DatFiles.Formats
         {
         }
 
-        /// <summary>
-        /// Parse a MAME XML DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all internal variables
@@ -230,18 +224,18 @@ namespace SabreTools.DatFiles.Formats
                     switch (xtr.Name)
                     {
                         case "mame":
-                            Header.Name = Header.Name ?? xtr.GetAttribute("build");
-                            Header.Description = Header.Description ?? Header.Name;
-                            Header.Debug = Header.Debug ?? xtr.GetAttribute("debug").AsYesNo();
-                            Header.MameConfig = Header.MameConfig ?? xtr.GetAttribute("mameconfig");
+                            Header.Name ??= xtr.GetAttribute("build");
+                            Header.Description ??= Header.Name;
+                            Header.Debug ??= xtr.GetAttribute("debug").AsYesNo();
+                            Header.MameConfig ??= xtr.GetAttribute("mameconfig");
                             xtr.Read();
                             break;
 
                         // Handle M1 DATs since they're 99% the same as a SL DAT
                         case "m1":
-                            Header.Name = Header.Name ?? "M1";
-                            Header.Description = Header.Description ?? "M1";
-                            Header.Version = Header.Version ?? xtr.GetAttribute("version") ?? string.Empty;
+                            Header.Name ??= "M1";
+                            Header.Description ??= "M1";
+                            Header.Version ??= xtr.GetAttribute("version") ?? string.Empty;
                             xtr.Read();
                             break;
 
@@ -1352,13 +1346,7 @@ namespace SabreTools.DatFiles.Formats
             };
         }
 
-        /// <summary>
-        /// Create and open an output file for writing direct from a dictionary
-        /// </summary>
-        /// <param name="outfile">Name of the file to write to</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try

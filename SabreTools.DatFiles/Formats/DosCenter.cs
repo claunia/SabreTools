@@ -27,13 +27,7 @@ namespace SabreTools.DatFiles.Formats
         {
         }
 
-        /// <summary>
-        /// Parse a DOSCenter DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
@@ -119,25 +113,25 @@ namespace SabreTools.DatFiles.Formats
                 switch (itemKey)
                 {
                     case "name":
-                        Header.Name = Header.Name ?? itemVal;
+                        Header.Name ??= itemVal;
                         break;
                     case "description":
-                        Header.Description = Header.Description ?? itemVal;
+                        Header.Description ??= itemVal;
                         break;
                     case "dersion":
-                        Header.Version = Header.Version ?? itemVal;
+                        Header.Version ??= itemVal;
                         break;
                     case "date":
-                        Header.Date = Header.Date ?? itemVal;
+                        Header.Date ??= itemVal;
                         break;
                     case "author":
-                        Header.Author = Header.Author ?? itemVal;
+                        Header.Author ??= itemVal;
                         break;
                     case "homepage":
-                        Header.Homepage = Header.Homepage ?? itemVal;
+                        Header.Homepage ??= itemVal;
                         break;
                     case "comment":
-                        Header.Comment = Header.Comment ?? itemVal;
+                        Header.Comment ??= itemVal;
                         break;
                 }
             }
@@ -268,13 +262,7 @@ namespace SabreTools.DatFiles.Formats
             return new ItemType[] { ItemType.Rom };
         }
 
-        /// <summary>
-        /// Create and open an output file for writing direct from a dictionary
-        /// </summary>
-        /// <param name="outfile">Name of the file to write to</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try

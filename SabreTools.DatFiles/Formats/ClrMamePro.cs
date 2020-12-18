@@ -37,13 +37,7 @@ namespace SabreTools.DatFiles.Formats
             Quotes = quotes;
         }
 
-        /// <summary>
-        /// Parse a ClrMamePro DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Open a file reader
@@ -139,49 +133,49 @@ namespace SabreTools.DatFiles.Formats
                 switch (itemKey)
                 {
                     case "name":
-                        Header.Name = Header.Name ?? itemVal;
-                        superdat = superdat || itemVal.Contains(" - SuperDAT");
+                        Header.Name ??= itemVal;
+                        superdat |= itemVal.Contains(" - SuperDAT");
 
                         if (keep && superdat)
-                            Header.Type = Header.Type ?? "SuperDAT";
+                            Header.Type ??= "SuperDAT";
 
                         break;
                     case "description":
-                        Header.Description = Header.Description ?? itemVal;
+                        Header.Description ??= itemVal;
                         break;
                     case "rootdir":
-                        Header.RootDir = Header.RootDir ?? itemVal;
+                        Header.RootDir ??= itemVal;
                         break;
                     case "category":
-                        Header.Category = Header.Category ?? itemVal;
+                        Header.Category ??= itemVal;
                         break;
                     case "version":
-                        Header.Version = Header.Version ?? itemVal;
+                        Header.Version ??= itemVal;
                         break;
                     case "date":
-                        Header.Date = Header.Date ?? itemVal;
+                        Header.Date ??= itemVal;
                         break;
                     case "author":
-                        Header.Author = Header.Author ?? itemVal;
+                        Header.Author ??= itemVal;
                         break;
                     case "email":
-                        Header.Email = Header.Email ?? itemVal;
+                        Header.Email ??= itemVal;
                         break;
                     case "homepage":
-                        Header.Homepage = Header.Homepage ?? itemVal;
+                        Header.Homepage ??= itemVal;
                         break;
                     case "url":
-                        Header.Url = Header.Url ?? itemVal;
+                        Header.Url ??= itemVal;
                         break;
                     case "comment":
-                        Header.Comment = Header.Comment ?? itemVal;
+                        Header.Comment ??= itemVal;
                         break;
                     case "header":
-                        Header.HeaderSkipper = Header.HeaderSkipper ?? itemVal;
+                        Header.HeaderSkipper ??= itemVal;
                         break;
                     case "type":
-                        Header.Type = Header.Type ?? itemVal;
-                        superdat = superdat || itemVal.Contains("SuperDAT");
+                        Header.Type ??= itemVal;
+                        superdat |= itemVal.Contains("SuperDAT");
                         break;
                     case "forcemerging":
                         if (Header.ForceMerging == MergingFlag.None)
@@ -442,13 +436,7 @@ namespace SabreTools.DatFiles.Formats
             };
         }
 
-        /// <summary>
-        /// Create and open an output file for writing direct from a dictionary
-        /// </summary>
-        /// <param name="outfile">Name of the file to write to</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try

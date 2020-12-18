@@ -25,13 +25,7 @@ namespace SabreTools.DatFiles.Formats
         {
         }
 
-        /// <summary>
-        /// Parse a RomCenter DAT and return all found games and roms within
-        /// </summary>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
         {
             // Prepare all intenral variables
@@ -130,37 +124,37 @@ namespace SabreTools.DatFiles.Formats
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "author":
-                        Header.Author = Header.Author ?? kvp?.Value;
+                        Header.Author ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Header.Version = Header.Version ?? kvp?.Value;
+                        Header.Version ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "email":
-                        Header.Email = Header.Email ?? kvp?.Value;
+                        Header.Email ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "homepage":
-                        Header.Homepage = Header.Homepage ?? kvp?.Value;
+                        Header.Homepage ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "url":
-                        Header.Url = Header.Url ?? kvp?.Value;
+                        Header.Url ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "date":
-                        Header.Date = Header.Date ?? kvp?.Value;
+                        Header.Date ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "comment":
-                        Header.Comment = Header.Comment ?? kvp?.Value;
+                        Header.Comment ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
@@ -205,12 +199,12 @@ namespace SabreTools.DatFiles.Formats
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "version":
-                        Header.RomCenterVersion = Header.RomCenterVersion ?? kvp?.Value;
+                        Header.RomCenterVersion ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "plugin":
-                        Header.System = Header.System ?? kvp?.Value;
+                        Header.System ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
@@ -269,12 +263,12 @@ namespace SabreTools.DatFiles.Formats
                 switch (kvp?.Key.ToLowerInvariant())
                 {
                     case "refname":
-                        Header.Name = Header.Name ?? kvp?.Value;
+                        Header.Name ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
                     case "version":
-                        Header.Description = Header.Description ?? kvp?.Value;
+                        Header.Description ??= kvp?.Value;
                         reader.ReadNextLine();
                         break;
 
@@ -373,13 +367,7 @@ namespace SabreTools.DatFiles.Formats
             return new ItemType[] { ItemType.Rom };
         }
 
-        /// <summary>
-        /// Create and open an output file for writing direct from a dictionary
-        /// </summary>
-        /// <param name="outfile">Name of the file to write to</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DAT was written correctly, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
         {
             try
