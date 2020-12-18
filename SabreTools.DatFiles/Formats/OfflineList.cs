@@ -318,7 +318,7 @@ namespace SabreTools.DatFiles.Formats
                     case "datversionurl":
                         // TODO: Read this into an appropriate field
                         content = reader.ReadElementContentAsString();
-                        Header.Url = (string.IsNullOrWhiteSpace(Header.Url) ? content : Header.Url);
+                        Header.Url ??= content;
                         break;
 
                     case "daturl":
