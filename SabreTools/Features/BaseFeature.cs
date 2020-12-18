@@ -700,20 +700,6 @@ namespace SabreTools.Features
             }
         }
 
-        internal const string NotRunnableValue = "not-runnable";
-        internal static Feature NotRunnableFlag
-        {
-            get
-            {
-                return new Feature(
-                    NotRunnableValue,
-                    new List<string>() { "-nrun", "--not-runnable" },
-                    "Include only items that are not marked runnable",
-                    ParameterType.Flag,
-                    longDescription: "This allows users to include only unrunnable games.");
-            }
-        }
-
         internal const string OneGamePerRegionValue = "one-game-per-region";
         internal static Feature OneGamePerRegionFlag
         {
@@ -851,20 +837,6 @@ namespace SabreTools.Features
                     "Output roms to miss instead of sets",
                     ParameterType.Flag,
                     longDescription: "By default, the outputted file will include the name of the game so this flag allows for the name of the rom to be output instead. [Missfile only]");
-            }
-        }
-
-        internal const string RunnableValue = "runnable";
-        internal static Feature RunnableFlag
-        {
-            get
-            {
-                return new Feature(
-                    RunnableValue,
-                    new List<string>() { "-run", "--runnable" },
-                    "Include only items that are marked runnable",
-                    ParameterType.Flag,
-                    longDescription: "This allows users to include only verified runnable games.");
             }
         }
 
@@ -1162,104 +1134,6 @@ namespace SabreTools.Features
             }
         }
 
-        internal const string UpdateDescriptionValue = "update-description";
-        internal static Feature UpdateDescriptionFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateDescriptionValue,
-                    new List<string>() { "-udd", "--update-description" },
-                    "Update machine descriptions from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of machine descriptions from base DATs.");
-            }
-        }
-
-        internal const string UpdateGameTypeValue = "update-game-type";
-        internal static Feature UpdateGameTypeFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateGameTypeValue,
-                    new List<string>() { "-ugt", "--update-game-type" },
-                    "Update machine type from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of machine type from base DATs.");
-            }
-        }
-
-        internal const string UpdateHashesValue = "update-hashes";
-        internal static Feature UpdateHashesFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateHashesValue,
-                    new List<string>() { "-uh", "--update-hashes" },
-                    "Update hashes from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of hashes from base DATs.");
-            }
-        }
-
-        internal const string UpdateManufacturerValue = "update-manufacturer";
-        internal static Feature UpdateManufacturerFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateManufacturerValue,
-                    new List<string>() { "-um", "--update-manufacturer" },
-                    "Update machine manufacturers from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of machine manufacturers from base DATs.");
-            }
-        }
-
-        internal const string UpdateNamesValue = "update-names";
-        internal static Feature UpdateNamesFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateNamesValue,
-                    new List<string>() { "-un", "--update-names" },
-                    "Update item names from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of item names from base DATs.");
-            }
-        }
-
-        internal const string UpdateParentsValue = "update-parents";
-        internal static Feature UpdateParentsFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateParentsValue,
-                    new List<string>() { "-up", "--update-parents" },
-                    "Update machine parents from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of machine parents (romof, cloneof, sampleof) from base DATs.");
-            }
-        }
-
-        internal const string UpdateYearValue = "update-year";
-        internal static Feature UpdateYearFlag
-        {
-            get
-            {
-                return new Feature(
-                    UpdateYearValue,
-                    new List<string>() { "-uy", "--update-year" },
-                    "Update machine years from base DATs",
-                    ParameterType.Flag,
-                    longDescription: "This flag enables updating of machine years from base DATs.");
-            }
-        }
-
         #endregion
 
         #region Int32 features
@@ -1339,34 +1213,6 @@ namespace SabreTools.Features
                     "Add a base DAT for processing",
                     ParameterType.List,
                     longDescription: "Add a DAT or folder of DATs to the base set to be used for all operations. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string CategoryListValue = "category-filter";
-        internal static Feature CategoryListInput
-        {
-            get
-            {
-                return new Feature(
-                    CategoryListValue,
-                    new List<string>() { "-cat", "--category-filter" },
-                    "Filter by Category",
-                    ParameterType.List,
-                    longDescription: "Include only items with this Category in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string CrcListValue = "crc";
-        internal static Feature CrcListInput
-        {
-            get
-            {
-                return new Feature(
-                    CrcListValue,
-                    new List<string>() { "-crc", "--crc" },
-                    "Filter by CRC hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this CRC hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
             }
         }
 
@@ -1454,275 +1300,6 @@ namespace SabreTools.Features
             }
         }
 
-        internal const string GameDescriptionListValue = "game-description";
-        internal static Feature GameDescriptionListInput
-        {
-            get
-            {
-                return new Feature(
-                    GameDescriptionListValue,
-                    new List<string>() { "-gd", "--game-description" },
-                    "Filter by game description",
-                    ParameterType.List,
-                    longDescription: "Include only items with this game description in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string GameNameListValue = "game-name";
-        internal static Feature GameNameListInput
-        {
-            get
-            {
-                return new Feature(
-                    GameNameListValue,
-                    new List<string>() { "-gn", "--game-name" },
-                    "Filter by game name",
-                    ParameterType.List,
-                    longDescription: "Include only items with this game name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string GameTypeListValue = "game-type";
-        internal static Feature GameTypeListInput
-        {
-            get
-            {
-                return new Feature(
-                    GameTypeListValue,
-                    new List<string>() { "-gt", "--game-type" },
-                    "Include only games with a given type",
-                    ParameterType.List,
-                    longDescription: @"Include only items with this game type in the output. Multiple instances of this flag are allowed.
-Possible values are: None, Bios, Device, Mechanical");
-            }
-        }
-
-        internal const string ItemNameListValue = "item-name";
-        internal static Feature ItemNameListInput
-        {
-            get
-            {
-                return new Feature(
-                    ItemNameListValue,
-                    new List<string>() { "-rn", "--item-name" },
-                    "Filter by item name",
-                    ParameterType.List,
-                    longDescription: "Include only items with this item name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string ItemTypeListValue = "item-type";
-        internal static Feature ItemTypeListInput
-        {
-            get
-            {
-                return new Feature(
-                    ItemTypeListValue,
-                    new List<string>() { "-rt", "--item-type" },
-                    "Filter by item type",
-                    ParameterType.List,
-                    longDescription: "Include only items with this item type in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string Md5ListValue = "md5";
-        internal static Feature Md5ListInput
-        {
-            get
-            {
-                return new Feature(
-                    Md5ListValue,
-                    new List<string>() { "-md5", "--md5" },
-                    "Filter by MD5 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this MD5 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotCategoryListValue = "not-category";
-        internal static Feature NotCategoryListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotCategoryListValue,
-                    new List<string>() { "-ncat", "--not-category" },
-                    "Filter by not Category",
-                    ParameterType.List,
-                    longDescription: "Include only items without this Category in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotCrcListValue = "not-crc";
-        internal static Feature NotCrcListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotCrcListValue,
-                    new List<string>() { "-ncrc", "--not-crc" },
-                    "Filter by not CRC hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this CRC hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotGameDescriptionListValue = "not-game-description";
-        internal static Feature NotGameDescriptionListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotGameDescriptionListValue,
-                    new List<string>() { "-ngd", "--not-game-description" },
-                    "Filter by not game description",
-                    ParameterType.List,
-                    longDescription: "Include only items without this game description in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotGameNameListValue = "not-game-name";
-        internal static Feature NotGameNameListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotGameNameListValue,
-                    new List<string>() { "-ngn", "--not-game-name" },
-                    "Filter by not game name",
-                    ParameterType.List,
-                    longDescription: "Include only items without this game name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotGameTypeListValue = "not-game-type";
-        internal static Feature NotGameTypeListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotGameTypeListValue,
-                    new List<string>() { "-ngt", "--not-game-type" },
-                    "Exclude only games with a given type",
-                    ParameterType.List,
-                    longDescription: @"Include only items without this game type in the output. Multiple instances of this flag are allowed.
-Possible values are: None, Bios, Device, Mechanical");
-            }
-        }
-
-        internal const string NotItemNameListValue = "not-item-name";
-        internal static Feature NotItemNameListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotItemNameListValue,
-                    new List<string>() { "-nrn", "--not-item-name" },
-                    "Filter by not item name",
-                    ParameterType.List,
-                    longDescription: "Include only items without this item name in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotItemTypeListValue = "not-item-type";
-        internal static Feature NotItemTypeListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotItemTypeListValue,
-                    new List<string>() { "-nrt", "--not-item-type" },
-                    "Filter by not item type",
-                    ParameterType.List,
-                    longDescription: "Include only items without this item type in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotMd5ListValue = "not-md5";
-        internal static Feature NotMd5ListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotMd5ListValue,
-                    new List<string>() { "-nmd5", "--not-md5" },
-                    "Filter by not MD5 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this MD5 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotSha1ListValue = "not-sha1";
-        internal static Feature NotSha1ListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotSha1ListValue,
-                    new List<string>() { "-nsha1", "--not-sha1" },
-                    "Filter by not SHA-1 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this SHA-1 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotSha256ListValue = "not-sha256";
-        internal static Feature NotSha256ListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotSha256ListValue,
-                    new List<string>() { "-nsha256", "--not-sha256" },
-                    "Filter by not SHA-256 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this SHA-256 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotSha384ListValue = "not-sha384";
-        internal static Feature NotSha384ListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotSha384ListValue,
-                    new List<string>() { "-nsha384", "--not-sha384" },
-                    "Filter by not SHA-384 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this SHA-384 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotSha512ListValue = "not-sha512";
-        internal static Feature NotSha512ListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotSha512ListValue,
-                    new List<string>() { "-nsha512", "--not-sha512" },
-                    "Filter by not SHA-512 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items without this SHA-512 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string NotStatusListValue = "not-status";
-        internal static Feature NotStatusListInput
-        {
-            get
-            {
-                return new Feature(
-                    NotStatusListValue,
-                    new List<string>() { "-nis", "--not-status" },
-                    "Exclude only items with a given status",
-                    ParameterType.List,
-                    longDescription: @"Include only items without this item status in the output. Multiple instances of this flag are allowed.
-Possible values are: None, Good, BadDump, Nodump, Verified");
-            }
-        }
-
         internal const string OutputTypeListValue = "output-type";
         internal static Feature OutputTypeListInput
         {
@@ -1797,77 +1374,6 @@ Possible values are:
     ssv              - Standardized Semicolon-Separated Value
     text             - Generic textfile
     tsv              - Standardized Tab-Separated Value");
-            }
-        }
-
-        internal const string Sha1ListValue = "sha1";
-        internal static Feature Sha1ListInput
-        {
-            get
-            {
-                return new Feature(
-                    Sha1ListValue,
-                    new List<string>() { "-sha1", "--sha1" },
-                    "Filter by SHA-1 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this SHA-1 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string Sha256ListValue = "sha256";
-        internal static Feature Sha256ListInput
-        {
-            get
-            {
-                return new Feature(
-                    Sha256ListValue,
-                    new List<string>() { "-sha256", "--sha256" },
-                    "Filter by SHA-256 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this SHA-256 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string Sha384ListValue = "sha384";
-        internal static Feature Sha384ListInput
-        {
-            get
-            {
-                return new Feature(
-                    Sha384ListValue,
-                    new List<string>() { "-sha384", "--sha384" },
-                    "Filter by SHA-384 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this SHA-384 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string Sha512ListValue = "sha512";
-        internal static Feature Sha512ListInput
-        {
-            get
-            {
-                return new Feature(
-                    Sha512ListValue,
-                    new List<string>() { "-sha512", "--sha512" },
-                    "Filter by SHA-512 hash",
-                    ParameterType.List,
-                    longDescription: "Include only items with this SHA-512 hash in the output. Additionally, the user can specify an exact match or full C#-style regex for pattern matching. Multiple instances of this flag are allowed.");
-            }
-        }
-
-        internal const string StatusListValue = "status";
-        internal static Feature StatusListInput
-        {
-            get
-            {
-                return new Feature(
-                    StatusListValue,
-                    new List<string>() { "-is", "--status" },
-                    "Include only items with a given status",
-                    ParameterType.List,
-                    longDescription: @"Include only items with this item status in the output. Multiple instances of this flag are allowed.
-Possible values are: None, Good, BadDump, Nodump, Verified");
             }
         }
 
@@ -1987,20 +1493,6 @@ Possible values are: None, Good, BadDump, Nodump, Verified");
             }
         }
 
-        internal const string EqualStringValue = "equal";
-        internal static Feature EqualStringInput
-        {
-            get
-            {
-                return new Feature(
-                    EqualStringValue,
-                    new List<string>() { "-seq", "--equal" },
-                    "Filter by size ==",
-                    ParameterType.String,
-                    longDescription: "Only include items of this exact size in the output DAT. Users can specify either a regular integer number or a number with a standard postfix. e.g. 8kb => 8000 or 8kib => 8192");
-            }
-        }
-
         internal const string FilenameStringValue = "filename";
         internal static Feature FilenameStringInput
         {
@@ -2060,20 +1552,6 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
             }
         }
 
-        internal const string GreaterStringValue = "greater";
-        internal static Feature GreaterStringInput
-        {
-            get
-            {
-                return new Feature(
-                    GreaterStringValue,
-                    new List<string>() { "-sgt", "--greater" },
-                    "Filter by size >=",
-                    ParameterType.String,
-                    longDescription: "Only include items whose size is greater than or equal to this value in the output DAT. Users can specify either a regular integer number or a number with a standard postfix. e.g. 8kb => 8000 or 8kib => 8192");
-            }
-        }
-
         internal const string HeaderStringValue = "header";
         internal static Feature HeaderStringInput
         {
@@ -2100,20 +1578,6 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
                     "Set a new homepage of the DAT",
                     ParameterType.String,
                     longDescription: "Set the homepage header field for the output DAT(s)");
-            }
-        }
-
-        internal const string LessStringValue = "less";
-        internal static Feature LessStringInput
-        {
-            get
-            {
-                return new Feature(
-                    LessStringValue,
-                    new List<string>() { "-slt", "--less" },
-                    "Filter by size =<",
-                    ParameterType.String,
-                    longDescription: "Only include items whose size is less than or equal to this value in the output DAT. Users can specify either a regular integer number or a number with a standard postfix. e.g. 8kb => 8000 or 8kib => 8192");
             }
         }
 
@@ -2307,38 +1771,7 @@ Some special strings that can be used:
         protected void AddFilteringFeatures()
         {
             AddFeature(FilterListInput);
-            AddFeature(CategoryListInput);
-            AddFeature(NotCategoryListInput);
-            AddFeature(GameNameListInput);
-            AddFeature(NotGameNameListInput);
-            AddFeature(GameDescriptionListInput);
-            AddFeature(NotGameDescriptionListInput);
             AddFeature(MatchOfTagsFlag);
-            AddFeature(ItemNameListInput);
-            AddFeature(NotItemNameListInput);
-            AddFeature(ItemTypeListInput);
-            AddFeature(NotItemTypeListInput);
-            AddFeature(GreaterStringInput);
-            AddFeature(LessStringInput);
-            AddFeature(EqualStringInput);
-            AddFeature(CrcListInput);
-            AddFeature(NotCrcListInput);
-            AddFeature(Md5ListInput);
-            AddFeature(NotMd5ListInput);
-            AddFeature(Sha1ListInput);
-            AddFeature(NotSha1ListInput);
-            AddFeature(Sha256ListInput);
-            AddFeature(NotSha256ListInput);
-            AddFeature(Sha384ListInput);
-            AddFeature(NotSha384ListInput);
-            AddFeature(Sha512ListInput);
-            AddFeature(NotSha512ListInput);
-            AddFeature(StatusListInput);
-            AddFeature(NotStatusListInput);
-            AddFeature(GameTypeListInput);
-            AddFeature(NotGameTypeListInput);
-            AddFeature(RunnableFlag);
-            AddFeature(NotRunnableFlag);
         }
 
         /// <summary>
@@ -2545,25 +1978,6 @@ Some special strings that can be used:
         protected List<DatItemField> GetUpdateDatItemFields(Dictionary<string, Feature> features)
         {
             List<DatItemField> updateFields = new List<DatItemField>();
-
-            if (GetBoolean(features, UpdateHashesValue))
-            {
-                logger.User($"This flag '{(UpdateHashesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(DatItemField.CRC);
-                updateFields.Add(DatItemField.MD5);
-                updateFields.Add(DatItemField.SHA1);
-                updateFields.Add(DatItemField.SHA256);
-                updateFields.Add(DatItemField.SHA384);
-                updateFields.Add(DatItemField.SHA512);
-                updateFields.Add(DatItemField.SpamSum);
-            }
-
-            if (GetBoolean(features, UpdateNamesValue))
-            {
-                logger.User($"This flag '{(UpdateNamesValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(DatItemField.Name);
-            }
-
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
                 updateFields.Add(fieldName.AsDatItemField());
@@ -2578,39 +1992,6 @@ Some special strings that can be used:
         protected List<MachineField> GetUpdateMachineFields(Dictionary<string, Feature> features)
         {
             List<MachineField> updateFields = new List<MachineField>();
-
-            if (GetBoolean(features, UpdateDescriptionValue))
-            {
-                logger.User($"This flag '{(UpdateDescriptionValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(MachineField.Description);
-            }
-
-            if (GetBoolean(features, UpdateGameTypeValue))
-            {
-                logger.User($"This flag '{(UpdateGameTypeValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(MachineField.Type);
-            }
-
-            if (GetBoolean(features, UpdateManufacturerValue))
-            {
-                logger.User($"This flag '{(UpdateManufacturerValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(MachineField.Manufacturer);
-            }
-
-            if (GetBoolean(features, UpdateParentsValue))
-            {
-                logger.User($"This flag '{(UpdateParentsValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(MachineField.CloneOf);
-                updateFields.Add(MachineField.RomOf);
-                updateFields.Add(MachineField.SampleOf);
-            }
-
-            if (GetBoolean(features, UpdateYearValue))
-            {
-                logger.User($"This flag '{(UpdateYearValue)}' is deprecated, please use {(string.Join(", ", UpdateFieldListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                updateFields.Add(MachineField.Year);
-            }
-
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
                 updateFields.Add(fieldName.AsMachineField());
@@ -2698,194 +2079,6 @@ Some special strings that can be used:
 
             // Include 'of" in game filters
             cleaner.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
-
-            // Category
-            if (features.ContainsKey(NotCategoryListValue))
-            {
-                logger.User($"This flag '{(NotCategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Category, GetList(features, NotCategoryListValue), true);
-            }
-            if (features.ContainsKey(CategoryListValue))
-            {
-                logger.User($"This flag '{(CategoryListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Category, GetList(features, CategoryListValue), false);
-            }
-
-            // CRC
-            if (features.ContainsKey(NotCrcListValue))
-            {
-                logger.User($"This flag '{(NotCrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.CRC, GetList(features, NotCrcListValue), true);
-            }
-            if (features.ContainsKey(CrcListValue))
-            {
-                logger.User($"This flag '{(CrcListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.CRC, GetList(features, NotCrcListValue), false);
-            }
-
-            // Item name
-            if (features.ContainsKey(NotItemNameListValue))
-            {
-                logger.User($"This flag '{(NotItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.Name, GetList(features, NotItemNameListValue), true);
-            }
-            if (features.ContainsKey(ItemNameListValue))
-            {
-                logger.User($"This flag '{(ItemNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.Name, GetList(features, ItemNameListValue), false);
-            }
-
-            // Item status
-            if (features.ContainsKey(NotStatusListValue))
-            {
-                logger.User($"This flag '{(NotStatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.Status, GetList(features, NotStatusListValue), true);
-            }
-            if (features.ContainsKey(StatusListValue))
-            {
-                logger.User($"This flag '{(StatusListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.Status, GetList(features, StatusListValue), false);
-            }
-
-            // Item type
-            if (features.ContainsKey(NotItemTypeListValue))
-            {
-                logger.User($"This flag '{(NotItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.Type, GetList(features, NotItemTypeListValue), true);
-            }
-            if (features.ContainsKey(ItemTypeListValue))
-            {
-                logger.User($"This flag '{(ItemTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.Type, GetList(features, ItemTypeListValue), false);
-            }
-
-            // Machine description
-            if (features.ContainsKey(NotGameDescriptionListValue))
-            {
-                logger.User($"This flag '{(NotGameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Description, GetList(features, NotGameDescriptionListValue), true);
-            }
-            if (features.ContainsKey(GameDescriptionListValue))
-            {
-                logger.User($"This flag '{(GameDescriptionListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Description, GetList(features, GameDescriptionListValue), false);
-            }
-
-            // Machine name
-            if (features.ContainsKey(NotGameNameListValue))
-            {
-                logger.User($"This flag '{(NotGameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Name, GetList(features, NotGameNameListValue), true);
-            }
-            if (features.ContainsKey(GameNameListValue))
-            {
-                logger.User($"This flag '{(GameNameListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Name, GetList(features, GameNameListValue), false);
-            }
-
-            // Machine type
-            if (features.ContainsKey(NotGameTypeListValue))
-            {
-                logger.User($"This flag '{(NotGameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Type, GetList(features, NotGameTypeListValue), true);
-            }
-            if (features.ContainsKey(GameTypeListValue))
-            {
-                logger.User($"This flag '{(GameTypeListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Type, GetList(features, GameTypeListValue), false);
-            }
-
-            // MD5
-            if (features.ContainsKey(NotMd5ListValue))
-            {
-                logger.User($"This flag '{(NotMd5ListValue)}' is deprecated, please use {(string.Join(", ", FilterListInput.Flags))} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.MD5, GetList(features, NotMd5ListValue), true);
-            }
-            if (features.ContainsKey(Md5ListValue))
-            {
-                logger.User($"This flag '{Md5ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.MD5, GetList(features, Md5ListValue), false);
-            }
-
-            // Runnable
-            if (features.ContainsKey(NotRunnableValue))
-            {
-                logger.User($"This flag '{NotRunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Runnable, string.Empty, true);
-            }
-            if (features.ContainsKey(RunnableValue))
-            {
-                logger.User($"This flag '{RunnableValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.MachineFilter.SetFilter(MachineField.Runnable, string.Empty, false);
-            }
-
-            // SHA1
-            if (features.ContainsKey(NotSha1ListValue))
-            {
-                logger.User($"This flag '{NotSha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA1, GetList(features, NotSha1ListValue), true);
-            }
-            if (features.ContainsKey(Sha1ListValue))
-            {
-                logger.User($"This flag '{Sha1ListValue}' is deprecated, please use {string.Join(", ", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA1, GetList(features, Sha1ListValue), false);
-            }
-
-            // SHA256
-            if (features.ContainsKey(NotSha256ListValue))
-            {
-                logger.User($"This flag '{NotSha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA256, GetList(features, NotSha256ListValue), true);
-            }
-            if (features.ContainsKey(Sha256ListValue))
-            {
-                logger.User($"This flag '{Sha256ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA256, GetList(features, Sha256ListValue), false);
-            }
-
-            // SHA384
-            if (features.ContainsKey(NotSha384ListValue))
-            {
-                logger.User($"This flag '{NotSha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA384, GetList(features, NotSha384ListValue), true);
-            }
-            if (features.ContainsKey(Sha384ListValue))
-            {
-                logger.User($"This flag '{Sha384ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA384, GetList(features, Sha384ListValue), false);
-            }
-
-            // SHA512
-            if (features.ContainsKey(NotSha512ListValue))
-            {
-                logger.User($"This flag '{NotSha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA512, GetList(features, NotSha512ListValue), true);
-            }
-            if (features.ContainsKey(Sha512ListValue))
-            {
-                logger.User($"This flag '{Sha512ListValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                cleaner.DatItemFilter.SetFilter(DatItemField.SHA512, GetList(features, Sha512ListValue), false);
-            }
-
-            // Size
-            if (features.ContainsKey(LessStringValue))
-            {
-                logger.User($"This flag '{LessStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                var value = ToSize(GetString(features, LessStringValue));
-                cleaner.DatItemFilter.SetFilter(DatItemField.Size, $"<{value}", false);
-            }
-            if (features.ContainsKey(EqualStringValue))
-            {
-                logger.User($"This flag '{EqualStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                var value = ToSize(GetString(features, EqualStringValue));
-                cleaner.DatItemFilter.SetFilter(DatItemField.Size, $"={value}", false);
-            }
-            if (features.ContainsKey(GreaterStringValue))
-            {
-                logger.User($"This flag '{GreaterStringValue}' is deprecated, please use {string.Join(",", FilterListInput.Flags)} instead. Please refer to README.1ST or the help feature for more details.");
-                var value = ToSize(GetString(features, GreaterStringValue));
-                cleaner.DatItemFilter.SetFilter(DatItemField.Size, $">{value}", false);
-            }
 
             return cleaner;
         }
