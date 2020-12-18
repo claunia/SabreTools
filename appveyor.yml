@@ -36,6 +36,11 @@ after_build:
 - 7z a RombaSharp_netcoreapp3.1.zip netcoreapp3.1\*
 - 7z a RombaSharp_net5.0.zip net5.0\*
 
+# testing step
+test:
+  assemblies:
+    - '**\*.Test.dll'
+
 # artifact linking
 artifacts:
 - path: SabreTools\bin\Debug\SabreTools_netcoreapp3.1.zip
