@@ -124,6 +124,10 @@ namespace SabreTools.Core.Tools
         /// <returns>Subfolder path for the given hash</returns>
         public static string GetDepotPath(string hash, int depth)
         {
+            // If the hash is null or empty, then we return null
+            if (string.IsNullOrEmpty(hash))
+                return null;
+
             // If the hash isn't the right size, then we return null
             if (hash.Length != Constants.SHA1Length)
                 return null;
@@ -153,8 +157,12 @@ namespace SabreTools.Core.Tools
         /// <returns>True if the extension is valid, false otherwise</returns>
         public static bool HasValidDatExtension(string path)
         {
+            // If the path is null or empty, then we return false
+            if (string.IsNullOrEmpty(path))
+                return false;
+
             // Get the extension from the path, if possible
-            string ext = Path.GetExtension(path).TrimStart('.');
+            string ext = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
 
             // Check against the list of known DAT extensions
             switch (ext)
