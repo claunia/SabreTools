@@ -4,7 +4,7 @@ using Xunit;
 
 namespace SabreTools.Test.Filtering
 {
-    public class CleanerCleaningTests
+    public class CleaningTests
     {
         [Fact]
         public void CleanDatItemRemoveUnicodeTest()
@@ -16,21 +16,13 @@ namespace SabreTools.Test.Filtering
             };
 
             // Setup DatItem
-            var datItem = new Rom
-            {
-                Name = "nam诶",
-                Machine = new Machine
-                {
-                    Name = "nam诶-2",
-                    Description = "nam诶-3",
-                }
-            };
+            var datItem = CreateDatItem("nam诶", "nam诶-2", "nam诶-3");
 
             // Run cleaning
             cleaner.CleanDatItem(datItem);
 
             // Check the fields
-            Assert.Equal("nam", datItem.Name);
+            Assert.Equal("nam", datItem.GetName());
             Assert.Equal("nam-2", datItem.Machine.Name);
             Assert.Equal("nam-3", datItem.Machine.Description);
         }
@@ -45,21 +37,13 @@ namespace SabreTools.Test.Filtering
             };
 
             // Setup DatItem
-            var datItem = new Rom
-            {
-                Name = "name",
-                Machine = new Machine
-                {
-                    Name = "\"ÁБ\"",
-                    Description = "ä|/Ж",
-                }
-            };
+            var datItem = CreateDatItem("name", "\"ÁБ\"", "ä|/Ж");
 
             // Run cleaning
             cleaner.CleanDatItem(datItem);
 
             // Check the fields
-            Assert.Equal("name", datItem.Name);
+            Assert.Equal("name", datItem.GetName());
             Assert.Equal("'AB'", datItem.Machine.Name);
             Assert.Equal("ae-Zh", datItem.Machine.Description);
         }
@@ -74,21 +58,13 @@ namespace SabreTools.Test.Filtering
             };
 
             // Setup DatItem
-            var datItem = new Rom
-            {
-                Name = "name",
-                Machine = new Machine
-                {
-                    Name = "name-2",
-                    Description = "name-3",
-                }
-            };
+            var datItem = CreateDatItem("name", "name-2", "name-3");
 
             // Run cleaning
             cleaner.CleanDatItem(datItem);
 
             // Check the fields
-            Assert.Equal("name", datItem.Name);
+            Assert.Equal("name", datItem.GetName());
             Assert.Equal("!", datItem.Machine.Name);
             Assert.Equal("name-3", datItem.Machine.Description);
         }
@@ -108,23 +84,31 @@ namespace SabreTools.Test.Filtering
             };
 
             // Setup DatItem
-            var datItem = new Rom
-            {
-                Name = "name",
-                Machine = new Machine
-                {
-                    Name = "name-2",
-                    Description = "name-3",
-                }
-            };
+            var datItem = CreateDatItem("name", "name-2", "name-3");
 
             // Run cleaning
             cleaner.CleanDatItem(datItem);
 
             // Check the fields
-            Assert.Equal(expected, datItem.Name);
+            Assert.Equal(expected, datItem.GetName());
             Assert.Equal("name-2", datItem.Machine.Name);
             Assert.Equal("name-3", datItem.Machine.Description);
+        }
+    
+        /// <summary>
+        /// Generate a consistent DatItem for testing
+        /// </summary>
+        private DatItem CreateDatItem(string name, string machine, string desc)
+        {
+            return new Rom
+            {
+                Name = name,
+                Machine = new Machine
+                {
+                    Name = machine,
+                    Description = desc,
+                }
+            };
         }
     }
 }
