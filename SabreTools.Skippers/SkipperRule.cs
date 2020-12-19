@@ -178,13 +178,10 @@ namespace SabreTools.Skippers
 
                             case HeaderSkipOperation.Byteswap:
                                 if (pos % 2 == 1)
-                                {
                                     buffer[pos - 1] = b;
-                                }
-                                if (pos % 2 == 0)
-                                {
+                                else
                                     buffer[pos + 1] = b;
-                                }
+
                                 break;
 
                             case HeaderSkipOperation.Wordswap:

@@ -129,9 +129,10 @@ namespace SabreTools.Skippers
                             SkipperRule rule = ParseRule(xtr);
                             if (rule != null)
                                 Rules.Add(rule);
-
-                            xtr.Skip();
+                            
+                            xtr.Read();
                             break;
+
                         default:
                             xtr.Read();
                             break;
@@ -168,27 +169,27 @@ namespace SabreTools.Skippers
                     SourceFile = this.SourceFile,
                 };
 
-                if (xtr.GetAttribute("start_offset") != null)
+                string startOffset = xtr.GetAttribute("start_offset");
+                if (startOffset != null)
                 {
-                    string offset = xtr.GetAttribute("start_offset");
-                    if (offset.ToLowerInvariant() == "eof")
+                    if (startOffset.ToLowerInvariant() == "eof")
                         rule.StartOffset = null;
                     else
-                        rule.StartOffset = Convert.ToInt64(offset, 16);
+                        rule.StartOffset = Convert.ToInt64(startOffset, 16);
                 }
 
-                if (xtr.GetAttribute("end_offset") != null)
+                string endOffset = xtr.GetAttribute("end_offset");
+                if (endOffset != null)
                 {
-                    string offset = xtr.GetAttribute("end_offset");
-                    if (offset.ToLowerInvariant() == "eof")
+                    if (endOffset.ToLowerInvariant() == "eof")
                         rule.EndOffset = null;
                     else
-                        rule.EndOffset = Convert.ToInt64(offset, 16);
+                        rule.EndOffset = Convert.ToInt64(endOffset, 16);
                 }
 
-                if (xtr.GetAttribute("operation") != null)
+                string operation = xtr.GetAttribute("operation");
+                if (operation != null)
                 {
-                    string operation = xtr.GetAttribute("operation");
                     switch (operation.ToLowerInvariant())
                     {
                         case "bitswap":
@@ -205,19 +206,32 @@ namespace SabreTools.Skippers
 
                 // Now read the individual tests into the Rule
                 XmlReader subreader = xtr.ReadSubtree();
-
                 if (subreader != null)
                 {
+                    subreader.MoveToContent();
                     while (!subreader.EOF)
                     {
                         if (subreader.NodeType != XmlNodeType.Element)
                             subreader.Read();
 
-                        SkipperTest test = ParseTest(xtr);
+                        switch (xtr.Name.ToLowerInvariant())
+                        {
+                            case "data":
+                            case "or":
+                            case "xor":
+                            case "and":
+                            case "file":
+                                SkipperTest test = ParseTest(subreader);
+                                if (test != null)
+                                    rule.Tests.Add(test);
 
-                        // Add the created test to the rule
-                        rule.Tests.Add(test);
-                        subreader.Read();
+                                subreader.Read();
+                                break;
+                                
+                            default:
+                                subreader.Read();
+                                break;
+                        }
                     }
                 }
 
@@ -275,8 +289,7 @@ namespace SabreTools.Skippers
                         break;
 
                     default:
-                        xtr.Read();
-                        break;
+                        return null;
                 }
 
                 // Now populate all the parts that we can

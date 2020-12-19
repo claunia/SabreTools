@@ -226,7 +226,7 @@ namespace SabreTools.Skippers
                 Name = "Atari 7800",
                 Author = "Roman Scherzer",
                 Version = "1.0",
-                SourceFile = "a7800.xml",
+                SourceFile = "a7800",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
@@ -289,7 +289,7 @@ namespace SabreTools.Skippers
                 Name = "Atari Lynx",
                 Author = "Roman Scherzer",
                 Version = "1.0",
-                SourceFile = "lynx.xml",
+                SourceFile = "lynx",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
@@ -409,7 +409,7 @@ namespace SabreTools.Skippers
                 Name = "psid",
                 Author = "Yori Yoshizuki",
                 Version = "1.2",
-                SourceFile = "psid.xml",
+                SourceFile = "psid",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
@@ -456,7 +456,7 @@ namespace SabreTools.Skippers
                 Name = "NEC TurboGrafx-16/PC-Engine",
                 Author = "Matt Nadareski (darksabre76)",
                 Version = "1.0",
-                SourceFile = "pce.xml",
+                SourceFile = "pce",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
@@ -537,7 +537,7 @@ namespace SabreTools.Skippers
                 Name = "Nintendo 64 - ABCD",
                 Author = "CUE",
                 Version = "1.1",
-                SourceFile = "n64.xml",
+                SourceFile = "n64",
                 Rules = new List<SkipperRule>
                 {
                     rule1, // V64
@@ -582,7 +582,7 @@ namespace SabreTools.Skippers
                 Name = "Nintendo Famicon/NES",
                 Author = "Roman Scherzer",
                 Version = "1.1",
-                SourceFile = "nes.xml",
+                SourceFile = "nes",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
@@ -682,7 +682,7 @@ namespace SabreTools.Skippers
                 Name = "fds",
                 Author = "Yori Yoshizuki",
                 Version = "1.0",
-                SourceFile = "fds.xml",
+                SourceFile = "fds",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
@@ -766,7 +766,7 @@ namespace SabreTools.Skippers
                 Name = "Nintendo Super Famicom/SNES",
                 Author = "Matt Nadareski (darksabre76)",
                 Version = "1.0",
-                SourceFile = "snes.xml",
+                SourceFile = "snes",
                 Rules = new List<SkipperRule>
                 {
                     rule1, // FIG
@@ -811,7 +811,7 @@ namespace SabreTools.Skippers
                 Name = "Nintendo Super Famicon SPC",
                 Author = "Yori Yoshizuki",
                 Version = "1.0",
-                SourceFile = "spc.xml",
+                SourceFile = "spc",
                 Rules = new List<SkipperRule>
                 {
                     rule1,
