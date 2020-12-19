@@ -242,7 +242,7 @@ namespace SabreTools.Filtering
         public void CleanDatItem(DatItem datItem)
         {
             // If we're stripping unicode characters, strip machine name and description
-            if (RemoveUnicode == true)
+            if (RemoveUnicode)
             {
                 datItem.Machine.Name = RemoveUnicodeCharacters(datItem.Machine.Name);
                 datItem.Machine.Description = RemoveUnicodeCharacters(datItem.Machine.Description);
@@ -250,18 +250,18 @@ namespace SabreTools.Filtering
             }
 
             // If we're in cleaning mode, sanitize machine name and description
-            if (Clean == true)
+            if (Clean)
             {
                 datItem.Machine.Name = CleanGameName(datItem.Machine.Name);
                 datItem.Machine.Description = CleanGameName(datItem.Machine.Description);
             }
 
             // If we are in single game mode, rename the machine
-            if (Single == true)
+            if (Single)
                 datItem.Machine.Name = "!";
 
             // If we are in NTFS trim mode, trim the item name
-            if (Trim == true && datItem.GetName() != null)
+            if (Trim && datItem.GetName() != null)
             {
                 // Windows max name length is 260
                 int usableLength = 260 - datItem.Machine.Name.Length - (Root?.Length ?? 0);
