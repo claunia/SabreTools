@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
+    <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Skippers\SabreTools.Skippers.csproj" />
   </ItemGroup>
 

@@ -31,6 +31,10 @@ namespace SabreTools.IO
         /// <returns>Subpath for the file</returns>
         public string GetNormalizedFileName(bool sanitize)
         {
+            // If the current path is empty, we can't do anything
+            if (string.IsNullOrWhiteSpace(CurrentPath))
+                return null;
+
             // Check that we have a combined path first
             if (string.IsNullOrWhiteSpace(ParentPath))
             {
@@ -70,8 +74,13 @@ namespace SabreTools.IO
         /// <returns>Complete output path</returns>
         public string GetOutputPath(string outDir, bool inplace)
         {
-            // First, we need to ensure the output directory
-            outDir = outDir.Ensure();
+            // If the current path is empty, we can't do anything
+            if (string.IsNullOrWhiteSpace(CurrentPath))
+                return null;
+
+            // If the output dir is empty (and we're not inplace), we can't do anything
+            if (string.IsNullOrWhiteSpace(outDir) && !inplace)
+                return null;
 
             // Check if we have a split path or not
             bool splitpath = !string.IsNullOrWhiteSpace(ParentPath);
@@ -89,13 +98,20 @@ namespace SabreTools.IO
                 // If we are processing a path that is coming from a directory and we are outputting to the current directory, we want to get the subfolder to write to
                 else if (CurrentPath.Length != ParentPath.Length && outDir == Environment.CurrentDirectory)
                 {
-                    outDir = Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, Path.GetDirectoryName(ParentPath).Length + 1)));
+                    string nextDir = Path.GetDirectoryName(ParentPath);
+                    int extraLength = nextDir.EndsWith(':')
+                        || nextDir.EndsWith(Path.DirectorySeparatorChar)
+                        || nextDir.EndsWith(Path.AltDirectorySeparatorChar) ? 0 : 1;
+                    outDir = Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, nextDir.Length + extraLength)));
                 }
 
                 // If we are processing a path that is coming from a directory, we want to get the subfolder to write to
                 else if (CurrentPath.Length != ParentPath.Length)
                 {
-                    outDir = Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, ParentPath.Length + 1)));
+                    int extraLength = ParentPath.EndsWith(':')
+                        || ParentPath.EndsWith(Path.DirectorySeparatorChar)
+                        || ParentPath.EndsWith(Path.AltDirectorySeparatorChar) ? 0 : 1;
+                    outDir = Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, ParentPath.Length + extraLength)));
                 }
 
                 // If we are processing a single file from the root of a directory, we just use the output directory
