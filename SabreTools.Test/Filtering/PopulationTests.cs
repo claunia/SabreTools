@@ -5,7 +5,7 @@ using Xunit;
 
 namespace SabreTools.Test.Filtering
 {
-    public class CleanerPopulationTests
+    public class PopulationTests
     {
         [Fact]
         public void PopulateExclusionNullListTest()
