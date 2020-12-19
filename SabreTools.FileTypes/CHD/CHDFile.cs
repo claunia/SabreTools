@@ -24,6 +24,14 @@ namespace SabreTools.FileTypes.CHD
         #region Constructors
 
         /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public CHDFile()
+        {
+            Type = FileType.CHD;
+        }
+
+        /// <summary>
         /// Create a new CHDFile from an input file
         /// </summary>
         /// <param name="filename">Filename respresenting the CHD file</param>

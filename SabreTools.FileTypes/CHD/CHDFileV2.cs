@@ -9,7 +9,7 @@ namespace SabreTools.FileTypes.CHD
     /// <summary>
     /// CHD V2 File
     /// </summary>
-    internal class CHDFileV2 : CHDFile
+    public class CHDFileV2 : CHDFile
     {
         /// <summary>
         /// CHD flags

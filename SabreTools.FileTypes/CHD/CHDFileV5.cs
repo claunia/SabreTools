@@ -8,7 +8,7 @@ namespace SabreTools.FileTypes.CHD
     /// <summary>
     /// CHD V5 File
     /// </summary>
-    internal class CHDFileV5 : CHDFile
+    public class CHDFileV5 : CHDFile
     {
         /// <summary>
         /// Uncompressed map format

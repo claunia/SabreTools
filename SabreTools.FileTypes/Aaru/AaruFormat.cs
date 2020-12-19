@@ -41,6 +41,14 @@ namespace SabreTools.FileTypes.Aaru
         #region Constructors
 
         /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public AaruFormat()
+        {
+            Type = FileType.AaruFormat;
+        }
+
+        /// <summary>
         /// Create a new AaruFormat from an input file
         /// </summary>
         /// <param name="filename">Filename respresenting the AaruFormat file</param>

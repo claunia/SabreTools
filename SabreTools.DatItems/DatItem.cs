@@ -544,7 +544,7 @@ namespace SabreTools.DatItems
                 if (file == null)
                     continue;
 
-                // If we don't have a Dis, Media, or Rom, we skip checking for duplicates
+                // If we don't have a Disk, Media, or Rom, we skip checking for duplicates
                 if (file.ItemType != ItemType.Disk && file.ItemType != ItemType.Media && file.ItemType != ItemType.Rom)
                     continue;
 
