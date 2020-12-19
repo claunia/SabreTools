@@ -123,7 +123,7 @@ namespace SabreTools.Skippers
             long extsize = input.Length;
             if ((Operation > HeaderSkipOperation.Bitswap && (extsize % 2) != 0)
                 || (Operation > HeaderSkipOperation.Byteswap && (extsize % 4) != 0)
-                || (Operation > HeaderSkipOperation.Bitswap && (StartOffset == null || StartOffset % 2 == 0)))
+                || (Operation > HeaderSkipOperation.Bitswap && (StartOffset == null || StartOffset % 2 != 0)))
             {
                 logger.Error("The stream did not have the correct size to be transformed!");
                 return false;

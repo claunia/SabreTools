@@ -10,7 +10,6 @@ namespace SabreTools.Test.Skippers
     {
         public SkipperMatchInternalTests()
         {
-            // Initialize the skippers
             SkipperMatch.Init(true);
         }
 
