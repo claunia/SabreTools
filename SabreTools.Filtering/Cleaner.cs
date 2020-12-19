@@ -123,7 +123,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Logging object
         /// </summary>
-        private Logger logger = new Logger();
+        private readonly Logger logger = new Logger();
 
         #endregion
 
@@ -139,6 +139,10 @@ namespace SabreTools.Filtering
             ExcludeDatHeaderFields ??= new List<DatHeaderField>();
             ExcludeMachineFields ??= new List<MachineField>();
             ExcludeDatItemFields ??= new List<DatItemField>();
+
+            // If the list is null or empty, just return
+            if (fields == null || fields.Count == 0)
+                return;
 
             foreach (string field in fields)
             {                
@@ -185,6 +189,10 @@ namespace SabreTools.Filtering
             DatHeaderFilter ??= new DatHeaderFilter();
             MachineFilter ??= new MachineFilter();
             DatItemFilter ??= new DatItemFilter();
+
+            // If the list is null or empty, just return
+            if (filters == null || filters.Count == 0)
+                return;
 
             foreach (string filterPair in filters)
             {
