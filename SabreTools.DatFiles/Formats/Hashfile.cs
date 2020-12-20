@@ -47,7 +47,7 @@ namespace SabreTools.DatFiles.Formats
                     string name = string.Empty;
                     string hash = string.Empty;
 
-                    // If we have CRC, then it's an SFV file and the name is first are
+                    // If we have CRC, then it's an SFV file and the name is first
                     if (_hash.HasFlag(Hash.CRC))
                     {
                         name = split[0].Replace("*", String.Empty);

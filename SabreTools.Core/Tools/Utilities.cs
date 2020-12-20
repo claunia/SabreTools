@@ -176,6 +176,7 @@ namespace SabreTools.Core.Tools
                 case "sha256":
                 case "sha384":
                 case "sha512":
+                case "spamsum":
                 case "ssv":
                 case "tsv":
                 case "txt":

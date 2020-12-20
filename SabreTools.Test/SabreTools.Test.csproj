@@ -9,10 +9,21 @@
     <ProjectReference Include="..\SabreTools.Core\SabreTools.Core.csproj" />
     <ProjectReference Include="..\SabreTools.DatFiles\SabreTools.DatFiles.csproj" />
     <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
+    <ProjectReference Include="..\SabreTools.DatTools\SabreTools.DatTools.csproj" />
     <ProjectReference Include="..\SabreTools.FileTypes\SabreTools.FileTypes.csproj" />
     <ProjectReference Include="..\SabreTools.Filtering\SabreTools.Filtering.csproj" />
     <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Skippers\SabreTools.Skippers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestData\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

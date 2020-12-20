@@ -12,43 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Skippers\a7800.xml" />
-    <None Remove="Skippers\fds.xml" />
-    <None Remove="Skippers\lynx.xml" />
-    <None Remove="Skippers\n64.xml" />
-    <None Remove="Skippers\nes.xml" />
-    <None Remove="Skippers\pce.xml" />
-    <None Remove="Skippers\psid.xml" />
-    <None Remove="Skippers\snes.xml" />
-    <None Remove="Skippers\spc.xml" />
+    <None Remove="Skippers\*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Skippers\a7800.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\fds.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\lynx.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\n64.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\nes.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\pce.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\psid.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\snes.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Skippers\spc.xml">
+    <Content Include="Skippers\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
