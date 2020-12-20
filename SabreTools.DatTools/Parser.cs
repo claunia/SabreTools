@@ -230,7 +230,7 @@ namespace SabreTools.DatTools
             else if (first.Contains("doscenter"))
                 return DatFormat.DOSCenter;
 
-            else if (first.Contains("#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra"))
+            else if (first.Contains("#Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra".ToLowerInvariant()))
                 return DatFormat.AttractMode;
 
             else

@@ -63,7 +63,7 @@ namespace SabreTools.DatFiles.Formats
                     // If we have the beginning of a game, set the name of the game
                     else if (line.StartsWith("ROMs required for"))
                     {
-                        gamename = Regex.Match(line, @"^ROMs required for \S*? string.Empty(.*?)string.Empty\.").Groups[1].Value;
+                        gamename = Regex.Match(line, @"^ROMs required for \S*? ""(.*?)""\.").Groups[1].Value;
                     }
 
                     // If we have a machine with no required roms (usually internal devices), skip it
