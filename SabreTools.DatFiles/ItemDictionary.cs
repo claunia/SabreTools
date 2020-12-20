@@ -379,7 +379,10 @@ namespace SabreTools.DatFiles
             set
             {
                 Remove(key);
-                AddRange(key, value);
+                if (value == null)
+                    items[key] = null;
+                else
+                    AddRange(key, value);
             }
         }
 
@@ -428,6 +431,10 @@ namespace SabreTools.DatFiles
             // Explicit lock for some weird corner cases
             lock (key)
             {
+                // If the value is null or empty, just return
+                if (value == null || !value.Any())
+                    return;
+
                 // Ensure the key exists
                 EnsureKey(key);
 
@@ -949,7 +956,7 @@ namespace SabreTools.DatFiles
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
-            if (bucketedBy != bucketBy)
+            if (bucketedBy != bucketBy && bucketBy != ItemKey.NULL)
             {
                 logger.User($"Organizing roms by {bucketBy}");
 
