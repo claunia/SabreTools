@@ -227,7 +227,7 @@ namespace SabreTools.DatFiles.Formats
                 // Add all infos to the info list
                 switch (reader.Name.ToLowerInvariant())
                 {
-                    case "info":
+                    default:
                         var info = new OfflineListInfo
                         {
                             Name = reader.Name.ToLowerInvariant(),
@@ -238,10 +238,6 @@ namespace SabreTools.DatFiles.Formats
 
                         Header.Infos.Add(info);
 
-                        reader.Read();
-                        break;
-
-                    default:
                         reader.Read();
                         break;
                 }

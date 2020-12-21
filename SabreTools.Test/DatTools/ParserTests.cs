@@ -15,9 +15,9 @@ namespace SabreTools.Test.DatTools
         [InlineData(null, (DatFormat)0x00, 0)]
         [InlineData("test-logiqx.xml", DatFormat.Logiqx, 6)]
         //[InlineData(null, DatFormat.LogiqxDeprecated, 0)] // Not parsed separately
-        //[InlineData(null, DatFormat.SoftwareList, 0)]
+        [InlineData("test-softwarelist.xml", DatFormat.SoftwareList, 5)]
         [InlineData("test-listxml.xml", DatFormat.Listxml, 20)]
-        //[InlineData(null, DatFormat.OfflineList, 0)]
+        [InlineData("test-offlinelist.xml", DatFormat.OfflineList, 1)]
         //[InlineData(null, DatFormat.SabreXML, 0)]
         [InlineData("test-openmsx.xml", DatFormat.OpenMSX, 3)]
         [InlineData("test-cmp.dat", DatFormat.ClrMamePro, 6)]
