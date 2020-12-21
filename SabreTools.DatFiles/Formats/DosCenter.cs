@@ -118,7 +118,7 @@ namespace SabreTools.DatFiles.Formats
                     case "description":
                         Header.Description ??= itemVal;
                         break;
-                    case "dersion":
+                    case "version":
                         Header.Version ??= itemVal;
                         break;
                     case "date":

@@ -11,10 +11,9 @@ namespace SabreTools.Test.DatTools
     {
         // TODO: Create files for each of these
         // TODO: Ensure that all stress all bits of reading
-        // TODO: Add total count? Might be a good metric if everything read
         [Theory]
         [InlineData(null, (DatFormat)0x00, 0)]
-        //[InlineData(null, DatFormat.Logiqx, 0)]
+        [InlineData("test-logiqx.xml", DatFormat.Logiqx, 6)]
         //[InlineData(null, DatFormat.LogiqxDeprecated, 0)] // Not parsed separately
         //[InlineData(null, DatFormat.SoftwareList, 0)]
         //[InlineData(null, DatFormat.Listxml, 0)]
@@ -23,7 +22,7 @@ namespace SabreTools.Test.DatTools
         [InlineData("test-openmsx.xml", DatFormat.OpenMSX, 3)]
         [InlineData("test-cmp.dat", DatFormat.ClrMamePro, 6)]
         //[InlineData(null, DatFormat.RomCenter, 0)]
-        //[InlineData(null, DatFormat.DOSCenter, 0)]
+        [InlineData("test-doscenter.dat", DatFormat.DOSCenter, 1)]
         [InlineData("test-attractmode.txt", DatFormat.AttractMode, 1)]
         //[InlineData(null, DatFormat.MissFile, 0)] // Parsing is not supported
         //[InlineData(null, DatFormat.CSV, 0)]

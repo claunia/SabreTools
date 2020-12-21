@@ -2,7 +2,7 @@ clrmamepro (
     name "Internal DAT Name"
     description "Internal DAT Name"
     rootdir "root"
-    category "games"
+    category "Games"
     version "1.0"
     date "1900-01-01"
     author "Unknown"
