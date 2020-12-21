@@ -9,6 +9,8 @@ environment:
   EnableNuGetPackageRestore: true
 
 # msbuild configuration
+platform:	
+- x64
 configuration:
 - Debug
 
