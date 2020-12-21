@@ -9,8 +9,6 @@ namespace SabreTools.Test.DatTools
 {
     public class ParserTests
     {
-        // TODO: Create files for each of these
-        // TODO: Ensure that all stress all bits of reading
         [Theory]
         [InlineData(null, (DatFormat)0x00, 0)]
         [InlineData("test-logiqx.xml", DatFormat.Logiqx, 6)]
@@ -18,19 +16,19 @@ namespace SabreTools.Test.DatTools
         [InlineData("test-softwarelist.xml", DatFormat.SoftwareList, 5)]
         [InlineData("test-listxml.xml", DatFormat.Listxml, 20)]
         [InlineData("test-offlinelist.xml", DatFormat.OfflineList, 1)]
-        //[InlineData(null, DatFormat.SabreXML, 0)]
+        //[InlineData(null, DatFormat.SabreXML, 0)] // TODO: Create good-enough test file for this
         [InlineData("test-openmsx.xml", DatFormat.OpenMSX, 3)]
         [InlineData("test-cmp.dat", DatFormat.ClrMamePro, 6)]
         [InlineData("test-romcenter.dat", DatFormat.RomCenter, 1)]
         [InlineData("test-doscenter.dat", DatFormat.DOSCenter, 1)]
         [InlineData("test-attractmode.txt", DatFormat.AttractMode, 1)]
         //[InlineData(null, DatFormat.MissFile, 0)] // Parsing is not supported
-        //[InlineData(null, DatFormat.CSV, 0)]
-        //[InlineData(null, DatFormat.SSV, 0)]
-        //[InlineData(null, DatFormat.TSV, 0)]
+        //[InlineData(null, DatFormat.CSV, 0)] // TODO: Create good-enough test file for this
+        //[InlineData(null, DatFormat.SSV, 0)] // TODO: Create good-enough test file for this
+        //[InlineData(null, DatFormat.TSV, 0)] // TODO: Create good-enough test file for this
         [InlineData("test-listrom.txt", DatFormat.Listrom, 6)]
         [InlineData("test-smdb.txt", DatFormat.EverdriveSMDB, 1)]
-        //[InlineData(null, DatFormat.SabreJSON, 0)]
+        //[InlineData(null, DatFormat.SabreJSON, 0)] // TODO: Create good-enough test file for this
         [InlineData("test-sfv.sfv", DatFormat.RedumpSFV, 1)]
         [InlineData("test-md5.md5", DatFormat.RedumpMD5, 1)]
         [InlineData("test-sha1.sha1", DatFormat.RedumpSHA1, 1)]
