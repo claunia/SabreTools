@@ -12,10 +12,12 @@ using SabreTools.IO;
 using SabreTools.Logging;
 using NaturalSort;
 
-// This file represents all methods related to splitting a DatFile into multiple
 namespace SabreTools.DatTools
 {
-    // TODO: Implement Level split
+    /// <summary>
+    /// Helper methods for splitting DatFiles
+    /// </summary>
+    /// <remarks>TODO: Implement Level split</remarks>
     public class Splitter
     {
         #region Logging

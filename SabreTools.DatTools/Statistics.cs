@@ -12,6 +12,10 @@ using SabreTools.Reports;
 
 namespace SabreTools.DatTools
 {
+    /// <summary>
+    /// Helper methods for dealing with DatFile statistics
+    /// </summary>
+    
     public class Statistics
     {
         #region Logging

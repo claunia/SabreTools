@@ -10,9 +10,11 @@ using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Reports;
 
-// This file represents all methods related to writing to a file
 namespace SabreTools.DatTools
 {
+    /// <summary>
+    /// Helper methods for writing from DatFiles
+    /// </summary>
     public class Writer
     {
         #region Logging

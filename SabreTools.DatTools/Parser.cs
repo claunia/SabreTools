@@ -8,9 +8,11 @@ using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-// This file represents all methods related to parsing from a file
 namespace SabreTools.DatTools
 {
+    /// <summary>
+    /// Helper methods for parsing into DatFiles
+    /// </summary>
     public class Parser
     {
         #region Logging

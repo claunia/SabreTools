@@ -13,9 +13,11 @@ using SabreTools.Filtering;
 using SabreTools.IO;
 using SabreTools.Logging;
 
-// This file represents all methods related to the Filtering namespace
 namespace SabreTools.DatTools
 {
+    /// <summary>
+    /// Helper methods for cleaning and filtering DatFiles
+    /// </summary>
     public class Modification
     {
         #region Logging

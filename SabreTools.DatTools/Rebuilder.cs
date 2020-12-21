@@ -13,9 +13,11 @@ using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Skippers;
 
-// This file represents all methods related to rebuilding from a DatFile
 namespace SabreTools.DatTools
 {
+    /// <summary>
+    /// Helper methods for rebuilding from DatFiles
+    /// </summary>
     public class Rebuilder
     {
         #region Logging

@@ -10,9 +10,11 @@ using SabreTools.FileTypes;
 using SabreTools.FileTypes.Archives;
 using SabreTools.Logging;
 
-// This file represents all methods related to verifying with a DatFile
 namespace SabreTools.DatTools
 {
+    /// <summary>
+    /// Helper methods for verifying data from DatFiles
+    /// </summary>
     public class Verification
     {
         #region Logging

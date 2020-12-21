@@ -11,7 +11,9 @@ using SabreTools.Logging;
 
 namespace SabreTools.DatTools
 {
-    // This file represents all methods related to converting and updating DatFiles
+    /// <summary>
+    /// Helper methods for updating and converting DatFiles
+    /// </summary>
     public class DatFileTool
     {
         #region Logging
