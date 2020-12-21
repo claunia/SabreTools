@@ -28,3 +28,4 @@ The softwaredb.xml file contains information about rom mapper types
 		<dump><megarom><hash>da58f56d4b1660bc36d74bfb29776ef8ec61a831</hash><start>0x4000</start><type>ASCII16</type><remark>Comment Too</remark></megarom></dump>
 		<dump><original value="true">Good</original><boot>LOAD(8)</boot><sccpluscart><type>KonamiSCC</type><hash>afb1aef44a67cf7c9232f8a1c8587c66dd820caa</hash><remark>Comment Three</remark></sccpluscart></dump>
 </software>
+</softwaredb>

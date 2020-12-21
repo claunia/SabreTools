@@ -102,7 +102,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             reader.ReadNextLine();
-            while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "credits")
+            do
             {
                 // We don't care about whitespace, comments, or invalid
                 if (reader.RowType != IniRowType.KeyValue)
@@ -163,7 +163,7 @@ namespace SabreTools.DatFiles.Formats
                         reader.ReadNextLine();
                         break;
                 }
-            }
+            } while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "credits");
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             reader.ReadNextLine();
-            while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "dat")
+            do
             {
                 // We don't care about whitespace, comments, or invalid
                 if (reader.RowType != IniRowType.KeyValue)
@@ -227,7 +227,7 @@ namespace SabreTools.DatFiles.Formats
                         reader.ReadNextLine();
                         break;
                 }
-            }
+            } while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "dat");
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             reader.ReadNextLine();
-            while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "emulator")
+            do
             {
                 // We don't care about whitespace, comments, or invalid
                 if (reader.RowType != IniRowType.KeyValue)
@@ -277,7 +277,7 @@ namespace SabreTools.DatFiles.Formats
                         reader.ReadNextLine();
                         break;
                 }
-            }
+            } while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "emulator");
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace SabreTools.DatFiles.Formats
                 return;
 
             reader.ReadNextLine();
-            while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "games")
+            do
             {
                 // We don't care about whitespace or comments
                 // We're keeping keyvalue in case a file has '=' in the row
@@ -358,7 +358,7 @@ namespace SabreTools.DatFiles.Formats
                 ParseAddHelper(rom);
 
                 reader.ReadNextLine();
-            }
+            } while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "games");
         }
 
         /// <inheritdoc/>

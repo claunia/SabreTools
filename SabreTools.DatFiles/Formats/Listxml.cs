@@ -537,6 +537,7 @@ namespace SabreTools.DatFiles.Formats
                             FlipX = reader.GetAttribute("flipx").AsYesNo(),
                             Width = Utilities.CleanLong(reader.GetAttribute("width")),
                             Height = Utilities.CleanLong(reader.GetAttribute("height")),
+                            Refresh = Utilities.CleanDouble(reader.GetAttribute("refresh")),
                             PixClock = Utilities.CleanLong(reader.GetAttribute("pixclock")),
                             HTotal = Utilities.CleanLong(reader.GetAttribute("htotal")),
                             HBEnd = Utilities.CleanLong(reader.GetAttribute("hbend")),
@@ -551,13 +552,6 @@ namespace SabreTools.DatFiles.Formats
                                 Name = filename,
                             },
                         };
-
-                        // Set the refresh
-                        if (reader.GetAttribute("refresh") != null)
-                        {
-                            if (Double.TryParse(reader.GetAttribute("refresh"), out double refresh))
-                                display.Refresh = refresh;
-                        }
 
                         datItems.Add(display);
 

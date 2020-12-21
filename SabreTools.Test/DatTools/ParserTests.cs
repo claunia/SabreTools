@@ -16,12 +16,12 @@ namespace SabreTools.Test.DatTools
         [InlineData("test-logiqx.xml", DatFormat.Logiqx, 6)]
         //[InlineData(null, DatFormat.LogiqxDeprecated, 0)] // Not parsed separately
         //[InlineData(null, DatFormat.SoftwareList, 0)]
-        //[InlineData(null, DatFormat.Listxml, 0)]
+        [InlineData("test-listxml.xml", DatFormat.Listxml, 20)]
         //[InlineData(null, DatFormat.OfflineList, 0)]
         //[InlineData(null, DatFormat.SabreXML, 0)]
         [InlineData("test-openmsx.xml", DatFormat.OpenMSX, 3)]
         [InlineData("test-cmp.dat", DatFormat.ClrMamePro, 6)]
-        //[InlineData(null, DatFormat.RomCenter, 0)]
+        [InlineData("test-romcenter.dat", DatFormat.RomCenter, 1)]
         [InlineData("test-doscenter.dat", DatFormat.DOSCenter, 1)]
         [InlineData("test-attractmode.txt", DatFormat.AttractMode, 1)]
         //[InlineData(null, DatFormat.MissFile, 0)] // Parsing is not supported
@@ -44,7 +44,7 @@ namespace SabreTools.Test.DatTools
             if (filename != null)
                 filename = Path.Combine(Environment.CurrentDirectory, "TestData", filename);
         
-            var datFile = Parser.CreateAndParse(filename);
+            var datFile = Parser.CreateAndParse(filename, throwOnError: true);
             Assert.Equal(datFormat, datFile.Header.DatFormat);
             Assert.Equal(totalCount, datFile.Items.TotalCount);
         }

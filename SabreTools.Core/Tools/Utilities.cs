@@ -63,6 +63,23 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
+        /// Get a sanitized double from an input string
+        /// </summary>
+        /// <param name="input">String to get value from</param>
+        /// <returns>Value as a double?, if possible</returns>
+        public static double? CleanDouble(string input)
+        {
+            double? value = null;
+            if (input != null)
+            {
+                if (Double.TryParse(input, out double doubleValue))
+                    value = doubleValue;
+            }
+
+            return value;
+        }
+
+        /// <summary>
         /// Get a sanitized size from an input string
         /// </summary>
         /// <param name="input">String to get value from</param>
