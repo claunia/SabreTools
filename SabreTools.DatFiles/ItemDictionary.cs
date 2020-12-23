@@ -670,6 +670,17 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Ensure the key exists in the items dictionary
+        /// </summary>
+        /// <param name="key">Key to ensure</param>
+        public void EnsureKey(string key)
+        {
+            // If the key is missing from the dictionary, add it
+            if (!items.ContainsKey(key))
+                items.TryAdd(key, new List<DatItem>());
+        }
+
+        /// <summary>
         /// Get a list of filtered items for a given key
         /// </summary>
         /// <param name="key">Key in the dictionary to retrieve</param>
@@ -766,17 +777,6 @@ namespace SabreTools.DatFiles
         public void SetBucketedBy(ItemKey newBucket)
         {
             bucketedBy = newBucket;
-        }
-
-        /// <summary>
-        /// Ensure the key exists in the items dictionary
-        /// </summary>
-        /// <param name="key">Key to ensure</param>
-        private void EnsureKey(string key)
-        {
-            // If the key is missing from the dictionary, add it
-            if (!items.ContainsKey(key))
-                items.TryAdd(key, new List<DatItem>());
         }
 
         /// <summary>

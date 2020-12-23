@@ -233,9 +233,7 @@ namespace SabreTools.DatFiles
             // If only adding statistics, we add an empty key for games and then just item stats
             if (statsOnly)
             {
-                if (Items.ContainsKey(key))
-                    Items.Add(key, new List<DatItem>());
-
+                Items.EnsureKey(key);
                 Items.AddItemStatistics(item);
             }
             else

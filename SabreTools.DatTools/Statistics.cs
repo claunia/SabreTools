@@ -110,7 +110,7 @@ namespace SabreTools.DatTools
 
                 logger.Verbose($"Beginning stat collection for '{file.CurrentPath}'");
                 List<string> games = new List<string>();
-                DatFile datdata = Parser.CreateAndParse(file.CurrentPath);
+                DatFile datdata = Parser.CreateAndParse(file.CurrentPath, statsOnly: true);
                 datdata.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
                 // Output single DAT stats (if asked)
