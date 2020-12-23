@@ -230,11 +230,18 @@ namespace SabreTools.DatFiles
             // Get the key and add the file
             key = item.GetKey(ItemKey.Machine);
 
-            // If only adding statistics
+            // If only adding statistics, we add an empty key for games and then just item stats
             if (statsOnly)
+            {
+                if (Items.ContainsKey(key))
+                    Items.Add(key, new List<DatItem>());
+
                 Items.AddItemStatistics(item);
+            }
             else
+            {
                 Items.Add(key, item);
+            }
 
             return key;
         }
