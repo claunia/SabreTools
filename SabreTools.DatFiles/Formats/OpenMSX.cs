@@ -41,7 +41,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
@@ -82,7 +82,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // We want to process the entire subtree of the software
                         case "software":
-                            ReadSoftware(xtr.ReadSubtree(), filename, indexId);
+                            ReadSoftware(xtr.ReadSubtree(), statsOnly, filename, indexId);
 
                             // Skip the software now that we've processed it
                             xtr.Skip();
@@ -114,9 +114,10 @@ namespace SabreTools.DatFiles.Formats
         /// Read software information
         /// </summary>
         /// <param name="reader">XmlReader representing a machine block</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadSoftware(XmlReader reader, string filename, int indexId)
+        private void ReadSoftware(XmlReader reader, bool statsOnly, string filename, int indexId)
         {
             // If we have an empty machine, skip it
             if (reader == null)
@@ -168,7 +169,7 @@ namespace SabreTools.DatFiles.Formats
                         break;
 
                     case "dump":
-                        containsItems = ReadDump(reader.ReadSubtree(), machine, diskno, filename, indexId);
+                        containsItems = ReadDump(reader.ReadSubtree(), machine, diskno, statsOnly, filename, indexId);
                         diskno++;
 
                         // Skip the dump now that we've processed it
@@ -196,7 +197,7 @@ namespace SabreTools.DatFiles.Formats
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(blank);
+                ParseAddHelper(blank, statsOnly);
             }
         }
 
@@ -206,12 +207,14 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="reader">XmlReader representing a part block</param>
         /// <param name="machine">Machine information to pass to contained items</param>
         /// <param name="diskno">Disk number to use when outputting to other DAT formats</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         private bool ReadDump(
             XmlReader reader,
             Machine machine,
             int diskno,
+            bool statsOnly,
 
             // Standard Dat parsing
             string filename,
@@ -284,7 +287,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 item.CopyMachineInformation(machine);
-                ParseAddHelper(item);
+                ParseAddHelper(item, statsOnly);
             }
 
             return items.Count > 0;

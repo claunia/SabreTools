@@ -28,11 +28,12 @@ namespace SabreTools.DatTools
         /// Create a DatFile and parse a file into it
         /// </summary>
         /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public static DatFile CreateAndParse(string filename, bool throwOnError = false)
+        public static DatFile CreateAndParse(string filename, bool statsOnly = false, bool throwOnError = false)
         {
             DatFile datFile = DatFile.Create();
-            ParseInto(datFile, new ParentablePath(filename), throwOnError: throwOnError);
+            ParseInto(datFile, new ParentablePath(filename), statsOnly: statsOnly, throwOnError: throwOnError);
             return datFile;
         }
 
@@ -45,6 +46,7 @@ namespace SabreTools.DatTools
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         public static void ParseInto(
             DatFile datFile,
@@ -53,10 +55,11 @@ namespace SabreTools.DatTools
             bool keep = false,
             bool keepext = false,
             bool quotes = true,
+            bool statsOnly = false,
             bool throwOnError = false)
         {
             ParentablePath path = new ParentablePath(filename.Trim('"'));
-            ParseInto(datFile, path, indexId, keep, keepext, quotes, throwOnError);
+            ParseInto(datFile, path, indexId, keep, keepext, quotes, statsOnly, throwOnError);
         }
 
         /// <summary>
@@ -68,6 +71,7 @@ namespace SabreTools.DatTools
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         /// <param name="keepext">True if original extension should be kept, false otherwise (default)</param>
         /// <param name="quotes">True if quotes are assumed in supported types (default), false otherwise</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         public static void ParseInto(
             DatFile datFile,
@@ -76,6 +80,7 @@ namespace SabreTools.DatTools
             bool keep = false,
             bool keepext = false,
             bool quotes = true,
+            bool statsOnly = false,
             bool throwOnError = true)
         {
             // Get the current path from the filename
@@ -100,7 +105,8 @@ namespace SabreTools.DatTools
             // Now parse the correct type of DAT
             try
             {
-                DatFile.Create(currentPathFormat, datFile, quotes)?.ParseFile(currentPath, indexId, keep, throwOnError);
+                var parsingDatFile = DatFile.Create(currentPathFormat, datFile, quotes);
+                parsingDatFile?.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
             catch (Exception ex)
             {

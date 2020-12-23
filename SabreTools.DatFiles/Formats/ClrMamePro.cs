@@ -38,7 +38,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
@@ -71,10 +71,10 @@ namespace SabreTools.DatFiles.Formats
                         case "set":         // Used by the most ancient DATs
                         case "game":        // Used by most CMP DATs
                         case "machine":     // Possibly used by MAME CMP DATs
-                            ReadSet(cmpr, false, filename, indexId);
+                            ReadSet(cmpr, false, statsOnly, filename, indexId);
                             break;
                         case "resource":    // Used by some other DATs to denote a BIOS set
-                            ReadSet(cmpr, true, filename, indexId);
+                            ReadSet(cmpr, true, statsOnly, filename, indexId);
                             break;
 
                         default:
@@ -201,11 +201,13 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="cmpr">ClrMameProReader to use to parse the header</param>
         /// <param name="resource">True if the item is a resource (bios), false otherwise</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         private void ReadSet(
             ClrMameProReader cmpr,
             bool resource,
+            bool statsOnly,
 
             // Standard Dat parsing
             string filename,
@@ -398,7 +400,7 @@ namespace SabreTools.DatFiles.Formats
                     }
 
                     // Now process and add the rom
-                    ParseAddHelper(item);
+                    ParseAddHelper(item, statsOnly);
                 }
             }
 
@@ -417,7 +419,7 @@ namespace SabreTools.DatFiles.Formats
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(blank);
+                ParseAddHelper(blank, statsOnly);
             }
         }
 

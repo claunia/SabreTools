@@ -30,7 +30,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
@@ -86,7 +86,7 @@ namespace SabreTools.DatFiles.Formats
                     };
 
                     // Now process and add the rom
-                    ParseAddHelper(rom);
+                    ParseAddHelper(rom, statsOnly);
                 }
                 catch (Exception ex)
                 {

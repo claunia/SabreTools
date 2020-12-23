@@ -25,7 +25,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
@@ -65,7 +65,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
 
                         case "directory":
-                            ReadDirectory(xtr.ReadSubtree(), filename, indexId);
+                            ReadDirectory(xtr.ReadSubtree(), statsOnly, filename, indexId);
 
                             // Skip the directory node now that we've processed it
                             xtr.Read();
@@ -96,9 +96,10 @@ namespace SabreTools.DatFiles.Formats
         /// Read directory information
         /// </summary>
         /// <param name="xtr">XmlReader to use to parse the header</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadDirectory(XmlReader xtr, string filename, int indexId)
+        private void ReadDirectory(XmlReader xtr, bool statsOnly, string filename, int indexId)
         {
             // If the reader is invalid, skip
             if (xtr == null)
@@ -127,7 +128,7 @@ namespace SabreTools.DatFiles.Formats
                         break;
 
                     case "files":
-                        ReadFiles(xtr.ReadSubtree(), machine, filename, indexId);
+                        ReadFiles(xtr.ReadSubtree(), machine, statsOnly, filename, indexId);
 
                         // Skip the directory node now that we've processed it
                         xtr.Read();
@@ -144,9 +145,10 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="xtr">XmlReader to use to parse the header</param>
         /// <param name="machine">Machine to copy information from</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadFiles(XmlReader xtr, Machine machine, string filename, int indexId)
+        private void ReadFiles(XmlReader xtr, Machine machine, bool statsOnly, string filename, int indexId)
         {
             // If the reader is invalid, skip
             if (xtr == null)
@@ -170,7 +172,7 @@ namespace SabreTools.DatFiles.Formats
                         DatItem item = xs.Deserialize(xtr.ReadSubtree()) as DatItem;
                         item.CopyMachineInformation(machine);
                         item.Source = new Source { Name = filename, Index = indexId };
-                        ParseAddHelper(item);
+                        ParseAddHelper(item, statsOnly);
                         xtr.Skip();
                         break;
                     default:

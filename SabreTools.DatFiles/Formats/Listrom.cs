@@ -35,7 +35,7 @@ namespace SabreTools.DatFiles.Formats
         /// 6331.sound-u8                            32 BAD CRC(1d298cb0) SHA1(bb0bb62365402543e3154b9a77be9c75010e6abc) BAD_DUMP
         /// 16v8h-blue.u24                          279 NO GOOD DUMP KNOWN
         /// </remarks>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
@@ -112,7 +112,7 @@ namespace SabreTools.DatFiles.Formats
                                 },
                             };
 
-                            ParseAddHelper(disk);
+                            ParseAddHelper(disk, statsOnly);
                         }
 
                         // Baddump Disks have 4 pieces (name, BAD, sha1, BAD_DUMP)
@@ -136,7 +136,7 @@ namespace SabreTools.DatFiles.Formats
                                 },
                             };
 
-                            ParseAddHelper(disk);
+                            ParseAddHelper(disk, statsOnly);
                         }
 
                         // Standard ROMs have 4 pieces (name, size, crc, sha1)
@@ -161,7 +161,7 @@ namespace SabreTools.DatFiles.Formats
                                 },
                             };
 
-                            ParseAddHelper(rom);
+                            ParseAddHelper(rom, statsOnly);
                         }
 
                         // Nodump Disks have 5 pieces (name, NO, GOOD, DUMP, KNOWN)
@@ -184,7 +184,7 @@ namespace SabreTools.DatFiles.Formats
                                 },
                             };
 
-                            ParseAddHelper(disk);
+                            ParseAddHelper(disk, statsOnly);
                         }
 
                         // Baddump ROMs have 6 pieces (name, size, BAD, crc, sha1, BAD_DUMP)
@@ -210,7 +210,7 @@ namespace SabreTools.DatFiles.Formats
                                 },
                             };
 
-                            ParseAddHelper(rom);
+                            ParseAddHelper(rom, statsOnly);
                         }
 
                         // Nodump ROMs have 6 pieces (name, size, NO, GOOD, DUMP, KNOWN)
@@ -234,7 +234,7 @@ namespace SabreTools.DatFiles.Formats
                                 },
                             };
 
-                            ParseAddHelper(rom);
+                            ParseAddHelper(rom, statsOnly);
                         }
 
                         // If we have something else, it's invalid

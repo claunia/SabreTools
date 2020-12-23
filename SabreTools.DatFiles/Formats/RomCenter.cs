@@ -26,7 +26,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all intenral variables
             IniReader ir = new IniReader(filename) { ValidateRows = false };
@@ -66,7 +66,7 @@ namespace SabreTools.DatFiles.Formats
                                 break;
 
                             case "games":
-                                ReadGamesSection(ir, filename, indexId);
+                                ReadGamesSection(ir, statsOnly, filename, indexId);
                                 break;
 
                             // Unknown section so we ignore it
@@ -284,9 +284,10 @@ namespace SabreTools.DatFiles.Formats
         /// Read games information
         /// </summary>
         /// <param name="reader">IniReader to use to parse the credits</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadGamesSection(IniReader reader, string filename, int indexId)
+        private void ReadGamesSection(IniReader reader, bool statsOnly, string filename, int indexId)
         {
             // If the reader is somehow null, skip it
             if (reader == null)
@@ -355,7 +356,7 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 // Now process and add the rom
-                ParseAddHelper(rom);
+                ParseAddHelper(rom, statsOnly);
 
                 reader.ReadNextLine();
             } while (!reader.EndOfStream && reader.Section.ToLowerInvariant() == "games");

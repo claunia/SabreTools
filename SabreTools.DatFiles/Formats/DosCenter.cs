@@ -28,7 +28,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
@@ -57,7 +57,7 @@ namespace SabreTools.DatFiles.Formats
 
                         // Sets
                         case "game":
-                            ReadGame(cmpr, filename, indexId);
+                            ReadGame(cmpr, statsOnly, filename, indexId);
                             break;
 
                         default:
@@ -141,9 +141,10 @@ namespace SabreTools.DatFiles.Formats
         /// Read set information
         /// </summary>
         /// <param name="cmpr">ClrMameProReader to use to parse the header</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadGame(ClrMameProReader cmpr, string filename, int indexId)
+        private void ReadGame(ClrMameProReader cmpr, bool statsOnly, string filename, int indexId)
         {
             // Prepare all internal variables
             bool containsItems = false;
@@ -233,7 +234,7 @@ namespace SabreTools.DatFiles.Formats
                     }
 
                     // Now process and add the rom
-                    ParseAddHelper(item);
+                    ParseAddHelper(item, statsOnly);
                 }
             }
 
@@ -252,7 +253,7 @@ namespace SabreTools.DatFiles.Formats
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(blank);
+                ParseAddHelper(blank, statsOnly);
             }
         }
 

@@ -133,7 +133,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
             XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
@@ -196,7 +196,7 @@ namespace SabreTools.DatFiles.Formats
                         // We want to process the entire subtree of the game
                         case "machine": // New-style Logiqx
                         case "game": // Old-style Logiqx
-                            ReadMachine(xtr.ReadSubtree(), dirs, filename, indexId, keep);
+                            ReadMachine(xtr.ReadSubtree(), dirs, statsOnly, filename, indexId, keep);
 
                             // Skip the machine now that we've processed it
                             xtr.Skip();
@@ -371,12 +371,14 @@ namespace SabreTools.DatFiles.Formats
         /// </summary>
         /// <param name="reader">XmlReader to use to parse the machine</param>
         /// <param name="dirs">List of dirs to prepend to the game name</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
         private void ReadMachine(
             XmlReader reader,
             List<string> dirs,
+            bool statsOnly,
 
             // Standard Dat parsing
             string filename,
@@ -489,7 +491,7 @@ namespace SabreTools.DatFiles.Formats
                         archive.CopyMachineInformation(machine);
 
                         // Now process and add the archive
-                        ParseAddHelper(archive);
+                        ParseAddHelper(archive, statsOnly);
 
                         reader.Read();
                         break;
@@ -513,7 +515,7 @@ namespace SabreTools.DatFiles.Formats
                         biosSet.CopyMachineInformation(machine);
 
                         // Now process and add the biosSet
-                        ParseAddHelper(biosSet);
+                        ParseAddHelper(biosSet, statsOnly);
 
                         reader.Read();
                         break;
@@ -539,7 +541,7 @@ namespace SabreTools.DatFiles.Formats
                         disk.CopyMachineInformation(machine);
 
                         // Now process and add the disk
-                        ParseAddHelper(disk);
+                        ParseAddHelper(disk, statsOnly);
 
                         reader.Read();
                         break;
@@ -565,7 +567,7 @@ namespace SabreTools.DatFiles.Formats
                         media.CopyMachineInformation(machine);
 
                         // Now process and add the media
-                        ParseAddHelper(media);
+                        ParseAddHelper(media, statsOnly);
 
                         reader.Read();
                         break;
@@ -585,7 +587,7 @@ namespace SabreTools.DatFiles.Formats
                         release.CopyMachineInformation(machine);
 
                         // Now process and add the release
-                        ParseAddHelper(release);
+                        ParseAddHelper(release, statsOnly);
 
                         reader.Read();
                         break;
@@ -619,7 +621,7 @@ namespace SabreTools.DatFiles.Formats
                         rom.CopyMachineInformation(machine);
 
                         // Now process and add the rom
-                        ParseAddHelper(rom);
+                        ParseAddHelper(rom, statsOnly);
 
                         reader.Read();
                         break;
@@ -641,7 +643,7 @@ namespace SabreTools.DatFiles.Formats
                         sample.CopyMachineInformation(machine);
 
                         // Now process and add the sample
-                        ParseAddHelper(sample);
+                        ParseAddHelper(sample, statsOnly);
 
                         reader.Read();
                         break;
@@ -667,7 +669,7 @@ namespace SabreTools.DatFiles.Formats
                 blank.CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(blank);
+                ParseAddHelper(blank, statsOnly);
             }
         }
 

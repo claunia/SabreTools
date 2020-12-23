@@ -152,16 +152,17 @@ namespace SabreTools.DatFiles
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        public abstract void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false);
+        public abstract void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false);
 
         /// <summary>
         /// Add a rom to the Dat after checking
         /// </summary>
         /// <param name="item">Item data to check against</param>
-        /// <param name="statsOnly">Only add item statistics, full item otherwise</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <returns>The key for the item</returns>
-        protected string ParseAddHelper(DatItem item, bool statsOnly = false)
+        protected string ParseAddHelper(DatItem item, bool statsOnly)
         {
             string key;
 

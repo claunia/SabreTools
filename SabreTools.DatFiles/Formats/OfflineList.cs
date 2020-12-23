@@ -27,7 +27,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        public override void ParseFile(string filename, int indexId, bool keep, bool throwOnError = false)
+        public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
             {
@@ -66,7 +66,7 @@ namespace SabreTools.DatFiles.Formats
                             break;
 
                         case "games":
-                            ReadGames(xtr.ReadSubtree(), filename, indexId);
+                            ReadGames(xtr.ReadSubtree(), statsOnly, filename, indexId);
 
                             // Skip the games node now that we've processed it
                             xtr.Skip();
@@ -424,9 +424,10 @@ namespace SabreTools.DatFiles.Formats
         /// Read games information
         /// </summary>
         /// <param name="reader">XmlReader to use to parse the header</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadGames(XmlReader reader, string filename, int indexId)
+        private void ReadGames(XmlReader reader, bool statsOnly, string filename, int indexId)
         {
             // If there's no subtree to the configuration, skip it
             if (reader == null)
@@ -449,7 +450,7 @@ namespace SabreTools.DatFiles.Formats
                 switch (reader.Name.ToLowerInvariant())
                 {
                     case "game":
-                        ReadGame(reader.ReadSubtree(), filename, indexId);
+                        ReadGame(reader.ReadSubtree(), statsOnly, filename, indexId);
 
                         // Skip the game node now that we've processed it
                         reader.Skip();
@@ -466,9 +467,10 @@ namespace SabreTools.DatFiles.Formats
         /// Read game information
         /// </summary>
         /// <param name="reader">XmlReader to use to parse the header</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadGame(XmlReader reader, string filename, int indexId)
+        private void ReadGame(XmlReader reader, bool statsOnly, string filename, int indexId)
         {
             // Prepare all internal variables
             string releaseNumber = string.Empty, duplicateid;
@@ -579,7 +581,7 @@ namespace SabreTools.DatFiles.Formats
                 datItems[i].CopyMachineInformation(machine);
 
                 // Now process and add the rom
-                ParseAddHelper(datItems[i]);
+                ParseAddHelper(datItems[i], statsOnly);
             }
         }
 
