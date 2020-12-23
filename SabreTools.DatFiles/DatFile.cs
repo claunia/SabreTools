@@ -159,8 +159,9 @@ namespace SabreTools.DatFiles
         /// Add a rom to the Dat after checking
         /// </summary>
         /// <param name="item">Item data to check against</param>
+        /// <param name="statsOnly">Only add item statistics, full item otherwise</param>
         /// <returns>The key for the item</returns>
-        protected string ParseAddHelper(DatItem item)
+        protected string ParseAddHelper(DatItem item, bool statsOnly = false)
         {
             string key;
 
@@ -227,7 +228,12 @@ namespace SabreTools.DatFiles
 
             // Get the key and add the file
             key = item.GetKey(ItemKey.Machine);
-            Items.Add(key, item);
+
+            // If only adding statistics
+            if (statsOnly)
+                Items.AddItemStatistics(item);
+            else
+                Items.Add(key, item);
 
             return key;
         }
