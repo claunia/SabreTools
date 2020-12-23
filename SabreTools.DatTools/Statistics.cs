@@ -129,6 +129,9 @@ namespace SabreTools.DatTools
                 totalStats.AddStatistics(datdata.Items);
                 totalStats.GameCount += datdata.Items.Keys.Count();
 
+                // Clear out the item dictionary so it doesn't linger
+                datdata.Items.Clear();
+
                 // Make sure to assign the new directory
                 lastdir = thisdir;
             }
