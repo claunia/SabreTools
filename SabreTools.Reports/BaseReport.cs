@@ -30,7 +30,7 @@ namespace SabreTools.Reports
         {
             var fs = File.Create(filename);
             if (fs != null)
-                _writer = new StreamWriter(fs);
+                _writer = new StreamWriter(fs) { AutoFlush = true };
 
             _baddumpCol = baddumpCol;
             _nodumpCol = nodumpCol;
@@ -47,7 +47,7 @@ namespace SabreTools.Reports
             if (!stream.CanWrite)
                 throw new ArgumentException(nameof(stream));
 
-            _writer = new StreamWriter(stream);
+            _writer = new StreamWriter(stream) { AutoFlush = true };
             _baddumpCol = baddumpCol;
             _nodumpCol = nodumpCol;
         }
