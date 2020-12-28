@@ -2,6 +2,7 @@
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatItems;
 using SabreTools.Logging;
 
 namespace SabreTools.Filtering
@@ -45,6 +46,7 @@ namespace SabreTools.Filtering
 
         #region ListXML
 
+        public FilterItem<string> History { get; private set; } = new FilterItem<string>();
         public FilterItem<string> SourceFile { get; private set; } = new FilterItem<string>();
         public FilterItem<Runnable> Runnable { get; private set; } = new FilterItem<Runnable>() { Positive = Core.Runnable.NULL, Negative = Core.Runnable.NULL };
 
@@ -220,6 +222,10 @@ namespace SabreTools.Filtering
                 #endregion
 
                 #region ListXML
+
+                case MachineField.History:
+                    SetStringFilter(History, value, negate);
+                    break;
 
                 case MachineField.SourceFile:
                     SetStringFilter(SourceFile, value, negate);

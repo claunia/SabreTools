@@ -902,6 +902,9 @@ namespace SabreTools.DatItems
 
             #region ListXML
 
+            if (fields.Contains(MachineField.History))
+                machine.History = null;
+
             if (fields.Contains(MachineField.SourceFile))
                 machine.SourceFile = null;
 
@@ -1891,6 +1894,9 @@ namespace SabreTools.DatItems
 
             #region ListXML
 
+            if (machineFields.Contains(MachineField.History))
+                machine.History = repMachine.History;
+
             if (machineFields.Contains(MachineField.SourceFile))
                 machine.SourceFile = repMachine.SourceFile;
 
@@ -2838,6 +2844,9 @@ namespace SabreTools.DatItems
             #endregion
 
             #region ListXML
+
+            if (mappings.Keys.Contains(MachineField.History))
+                machine.History = mappings[MachineField.History];
 
             if (mappings.Keys.Contains(MachineField.SourceFile))
                 machine.SourceFile = mappings[MachineField.SourceFile];

@@ -337,6 +337,10 @@ namespace SabreTools.DatFiles.Formats
                         machine.Manufacturer = reader.ReadElementContentAsString();
                         break;
 
+                    case "history":
+                        machine.History = reader.ReadElementContentAsString();
+                        break;
+
                     case "adjuster":
                         var adjuster = new Adjuster
                         {
@@ -1473,6 +1477,7 @@ namespace SabreTools.DatFiles.Formats
             xtw.WriteOptionalElementString("description", datItem.Machine.Description);
             xtw.WriteOptionalElementString("year", datItem.Machine.Year);
             xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
+            xtw.WriteOptionalElementString("history", datItem.Machine.History);
 
             xtw.Flush();
         }

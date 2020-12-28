@@ -1699,6 +1699,10 @@ namespace SabreTools.Filtering
 
             #region ListXML
 
+            // Machine_History
+            if (!Filter.PassStringFilter(MachineFilter.History, machine.History))
+                return false;
+
             // Machine_SourceFile
             if (!Filter.PassStringFilter(MachineFilter.SourceFile, machine.SourceFile))
                 return false;

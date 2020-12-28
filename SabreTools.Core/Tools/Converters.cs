@@ -1051,6 +1051,9 @@ namespace SabreTools.Core.Tools
 
                 #region ListXML
 
+                case "history":
+                    return MachineField.History;
+
                 case "sourcefile":
                 case "source_file":
                     return MachineField.SourceFile;

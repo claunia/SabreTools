@@ -6,6 +6,7 @@
 		<description>Game! (Version 1)</description>
 		<year>1980</year>
 		<manufacturer>Manufacturer</manufacturer>
+		<history>A long and storied history</history>
 		<adjuster name="adjuster" default="yes">
 			<condition tag="tag" mask="mask" relation="eq" value="value" />
 		</adjuster>

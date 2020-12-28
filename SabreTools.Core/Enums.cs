@@ -741,6 +741,7 @@ namespace SabreTools.Core
 
         #region ListXML
 
+        History,
         SourceFile,
         Runnable,
 

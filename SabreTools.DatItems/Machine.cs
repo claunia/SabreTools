@@ -158,6 +158,13 @@ namespace SabreTools.DatItems
         #region ListXML
 
         /// <summary>
+        /// History.dat entry for the machine
+        /// </summary>
+        [JsonProperty("history", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("history")]
+        public string History { get; set; } = null;
+
+        /// <summary>
         /// Emulator source file related to the machine
         /// </summary>
         /// <remarks>Also in Logiqx</remarks>
@@ -370,6 +377,7 @@ namespace SabreTools.DatItems
 
                 #region ListXML
 
+                History = this.History,
                 SourceFile = this.SourceFile,
                 Runnable = this.Runnable,
 
