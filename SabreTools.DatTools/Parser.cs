@@ -108,10 +108,9 @@ namespace SabreTools.DatTools
                 var parsingDatFile = DatFile.Create(currentPathFormat, datFile, quotes);
                 parsingDatFile?.ParseFile(currentPath, indexId, keep, statsOnly: statsOnly, throwOnError: throwOnError);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex, $"Error with file '{currentPath}'");
-                if (throwOnError) throw ex;
             }
         }
 

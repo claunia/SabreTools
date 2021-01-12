@@ -71,10 +71,9 @@ namespace SabreTools.DatFiles.Formats
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Warning($"Exception found while parsing '{filename}': {ex}");
-                if (throwOnError) throw ex;
             }
 
             jtr.Close();
@@ -404,10 +403,9 @@ namespace SabreTools.DatFiles.Formats
                 jtw.Close();
                 fs.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 

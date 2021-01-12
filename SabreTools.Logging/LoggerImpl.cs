@@ -258,11 +258,10 @@ namespace SabreTools.Logging
                         _log.WriteLine((AppendPrefix ? $"{loglevel} - {DateTime.Now} - " : string.Empty) + output);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (ThrowOnError)
                 {
                     Console.WriteLine(ex);
                     Console.WriteLine("Could not write to log file!");
-                    if (ThrowOnError) throw ex;
                     return;
                 }
             }

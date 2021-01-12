@@ -104,15 +104,10 @@ namespace SabreTools.DatFiles.Formats
                         ParseAddHelper(datItem, statsOnly);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!throwOnError)
                 {
                     string message = $"'{filename}' - There was an error parsing line {svr.LineNumber} '{svr.CurrentLine}'";
                     logger.Error(ex, message);
-                    if (throwOnError)
-                    {
-                        svr.Dispose();
-                        throw new Exception(message, ex);
-                    }
                 }
             }
 
@@ -179,10 +174,9 @@ namespace SabreTools.DatFiles.Formats
                 svw.Dispose();
                 fs.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 

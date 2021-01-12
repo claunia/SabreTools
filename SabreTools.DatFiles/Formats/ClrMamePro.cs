@@ -81,15 +81,10 @@ namespace SabreTools.DatFiles.Formats
                             break;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!throwOnError)
                 {
                     string message = $"'{filename}' - There was an error parsing line {cmpr.LineNumber} '{cmpr.CurrentLine}'";
                     logger.Error(ex, message);
-                    if (throwOnError)
-                    {
-                        cmpr.Dispose();
-                        throw new Exception(message, ex);
-                    }
                 }
             }
 
@@ -507,10 +502,9 @@ namespace SabreTools.DatFiles.Formats
                 cmpw.Dispose();
                 fs.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 

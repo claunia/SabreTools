@@ -80,10 +80,9 @@ namespace SabreTools.DatFiles.Formats
                 sw.Dispose();
                 fs.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 

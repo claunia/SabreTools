@@ -244,15 +244,10 @@ namespace SabreTools.DatFiles.Formats
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!throwOnError)
                 {
                     string message = $"'{filename}' - There was an error parsing at position {sr.BaseStream.Position}";
                     logger.Error(ex, message);
-                    if (throwOnError)
-                    {
-                        sr.Dispose();
-                        throw new Exception(message, ex);
-                    }
                 }
             }
         }
@@ -323,10 +318,9 @@ namespace SabreTools.DatFiles.Formats
                 sw.Dispose();
                 fs.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 

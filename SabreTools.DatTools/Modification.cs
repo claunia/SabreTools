@@ -79,10 +79,9 @@ namespace SabreTools.DatTools
                 if (cleaner?.KeepEmptyGames == false)
                     datFile.Items.ClearEmpty();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -168,10 +167,9 @@ namespace SabreTools.DatTools
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -242,10 +240,9 @@ namespace SabreTools.DatTools
                     datFile.Items[key] = items;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -291,10 +288,9 @@ namespace SabreTools.DatTools
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 
@@ -388,10 +384,9 @@ namespace SabreTools.DatTools
                     datFile.Items.AddRange(key, newItems);
                 });
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Warning(ex.ToString());
-                if (throwOnError) throw ex;
             }
         }
 

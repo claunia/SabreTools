@@ -77,15 +77,10 @@ namespace SabreTools.DatFiles.Formats
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 string message = $"'{filename}' - There was an error parsing line {ir.LineNumber} '{ir.CurrentLine}'";
                 logger.Error(ex, message);
-                if (throwOnError)
-                {
-                    ir.Dispose();
-                    throw new Exception(message, ex);
-                }
             }
 
             ir.Dispose();
@@ -424,10 +419,9 @@ namespace SabreTools.DatFiles.Formats
                 iw.Dispose();
                 fs.Dispose();
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 

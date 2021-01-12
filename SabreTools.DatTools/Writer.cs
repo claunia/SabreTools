@@ -83,18 +83,16 @@ namespace SabreTools.DatTools
                     {
                         DatFile.Create(datFormat, datFile, quotes)?.WriteToFile(outfile, ignoreblanks, throwOnError);
                     }
-                    catch (Exception ex)
+                    catch (Exception ex) when (!throwOnError)
                     {
                         logger.Error(ex, $"Datfile {outfile} could not be written out");
-                        if (throwOnError) throw ex;
                     }
 
                 });
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!throwOnError)
             {
                 logger.Error(ex);
-                if (throwOnError) throw ex;
                 return false;
             }
 
