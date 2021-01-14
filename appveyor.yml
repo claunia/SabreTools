@@ -1,5 +1,5 @@
 # version format
-version: 1.0.6-test_{build}
+version: 1.0.7-test_{build}
 
 # vm template
 image: Visual Studio 2019
