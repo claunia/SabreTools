@@ -80,32 +80,6 @@ namespace SabreTools.Features
         public static string HeadererFileName = Path.Combine(PathTool.GetRuntimeDirectory(), "Headerer.sqlite");
         public static string HeadererConnectionString = $"Data Source={HeadererFileName};Version = 3;";
 
-        #region Byte (1000-based) size comparisons
-
-        private const long KiloByte = 1000;
-        private readonly static long MegaByte = (long)Math.Pow(KiloByte, 2);
-        private readonly static long GigaByte = (long)Math.Pow(KiloByte, 3);
-        private readonly static long TeraByte = (long)Math.Pow(KiloByte, 4);
-        private readonly static long PetaByte = (long)Math.Pow(KiloByte, 5);
-        private readonly static long ExaByte = (long)Math.Pow(KiloByte, 6);
-        private readonly static long ZettaByte = (long)Math.Pow(KiloByte, 7);
-        private readonly static long YottaByte = (long)Math.Pow(KiloByte, 8);
-
-        #endregion
-
-        #region Byte (1024-based) size comparisons
-
-        private const long KibiByte = 1024;
-        private readonly static long MibiByte = (long)Math.Pow(KibiByte, 2);
-        private readonly static long GibiByte = (long)Math.Pow(KibiByte, 3);
-        private readonly static long TibiByte = (long)Math.Pow(KibiByte, 4);
-        private readonly static long PibiByte = (long)Math.Pow(KibiByte, 5);
-        private readonly static long ExiByte = (long)Math.Pow(KibiByte, 6);
-        private readonly static long ZittiByte = (long)Math.Pow(KibiByte, 7);
-        private readonly static long YittiByte = (long)Math.Pow(KibiByte, 8);
-
-        #endregion
-
         #endregion
 
         #region Features
@@ -2295,55 +2269,6 @@ CREATE TABLE IF NOT EXISTS data (
                 "tsv" => StatReportFormat.TSV,
                 _ => 0x0,
             };
-        }
-
-        /// <summary>
-        /// Get the multiplier to be used with the size given
-        /// </summary>
-        /// <param name="sizestring">String with possible size with extension</param>
-        /// <returns>Tuple of multiplier to use on final size and fixed size string</returns>
-        private static long ToSize(string sizestring)
-        {
-            // If the string is null or empty, we return -1
-            if (string.IsNullOrWhiteSpace(sizestring))
-                return -1;
-
-            // Make sure the string is in lower case
-            sizestring = sizestring.ToLowerInvariant();
-
-            // Get any trailing size identifiers
-            long multiplier = 1;
-            if (sizestring.EndsWith("k") || sizestring.EndsWith("kb"))
-                multiplier = KiloByte;
-            else if (sizestring.EndsWith("ki") || sizestring.EndsWith("kib"))
-                multiplier = KibiByte;
-            else if (sizestring.EndsWith("m") || sizestring.EndsWith("mb"))
-                multiplier = MegaByte;
-            else if (sizestring.EndsWith("mi") || sizestring.EndsWith("mib"))
-                multiplier = MibiByte;
-            else if (sizestring.EndsWith("g") || sizestring.EndsWith("gb"))
-                multiplier = GigaByte;
-            else if (sizestring.EndsWith("gi") || sizestring.EndsWith("gib"))
-                multiplier = GibiByte;
-            else if (sizestring.EndsWith("t") || sizestring.EndsWith("tb"))
-                multiplier = TeraByte;
-            else if (sizestring.EndsWith("ti") || sizestring.EndsWith("tib"))
-                multiplier = TibiByte;
-            else if (sizestring.EndsWith("p") || sizestring.EndsWith("pb"))
-                multiplier = PetaByte;
-            else if (sizestring.EndsWith("pi") || sizestring.EndsWith("pib"))
-                multiplier = PibiByte;
-
-            // Remove any trailing identifiers
-            sizestring = sizestring.TrimEnd(new char[] { 'k', 'm', 'g', 't', 'p', 'i', 'b', ' ' });
-
-            // Now try to get the size from the string
-            if (!Int64.TryParse(sizestring, out long size))
-                size = -1;
-            else
-                size *= multiplier;
-
-            return size;
         }
     
         #endregion
