@@ -88,9 +88,9 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Finalize the internal hash algorigthm
+        /// Terminate the internal hash algorigthm
         /// </summary>
-        public void Finalize()
+        public void Terminate()
         {
             byte[] emptyBuffer = new byte[0];
             switch (HashType)

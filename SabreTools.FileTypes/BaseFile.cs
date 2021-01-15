@@ -399,7 +399,7 @@ namespace SabreTools.FileTypes
 
                 // Finalize all hashing helpers
                 loadBuffer.Finish();
-                Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Finalize());
+                Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Terminate());
 
                 // Get the results
                 BaseFile baseFile = new BaseFile()

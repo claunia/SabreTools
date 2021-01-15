@@ -47,10 +47,7 @@ namespace SabreTools.Filtering
         /// <param name="negate">True if negative filter, false otherwise</param>
         public void SetFilter(DatHeaderField key, string value, bool negate)
         {
-            switch (key)
-            {
-                // TODO: Add DatHeader filters
-            }
+            // TODO: Add DatHeader filters
         }
 
         #endregion
