@@ -23,6 +23,7 @@ namespace SabreTools.Core
         Standard = CRC | MD5 | SHA1,
         DeepHashes = SHA256 | SHA384 | SHA512 | SpamSum,
         SecureHashes = MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
+        All =  CRC | MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
     }
 
     /// <summary>
