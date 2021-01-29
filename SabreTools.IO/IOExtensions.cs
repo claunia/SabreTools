@@ -26,7 +26,7 @@ namespace SabreTools.IO
             dir = Path.GetFullPath(dir);
 
             // If we're creating the output folder, do so
-            if (create)
+            if (create && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
             return dir;
