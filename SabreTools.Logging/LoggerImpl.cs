@@ -16,7 +16,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Optional output filename for logs
         /// </summary>
-        public static string Filename { get; set; } = null;
+        public static string Filename { get; private set; } = null;
 
         /// <summary>
         /// Determines if we're logging to file or not
@@ -26,8 +26,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Optional output log directory
         /// </summary>
-        /// TODO: Make this either passed in or optional
-        public static string LogDirectory { get; set; } = Path.Combine(PathTool.GetRuntimeDirectory(), "logs") + Path.DirectorySeparatorChar;
+        public static string LogDirectory { get; private set; } = null;
 
         /// <summary>
         /// Determines the lowest log level to output
@@ -84,11 +83,17 @@ namespace SabreTools.Logging
         /// <param name="addDate">True to append a date to the filename, false otherwise</param>
         public static void SetFilename(string filename, bool addDate = true)
         {
-            // Set and create the output
+            // Get the full log path
+            string fullPath = Path.GetFullPath(filename);
+
+            // Set the log directory
+            LogDirectory = Path.GetDirectoryName(fullPath);
+
+            // Set the 
             if (addDate)
-                Filename = $"{Path.GetFileNameWithoutExtension(filename)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{filename.GetNormalizedExtension()}";
+                Filename = $"{Path.GetFileNameWithoutExtension(fullPath)} ({DateTime.Now:yyyy-MM-dd HH-mm-ss}).{fullPath.GetNormalizedExtension()}";
             else
-                Filename = filename;
+                Filename = Path.GetFileName(fullPath);
         }
 
         /// <summary>

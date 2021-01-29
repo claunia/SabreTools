@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 using SabreTools.Features;
 using SabreTools.Core;
 using SabreTools.Help;
+using SabreTools.IO;
 using SabreTools.Logging;
 
 namespace SabreTools
@@ -31,7 +33,7 @@ namespace SabreTools
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            LoggerImpl.SetFilename("sabretools.log", true);
+            LoggerImpl.SetFilename(Path.Combine(PathTool.GetRuntimeDirectory(), "logs", "sabretools.log"), true);
             LoggerImpl.AppendPrefix = true;
             LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
             LoggerImpl.ThrowOnError = false;

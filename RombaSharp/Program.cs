@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 using RombaSharp.Features;
 using SabreTools.Core;
 using SabreTools.Help;
+using SabreTools.IO;
 using SabreTools.Logging;
 
 namespace RombaSharp
@@ -38,7 +40,7 @@ namespace RombaSharp
         public static void Main(string[] args)
         {
             // Perform initial setup and verification
-            LoggerImpl.SetFilename("romba.log", true);
+            LoggerImpl.SetFilename(Path.Combine(PathTool.GetRuntimeDirectory(), "logs", "romba.log"), true);
             LoggerImpl.AppendPrefix = true;
             LoggerImpl.LowestLogLevel = LogLevel.VERBOSE;
             LoggerImpl.ThrowOnError = false;
