@@ -187,7 +187,7 @@ namespace SabreTools.DatTools
         public static bool ApplyFilters(DatFile datFile, Cleaner cleaner, bool perMachine = false, bool throwOnError = false)
         {
             // If we have a null cleaner or filters, return false
-            if (cleaner == null || cleaner.DatHeaderFilter == null || cleaner.MachineFilter == null || cleaner.DatItemFilter == null)
+            if (cleaner == null || cleaner.MachineFilter == null || cleaner.DatItemFilter == null)
                 return false;
 
             // If we're filtering per machine, bucket by machine first

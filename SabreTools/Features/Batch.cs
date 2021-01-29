@@ -208,13 +208,11 @@ Reset the internal state:           reset();";
                                 // Create cleaner to run filters from
                                 Cleaner cleaner = new Cleaner
                                 {
-                                    DatHeaderFilter = new DatHeaderFilter(),
                                     MachineFilter = new MachineFilter(),
                                     DatItemFilter = new DatItemFilter(),
                                 };
 
                                 // Set the possible filters
-                                cleaner.DatHeaderFilter.SetFilter(filterDatHeaderField, filterValue, filterRemove.Value);
                                 cleaner.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
                                 cleaner.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
 

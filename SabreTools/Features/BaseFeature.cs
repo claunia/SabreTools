@@ -2025,7 +2025,6 @@ Some special strings that can be used:
         {
             Cleaner cleaner = new Cleaner()
             {
-                DatHeaderFilter = new DatHeaderFilter(),
                 DatItemFilter = new DatItemFilter(),
                 MachineFilter = new MachineFilter(),
 

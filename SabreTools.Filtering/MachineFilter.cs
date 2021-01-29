@@ -322,5 +322,206 @@ namespace SabreTools.Filtering
         }
 
         #endregion
+    
+        #region Filter Running
+
+        /// <summary>
+        /// Check to see if a Machine passes the filters
+        /// </summary>
+        /// <param name="machine">Machine to check</param>
+        /// <returns>True if the machine passed the filter, false otherwise</returns>
+        public bool PassesFilters(Machine machine)
+        {
+            if (machine == null)
+                return false;
+
+            #region Common
+
+            // Machine_Name
+            bool passes = PassStringFilter(Name, machine.Name);
+            if (IncludeOfInGame)
+            {
+                passes |= PassStringFilter(Name, machine.CloneOf);
+                passes |= PassStringFilter(Name, machine.RomOf);
+            }
+            if (!passes)
+                return false;
+
+            // Machine_Comment
+            if (!PassStringFilter(Comment, machine.Comment))
+                return false;
+
+            // Machine_Description
+            if (!PassStringFilter(Description, machine.Description))
+                return false;
+
+            // Machine_Year
+            if (!PassStringFilter(Year, machine.Year))
+                return false;
+
+            // Machine_Manufacturer
+            if (!PassStringFilter(Manufacturer, machine.Manufacturer))
+                return false;
+
+            // Machine_Publisher
+            if (!PassStringFilter(Publisher, machine.Publisher))
+                return false;
+
+            // Machine_Category
+            if (!PassStringFilter(Category, machine.Category))
+                return false;
+
+            // Machine_RomOf
+            if (!PassStringFilter(RomOf, machine.RomOf))
+                return false;
+
+            // Machine_CloneOf
+            if (!PassStringFilter(CloneOf, machine.CloneOf))
+                return false;
+
+            // Machine_SampleOf
+            if (!PassStringFilter(SampleOf, machine.SampleOf))
+                return false;
+
+            // Machine_Type
+            if (Type.MatchesPositive(0x0, machine.MachineType) == false)
+                return false;
+            if (Type.MatchesNegative(0x0, machine.MachineType) == true)
+                return false;
+
+            #endregion
+
+            #region AttractMode
+
+            // Machine_Players
+            if (!PassStringFilter(Players, machine.Players))
+                return false;
+
+            // Machine_Rotation
+            if (!PassStringFilter(Rotation, machine.Rotation))
+                return false;
+
+            // Machine_Control
+            if (!PassStringFilter(Control, machine.Control))
+                return false;
+
+            // Machine_Status
+            if (!PassStringFilter(Status, machine.Status))
+                return false;
+
+            // Machine_DisplayCount
+            if (!PassStringFilter(DisplayCount, machine.DisplayCount))
+                return false;
+
+            // Machine_DisplayType
+            if (!PassStringFilter(DisplayType, machine.DisplayType))
+                return false;
+
+            // Machine_Buttons
+            if (!PassStringFilter(Buttons, machine.Buttons))
+                return false;
+
+            #endregion
+
+            #region ListXML
+
+            // Machine_History
+            if (!PassStringFilter(History, machine.History))
+                return false;
+
+            // Machine_SourceFile
+            if (!PassStringFilter(SourceFile, machine.SourceFile))
+                return false;
+
+            // Machine_Runnable
+            if (Runnable.MatchesPositive(Core.Runnable.NULL, machine.Runnable) == false)
+                return false;
+            if (Runnable.MatchesNegative(Core.Runnable.NULL, machine.Runnable) == true)
+                return false;
+
+            #endregion
+
+            #region Logiqx
+
+            // Machine_Board
+            if (!PassStringFilter(Board, machine.Board))
+                return false;
+
+            // Machine_RebuildTo
+            if (!PassStringFilter(RebuildTo, machine.RebuildTo))
+                return false;
+
+            #endregion
+
+            #region Logiqx EmuArc
+
+            // Machine_TitleID
+            if (!PassStringFilter(TitleID, machine.TitleID))
+                return false;
+
+            // Machine_Developer
+            if (!PassStringFilter(Developer, machine.Developer))
+                return false;
+
+            // Machine_Genre
+            if (!PassStringFilter(Genre, machine.Genre))
+                return false;
+
+            // Machine_Subgenre
+            if (!PassStringFilter(Subgenre, machine.Subgenre))
+                return false;
+
+            // Machine_Ratings
+            if (!PassStringFilter(Ratings, machine.Ratings))
+                return false;
+
+            // Machine_Score
+            if (!PassStringFilter(Score, machine.Score))
+                return false;
+
+            // Machine_Enabled
+            if (!PassStringFilter(Enabled, machine.Enabled))
+                return false;
+
+            // Machine_CRC
+            if (!PassBoolFilter(CRC, machine.Crc))
+                return false;
+
+            // Machine_RelatedTo
+            if (!PassStringFilter(RelatedTo, machine.RelatedTo))
+                return false;
+
+            #endregion
+
+            #region OpenMSX
+
+            // Machine_GenMSXID
+            if (!PassStringFilter(GenMSXID, machine.GenMSXID))
+                return false;
+
+            // Machine_System
+            if (!PassStringFilter(System, machine.System))
+                return false;
+
+            // Machine_Country
+            if (!PassStringFilter(Country, machine.Country))
+                return false;
+
+            #endregion
+
+            #region SoftwareList
+
+            // Machine_Supported
+            if (Supported.MatchesPositive(Core.Supported.NULL, machine.Supported) == false)
+                return false;
+            if (Supported.MatchesNegative(Core.Supported.NULL, machine.Supported) == true)
+                return false;
+
+            #endregion // SoftwareList
+
+            return true;
+        }
+
+        #endregion
     }
 }
