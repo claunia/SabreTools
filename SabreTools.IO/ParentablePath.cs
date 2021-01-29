@@ -35,35 +35,18 @@ namespace SabreTools.IO
             if (string.IsNullOrWhiteSpace(CurrentPath))
                 return null;
 
-            // Check that we have a combined path first
-            if (string.IsNullOrWhiteSpace(ParentPath))
-            {
-                string filename = Path.GetFileName(CurrentPath);
-                if (sanitize)
-                    filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
+            // Assume the current path is the filename
+            string filename = Path.GetFileName(CurrentPath);
 
-                return filename;
-            }
+            // If we have a true ParentPath, remove it from CurrentPath and return the remainder
+            if (!string.IsNullOrWhiteSpace(ParentPath) && !string.Equals(CurrentPath, ParentPath, StringComparison.Ordinal))
+                filename = CurrentPath.Remove(0, ParentPath.Length + 1);
 
-            // If the parts are the same, return the filename from the first part
-            if (string.Equals(CurrentPath, ParentPath, StringComparison.Ordinal))
-            {
-                string filename = Path.GetFileName(CurrentPath);
-                if (sanitize)
-                    filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
+            // If we're sanitizing the path after, do so
+            if (sanitize)
+                filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
 
-                return filename;
-            }
-
-            // Otherwise, remove the path.ParentPath from the path.CurrentPath and return the remainder
-            else
-            {
-                string filename = CurrentPath.Remove(0, ParentPath.Length + 1);
-                if (sanitize)
-                    filename = filename.Replace(Path.DirectorySeparatorChar, '-').Replace(Path.AltDirectorySeparatorChar, '-');
-
-                return filename;
-            }
+            return filename;
         }
 
         /// <summary>
@@ -85,59 +68,27 @@ namespace SabreTools.IO
             // Check if we have a split path or not
             bool splitpath = !string.IsNullOrWhiteSpace(ParentPath);
 
-            // If we have a split path, we need to treat the input separately
-            if (splitpath)
-            {
-                // If we have an inplace output, use the directory name from the input path
-                if (inplace)
-                {
-                    outDir = Path.GetDirectoryName(CurrentPath);
-                }
+            // If we have an inplace output, use the directory name from the input path
+            if (inplace)
+                return Path.GetDirectoryName(CurrentPath);
 
-                // TODO: Should this be the default? Always create a subfolder if a folder is found?
-                // If we are processing a path that is coming from a directory and we are outputting to the current directory, we want to get the subfolder to write to
-                else if (CurrentPath.Length != ParentPath.Length && outDir == Environment.CurrentDirectory)
-                {
-                    string nextDir = Path.GetDirectoryName(ParentPath);
-                    int extraLength = nextDir.EndsWith(':')
-                        || nextDir.EndsWith(Path.DirectorySeparatorChar)
-                        || nextDir.EndsWith(Path.AltDirectorySeparatorChar) ? 0 : 1;
-                    outDir = Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, nextDir.Length + extraLength)));
-                }
+            // If the current and parent paths are the same, just use the output directory
+            if (!splitpath || CurrentPath.Length == ParentPath.Length)
+                return outDir;
 
-                // If we are processing a path that is coming from a directory, we want to get the subfolder to write to
-                else if (CurrentPath.Length != ParentPath.Length)
-                {
-                    int extraLength = ParentPath.EndsWith(':')
-                        || ParentPath.EndsWith(Path.DirectorySeparatorChar)
-                        || ParentPath.EndsWith(Path.AltDirectorySeparatorChar) ? 0 : 1;
-                    outDir = Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, ParentPath.Length + extraLength)));
-                }
+            // By default, the working parent directory is the parent path
+            string workingParent = ParentPath;
 
-                // If we are processing a single file from the root of a directory, we just use the output directory
-                else
-                {
-                    // No-op
-                }
-            }
-            // Otherwise, assume the input path is just a filename
-            else
-            {
-                // If we have an inplace output, use the directory name from the input path
-                if (inplace)
-                {
-                    outDir = Path.GetDirectoryName(CurrentPath);
-                }
+            // TODO: Should this be the default? Always create a subfolder if a folder is found?
+            // If we are processing a path that is coming from a directory and we are outputting to the current directory, we want to get the subfolder to write to
+            if (outDir == Environment.CurrentDirectory)
+                workingParent = Path.GetDirectoryName(ParentPath);
 
-                // Otherwise, just use the supplied output directory
-                else
-                {
-                    // No-op
-                }
-            }
-
-            // Finally, return the output directory
-            return outDir;
+            // Determine the correct subfolder based on the working parent directory
+            int extraLength = workingParent.EndsWith(':')
+                || workingParent.EndsWith(Path.DirectorySeparatorChar)
+                || workingParent.EndsWith(Path.AltDirectorySeparatorChar) ? 0 : 1;
+            return Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, workingParent.Length + extraLength)));
         }
     }
 }
