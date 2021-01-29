@@ -14,15 +14,21 @@ namespace SabreTools.IO
         /// <param name="offset">Optional offset to seek to</param>
         public static long SeekIfPossible(this Stream input, long offset = 0)
         {
+            // If the stream is null, don't even try
+            if (input == null)
+                return -1;
+            
+            // If the input is not seekable, just return the current position
+            if (!input.CanSeek)
+                return input.Position;
+
+            // Attempt to seek to the offset
             try
             {
-                if (input.CanSeek)
-                {
-                    if (offset < 0)
-                        return input.Seek(offset, SeekOrigin.End);
-                    else if (offset >= 0)
-                        return input.Seek(offset, SeekOrigin.Begin);
-                }
+                if (offset < 0)
+                    return input.Seek(offset, SeekOrigin.End);
+                else if (offset >= 0)
+                    return input.Seek(offset, SeekOrigin.Begin);
 
                 return input.Position;
             }
