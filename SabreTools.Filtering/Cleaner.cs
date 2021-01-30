@@ -15,7 +15,6 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the cleaning operations that need to be performed on a set of items, usually a DAT
     /// </summary>
-    /// TODO: Split out helper classes
     public class Cleaner
     {
         #region Exclusion Fields
