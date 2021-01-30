@@ -159,8 +159,15 @@ Reset the internal state:           reset();";
 
                                 // TODO: We might not want to remove higher order hashes in the future
                                 // TODO: We might not want to remove dates in the future
-                                Cleaner dfdCleaner = new Cleaner() { ExcludeDatItemFields = Hash.DeepHashes.AsDatItemFields() };
-                                dfdCleaner.ExcludeDatItemFields.Add(DatItemField.Date);
+                                Cleaner dfdCleaner = new Cleaner();
+                                dfdCleaner.PopulateExclusionsFromList(new List<string> 
+                                {
+                                    "DatItem.SHA256",
+                                    "DatItem.SHA384",
+                                    "DatItem.SHA512",
+                                    "DatItem.SpamSum",
+                                    "DatItem.Date",
+                                });
                                 Modification.ApplyCleaning(datFile, dfdCleaner);
 
                                 break;
@@ -342,9 +349,9 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Run the removal functionality
-                                var removeDatItemFields = command.Arguments.Select(s => s.AsDatItemField()).ToList();
-                                var removeMachineFields = command.Arguments.Select(s => s.AsMachineField()).ToList();
-                                Modification.RemoveFieldsFromItems(datFile, removeDatItemFields, removeMachineFields);
+                                Cleaner remCleaner = new Cleaner();
+                                remCleaner.PopulateExclusionsFromList(command.Arguments);
+                                remCleaner.RemoveFieldsFromItems(datFile);
 
                                 break;
 

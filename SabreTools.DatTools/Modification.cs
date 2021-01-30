@@ -66,11 +66,7 @@ namespace SabreTools.DatTools
                     OneRomPerGame(datFile);
 
                 // If we are removing fields, do that now
-                if ((cleaner.ExcludeMachineFields != null && cleaner.ExcludeMachineFields.Any())
-                    || cleaner.ExcludeDatItemFields != null && cleaner.ExcludeDatItemFields.Any())
-                {
-                    RemoveFieldsFromItems(datFile, cleaner.ExcludeDatItemFields, cleaner.ExcludeMachineFields);
-                }
+                cleaner.RemoveFieldsFromItems(datFile);
 
                 // Remove all marked items
                 datFile.Items.ClearMarked();
@@ -492,40 +488,6 @@ namespace SabreTools.DatTools
                 {
                     DatItemTool.SetOneRomPerGame(items[i]);
                 }
-            });
-        }
-
-        /// <summary>
-        /// Remove fields as per the header
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to run operations on</param>
-        /// <param name="datItemFields">DatItem fields to remove</param>
-        /// <param name="machineFields">Machine fields to remove</param>
-        public static void RemoveFieldsFromItems(
-            DatFile datFile,
-            List<DatItemField> datItemFields,
-            List<MachineField> machineFields)
-        {
-            // If we have null field list, make it empty
-            if (datItemFields == null)
-                datItemFields = new List<DatItemField>();
-            if (machineFields == null)
-                machineFields = new List<MachineField>();
-
-            // Output the logging statement
-            logger.User("Removing filtered fields");
-
-            // Now process all of the roms
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
-            {
-                List<DatItem> items = datFile.Items[key];
-                for (int j = 0; j < items.Count; j++)
-                {
-                    DatItemTool.RemoveFields(items[j], datItemFields, machineFields);
-                }
-
-                datFile.Items.Remove(key);
-                datFile.Items.AddRange(key, items);
             });
         }
 

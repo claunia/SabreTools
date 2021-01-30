@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
@@ -14,24 +15,20 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the cleaning operations that need to be performed on a set of items, usually a DAT
     /// </summary>
+    /// TODO: Split out helper classes
     public class Cleaner
     {
         #region Exclusion Fields
 
         /// <summary>
-        /// Dictionary of DatHeader fields to exclude from writing
+        /// DatItemRemover to remove fields from DatHeaders
         /// </summary>
-        public List<DatHeaderField> ExcludeDatHeaderFields { get; set; } = new List<DatHeaderField>();
+        public DatHeaderRemover DatHeaderRemover { get; set; }
 
         /// <summary>
-        /// Dictionary of DatItem fields to exclude from writing
+        /// DatItemRemover to remove fields from DatItems
         /// </summary>
-        public List<DatItemField> ExcludeDatItemFields { get; set; } = new List<DatItemField>();
-
-        /// <summary>
-        /// Dictionary of Machine fields to exclude from writing
-        /// </summary>
-        public List<MachineField> ExcludeMachineFields { get; set; } = new List<MachineField>();
+        public DatItemRemover DatItemRemover { get; set; }
 
         #endregion
 
@@ -130,10 +127,9 @@ namespace SabreTools.Filtering
         /// <param name="fields">List of field names</param>
         public void PopulateExclusionsFromList(List<string> fields)
         {
-            // Instantiate the lists, if necessary
-            ExcludeDatHeaderFields ??= new List<DatHeaderField>();
-            ExcludeMachineFields ??= new List<MachineField>();
-            ExcludeDatItemFields ??= new List<DatItemField>();
+            // Instantiate the removers, if necessary
+            DatHeaderRemover ??= new DatHeaderRemover();
+            DatItemRemover ??= new DatItemRemover();
 
             // If the list is null or empty, just return
             if (fields == null || fields.Count == 0)
@@ -146,28 +142,12 @@ namespace SabreTools.Filtering
                     continue;
 
                 // DatHeader fields
-                DatHeaderField datHeaderField = field.AsDatHeaderField();
-                if (datHeaderField != DatHeaderField.NULL)
-                {
-                    ExcludeDatHeaderFields.Add(datHeaderField);
+                if (DatHeaderRemover.SetRemover(field))
                     continue;
-                }
 
-                // Machine fields
-                MachineField machineField = field.AsMachineField();
-                if (machineField != MachineField.NULL)
-                {
-                    ExcludeMachineFields.Add(machineField);
+                // Machine and DatItem fields
+                if (DatItemRemover.SetRemover(field))
                     continue;
-                }
-
-                // DatItem fields
-                DatItemField datItemField = field.AsDatItemField();
-                if (datItemField != DatItemField.NULL)
-                {
-                    ExcludeDatItemFields.Add(datItemField);
-                    continue;
-                }
 
                 // If we didn't match anything, log an error
                 logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
@@ -477,6 +457,44 @@ namespace SabreTools.Filtering
 
             // Filter on DatItem fields
             return DatItemFilter.PassesFilters(datItem);
+        }
+
+        #endregion
+    
+        #region Removal
+
+        /// <summary>
+        /// Remove fields as per the header
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        public void RemoveFieldsFromItems(DatFile datFile)
+        {
+            // If the removers don't exist, we can't use it
+            if (DatHeaderRemover == null && DatItemRemover == null)
+                return;
+
+            // Output the logging statement
+            logger.User("Removing filtered fields");
+
+            // Remove DatHeader fields
+            if (DatHeaderRemover != null)
+                DatHeaderRemover.RemoveFields(datFile.Header);
+
+            // Remove DatItem and Machine fields
+            if (DatItemRemover != null)
+            {
+                Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+                {
+                    List<DatItem> items = datFile.Items[key];
+                    for (int j = 0; j < items.Count; j++)
+                    {
+                        DatItemRemover.RemoveFields(items[j]);
+                    }
+
+                    datFile.Items.Remove(key);
+                    datFile.Items.AddRange(key, items);
+                });
+            }
         }
 
         #endregion

@@ -9,24 +9,6 @@ namespace SabreTools.Test.DatItems
     public class DatItemToolTests
     {
         [Fact]
-        public void RemoveFieldsDatItemTest()
-        {
-            var datItem = CreateDatItem();
-            var fields = new List<DatItemField> { DatItemField.Name };
-            DatItemTool.RemoveFields(datItem, datItemFields: fields);
-            Assert.Null(datItem.GetName());
-        }
-
-        [Fact]
-        public void RemoveFieldsMachineTest()
-        {
-            var datItem = CreateDatItem();
-            var fields = new List<MachineField> { MachineField.Name };
-            DatItemTool.RemoveFields(datItem, machineFields: fields);
-            Assert.Null(datItem.Machine.Name);
-        }
-
-        [Fact]
         public void ReplaceFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
