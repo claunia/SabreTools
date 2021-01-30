@@ -7,6 +7,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using Compress;
 using Compress.SevenZip;
+using Compress.Utils;
 using Compress.ZipFile;
 using NaturalSort;
 
@@ -74,7 +75,7 @@ namespace SabreTools.FileTypes.Archives
                 ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                 {
-                    throw new Exception(ZipFile.ZipErrorMessageText(zr));
+                    throw new Exception(ZipUtils.ZipErrorMessageText(zr));
                 }
 
                 for (int i = 0; i < zf.LocalFilesCount() && zr == ZipReturn.ZipGood; i++)
@@ -197,7 +198,7 @@ namespace SabreTools.FileTypes.Archives
                 ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                 {
-                    throw new Exception(ZipFile.ZipErrorMessageText(zr));
+                    throw new Exception(ZipUtils.ZipErrorMessageText(zr));
                 }
 
                 for (int i = 0; i < zf.LocalFilesCount() && zr == ZipReturn.ZipGood; i++)
@@ -266,7 +267,7 @@ namespace SabreTools.FileTypes.Archives
                 ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                 {
-                    throw new Exception(ZipFile.ZipErrorMessageText(zr));
+                    throw new Exception(ZipUtils.ZipErrorMessageText(zr));
                 }
 
                 for (int i = 0; i < zf.LocalFilesCount(); i++)
@@ -336,7 +337,7 @@ namespace SabreTools.FileTypes.Archives
                 ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
                 if (zr != ZipReturn.ZipGood)
                 {
-                    throw new Exception(ZipFile.ZipErrorMessageText(zr));
+                    throw new Exception(ZipUtils.ZipErrorMessageText(zr));
                 }
 
                 List<(string, bool)> zipEntries = new List<(string, bool)>();
@@ -380,7 +381,7 @@ namespace SabreTools.FileTypes.Archives
             ZipReturn zr = zf.ZipFileOpen(this.Filename, -1, true);
             if (zr != ZipReturn.ZipGood)
             {
-                throw new Exception(ZipFile.ZipErrorMessageText(zr));
+                throw new Exception(ZipUtils.ZipErrorMessageText(zr));
             }
 
             return zf.ZipStatus == ZipStatus.Trrnt7Zip;
@@ -441,12 +442,13 @@ namespace SabreTools.FileTypes.Archives
                     DateTime dt = DateTime.Now;
                     if (UseDates && !string.IsNullOrWhiteSpace(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out dt))
                     {
-                        uint msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
-                        zipFile.ZipFileOpenWriteStream(false, false, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, msDosDateTime, out writeStream);
+                        long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                        TimeStamps ts = new TimeStamps { ModTime = msDosDateTime };
+                        zipFile.ZipFileOpenWriteStream(false, false, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, ts);
                     }
                     else
                     {
-                        zipFile.ZipFileOpenWriteStream(false, true, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, null, out writeStream);
+                        zipFile.ZipFileOpenWriteStream(false, true, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, null);
                     }
 
                     // Copy the input stream to the output
@@ -499,7 +501,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Get the order for the entries with the new file
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipFile.TrrntZipStringCompare);
+                    keys.Sort(ZipUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
                     foreach (string key in keys)
@@ -516,12 +518,13 @@ namespace SabreTools.FileTypes.Archives
                             DateTime dt = DateTime.Now;
                             if (UseDates && !string.IsNullOrWhiteSpace(baseFile.Date) && DateTime.TryParse(baseFile.Date.Replace('\\', '/'), out dt))
                             {
-                                uint msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
-                                zipFile.ZipFileOpenWriteStream(false, false, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, msDosDateTime, out writeStream);
+                                long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                                TimeStamps ts = new TimeStamps { ModTime = msDosDateTime };
+                                zipFile.ZipFileOpenWriteStream(false, false, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, ts);
                             }
                             else
                             {
-                                zipFile.ZipFileOpenWriteStream(false, true, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, null, out writeStream);
+                                zipFile.ZipFileOpenWriteStream(false, true, baseFile.Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, null);
                             }
 
                             // Copy the input stream to the output
@@ -541,7 +544,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Instantiate the streams
                             oldZipFile.ZipFileOpenReadStream(index, out Stream zreadStream, out ulong istreamSize);
-                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.Filename(index), istreamSize, 0, null, out writeStream);
+                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.Filename(index), istreamSize, 0, out writeStream, null);
 
                             // Copy the input stream to the output
                             byte[] ibuffer = new byte[_bufferSize];
@@ -640,7 +643,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Sort the keys in TZIP order
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipFile.TrrntZipStringCompare);
+                    keys.Sort(ZipUtils.TrrntZipStringCompare);
 
                     // Now add all of the files in order
                     foreach (string key in keys)
@@ -655,12 +658,13 @@ namespace SabreTools.FileTypes.Archives
                         DateTime dt = DateTime.Now;
                         if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[index].Date) && DateTime.TryParse(baseFiles[index].Date.Replace('\\', '/'), out dt))
                         {
-                            uint msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
-                            zipFile.ZipFileOpenWriteStream(false, false, baseFiles[index].Filename.Replace('\\', '/'), istreamSize, 0, msDosDateTime, out writeStream);
+                            long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                            TimeStamps ts = new TimeStamps { ModTime = msDosDateTime };
+                            zipFile.ZipFileOpenWriteStream(false, false, baseFiles[index].Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, ts);
                         }
                         else
                         {
-                            zipFile.ZipFileOpenWriteStream(false, true, baseFiles[index].Filename.Replace('\\', '/'), istreamSize, 0, null, out writeStream);
+                            zipFile.ZipFileOpenWriteStream(false, true, baseFiles[index].Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, null);
                         }
 
                         // Copy the input stream to the output
@@ -720,7 +724,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Get the order for the entries with the new file
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipFile.TrrntZipStringCompare);
+                    keys.Sort(ZipUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
                     foreach (string key in keys)
@@ -738,12 +742,13 @@ namespace SabreTools.FileTypes.Archives
                             DateTime dt = DateTime.Now;
                             if (UseDates && !string.IsNullOrWhiteSpace(baseFiles[-index - 1].Date) && DateTime.TryParse(baseFiles[-index - 1].Date.Replace('\\', '/'), out dt))
                             {
-                                uint msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
-                                zipFile.ZipFileOpenWriteStream(false, false, baseFiles[-index - 1].Filename.Replace('\\', '/'), istreamSize, 0, msDosDateTime, out writeStream);
+                                long msDosDateTime = Utilities.ConvertDateTimeToMsDosTimeFormat(dt);
+                                TimeStamps ts = new TimeStamps { ModTime = msDosDateTime };
+                                zipFile.ZipFileOpenWriteStream(false, false, baseFiles[-index - 1].Filename.Replace('\\', '/'), istreamSize, 0, out writeStream, ts);
                             }
                             else
                             {
-                                zipFile.ZipFileOpenWriteStream(false, true, baseFiles[-index - 1].Filename.Replace('\\', '/'), istreamSize, 0, null, out writeStream);
+                                zipFile.ZipFileOpenWriteStream(false, true, baseFiles[-index - 1].Filename.Replace('\\', '/'), istreamSize, 0,  out writeStream, null);
                             }
 
                             // Copy the input stream to the output
@@ -763,7 +768,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Instantiate the streams
                             oldZipFile.ZipFileOpenReadStream(index, out Stream zreadStream, out ulong istreamSize);
-                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.Filename(index), istreamSize, 0, null, out writeStream);
+                            zipFile.ZipFileOpenWriteStream(false, true, oldZipFile.Filename(index), istreamSize, 0, out writeStream, null);
 
                             // Copy the input stream to the output
                             byte[] ibuffer = new byte[_bufferSize];

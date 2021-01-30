@@ -330,7 +330,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Get the order for the entries with the new file
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipFile.TrrntZipStringCompare);
+                    keys.Sort(ZipUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
                     foreach (string key in keys)
@@ -444,7 +444,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Sort the keys in TZIP order
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipFile.TrrntZipStringCompare);
+                    keys.Sort(ZipUtils.TrrntZipStringCompare);
 
                     // Now add all of the files in order
                     foreach (string key in keys)
@@ -499,7 +499,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Get the order for the entries with the new file
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipFile.TrrntZipStringCompare);
+                    keys.Sort(ZipUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
                     foreach (string key in keys)

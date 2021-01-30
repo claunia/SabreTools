@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using Compress.Utils;
 using Compress.ZipFile.ZLib;
-using Directory = RVIO.Directory;
 using FileInfo = RVIO.FileInfo;
 using FileStream = RVIO.FileStream;
 using Path = RVIO.Path;
@@ -52,6 +52,19 @@ namespace Compress.gZip
         {
             return false;
         }
+        public long LastModified(int i)
+        {
+            return 0; // need to test if this is the same as Zip Date (Probably is)
+        }
+        public long? Created(int i)
+        {
+            return null;
+        }
+        public long? Accessed(int i)
+        {
+            return null;
+        }
+
 
         public ZipOpenType ZipOpen { get; private set; }
 
@@ -137,7 +150,6 @@ namespace Compress.gZip
 
                 byte FLG = zipBr.ReadByte();
 
-
                 uint MTime = zipBr.ReadUInt32();
                 byte XFL = zipBr.ReadByte();
                 byte OS = zipBr.ReadByte();
@@ -152,19 +164,47 @@ namespace Compress.gZip
                     switch (XLen)
                     {
                         case 12:
+                            // 0-3: byte[4] CRC
                             CRC = new byte[4];
                             Array.Copy(ExtraData, 0, CRC, 0, 4);
+                            // 4-11: ulong uncompressed
                             UnCompressedSize = BitConverter.ToUInt64(ExtraData, 4);
                             break;
                         case 28:
+                            // 0-15: byte[16] md5
+                            // byte[] md5Hash = new byte[16];
+                            // Array.Copy(ExtraData, 0, md5Hash, 0, 16);
+                            // 16-19: byte[4] CRC
                             CRC = new byte[4];
                             Array.Copy(ExtraData, 16, CRC, 0, 4);
+                            // 20-27: ulong uncompressed
                             UnCompressedSize = BitConverter.ToUInt64(ExtraData, 20);
                             break;
                         case 77:
+                            // 0-15: byte[16] md5
+                            // md5Hash = new byte[16];
+                            // Array.Copy(ExtraData, 0, md5Hash, 0, 16);
+                            // 16-19: byte[4] CRC
                             CRC = new byte[4];
                             Array.Copy(ExtraData, 16, CRC, 0, 4);
+                            // 20-27: ulong uncompressed
                             UnCompressedSize = BitConverter.ToUInt64(ExtraData, 20);
+
+                            // 28: altFileType
+                            // byte altType = ExtraData[28];
+
+                            // 29-44: byte[16] altmd5
+                            // byte[] altmd5Hash = new byte[16];
+                            // Array.Copy(ExtraData, 29, altmd5Hash, 0, 16);
+                            // 45-64: byte[20] altsha1
+                            // byte[] altsha1Hash = new byte[20];
+                            // Array.Copy(ExtraData, 45, altsha1Hash, 0, 20);
+                            // 65-68: byte[4] altcrc
+                            // byte[] altcrc = new byte[4];
+                            // Array.Copy(ExtraData, 65, altcrc, 0, 4);
+                            // 69-76: ulong altuncompressed
+                            // ulong uncompressedAltSize = BitConverter.ToUInt64(ExtraData, 69);
+
                             break;
                     }
                 }
@@ -230,43 +270,71 @@ namespace Compress.gZip
 
         public void ZipFileClose()
         {
-            if (ZipOpen == ZipOpenType.Closed)
+            switch (ZipOpen)
             {
-                return;
-            }
+                case ZipOpenType.Closed:
+                    return;
 
-            if (ZipOpen == ZipOpenType.OpenRead)
-            {
-                if (_zipFs != null)
-                {
-                    _zipFs.Close();
-                    _zipFs.Dispose();
-                }
-                ZipOpen = ZipOpenType.Closed;
-                return;
-            }
+                case ZipOpenType.OpenRead:
+                    {
+                        if (_zipFs != null)
+                        {
+                            _zipFs.Close();
+                            _zipFs.Dispose();
+                        }
+                        ZipOpen = ZipOpenType.Closed;
+                        return;
+                    }
 
+                case ZipOpenType.OpenWrite:
+                    {
+                        if (_zipFs != null)
+                        {
+                            _zipFs.Close();
+                            _zipFs.Dispose();
+                        }
+                        ZipOpen = ZipOpenType.Closed;
+                        return;
+                    }
+            }
         }
 
         public ZipReturn ZipFileOpenReadStream(int index, out Stream stream, out ulong streamSize)
         {
+            return ZipFileOpenReadStream(index, false, out stream, out streamSize);
+        }
+
+        public ZipReturn ZipFileOpenReadStream(int index, bool raw, out Stream stream, out ulong streamSize)
+        {
             ZipFileCloseReadStream();
+            stream = null;
+            streamSize = 0;
+
+            if (ZipOpen != ZipOpenType.OpenRead)
+            {
+                return ZipReturn.ZipReadingFromOutputFile;
+            }
 
             _zipFs.Position = dataStartPos;
-
-            _compressionStream = new ZlibBaseStream(_zipFs, CompressionMode.Decompress, CompressionLevel.Default, ZlibStreamFlavor.DEFLATE, true);
-            stream = _compressionStream;
-            streamSize = UnCompressedSize;
+            if (raw)
+            {
+                stream = _zipFs;
+                streamSize = CompressedSize;
+            }
+            else
+            {
+                //_compressionStream = new ZlibBaseStream(_zipFs, CompressionMode.Decompress, CompressionLevel.Default, ZlibStreamFlavor.DEFLATE, true);
+                _compressionStream = new System.IO.Compression.DeflateStream(_zipFs, System.IO.Compression.CompressionMode.Decompress, true);
+                stream = _compressionStream;
+                streamSize = UnCompressedSize;
+            }
 
             return ZipReturn.ZipGood;
         }
 
-        public bool hasAltFileHeader;
-
-
         public byte[] ExtraData;
 
-        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong unCompressedSize, ushort compressionMethod, uint? datetime, out Stream stream)
+        public ZipReturn ZipFileOpenWriteStream(bool raw, bool trrntzip, string filename, ulong unCompressedSize, ushort compressionMethod, out Stream stream, TimeStamps dateTime)
         {
             using (BinaryWriter zipBw = new BinaryWriter(_zipFs, Encoding.UTF8, true))
             {
@@ -295,13 +363,17 @@ namespace Compress.gZip
 
 
                 dataStartPos = zipBw.BaseStream.Position;
-                stream = raw
-                    ? _zipFs
-                    : new ZlibBaseStream(_zipFs, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
+
+
+                _compressionStream = raw
+                           ? _zipFs
+                           : new ZlibBaseStream(_zipFs, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
 
                 zipBw.Flush();
                 zipBw.Close();
             }
+
+            stream = _compressionStream;
             return ZipReturn.ZipGood;
         }
 
@@ -315,6 +387,11 @@ namespace Compress.gZip
                 dfStream.Close();
                 dfStream.Dispose();
             }
+            else if (_compressionStream is System.IO.Compression.DeflateStream dfioStream)
+            {
+                dfioStream.Close();
+                dfioStream.Dispose();
+            }
             _compressionStream = null;
 
             return ZipReturn.ZipGood;
@@ -322,7 +399,7 @@ namespace Compress.gZip
 
         public ZipStatus ZipStatus { get; private set; }
 
-        public string ZipFilename => _zipFileInfo != null ? _zipFileInfo.FullName : string.Empty;
+        public string ZipFilename => _zipFileInfo != null ? _zipFileInfo.FullName : "";
 
         public long TimeStamp => _zipFileInfo?.LastWriteTime ?? 0;
 
@@ -338,7 +415,7 @@ namespace Compress.gZip
                 return ZipReturn.ZipFileAlreadyOpen;
             }
 
-            CreateDirForFile(newFilename);
+            DirUtil.CreateDirForFile(newFilename);
             _zipFileInfo = new FileInfo(newFilename);
 
             int errorCode = FileStream.OpenFileWrite(newFilename, out _zipFs);
@@ -354,14 +431,24 @@ namespace Compress.gZip
 
         public ZipReturn ZipFileCloseWriteStream(byte[] crc32)
         {
+            if (_compressionStream is ZlibBaseStream dfStream)
+            {
+                dfStream.Flush();
+                dfStream.Close();
+                dfStream.Dispose();
+            }
+
+            _compressionStream = null;
+
+            CompressedSize = (ulong)(_zipFs.Position - dataStartPos);
+
             using (BinaryWriter zipBw = new BinaryWriter(_zipFs, Encoding.UTF8, true))
             {
-                CompressedSize = (ulong)(zipBw.BaseStream.Position - dataStartPos);
 
-                zipBw.Write(CRC[3]);
-                zipBw.Write(CRC[2]);
-                zipBw.Write(CRC[1]);
-                zipBw.Write(CRC[0]);
+                zipBw.Write(crc32[3]);
+                zipBw.Write(crc32[2]);
+                zipBw.Write(crc32[1]);
+                zipBw.Write(crc32[0]);
                 zipBw.Write((uint)UnCompressedSize);
 
                 long endpos = _zipFs.Position;
@@ -383,8 +470,6 @@ namespace Compress.gZip
                 zipBw.Flush();
                 zipBw.Close();
             }
-
-            _zipFs.Close();
 
             return ZipReturn.ZipGood;
         }
@@ -420,39 +505,27 @@ namespace Compress.gZip
             _zipFileInfo = null;
             ZipOpen = ZipOpenType.Closed;
         }
-
-
-        private static void CreateDirForFile(string sFilename)
+        public ZipReturn GetRawStream(out Stream st)
         {
-            string strTemp = Path.GetDirectoryName(sFilename);
-
-            if (string.IsNullOrEmpty(strTemp))
+            st = null;
+            if (!RVIO.File.Exists(_zipFileInfo.FullName))
             {
-                return;
+                return ZipReturn.ZipErrorFileNotFound;
             }
 
-            if (Directory.Exists(strTemp))
+            int errorCode = FileStream.OpenFileRead(_zipFileInfo.FullName, out st);
+            if (errorCode != 0)
             {
-                return;
-            }
-
-
-            while (strTemp.Length > 0 && !Directory.Exists(strTemp))
-            {
-                int pos = strTemp.LastIndexOf(Path.DirectorySeparatorChar);
-                if (pos < 0)
+                if (errorCode == 32)
                 {
-                    pos = 0;
+                    return ZipReturn.ZipFileLocked;
                 }
-                strTemp = strTemp.Substring(0, pos);
+                return ZipReturn.ZipErrorOpeningFile;
             }
 
-            while (sFilename.IndexOf(Path.DirectorySeparatorChar, strTemp.Length + 1) > 0)
-            {
-                strTemp = sFilename.Substring(0, sFilename.IndexOf(Path.DirectorySeparatorChar, strTemp.Length + 1));
-                Directory.CreateDirectory(strTemp);
-            }
+            st.Position = dataStartPos;
+
+            return ZipReturn.ZipGood;
         }
-
     }
 }

@@ -321,7 +321,8 @@ namespace Compress.ZipFile.ZLib
 
         public override System.Int64 Seek(System.Int64 offset, System.IO.SeekOrigin origin)
         {
-            return _stream.Seek(offset, origin);
+            throw new NotImplementedException();
+            //_outStream.Seek(offset, origin);
         }
         public override void SetLength(System.Int64 value)
         {

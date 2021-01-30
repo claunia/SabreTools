@@ -6,9 +6,9 @@ using System.IO.Compression;
 using Compress.SevenZip.Compress.BZip2;
 using Compress.SevenZip.Compress.LZMA;
 using Compress.SevenZip.Compress.PPmd;
+using Compress.SevenZip.Compress.ZSTD;
 using Compress.SevenZip.Filters;
 using Compress.SevenZip.Structure;
-using Zstandard.Net;
 using FileStream = RVIO.FileStream;
 
 namespace Compress.SevenZip
@@ -50,6 +50,11 @@ namespace Compress.SevenZip
                 ZipFileCloseReadStream();
                 _streamIndex = thisStreamIndex;
 
+                if (_header.StreamsInfo==null)
+                {
+                    stream = null;
+                    return ZipReturn.ZipGood;
+                }
 
                 Folder folder = _header.StreamsInfo.Folders[_streamIndex];
 
@@ -192,7 +197,7 @@ namespace Compress.SevenZip
                 return ZipReturn.ZipGood;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return ZipReturn.ZipErrorGettingDataStream;
             }
@@ -224,18 +229,21 @@ namespace Compress.SevenZip
         {
             if (_streamIndex != -1)
             {
-                Folder folder = _header.StreamsInfo.Folders[_streamIndex];
-
-                foreach (Coder c in folder.Coders)
+                if (_header.StreamsInfo != null)
                 {
-                    Stream ds = c?.DecoderStream;
-                    if (ds == null)
+                    Folder folder = _header.StreamsInfo.Folders[_streamIndex];
+
+                    foreach (Coder c in folder.Coders)
                     {
-                        continue;
+                        Stream ds = c?.DecoderStream;
+                        if (ds == null)
+                        {
+                            continue;
+                        }
+                        ds.Close();
+                        ds.Dispose();
+                        c.DecoderStream = null;
                     }
-                    ds.Close();
-                    ds.Dispose();
-                    c.DecoderStream = null;
                 }
             }
             _streamIndex = -1;

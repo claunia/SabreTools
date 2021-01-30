@@ -25,7 +25,7 @@ namespace Compress.SevenZip
             ZipStatus = ZipStatus.TrrntZip;
         }
 
-        private bool IsRomVault7Z(long testBaseOffset, ulong testHeaderPos, ulong testHeaderLength, uint testHeaderCRC)
+        private bool IsRomVault7Z(long testBaseOffset,ulong testHeaderPos,ulong testHeaderLength,uint testHeaderCRC)
         {
             long length = _zipFs.Length;
             if (length < 32)
@@ -60,7 +60,7 @@ namespace Compress.SevenZip
             if (headerCRC != testHeaderCRC)
                 return false;
 
-            if (headerOffset != testHeaderPos + (ulong)testBaseOffset)
+            if (headerOffset != testHeaderPos+(ulong)testBaseOffset)
                 return false;
 
             return headerSize == testHeaderLength;

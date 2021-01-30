@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Compress.SevenZip.Structure
@@ -10,6 +11,9 @@ namespace Compress.SevenZip.Structure
         public bool[] EmptyStreamFlags;
         public bool[] EmptyFileFlags;
         public uint[] Attributes;
+        public ulong[] TimeCreation;
+        public ulong[] TimeLastAccess;
+        public ulong[] TimeLastWrite;
 
         public void Read(BinaryReader br)
         {
@@ -67,9 +71,13 @@ namespace Compress.SevenZip.Structure
                         continue;
 
                     case HeaderProperty.kCreationTime:
+                        TimeCreation = Util.ReadUInt64Def(br, size);
+                        continue;
                     case HeaderProperty.kLastAccessTime:
+                        TimeLastAccess = Util.ReadUInt64Def(br, size);
+                        continue;
                     case HeaderProperty.kLastWriteTime:
-                        br.ReadBytes((int)bytessize);
+                        TimeLastWrite = Util.ReadUInt64Def(br, size);
                         continue;
 
                     case HeaderProperty.kDummy:

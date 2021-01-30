@@ -107,7 +107,7 @@ namespace SabreTools.Core.Tools
         /// <remarks>
         /// Adapted from 7-zip Source Code: CPP/Windows/TimeUtils.cpp:FileTimeToDosTime
         /// </remarks>
-        public static uint ConvertDateTimeToMsDosTimeFormat(DateTime dateTime)
+        public static long ConvertDateTimeToMsDosTimeFormat(DateTime dateTime)
         {
             uint year = (uint)((dateTime.Year - 1980) % 128);
             uint mon = (uint)dateTime.Month;

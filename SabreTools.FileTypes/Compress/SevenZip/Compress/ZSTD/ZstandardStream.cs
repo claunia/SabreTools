@@ -2,9 +2,9 @@
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
-using Interop = Zstandard.Net.ZstandardInterop;
+using Interop = Compress.SevenZip.Compress.ZSTD.ZstandardInterop;
 
-namespace Zstandard.Net
+namespace Compress.SevenZip.Compress.ZSTD
 {
     /// <summary>
     /// Provides methods and properties for compressing and decompressing streams by using the Zstandard algorithm.
@@ -32,7 +32,7 @@ namespace Zstandard.Net
 
         private Interop.Buffer outputBuffer = new Interop.Buffer();
         private Interop.Buffer inputBuffer = new Interop.Buffer();
-
+       
         /// <summary>
         /// Initializes a new instance of the <see cref="ZstandardStream"/> class by using the specified stream and compression mode, and optionally leaves the stream open.
         /// </summary>
@@ -238,7 +238,7 @@ namespace Zstandard.Net
                 {
                     var inputSize = this.dataSize - this.dataPosition;
 
-                    // read data from input stream
+                    // read data from input stream 
                     if (inputSize <= 0 && !this.dataDepleted && !this.dataSkipRead)
                     {
                         this.dataSize = this.stream.Read(this.data, 0, (int)this.zstreamInputSize);
