@@ -396,7 +396,7 @@ namespace SabreTools.Filtering
                             continue;
 
                         // If the rom doesn't pass the filter, mark for removal
-                        if (!PassesFilters(item))
+                        if (!PassesAllFilters(item))
                         {
                             item.Remove = true;
 
@@ -436,7 +436,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="datItem">DatItem to check</param>
         /// <returns>True if the item passed the filter, false otherwise</returns>
-        internal bool PassesFilters(DatItem datItem)
+        internal bool PassesAllFilters(DatItem datItem)
         {
             // Null item means it will never pass
             if (datItem == null)

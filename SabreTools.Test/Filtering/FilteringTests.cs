@@ -19,7 +19,7 @@ namespace SabreTools.Test.Filtering
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = filter.PassesFilters(datItem);
+            bool actual = filter.PassesAllFilters(datItem);
             Assert.True(actual);
         }
 
@@ -34,7 +34,7 @@ namespace SabreTools.Test.Filtering
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = filter.PassesFilters(datItem);
+            bool actual = filter.PassesAllFilters(datItem);
             Assert.False(actual);
         }
 
@@ -49,7 +49,7 @@ namespace SabreTools.Test.Filtering
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = filter.PassesFilters(datItem);
+            bool actual = filter.PassesAllFilters(datItem);
             Assert.True(actual);
         }
 
@@ -64,7 +64,7 @@ namespace SabreTools.Test.Filtering
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = filter.PassesFilters(datItem);
+            bool actual = filter.PassesAllFilters(datItem);
             Assert.False(actual);
         }
 

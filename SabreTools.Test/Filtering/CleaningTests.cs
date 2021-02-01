@@ -95,6 +95,26 @@ namespace SabreTools.Test.Filtering
             Assert.Equal("name-3", datItem.Machine.Description);
         }
     
+        [Fact]
+        public void SetOneRomPerGameTest()
+        {
+            // Setup cleaner
+            var cleaner = new Cleaner
+            {
+                OneRomPerGame = true,
+            };
+
+            // Setup DatItem
+            var datItem = CreateDatItem("name", "name-2", "name-3");
+
+            // Run cleaning
+            cleaner.SetOneRomPerGame(datItem);
+
+            // Check the fields
+            Assert.Equal("name", datItem.GetName());
+            Assert.Equal("name-2/name", datItem.Machine.Name);
+        }
+
         /// <summary>
         /// Generate a consistent DatItem for testing
         /// </summary>

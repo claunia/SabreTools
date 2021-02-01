@@ -540,9 +540,23 @@ namespace SabreTools.Filtering
                 List<DatItem> items = datFile.Items[key];
                 for (int i = 0; i < items.Count; i++)
                 {
-                    DatItemTool.SetOneRomPerGame(items[i]);
+                    SetOneRomPerGame(items[i]);
                 }
             });
+        }
+
+        /// <summary>
+        /// Set internal names to match One Rom Per Game (ORPG) logic
+        /// </summary>
+        /// <param name="datItem">DatItem to run logic on</param>
+        internal void SetOneRomPerGame(DatItem datItem)
+        {
+            if (datItem.GetName() == null)
+                return;
+
+            string[] splitname = datItem.GetName().Split('.');
+            datItem.Machine.Name += $"/{string.Join(".", splitname.Take(splitname.Length > 1 ? splitname.Length - 1 : 1))}";
+            datItem.SetName(Path.GetFileName(datItem.GetName()));
         }
 
         /// <summary>

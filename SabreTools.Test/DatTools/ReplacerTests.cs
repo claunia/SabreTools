@@ -2,27 +2,32 @@ using System.Collections.Generic;
 
 using SabreTools.Core;
 using SabreTools.DatItems;
+using SabreTools.DatTools;
 using Xunit;
 
-namespace SabreTools.Test.DatItems
+namespace SabreTools.Test.DatTools
 {
-    public class DatItemToolTests
+    public class ReplacerTests
     {
         [Fact]
-        public void SetFieldsDatItemTest()
+        public void ReplaceFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
-            var mappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" };
-            DatItemTool.SetFields(datItem, mappings, null);
+            var repDatItem = CreateDatItem();
+            repDatItem.SetName("bar");
+            var fields = new List<DatItemField> { DatItemField.Name };
+            Replacer.ReplaceFields(datItem, repDatItem, fields);
             Assert.Equal("bar", datItem.GetName());
         }
 
         [Fact]
-        public void SetFieldsMachineTest()
+        public void ReplaceFieldsMachineTest()
         {
             var datItem = CreateDatItem();
-            var mappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" };
-            DatItemTool.SetFields(datItem, null, mappings);
+            var repDatItem = CreateDatItem();
+            repDatItem.Machine.Name = "foo";
+            var fields = new List<MachineField> { MachineField.Name };
+            Replacer.ReplaceFields(datItem.Machine, repDatItem.Machine, fields, false);
             Assert.Equal("foo", datItem.Machine.Name);
         }
 

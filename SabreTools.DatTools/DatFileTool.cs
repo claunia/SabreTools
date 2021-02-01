@@ -95,7 +95,7 @@ namespace SabreTools.DatTools
 
                         // Replace fields from the first duplicate, if we have one
                         if (dupes.Count > 0)
-                            DatItemTool.ReplaceFields(newDatItem, dupes.First(), datItemFields);
+                            Replacer.ReplaceFields(newDatItem, dupes.First(), datItemFields);
 
                         newDatItems.Add(newDatItem);
                     }
@@ -122,7 +122,7 @@ namespace SabreTools.DatTools
                     {
                         DatItem newDatItem = datItem.Clone() as DatItem;
                         if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count() > 0)
-                            DatItemTool.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
+                            Replacer.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
 
                         newDatItems.Add(newDatItem);
                     }
