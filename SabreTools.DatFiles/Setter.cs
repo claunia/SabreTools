@@ -12,6 +12,7 @@ namespace SabreTools.DatFiles
     /// <summary>
     /// Set fields on DatItems
     /// </summary>
+    /// TODO: Figure out how to get this into the Filtering namespace
     public class Setter
     {
         #region Fields
