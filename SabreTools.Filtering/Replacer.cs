@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SabreTools.Core;
 using SabreTools.DatItems;
 
-namespace SabreTools.DatTools
+namespace SabreTools.Filtering
 {
     /// <summary>
     /// Replace fields in DatItems

@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 using SabreTools.Core;
 using SabreTools.DatItems;
-using SabreTools.DatTools;
+using SabreTools.Filtering;
 using Xunit;
 
-namespace SabreTools.Test.DatTools
+namespace SabreTools.Test.Filtering
 {
     public class ReplacerTests
     {
