@@ -64,7 +64,7 @@ namespace SabreTools.Features
 
             // Apply the specialized field removals to the cleaner
             if (!addFileDates)
-                Cleaner.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
+                Remover.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header);
@@ -96,8 +96,9 @@ namespace SabreTools.Features
                         // Perform additional processing steps
                         Extras.ApplyExtras(datdata);
                         Splitter.ApplySplitting(datdata, false);
-                        Cleaner.ApplyFilters(datdata);
+                        Filter.ApplyFilters(datdata);
                         Cleaner.ApplyCleaning(datdata);
+                        Remover.ApplyRemovals(datdata);
 
                         // Write out the file
                         Writer.Write(datdata, OutputDir);

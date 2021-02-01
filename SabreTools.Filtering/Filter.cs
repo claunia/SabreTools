@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
+using SabreTools.Core;
+using SabreTools.Core.Tools;
+using SabreTools.DatFiles;
+using SabreTools.DatItems;
 using SabreTools.Logging;
 
 namespace SabreTools.Filtering
@@ -7,7 +13,7 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the filtering operations that need to be performed on a set of items, usually a DAT
     /// </summary>
-    public abstract class Filter
+    public class Filter
     {
         #region Constants
 
@@ -39,6 +45,20 @@ namespace SabreTools.Filtering
 
         #endregion
 
+         #region Fields
+
+        /// <summary>
+        /// Filter for DatItem fields
+        /// </summary>
+        public DatItemFilter DatItemFilter { get; set; }
+
+        /// <summary>
+        /// Filter for Machine fields
+        /// </summary>
+        public MachineFilter MachineFilter { get; set; }
+
+        #endregion
+
         #region Logging
 
         /// <summary>
@@ -60,7 +80,50 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Filter Population
+        #region Population
+
+        /// <summary>
+        /// Populate the filters objects using a set of key:value filters
+        /// </summary>
+        /// <param name="filters">List of key:value where ~key/!key is negated</param>
+        public void PopulateFiltersFromList(List<string> filters)
+        {
+            // Instantiate the filters, if necessary
+            MachineFilter ??= new MachineFilter();
+            DatItemFilter ??= new DatItemFilter();
+
+            // If the list is null or empty, just return
+            if (filters == null || filters.Count == 0)
+                return;
+
+            foreach (string filterPair in filters)
+            {
+                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
+                
+                // If we don't even have a possible filter pair
+                if (field == null && value == null)
+                    continue;
+
+                // Machine fields
+                MachineField machineField = field.AsMachineField();
+                if (machineField != MachineField.NULL)
+                {
+                    MachineFilter.SetFilter(machineField, value, negate);
+                    continue;
+                }
+
+                // DatItem fields
+                DatItemField datItemField = field.AsDatItemField();
+                if (datItemField != DatItemField.NULL)
+                {
+                    DatItemFilter.SetFilter(datItemField, value, negate);
+                    continue;
+                }
+
+                // If we didn't match anything, log an error
+                logger.Warning($"The value {field} did not match any filterable field names. Please check the wiki for more details on supported field names.");
+            }
+        }
 
         /// <summary>
         /// Split the parts of a filter statement
@@ -294,7 +357,98 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Filter Running
+        #region Running
+
+        /// <summary>
+        /// Apply a set of Filters on the DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="perMachine">True if entire machines are considered, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>True if the DatFile was filtered, false on error</returns>
+        public bool ApplyFilters(DatFile datFile, bool perMachine = false, bool throwOnError = false)
+        {
+            // If we have null filters, return false
+            if (MachineFilter == null || DatItemFilter == null)
+                return false;
+
+            // If we're filtering per machine, bucket by machine first
+            if (perMachine)
+                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+
+            try
+            {
+                // Loop over every key in the dictionary
+                List<string> keys = datFile.Items.Keys.ToList();
+                foreach (string key in keys)
+                {
+                    // For every item in the current key
+                    bool machinePass = true;
+                    List<DatItem> items = datFile.Items[key];
+                    foreach (DatItem item in items)
+                    {
+                        // If we have a null item, we can't pass it
+                        if (item == null)
+                            continue;
+
+                        // If the item is already filtered out, we skip
+                        if (item.Remove)
+                            continue;
+
+                        // If the rom doesn't pass the filter, mark for removal
+                        if (!PassesFilters(item))
+                        {
+                            item.Remove = true;
+
+                            // If we're in machine mode, set and break
+                            if (perMachine)
+                            {
+                                machinePass = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If we didn't pass and we're in machine mode, set all items as remove
+                    if (perMachine && !machinePass)
+                    {
+                        foreach (DatItem item in items)
+                        {
+                            item.Remove = true;
+                        }
+                    }
+
+                    // Assign back for caution
+                    datFile.Items[key] = items;
+                }
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filters
+        /// </summary>
+        /// <param name="datItem">DatItem to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        internal bool PassesFilters(DatItem datItem)
+        {
+            // Null item means it will never pass
+            if (datItem == null)
+                return false;
+
+            // Filter on Machine fields
+            if (!MachineFilter.PassesFilters(datItem.Machine))
+                return false;
+
+            // Filter on DatItem fields
+            return DatItemFilter.PassesFilters(datItem);
+        }
 
         /// <summary>
         /// Determines if a value passes a bool? filter

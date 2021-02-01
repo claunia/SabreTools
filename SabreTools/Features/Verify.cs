@@ -63,8 +63,9 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(datdata);
                     Splitter.ApplySplitting(datdata, true);
-                    Cleaner.ApplyFilters(datdata);
+                    Filter.ApplyFilters(datdata);
                     Cleaner.ApplyCleaning(datdata);
+                    Remover.ApplyRemovals(datdata);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -110,8 +111,9 @@ namespace SabreTools.Features
                 // Perform additional processing steps
                 Extras.ApplyExtras(datdata);
                 Splitter.ApplySplitting(datdata, true);
-                Cleaner.ApplyFilters(datdata);
+                Filter.ApplyFilters(datdata);
                 Cleaner.ApplyCleaning(datdata);
+                Remover.ApplyRemovals(datdata);
 
                 // Set depot information
                 datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;

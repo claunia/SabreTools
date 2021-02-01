@@ -1726,6 +1726,11 @@ Some special strings that can be used:
         protected ExtraIni Extras { get; set; }
 
         /// <summary>
+        /// Preconfigured Filter
+        /// </summary>
+        protected Filter Filter { get; set; }
+
+        /// <summary>
         /// Pre-configured DatHeader
         /// </summary>
         protected DatHeader Header { get; set; }
@@ -1734,6 +1739,11 @@ Some special strings that can be used:
         /// Output directory
         /// </summary>
         protected string OutputDir { get; set; }
+
+        /// <summary>
+        /// Pre-configured Remover
+        /// </summary>
+        protected Remover Remover { get; set; }
 
         /// <summary>
         /// Pre-configured Splitter
@@ -1804,8 +1814,10 @@ Some special strings that can be used:
             // Generic feature flags
             Cleaner = GetCleaner(features);
             Extras = GetExtras(features);
+            Filter = GetFilter(features);
             Header = GetDatHeader(features);
             OutputDir = GetString(features, OutputDirStringValue);
+            Remover = GetRemover(features);
             Splitter = GetSplitter(features);
 
             // Set threading flag, if necessary
@@ -2011,9 +2023,6 @@ Some special strings that can be used:
         {
             Cleaner cleaner = new Cleaner()
             {
-                DatItemFilter = new DatItemFilter(),
-                MachineFilter = new MachineFilter(),
-
                 Clean = GetBoolean(features, CleanValue),
                 DedupeRoms = GetDedupeType(features),
                 DescriptionAsName = GetBoolean(features, DescriptionAsNameValue),
@@ -2027,17 +2036,6 @@ Some special strings that can be used:
                 Single = GetBoolean(features, SingleSetValue),
                 Trim = GetBoolean(features, TrimValue),
             };
-
-            // Populate field exclusions
-            List<string> exclusionFields = GetList(features, ExcludeFieldListValue);
-            cleaner.PopulateExclusionsFromList(exclusionFields);
-
-            // Populate filters
-            List<string> filterPairs = GetList(features, FilterListValue);
-            cleaner.PopulateFiltersFromList(filterPairs);
-
-            // Include 'of" in game filters
-            cleaner.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
 
             return cleaner;
         }
@@ -2120,6 +2118,42 @@ Some special strings that can be used:
             extraIni.PopulateFromList(GetList(features, ExtraIniListValue));
             return extraIni;
         }
+
+        /// <summary>
+        /// Get Filter from feature list
+        /// </summary>
+        private Filter GetFilter(Dictionary<string, Feature> features)
+        {
+            Filter filter = new Filter()
+            {
+                DatItemFilter = new DatItemFilter(),
+                MachineFilter = new MachineFilter(),
+            };
+
+            // Populate filters
+            List<string> filterPairs = GetList(features, FilterListValue);
+            filter.PopulateFiltersFromList(filterPairs);
+
+            // Include 'of" in game filters
+            filter.MachineFilter.IncludeOfInGame = GetBoolean(features, MatchOfTagsValue);
+
+            return filter;
+        }
+
+        /// <summary>
+        /// Get Remover from feature list
+        /// </summary>
+        private Remover GetRemover(Dictionary<string, Feature> features)
+        {
+            Remover remover = new Remover();
+            
+            // Populate field exclusions
+            List<string> exclusionFields = GetList(features, ExcludeFieldListValue);
+            remover.PopulateExclusionsFromList(exclusionFields);
+
+            return remover;
+        }
+
 
         /// <summary>
         /// Get Splitter from feature list

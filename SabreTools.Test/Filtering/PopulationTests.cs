@@ -13,14 +13,14 @@ namespace SabreTools.Test.Filtering
             // Setup the list
             List<string> exclusions = null;
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateExclusionsFromList(exclusions);
+            // Setup the remover
+            var remover = new Remover();
+            remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.Empty(cleaner.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(cleaner.DatItemRemover.MachineFields);
-            Assert.Empty(cleaner.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
+            Assert.Empty(remover.DatItemRemover.MachineFields);
+            Assert.Empty(remover.DatItemRemover.DatItemFields);
         }
 
         [Fact]
@@ -29,14 +29,14 @@ namespace SabreTools.Test.Filtering
             // Setup the list
             List<string> exclusions = new List<string>();
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateExclusionsFromList(exclusions);
+            // Setup the remover
+            var remover = new Remover();
+            remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.Empty(cleaner.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(cleaner.DatItemRemover.MachineFields);
-            Assert.Empty(cleaner.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
+            Assert.Empty(remover.DatItemRemover.MachineFields);
+            Assert.Empty(remover.DatItemRemover.DatItemFields);
         }
 
         [Fact]
@@ -48,14 +48,14 @@ namespace SabreTools.Test.Filtering
                 "header.datname",
             };
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateExclusionsFromList(exclusions);
+            // Setup the remover
+            var remover = new Remover();
+            remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.Single(cleaner.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(cleaner.DatItemRemover.MachineFields);
-            Assert.Empty(cleaner.DatItemRemover.DatItemFields);
+            Assert.Single(remover.DatHeaderRemover.DatHeaderFields);
+            Assert.Empty(remover.DatItemRemover.MachineFields);
+            Assert.Empty(remover.DatItemRemover.DatItemFields);
         }
 
         [Fact]
@@ -67,14 +67,14 @@ namespace SabreTools.Test.Filtering
                 "machine.name",
             };
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateExclusionsFromList(exclusions);
+            // Setup the remover
+            var remover = new Remover();
+            remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.Empty(cleaner.DatHeaderRemover.DatHeaderFields);
-            Assert.Single(cleaner.DatItemRemover.MachineFields);
-            Assert.Empty(cleaner.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
+            Assert.Single(remover.DatItemRemover.MachineFields);
+            Assert.Empty(remover.DatItemRemover.DatItemFields);
         }
 
         [Fact]
@@ -86,14 +86,14 @@ namespace SabreTools.Test.Filtering
                 "item.name",
             };
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateExclusionsFromList(exclusions);
+            // Setup the remover
+            var remover = new Remover();
+            remover.PopulateExclusionsFromList(exclusions);
 
             // Check the exclusion lists
-            Assert.Empty(cleaner.DatHeaderRemover.DatHeaderFields);
-            Assert.Empty(cleaner.DatItemRemover.MachineFields);
-            Assert.Single(cleaner.DatItemRemover.DatItemFields);
+            Assert.Empty(remover.DatHeaderRemover.DatHeaderFields);
+            Assert.Empty(remover.DatItemRemover.MachineFields);
+            Assert.Single(remover.DatItemRemover.DatItemFields);
         }
     
         [Fact]
@@ -102,13 +102,13 @@ namespace SabreTools.Test.Filtering
             // Setup the list
             List<string> filters = null;
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(filters);
+            // Setup the filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(filters);
 
             // Check the filters
-            Assert.NotNull(cleaner.MachineFilter);
-            Assert.NotNull(cleaner.DatItemFilter);
+            Assert.NotNull(filter.MachineFilter);
+            Assert.NotNull(filter.DatItemFilter);
         }
 
         [Fact]
@@ -117,13 +117,13 @@ namespace SabreTools.Test.Filtering
             // Setup the list
             List<string> filters = new List<string>();
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(filters);
+            // Setup the filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(filters);
 
             // Check the filters
-            Assert.NotNull(cleaner.MachineFilter);
-            Assert.NotNull(cleaner.DatItemFilter);
+            Assert.NotNull(filter.MachineFilter);
+            Assert.NotNull(filter.DatItemFilter);
         }
 
         [Fact]
@@ -136,14 +136,14 @@ namespace SabreTools.Test.Filtering
                 "!machine.name:bar",
             };
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(filters);
+            // Setup the filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(filters);
 
             // Check the filters
-            Assert.Contains("foo", cleaner.MachineFilter.Name.PositiveSet);
-            Assert.Contains("bar", cleaner.MachineFilter.Name.NegativeSet);
-            Assert.NotNull(cleaner.DatItemFilter);
+            Assert.Contains("foo", filter.MachineFilter.Name.PositiveSet);
+            Assert.Contains("bar", filter.MachineFilter.Name.NegativeSet);
+            Assert.NotNull(filter.DatItemFilter);
         }
 
         [Fact]
@@ -156,14 +156,14 @@ namespace SabreTools.Test.Filtering
                 "!item.name:bar"
             };
 
-            // Setup the cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(filters);
+            // Setup the filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(filters);
 
             // Check the filters
-            Assert.NotNull(cleaner.MachineFilter);
-            Assert.Contains("foo", cleaner.DatItemFilter.Name.PositiveSet);
-            Assert.Contains("bar", cleaner.DatItemFilter.Name.NegativeSet);
+            Assert.NotNull(filter.MachineFilter);
+            Assert.Contains("foo", filter.DatItemFilter.Name.PositiveSet);
+            Assert.Contains("bar", filter.DatItemFilter.Name.NegativeSet);
         }
     }
 }

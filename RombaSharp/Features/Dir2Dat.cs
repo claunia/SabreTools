@@ -56,15 +56,15 @@ namespace RombaSharp.Features
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
             DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive);
-            Cleaner cleaner = new Cleaner();
-            cleaner.PopulateExclusionsFromList(new List<string> 
+            Remover remover = new Remover();
+            remover.PopulateExclusionsFromList(new List<string> 
             {
                 "DatItem.SHA256",
                 "DatItem.SHA384",
                 "DatItem.SHA512",
                 "DatItem.SpamSum",
             });
-            cleaner.ApplyCleaning(datfile);
+            remover.ApplyRemovals(datfile);
             Writer.Write(datfile, outdat);
         }
     }

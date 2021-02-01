@@ -10,7 +10,7 @@ namespace SabreTools.Filtering
     /// <summary>
     /// Represents the removal operations that need to be performed on a DatHeader
     /// </summary>
-    public class DatHeaderRemover : Remover
+    public class DatHeaderRemover
     {
         #region Fields
 
@@ -21,22 +21,13 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Constructors
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public DatHeaderRemover()
-        {
-            logger = new Logger(this);
-        }
-
-        #endregion
-
         #region Population
 
-        /// <inheritdoc/>
-        public override bool SetRemover(string field)
+        /// <summary>
+        /// Set remover from a value
+        /// </summary>
+        /// <param name="field">Key for the remover to be set</param>
+        public bool SetRemover(string field)
         {
             // If the key is null or empty, return false
             if (string.IsNullOrWhiteSpace(field))

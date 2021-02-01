@@ -11,60 +11,60 @@ namespace SabreTools.Test.Filtering
         [Fact]
         public void PassesFiltersDatItemFilterPass()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(new List<string> { "item.name:foo" });
+            // Setup filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(new List<string> { "item.name:foo" });
 
             // Setup DatItem
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = cleaner.PassesFilters(datItem);
+            bool actual = filter.PassesFilters(datItem);
             Assert.True(actual);
         }
 
         [Fact]
         public void PassesFiltersDatItemFilterFail()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(new List<string> { "item.name:bar" });
+            // Setup filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(new List<string> { "item.name:bar" });
 
             // Setup DatItem
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = cleaner.PassesFilters(datItem);
+            bool actual = filter.PassesFilters(datItem);
             Assert.False(actual);
         }
 
         [Fact]
         public void PassesFiltersMachineFilterPass()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(new List<string> { "machine.name:bar" });
+            // Setup filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(new List<string> { "machine.name:bar" });
 
             // Setup DatItem
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = cleaner.PassesFilters(datItem);
+            bool actual = filter.PassesFilters(datItem);
             Assert.True(actual);
         }
 
         [Fact]
         public void PassesFiltersMachineFilterFail()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner();
-            cleaner.PopulateFiltersFromList(new List<string> { "machine.name:foo" });
+            // Setup filter
+            var filter = new Filter();
+            filter.PopulateFiltersFromList(new List<string> { "machine.name:foo" });
 
             // Setup DatItem
             var datItem = CreateDatItem();
 
             // Run filters
-            bool actual = cleaner.PassesFilters(datItem);
+            bool actual = filter.PassesFilters(datItem);
             Assert.False(actual);
         }
 

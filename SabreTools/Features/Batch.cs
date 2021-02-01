@@ -159,8 +159,8 @@ Reset the internal state:           reset();";
 
                                 // TODO: We might not want to remove higher order hashes in the future
                                 // TODO: We might not want to remove dates in the future
-                                Cleaner dfdCleaner = new Cleaner();
-                                dfdCleaner.PopulateExclusionsFromList(new List<string> 
+                                Remover dfdRemover = new Remover();
+                                dfdRemover.PopulateExclusionsFromList(new List<string> 
                                 {
                                     "DatItem.SHA256",
                                     "DatItem.SHA384",
@@ -168,7 +168,7 @@ Reset the internal state:           reset();";
                                     "DatItem.SpamSum",
                                     "DatItem.Date",
                                 });
-                                dfdCleaner.ApplyCleaning(datFile);
+                                dfdRemover.ApplyRemovals(datFile);
 
                                 break;
 
@@ -213,18 +213,18 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Create cleaner to run filters from
-                                Cleaner filterCleaner = new Cleaner
+                                Filter filter = new Filter
                                 {
                                     MachineFilter = new MachineFilter(),
                                     DatItemFilter = new DatItemFilter(),
                                 };
 
                                 // Set the possible filters
-                                filterCleaner.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
-                                filterCleaner.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
+                                filter.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
+                                filter.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
 
                                 // Apply the filters blindly
-                                filterCleaner.ApplyFilters(datFile, filterPerMachine.Value);
+                                filter.ApplyFilters(datFile, filterPerMachine.Value);
 
                                 // Cleanup after the filter
                                 // TODO: We might not want to remove immediately
@@ -353,9 +353,9 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Run the removal functionality
-                                Cleaner remCleaner = new Cleaner();
-                                remCleaner.PopulateExclusionsFromList(command.Arguments);
-                                remCleaner.RemoveFieldsFromItems(datFile);
+                                Remover remover = new Remover();
+                                remover.PopulateExclusionsFromList(command.Arguments);
+                                remover.ApplyRemovals(datFile);
 
                                 break;
 

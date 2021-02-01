@@ -158,8 +158,9 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(datFile);
                     Splitter.ApplySplitting(datFile, false);
-                    Cleaner.ApplyFilters(datFile);
+                    Filter.ApplyFilters(datFile);
                     Cleaner.ApplyCleaning(datFile);
+                    Remover.ApplyRemovals(datFile);
 
                     // Get the correct output path
                     string realOutDir = inputPath.GetOutputPath(OutputDir, GetBoolean(features, InplaceValue));
@@ -196,8 +197,9 @@ namespace SabreTools.Features
             // Perform additional processing steps
             Extras.ApplyExtras(userInputDat);
             Splitter.ApplySplitting(userInputDat, false);
-            Cleaner.ApplyFilters(userInputDat);
+            Filter.ApplyFilters(userInputDat);
             Cleaner.ApplyCleaning(userInputDat);
+            Remover.ApplyRemovals(userInputDat);
 
             // Output only DatItems that are duplicated across inputs
             if (updateMode.HasFlag(UpdateMode.DiffDupesOnly))
@@ -288,8 +290,9 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, false);
-                    Cleaner.ApplyFilters(repDat);
+                    Filter.ApplyFilters(repDat);
                     Cleaner.ApplyCleaning(repDat);
+                    Remover.ApplyRemovals(repDat);
 
                     // Now replace the fields from the base DatFile
                     DatFileTool.DiffAgainst(userInputDat, repDat, GetBoolean(Features, ByGameValue));
@@ -313,8 +316,9 @@ namespace SabreTools.Features
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
                     Splitter.ApplySplitting(repDat, false);
-                    Cleaner.ApplyFilters(repDat);
+                    Filter.ApplyFilters(repDat);
                     Cleaner.ApplyCleaning(repDat);
+                    Remover.ApplyRemovals(repDat);
 
                     // Now replace the fields from the base DatFile
                     DatFileTool.BaseReplace(

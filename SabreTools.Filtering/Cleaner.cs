@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
-using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Logging;
@@ -22,35 +21,7 @@ namespace SabreTools.Filtering
 
     public class Cleaner
     {
-        #region Exclusion Fields
-
-        /// <summary>
-        /// DatItemRemover to remove fields from DatHeaders
-        /// </summary>
-        public DatHeaderRemover DatHeaderRemover { get; set; }
-
-        /// <summary>
-        /// DatItemRemover to remove fields from DatItems
-        /// </summary>
-        public DatItemRemover DatItemRemover { get; set; }
-
-        #endregion
-
-        #region Filter Fields
-
-        /// <summary>
-        /// Filter for DatItem fields
-        /// </summary>
-        public DatItemFilter DatItemFilter { get; set; }
-
-        /// <summary>
-        /// Filter for Machine fields
-        /// </summary>
-        public MachineFilter MachineFilter { get; set; }
-
-        #endregion
-
-        #region Flag Fields
+        #region Fields
 
         /// <summary>
         /// Clean all names to WoD standards
@@ -123,87 +94,7 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Population
-
-        /// <summary>
-        /// Populate the exclusion objects using a set of field names
-        /// </summary>
-        /// <param name="fields">List of field names</param>
-        public void PopulateExclusionsFromList(List<string> fields)
-        {
-            // Instantiate the removers, if necessary
-            DatHeaderRemover ??= new DatHeaderRemover();
-            DatItemRemover ??= new DatItemRemover();
-
-            // If the list is null or empty, just return
-            if (fields == null || fields.Count == 0)
-                return;
-
-            foreach (string field in fields)
-            {                
-                // If we don't even have a possible field name
-                if (field == null)
-                    continue;
-
-                // DatHeader fields
-                if (DatHeaderRemover.SetRemover(field))
-                    continue;
-
-                // Machine and DatItem fields
-                if (DatItemRemover.SetRemover(field))
-                    continue;
-
-                // If we didn't match anything, log an error
-                logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
-            }
-        }
-
-        /// <summary>
-        /// Populate the filters objects using a set of key:value filters
-        /// </summary>
-        /// <param name="filters">List of key:value where ~key/!key is negated</param>
-        public void PopulateFiltersFromList(List<string> filters)
-        {
-            // Instantiate the filters, if necessary
-            MachineFilter ??= new MachineFilter();
-            DatItemFilter ??= new DatItemFilter();
-
-            // If the list is null or empty, just return
-            if (filters == null || filters.Count == 0)
-                return;
-
-            foreach (string filterPair in filters)
-            {
-                (string field, string value, bool negate) = ProcessFilterPair(filterPair);
-                
-                // If we don't even have a possible filter pair
-                if (field == null && value == null)
-                    continue;
-
-                // Machine fields
-                MachineField machineField = field.AsMachineField();
-                if (machineField != MachineField.NULL)
-                {
-                    MachineFilter.SetFilter(machineField, value, negate);
-                    continue;
-                }
-
-                // DatItem fields
-                DatItemField datItemField = field.AsDatItemField();
-                if (datItemField != DatItemField.NULL)
-                {
-                    DatItemFilter.SetFilter(datItemField, value, negate);
-                    continue;
-                }
-
-                // If we didn't match anything, log an error
-                logger.Warning($"The value {field} did not match any filterable field names. Please check the wiki for more details on supported field names.");
-            }
-        }
-
-        #endregion
-    
-        #region Cleaning
+        #region Running
 
         /// <summary>
         /// Apply cleaning methods to the DatFile
@@ -239,9 +130,6 @@ namespace SabreTools.Filtering
                 // Run the one rom per game logic, if required
                 if (OneRomPerGame == true)
                     SetOneRomPerGame(datFile);
-
-                // If we are removing fields, do that now
-                RemoveFieldsFromItems(datFile);
 
                 // Remove all marked items
                 datFile.Items.ClearMarked();
@@ -688,165 +576,6 @@ namespace SabreTools.Filtering
                 datFile.Items.Remove(key);
                 datFile.Items.AddRange(key, items);
             });
-        }
-
-        #endregion
-
-        #region Filtering
-
-        /// <summary>
-        /// Apply a set of Filters on the DatFile
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to run operations on</param>
-        /// <param name="perMachine">True if entire machines are considered, false otherwise (default)</param>
-        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
-        /// <returns>True if the DatFile was filtered, false on error</returns>
-        public bool ApplyFilters(DatFile datFile, bool perMachine = false, bool throwOnError = false)
-        {
-            // If we have null filters, return false
-            if (MachineFilter == null || DatItemFilter == null)
-                return false;
-
-            // If we're filtering per machine, bucket by machine first
-            if (perMachine)
-                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
-
-            try
-            {
-                // Loop over every key in the dictionary
-                List<string> keys = datFile.Items.Keys.ToList();
-                foreach (string key in keys)
-                {
-                    // For every item in the current key
-                    bool machinePass = true;
-                    List<DatItem> items = datFile.Items[key];
-                    foreach (DatItem item in items)
-                    {
-                        // If we have a null item, we can't pass it
-                        if (item == null)
-                            continue;
-
-                        // If the item is already filtered out, we skip
-                        if (item.Remove)
-                            continue;
-
-                        // If the rom doesn't pass the filter, mark for removal
-                        if (!PassesFilters(item))
-                        {
-                            item.Remove = true;
-
-                            // If we're in machine mode, set and break
-                            if (perMachine)
-                            {
-                                machinePass = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    // If we didn't pass and we're in machine mode, set all items as remove
-                    if (perMachine && !machinePass)
-                    {
-                        foreach (DatItem item in items)
-                        {
-                            item.Remove = true;
-                        }
-                    }
-
-                    // Assign back for caution
-                    datFile.Items[key] = items;
-                }
-            }
-            catch (Exception ex) when (!throwOnError)
-            {
-                logger.Error(ex);
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Check to see if a DatItem passes the filters
-        /// </summary>
-        /// <param name="datItem">DatItem to check</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        internal bool PassesFilters(DatItem datItem)
-        {
-            // Null item means it will never pass
-            if (datItem == null)
-                return false;
-
-            // Filter on Machine fields
-            if (!MachineFilter.PassesFilters(datItem.Machine))
-                return false;
-
-            // Filter on DatItem fields
-            return DatItemFilter.PassesFilters(datItem);
-        }
-
-        /// <summary>
-        /// Split the parts of a filter statement
-        /// </summary>
-        /// <param name="filter">key:value where ~key/!key is negated</param>
-        private (string field, string value, bool negate) ProcessFilterPair(string filter)
-        {
-            // If we don't even have a possible filter pair
-            if (!filter.Contains(":"))
-            {
-                logger.Warning($"'{filter}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
-                return (null, null, false);
-            }
-
-            string filterTrimmed = filter.Trim('"', ' ', '\t');
-            bool negate = filterTrimmed.StartsWith("!")
-                || filterTrimmed.StartsWith("~")
-                || filterTrimmed.StartsWith("not-");
-            filterTrimmed = filterTrimmed.TrimStart('!', '~');
-            filterTrimmed = filterTrimmed.StartsWith("not-") ? filterTrimmed[4..] : filterTrimmed;
-
-            string filterFieldString = filterTrimmed.Split(':')[0].ToLowerInvariant().Trim('"', ' ', '\t');
-            string filterValue = filterTrimmed[(filterFieldString.Length + 1)..].Trim('"', ' ', '\t');
-        
-            return (filterFieldString, filterValue, negate);
-        }
-
-        #endregion
-    
-        #region Removal
-
-        /// <summary>
-        /// Remove fields as per the header
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to run operations on</param>
-        public void RemoveFieldsFromItems(DatFile datFile)
-        {
-            // If the removers don't exist, we can't use it
-            if (DatHeaderRemover == null && DatItemRemover == null)
-                return;
-
-            // Output the logging statement
-            logger.User("Removing filtered fields");
-
-            // Remove DatHeader fields
-            if (DatHeaderRemover != null)
-                DatHeaderRemover.RemoveFields(datFile.Header);
-
-            // Remove DatItem and Machine fields
-            if (DatItemRemover != null)
-            {
-                Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
-                {
-                    List<DatItem> items = datFile.Items[key];
-                    for (int j = 0; j < items.Count; j++)
-                    {
-                        DatItemRemover.RemoveFields(items[j]);
-                    }
-
-                    datFile.Items.Remove(key);
-                    datFile.Items.AddRange(key, items);
-                });
-            }
         }
 
         #endregion
