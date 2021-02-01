@@ -22,9 +22,9 @@ namespace SabreTools.Filtering
         public DatItemField DatItemField { get; set; } = DatItemField.NULL;
 
         /// <summary>
-        /// Mappings from value to machine name
+        /// Mappings from machine names to value
         /// </summary>
-        public Dictionary<string, List<string>> Mappings { get; set; } = new Dictionary<string, List<string>>();
+        public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>();
 
         #endregion
 
@@ -77,22 +77,18 @@ namespace SabreTools.Filtering
                     // If we have a value, then we start populating the dictionary
                     else if (foundRootFolder)
                     {
-                        // Get the key and value
-                        string key = ir.Section;
-                        string value = ir.CurrentLine.Trim();
+                        // Get the value and machine name
+                        string value = ir.Section;
+                        string machineName = ir.CurrentLine.Trim();
 
                         // If the section is "ROOT_FOLDER", then we use the value "true" instead.
                         // This is done because some INI files use the name of the file as the
                         // category to be assigned to the items included.
-                        if (key == "ROOT_FOLDER")
-                            key = "true";
-
-                        // Ensure the key exists
-                        if (!Mappings.ContainsKey(key))
-                            Mappings[key] = new List<string>();
+                        if (value == "ROOT_FOLDER")
+                            value = "true";
 
                         // Add the new mapping
-                        Mappings[key].Add(value);
+                        Mappings[machineName] = value;
                     }
                 }
             }

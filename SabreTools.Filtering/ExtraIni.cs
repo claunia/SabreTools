@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles;
@@ -88,67 +88,38 @@ namespace SabreTools.Filtering
                 // Bucket by game first
                 datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
 
-                // Create a new set of mappings based on the items
-                var machineMap = new Dictionary<string, Dictionary<MachineField, string>>();
-                var datItemMap = new Dictionary<string, Dictionary<DatItemField, string>>();
+                // Create mappings based on the extra items
+                var combinedMachineMaps = CombineMachineExtras();
+                var combinedDatItemMaps = CombineDatItemExtras();
 
-                // Loop through each of the extras
-                foreach (ExtraIniItem item in Items)
-                {
-                    foreach (var mapping in item.Mappings)
-                    {
-                        string key = mapping.Key;
-                        List<string> machineNames = mapping.Value;
+                // Now get the combined set of keys
+                var machines = combinedMachineMaps.Keys.Concat(combinedDatItemMaps.Keys).Distinct();
 
-                        // Loop through the machines and add the new mappings
-                        foreach (string machine in machineNames)
-                        {
-                            if (item.MachineField != MachineField.NULL)
-                            {
-                                if (!machineMap.ContainsKey(machine))
-                                    machineMap[machine] = new Dictionary<MachineField, string>();
-
-                                machineMap[machine][item.MachineField] = key;
-                            }
-                            else if (item.DatItemField != DatItemField.NULL)
-                            {
-                                if (!datItemMap.ContainsKey(machine))
-                                    datItemMap[machine] = new Dictionary<DatItemField, string>();
-
-                                datItemMap[machine][item.DatItemField] = key;
-                            }
-                        }
-                    }
-                }
-
-                // Now apply the new set of Machine mappings
-                foreach (string key in machineMap.Keys)
+                // Apply the mappings
+                foreach (string machine in machines)
                 {
                     // If the key doesn't exist, continue
-                    if (!datFile.Items.ContainsKey(key))
+                    if (!datFile.Items.ContainsKey(machine))
                         continue;
 
-                    List<DatItem> datItems = datFile.Items[key];
-                    Setter setter = new Setter { MachineMappings = machineMap[key] };
+                    // Get the list of DatItems for the machine
+                    List<DatItem> datItems = datFile.Items[machine];
 
+                    // Try to get the map values, if possible
+                    combinedMachineMaps.TryGetValue(machine, out Dictionary<MachineField, string> machineMappings);
+                    combinedDatItemMaps.TryGetValue(machine, out Dictionary<DatItemField, string> datItemMappings);
+
+                    // Create a setter with the new mappings
+                    Setter setter = new Setter
+                    {
+                        MachineMappings = machineMappings,
+                        DatItemMappings = datItemMappings,
+                    };
+
+                    // Loop through and set the fields accordingly
                     foreach (var datItem in datItems)
                     {
                         setter.SetFields(datItem.Machine);
-                    }
-                }
-
-                // Now apply the new set of DatItem mappings
-                foreach (string key in datItemMap.Keys)
-                {
-                    // If the key doesn't exist, continue
-                    if (!datFile.Items.ContainsKey(key))
-                        continue;
-
-                    List<DatItem> datItems = datFile.Items[key];
-                    Setter setter = new Setter { DatItemMappings = datItemMap[key] };
-
-                    foreach (var datItem in datItems)
-                    {
                         setter.SetFields(datItem);
                     }
                 }
@@ -160,6 +131,58 @@ namespace SabreTools.Filtering
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Combine MachineField-based ExtraIni fields
+        /// </summary>
+        /// <returns>Mapping dictionary from machine name to field mapping</returns>
+        private Dictionary<string, Dictionary<MachineField, string>> CombineMachineExtras()
+        {
+            var machineMap = new Dictionary<string, Dictionary<MachineField, string>>();
+
+            // Loop through each of the extras
+            foreach (ExtraIniItem item in Items.Where(i => i.MachineField != MachineField.NULL))
+            {
+                foreach (var mapping in item.Mappings)
+                {
+                    string machineName = mapping.Key;
+                    string value = mapping.Value;
+                        
+                    machineMap[machineName] = new Dictionary<MachineField, string>
+                    {
+                        [item.MachineField] = value,
+                    };
+                }
+            }
+
+            return machineMap;
+        }
+
+        /// <summary>
+        /// Combine DatItemField-based ExtraIni fields
+        /// </summary>
+        /// <returns>Mapping dictionary from machine name to field mapping</returns>
+        private Dictionary<string, Dictionary<DatItemField, string>> CombineDatItemExtras()
+        {
+            var datItemMap = new Dictionary<string, Dictionary<DatItemField, string>>();
+
+            // Loop through each of the extras
+            foreach (ExtraIniItem item in Items.Where(i => i.DatItemField != DatItemField.NULL))
+            {
+                foreach (var mapping in item.Mappings)
+                {
+                    string machineName = mapping.Key;
+                    string value = mapping.Value;
+                        
+                    datItemMap[machineName] = new Dictionary<DatItemField, string>()
+                    {
+                        [item.DatItemField] = value,
+                    };
+                }
+            }
+
+            return datItemMap;
         }
 
         #endregion
