@@ -10,7 +10,7 @@ namespace SabreTools.DatItems
     /// <summary>
     /// Set fields on DatItems
     /// </summary>
-    public static class DatItemTool
+    public static class Setter
     {
         /// <summary>
         /// Set fields with given values

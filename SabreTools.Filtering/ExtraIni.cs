@@ -133,7 +133,7 @@ namespace SabreTools.Filtering
 
                     foreach (var datItem in datItems)
                     {
-                        DatItemTool.SetFields(datItem.Machine, mappings);
+                        Setter.SetFields(datItem.Machine, mappings);
                     }
                 }
 
@@ -149,7 +149,7 @@ namespace SabreTools.Filtering
 
                     foreach (var datItem in datItems)
                     {
-                        DatItemTool.SetFields(datItem, mappings, null);
+                        Setter.SetFields(datItem, mappings, null);
                     }
                 }
             }

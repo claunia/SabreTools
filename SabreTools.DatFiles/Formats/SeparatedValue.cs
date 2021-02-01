@@ -99,7 +99,7 @@ namespace SabreTools.DatFiles.Formats
                     if (datItemMappings.ContainsKey(DatItemField.Type))
                     {
                         DatItem datItem = DatItem.Create(datItemMappings[DatItemField.Type].AsItemType());
-                        DatItemTool.SetFields(datItem, datItemMappings, machineMappings);
+                        Setter.SetFields(datItem, datItemMappings, machineMappings);
                         datItem.Source = new Source(indexId, filename);
                         ParseAddHelper(datItem, statsOnly);
                     }

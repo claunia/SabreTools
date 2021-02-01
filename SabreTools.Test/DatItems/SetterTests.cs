@@ -6,14 +6,14 @@ using Xunit;
 
 namespace SabreTools.Test.DatItems
 {
-    public class DatItemToolTests
+    public class SetterTests
     {
         [Fact]
         public void SetFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
             var mappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" };
-            DatItemTool.SetFields(datItem, mappings, null);
+            Setter.SetFields(datItem, mappings, null);
             Assert.Equal("bar", datItem.GetName());
         }
 
@@ -22,7 +22,7 @@ namespace SabreTools.Test.DatItems
         {
             var datItem = CreateDatItem();
             var mappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" };
-            DatItemTool.SetFields(datItem, null, mappings);
+            Setter.SetFields(datItem, null, mappings);
             Assert.Equal("foo", datItem.Machine.Name);
         }
 
