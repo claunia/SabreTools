@@ -14,7 +14,7 @@ namespace SabreTools.DatTools
     /// <summary>
     /// Helper methods for updating and converting DatFiles
     /// </summary>
-    public class DatFileTool
+    public static class DatFileTool
     {
         #region Logging
 
@@ -24,6 +24,40 @@ namespace SabreTools.DatTools
         private static readonly Logger logger = new Logger();
 
         #endregion
+
+        /// <summary>
+        /// Apply SuperDAT naming logic to a merged DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="inputs">List of inputs to use for renaming</param>
+        public static void ApplySuperDAT(DatFile datFile, List<ParentablePath> inputs)
+        {
+            List<string> keys = datFile.Items.Keys.ToList();
+            Parallel.ForEach(keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = datFile.Items[key].ToList();
+                List<DatItem> newItems = new List<DatItem>();
+                foreach (DatItem item in items)
+                {
+                    DatItem newItem = item;
+                    string filename = inputs[newItem.Source.Index].CurrentPath;
+                    string rootpath = inputs[newItem.Source.Index].ParentPath;
+
+                    if (!string.IsNullOrWhiteSpace(rootpath))
+                        rootpath += Path.DirectorySeparatorChar.ToString();
+
+                    filename = filename.Remove(0, rootpath.Length);
+                    newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
+                        + Path.GetFileNameWithoutExtension(filename) + Path.DirectorySeparatorChar
+                        + newItem.Machine.Name;
+
+                    newItems.Add(newItem);
+                }
+
+                datFile.Items.Remove(key);
+                datFile.Items.AddRange(key, newItems);
+            });
+        }
 
         /// <summary>
         /// Replace item values from the base set represented by the current DAT

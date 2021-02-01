@@ -207,7 +207,7 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Filter Population
+        #region Population
 
         /// <summary>
         /// Set multiple filters from key
@@ -763,7 +763,7 @@ namespace SabreTools.Filtering
     
         #endregion
     
-        #region Filter Running
+        #region Running
 
         /// <summary>
         /// Check to see if a DatItem passes the filters

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
@@ -62,10 +61,10 @@ namespace SabreTools.Features
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var includeInScan = GetIncludeInScan(features);
             var skipFileType = GetSkipFileType(features);
-            var splitType = GetSplitType(features);
 
             // Apply the specialized field removals to the cleaner
-            Cleaner.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
+            if (!addFileDates)
+                Cleaner.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
 
             // Create a new DATFromDir object and process the inputs
             DatFile basedat = DatFile.Create(Header);
@@ -95,10 +94,10 @@ namespace SabreTools.Features
                     if (success)
                     {
                         // Perform additional processing steps
-                        Modification.ApplyExtras(datdata, Extras);
-                        Modification.ApplySplitting(datdata, splitType, false);
-                        Modification.ApplyFilters(datdata, Cleaner);
-                        Modification.ApplyCleaning(datdata, Cleaner);
+                        Extras.ApplyExtras(datdata);
+                        Splitter.ApplySplitting(datdata, false);
+                        Cleaner.ApplyFilters(datdata);
+                        Cleaner.ApplyCleaning(datdata);
 
                         // Write out the file
                         Writer.Write(datdata, OutputDir);

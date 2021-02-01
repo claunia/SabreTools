@@ -38,7 +38,7 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Remover Population
+        #region Population
 
         /// <inheritdoc/>
         public override bool SetRemover(string field)
@@ -68,7 +68,7 @@ namespace SabreTools.Filtering
 
         #endregion
 
-        #region Remover Running
+        #region Running
 
         /// <summary>
         /// Remove fields with given values

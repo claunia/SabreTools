@@ -1735,6 +1735,11 @@ Some special strings that can be used:
         /// </summary>
         protected string OutputDir { get; set; }
 
+        /// <summary>
+        /// Pre-configured Splitter
+        /// </summary>
+        protected Filtering.Splitter Splitter { get; set; }
+
         #endregion
 
         #region Add Feature Groups
@@ -1801,6 +1806,7 @@ Some special strings that can be used:
             Extras = GetExtras(features);
             Header = GetDatHeader(features);
             OutputDir = GetString(features, OutputDirStringValue);
+            Splitter = GetSplitter(features);
 
             // Set threading flag, if necessary
             if (features.ContainsKey(ThreadsInt32Value))
@@ -1893,26 +1899,6 @@ Some special strings that can be used:
                 splittingMode |= SplittingMode.Type;
 
             return splittingMode;
-        }
-
-        /// <summary>
-        /// Get SplitType from feature list
-        /// </summary>
-        protected MergingFlag GetSplitType(Dictionary<string, Feature> features)
-        {
-            MergingFlag splitType = MergingFlag.None;
-            if (GetBoolean(features, DatDeviceNonMergedValue))
-                splitType = MergingFlag.Device;
-            else if (GetBoolean(features, DatFullNonMergedValue))
-                splitType = MergingFlag.Full;
-            else if (GetBoolean(features, DatMergedValue))
-                splitType = MergingFlag.Merged;
-            else if (GetBoolean(features, DatNonMergedValue))
-                splitType = MergingFlag.NonMerged;
-            else if (GetBoolean(features, DatSplitValue))
-                splitType = MergingFlag.Split;
-
-            return splitType;
         }
 
         /// <summary>
@@ -2133,6 +2119,38 @@ Some special strings that can be used:
             ExtraIni extraIni = new ExtraIni();
             extraIni.PopulateFromList(GetList(features, ExtraIniListValue));
             return extraIni;
+        }
+
+        /// <summary>
+        /// Get Splitter from feature list
+        /// </summary>
+        private Filtering.Splitter GetSplitter(Dictionary<string, Feature> features)
+        {
+            Filtering.Splitter splitter = new Filtering.Splitter
+            {
+                SplitType = GetSplitType(features),
+            };
+            return splitter;
+        }
+
+        /// <summary>
+        /// Get SplitType from feature list
+        /// </summary>
+        private MergingFlag GetSplitType(Dictionary<string, Feature> features)
+        {
+            MergingFlag splitType = MergingFlag.None;
+            if (GetBoolean(features, DatDeviceNonMergedValue))
+                splitType = MergingFlag.Device;
+            else if (GetBoolean(features, DatFullNonMergedValue))
+                splitType = MergingFlag.Full;
+            else if (GetBoolean(features, DatMergedValue))
+                splitType = MergingFlag.Merged;
+            else if (GetBoolean(features, DatNonMergedValue))
+                splitType = MergingFlag.NonMerged;
+            else if (GetBoolean(features, DatSplitValue))
+                splitType = MergingFlag.Split;
+
+            return splitType;
         }
 
         #endregion

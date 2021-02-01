@@ -64,7 +64,7 @@ namespace RombaSharp.Features
                 "DatItem.SHA512",
                 "DatItem.SpamSum",
             });
-            Modification.ApplyCleaning(datfile, cleaner);
+            cleaner.ApplyCleaning(datfile);
             Writer.Write(datfile, outdat);
         }
     }

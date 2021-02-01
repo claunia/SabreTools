@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -10,11 +13,13 @@ using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.Logging;
 
+[assembly: InternalsVisibleTo("SabreTools.Test")]
 namespace SabreTools.Filtering
 {
     /// <summary>
     /// Represents the cleaning operations that need to be performed on a set of items, usually a DAT
     /// </summary>
+
     public class Cleaner
     {
         #region Exclusion Fields
@@ -201,10 +206,90 @@ namespace SabreTools.Filtering
         #region Cleaning
 
         /// <summary>
+        /// Apply cleaning methods to the DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>True if cleaning was successful, false on error</returns>
+        public bool ApplyCleaning(DatFile datFile, bool throwOnError = false)
+        {
+            try
+            {
+                // Perform item-level cleaning
+                CleanDatItems(datFile);
+
+                // Bucket and dedupe according to the flag
+                if (DedupeRoms == DedupeType.Full)
+                    datFile.Items.BucketBy(ItemKey.CRC, DedupeRoms);
+                else if (DedupeRoms == DedupeType.Game)
+                    datFile.Items.BucketBy(ItemKey.Machine, DedupeRoms);
+
+                // Process description to machine name
+                if (DescriptionAsName == true)
+                    MachineDescriptionToName(datFile);
+
+                // If we are removing scene dates, do that now
+                if (SceneDateStrip == true)
+                    StripSceneDatesFromItems(datFile);
+
+                // Run the one rom per game logic, if required
+                if (OneGamePerRegion == true)
+                    SetOneGamePerRegion(datFile);
+
+                // Run the one rom per game logic, if required
+                if (OneRomPerGame == true)
+                    SetOneRomPerGame(datFile);
+
+                // If we are removing fields, do that now
+                RemoveFieldsFromItems(datFile);
+
+                // Remove all marked items
+                datFile.Items.ClearMarked();
+
+                // We remove any blanks, if we aren't supposed to have any
+                if (KeepEmptyGames == false)
+                    datFile.Items.ClearEmpty();
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Clean individual items based on the current filter
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal void CleanDatItems(DatFile datFile)
+        {
+            List<string> keys = datFile.Items.Keys.ToList();
+            foreach (string key in keys)
+            {
+                // For every item in the current key
+                List<DatItem> items = datFile.Items[key];
+                foreach (DatItem item in items)
+                {
+                    // If we have a null item, we can't clean it it
+                    if (item == null)
+                        continue;
+
+                    // Run cleaning per item
+                    CleanDatItem(item);
+                }
+
+                // Assign back for caution
+                datFile.Items[key] = items;
+            }
+        }
+
+        /// <summary>
         /// Clean a DatItem according to the cleaner
         /// </summary>
         /// <param name="datItem">DatItem to clean</param>
-        public void CleanDatItem(DatItem datItem)
+        internal void CleanDatItem(DatItem datItem)
         {
             // If we're stripping unicode characters, strip machine name and description
             if (RemoveUnicode)
@@ -243,7 +328,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="game">Name of the game to be cleaned</param>
         /// <returns>The cleaned name</returns>
-        private string CleanGameName(string game)
+        internal string CleanGameName(string game)
         {
             if (game == null)
                 return null;
@@ -259,11 +344,70 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
+        /// Use game descriptions as names in the DAT, updating cloneof/romof/sampleof
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        internal void MachineDescriptionToName(DatFile datFile, bool throwOnError = false)
+        {
+            try
+            {
+                // First we want to get a mapping for all games to description
+                ConcurrentDictionary<string, string> mapping = new ConcurrentDictionary<string, string>();
+                Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+                {
+                    List<DatItem> items = datFile.Items[key];
+                    foreach (DatItem item in items)
+                    {
+                        // If the key mapping doesn't exist, add it
+                        mapping.TryAdd(item.Machine.Name, item.Machine.Description.Replace('/', '_').Replace("\"", "''").Replace(":", " -"));
+                    }
+                });
+
+                // Now we loop through every item and update accordingly
+                Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+                {
+                    List<DatItem> items = datFile.Items[key];
+                    List<DatItem> newItems = new List<DatItem>();
+                    foreach (DatItem item in items)
+                    {
+                        // Update machine name
+                        if (!string.IsNullOrWhiteSpace(item.Machine.Name) && mapping.ContainsKey(item.Machine.Name))
+                            item.Machine.Name = mapping[item.Machine.Name];
+
+                        // Update cloneof
+                        if (!string.IsNullOrWhiteSpace(item.Machine.CloneOf) && mapping.ContainsKey(item.Machine.CloneOf))
+                            item.Machine.CloneOf = mapping[item.Machine.CloneOf];
+
+                        // Update romof
+                        if (!string.IsNullOrWhiteSpace(item.Machine.RomOf) && mapping.ContainsKey(item.Machine.RomOf))
+                            item.Machine.RomOf = mapping[item.Machine.RomOf];
+
+                        // Update sampleof
+                        if (!string.IsNullOrWhiteSpace(item.Machine.SampleOf) && mapping.ContainsKey(item.Machine.SampleOf))
+                            item.Machine.SampleOf = mapping[item.Machine.SampleOf];
+
+                        // Add the new item to the output list
+                        newItems.Add(item);
+                    }
+
+                    // Replace the old list of roms with the new one
+                    datFile.Items.Remove(key);
+                    datFile.Items.AddRange(key, newItems);
+                });
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Warning(ex.ToString());
+            }
+        }
+
+        /// <summary>
         /// Replace accented characters
         /// </summary>
         /// <param name="input">String to be parsed</param>
         /// <returns>String with characters replaced</returns>
-        private string NormalizeChars(string input)
+        internal string NormalizeChars(string input)
         {
             if (input == null)
                 return null;
@@ -319,7 +463,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="s">Input string to clean</param>
         /// <returns>Cleaned string</returns>
-        private string RemoveUnicodeCharacters(string s)
+        internal string RemoveUnicodeCharacters(string s)
         {
             if (s == null)
                 return null;
@@ -332,7 +476,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="input">String to be parsed</param>
         /// <returns>String with characters replaced</returns>
-        private string RussianToLatin(string input)
+        internal string RussianToLatin(string input)
         {
             if (input == null)
                 return null;
@@ -367,7 +511,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="input">String to be parsed</param>
         /// <returns>String with characters replaced</returns>
-        private string SearchPattern(string input)
+        internal string SearchPattern(string input)
         {
             if (input == null)
                 return null;
@@ -409,9 +553,237 @@ namespace SabreTools.Filtering
             return input;
         }
 
+        /// <summary>
+        /// Filter a DAT using 1G1R logic given an ordered set of regions
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <remarks>
+        /// In the most technical sense, the way that the region list is being used does not
+        /// confine its values to be just regions. Since it's essentially acting like a
+        /// specialized version of the machine name filter, anything that is usually encapsulated
+        /// in parenthesis would be matched on, including disc numbers, languages, editions,
+        /// and anything else commonly used. Please note that, unlike other existing 1G1R 
+        /// solutions, this does not have the ability to contain custom mappings of parent
+        /// to clone sets based on name, nor does it have the ability to match on the 
+        /// Release DatItem type.
+        /// </remarks>
+        internal void SetOneGamePerRegion(DatFile datFile)
+        {
+            // If we have null region list, make it empty
+            if (RegionList == null)
+                RegionList = new List<string>();
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Then we want to get a mapping of all machines to parents
+            Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
+            foreach (string key in datFile.Items.Keys)
+            {
+                DatItem item = datFile.Items[key][0];
+
+                // Match on CloneOf first
+                if (!string.IsNullOrEmpty(item.Machine.CloneOf))
+                {
+                    if (!parents.ContainsKey(item.Machine.CloneOf.ToLowerInvariant()))
+                        parents.Add(item.Machine.CloneOf.ToLowerInvariant(), new List<string>());
+
+                    parents[item.Machine.CloneOf.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
+                }
+
+                // Then by RomOf
+                else if (!string.IsNullOrEmpty(item.Machine.RomOf))
+                {
+                    if (!parents.ContainsKey(item.Machine.RomOf.ToLowerInvariant()))
+                        parents.Add(item.Machine.RomOf.ToLowerInvariant(), new List<string>());
+
+                    parents[item.Machine.RomOf.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
+                }
+
+                // Otherwise, treat it as a parent
+                else
+                {
+                    if (!parents.ContainsKey(item.Machine.Name.ToLowerInvariant()))
+                        parents.Add(item.Machine.Name.ToLowerInvariant(), new List<string>());
+
+                    parents[item.Machine.Name.ToLowerInvariant()].Add(item.Machine.Name.ToLowerInvariant());
+                }
+            }
+
+            // Once we have the full list of mappings, filter out games to keep
+            foreach (string key in parents.Keys)
+            {
+                // Find the first machine that matches the regions in order, if possible
+                string machine = default;
+                foreach (string region in RegionList)
+                {
+                    machine = parents[key].FirstOrDefault(m => Regex.IsMatch(m, @"\(.*" + region + @".*\)", RegexOptions.IgnoreCase));
+                    if (machine != default)
+                        break;
+                }
+
+                // If we didn't get a match, use the parent
+                if (machine == default)
+                    machine = key;
+
+                // Remove the key from the list
+                parents[key].Remove(machine);
+
+                // Remove the rest of the items from this key
+                parents[key].ForEach(k => datFile.Items.Remove(k));
+            }
+
+            // Finally, strip out the parent tags
+            Splitter.RemoveTagsFromChild(datFile);
+        }
+
+        /// <summary>
+        /// Ensure that all roms are in their own game (or at least try to ensure)
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal void SetOneRomPerGame(DatFile datFile)
+        {
+            // Because this introduces subfolders, we need to set the SuperDAT type
+            datFile.Header.Type = "SuperDAT";
+
+            // For each rom, we want to update the game to be "<game name>/<rom name>"
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = datFile.Items[key];
+                for (int i = 0; i < items.Count; i++)
+                {
+                    DatItemTool.SetOneRomPerGame(items[i]);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Strip the dates from the beginning of scene-style set names
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal void StripSceneDatesFromItems(DatFile datFile)
+        {
+            // Output the logging statement
+            logger.User("Stripping scene-style dates");
+
+            // Set the regex pattern to use
+            string pattern = @"([0-9]{2}\.[0-9]{2}\.[0-9]{2}-)(.*?-.*?)";
+
+            // Now process all of the roms
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = datFile.Items[key];
+                for (int j = 0; j < items.Count; j++)
+                {
+                    DatItem item = items[j];
+                    if (Regex.IsMatch(item.Machine.Name, pattern))
+                        item.Machine.Name = Regex.Replace(item.Machine.Name, pattern, "$2");
+
+                    if (Regex.IsMatch(item.Machine.Description, pattern))
+                        item.Machine.Description = Regex.Replace(item.Machine.Description, pattern, "$2");
+
+                    items[j] = item;
+                }
+
+                datFile.Items.Remove(key);
+                datFile.Items.AddRange(key, items);
+            });
+        }
+
         #endregion
 
         #region Filtering
+
+        /// <summary>
+        /// Apply a set of Filters on the DatFile
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        /// <param name="perMachine">True if entire machines are considered, false otherwise (default)</param>
+        /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
+        /// <returns>True if the DatFile was filtered, false on error</returns>
+        public bool ApplyFilters(DatFile datFile, bool perMachine = false, bool throwOnError = false)
+        {
+            // If we have null filters, return false
+            if (MachineFilter == null || DatItemFilter == null)
+                return false;
+
+            // If we're filtering per machine, bucket by machine first
+            if (perMachine)
+                datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+
+            try
+            {
+                // Loop over every key in the dictionary
+                List<string> keys = datFile.Items.Keys.ToList();
+                foreach (string key in keys)
+                {
+                    // For every item in the current key
+                    bool machinePass = true;
+                    List<DatItem> items = datFile.Items[key];
+                    foreach (DatItem item in items)
+                    {
+                        // If we have a null item, we can't pass it
+                        if (item == null)
+                            continue;
+
+                        // If the item is already filtered out, we skip
+                        if (item.Remove)
+                            continue;
+
+                        // If the rom doesn't pass the filter, mark for removal
+                        if (!PassesFilters(item))
+                        {
+                            item.Remove = true;
+
+                            // If we're in machine mode, set and break
+                            if (perMachine)
+                            {
+                                machinePass = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    // If we didn't pass and we're in machine mode, set all items as remove
+                    if (perMachine && !machinePass)
+                    {
+                        foreach (DatItem item in items)
+                        {
+                            item.Remove = true;
+                        }
+                    }
+
+                    // Assign back for caution
+                    datFile.Items[key] = items;
+                }
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check to see if a DatItem passes the filters
+        /// </summary>
+        /// <param name="datItem">DatItem to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        internal bool PassesFilters(DatItem datItem)
+        {
+            // Null item means it will never pass
+            if (datItem == null)
+                return false;
+
+            // Filter on Machine fields
+            if (!MachineFilter.PassesFilters(datItem.Machine))
+                return false;
+
+            // Filter on DatItem fields
+            return DatItemFilter.PassesFilters(datItem);
+        }
 
         /// <summary>
         /// Split the parts of a filter statement
@@ -437,25 +809,6 @@ namespace SabreTools.Filtering
             string filterValue = filterTrimmed[(filterFieldString.Length + 1)..].Trim('"', ' ', '\t');
         
             return (filterFieldString, filterValue, negate);
-        }
-
-        /// <summary>
-        /// Check to see if a DatItem passes the filters
-        /// </summary>
-        /// <param name="datItem">DatItem to check</param>
-        /// <returns>True if the item passed the filter, false otherwise</returns>
-        public bool PassesFilters(DatItem datItem)
-        {
-            // Null item means it will never pass
-            if (datItem == null)
-                return false;
-
-            // Filter on Machine fields
-            if (!MachineFilter.PassesFilters(datItem.Machine))
-                return false;
-
-            // Filter on DatItem fields
-            return DatItemFilter.PassesFilters(datItem);
         }
 
         #endregion

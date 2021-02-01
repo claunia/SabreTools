@@ -50,7 +50,6 @@ namespace SabreTools.Features
             TreatAsFile asFiles = GetTreatAsFiles(features);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
-            var splitType = GetSplitType(features);
 
             // If we are in individual mode, process each DAT on their own
             if (GetBoolean(features, IndividualValue))
@@ -62,10 +61,10 @@ namespace SabreTools.Features
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Perform additional processing steps
-                    Modification.ApplyExtras(datdata, Extras);
-                    Modification.ApplySplitting(datdata, splitType, true);
-                    Modification.ApplyFilters(datdata, Cleaner);
-                    Modification.ApplyCleaning(datdata, Cleaner);
+                    Extras.ApplyExtras(datdata);
+                    Splitter.ApplySplitting(datdata, true);
+                    Cleaner.ApplyFilters(datdata);
+                    Cleaner.ApplyCleaning(datdata);
 
                     // Set depot information
                     datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
@@ -109,10 +108,10 @@ namespace SabreTools.Features
                 }
 
                 // Perform additional processing steps
-                Modification.ApplyExtras(datdata, Extras);
-                Modification.ApplySplitting(datdata, splitType, true);
-                Modification.ApplyFilters(datdata, Cleaner);
-                Modification.ApplyCleaning(datdata, Cleaner);
+                Extras.ApplyExtras(datdata);
+                Splitter.ApplySplitting(datdata, true);
+                Cleaner.ApplyFilters(datdata);
+                Cleaner.ApplyCleaning(datdata);
 
                 // Set depot information
                 datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;

@@ -168,7 +168,7 @@ Reset the internal state:           reset();";
                                     "DatItem.SpamSum",
                                     "DatItem.Date",
                                 });
-                                Modification.ApplyCleaning(datFile, dfdCleaner);
+                                dfdCleaner.ApplyCleaning(datFile);
 
                                 break;
 
@@ -213,18 +213,18 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Create cleaner to run filters from
-                                Cleaner cleaner = new Cleaner
+                                Cleaner filterCleaner = new Cleaner
                                 {
                                     MachineFilter = new MachineFilter(),
                                     DatItemFilter = new DatItemFilter(),
                                 };
 
                                 // Set the possible filters
-                                cleaner.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
-                                cleaner.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
+                                filterCleaner.MachineFilter.SetFilter(filterMachineField, filterValue, filterRemove.Value);
+                                filterCleaner.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
 
                                 // Apply the filters blindly
-                                Modification.ApplyFilters(datFile, cleaner, filterPerMachine.Value);
+                                filterCleaner.ApplyFilters(datFile, filterPerMachine.Value);
 
                                 // Cleanup after the filter
                                 // TODO: We might not want to remove immediately
@@ -269,7 +269,7 @@ Reset the internal state:           reset();";
                                 extraIni.Items.Add(extraIniItem);
 
                                 // Apply the extra INI blindly
-                                Modification.ApplyExtras(datFile, extraIni);
+                                extraIni.ApplyExtras(datFile);
 
                                 break;
 
@@ -293,7 +293,8 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the merging flag
-                                Modification.ApplySplitting(datFile, mergingFlag, false);
+                                Filtering.Splitter splitter = new Filtering.Splitter { SplitType = mergingFlag };
+                                splitter.ApplySplitting(datFile, false);
 
                                 break;
 
@@ -307,7 +308,8 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the logic
-                                Modification.MachineDescriptionToName(datFile);
+                                Cleaner descNameCleaner = new Cleaner { DescriptionAsName = true };
+                                descNameCleaner.ApplyCleaning(datFile);
 
                                 break;
 
@@ -321,7 +323,8 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Run the 1G1R functionality
-                                Modification.OneGamePerRegion(datFile, command.Arguments);
+                                Cleaner ogorCleaner = new Cleaner { OneGamePerRegion = true, RegionList = command.Arguments }; 
+                                ogorCleaner.ApplyCleaning(datFile);
 
                                 break;
 
@@ -335,7 +338,8 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the logic
-                                Modification.OneRomPerGame(datFile);
+                                Cleaner orpgCleaner = new Cleaner { OneRomPerGame = true }; 
+                                orpgCleaner.ApplyCleaning(datFile);
 
                                 break;
 
@@ -365,7 +369,8 @@ Reset the internal state:           reset();";
                                 }
 
                                 // Apply the logic
-                                Modification.StripSceneDatesFromItems(datFile);
+                                Cleaner stripCleaner = new Cleaner { SceneDateStrip = true }; 
+                                stripCleaner.ApplyCleaning(datFile);
 
                                 break;
 
