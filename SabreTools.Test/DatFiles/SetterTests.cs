@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 
 using SabreTools.Core;
+using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using Xunit;
 
-namespace SabreTools.Test.DatItems
+namespace SabreTools.Test.DatFiles
 {
     public class SetterTests
     {
@@ -12,8 +13,11 @@ namespace SabreTools.Test.DatItems
         public void SetFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
-            var mappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" };
-            Setter.SetFields(datItem, mappings, null);
+            Setter setter = new Setter
+            {
+                DatItemMappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" }
+            };
+            setter.SetFields(datItem);
             Assert.Equal("bar", datItem.GetName());
         }
 
@@ -21,8 +25,11 @@ namespace SabreTools.Test.DatItems
         public void SetFieldsMachineTest()
         {
             var datItem = CreateDatItem();
-            var mappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" };
-            Setter.SetFields(datItem, null, mappings);
+            Setter setter = new Setter
+            {
+                MachineMappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" }
+            };
+            setter.SetFields(datItem.Machine);
             Assert.Equal("foo", datItem.Machine.Name);
         }
 

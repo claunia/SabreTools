@@ -129,11 +129,11 @@ namespace SabreTools.Filtering
                         continue;
 
                     List<DatItem> datItems = datFile.Items[key];
-                    var mappings = machineMap[key];
+                    Setter setter = new Setter { MachineMappings = machineMap[key] };
 
                     foreach (var datItem in datItems)
                     {
-                        Setter.SetFields(datItem.Machine, mappings);
+                        setter.SetFields(datItem.Machine);
                     }
                 }
 
@@ -145,11 +145,11 @@ namespace SabreTools.Filtering
                         continue;
 
                     List<DatItem> datItems = datFile.Items[key];
-                    var mappings = datItemMap[key];
+                    Setter setter = new Setter { DatItemMappings = datItemMap[key] };
 
                     foreach (var datItem in datItems)
                     {
-                        Setter.SetFields(datItem, mappings, null);
+                        setter.SetFields(datItem);
                     }
                 }
             }
