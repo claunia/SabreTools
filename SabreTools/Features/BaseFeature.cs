@@ -1816,7 +1816,7 @@ Some special strings that can be used:
             Extras = GetExtras(features);
             Filter = GetFilter(features);
             Header = GetDatHeader(features);
-            OutputDir = GetString(features, OutputDirStringValue);
+            OutputDir = GetString(features, OutputDirStringValue).Trim('"');
             Remover = GetRemover(features);
             Splitter = GetSplitter(features);
 
