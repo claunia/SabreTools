@@ -51,6 +51,8 @@ namespace SabreTools.DatTools
             long totalSize = 0;
             long currentSize = 0;
 
+            InternalStopwatch watch = new InternalStopwatch($"Populating DAT from {basePath}");
+
             // Process the input
             if (Directory.Exists(basePath))
             {
@@ -90,6 +92,7 @@ namespace SabreTools.DatTools
                 logger.User(totalSize, totalSize, basePath);
             }
 
+            watch.Stop();
             return true;
         }
 

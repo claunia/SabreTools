@@ -43,6 +43,8 @@ namespace SabreTools.DatTools
             if (datFile.Items.TotalCount == 0)
                 return (null, null);
 
+            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by extension");
+
             // Make sure all of the extensions don't have a dot at the beginning
             var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant());
             string newExtAString = string.Join(",", newExtA);
@@ -84,6 +86,7 @@ namespace SabreTools.DatTools
             });
 
             // Then return both DatFiles
+            watch.Stop();
             return (extADat, extBDat);
         }
 
@@ -95,7 +98,7 @@ namespace SabreTools.DatTools
         public static Dictionary<DatItemField, DatFile> SplitByHash(DatFile datFile)
         {
             // Create each of the respective output DATs
-            logger.User("Creating and populating new DATs");
+            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by best available hashes");
 
             // Create the set of field-to-dat mappings
             Dictionary<DatItemField, DatFile> fieldDats = new Dictionary<DatItemField, DatFile>();
@@ -206,6 +209,7 @@ namespace SabreTools.DatTools
                 }
             });
 
+            watch.Stop();
             return fieldDats;
         }
 
@@ -219,6 +223,8 @@ namespace SabreTools.DatTools
         /// <returns>True if split succeeded, false otherwise</returns>
         public static bool SplitByLevel(DatFile datFile, string outDir, bool shortname, bool basedat)
         {
+            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by level");
+
             // First, bucket by games so that we can do the right thing
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false, norename: true);
 
@@ -253,6 +259,7 @@ namespace SabreTools.DatTools
                 tempDat.Header.Name = Path.GetDirectoryName(key);
             });
 
+            watch.Stop();
             return true;
         }
 
@@ -314,7 +321,7 @@ namespace SabreTools.DatTools
         public static (DatFile lessThan, DatFile greaterThan) SplitBySize(DatFile datFile, long radix)
         {
             // Create each of the respective output DATs
-            logger.User("Creating and populating new DATs");
+            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by size");
 
             DatFile lessThan = DatFile.Create(datFile.Header.CloneStandard());
             lessThan.Header.FileName += $" (less than {radix})";
@@ -351,6 +358,7 @@ namespace SabreTools.DatTools
             });
 
             // Then return both DatFiles
+            watch.Stop();
             return (lessThan, greaterThan);
         }
 
@@ -362,7 +370,7 @@ namespace SabreTools.DatTools
         public static Dictionary<ItemType, DatFile> SplitByType(DatFile datFile)
         {
             // Create each of the respective output DATs
-            logger.User("Creating and populating new DATs");
+            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by item type");
 
             // Create the set of type-to-dat mappings
             Dictionary<ItemType, DatFile> typeDats = new Dictionary<ItemType, DatFile>();
@@ -391,6 +399,7 @@ namespace SabreTools.DatTools
                 FillWithItemType(datFile, typeDats[itemType], itemType);
             });
 
+            watch.Stop();
             return typeDats;
         }
 

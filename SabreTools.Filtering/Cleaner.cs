@@ -104,6 +104,8 @@ namespace SabreTools.Filtering
         /// <returns>True if cleaning was successful, false on error</returns>
         public bool ApplyCleaning(DatFile datFile, bool throwOnError = false)
         {
+            InternalStopwatch watch = new InternalStopwatch("Applying cleaning steps to DAT");
+
             try
             {
                 // Perform item-level cleaning
@@ -142,6 +144,10 @@ namespace SabreTools.Filtering
             {
                 logger.Error(ex);
                 return false;
+            }
+            finally
+            {
+                watch.Stop();
             }
 
             return true;

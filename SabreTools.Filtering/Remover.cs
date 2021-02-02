@@ -56,6 +56,8 @@ namespace SabreTools.Filtering
         /// <param name="fields">List of field names</param>
         public void PopulateExclusionsFromList(List<string> fields)
         {
+            InternalStopwatch watch = new InternalStopwatch("Populating removals from list");
+
             // Instantiate the removers, if necessary
             DatHeaderRemover ??= new DatHeaderRemover();
             DatItemRemover ??= new DatItemRemover();
@@ -81,6 +83,8 @@ namespace SabreTools.Filtering
                 // If we didn't match anything, log an error
                 logger.Warning($"The value {field} did not match any known field names. Please check the wiki for more details on supported field names.");
             }
+
+            watch.Stop();
         }
 
         #endregion
@@ -98,7 +102,7 @@ namespace SabreTools.Filtering
                 return;
 
             // Output the logging statement
-            logger.User("Removing filtered fields");
+            InternalStopwatch watch = new InternalStopwatch("Applying removals to DAT");
 
             // Remove DatHeader fields
             if (DatHeaderRemover != null)
@@ -119,6 +123,8 @@ namespace SabreTools.Filtering
                     datFile.Items.AddRange(key, items);
                 });
             }
+
+            watch.Stop();
         }
 
         #endregion

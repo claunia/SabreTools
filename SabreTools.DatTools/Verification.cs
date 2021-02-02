@@ -120,6 +120,8 @@ namespace SabreTools.DatTools
         {
             bool success = true;
 
+            InternalStopwatch watch = new InternalStopwatch("Verifying all from supplied paths");
+
             // Force bucketing according to the flags
             datFile.Items.SetBucketedBy(ItemKey.NULL);
             if (hashOnly)
@@ -142,6 +144,8 @@ namespace SabreTools.DatTools
                 // Set the list back, just in case
                 datFile.Items[key] = items;
             }
+
+            watch.Stop();
 
             // Set fixdat headers in case of writing out
             datFile.Header.FileName = $"fixDAT_{datFile.Header.FileName}";

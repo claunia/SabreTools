@@ -101,6 +101,8 @@ namespace SabreTools.DatTools
             DatFormat currentPathFormat = GetDatFormat(currentPath);
             datFile.Header.DatFormat = datFile.Header.DatFormat == 0 ? currentPathFormat : datFile.Header.DatFormat;
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
+            
+            InternalStopwatch watch = new InternalStopwatch($"Parsing '{currentPath}' into internal DAT");
 
             // Now parse the correct type of DAT
             try
@@ -112,6 +114,8 @@ namespace SabreTools.DatTools
             {
                 logger.Error(ex, $"Error with file '{currentPath}'");
             }
+
+            watch.Stop();
         }
 
         /// <summary>

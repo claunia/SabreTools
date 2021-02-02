@@ -54,6 +54,8 @@ namespace SabreTools.DatTools
             // Ensure the output directory is set and created
             outDir = outDir.Ensure(create: true);
 
+            InternalStopwatch watch = new InternalStopwatch($"Writing out internal dat to {outDir}");
+
             // If the DAT has no output format, default to XML
             if (datFile.Header.DatFormat == 0)
             {
@@ -94,6 +96,10 @@ namespace SabreTools.DatTools
             {
                 logger.Error(ex);
                 return false;
+            }
+            finally
+            {
+                watch.Stop();
             }
 
             return true;

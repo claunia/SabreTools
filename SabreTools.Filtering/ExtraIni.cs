@@ -50,6 +50,8 @@ namespace SabreTools.Filtering
         /// <param name="inputs">Field and file combinations</param>
         public void PopulateFromList(List<string> inputs)
         {
+            InternalStopwatch watch = new InternalStopwatch("Populating extras from list");
+
             foreach (string input in inputs)
             {
                 ExtraIniItem item = new ExtraIniItem();
@@ -70,6 +72,8 @@ namespace SabreTools.Filtering
                 if (item.PopulateFromFile(fileString))
                     Items.Add(item);
             }
+
+            watch.Stop();
         }
 
         #endregion
@@ -84,6 +88,8 @@ namespace SabreTools.Filtering
         /// <returns>True if the extras were applied, false on error</returns>
         public bool ApplyExtras(DatFile datFile, bool throwOnError = false)
         {
+            InternalStopwatch watch = new InternalStopwatch("Applying extra mappings to DAT");
+
             try
             {
                 // Bucket by game first
@@ -129,6 +135,10 @@ namespace SabreTools.Filtering
             {
                 logger.Error(ex);
                 return false;
+            }
+            finally
+            {
+                watch.Stop();
             }
 
             return true;

@@ -47,6 +47,8 @@ namespace SabreTools.Filtering
         /// <returns>True if the DatFile was split, false on error</returns>
         public bool ApplySplitting(DatFile datFile, bool useTags, bool throwOnError = false)
         {
+            InternalStopwatch watch = new InternalStopwatch("Applying splitting to DAT");
+
             try
             {
                 // If we are using tags from the DAT, set the proper input for split type unless overridden
@@ -80,6 +82,10 @@ namespace SabreTools.Filtering
             {
                 logger.Error(ex);
                 return false;
+            }
+            finally
+            {
+                watch.Stop();
             }
 
             return true;

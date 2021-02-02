@@ -75,7 +75,7 @@ namespace SabreTools.DatTools
             List<DatItemField> datItemFields,
             bool onlySame)
         {
-            logger.User($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
+            InternalStopwatch watch = new InternalStopwatch($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
             if (datItemFields.Any())
@@ -133,6 +133,8 @@ namespace SabreTools.DatTools
                     intDat.Items.AddRange(key, newDatItems);
                 });
             }
+
+            watch.Stop();
         }
 
         /// <summary>
@@ -149,7 +151,7 @@ namespace SabreTools.DatTools
             else
                 datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
-            logger.User($"Comparing '{intDat.Header.FileName}' to base DAT");
+            InternalStopwatch watch = new InternalStopwatch($"Comparing '{intDat.Header.FileName}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
@@ -205,6 +207,8 @@ namespace SabreTools.DatTools
                     intDat.Items.AddRange(key, keepDatItems);
                 }
             });
+
+            watch.Stop();
         }
 
         /// <summary>
@@ -449,32 +453,6 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
-        /// Fill a DatFile with all items with a particular source index ID
-        /// </summary>
-        /// <param name="datFile">Current DatFile object to use for updating</param>
-        /// <param name="indexDat">DatFile to add found items to</param>
-        /// <param name="index">Source index ID to retrieve items for</param>
-        /// <returns>DatFile containing all items with the source index ID/returns>
-        public static void FillWithSourceIndex(DatFile datFile, DatFile indexDat, int index)
-        {
-            // Loop through and add the items for this index to the output
-            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
-            {
-                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
-
-                // If the rom list is empty or null, just skip it
-                if (items == null || items.Count == 0)
-                    return;
-
-                foreach (DatItem item in items)
-                {
-                    if (item.Source.Index == index)
-                        indexDat.Items.Add(key, item);
-                }
-            });
-        }
-
-        /// <summary>
         /// Populate from multiple paths while returning the invividual headers
         /// </summary>
         /// <param name="datFile">Current DatFile object to use for updating</param>
@@ -542,6 +520,32 @@ namespace SabreTools.DatTools
             // Now remove the file dictionary from the source DAT
             if (delete)
                 addFrom.Items = null;
+        }
+
+        /// <summary>
+        /// Fill a DatFile with all items with a particular source index ID
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to use for updating</param>
+        /// <param name="indexDat">DatFile to add found items to</param>
+        /// <param name="index">Source index ID to retrieve items for</param>
+        /// <returns>DatFile containing all items with the source index ID/returns>
+        private static void FillWithSourceIndex(DatFile datFile, DatFile indexDat, int index)
+        {
+            // Loop through and add the items for this index to the output
+            Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
+            {
+                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
+
+                // If the rom list is empty or null, just skip it
+                if (items == null || items.Count == 0)
+                    return;
+
+                foreach (DatItem item in items)
+                {
+                    if (item.Source.Index == index)
+                        indexDat.Items.Add(key, item);
+                }
+            });
         }
     }
 }
