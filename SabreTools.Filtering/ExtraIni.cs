@@ -88,6 +88,10 @@ namespace SabreTools.Filtering
         /// <returns>True if the extras were applied, false on error</returns>
         public bool ApplyExtras(DatFile datFile, bool throwOnError = false)
         {
+            // If we have no extras, don't attempt to apply and just return true
+            if (Items == null || !Items.Any())
+                return true;
+
             InternalStopwatch watch = new InternalStopwatch("Applying extra mappings to DAT");
 
             try
