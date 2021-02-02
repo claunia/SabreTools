@@ -154,20 +154,12 @@ Reset the internal state:           reset();";
                                 // Assume there could be multiple
                                 foreach (string input in command.Arguments)
                                 {
-                                    DatTools.DatFromDir.PopulateFromDir(datFile, input);
+                                    DatTools.DatFromDir.PopulateFromDir(datFile, input, hashes: Hash.Standard);
                                 }
 
-                                // TODO: We might not want to remove higher order hashes in the future
                                 // TODO: We might not want to remove dates in the future
                                 Remover dfdRemover = new Remover();
-                                dfdRemover.PopulateExclusionsFromList(new List<string> 
-                                {
-                                    "DatItem.SHA256",
-                                    "DatItem.SHA384",
-                                    "DatItem.SHA512",
-                                    "DatItem.SpamSum",
-                                    "DatItem.Date",
-                                });
+                                dfdRemover.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
                                 dfdRemover.ApplyRemovals(datFile);
 
                                 break;

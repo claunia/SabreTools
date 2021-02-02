@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
+using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
-using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.IO;
 
@@ -53,16 +53,7 @@ namespace RombaSharp.Features
             DatFile datfile = DatFile.Create();
             datfile.Header.Name = string.IsNullOrWhiteSpace(name) ? "untitled" : name;
             datfile.Header.Description = description;
-            DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive);
-            Remover remover = new Remover();
-            remover.PopulateExclusionsFromList(new List<string> 
-            {
-                "DatItem.SHA256",
-                "DatItem.SHA384",
-                "DatItem.SHA512",
-                "DatItem.SpamSum",
-            });
-            remover.ApplyRemovals(datfile);
+            DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
             Writer.Write(datfile, outdat);
         }
     }

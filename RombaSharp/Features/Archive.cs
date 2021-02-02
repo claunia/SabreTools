@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 
+using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -67,8 +68,8 @@ have a current entry in the DAT index.";
             DatFile df = DatFile.Create();
             foreach (string dir in onlyDirs)
             {
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive);
-                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
+                DatFromDir.PopulateFromDir(df, dir, asFiles: TreatAsFile.All, hashes: Hash.Standard);
             }
 
             // Create an empty Dat for files that need to be rebuilt
