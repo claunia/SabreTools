@@ -1,5 +1,6 @@
 using SabreTools.Core;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.FileTypes.Aaru;
 using SabreTools.FileTypes.Archives;

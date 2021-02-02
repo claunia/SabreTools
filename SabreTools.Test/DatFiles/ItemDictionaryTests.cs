@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using Xunit;
 
 namespace SabreTools.Test.DatFiles

@@ -3,6 +3,7 @@ using System.IO;
 
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.DatTools;
 using SabreTools.FileTypes;
 using SabreTools.Help;

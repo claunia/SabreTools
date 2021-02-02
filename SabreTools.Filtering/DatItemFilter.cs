@@ -3,6 +3,7 @@
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.Logging;
 
 namespace SabreTools.Filtering

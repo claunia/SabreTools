@@ -9,6 +9,7 @@ using System.Xml.Schema;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.IO;
 
 // TODO: Use softwarelist.dtd and *try* to make this write more correctly

@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.Logging;
 using NaturalSort;
 using Newtonsoft.Json;

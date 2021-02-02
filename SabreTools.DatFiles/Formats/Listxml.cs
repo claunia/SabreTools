@@ -9,6 +9,7 @@ using System.Xml.Schema;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.IO;
 
 namespace SabreTools.DatFiles.Formats
@@ -716,7 +717,7 @@ namespace SabreTools.DatFiles.Formats
                         break;
 
                     case "softwarelist":
-                        datItems.Add(new DatItems.SoftwareList
+                        datItems.Add(new DatItems.Formats.SoftwareList
                         {
                             Name = reader.GetAttribute("name"),
                             Status = reader.GetAttribute("status").AsSoftwareListStatus(),
@@ -1836,7 +1837,7 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case ItemType.SoftwareList:
-                    var softwareList = datItem as DatItems.SoftwareList;
+                    var softwareList = datItem as DatItems.Formats.SoftwareList;
                     xtw.WriteStartElement("softwarelist");
                     xtw.WriteRequiredAttributeString("name", softwareList.Name);
                     xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());

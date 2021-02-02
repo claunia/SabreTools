@@ -5,6 +5,7 @@ using System.Linq;
 using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.Logging;
 
 namespace SabreTools.Filtering

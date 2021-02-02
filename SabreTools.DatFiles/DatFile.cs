@@ -8,6 +8,7 @@ using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.Logging;
 using Newtonsoft.Json;
 

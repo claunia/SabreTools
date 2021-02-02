@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 using SabreTools.Core;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 
 namespace SabreTools.Filtering
 {

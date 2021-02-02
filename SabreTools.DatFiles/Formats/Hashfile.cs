@@ -5,6 +5,7 @@ using System.Text;
 
 using SabreTools.Core;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.IO;
 using SabreTools.IO.Writers;
 

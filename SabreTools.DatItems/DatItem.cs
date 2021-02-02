@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.DatItems.Formats;
 using SabreTools.FileTypes;
 using SabreTools.Logging;
 using NaturalSort;

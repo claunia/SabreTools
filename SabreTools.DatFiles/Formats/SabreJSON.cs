@@ -7,6 +7,7 @@ using System.Text;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -314,7 +315,7 @@ namespace SabreTools.DatFiles.Formats
                         datItem = datItemObj.ToObject<SlotOption>();
                         break;
                     case ItemType.SoftwareList:
-                        datItem = datItemObj.ToObject<DatItems.SoftwareList>();
+                        datItem = datItemObj.ToObject<DatItems.Formats.SoftwareList>();
                         break;
                     case ItemType.Sound:
                         datItem = datItemObj.ToObject<Sound>();

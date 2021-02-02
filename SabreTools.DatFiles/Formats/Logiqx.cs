@@ -10,6 +10,7 @@ using System.Xml.Schema;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
 using SabreTools.IO;
 
 namespace SabreTools.DatFiles.Formats
