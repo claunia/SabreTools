@@ -96,6 +96,8 @@ namespace SabreTools.Filtering
             if (filters == null || filters.Count == 0)
                 return;
 
+            InternalStopwatch watch = new InternalStopwatch("Populating filters from list");
+
             foreach (string filterPair in filters)
             {
                 (string field, string value, bool negate) = ProcessFilterPair(filterPair);
@@ -123,6 +125,8 @@ namespace SabreTools.Filtering
                 // If we didn't match anything, log an error
                 logger.Warning($"The value {field} did not match any filterable field names. Please check the wiki for more details on supported field names.");
             }
+
+            watch.Stop();
         }
 
         /// <summary>
@@ -372,6 +376,8 @@ namespace SabreTools.Filtering
             if (MachineFilter == null || DatItemFilter == null)
                 return false;
 
+            InternalStopwatch watch = new InternalStopwatch("Applying filters to DAT");
+
             // If we're filtering per machine, bucket by machine first
             if (perMachine)
                 datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
@@ -426,6 +432,10 @@ namespace SabreTools.Filtering
             {
                 logger.Error(ex);
                 return false;
+            }
+            finally
+            {
+                watch.Stop();
             }
 
             return true;

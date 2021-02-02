@@ -101,7 +101,6 @@ namespace SabreTools.Filtering
             if (DatHeaderRemover == null && DatItemRemover == null)
                 return;
 
-            // Output the logging statement
             InternalStopwatch watch = new InternalStopwatch("Applying removals to DAT");
 
             // Remove DatHeader fields
