@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using SabreTools.Core;
@@ -56,8 +57,6 @@ namespace SabreTools.Filtering
         /// <param name="fields">List of field names</param>
         public void PopulateExclusionsFromList(List<string> fields)
         {
-            InternalStopwatch watch = new InternalStopwatch("Populating removals from list");
-
             // Instantiate the removers, if necessary
             DatHeaderRemover ??= new DatHeaderRemover();
             DatItemRemover ??= new DatItemRemover();
@@ -65,6 +64,8 @@ namespace SabreTools.Filtering
             // If the list is null or empty, just return
             if (fields == null || fields.Count == 0)
                 return;
+
+            InternalStopwatch watch = new InternalStopwatch("Populating removals from list");
 
             foreach (string field in fields)
             {                
@@ -104,11 +105,11 @@ namespace SabreTools.Filtering
             InternalStopwatch watch = new InternalStopwatch("Applying removals to DAT");
 
             // Remove DatHeader fields
-            if (DatHeaderRemover != null)
+            if (DatHeaderRemover != null && DatHeaderRemover.DatHeaderFields.Any())
                 DatHeaderRemover.RemoveFields(datFile.Header);
 
             // Remove DatItem and Machine fields
-            if (DatItemRemover != null)
+            if (DatItemRemover != null && (DatItemRemover.MachineFields.Any() || DatItemRemover.DatItemFields.Any()))
             {
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
