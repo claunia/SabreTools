@@ -54,7 +54,7 @@ namespace SabreTools.DatTools
             // Ensure the output directory is set and created
             outDir = outDir.Ensure(create: true);
 
-            InternalStopwatch watch = new InternalStopwatch($"Writing out internal dat to {outDir}");
+            InternalStopwatch watch = new InternalStopwatch($"Writing out internal dat to '{outDir}'");
 
             // If the DAT has no output format, default to XML
             if (datFile.Header.DatFormat == 0)
@@ -87,7 +87,7 @@ namespace SabreTools.DatTools
                     }
                     catch (Exception ex) when (!throwOnError)
                     {
-                        logger.Error(ex, $"Datfile {outfile} could not be written out");
+                        logger.Error(ex, $"Datfile '{outfile}' could not be written out");
                     }
 
                 });
