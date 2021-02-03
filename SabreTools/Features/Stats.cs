@@ -32,6 +32,9 @@ The stats that are outputted are as follows:
 - Items with Nodump status";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(ReportTypeListInput);
             AddFeature(FilenameStringInput);
             AddFeature(OutputDirStringInput);

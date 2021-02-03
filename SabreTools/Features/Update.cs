@@ -25,6 +25,9 @@ namespace SabreTools.Features
             LongDescription = "This is the multitool part of the program, allowing for almost every manipulation to a DAT, or set of DATs. This is also a combination of many different programs that performed DAT manipulation that work better together.";
             Features = new Dictionary<string, Help.Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             // Output Formats
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(PrefixStringInput);
@@ -79,7 +82,6 @@ namespace SabreTools.Features
             AddFilteringFeatures();
             AddFeature(OutputDirStringInput);
             AddFeature(InplaceFlag);
-            AddFeature(ThreadsInt32Input);
         }
 
         public override void ProcessFeatures(Dictionary<string, Help.Feature> features)

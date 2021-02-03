@@ -24,7 +24,7 @@ namespace SabreTools.Features
             Features = new Dictionary<string, Feature>();
 
             // Common Features
-            AddFeature(LogLevelStringInput);
+            AddCommonFeatures();
 
             AddFeature(DatListInput);
             AddFeature(OutputDirStringInput);
@@ -56,7 +56,6 @@ namespace SabreTools.Features
             AddFeature(HeaderStringInput);
             AddInternalSplitFeatures();
             AddFeature(UpdateDatFlag);
-            AddFeature(ThreadsInt32Input);
         }
 
         public override void ProcessFeatures(Dictionary<string, Feature> features)

@@ -95,9 +95,9 @@ of other features. The following descriptions are based on what WILL be done
 with each flag. Not all features are currently available.
 
 Usage:
-	RombaSharp.exe [options] [filename|dirname] ...
+	RombaSharp.exe [feature] [options] [filename|dirname] ...
 	
-Options:
+Features and Options:
 	-?, -h, --help		Show the built-in help text
 		Built-in to most of the programs is a basic help text
 		
@@ -159,20 +159,32 @@ For any command below that includes a `field` of any sort, the name are standard
 	the format will be `item.name`
 
 Usage:
-	SabreTools.exe [options] [filename|dirname] ...
+	SabreTools.exe [feature] [options] [filename|dirname] ...
+
+Universal Options:
+	These parameters can be enabled on any feature except Detailed Help and Help
+
+  -ll=, --log-level=  	   Set the lowest log level for output
+	  Set the lowest log level for output.
+	  Possible values are: Verbose, User, Warning, Error
+
+  -sc, --script				Enable script mode (no clear screen)
+	  For times when SabreTools is being used in a scripted environment, the
+	  user may not want the screen to be cleared every time that it is called.
+	  This flag allows the user to skip clearing the screen on run just like if
+	  the console was being redirected.
+
+  -mt=, --threads=			Amount of threads to use (default = # cores)
+	  Optionally, set the number of threads to use for the multithreaded
+	  operations. The default is the number of available machine threads;
+	  -1 means unlimited threads created.
 	
-Options:
+Features and Options:
   -?, -h, --help			  Show this help
 	  Built-in to most of the programs is a basic help text.
 
   -??, -hd, --help-detailed   Show this detailed help
 	  Display a detailed help text to the screen.
-
-  --script					Enable script mode (no clear screen)
-	  For times when SabreTools is being used in a scripted environment, the
-	  user may not want the screen to be cleared every time that it is called.
-	  This flag allows the user to skip clearing the screen on run just like if
-	  the console was being redirected.
 
   -bt, --batch				Enable batch mode
 	  Run a special mode that takes input files as lists of batch commands to
@@ -204,10 +216,6 @@ Options:
 	  this will output a DAT named based on the input directory and the current
 	  date. It will also treat all archives as possible games and add all three
 	  hashes (CRC, MD5, SHA-1) for each file.
-
-	  -ll=, --log-level=  		 Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
 
 	  -nm, --skip-md5			 Don't include MD5 in output
 		  This allows the user to skip calculating the MD5 for each of the
@@ -419,11 +427,6 @@ Options:
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
 
-	  -mt=, --threads=			Amount of threads to use (default = # cores)
-		  Optionally, set the number of threads to use for the multithreaded
-		  operations. The default is the number of available machine threads;
-		  -1 means unlimited threads created.
-
   -ex, --extract			  Extract and remove copier headers
 	  This will detect, store, and remove copier headers from a file or folder
 	  of files. The headers are backed up and collated by the hash of the
@@ -440,10 +443,6 @@ Options:
 	  - Nintendo Famicom Disk System
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC
-
-	  -ll=, --log-level=  		 Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
 
 	  -out=, --output-dir=		Set output directory
 		  This sets an output folder to be used when the files are created. If
@@ -471,10 +470,6 @@ Options:
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC
 
-	  -ll=, --log-level=  		 Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
-
 	  -out=, --output-dir=		 Set output directory
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
@@ -483,10 +478,6 @@ Options:
 	  This feature allows the user to quickly rebuild based on a supplied DAT
 	  file(s). By default all files will be rebuilt to uncompressed folders in
 	  the output directory.
-
-	  -ll=, --log-level=  	   Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
 
 	  -dat=, --dat=			   Input DAT to be used
 		  User-supplied DAT for use in all operations. Multiple instances of
@@ -616,19 +607,10 @@ Options:
 		  the files that could not be matched will be output to the output
 		  directory.
 
-	  -mt=, --threads=			Amount of threads to use (default = # cores)
-		  Optionally, set the number of threads to use for the multithreaded
-		  operations. The default is the number of available machine threads;
-		  -1 means unlimited threads created.
-
   -sp, --split				Split input DATs by a given criteria
 	  This feature allows the user to split input DATs by a number of different
 	  possible criteria. See the individual input information for details. More
 	  than one split type is allowed at a time.
-
-	  -ll=, --log-level=  	    Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
 
 	  -ot=, --output-type=		Output DATs to a specified format
 		  Add outputting the created DAT to known format. Multiple instances of
@@ -747,10 +729,6 @@ Options:
 	  - Items that include a SHA-512
 	  - Items with Nodump status
 
-	  -ll=, --log-level=  	   Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
-
 	  -srt=, --report-type=	   Output statistics to a specified format
 		  Add outputting the created DAT to known format. Multiple instances of
 		  this flag are allowed.
@@ -787,10 +765,6 @@ Options:
 	  manipulation to a DAT, or set of DATs. This is also a combination of many
 	  different programs that performed DAT manipulation that work better
 	  together.
-
-	  -ll=, --log-level=  		Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
 
 	  -ot=, --output-type=		Output DATs to a specified format
 		  Add outputting the created DAT to known format. Multiple instances of
@@ -1174,21 +1148,12 @@ Options:
 		  directory, if set). This flag enables users to write out to the
 		  directory that the DATs originated from.
 
-	  -mt=, --threads=			Amount of threads to use (default = # cores)
-		  Optionally, set the number of threads to use for the multithreaded
-		  operations. The default is the number of available machine threads;
-		  -1 means unlimited threads created.
-
   -ve, --verify			   Verify a folder against DATs
 	  When used, this will use an input DAT or set of DATs to blindly check
 	  against an input folder. The base of the folder is considered the base
 	  for the combined DATs and games are either the directories or archives
 	  within. This will only do a direct verification of the items within and
 	  will create a fixdat afterwards for missing files.
-
-	  -ll=, --log-level=  	   Set the lowest log level for output
-	  	  Set the lowest log level for output.
-		  Possible values are: Verbose, User, Warning, Error
 
 	  -dat=, --dat=			   Input DAT to be used
 		  User-supplied DAT for use in all operations. Multiple instances of

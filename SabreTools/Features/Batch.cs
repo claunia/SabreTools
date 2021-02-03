@@ -46,7 +46,7 @@ Reset the internal state:           reset();";
             Features = new Dictionary<string, Help.Feature>();
 
             // Common Features
-            AddFeature(LogLevelStringInput);
+            AddCommonFeatures();
         }
 
         public override void ProcessFeatures(Dictionary<string, Help.Feature> features)

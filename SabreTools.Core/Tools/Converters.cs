@@ -956,7 +956,7 @@ namespace SabreTools.Core.Tools
         /// <returns>LogLevel value corresponding to the string</returns>
         public static LogLevel AsLogLevel(this string logLevel)
         {
-            return logLevel.ToLowerInvariant() switch
+            return logLevel?.ToLowerInvariant() switch
             {
                 "verbose" => LogLevel.VERBOSE,
                 "user" => LogLevel.USER,

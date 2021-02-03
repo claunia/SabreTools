@@ -828,6 +828,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string ScriptValue = "script";
+        internal static Feature ScriptFlag
+        {
+            get
+            {
+                return new Feature(
+                    ScriptValue,
+                    new List<string>() { "-sc", "--script" },
+                    "Enable script mode (no clear screen)",
+                    ParameterType.Flag,
+                    "For times when SabreTools is being used in a scripted environment, the user may not want the screen to be cleared every time that it is called. This flag allows the user to skip clearing the screen on run just like if the console was being redirected.");
+            }
+        }
+
         internal const string ShortValue = "short";
         internal static Feature ShortFlag
         {
@@ -1764,6 +1778,11 @@ Some special strings that can be used:
         /// Pre-configured Remover
         /// </summary>
         protected Remover Remover { get; set; }
+        
+        /// <summary>
+        /// Determines if scripting mode is enabled
+        /// </summary>
+        public bool ScriptMode { get; protected set; }
 
         /// <summary>
         /// Pre-configured Splitter
@@ -1773,6 +1792,16 @@ Some special strings that can be used:
         #endregion
 
         #region Add Feature Groups
+
+        /// <summary>
+        /// Add common features
+        /// </summary>
+        protected void AddCommonFeatures()
+        {
+            AddFeature(ScriptFlag);
+            AddFeature(LogLevelStringInput);
+            AddFeature(ThreadsInt32Input);
+        }
 
         /// <summary>
         /// Add Filter-specific features
@@ -1839,6 +1868,7 @@ Some special strings that can be used:
             LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
             OutputDir = GetString(features, OutputDirStringValue).Trim('"');
             Remover = GetRemover(features);
+            ScriptMode = GetBoolean(features, ScriptValue);
             Splitter = GetSplitter(features);
 
             // Set threading flag, if necessary

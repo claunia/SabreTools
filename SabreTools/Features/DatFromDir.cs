@@ -23,7 +23,7 @@ namespace SabreTools.Features
             Features = new Dictionary<string, Help.Feature>();
 
             // Common Features
-            AddFeature(LogLevelStringInput);
+            AddCommonFeatures();
 
             // Hash Features
             AddFeature(SkipMd5Flag);
@@ -50,7 +50,6 @@ namespace SabreTools.Features
             AddFeature(ExtraIniListInput);
             AddFilteringFeatures();
             AddFeature(OutputDirStringInput);
-            AddFeature(ThreadsInt32Input);
         }
 
         public override void ProcessFeatures(Dictionary<string, Help.Feature> features)

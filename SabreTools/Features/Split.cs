@@ -24,8 +24,8 @@ namespace SabreTools.Features
             Features = new Dictionary<string, Help.Feature>();
 
             // Common Features
-            AddFeature(LogLevelStringInput);
-
+            AddCommonFeatures();
+            
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
             AddFeature(OutputDirStringInput);

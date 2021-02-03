@@ -35,7 +35,7 @@ The following systems have headers that this program can work with:
             Features = new Dictionary<string, Feature>();
 
             // Common Features
-            AddFeature(LogLevelStringInput);
+            AddCommonFeatures();
 
             AddFeature(OutputDirStringInput);
             AddFeature(NoStoreHeaderFlag);
