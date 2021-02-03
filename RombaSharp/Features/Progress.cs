@@ -16,6 +16,9 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = "Shows progress of the currently running command.";
             Features = new Dictionary<string, Feature>();
+
+            // Common Features
+            AddCommonFeatures();
         }
 
         public override void ProcessFeatures(Dictionary<string, Feature> features)

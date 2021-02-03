@@ -31,6 +31,9 @@ If -only-needed is set, only those files are put in the ROM archive that
 have a current entry in the DAT index.";
             Features = new Dictionary<string, SabreTools.Help.Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OnlyNeededFlag);
             AddFeature(ResumeStringInput);
             AddFeature(IncludeZipsInt32Input); // Defaults to 0

@@ -30,6 +30,9 @@ accordingly, marking deleted or overwritten dats as orphaned and updating
 contents of any changed dats.";
             Features = new Dictionary<string, SabreTools.Help.Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(WorkersInt32Input);
             AddFeature(MissingSha1sStringInput);
         }

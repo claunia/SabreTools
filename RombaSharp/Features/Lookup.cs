@@ -19,6 +19,9 @@ namespace RombaSharp.Features
             LongDescription = "For each specified hash it looks up any available information (dat or rom).";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(SizeInt64Input); // Defaults to -1
             AddFeature(OutStringInput);
         }

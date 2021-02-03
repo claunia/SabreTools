@@ -16,6 +16,9 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = "Cancels current long-running job.";
             Features = new Dictionary<string, Feature>();
+
+            // Common Features
+            AddCommonFeatures();
         }
 
         public override void ProcessFeatures(Dictionary<string, Feature> features)

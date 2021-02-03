@@ -16,6 +16,9 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = "Gracefully shuts down server saving all the cached data.";
             Features = new Dictionary<string, Feature>();
+
+            // Common Features
+            AddCommonFeatures();
         }
 
         public override void ProcessFeatures(Dictionary<string, Feature> features)

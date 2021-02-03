@@ -25,6 +25,9 @@ output dir. The files will be placed in the specified location using a folder
 structure according to the original DAT master directory tree structure.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OutStringInput);
             AddFeature(FixdatOnlyFlag);
             AddFeature(CopyFlag);

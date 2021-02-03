@@ -22,6 +22,9 @@ namespace RombaSharp.Features
 in -old DAT file. Ignores those entries in -old that are not in -new.";
             this.Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OutStringInput);
             AddFeature(OldStringInput);
             AddFeature(NewStringInput);

@@ -19,6 +19,9 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = "Exports db to standardized export.csv";
             Features = new Dictionary<string, Feature>();
+
+            // Common Features
+            AddCommonFeatures();
         }
 
         // TODO: Add ability to say which depot the files are found in

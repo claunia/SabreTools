@@ -25,6 +25,9 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = "Rescan a specific depot to get new information";
             Features = new Dictionary<string, SabreTools.Help.Feature>();
+
+            // Common Features
+            AddCommonFeatures();
         }
 
         public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)

@@ -20,6 +20,9 @@ namespace RombaSharp.Features
             LongDescription = "Merges specified depot into current depot.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OnlyNeededFlag);
             AddFeature(ResumeStringInput);
             AddFeature(WorkersInt32Input);

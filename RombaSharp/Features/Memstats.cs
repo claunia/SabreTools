@@ -16,6 +16,9 @@ namespace RombaSharp.Features
             _featureType = ParameterType.Flag;
             LongDescription = "Print memory stats.";
             Features = new Dictionary<string, Feature>();
+
+            // Common Features
+            AddCommonFeatures();
         }
 
         public override void ProcessFeatures(Dictionary<string, Feature> features)

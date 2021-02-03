@@ -17,6 +17,9 @@ namespace RombaSharp.Features
             LongDescription = @"For each specified DAT file it creates a fix DAT with the missing entries for that DAT. If nothing is missing it doesn't create a fix DAT for that particular DAT.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OutStringInput);
             AddFeature(FixdatOnlyFlag); // Enabled by default
             AddFeature(WorkersInt32Input);

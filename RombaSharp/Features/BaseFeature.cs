@@ -20,7 +20,18 @@ namespace RombaSharp.Features
 {
     internal class BaseFeature : TopLevel
     {
-        #region Private Flag features
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        protected Logger logger = new Logger();
+
+        #endregion
+
+        #region Features
+
+        #region Flag features
 
         internal const string CopyValue = "copy";
         internal static SabreTools.Help.Feature CopyFlag
@@ -87,6 +98,20 @@ namespace RombaSharp.Features
             }
         }
 
+        internal const string ScriptValue = "script";
+        internal static SabreTools.Help.Feature ScriptFlag
+        {
+            get
+            {
+                return new SabreTools.Help.Feature(
+                    ScriptValue,
+                    new List<string>() { "-sc", "--script" },
+                    "Enable script mode (no clear screen)",
+                    ParameterType.Flag,
+                    "For times when RombaSharp is being used in a scripted environment, the user may not want the screen to be cleared every time that it is called. This flag allows the user to skip clearing the screen on run just like if the console was being redirected.");
+            }
+        }
+
         internal const string SkipInitialScanValue = "skip-initial-scan";
         internal static SabreTools.Help.Feature SkipInitialScanFlag
         {
@@ -115,7 +140,7 @@ namespace RombaSharp.Features
 
         #endregion
 
-        #region Private Int32 features
+        #region Int32 features
 
         internal const string Include7ZipsInt32Value = "include-7zips";
         internal static SabreTools.Help.Feature Include7ZipsInt32Input
@@ -184,7 +209,7 @@ namespace RombaSharp.Features
 
         #endregion
 
-        #region Private Int64 features
+        #region Int64 features
 
         internal const string SizeInt64Value = "size";
         internal static SabreTools.Help.Feature SizeInt64Input
@@ -201,7 +226,7 @@ namespace RombaSharp.Features
 
         #endregion
 
-        #region Private List<String> features
+        #region List<String> features
 
         internal const string DatsListStringValue = "dats";
         internal static SabreTools.Help.Feature DatsListStringInput
@@ -231,7 +256,7 @@ namespace RombaSharp.Features
 
         #endregion
 
-        #region Private String features
+        #region String features
 
         internal const string BackupStringValue = "backup";
         internal static SabreTools.Help.Feature BackupStringInput
@@ -256,6 +281,21 @@ namespace RombaSharp.Features
                     "-description",
                     "description value in DAT header",
                     ParameterType.String);
+            }
+        }
+
+        internal const string LogLevelStringValue = "log-level";
+        internal static SabreTools.Help.Feature LogLevelStringInput
+        {
+            get
+            {
+                return new SabreTools.Help.Feature(
+                    LogLevelStringValue,
+                    new List<string>() { "-ll", "--log-level" },
+                    "Set the lowest log level for output",
+                    ParameterType.String,
+                    longDescription: @"Set the lowest log level for output.
+Possible values are: Verbose, User, Warning, Error");
             }
         }
 
@@ -352,6 +392,24 @@ namespace RombaSharp.Features
 
         #endregion
 
+        #endregion // Features
+
+        #region Fields
+
+        /// <summary>
+        /// Lowest log level for output
+        /// </summary>
+        public LogLevel LogLevel { get; protected set; }
+
+        /// <summary>
+        /// Determines if scripting mode is enabled
+        /// </summary>
+        public bool ScriptMode { get; protected set; }
+
+        #endregion
+
+        #region Settings
+
         // General settings
         internal static string _logdir;		// Log folder location
         internal static string _tmpdir;     // Temp folder location
@@ -374,13 +432,26 @@ namespace RombaSharp.Features
         internal const string _config = "config.xml";
         internal static string _connectionString;
 
+        #endregion
+
+        #region Add Feature Groups
+
         /// <summary>
-        /// Logging object
+        /// Add common features
         /// </summary>
-        protected Logger logger = new Logger();
+        protected void AddCommonFeatures()
+        {
+            AddFeature(ScriptFlag);
+            AddFeature(LogLevelStringInput);
+        }
+
+        #endregion
 
         public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
+            LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
+            ScriptMode = GetBoolean(features, ScriptValue);
+
             InitializeConfiguration();
             EnsureDatabase(_db, _connectionString);
         }

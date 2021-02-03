@@ -22,6 +22,9 @@ a folder structure according to the original DAT master directory tree
 structure. It also deletes the specified DATs from the DAT index.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(WorkersInt32Input);
             AddFeature(DepotListStringInput);
             AddFeature(DatsListStringInput);

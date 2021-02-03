@@ -21,6 +21,9 @@ namespace RombaSharp.Features
             LongDescription = @"Creates a DAT file with those entries that are in -new DAT files and not in -old DAT files. Ignores those entries in -old that are not in -new.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OutStringInput);
             AddFeature(OldStringInput);
             AddFeature(NewStringInput);

@@ -49,24 +49,6 @@ namespace RombaSharp
             // Create a new Help object for this program
             _help = RetrieveHelp();
 
-            // Get the location of the script tag, if it exists
-            int scriptLocation = (new List<string>(args)).IndexOf("--script");
-
-            // If output is being redirected or we are in script mode, don't allow clear screens
-            if (!Console.IsOutputRedirected && scriptLocation == -1)
-            {
-                Console.Clear();
-                Prepare.SetConsoleHeader("RombaSharp");
-            }
-
-            // Now we remove the script tag because it messes things up
-            if (scriptLocation > -1)
-            {
-                List<string> newargs = new List<string>(args);
-                newargs.RemoveAt(scriptLocation);
-                args = newargs.ToArray();
-            }
-
             // Credits take precidence over all
             if ((new List<string>(args)).Contains("--credits"))
             {
@@ -116,13 +98,22 @@ namespace RombaSharp
                 return;
             }
 
+            // Set the new log level based on settings
+            LoggerImpl.LowestLogLevel = feature.LogLevel;
+
+            // If output is being redirected or we are in script mode, don't allow clear screens
+            if (!Console.IsOutputRedirected && feature.ScriptMode)
+            {
+                Console.Clear();
+                Prepare.SetConsoleHeader("SabreTools");
+            }
+
             // Now process the current feature
             Dictionary<string, Feature> features = _help.GetEnabledFeatures();
             switch (featureName)
             {
                 case DisplayHelpDetailed.Value:
                 case DisplayHelp.Value:
-                case Script.Value:
                     // No-op as this should be caught
                     break;
 
@@ -189,7 +180,6 @@ namespace RombaSharp
             // Add all of the features
             help.Add(new DisplayHelp());
             help.Add(new DisplayHelpDetailed());
-            help.Add(new Script());
             help.Add(new Archive());
             help.Add(new Build());
             help.Add(new Cancel());

@@ -23,6 +23,9 @@ namespace RombaSharp.Features
             LongDescription = "Creates a DAT file for the specified input directory and saves it to the -out filename.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddCommonFeatures();
+
             AddFeature(OutStringInput);
             AddFeature(SourceStringInput);
             AddFeature(NameStringInput); // Defaults to "untitled"

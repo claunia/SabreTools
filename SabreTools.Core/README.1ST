@@ -96,6 +96,19 @@ with each flag. Not all features are currently available.
 
 Usage:
 	RombaSharp.exe [feature] [options] [filename|dirname] ...
+
+Universal Options:
+	These parameters can be enabled on any feature except Detailed Help and Help
+
+  -ll=, --log-level=  	   Set the lowest log level for output
+	  Set the lowest log level for output.
+	  Possible values are: Verbose, User, Warning, Error
+
+  -sc, --script				Enable script mode (no clear screen)
+	  For times when SabreTools is being used in a scripted environment, the
+	  user may not want the screen to be cleared every time that it is called.
+	  This flag allows the user to skip clearing the screen on run just like if
+	  the console was being redirected.
 	
 Features and Options:
 	-?, -h, --help		Show the built-in help text
