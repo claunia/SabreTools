@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
@@ -72,10 +73,10 @@ namespace SabreTools.Filtering
 
             #region Common
 
-            if (MachineFields != null && datItem.Machine != null)
+            if (MachineFields != null && MachineFields.Any() && datItem.Machine != null)
                 RemoveFields(datItem.Machine);
 
-            if (DatItemFields == null)
+            if (DatItemFields == null || !DatItemFields.Any())
                 return;
 
             if (DatItemFields.Contains(DatItemField.Name))
