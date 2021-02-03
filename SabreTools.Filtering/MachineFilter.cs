@@ -95,6 +95,11 @@ namespace SabreTools.Filtering
         /// Include romof and cloneof when filtering machine names
         /// </summary>
         public bool IncludeOfInGame { get; set; }
+        
+        /// <summary>
+        /// Determines if any filters have been set
+        /// </summary>
+        public bool HasFilters { get; set; } = false;
 
         #endregion
 

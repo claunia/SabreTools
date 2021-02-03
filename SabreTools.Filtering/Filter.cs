@@ -56,11 +56,6 @@ namespace SabreTools.Filtering
         /// Filter for Machine fields
         /// </summary>
         public MachineFilter MachineFilter { get; set; }
-        
-        /// <summary>
-        /// Determines if any filters have been set
-        /// </summary>
-        public bool HasFilters { get; private set; } = false;
 
         #endregion
 
@@ -116,7 +111,7 @@ namespace SabreTools.Filtering
                 if (machineField != MachineField.NULL)
                 {
                     MachineFilter.SetFilter(machineField, value, negate);
-                    HasFilters = true;
+                    MachineFilter.HasFilters = true;
                     continue;
                 }
 
@@ -125,7 +120,7 @@ namespace SabreTools.Filtering
                 if (datItemField != DatItemField.NULL)
                 {
                     DatItemFilter.SetFilter(datItemField, value, negate);
-                    HasFilters = true;
+                    DatItemFilter.HasFilters = true;
                     continue;
                 }
 
@@ -384,7 +379,7 @@ namespace SabreTools.Filtering
                 return false;
 
             // If no filters were set, return true
-            if (HasFilters)
+            if (!MachineFilter.HasFilters && !DatItemFilter.HasFilters)
                 return true;
 
             InternalStopwatch watch = new InternalStopwatch("Applying filters to DAT");
@@ -464,8 +459,12 @@ namespace SabreTools.Filtering
                 return false;
 
             // Filter on Machine fields
-            if (!MachineFilter.PassesFilters(datItem.Machine))
+            if (MachineFilter.HasFilters && !MachineFilter.PassesFilters(datItem.Machine))
                 return false;
+
+            // If we have no DatItemFilters set, just return true
+            if (!DatItemFilter.HasFilters)
+                return true;
 
             // Filter on DatItem fields
             return DatItemFilter.PassesFilters(datItem);

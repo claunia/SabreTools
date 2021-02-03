@@ -193,6 +193,11 @@ namespace SabreTools.Filtering
         #endregion
 
         #endregion // Item-Specific
+        
+        /// <summary>
+        /// Determines if any filters have been set
+        /// </summary>
+        public bool HasFilters { get; set; } = false;
 
         #endregion // Fields
 
