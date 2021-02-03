@@ -118,7 +118,7 @@ namespace SabreTools.DatFiles.Formats
         {
             try
             {
-                logger.User($"Opening file for writing: {outfile}");
+                logger.User($"Writing to {outfile}...");
                 FileStream fs = File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
@@ -163,7 +163,7 @@ namespace SabreTools.DatFiles.Formats
                     }
                 }
 
-                logger.Verbose($"File written!{Environment.NewLine}");
+                logger.User($"{outfile} written!{Environment.NewLine}");
                 svw.Dispose();
                 fs.Dispose();
             }
