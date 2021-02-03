@@ -4,6 +4,8 @@ using SabreTools.Help;
 
 namespace SabreTools.Features
 {
+    // TODO: With the introduction of the `--log-level` input, can we create a better way
+    // to handle "universal" flags? Having script as its own feature is not ideal.
     internal class Script : BaseFeature
     {
         public const string Value = "Script";

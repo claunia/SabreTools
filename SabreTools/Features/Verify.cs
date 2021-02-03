@@ -23,6 +23,9 @@ namespace SabreTools.Features
             LongDescription = "When used, this will use an input DAT or set of DATs to blindly check against an input folder. The base of the folder is considered the base for the combined DATs and games are either the directories or archives within. This will only do a direct verification of the items within and will create a fixdat afterwards for missing files.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddFeature(LogLevelStringInput);
+
             AddFeature(DatListInput);
             AddFeature(DepotFlag);
             this[DepotFlag].AddFeature(DepotDepthInt32Input);

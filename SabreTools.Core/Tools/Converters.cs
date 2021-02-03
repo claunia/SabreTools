@@ -949,7 +949,24 @@ namespace SabreTools.Core.Tools
             };
         }
 
-         /// <summary>
+        /// <summary>
+        /// Get LogLevel value from input string
+        /// </summary>
+        /// <param name="logLevel">String to get value from</param>
+        /// <returns>LogLevel value corresponding to the string</returns>
+        public static LogLevel AsLogLevel(this string logLevel)
+        {
+            return logLevel.ToLowerInvariant() switch
+            {
+                "verbose" => LogLevel.VERBOSE,
+                "user" => LogLevel.USER,
+                "warning" => LogLevel.WARNING,
+                "error" => LogLevel.ERROR,
+                _ => LogLevel.VERBOSE,
+            };
+        }
+
+        /// <summary>
         /// Get MachineField value from input string
         /// </summary>
         /// <param name="input">String to get value from</param>

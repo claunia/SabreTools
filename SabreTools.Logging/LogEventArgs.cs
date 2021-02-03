@@ -1,5 +1,7 @@
 ﻿using System;
 
+using SabreTools.Core;
+
 namespace SabreTools.Logging
 {
     /// <summary>

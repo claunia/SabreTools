@@ -23,6 +23,9 @@ namespace SabreTools.Features
             LongDescription = "This feature allows the user to quickly rebuild based on a supplied DAT file(s). By default all files will be rebuilt to uncompressed folders in the output directory.";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddFeature(LogLevelStringInput);
+
             AddFeature(DatListInput);
             AddFeature(OutputDirStringInput);
             AddFeature(DepotFlag);

@@ -205,6 +205,10 @@ Options:
 	  date. It will also treat all archives as possible games and add all three
 	  hashes (CRC, MD5, SHA-1) for each file.
 
+	  -ll=, --log-level=  		 Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
+
 	  -nm, --skip-md5			 Don't include MD5 in output
 		  This allows the user to skip calculating the MD5 for each of the
 		  files which will speed up the creation of the DAT.
@@ -437,6 +441,10 @@ Options:
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC
 
+	  -ll=, --log-level=  		 Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
+
 	  -out=, --output-dir=		Set output directory
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
@@ -463,7 +471,11 @@ Options:
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System
 	  - Nintendo Super Famicom / Super Nintendo Entertainment System SPC
 
-	  -out=, --output-dir=		Set output directory
+	  -ll=, --log-level=  		 Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
+
+	  -out=, --output-dir=		 Set output directory
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
 
@@ -471,6 +483,10 @@ Options:
 	  This feature allows the user to quickly rebuild based on a supplied DAT
 	  file(s). By default all files will be rebuilt to uncompressed folders in
 	  the output directory.
+
+	  -ll=, --log-level=  	   Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
 
 	  -dat=, --dat=			   Input DAT to be used
 		  User-supplied DAT for use in all operations. Multiple instances of
@@ -610,6 +626,10 @@ Options:
 	  possible criteria. See the individual input information for details. More
 	  than one split type is allowed at a time.
 
+	  -ll=, --log-level=  	    Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
+
 	  -ot=, --output-type=		Output DATs to a specified format
 		  Add outputting the created DAT to known format. Multiple instances of
 		  this flag are allowed.
@@ -727,6 +747,10 @@ Options:
 	  - Items that include a SHA-512
 	  - Items with Nodump status
 
+	  -ll=, --log-level=  	   Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
+
 	  -srt=, --report-type=	   Output statistics to a specified format
 		  Add outputting the created DAT to known format. Multiple instances of
 		  this flag are allowed.
@@ -763,6 +787,10 @@ Options:
 	  manipulation to a DAT, or set of DATs. This is also a combination of many
 	  different programs that performed DAT manipulation that work better
 	  together.
+
+	  -ll=, --log-level=  		Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
 
 	  -ot=, --output-type=		Output DATs to a specified format
 		  Add outputting the created DAT to known format. Multiple instances of
@@ -1157,6 +1185,10 @@ Options:
 	  for the combined DATs and games are either the directories or archives
 	  within. This will only do a direct verification of the items within and
 	  will create a fixdat afterwards for missing files.
+
+	  -ll=, --log-level=  	   Set the lowest log level for output
+	  	  Set the lowest log level for output.
+		  Possible values are: Verbose, User, Warning, Error
 
 	  -dat=, --dat=			   Input DAT to be used
 		  User-supplied DAT for use in all operations. Multiple instances of

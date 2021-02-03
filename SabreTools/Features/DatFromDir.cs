@@ -22,6 +22,9 @@ namespace SabreTools.Features
             LongDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
             Features = new Dictionary<string, Help.Feature>();
 
+            // Common Features
+            AddFeature(LogLevelStringInput);
+
             // Hash Features
             AddFeature(SkipMd5Flag);
             AddFeature(SkipSha1Flag);

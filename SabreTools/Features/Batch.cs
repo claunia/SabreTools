@@ -44,6 +44,9 @@ Set the output directory:           output(outdir);
 Write the internal items:           write([overwrite = true]);
 Reset the internal state:           reset();";
             Features = new Dictionary<string, Help.Feature>();
+
+            // Common Features
+            AddFeature(LogLevelStringInput);
         }
 
         public override void ProcessFeatures(Dictionary<string, Help.Feature> features)

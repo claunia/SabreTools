@@ -23,6 +23,9 @@ namespace SabreTools.Features
             LongDescription = "This feature allows the user to split input DATs by a number of different possible criteria. See the individual input information for details. More than one split type is allowed at a time.";
             Features = new Dictionary<string, Help.Feature>();
 
+            // Common Features
+            AddFeature(LogLevelStringInput);
+
             AddFeature(OutputTypeListInput);
             this[OutputTypeListInput].AddFeature(DeprecatedFlag);
             AddFeature(OutputDirStringInput);

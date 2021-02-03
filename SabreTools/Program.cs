@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
-using SabreTools.Features;
 using SabreTools.Core;
+using SabreTools.Features;
 using SabreTools.Help;
 using SabreTools.IO;
 using SabreTools.Logging;
@@ -108,6 +108,9 @@ namespace SabreTools
                 LoggerImpl.Close();
                 return;
             }
+
+            // Set the new log level based on settings
+            LoggerImpl.LowestLogLevel = feature.LogLevel;
 
             // Now process the current feature
             Dictionary<string, Feature> features = _help.GetEnabledFeatures();

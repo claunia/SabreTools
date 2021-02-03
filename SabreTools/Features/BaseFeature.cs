@@ -1555,6 +1555,21 @@ Possible values are: None, Zip, Unzip, Partial, Flat");
             }
         }
 
+        internal const string LogLevelStringValue = "log-level";
+        internal static Feature LogLevelStringInput
+        {
+            get
+            {
+                return new Feature(
+                    LogLevelStringValue,
+                    new List<string>() { "-ll", "--log-level" },
+                    "Set the lowest log level for output",
+                    ParameterType.String,
+                    longDescription: @"Set the lowest log level for output.
+Possible values are: Verbose, User, Warning, Error");
+            }
+        }
+
         internal const string NameStringValue = "name";
         internal static Feature NameStringInput
         {
@@ -1736,6 +1751,11 @@ Some special strings that can be used:
         protected DatHeader Header { get; set; }
 
         /// <summary>
+        /// Lowest log level for output
+        /// </summary>
+        public LogLevel LogLevel { get; protected set; }
+
+        /// <summary>
         /// Output directory
         /// </summary>
         protected string OutputDir { get; set; }
@@ -1816,6 +1836,7 @@ Some special strings that can be used:
             Extras = GetExtras(features);
             Filter = GetFilter(features);
             Header = GetDatHeader(features);
+            LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
             OutputDir = GetString(features, OutputDirStringValue).Trim('"');
             Remover = GetRemover(features);
             Splitter = GetSplitter(features);

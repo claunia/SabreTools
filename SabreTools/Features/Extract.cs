@@ -34,6 +34,9 @@ The following systems have headers that this program can work with:
   - Nintendo Super Famicom / Super Nintendo Entertainment System SPC";
             Features = new Dictionary<string, Feature>();
 
+            // Common Features
+            AddFeature(LogLevelStringInput);
+
             AddFeature(OutputDirStringInput);
             AddFeature(NoStoreHeaderFlag);
         }
