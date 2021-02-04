@@ -21,15 +21,6 @@ namespace SabreTools.DatTools
     /// <remarks>TODO: Implement Level split</remarks>
     public class Splitter
     {
-        #region Logging
-
-        /// <summary>
-        /// Logging object
-        /// </summary>
-        private static readonly Logger logger = new Logger();
-
-        #endregion
-
         /// <summary>
         /// Split a DAT by input extensions
         /// </summary>
