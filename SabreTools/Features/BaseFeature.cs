@@ -1866,7 +1866,7 @@ Some special strings that can be used:
             Filter = GetFilter(features);
             Header = GetDatHeader(features);
             LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
-            OutputDir = GetString(features, OutputDirStringValue).Trim('"');
+            OutputDir = GetString(features, OutputDirStringValue)?.Trim('"');
             Remover = GetRemover(features);
             ScriptMode = GetBoolean(features, ScriptValue);
             Splitter = GetSplitter(features);
