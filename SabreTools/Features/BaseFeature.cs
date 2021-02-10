@@ -78,7 +78,7 @@ namespace SabreTools.Features
         #region Constants
 
         public static string HeadererFileName = Path.Combine(PathTool.GetRuntimeDirectory(), "Headerer.sqlite");
-        public static string HeadererConnectionString = $"Data Source={HeadererFileName};Version = 3;";
+        public static string HeadererConnectionString = $"Data Source={HeadererFileName};";
 
         #endregion
 
