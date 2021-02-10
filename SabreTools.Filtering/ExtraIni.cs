@@ -50,6 +50,10 @@ namespace SabreTools.Filtering
         /// <param name="inputs">Field and file combinations</param>
         public void PopulateFromList(List<string> inputs)
         {
+            // If there are no inputs, just skip
+            if (inputs == null || !inputs.Any())
+                return;
+
             InternalStopwatch watch = new InternalStopwatch("Populating extras from list");
 
             foreach (string input in inputs)
