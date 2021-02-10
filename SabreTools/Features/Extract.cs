@@ -65,8 +65,9 @@ The following systems have headers that this program can work with:
         /// <returns>True if the output file was created, false otherwise</returns>
         private bool DetectTransformStore(string file, string outDir, bool nostore)
         {
-            // Ensure the output directory
-            outDir = outDir.Ensure();
+            // Create the output directory if it doesn't exist
+            if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
 
             logger.User($"\nGetting skipper information for '{file}'");
 
