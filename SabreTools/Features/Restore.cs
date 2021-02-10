@@ -59,9 +59,8 @@ The following systems have headers that this program can work with:
         /// <returns>True if a header was found and appended, false otherwise</returns>
         public bool RestoreHeader(string file, string outDir)
         {
-            // Create the output directory if it doesn't exist
-            if (!string.IsNullOrWhiteSpace(outDir) && !Directory.Exists(outDir))
-                Directory.CreateDirectory(outDir);
+            // Ensure the output directory
+            outDir = outDir.Ensure();
 
             // First, get the SHA-1 hash of the file
             BaseFile baseFile = BaseFile.GetInfo(file, hashes: Hash.SHA1, asFiles: TreatAsFile.NonArchive);
