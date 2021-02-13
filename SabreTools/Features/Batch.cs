@@ -80,9 +80,7 @@ Reset the internal state:           reset();";
                 string[] lines = File.ReadAllLines(path);
 
                 // Each batch file has its own state
-                int index = 0;
-                DatFile datFile = DatFile.Create();
-                string outputDirectory = null;
+                BatchFile batchFile = new BatchFile();
 
                 // Process each command line
                 foreach (string line in lines)
@@ -109,96 +107,78 @@ Reset the internal state:           reset();";
                     {
                         // Set a header field
                         case "set":
-                            SetHeaderField(command, datFile);
+                            SetHeaderField(command, batchFile);
                             break;
 
                         // Parse in new input file(s)
                         case "input":
-                            ParseInputs(command, datFile, ref index);
+                            ParseInputs(command, batchFile);
                             break;
 
                         // Run DFD/D2D on path(s)
                         case "d2d":
                         case "dfd":
-                            PopulateFromDir(command, datFile);
+                            PopulateFromDir(command, batchFile);
                             break;
 
                         // Apply a filter
                         case "filter":
-                            ApplyFilter(command, datFile);
+                            ApplyFilter(command, batchFile);
                             break;
 
                         // Apply an extra INI
                         case "extra":
-                            ApplyExtra(command, datFile);
+                            ApplyExtra(command, batchFile);
                             break;
 
                         // Apply internal split/merge
                         case "merge":
-                            RunMerge(command, datFile);
+                            RunMerge(command, batchFile);
                             break;
 
                         // Apply description-as-name logic
                         case "descname":
-                            DescriptionAsName(command, datFile);
+                            DescriptionAsName(command, batchFile);
                             break;
 
                         // Apply 1G1R
                         case "1g1r":
-                            OneGamePerRegion(command, datFile);
+                            OneGamePerRegion(command, batchFile);
                             break;
 
                         // Apply one rom per game (ORPG)
                         case "orpg":
-                            OneRomPerGame(command, datFile);
+                            OneRomPerGame(command, batchFile);
                             break;
 
                         // Remove a field
                         case "remove":
-                            RemoveField(command, datFile);
+                            RemoveField(command, batchFile);
                             break;
 
                         // Apply scene date stripping
                         case "sds":
-                            SceneDateStrip(command, datFile);
+                            SceneDateStrip(command, batchFile);
                             break;
 
                         // Set new output format(s)
                         case "format":
-                            SetOutputFormat(command, datFile);
+                            SetOutputFormat(command, batchFile);
                             break;
 
                         // Set output directory
                         case "output":
-                            if (command.Arguments.Count != 1)
-                            {
-                                logger.User($"Invoked {command.Name} and expected exactly 1 argument, but {command.Arguments.Count} arguments were provided");
-                                logger.User("Usage: output(outdir);");
-                                continue;
-                            }
-
-                            // Only set the first as the output directory
-                            outputDirectory = command.Arguments[0];
+                            SetOutputDirectory(command, batchFile);
                             break;
 
                         // Write out the current DatFile
                         case "write":
-                            Write(command, datFile, outputDirectory);
+                            Write(command, batchFile);
                             break;
 
                         // Reset the internal state
                         case "reset":
-                            if (command.Arguments.Count != 0)
-                            {
-                                logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
-                                logger.User("Usage: reset();");
-                                continue;
-                            }
-
-                            // Reset all state variables
-                            index = 0;
-                            datFile = DatFile.Create();
-                            outputDirectory = null;
+                            Reset(command, batchFile);
                             break;
 
                         default:
@@ -219,8 +199,8 @@ Reset the internal state:           reset();";
         /// Apply a single extras file to the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void ApplyExtra(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void ApplyExtra(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count != 2)
             {
@@ -258,15 +238,15 @@ Reset the internal state:           reset();";
             extraIni.Items.Add(extraIniItem);
 
             // Apply the extra INI blindly
-            extraIni.ApplyExtras(datFile);
+            extraIni.ApplyExtras(batchFile.DatFile);
         }
 
         /// <summary>
         /// Apply a single filter to the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void ApplyFilter(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void ApplyFilter(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count < 2 || command.Arguments.Count > 4)
             {
@@ -318,20 +298,20 @@ Reset the internal state:           reset();";
             filter.DatItemFilter.SetFilter(filterDatItemField, filterValue, filterRemove.Value);
 
             // Apply the filters blindly
-            filter.ApplyFilters(datFile, filterPerMachine.Value);
+            filter.ApplyFilters(batchFile.DatFile, filterPerMachine.Value);
 
             // Cleanup after the filter
             // TODO: We might not want to remove immediately
-            datFile.Items.ClearMarked(); 
-            datFile.Items.ClearEmpty();
+            batchFile.DatFile.Items.ClearMarked(); 
+            batchFile.DatFile.Items.ClearEmpty();
         }
 
         /// <summary>
         /// Apply a description-as-name to the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void DescriptionAsName(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void DescriptionAsName(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count != 0)
             {
@@ -342,15 +322,15 @@ Reset the internal state:           reset();";
 
             // Apply the logic
             Cleaner descNameCleaner = new Cleaner { DescriptionAsName = true };
-            descNameCleaner.ApplyCleaning(datFile);
+            descNameCleaner.ApplyCleaning(batchFile.DatFile);
         }
 
         /// <summary>
         /// Apply 1G1R to the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void OneGamePerRegion(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void OneGamePerRegion(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count == 0)
             {
@@ -361,15 +341,15 @@ Reset the internal state:           reset();";
 
             // Run the 1G1R functionality
             Cleaner ogorCleaner = new Cleaner { OneGamePerRegion = true, RegionList = command.Arguments }; 
-            ogorCleaner.ApplyCleaning(datFile);
+            ogorCleaner.ApplyCleaning(batchFile.DatFile);
         }
 
         /// <summary>
         /// Apply ORPG to the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void OneRomPerGame(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void OneRomPerGame(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count != 0)
             {
@@ -380,16 +360,15 @@ Reset the internal state:           reset();";
 
             // Apply the logic
             Cleaner orpgCleaner = new Cleaner { OneRomPerGame = true }; 
-            orpgCleaner.ApplyCleaning(datFile);
+            orpgCleaner.ApplyCleaning(batchFile.DatFile);
         }
 
         /// <summary>
         /// Populate the internal DAT from one or more files
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        /// <param name="index">Current input file index</param>
-        private void ParseInputs(BatchCommand command, DatFile datFile, ref int index)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void ParseInputs(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count == 0)
             {
@@ -404,7 +383,7 @@ Reset the internal state:           reset();";
             // Assume there could be multiple
             foreach (ParentablePath datFilePath in datFilePaths)
             {
-                Parser.ParseInto(datFile, datFilePath, index++);
+                Parser.ParseInto(batchFile.DatFile, datFilePath, batchFile.Index++);
             }
         }
 
@@ -412,8 +391,8 @@ Reset the internal state:           reset();";
         /// Populate the internal DAT from one or more paths
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void PopulateFromDir(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void PopulateFromDir(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count == 0)
             {
@@ -427,21 +406,21 @@ Reset the internal state:           reset();";
             // Assume there could be multiple
             foreach (string input in command.Arguments)
             {
-                DatTools.DatFromDir.PopulateFromDir(datFile, input, hashes: Hash.Standard);
+                DatTools.DatFromDir.PopulateFromDir(batchFile.DatFile, input, hashes: Hash.Standard);
             }
 
             // TODO: We might not want to remove dates in the future
             Remover dfdRemover = new Remover();
             dfdRemover.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
-            dfdRemover.ApplyRemovals(datFile);
+            dfdRemover.ApplyRemovals(batchFile.DatFile);
         }
 
         /// <summary>
         /// Remove a field from the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void RemoveField(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void RemoveField(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count == 0)
             {
@@ -453,15 +432,33 @@ Reset the internal state:           reset();";
             // Run the removal functionality
             Remover remover = new Remover();
             remover.PopulateExclusionsFromList(command.Arguments);
-            remover.ApplyRemovals(datFile);
+            remover.ApplyRemovals(batchFile.DatFile);
+        }
+
+        /// <summary>
+        /// Remove a field from the internal DAT
+        /// </summary>
+        /// <param name="command">BatchCommand representing the line</param>
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void Reset(BatchCommand command, BatchFile batchFile)
+        {
+            if (command.Arguments.Count != 0)
+            {
+                logger.User($"Invoked {command.Name} and expected no arguments, but {command.Arguments.Count} arguments were provided");
+                logger.User("Usage: reset();");
+                return;
+            }
+
+            // Reset all state variables
+            batchFile.Reset();
         }
 
         /// <summary>
         /// Run internal split/merge on the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void RunMerge(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void RunMerge(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count != 1)
             {
@@ -482,15 +479,15 @@ Reset the internal state:           reset();";
 
             // Apply the merging flag
             Filtering.Splitter splitter = new Filtering.Splitter { SplitType = mergingFlag };
-            splitter.ApplySplitting(datFile, false);
+            splitter.ApplySplitting(batchFile.DatFile, false);
         }
 
         /// <summary>
         /// Apply scene date stripping to the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void SceneDateStrip(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void SceneDateStrip(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count != 0)
             {
@@ -501,15 +498,15 @@ Reset the internal state:           reset();";
 
             // Apply the logic
             Cleaner stripCleaner = new Cleaner { SceneDateStrip = true }; 
-            stripCleaner.ApplyCleaning(datFile);
+            stripCleaner.ApplyCleaning(batchFile.DatFile);
         }
 
         /// <summary>
         /// Set a single header field on the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void SetHeaderField(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void SetHeaderField(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count != 2)
             {
@@ -530,15 +527,33 @@ Reset the internal state:           reset();";
             }
 
             // Set the header field
-            datFile.Header.SetFields(new Dictionary<DatHeaderField, string> { [field] = value });
+            batchFile.DatFile.Header.SetFields(new Dictionary<DatHeaderField, string> { [field] = value });
+        }
+
+        /// <summary>
+        /// Set output directory
+        /// </summary>
+        /// <param name="command">BatchCommand representing the line</param>
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void SetOutputDirectory(BatchCommand command, BatchFile batchFile)
+        {
+            if (command.Arguments.Count != 1)
+            {
+                logger.User($"Invoked {command.Name} and expected exactly 1 argument, but {command.Arguments.Count} arguments were provided");
+                logger.User("Usage: output(outdir);");
+                return;
+            }
+
+            // Only set the first as the output directory
+            batchFile.OutputDirectory = command.Arguments[0];
         }
 
         /// <summary>
         /// Set output DatFile format
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        private void SetOutputFormat(BatchCommand command, DatFile datFile)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void SetOutputFormat(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count == 0)
             {
@@ -548,14 +563,14 @@ Reset the internal state:           reset();";
             }
 
             // Assume there could be multiple
-            datFile.Header.DatFormat = 0x00;
+            batchFile.DatFile.Header.DatFormat = 0x00;
             foreach (string format in command.Arguments)
             {
-                datFile.Header.DatFormat |= GetDatFormat(format);
+                batchFile.DatFile.Header.DatFormat |= GetDatFormat(format);
             }
 
             // If we had an invalid input, log and continue
-            if (datFile.Header.DatFormat == 0x00)
+            if (batchFile.DatFile.Header.DatFormat == 0x00)
             {
                 logger.User($"No valid output format found");
                 return;
@@ -566,9 +581,8 @@ Reset the internal state:           reset();";
         /// Write out the internal DAT
         /// </summary>
         /// <param name="command">BatchCommand representing the line</param>
-        /// <param name="datFile">DatFile representing the internal DAT</param>
-        /// <param name="outputDirectory">Directory to write outputs to</param>
-        private void Write(BatchCommand command, DatFile datFile, string outputDirectory)
+        /// <param name="batchFile">Current BatchFile state</param>
+        private void Write(BatchCommand command, BatchFile batchFile)
         {
             if (command.Arguments.Count > 1)
             {
@@ -590,10 +604,12 @@ Reset the internal state:           reset();";
             }
 
             // Write out the dat with the current state
-            Writer.Write(datFile, outputDirectory, overwrite: overwrite.Value);
+            Writer.Write(batchFile.DatFile, batchFile.OutputDirectory, overwrite: overwrite.Value);
         }
 
         #endregion
+
+        #region Private Helper Classes
 
         /// <summary>
         /// Internal representation of a single batch command
@@ -636,5 +652,27 @@ Reset the internal state:           reset();";
                 return new BatchCommand { Name = commandName, Arguments = arguments };
             }
         }
+    
+        /// <summary>
+        /// Internal representation of a single batch file
+        /// </summary>
+        private class BatchFile
+        {
+            public DatFile DatFile { get; set; } = DatFile.Create();
+            public int Index { get; set; } = 0;
+            public string OutputDirectory { get; set; } = null;
+
+            /// <summary>
+            /// Reset the current state
+            /// </summary>
+            public void Reset()
+            {
+                this.Index = 0;
+                this.DatFile = DatFile.Create();
+                this.OutputDirectory = null;
+            }
+        }
+    
+        #endregion
     }
 }
