@@ -11,6 +11,7 @@ using SabreTools.DatTools;
 using SabreTools.Filtering;
 using SabreTools.Help;
 using SabreTools.IO;
+using SabreTools.Logging;
 
 namespace SabreTools.Features
 {
@@ -57,7 +58,9 @@ Reset the internal state:           reset();";
             // Try to read each input as a batch run file
             foreach (string path in Inputs)
             {
+                InternalStopwatch watch = new InternalStopwatch($"Processing '{path}'...");
                 ProcessScript(path);
+                watch.Stop();
             }
         }
 
@@ -99,6 +102,7 @@ Reset the internal state:           reset();";
                     if (command == null)
                     {
                         logger.User($"Could not process {path} due to the following line: {line}");
+                        logger.User($"Please see the help text for more details about possible commands");
                         break;
                     }
 
