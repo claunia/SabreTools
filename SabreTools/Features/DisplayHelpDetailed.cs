@@ -11,7 +11,7 @@ namespace SabreTools.Features
         public DisplayHelpDetailed()
         {
             Name = Value;
-            Flags = new List<string>() { "-??", "-hd", "--help-detailed" };
+            Flags = new List<string>() { "??", "hd", "help-detailed" };
             Description = "Show this detailed help";
             _featureType = ParameterType.Flag;
             LongDescription = "Display a detailed help text to the screen.";

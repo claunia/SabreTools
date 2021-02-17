@@ -17,7 +17,7 @@ namespace SabreTools.Features
         public Restore()
         {
             Name = Value;
-            Flags = new List<string>() { "-re", "--restore" };
+            Flags = new List<string>() { "re", "restore" };
             Description = "Restore header to file based on SHA-1";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will make use of stored copier headers and reapply them to files if they match the included hash. More than one header can be applied to a file, so they will be output to new files, suffixed with .newX, where X is a number. No input files are altered in the process. Only uncompressed files will be processed.

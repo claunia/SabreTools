@@ -18,7 +18,7 @@ namespace SabreTools.Features
         public Extract()
         {
             Name = Value;
-            Flags = new List<string>() { "-ex", "--extract" };
+            Flags = new List<string>() { "ex", "extract" };
             Description = "Extract and remove copier headers";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will detect, store, and remove copier headers from a file or folder of files. The headers are backed up and collated by the hash of the unheadered file. Files are then output without the detected copier header alongside the originals with the suffix .new. No input files are altered in the process. Only uncompressed files will be processed.

@@ -17,7 +17,7 @@ namespace SabreTools.Features
         public Sort()
         {
             Name = Value;
-            Flags = new List<string>() { "-ss", "--sort" };
+            Flags = new List<string>() { "ss", "sort" };
             Description = "Sort inputs by a set of DATs";
             _featureType = ParameterType.Flag;
             LongDescription = "This feature allows the user to quickly rebuild based on a supplied DAT file(s). By default all files will be rebuilt to uncompressed folders in the output directory.";

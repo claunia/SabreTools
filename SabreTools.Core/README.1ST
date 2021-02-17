@@ -193,13 +193,13 @@ Universal Options:
 	  -1 means unlimited threads created.
 	
 Features and Options:
-  -?, -h, --help			  Show this help
+  ?, h, help			  Show this help
 	  Built-in to most of the programs is a basic help text.
 
-  -??, -hd, --help-detailed   Show this detailed help
+  ??, hd, help-detailed   Show this detailed help
 	  Display a detailed help text to the screen.
 
-  -bt, --batch				Enable batch mode
+  bt, batch				  Enable batch mode
 	  Run a special mode that takes input files as lists of batch commands to
 	  run sequentially. Each command has to be its own line and must be followed
 	  by a semicolon (`;`). Commented lines may start with either `REM` or `#`.
@@ -224,7 +224,7 @@ Features and Options:
 	  Write the internal items:           write([overwrite = true]);
 	  Reset the internal state:           reset();";
 
-  -d, --d2d, --dfd			Create DAT(s) from an input directory
+  d, d2d, dfd		      Create DAT(s) from an input directory
 	  Create a DAT file from an input directory or set of files. By default,
 	  this will output a DAT named based on the input directory and the current
 	  date. It will also treat all archives as possible games and add all three
@@ -440,7 +440,7 @@ Features and Options:
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
 
-  -ex, --extract			  Extract and remove copier headers
+  ex, extract			  Extract and remove copier headers
 	  This will detect, store, and remove copier headers from a file or folder
 	  of files. The headers are backed up and collated by the hash of the
 	  unheadered file. Files are then output without the detected copier header
@@ -466,7 +466,7 @@ Features and Options:
 		  the database. This flag allows users to skip that step entirely,
 		  avoiding caching the headers at all.
 
-  -re, --restore			  Restore header to file based on SHA-1
+  re, restore			  Restore header to file based on SHA-1
 	  This will make use of stored copier headers and reapply them to files if
 	  they match the included hash. More than one header can be applied to a
 	  file, so they will be output to new files, suffixed with .newX, where X
@@ -487,7 +487,7 @@ Features and Options:
 		  This sets an output folder to be used when the files are created. If
 		  a path is not defined, the runtime directory is used instead.
 
-  -ss, --sort				 Sort inputs by a set of DATs
+  ss, sort				  Sort inputs by a set of DATs
 	  This feature allows the user to quickly rebuild based on a supplied DAT
 	  file(s). By default all files will be rebuilt to uncompressed folders in
 	  the output directory.
@@ -620,7 +620,7 @@ Features and Options:
 		  the files that could not be matched will be output to the output
 		  directory.
 
-  -sp, --split				Split input DATs by a given criteria
+  sp, split				  Split input DATs by a given criteria
 	  This feature allows the user to split input DATs by a number of different
 	  possible criteria. See the individual input information for details. More
 	  than one split type is allowed at a time.
@@ -725,7 +725,7 @@ Features and Options:
 		  For a DAT, or set of DATs, allow for splitting based on the types of
 		  the files, specifically if the type is a rom or a disk.
 
-  -st, --stats				Get statistics on all input DATs
+  st, stats				  Get statistics on all input DATs
 	  This will output by default the combined statistics for all input DAT
 	  files.
 	  
@@ -773,7 +773,7 @@ Features and Options:
 		  In cases where DATs would be processed in bulk, this flag allows them
 		  to be processed on their own instead.
 
-  -ud, --update			   Update and manipulate DAT(s)
+  ud, update			  Update and manipulate DAT(s)
 	  This is the multitool part of the program, allowing for almost every
 	  manipulation to a DAT, or set of DATs. This is also a combination of many
 	  different programs that performed DAT manipulation that work better
@@ -1161,7 +1161,7 @@ Features and Options:
 		  directory, if set). This flag enables users to write out to the
 		  directory that the DATs originated from.
 
-  -ve, --verify			   Verify a folder against DATs
+  ve, verify			  Verify a folder against DATs
 	  When used, this will use an input DAT or set of DATs to blindly check
 	  against an input folder. The base of the folder is considered the base
 	  for the combined DATs and games are either the directories or archives
@@ -1271,43 +1271,43 @@ users of SabreTools. Thanks to Kludge for most of these suggestions!
 	Convert a DAT file to XML and put it in a new folder
 
 	Long form:
-		SabreTools.exe --update --output-type=xml --output-dir==OutDir
+		SabreTools.exe update --output-type=xml --output-dir==OutDir
 		Path\To\DatFile.dat
 
 	Short form:
-		SabreTools.exe -ud -ox -out=OutDir DatFile.dat Path\To\DatFile.dat
+		SabreTools.exe ud -ox -out=OutDir DatFile.dat Path\To\DatFile.dat
 
 -- Example 2 --
 	Convert a folder of DAT files to ClrMamePro and strip parent tags
 	Note: This would output the created files to the SabreTools folder
 
 	Long form:
-		SabreTools.exe --update --output-type=cmp --exclude-of=romof
+		SabreTools.exe update --output-type=cmp --exclude-of=romof
 		--exclude-of=sampleof --exclude-of=cloneof Path\To\Dats
 
 	Short form:
-		SabreTools.exe -ud -oc -ef=romof --ef=sampleof --ef=cloneof
+		SabreTools.exe ud -oc -ef=romof --ef=sampleof --ef=cloneof
 		Path\To\Dats
 
 -- Example 3 --
 	Create an XML DAT from a folder of zipped sets setting a custom name
 
 	Long form:
-		SabreTools.exe --dfd --output-type=xml --name=DatName Path\To\Files
+		SabreTools.exe dfd --output-type=xml --name=DatName Path\To\Files
 
 	Short form:
-		SabreTools.exe -d -ox -n=DatName Path\To\Files
+		SabreTools.exe d -ox -n=DatName Path\To\Files
 
 -- Example 4 --
 	Run a fixdat for a friend based on a couple folders the files can be in
 	and outputting in TorrentZip format
 
 	Long form:
-		SabreTools.exe --sort --dat=Fix.dat --torrent-zip --output-dir==FixDir
+		SabreTools.exe sort --dat=Fix.dat --torrent-zip --output-dir==FixDir
 		InDir1 InDir2
 
 	Short form:
-		SabreTools.exe -ss -dat=Fix.dat -tzip -out=FixDir InDir2 InDir2
+		SabreTools.exe ss -dat=Fix.dat -tzip -out=FixDir InDir2 InDir2
 		
 -- Example 5 --
 	Remove all files found in a base set of DATs from another set. This example
@@ -1315,10 +1315,10 @@ users of SabreTools. Thanks to Kludge for most of these suggestions!
 	files in the same set.
 	
 	Long form:
-		SabreTools.exe --update --diff-against --base-dat="Path\To\Base" InDr
+		SabreTools.exe update --diff-against --base-dat="Path\To\Base" InDr
 		
 	Short form:
-		SabreTools.exe -ud -dag -bd="Path\To\Base" InDr
+		SabreTools.exe ud -dag -bd="Path\To\Base" InDr
 
 ** Section 4.0 - Contributors
 

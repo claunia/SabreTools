@@ -11,7 +11,7 @@ namespace SabreTools.Features
         public DisplayHelp()
         {
             Name = Value;
-            Flags = new List<string>() { "-?", "-h", "--help" };
+            Flags = new List<string>() { "?", "h", "help" };
             Description = "Show this help";
             _featureType = ParameterType.Flag;
             LongDescription = "Built-in to most of the programs is a basic help text.";

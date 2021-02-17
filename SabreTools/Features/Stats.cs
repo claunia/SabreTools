@@ -13,7 +13,7 @@ namespace SabreTools.Features
         public Stats()
         {
             Name = Value;
-            Flags = new List<string>() { "-st", "--stats" };
+            Flags = new List<string>() { "st", "stats" };
             Description = "Get statistics on all input DATs";
             _featureType = ParameterType.Flag;
             LongDescription = @"This will output by default the combined statistics for all input DAT files.

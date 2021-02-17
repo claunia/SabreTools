@@ -16,7 +16,7 @@ namespace SabreTools.Features
         public DatFromDir()
         {
             Name = Value;
-            Flags = new List<string>() { "-d", "--d2d", "--dfd" };
+            Flags = new List<string>() { "d", "d2d", "dfd" };
             Description = "Create DAT(s) from an input directory";
             _featureType = ParameterType.Flag;
             LongDescription = "Create a DAT file from an input directory or set of files. By default, this will output a DAT named based on the input directory and the current date. It will also treat all archives as possible games and add all three hashes (CRC, MD5, SHA-1) for each file.";
