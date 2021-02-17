@@ -14,6 +14,7 @@ using SabreTools.IO;
 
 namespace SabreTools.Features
 {
+    // TODO: Should the private classes here be split into a new namespace?
     internal class Batch : BaseFeature
     {
         public const string Value = "Batch";
@@ -121,13 +122,11 @@ Reset the internal state:           reset();";
             }
         }
 
-
         #region Commands
 
         /// <summary>
         /// Internal representation of a single batch command
         /// </summary>
-        /// TODO: Should BatchCommand be a part of SabreTools.DatTools?
         private abstract class BatchCommand
         {
             public string Name { get; private set; }
