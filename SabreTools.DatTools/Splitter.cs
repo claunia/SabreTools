@@ -21,6 +21,15 @@ namespace SabreTools.DatTools
     /// <remarks>TODO: Implement Level split</remarks>
     public class Splitter
     {
+        #region Logging
+
+        /// <summary>
+        /// Logging object
+        /// </summary>
+        private static Logger logger = new Logger();
+
+        #endregion
+
         /// <summary>
         /// Split a DAT by input extensions
         /// </summary>
@@ -391,18 +400,33 @@ namespace SabreTools.DatTools
                 // Get the current machine
                 var items = datFile.Items[machine];
                 if (items == null || !items.Any())
+                {
+                    logger.Error($"{machine} contains no items and will be skipped");
                     continue;
+                }
 
                 // Get the total size of the current machine
                 long machineSize = 0;
                 foreach (var item in items)
                 {
                     if (item is Rom rom)
+                    {
                         machineSize += rom.Size ?? 0;
+                        if ((rom.Size ?? 0) > chunkSize)
+                            logger.Error($"{rom.GetName() ?? string.Empty} in {machine} is larger than {chunkSize}");
+                    }
+                }
+
+                // If the current machine size is greater than the chunk size by itself, we want to log and skip
+                // TODO: Should this eventually try to split the machine here?
+                if (machineSize > chunkSize)
+                {
+                    logger.Error($"{machine} is larger than {chunkSize} and will be skipped");
+                    continue;
                 }
 
                 // If the current machine size makes the current DatFile too big, split
-                if (currentSize + machineSize > chunkSize)
+                else if (currentSize + machineSize > chunkSize)
                 {
                     datFiles.Add(currentDat);
                     currentSize = 0;
