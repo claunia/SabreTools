@@ -411,6 +411,7 @@ namespace SabreTools.DatTools
                 {
                     if (item is Rom rom)
                     {
+                        // TODO: Should there be more than just a log if a single item is larger than the chunksize?
                         machineSize += rom.Size ?? 0;
                         if ((rom.Size ?? 0) > chunkSize)
                             logger.Error($"{rom.GetName() ?? string.Empty} in {machine} is larger than {chunkSize}");
