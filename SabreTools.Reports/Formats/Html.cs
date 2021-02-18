@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
+using System.Xml;
+
+using SabreTools.Logging;
 
 namespace SabreTools.Reports.Formats
 {
@@ -13,133 +18,314 @@ namespace SabreTools.Reports.Formats
         /// <summary>
         /// Create a new report from the filename
         /// </summary>
-        /// <param name="filename">Name of the file to write out to</param>
-        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
-        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        public Html(string filename, bool baddumpCol = false, bool nodumpCol = false)
-            : base(filename, baddumpCol, nodumpCol)
+        /// <param name="statsList">List of statistics objects to set</param>
+        public Html(List<DatStatistics> statsList)
+            : base(statsList)
         {
         }
 
-        /// <summary>
-        /// Create a new report from the stream
-        /// </summary>
-        /// <param name="datfile">DatFile to write out statistics for</param>
-        /// <param name="stream">Output stream to write to</param>
-        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
-        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        public Html(Stream stream, bool baddumpCol = false, bool nodumpCol = false)
-            : base(stream, baddumpCol, nodumpCol)
+        /// <inheritdoc/>
+        public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
-        }
+            InternalStopwatch watch = new InternalStopwatch($"Writing statistics to '{outfile}");
 
-        /// <summary>
-        /// Write the report to file
-        /// </summary>
-        public override void Write()
-        {
-            string line = "\t\t\t<tr" + (_name.StartsWith("DIR: ")
-                            ? $" class=\"dir\"><td>{WebUtility.HtmlEncode(_name.Remove(0, 5))}"
-                            : $"><td>{WebUtility.HtmlEncode(_name)}") + "</td>"
-                        + $"<td align=\"right\">{GetBytesReadable(_stats.TotalSize)}</td>"
-                        + $"<td align=\"right\">{_machineCount}</td>"
-                        + $"<td align=\"right\">{_stats.RomCount}</td>"
-                        + $"<td align=\"right\">{_stats.DiskCount}</td>"
-                        + $"<td align=\"right\">{_stats.CRCCount}</td>"
-                        + $"<td align=\"right\">{_stats.MD5Count}</td>"
-                        + $"<td align=\"right\">{_stats.SHA1Count}</td>"
-                        + $"<td align=\"right\">{_stats.SHA256Count}</td>"
-                        + (_baddumpCol ? $"<td align=\"right\">{_stats.BaddumpCount}</td>" : string.Empty)
-                        + (_nodumpCol ? $"<td align=\"right\">{_stats.NodumpCount}</td>" : string.Empty)
-                        + "</tr>\n";
-            _writer.Write(line);
-            _writer.Flush();
+            try
+            {
+                // Try to create the output file
+                FileStream fs = File.Create(outfile);
+                if (fs == null)
+                {
+                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    return false;
+                }
+
+                XmlTextWriter xtw = new XmlTextWriter(fs, Encoding.UTF8)
+                {
+                    Formatting = Formatting.Indented,
+                    IndentChar = '\t',
+                    Indentation = 1
+                };
+
+                // Write out the header
+                WriteHeader(xtw, baddumpCol, nodumpCol);
+
+                // Now process each of the statistics
+                for (int i = 0; i < Statistics.Count; i++)
+                {
+                    // Get the current statistic
+                    DatStatistics stat = Statistics[i];
+
+                    // If we have a directory statistic
+                    if (stat.IsDirectory)
+                    {
+                        WriteMidSeparator(xtw, baddumpCol, nodumpCol);
+                        WriteIndividual(xtw, stat, baddumpCol, nodumpCol);
+                        
+                        // If we have anything but the last value, write the separator
+                        if (i < Statistics.Count - 1)
+                        {
+                            WriteFooterSeparator(xtw, baddumpCol, nodumpCol);
+                            WriteMidHeader(xtw, baddumpCol, nodumpCol);
+                        }
+                    }
+
+                    // If we have a normal statistic
+                    else
+                    {
+                        WriteIndividual(xtw, stat, baddumpCol, nodumpCol);
+                    }
+                }
+
+                WriteFooter(xtw);
+                xtw.Dispose();
+                fs.Dispose();
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+            finally
+            {
+                watch.Stop();
+            }
+
+            return true;
         }
 
         /// <summary>
         /// Write out the header to the stream, if any exists
         /// </summary>
-        public override void WriteHeader()
+        /// <param name="xtw">XmlTextWriter to write to</param>
+        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
+        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
+        private void WriteHeader(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
-            _writer.Write(@"<!DOCTYPE html>
-<html>
-    <header>
-        <title>DAT Statistics Report</title>
-        <style>
-            body {
-                background-color: lightgray;
-            }
-            .dir {
-                color: #0088FF;
-            }
-            .right {
-                align: right;
-            }
-        </style>
-    </header>
-    <body>
-        <h2>DAT Statistics Report (" + DateTime.Now.ToShortDateString() + @")</h2>
-        <table border=string.Empty1string.Empty cellpadding=string.Empty5string.Empty cellspacing=string.Empty0string.Empty>
-");
-            _writer.Flush();
+            xtw.WriteDocType("html", null, null, null);
+            xtw.WriteStartElement("html");
+
+            xtw.WriteStartElement("header");
+            xtw.WriteElementString("title", "DAT Statistics Report");
+            xtw.WriteElementString("style", @"
+body {
+    background-color: lightgray;
+}
+.dir {
+    color: #0088FF;
+}");
+            xtw.WriteEndElement(); // header
+
+            xtw.WriteStartElement("body");
+
+            xtw.WriteElementString("h2", $"DAT Statistics Report ({DateTime.Now.ToShortDateString()})");
+
+            xtw.WriteStartElement("table");
+            xtw.WriteAttributeString("border", "1");
+            xtw.WriteAttributeString("cellpadding", "5");
+            xtw.WriteAttributeString("cellspacing", "0");
+            xtw.Flush();
 
             // Now write the mid header for those who need it
-            WriteMidHeader();
+            WriteMidHeader(xtw, baddumpCol, nodumpCol);
         }
 
         /// <summary>
         /// Write out the mid-header to the stream, if any exists
         /// </summary>
-        public override void WriteMidHeader()
+        /// <param name="xtw">XmlTextWriter to write to</param>
+        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
+        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
+        private void WriteMidHeader(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
-            _writer.Write(@"			<tr bgcolor=string.Emptygraystring.Empty><th>File Name</th><th align=string.Emptyrightstring.Empty>Total Size</th><th align=string.Emptyrightstring.Empty>Games</th><th align=string.Emptyrightstring.Empty>Roms</th>"
-+ @"<th align=string.Emptyrightstring.Empty>Disks</th><th align=string.Emptyrightstring.Empty>&#35; with CRC</th><th align=string.Emptyrightstring.Empty>&#35; with MD5</th><th align=string.Emptyrightstring.Empty>&#35; with SHA-1</th><th align=string.Emptyrightstring.Empty>&#35; with SHA-256</th>"
-+ (_baddumpCol ? "<th class=\".right\">Baddumps</th>" : string.Empty) + (_nodumpCol ? "<th class=\".right\">Nodumps</th>" : string.Empty) + "</tr>\n");
-            _writer.Flush();
+            xtw.WriteStartElement("tr");
+            xtw.WriteAttributeString("bgcolor", "gray");
+
+            xtw.WriteElementString("th", "File Name");
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("Total Size");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("Games");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("Roms");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("Disks");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("# with CRC");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("# with MD5");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("# with SHA-1");
+            xtw.WriteEndElement(); // th
+
+            xtw.WriteStartElement("th");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString("# with SHA-256");
+            xtw.WriteEndElement(); // th
+
+            if (baddumpCol)
+            {
+                xtw.WriteStartElement("th");
+                xtw.WriteAttributeString("align", "right");
+                xtw.WriteString("Baddumps");
+                xtw.WriteEndElement(); // th
+            }
+
+            if (nodumpCol)
+            {
+                xtw.WriteStartElement("th");
+                xtw.WriteAttributeString("align", "right");
+                xtw.WriteString("Nodumps");
+                xtw.WriteEndElement(); // th
+            }
+
+            xtw.WriteEndElement(); // tr
+            xtw.Flush();
+        }
+
+        /// <summary>
+        /// Write a single set of statistics
+        /// </summary>
+        /// <param name="xtw">XmlTextWriter to write to</param>
+        /// <param name="stat">DatStatistics object to write out</param>
+        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
+        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
+        private void WriteIndividual(XmlTextWriter xtw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
+        {
+            bool isDirectory = stat.DisplayName.StartsWith("DIR: ");
+
+            xtw.WriteStartElement("tr");
+            if (isDirectory)
+                xtw.WriteAttributeString("class", "dir");
+            
+            xtw.WriteElementString("td", isDirectory ? WebUtility.HtmlEncode(stat.DisplayName.Remove(0, 5)) : WebUtility.HtmlEncode(stat.DisplayName));
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(GetBytesReadable(stat.Statistics.TotalSize));
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.MachineCount.ToString());
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.Statistics.RomCount.ToString());
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.Statistics.DiskCount.ToString());
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.Statistics.CRCCount.ToString());
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.Statistics.MD5Count.ToString());
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.Statistics.SHA1Count.ToString());
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("align", "right");
+            xtw.WriteString(stat.Statistics.SHA256Count.ToString());
+            xtw.WriteEndElement(); // td
+
+            if (baddumpCol)
+            {
+                xtw.WriteStartElement("td");
+                xtw.WriteAttributeString("align", "right");
+                xtw.WriteString(stat.Statistics.BaddumpCount.ToString());
+                xtw.WriteEndElement(); // td
+            }
+
+            if (nodumpCol)
+            {
+                xtw.WriteStartElement("td");
+                xtw.WriteAttributeString("align", "right");
+                xtw.WriteString(stat.Statistics.NodumpCount.ToString());
+                xtw.WriteEndElement(); // td
+            }
+
+            xtw.WriteEndElement(); // tr
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out the separator to the stream, if any exists
         /// </summary>
-        public override void WriteMidSeparator()
+        /// <param name="xtw">XmlTextWriter to write to</param>
+        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
+        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
+        private void WriteMidSeparator(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
-            _writer.Write("<tr><td colspan=\""
-                        + (_baddumpCol && _nodumpCol
-                            ? "12"
-                            : (_baddumpCol ^ _nodumpCol
-                                ? "11"
-                                : "10")
-                            )
-                        + "\"></td></tr>\n");
-            _writer.Flush();
+            xtw.WriteStartElement("tr");
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("colspan", baddumpCol && nodumpCol ? "12" : (baddumpCol ^ nodumpCol ? "11" : "10"));
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteEndElement(); // tr
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out the footer-separator to the stream, if any exists
         /// </summary>
-        public override void WriteFooterSeparator()
+        /// <param name="xtw">XmlTextWriter to write to</param>
+        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
+        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
+        private void WriteFooterSeparator(XmlTextWriter xtw, bool baddumpCol, bool nodumpCol)
         {
-            _writer.Write("<tr border=\"0\"><td colspan=\""
-                        + (_baddumpCol && _nodumpCol
-                            ? "12"
-                            : (_baddumpCol ^ _nodumpCol
-                                ? "11"
-                                : "10")
-                            )
-                        + "\"></td></tr>\n");
-            _writer.Flush();
+            xtw.WriteStartElement("tr");
+            xtw.WriteAttributeString("border", "0");
+
+            xtw.WriteStartElement("td");
+            xtw.WriteAttributeString("colspan", baddumpCol && nodumpCol ? "12" : (baddumpCol ^ nodumpCol ? "11" : "10"));
+            xtw.WriteEndElement(); // td
+
+            xtw.WriteEndElement(); // tr
+            xtw.Flush();
         }
 
         /// <summary>
         /// Write out the footer to the stream, if any exists
         /// </summary>
-        public override void WriteFooter()
+        /// <param name="xtw">XmlTextWriter to write to</param>
+        private void WriteFooter(XmlTextWriter xtw)
         {
-            _writer.Write(@"		</table>
-    </body>
-</html>
-");
-            _writer.Flush();
+            xtw.WriteEndElement(); // table
+            xtw.WriteEndElement(); // body
+            xtw.WriteEndElement(); // html
+            xtw.Flush();
         }
     }
 }

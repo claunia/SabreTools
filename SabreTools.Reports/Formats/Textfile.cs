@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+using SabreTools.Logging;
 
 namespace SabreTools.Reports.Formats
 {
@@ -7,98 +11,118 @@ namespace SabreTools.Reports.Formats
     /// </summary>
     internal class Textfile : BaseReport
     {
+        private readonly bool _writeToConsole;
+
         /// <summary>
         /// Create a new report from the filename
         /// </summary>
-        /// <param name="filename">Name of the file to write out to</param>
-        /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
-        /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        public Textfile(string filename, bool baddumpCol = false, bool nodumpCol = false)
-            : base(filename, baddumpCol, nodumpCol)
+        /// <param name="statsList">List of statistics objects to set</param>
+        /// <param name="writeToConsole">True to write to consoke output, false otherwise</param>
+        public Textfile(List<DatStatistics> statsList, bool writeToConsole)
+            : base(statsList)
         {
+            _writeToConsole = writeToConsole;
+        }
+
+        /// <inheritdoc/>
+        public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
+        {
+            InternalStopwatch watch = new InternalStopwatch($"Writing statistics to '{outfile}");
+
+            try
+            {
+                // Try to create the output file
+                Stream fs = _writeToConsole ? Console.OpenStandardOutput() : File.Create(outfile);
+                if (fs == null)
+                {
+                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    return false;
+                }
+
+                StreamWriter sw = new StreamWriter(fs);
+
+                // Now process each of the statistics
+                for (int i = 0; i < Statistics.Count; i++)
+                {
+                    // Get the current statistic
+                    DatStatistics stat = Statistics[i];
+
+                    // If we have a directory statistic
+                    if (stat.IsDirectory)
+                    {
+                        WriteIndividual(sw, stat, baddumpCol, nodumpCol);
+                        
+                        // If we have anything but the last value, write the separator
+                        if (i < Statistics.Count - 1)
+                            WriteFooterSeparator(sw);
+                    }
+
+                    // If we have a normal statistic
+                    else
+                    {
+                        WriteIndividual(sw, stat, baddumpCol, nodumpCol);
+                    }
+                }
+
+                sw.Dispose();
+                fs.Dispose();
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+            finally
+            {
+                watch.Stop();
+            }
+
+            return true;
         }
 
         /// <summary>
-        /// Create a new report from the stream
+        /// Write a single set of statistics
         /// </summary>
-        /// <param name="stream">Output stream to write to</param>
+        /// <param name="sw">StreamWriter to write to</param>
+        /// <param name="stat">DatStatistics object to write out</param>
         /// <param name="baddumpCol">True if baddumps should be included in output, false otherwise</param>
         /// <param name="nodumpCol">True if nodumps should be included in output, false otherwise</param>
-        public Textfile(Stream stream, bool baddumpCol = false, bool nodumpCol = false)
-            : base(stream, baddumpCol, nodumpCol)
+        private void WriteIndividual(StreamWriter sw, DatStatistics stat, bool baddumpCol, bool nodumpCol)
         {
-        }
-
-        /// <summary>
-        /// Write the report to file
-        /// </summary>
-        public override void Write()
-        {
-            string line = @"'" + _name + @"':
+            string line = @"'" + stat.DisplayName + @"':
 --------------------------------------------------
-    Uncompressed size:       " + GetBytesReadable(_stats.TotalSize) + @"
-    Games found:             " + _machineCount + @"
-    Roms found:              " + _stats.RomCount + @"
-    Disks found:             " + _stats.DiskCount + @"
-    Roms with CRC:           " + _stats.CRCCount + @"
-    Roms with MD5:           " + _stats.MD5Count + @"
-    Roms with SHA-1:         " + _stats.SHA1Count + @"
-    Roms with SHA-256:       " + _stats.SHA256Count + @"
-    Roms with SHA-384:       " + _stats.SHA384Count + @"
-    Roms with SHA-512:       " + _stats.SHA512Count + "\n";
+    Uncompressed size:       " + GetBytesReadable(stat.Statistics.TotalSize) + @"
+    Games found:             " + stat.MachineCount + @"
+    Roms found:              " + stat.Statistics.RomCount + @"
+    Disks found:             " + stat.Statistics.DiskCount + @"
+    Roms with CRC:           " + stat.Statistics.CRCCount + @"
+    Roms with MD5:           " + stat.Statistics.MD5Count + @"
+    Roms with SHA-1:         " + stat.Statistics.SHA1Count + @"
+    Roms with SHA-256:       " + stat.Statistics.SHA256Count + @"
+    Roms with SHA-384:       " + stat.Statistics.SHA384Count + @"
+    Roms with SHA-512:       " + stat.Statistics.SHA512Count + "\n";
 
-            if (_baddumpCol)
-                line += "	Roms with BadDump status: " + _stats.BaddumpCount + "\n";
+            if (baddumpCol)
+                line += "	Roms with BadDump status: " + stat.Statistics.BaddumpCount + "\n";
 
-            if (_nodumpCol)
-                line += "	Roms with Nodump status: " + _stats.NodumpCount + "\n";
+            if (nodumpCol)
+                line += "	Roms with Nodump status: " + stat.Statistics.NodumpCount + "\n";
 
             // For spacing between DATs
             line += "\n\n";
 
-            _writer.Write(line);
-            _writer.Flush();
-        }
-
-        /// <summary>
-        /// Write out the header to the stream, if any exists
-        /// </summary>
-        public override void WriteHeader()
-        {
-            // This call is a no-op for textfile output
-        }
-
-        /// <summary>
-        /// Write out the mid-header to the stream, if any exists
-        /// </summary>
-        public override void WriteMidHeader()
-        {
-            // This call is a no-op for textfile output
-        }
-
-        /// <summary>
-        /// Write out the separator to the stream, if any exists
-        /// </summary>
-        public override void WriteMidSeparator()
-        {
-            // This call is a no-op for textfile output
+            sw.Write(line);
+            sw.Flush();
         }
 
         /// <summary>
         /// Write out the footer-separator to the stream, if any exists
         /// </summary>
-        public override void WriteFooterSeparator()
+        /// <param name="sw">StreamWriter to write to</param>
+        private void WriteFooterSeparator(StreamWriter sw)
         {
-            _writer.Write("\n");
-            _writer.Flush();
-        }
-
-        /// <summary>
-        /// Write out the footer to the stream, if any exists
-        /// </summary>
-        public override void WriteFooter()
-        {
-            // This call is a no-op for textfile output
+            sw.Write("\n");
+            sw.Flush();
         }
     }
 }
