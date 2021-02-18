@@ -1197,7 +1197,7 @@ namespace SabreTools.Features
                     new List<string>() { "-cs", "--chunk-size" },
                     "Set a chunk size to output",
                     ParameterType.Int64,
-                    longDescription: "Set the total game size to cut off at for each chunked DAT. It is recommended to use a sufficiently large size such as 1GB or else you may run into issues.");
+                    longDescription: "Set the total game size to cut off at for each chunked DAT. It is recommended to use a sufficiently large size such as 1GB or else you may run into issues, especially if a single game could be larger than the size provided.");
             }
         }
 

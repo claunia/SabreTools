@@ -728,7 +728,8 @@ Features and Options:
 		  -cs=, --chunk-size=		Set a chunk size to output
 			  Set the total game size to cut off at for each chunked DAT. It is
 			  recommended to use a sufficiently large size such as 1GB or else
-			  you may run into issues.
+			  you may run into issues, especially if a single game could be
+			  larger than the size provided.
 
 	  -ts, --type				 Split DAT(s) or folder by file types (rom/disk)
 		  For a DAT, or set of DATs, allow for splitting based on the types of
