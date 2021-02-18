@@ -563,8 +563,8 @@ namespace SabreTools.DatFiles
                 AddExtension = this.AddExtension,
                 RemoveExtension = this.RemoveExtension,
                 GameName = this.GameName,
-                InputDepot = this.InputDepot.Clone() as DepotInformation,
-                OutputDepot = this.OutputDepot.Clone() as DepotInformation,
+                InputDepot = this.InputDepot?.Clone() as DepotInformation,
+                OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
             };
         }
 
@@ -613,8 +613,8 @@ namespace SabreTools.DatFiles
                 AddExtension = this.AddExtension,
                 RemoveExtension = this.RemoveExtension,
                 GameName = this.GameName,
-                InputDepot = this.InputDepot.Clone() as DepotInformation,
-                OutputDepot = this.OutputDepot.Clone() as DepotInformation,
+                InputDepot = this.InputDepot?.Clone() as DepotInformation,
+                OutputDepot = this.OutputDepot?.Clone() as DepotInformation,
             };
         }
 

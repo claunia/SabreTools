@@ -71,7 +71,7 @@ namespace SabreTools.Features
                     Remover.ApplyRemovals(datdata);
 
                     // Set depot information
-                    datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
+                    datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
@@ -119,7 +119,7 @@ namespace SabreTools.Features
                 Remover.ApplyRemovals(datdata);
 
                 // Set depot information
-                datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
+                datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
 
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.HeaderSkipper))

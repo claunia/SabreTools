@@ -96,8 +96,8 @@ namespace SabreTools.Features
                     Parser.ParseInto(datdata, datfile, int.MaxValue, keep: true);
 
                     // Set depot information
-                    datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
-                    datdata.Header.OutputDepot = Header.OutputDepot.Clone() as DepotInformation;
+                    datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
+                    datdata.Header.OutputDepot = Header.OutputDepot?.Clone() as DepotInformation;
 
                     // If we have overridden the header skipper, set it now
                     if (!string.IsNullOrEmpty(Header.HeaderSkipper))
@@ -135,8 +135,8 @@ namespace SabreTools.Features
                 }
 
                 // Set depot information
-                datdata.Header.InputDepot = Header.InputDepot.Clone() as DepotInformation;
-                datdata.Header.OutputDepot = Header.OutputDepot.Clone() as DepotInformation;
+                datdata.Header.InputDepot = Header.InputDepot?.Clone() as DepotInformation;
+                datdata.Header.OutputDepot = Header.OutputDepot?.Clone() as DepotInformation;
 
                 // If we have overridden the header skipper, set it now
                 if (!string.IsNullOrEmpty(Header.HeaderSkipper))
