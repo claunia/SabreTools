@@ -38,10 +38,11 @@ namespace SabreTools.Features
             None = 0x00,
 
             Extension = 1 << 0,
-            Hash = 1 << 2,
-            Level = 1 << 3,
-            Type = 1 << 4,
-            Size = 1 << 5,
+            Hash = 1 << 1,
+            Level = 1 << 2,
+            Type = 1 << 3,
+            Size = 1 << 4,
+            TotalSize = 1 << 5,
         }
 
         /// <summary>
@@ -1080,6 +1081,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string TotalSizeValue = "total-size";
+        internal static Feature TotalSizeFlag
+        {
+            get
+            {
+                return new Feature(
+                    TotalSizeValue,
+                    new List<string>() { "-tis", "--total-size" },
+                    "Split DAT(s) or folder by total game sizes",
+                    ParameterType.Flag,
+                    longDescription: "For a DAT, or set of DATs, allow for splitting based on the combined sizes of the games, splitting into individual chunks.");
+            }
+        }
+
         internal const string TrimValue = "trim";
         internal static Feature TrimFlag
         {
@@ -1171,6 +1186,20 @@ namespace SabreTools.Features
         #endregion
 
         #region Int64 features
+
+        internal const string ChunkSizeInt64Value = "chunk-size";
+        internal static Feature ChunkSizeInt64Input
+        {
+            get
+            {
+                return new Feature(
+                    ChunkSizeInt64Value,
+                    new List<string>() { "-cs", "--chunk-size" },
+                    "Set a chunk size to output",
+                    ParameterType.Int64,
+                    longDescription: "Set the total game size to cut off at for each chunked DAT. It is recommended to use a sufficiently large size such as 1GB or else you may run into issues.");
+            }
+        }
 
         internal const string RadixInt64Value = "radix";
         internal static Feature RadixInt64Input
@@ -1958,6 +1987,8 @@ Some special strings that can be used:
                 splittingMode |= SplittingMode.Level;
             if (GetBoolean(features, SizeValue))
                 splittingMode |= SplittingMode.Size;
+            if (GetBoolean(features, TotalSizeValue))
+                splittingMode |= SplittingMode.TotalSize;
             if (GetBoolean(features, TypeValue))
                 splittingMode |= SplittingMode.Type;
 

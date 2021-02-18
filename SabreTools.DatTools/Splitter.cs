@@ -354,6 +354,79 @@ namespace SabreTools.DatTools
         }
 
         /// <summary>
+        /// Split a DAT by size of Rom
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to split</param>
+        /// <param name="chunkSize">Long value representing the total size to split at</param>
+        /// <returns>Less Than and Greater Than DatFiles</returns>
+        public static List<DatFile> SplitByTotalSize(DatFile datFile, long chunkSize)
+        {
+            // If the size is invalid, just return
+            if (chunkSize <= 0)
+                return new List<DatFile>();
+
+            // Create each of the respective output DATs
+            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by total size");
+
+            // Sort the DatFile by machine name
+            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
+
+            // Get the keys in a known order for easier sorting
+            var keys = datFile.Items.SortedKeys;
+
+            // Get the output list
+            List<DatFile> datFiles = new List<DatFile>();
+
+            // Initialize everything
+            long currentSize = 0;
+            long currentIndex = 0;
+            DatFile currentDat = DatFile.Create(datFile.Header.CloneStandard());
+            currentDat.Header.FileName += $"_{currentIndex}";
+            currentDat.Header.Name += $"_{currentIndex}";
+            currentDat.Header.Description += $"_{currentIndex}";
+
+            // Loop through each machine 
+            foreach (string machine in keys)
+            {
+                // Get the current machine
+                var items = datFile.Items[machine];
+                if (items == null || !items.Any())
+                    continue;
+
+                // Get the total size of the current machine
+                long machineSize = 0;
+                foreach (var item in items)
+                {
+                    if (item is Rom rom)
+                        machineSize += rom.Size ?? 0;
+                }
+
+                // If the current machine size makes the current DatFile too big, split
+                if (currentSize + machineSize > chunkSize)
+                {
+                    datFiles.Add(currentDat);
+                    currentSize = 0;
+                    currentIndex++;
+                    currentDat = DatFile.Create(datFile.Header.CloneStandard());
+                    currentDat.Header.FileName += $"_{currentIndex}";
+                    currentDat.Header.Name += $"_{currentIndex}";
+                    currentDat.Header.Description += $"_{currentIndex}";
+                }
+
+                // Add the current machine to the current DatFile
+                currentDat.Items[machine] = items;
+                currentSize += machineSize;
+            }
+
+            // Add the final DatFile to the list
+            datFiles.Add(currentDat);
+
+            // Then return the list
+            watch.Stop();
+            return datFiles;
+        }
+
+        /// <summary>
         /// Split a DAT by type of DatItem
         /// </summary>
         /// <param name="datFile">Current DatFile object to split</param>

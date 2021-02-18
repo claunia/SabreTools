@@ -39,6 +39,8 @@ namespace SabreTools.Features
             this[LevelFlag].AddFeature(BaseFlag);
             AddFeature(SizeFlag);
             this[SizeFlag].AddFeature(RadixInt64Input);
+            AddFeature(TotalSizeFlag);
+            this[TotalSizeFlag].AddFeature(ChunkSizeInt64Input);
             AddFeature(TypeFlag);
         }
 
@@ -116,6 +118,23 @@ namespace SabreTools.Features
                     // Output both possible DatFiles
                     Writer.Write(lessThan, OutputDir);
                     Writer.Write(greaterThan, OutputDir);
+
+                    watch.Stop();
+                }
+
+                // Total Size splitting
+                if (splittingMode.HasFlag(SplittingMode.TotalSize))
+                {
+                    logger.Warning("This feature is not implemented: level-split");
+                    List<DatFile> sizedDats = DatTools.Splitter.SplitByTotalSize(internalDat, GetInt64(features, ChunkSizeInt64Value));
+
+                    InternalStopwatch watch = new InternalStopwatch("Outputting total-size-split DATs");
+
+                    // Loop through each type DatFile
+                    Parallel.ForEach(sizedDats, Globals.ParallelOptions, sizedDat =>
+                    {
+                        Writer.Write(sizedDat, OutputDir);
+                    });
 
                     watch.Stop();
                 }

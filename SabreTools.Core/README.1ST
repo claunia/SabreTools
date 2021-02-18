@@ -721,6 +721,15 @@ Features and Options:
 			  first DAT, and everything greater than or equal goes in the
 			  second.
 
+	  -tis, --total-size		Split DAT(s) or folder by total game sizes
+		  For a DAT, or set of DATs, allow for splitting based on the combined
+		  sizes of the games, splitting into individual chunks.
+
+		  -cs=, --chunk-size=		Set a chunk size to output
+			  Set the total game size to cut off at for each chunked DAT. It is
+			  recommended to use a sufficiently large size such as 1GB or else
+			  you may run into issues.
+
 	  -ts, --type				 Split DAT(s) or folder by file types (rom/disk)
 		  For a DAT, or set of DATs, allow for splitting based on the types of
 		  the files, specifically if the type is a rom or a disk.
