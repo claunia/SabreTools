@@ -26,12 +26,13 @@ namespace SabreTools.Features
             AddCommonFeatures();
 
             // Hash Features
-            AddFeature(SkipMd5Flag);
-            AddFeature(SkipSha1Flag);
-            AddFeature(SkipSha256Flag);
-            AddFeature(SkipSha384Flag);
-            AddFeature(SkipSha512Flag);
-            AddFeature(SkipSpamSumFlag);
+            AddFeature(IncludeCrcFlag);
+            AddFeature(IncludeMd5Flag);
+            AddFeature(IncludeSha1Flag);
+            AddFeature(IncludeSha256Flag);
+            AddFeature(IncludeSha384Flag);
+            AddFeature(IncludeSha512Flag);
+            AddFeature(IncludeSpamSumFlag);
 
             AddFeature(NoAutomaticDateFlag);
             AddFeature(AaruFormatsAsFilesFlag);

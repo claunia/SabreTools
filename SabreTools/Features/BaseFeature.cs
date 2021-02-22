@@ -535,6 +535,104 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string IncludeCrcValue = "include-crc";
+        internal static Feature IncludeCrcFlag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeCrcValue,
+                    new List<string>() { "-crc", "--include-crc" },
+                    "Include CRC32 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables CRC32 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeMd5Value = "include-md5";
+        internal static Feature IncludeMd5Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeMd5Value,
+                    new List<string>() { "-md5", "--include-md5" },
+                    "Include MD5 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables MD5 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeSha1Value = "include-sha1";
+        internal static Feature IncludeSha1Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeSha1Value,
+                    new List<string>() { "-sha1", "--include-sha1" },
+                    "Include SHA-1 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables SHA-1 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeSha256Value = "include-sha256";
+        internal static Feature IncludeSha256Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeSha256Value,
+                    new List<string>() { "-sha256", "--include-sha256" },
+                    "Include SHA-256 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables SHA-256 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeSha384Value = "include-sha384";
+        internal static Feature IncludeSha384Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeSha384Value,
+                    new List<string>() { "-sha384", "--include-sha384" },
+                    "Include SHA-384 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables SHA-384 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeSha512Value = "include-sha512";
+        internal static Feature IncludeSha512Flag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeSha512Value,
+                    new List<string>() { "-sha512", "--include-sha512" },
+                    "Include SHA-512 in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables SHA-512 calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
+        internal const string IncludeSpamSumValue = "include-spamsum";
+        internal static Feature IncludeSpamSumFlag
+        {
+            get
+            {
+                return new Feature(
+                    IncludeSpamSumValue,
+                    new List<string>() { "-spamsum", "--include-spamsum" },
+                    "Include SpamSum in output",
+                    ParameterType.Flag,
+                    longDescription: "This enables SpamSum calculation for each of the files. Adding this flag overrides the default hashing behavior of including CRC32, MD5, and SHA-1 hashes.");
+            }
+        }
+
         internal const string IndividualValue = "individual";
         internal static Feature IndividualFlag
         {
@@ -924,90 +1022,6 @@ namespace SabreTools.Features
                     "Skip output of first DAT",
                     ParameterType.Flag,
                     longDescription: "In times where the first DAT does not need to be written out a second time, this will skip writing it. This can often speed up the output process.");
-            }
-        }
-
-        internal const string SkipMd5Value = "skip-md5";
-        internal static Feature SkipMd5Flag
-        {
-            get
-            {
-                return new Feature(
-                    SkipMd5Value,
-                    new List<string>() { "-nm", "--skip-md5" },
-                    "Don't include MD5 in output",
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to skip calculating the MD5 for each of the files which will speed up the creation of the DAT.");
-            }
-        }
-
-        internal const string SkipSha1Value = "skip-sha1";
-        internal static Feature SkipSha1Flag
-        {
-            get
-            {
-                return new Feature(
-                    SkipSha1Value,
-                    new List<string>() { "-ns", "--skip-sha1" },
-                    "Don't include SHA-1 in output",
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to skip calculating the SHA-1 for each of the files which will speed up the creation of the DAT.");
-            }
-        }
-
-        internal const string SkipSha256Value = "skip-sha256";
-        internal static Feature SkipSha256Flag
-        {
-            get
-            {
-                return new Feature(
-                    SkipSha256Value,
-                    new List<string>() { "-ns256", "--skip-sha256" },
-                    "Include SHA-256 in output", // TODO: This needs to be inverted later
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to include calculating the SHA-256 for each of the files.");
-            }
-        }
-
-        internal const string SkipSha384Value = "skip-sha384";
-        internal static Feature SkipSha384Flag
-        {
-            get
-            {
-                return new Feature(
-                    SkipSha384Value,
-                    new List<string>() { "-ns384", "--skip-sha384" },
-                    "Include SHA-384 in output", // TODO: This needs to be inverted later
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to include calculating the SHA-384 for each of the files.");
-            }
-        }
-
-        internal const string SkipSha512Value = "skip-sha512";
-        internal static Feature SkipSha512Flag
-        {
-            get
-            {
-                return new Feature(
-                    SkipSha512Value,
-                    new List<string>() { "-ns512", "--skip-sha512" },
-                    "Include SHA-512 in output", // TODO: This needs to be inverted later
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to include calculating the SHA-512 for each of the files.");
-            }
-        }
-
-        internal const string SkipSpamSumValue = "skip-spamsum";
-        internal static Feature SkipSpamSumFlag
-        {
-            get
-            {
-                return new Feature(
-                    SkipSpamSumValue,
-                    new List<string>() { "-nss", "--skip-spamsum" },
-                    "Include SpamSum in output", // TODO: This needs to be inverted later
-                    ParameterType.Flag,
-                    longDescription: "This allows the user to include calculating the SpamSum for each of the files.");
             }
         }
 
@@ -1912,20 +1926,26 @@ Some special strings that can be used:
         /// </summary>
         protected Hash GetIncludeInScan(Dictionary<string, Feature> features)
         {
-            Hash includeInScan = Hash.Standard; // TODO: This should be All eventually
+            Hash includeInScan = 0x00;
 
-            if (GetBoolean(features, SkipMd5Value))
-                includeInScan &= ~Hash.MD5;
-            if (GetBoolean(features, SkipSha1Value))
-                includeInScan &= ~Hash.SHA1;
-            if (GetBoolean(features, SkipSha256Value))
-                includeInScan |= Hash.SHA256; // TODO: This needs to be inverted later
-            if (GetBoolean(features, SkipSha384Value))
-                includeInScan |= Hash.SHA384; // TODO: This needs to be inverted later
-            if (GetBoolean(features, SkipSha512Value))
-                includeInScan |= Hash.SHA512; // TODO: This needs to be inverted later
-            if (GetBoolean(features, SkipSpamSumValue))
-                includeInScan |= Hash.SpamSum; // TODO: This needs to be inverted later
+            if (GetBoolean(features, IncludeCrcValue))
+                includeInScan |= Hash.CRC;
+            if (GetBoolean(features, IncludeMd5Value))
+                includeInScan |= Hash.MD5;
+            if (GetBoolean(features, IncludeSha1Value))
+                includeInScan |= Hash.SHA1;
+            if (GetBoolean(features, IncludeSha256Value))
+                includeInScan |= Hash.SHA256;
+            if (GetBoolean(features, IncludeSha384Value))
+                includeInScan |= Hash.SHA384;
+            if (GetBoolean(features, IncludeSha512Value))
+                includeInScan |= Hash.SHA512;
+            if (GetBoolean(features, IncludeSpamSumValue))
+                includeInScan |= Hash.SpamSum;
+
+            // Fallback to "Standard" if no flags are set
+            if (includeInScan == 0x00)
+                includeInScan = Hash.Standard;
 
             return includeInScan;
         }

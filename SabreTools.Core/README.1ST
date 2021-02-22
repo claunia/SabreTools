@@ -230,29 +230,40 @@ Features and Options:
 	  date. It will also treat all archives as possible games and add all three
 	  hashes (CRC, MD5, SHA-1) for each file.
 
-	  -nm, --skip-md5			 Don't include MD5 in output
-		  This allows the user to skip calculating the MD5 for each of the
-		  files which will speed up the creation of the DAT.
+	  -crc, --include-crc		 Include CRC32 in output
+		  This enables CRC32 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
 
-	  -ns, --skip-sha1			Don't include SHA-1 in output
-		  This allows the user to skip calculating the SHA-1 for each of the
-		  files which will speed up the creation of the DAT.
+	  -md5, --include-md5		 Include MD5 in output
+		  This enables MD5 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
 
-	  -ns256, --skip-sha256	   Include SHA-256 in output
-		  This allows the user to include calculating the SHA-256 for each of the
-		  files.
+	  -sha1, --include-sha1		 Include SHA-1 in output
+		  This enables SHA-1 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
 
-	  -ns384, --skip-sha384	   Include SHA-384 in output
-		  This allows the user to include calculating the SHA-384 for each of the
-		  files.
+	  -sha256, --include-sha256	 Include SHA-256 in output
+		  This enables SHA-256 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
 
-	  -ns512, --skip-sha512	   Include SHA-512 in output
-		  This allows the user to include calculating the SHA-512 for each of the
-		  files.
+	  -sha384, --include-sha384	 Include SHA-384 in output
+		  This enables SHA-384 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
 
-	  --nss, --skip-spamsum	   Include SpamSum in output
-		  This allows the user to include calculating the SpamSum for each of the
-		  files.
+	  -sha512, --include-sha512	 Include SHA-512 in output
+		  This enables SHA-512 calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
+
+	  -spamsum, --include-spamsum	 Include SpamSum in output
+		  This enables SpamSum calculation for each of the files. Adding this flag
+		  overrides the default hashing behavior of including CRC32, MD5, and
+		  SHA-1 hashes.
 
 	  -b, --no-automatic-date	 Don't include date in file name
 		  Normally, the DAT will be created with the date in the file name in
