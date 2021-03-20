@@ -26,9 +26,12 @@ namespace RombaSharp.Features
             AddCommonFeatures();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
+
             logger.Error("This feature is not yet implemented: import");
 
             // First ensure the inputs and database connection
@@ -121,6 +124,7 @@ namespace RombaSharp.Features
 
             slc.Dispose();
             dbc.Dispose();
+            return true;
         }
     }
 }

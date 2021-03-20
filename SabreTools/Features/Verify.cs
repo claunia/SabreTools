@@ -41,9 +41,11 @@ namespace SabreTools.Features
             AddFilteringFeatures();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get a list of files from the input datfiles
             var datfiles = GetList(features, DatListValue);
@@ -148,6 +150,8 @@ namespace SabreTools.Features
                 Writer.WriteStatsToConsole(datdata);
                 Writer.Write(datdata, OutputDir);
             }
+
+            return true;
         }
     }
 }

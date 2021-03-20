@@ -53,9 +53,11 @@ namespace SabreTools.Features
             AddFeature(OutputDirStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
@@ -113,6 +115,8 @@ namespace SabreTools.Features
                     }
                 }
             }
+
+            return true;
         }
     }
 }

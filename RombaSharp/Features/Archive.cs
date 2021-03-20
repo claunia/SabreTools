@@ -45,9 +45,11 @@ have a current entry in the DAT index.";
             AddFeature(NoDbFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get the archive scanning level
             // TODO: Remove usage
@@ -201,6 +203,8 @@ have a current entry in the DAT index.";
                 outDir: _depots.Keys.ToList()[0],
                 outputFormat: OutputFormat.TorrentGzipRomba,
                 asFiles: TreatAsFile.NonArchive);
+            
+            return true;
         }
     }
 }

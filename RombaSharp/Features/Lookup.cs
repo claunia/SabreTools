@@ -26,9 +26,11 @@ namespace RombaSharp.Features
             AddFeature(OutStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             long size = GetInt64(features, SizeInt64Value);
@@ -123,6 +125,7 @@ namespace RombaSharp.Features
             }
 
             dbc.Dispose();
+            return true;
         }
     }
 }

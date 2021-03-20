@@ -31,9 +31,11 @@ structure. It also deletes the specified DATs from the DAT index.";
             AddFeature(LogOnlyFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             bool logOnly = GetBoolean(features, LogOnlyValue);
@@ -42,6 +44,7 @@ structure. It also deletes the specified DATs from the DAT index.";
             List<string> depot = GetList(features, DepotListStringValue);
 
             logger.Error("This feature is not yet implemented: purge-delete");
+            return true;
         }
     }
 }

@@ -41,9 +41,11 @@ The following systems have headers that this program can work with:
             AddFeature(NoStoreHeaderFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             bool nostore = GetBoolean(features, NoStoreHeaderValue);
@@ -54,6 +56,8 @@ The following systems have headers that this program can work with:
             {
                 DetectTransformStore(file.CurrentPath, OutputDir, nostore);
             }
+
+            return true;
         }
 
         /// <summary>

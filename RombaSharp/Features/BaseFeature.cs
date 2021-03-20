@@ -447,13 +447,14 @@ Possible values are: Verbose, User, Warning, Error");
 
         #endregion
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
             LogLevel = GetString(features, LogLevelStringValue).AsLogLevel();
             ScriptMode = GetBoolean(features, ScriptValue);
 
             InitializeConfiguration();
             EnsureDatabase(_db, _connectionString);
+            return true;
         }
 
         /// <summary>

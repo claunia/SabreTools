@@ -30,9 +30,11 @@ namespace RombaSharp.Features
         }
 
         // TODO: Add way of specifying "current depot" since that's what Romba relies on
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             bool onlyNeeded = GetBoolean(features, OnlyNeededValue);
@@ -74,6 +76,8 @@ namespace RombaSharp.Features
 
                 }
             }
+
+            return true;
         }
     }
 }

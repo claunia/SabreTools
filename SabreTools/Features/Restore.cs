@@ -39,9 +39,11 @@ The following systems have headers that this program can work with:
             AddFeature(OutputDirStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get only files from the inputs
             List<ParentablePath> files = PathTool.GetFilesOnly(Inputs);
@@ -49,6 +51,8 @@ The following systems have headers that this program can work with:
             {
                 RestoreHeader(file.CurrentPath, OutputDir);
             }
+
+            return true;
         }
     
         /// <summary>

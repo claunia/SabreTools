@@ -110,6 +110,7 @@ namespace SabreTools
 
             // Now process the current feature
             Dictionary<string, Feature> features = _help.GetEnabledFeatures();
+            bool success = false;
             switch (featureName)
             {
                 // No-op as these should be caught
@@ -127,18 +128,25 @@ namespace SabreTools
                 case Update.Value:
                 case Verify.Value:
                     VerifyInputs(feature.Inputs, feature);
-                    feature.ProcessFeatures(features);
+                    success = feature.ProcessFeatures(features);
                     break;
 
                 // Requires no input verification
                 case Sort.Value:
-                    feature.ProcessFeatures(features);
+                    success = feature.ProcessFeatures(features);
                     break;
 
                 // If nothing is set, show the help
                 default:
                     _help.OutputGenericHelp();
                     break;
+            }
+
+            // If the feature failed, output help
+            if (!success)
+            {
+                logger.Error("An error occurred during processing!");
+                _help.OutputIndividualFeature(featureName);
             }
 
             LoggerImpl.Close();
@@ -190,13 +198,6 @@ namespace SabreTools
             if (inputs.Count == 0)
             {
                 logger.Error("This feature requires at least one input");
-                _help.OutputIndividualFeature(feature.Name);
-                Environment.Exit(0);
-            }
-
-            if (feature.Header == null)
-            {
-                logger.Error("Please check for errors in parameters");
                 _help.OutputIndividualFeature(feature.Name);
                 Environment.Exit(0);
             }

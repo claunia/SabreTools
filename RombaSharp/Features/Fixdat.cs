@@ -26,9 +26,11 @@ namespace RombaSharp.Features
             AddFeature(SubworkersInt32Input);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             // Inputs
@@ -38,6 +40,7 @@ namespace RombaSharp.Features
             string outdat = GetString(features, OutStringValue);
 
             logger.Error("This feature is not yet implemented: fixdat");
+            return true;
         }
     }
 }

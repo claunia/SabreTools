@@ -58,9 +58,11 @@ namespace SabreTools.Features
             AddFeature(UpdateDatFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             TreatAsFile asFiles = GetTreatAsFiles(features);
@@ -161,6 +163,8 @@ namespace SabreTools.Features
                     Writer.Write(datdata, OutputDir);
                 }
             }
+
+            return true;
         }
     }
 }

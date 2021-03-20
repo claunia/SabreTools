@@ -110,6 +110,7 @@ namespace RombaSharp
 
             // Now process the current feature
             Dictionary<string, Feature> features = _help.GetEnabledFeatures();
+            bool success = false;
             switch (featureName)
             {
                 case DisplayHelpDetailed.Value:
@@ -128,7 +129,7 @@ namespace RombaSharp
                 case Miss.Value:
                 case RescanDepots.Value:
                     VerifyInputs(feature.Inputs, featureName);
-                    feature.ProcessFeatures(features);
+                    success = feature.ProcessFeatures(features);
                     break;
 
                 // Requires no input verification
@@ -145,13 +146,20 @@ namespace RombaSharp
                 case RefreshDats.Value:
                 case Shutdown.Value:
                 case Features.Version.Value:
-                    feature.ProcessFeatures(features);
+                    success = feature.ProcessFeatures(features);
                     break;
 
                 // If nothing is set, show the help
                 default:
                     _help.OutputGenericHelp();
                     break;
+            }
+
+            // If the feature failed, output help
+            if (!success)
+            {
+                logger.Error("An error occurred during processing!");
+                _help.OutputIndividualFeature(featureName);
             }
 
             LoggerImpl.Close();

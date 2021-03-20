@@ -32,9 +32,11 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             AddFeature(DescriptionStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             string name = GetString(features, NameStringValue);
@@ -50,13 +52,13 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             if (!File.Exists(olddat))
             {
                 logger.Error($"File '{olddat}' does not exist!");
-                return;
+                return false;
             }
 
             if (!File.Exists(newdat))
             {
                 logger.Error($"File '{newdat}' does not exist!");
-                return;
+                return false;
             }
 
             // Create the encapsulating datfile
@@ -69,6 +71,7 @@ in -old DAT file. Ignores those entries in -old that are not in -new.";
             DatFile intDat = Parser.CreateAndParse(newdat);
             DatFileTool.DiffAgainst(datfile, intDat, false);
             Writer.Write(intDat, outdat);
+            return true;
         }
     }
 }

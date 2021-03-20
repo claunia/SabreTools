@@ -22,10 +22,14 @@ namespace RombaSharp.Features
             AddCommonFeatures();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
+
             logger.User($"RombaSharp version: {Prepare.Version}");
+            return true;
         }
     }
 }

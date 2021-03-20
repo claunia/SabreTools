@@ -32,9 +32,11 @@ namespace RombaSharp.Features
             AddFeature(DescriptionStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             string name = GetString(features, NameStringValue);
@@ -49,7 +51,7 @@ namespace RombaSharp.Features
             if (!Directory.Exists(source))
             {
                 logger.Error($"File '{source}' does not exist!");
-                return;
+                return false;
             }
 
             // Create and write the encapsulating datfile
@@ -58,6 +60,7 @@ namespace RombaSharp.Features
             datfile.Header.Description = description;
             DatFromDir.PopulateFromDir(datfile, source, asFiles: TreatAsFile.NonArchive, hashes: Hash.Standard);
             Writer.Write(datfile, outdat);
+            return true;
         }
     }
 }

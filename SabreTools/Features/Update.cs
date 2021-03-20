@@ -84,9 +84,11 @@ namespace SabreTools.Features
             AddFeature(InplaceFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             var updateDatItemFields = GetUpdateDatItemFields(features);
@@ -171,7 +173,7 @@ namespace SabreTools.Features
                     Writer.Write(datFile, realOutDir, overwrite: GetBoolean(features, InplaceValue));
                 });
 
-                return;
+                return true;
             }
 
             // Reverse inputs if we're in a required mode
@@ -346,6 +348,8 @@ namespace SabreTools.Features
 
                 Writer.Write(userInputDat, OutputDir);
             }
+
+            return true;
         }
     }
 }

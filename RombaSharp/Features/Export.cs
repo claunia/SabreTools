@@ -25,9 +25,11 @@ namespace RombaSharp.Features
         }
 
         // TODO: Add ability to say which depot the files are found in
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             SqliteConnection dbc = new SqliteConnection(_connectionString);
             dbc.Open();
@@ -69,6 +71,7 @@ namespace RombaSharp.Features
             slc.Dispose();
             sw.Dispose();
             dbc.Dispose();
+            return true;
         }
     }
 }

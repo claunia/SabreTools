@@ -30,9 +30,12 @@ namespace RombaSharp.Features
             AddCommonFeatures();
         }
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
+
             logger.Error("This feature is not yet implemented: rescan-depots");
 
             foreach (string depotname in Inputs)
@@ -41,14 +44,14 @@ namespace RombaSharp.Features
                 if (!_depots.ContainsKey(depotname))
                 {
                     logger.User($"'{depotname}' is not a recognized depot. Please add it to your configuration file and try again");
-                    return;
+                    return false;
                 }
 
                 // Then check that the depot is online
                 if (!Directory.Exists(depotname))
                 {
                     logger.User($"'{depotname}' does not appear to be online. Please check its status and try again");
-                    return;
+                    return false;
                 }
 
                 // Open the database connection
@@ -165,6 +168,8 @@ WHERE sha1.sha1 IN ";
                 slc.Dispose();
                 dbc.Dispose();
             }
+
+            return true;
         }
     }
 }

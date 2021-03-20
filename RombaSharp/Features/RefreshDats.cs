@@ -37,9 +37,11 @@ contents of any changed dats.";
             AddFeature(MissingSha1sStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, SabreTools.Help.Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             int workers = GetInt32(features, WorkersInt32Value);
@@ -139,6 +141,7 @@ contents of any changed dats.";
             }
 
             dbc.Dispose();
+            return true;
         }
     }
 }

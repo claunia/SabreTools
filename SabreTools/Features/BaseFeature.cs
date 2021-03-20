@@ -1853,7 +1853,7 @@ Some special strings that can be used:
 
         #endregion
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
             // Generic feature flags
             Cleaner = GetCleaner(features);
@@ -1869,6 +1869,12 @@ Some special strings that can be used:
             // Set threading flag, if necessary
             if (features.ContainsKey(ThreadsInt32Value))
                 Globals.MaxThreads = GetInt32(features, ThreadsInt32Value);
+            
+            // Failure conditions
+            if (Header == null)
+                return false;
+            
+            return true;
         }
 
         #region Protected Specific Extraction

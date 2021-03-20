@@ -35,9 +35,11 @@ structure according to the original DAT master directory tree structure.";
             AddFeature(SubworkersInt32Input);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             bool copy = GetBoolean(features, CopyValue);
@@ -74,6 +76,8 @@ structure according to the original DAT master directory tree structure.";
                     outDir: outputFolder,
                     outputFormat: copy ? OutputFormat.TorrentGzipRomba : OutputFormat.TorrentZip);
             }
+
+            return true;
         }
     }
 }

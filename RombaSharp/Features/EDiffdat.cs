@@ -29,9 +29,11 @@ namespace RombaSharp.Features
             AddFeature(NewStringInput);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Get feature flags
             string olddat = GetString(features, OldStringValue);
@@ -45,13 +47,13 @@ namespace RombaSharp.Features
             if (!File.Exists(olddat))
             {
                 logger.Error($"File '{olddat}' does not exist!");
-                return;
+                return false;
             }
 
             if (!File.Exists(newdat))
             {
                 logger.Error($"File '{newdat}' does not exist!");
-                return;
+                return false;
             }
 
             // Create the encapsulating datfile
@@ -61,6 +63,7 @@ namespace RombaSharp.Features
             DatFile intDat = Parser.CreateAndParse(newdat);
             DatFileTool.DiffAgainst(datfile, intDat, false);
             Writer.Write(intDat, outdat);
+            return true;
         }
     }
 }

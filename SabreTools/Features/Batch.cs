@@ -51,9 +51,11 @@ Reset the internal state:           reset();";
             AddCommonFeatures();
         }
 
-        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
-            base.ProcessFeatures(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
             // Try to read each input as a batch run file
             foreach (string path in Inputs)
@@ -62,6 +64,8 @@ Reset the internal state:           reset();";
                 ProcessScript(path);
                 watch.Stop();
             }
+
+            return true;
         }
 
         /// <summary>

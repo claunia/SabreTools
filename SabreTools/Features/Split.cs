@@ -44,14 +44,19 @@ namespace SabreTools.Features
             AddFeature(TypeFlag);
         }
 
-        public override void ProcessFeatures(Dictionary<string, Help.Feature> features)
+        public override bool ProcessFeatures(Dictionary<string, Help.Feature> features)
         {
-            base.ProcessFeatures(features);
-            SplittingMode splittingMode = GetSplittingMode(features);
+            // If the base fails, just fail out
+            if (!base.ProcessFeatures(features))
+                return false;
 
-            // If we somehow have the "none" split type, return
+            // Get the splitting mode
+            SplittingMode splittingMode = GetSplittingMode(features);
             if (splittingMode == SplittingMode.None)
-                return;
+            {
+                logger.Error("No valid splitting mode found!");
+                return false;
+            }
 
             // Get only files from the inputs
             List<ParentablePath> files = PathTool.GetFilesOnly(Inputs, appendparent: true);
@@ -155,6 +160,8 @@ namespace SabreTools.Features
                     watch.Stop();
                 }
             }
+
+            return true;
         }
     }
 }
