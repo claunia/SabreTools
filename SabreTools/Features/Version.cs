@@ -3,7 +3,7 @@
 using SabreTools.Core;
 using SabreTools.Help;
 
-namespace RombaSharp.Features
+namespace SabreTools.Features
 {
     internal class Version : BaseFeature
     {
@@ -12,7 +12,7 @@ namespace RombaSharp.Features
         public Version()
         {
             Name = Value;
-            Flags = new List<string>() { "version" };
+            Flags = new List<string>() { "v", "version" };
             Description = "Prints version";
             _featureType = ParameterType.Flag;
             LongDescription = "Prints current program version.";
@@ -28,7 +28,7 @@ namespace RombaSharp.Features
             if (!base.ProcessFeatures(features))
                 return false;
 
-            logger.User($"RombaSharp version: {Prepare.Version}");
+            logger.User($"SabreTools version: {Prepare.Version}");
             return true;
         }
     }

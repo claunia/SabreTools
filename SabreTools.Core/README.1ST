@@ -1182,6 +1182,9 @@ Features and Options:
 		  directory, if set). This flag enables users to write out to the
 		  directory that the DATs originated from.
 
+  v, version				  Prints version
+	  Prints current program version.
+
   ve, verify			  Verify a folder against DATs
 	  When used, this will use an input DAT or set of DATs to blindly check
 	  against an input folder. The base of the folder is considered the base
