@@ -126,7 +126,7 @@ namespace SabreTools
                 case Stats.Value:
                 case Update.Value:
                 case Verify.Value:
-                    VerifyInputs(feature.Inputs, featureName);
+                    VerifyInputs(feature.Inputs, feature);
                     feature.ProcessFeatures(features);
                     break;
 
@@ -185,12 +185,19 @@ namespace SabreTools
         /// </summary>
         /// <param name="inputs">List of inputs</param>
         /// <param name="feature">Name of the current feature</param>
-        private static void VerifyInputs(List<string> inputs, string feature)
+        private static void VerifyInputs(List<string> inputs, BaseFeature feature)
         {
             if (inputs.Count == 0)
             {
                 logger.Error("This feature requires at least one input");
-                _help.OutputIndividualFeature(feature);
+                _help.OutputIndividualFeature(feature.Name);
+                Environment.Exit(0);
+            }
+
+            if (feature.Header == null)
+            {
+                logger.Error("Please check for errors in parameters");
+                _help.OutputIndividualFeature(feature.Name);
                 Environment.Exit(0);
             }
         }

@@ -1756,7 +1756,8 @@ Some special strings that can be used:
         /// <summary>
         /// Pre-configured DatHeader
         /// </summary>
-        protected DatHeader Header { get; set; }
+        /// <remarks>Public because it's an indicator something went wrong</remarks>
+        public DatHeader Header { get; set; }
 
         /// <summary>
         /// Lowest log level for output
@@ -2140,10 +2141,19 @@ Some special strings that can be used:
             foreach (string ot in GetList(features, OutputTypeListValue))
             {
                 DatFormat dftemp = GetDatFormat(ot);
-                if (dftemp == DatFormat.Logiqx && deprecated)
+                if (dftemp == 0x00)
+                {
+                    logger.Error($"{ot} is not a recognized DAT format");
+                    return null;
+                }
+                else if (dftemp == DatFormat.Logiqx && deprecated)
+                {
                     datHeader.DatFormat |= DatFormat.LogiqxDeprecated;
+                }
                 else
+                {
                     datHeader.DatFormat |= dftemp;
+                }
             }
 
             return datHeader;
@@ -2206,7 +2216,6 @@ Some special strings that can be used:
 
             return remover;
         }
-
 
         /// <summary>
         /// Get Splitter from feature list
