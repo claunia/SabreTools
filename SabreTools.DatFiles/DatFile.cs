@@ -379,16 +379,16 @@ namespace SabreTools.DatFiles
         /// <param name="forceRomName">True if the UseRomName should be always on (default), false otherwise</param>
         protected void ProcessItemName(DatItem item, bool forceRemoveQuotes, bool forceRomName = true)
         {
-            string name = item.GetName() ?? string.Empty;
-
             // Backup relevant values and set new ones accordingly
             bool quotesBackup = Header.Quotes;
             bool useRomNameBackup = Header.UseRomName;
             if (forceRemoveQuotes)
                 Header.Quotes = false;
-
             if (forceRomName)
                 Header.UseRomName = true;
+
+            // Get the name to update
+            string name = (Header.UseRomName ? item.GetName() : item.Machine.Name) ?? string.Empty;
 
             // Create the proper Prefix and Postfix
             string pre = CreatePrefixPostfix(item, true);
@@ -450,8 +450,12 @@ namespace SabreTools.DatFiles
             if (Header.UseRomName && Header.GameName)
                 name = Path.Combine(item.Machine.Name, name);
 
-            // Now assign back the item name
-            item.SetName($"{pre}{name}{post}");
+            // Now assign back the formatted name
+            name = $"{pre}{name}{post}";
+            if (Header.UseRomName)
+                item.SetName(name);
+            else
+                item.Machine.Name = name;
 
             // Restore all relevant values
             if (forceRemoveQuotes)
