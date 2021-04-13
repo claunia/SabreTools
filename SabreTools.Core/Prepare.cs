@@ -12,8 +12,8 @@ namespace SabreTools.Core
         /// <summary>
         /// The current toolset version to be used by all child applications
         /// </summary>
-        //public readonly static string Version = $"v1.1.0";
-        public readonly static string Version = $"v1.1.0-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
+        public readonly static string Version = $"v1.1.1";
+        //public readonly static string Version = $"v1.1.1-{File.GetCreationTime(Assembly.GetExecutingAssembly().Location):yyyy-MM-dd HH:mm:ss}";
  
         /// <summary>
         /// Readies the console and outputs the header
