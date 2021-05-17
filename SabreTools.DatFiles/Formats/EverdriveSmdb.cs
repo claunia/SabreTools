@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.IO;
@@ -58,6 +59,7 @@ namespace SabreTools.DatFiles.Formats
                     2 - SHA-1
                     3 - MD5
                     4 - CRC32
+                    5 - Size (Optional)
                     */
 
                     string[] fullname = svr.Line[1].Split('/');
@@ -84,6 +86,10 @@ namespace SabreTools.DatFiles.Formats
                             Name = filename,
                         },
                     };
+
+                    // Size in SMDB files is optional
+                    if (svr.Line.Count > 5)
+                        rom.Size = Utilities.CleanLong(svr.Line[5]);
 
                     // Now process and add the rom
                     ParseAddHelper(rom, statsOnly);
@@ -185,12 +191,12 @@ namespace SabreTools.DatFiles.Formats
 
                     string[] fields = new string[]
                     {
-                            rom.SHA256 ?? string.Empty,
-                            $"{rom.Machine.Name ?? string.Empty}/",
-                            rom.Name ?? string.Empty,
-                            rom.SHA1 ?? string.Empty,
-                            rom.MD5 ?? string.Empty,
-                            rom.CRC ?? string.Empty,
+                        rom.SHA256 ?? string.Empty,
+                        $"{rom.Machine.Name ?? string.Empty}/{rom.Name ?? string.Empty}",
+                        rom.SHA1 ?? string.Empty,
+                        rom.MD5 ?? string.Empty,
+                        rom.CRC ?? string.Empty,
+                        rom.Size.ToString() ?? string.Empty,
                     };
 
                     svw.WriteValues(fields);
