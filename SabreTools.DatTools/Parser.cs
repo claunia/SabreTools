@@ -167,23 +167,65 @@ namespace SabreTools.DatTools
             // Get the first two non-whitespace, non-comment lines to check, if possible
             string first = string.Empty, second = string.Empty;
 
+            // TODO: Add handling of multi-line comments
+
             try
             {
                 using StreamReader sr = File.OpenText(filename);
-                first = sr.ReadLine().ToLowerInvariant();
-                while ((string.IsNullOrWhiteSpace(first) || first.StartsWith("<!--"))
-                    && !sr.EndOfStream)
+                first = sr.ReadLine().ToLowerInvariant().Trim();
+                bool inComment = first.StartsWith("<!--");
+
+                while ((string.IsNullOrWhiteSpace(first) || inComment) && !sr.EndOfStream)
                 {
-                    first = sr.ReadLine().ToLowerInvariant();
+                    if (first.StartsWith("<!--") && first.EndsWith("-->"))
+                    {
+                        inComment = false;
+                        first = sr.ReadLine().ToLowerInvariant().Trim();
+                    }
+                    else if (first.StartsWith("<!--"))
+                    {
+                        inComment = true;
+                        first = sr.ReadLine().ToLowerInvariant().Trim();
+                    }
+                    else if (inComment && first.EndsWith("-->"))
+                    {
+                        first = sr.ReadLine().ToLowerInvariant().Trim();
+                        inComment = first.StartsWith("<!--");
+                    }
+                    else if (string.IsNullOrWhiteSpace(first) || inComment)
+                    {
+                        first = sr.ReadLine().ToLowerInvariant().Trim();
+                        inComment |= first.StartsWith("<!--");
+                    }
                 }
 
                 if (!sr.EndOfStream)
                 {
-                    second = sr.ReadLine().ToLowerInvariant();
-                    while (string.IsNullOrWhiteSpace(second) || second.StartsWith("<!--")
-                        && !sr.EndOfStream)
+                    second = sr.ReadLine().ToLowerInvariant().Trim();
+                    inComment = second.StartsWith("<!--");
+
+                    while ((string.IsNullOrWhiteSpace(second) || inComment) && !sr.EndOfStream)
                     {
-                        second = sr.ReadLine().ToLowerInvariant();
+                        if (second.StartsWith("<!--") && second.EndsWith("-->"))
+                        {
+                            inComment = false;
+                            second = sr.ReadLine().ToLowerInvariant().Trim();
+                        }
+                        else if (second.StartsWith("<!--"))
+                        {
+                            inComment = true;
+                            second = sr.ReadLine().ToLowerInvariant().Trim();
+                        }
+                        else if (inComment && second.EndsWith("-->"))
+                        {
+                            second = sr.ReadLine().ToLowerInvariant().Trim();
+                            inComment = second.StartsWith("<!--");
+                        }
+                        else if (string.IsNullOrWhiteSpace(second) || inComment)
+                        {
+                            second = sr.ReadLine().ToLowerInvariant().Trim();
+                            inComment |= second.StartsWith("<!--");
+                        }
                     }
                 }
             }
