@@ -375,7 +375,7 @@ namespace SabreTools.DatTools
                 return false;
 
             // If either we have duplicates or we're filtering
-            if (ShouldRebuild(datFile, datItem, fileStream, inverse, out List<DatItem> dupes))
+            if (ShouldRebuild(datFile, datItem, fileStream, inverse, out ConcurrentList<DatItem> dupes))
             {
                 // If we have a very specific TGZ->TGZ case, just copy it accordingly
                 if (RebuildTorrentGzip(datFile, datItem, file, outDir, outputFormat, isZip))
@@ -480,7 +480,7 @@ namespace SabreTools.DatTools
         /// <param name="inverse">True if the DAT should be used as a filter instead of a template, false otherwise</param>
         /// <param name="dupes">Output list of duplicate items to rebuild to</param>
         /// <returns>True if the item should be rebuilt, false otherwise</returns>
-        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream stream, bool inverse, out List<DatItem> dupes)
+        private static bool ShouldRebuild(DatFile datFile, DatItem datItem, Stream stream, bool inverse, out ConcurrentList<DatItem> dupes)
         {
             // Find if the file has duplicates in the DAT
             dupes = datFile.Items.GetDuplicates(datItem);

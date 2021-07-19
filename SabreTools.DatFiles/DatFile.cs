@@ -513,7 +513,7 @@ namespace SabreTools.DatFiles
         /// <param name="datItems">DatItems to check</param>
         /// <returns>True if the machine contains at least one writable item, false otherwise</returns>
         /// <remarks>Empty machines are kept with this</remarks>
-        protected bool ContainsWritable(List<DatItem> datItems)
+        protected bool ContainsWritable(ConcurrentList<DatItem> datItems)
         {
             // Empty machines are considered writable
             if (datItems == null || datItems.Count == 0)

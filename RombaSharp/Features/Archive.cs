@@ -93,7 +93,7 @@ have a current entry in the DAT index.";
 
             foreach (string key in df.Items.Keys)
             {
-                List<DatItem> datItems = df.Items[key];
+                ConcurrentList<DatItem> datItems = df.Items[key];
                 foreach (Rom rom in datItems)
                 {
                     // If we care about if the file exists, check the databse first

@@ -88,7 +88,7 @@ namespace RombaSharp.Features
                 IEnumerable<string> keys = depot.Items.Keys;
                 foreach (string key in keys)
                 {
-                    List<DatItem> roms = depot.Items[key];
+                    ConcurrentList<DatItem> roms = depot.Items[key];
                     foreach (Rom rom in roms)
                     {
                         if (hashes.Contains(rom.SHA1))

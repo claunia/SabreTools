@@ -36,8 +36,8 @@ namespace SabreTools.DatTools
             List<string> keys = datFile.Items.Keys.ToList();
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = datFile.Items[key].ToList();
-                List<DatItem> newItems = new List<DatItem>();
+                ConcurrentList<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> newItems = new ConcurrentList<DatItem>();
                 foreach (DatItem item in items)
                 {
                     DatItem newItem = item;
@@ -87,11 +87,11 @@ namespace SabreTools.DatTools
                 // Then we do a hashwise comparison against the base DAT
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    List<DatItem> datItems = intDat.Items[key];
-                    List<DatItem> newDatItems = new List<DatItem>();
+                    ConcurrentList<DatItem> datItems = intDat.Items[key];
+                    ConcurrentList<DatItem> newDatItems = new ConcurrentList<DatItem>();
                     foreach (DatItem datItem in datItems)
                     {
-                        List<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
+                        ConcurrentList<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
                         DatItem newDatItem = datItem.Clone() as DatItem;
 
                         // Replace fields from the first duplicate, if we have one
@@ -117,8 +117,8 @@ namespace SabreTools.DatTools
                 // Then we do a namewise comparison against the base DAT
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    List<DatItem> datItems = intDat.Items[key];
-                    List<DatItem> newDatItems = new List<DatItem>();
+                    ConcurrentList<DatItem> datItems = intDat.Items[key];
+                    ConcurrentList<DatItem> newDatItems = new ConcurrentList<DatItem>();
                     foreach (DatItem datItem in datItems)
                     {
                         DatItem newDatItem = datItem.Clone() as DatItem;
@@ -194,8 +194,8 @@ namespace SabreTools.DatTools
                 // Standard Against uses hashes
                 else
                 {
-                    List<DatItem> datItems = intDat.Items[key];
-                    List<DatItem> keepDatItems = new List<DatItem>();
+                    ConcurrentList<DatItem> datItems = intDat.Items[key];
+                    ConcurrentList<DatItem> keepDatItems = new ConcurrentList<DatItem>();
                     foreach (DatItem datItem in datItems)
                     {
                         if (!datFile.Items.HasDuplicates(datItem, true))
@@ -288,7 +288,7 @@ namespace SabreTools.DatTools
 
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -366,7 +366,7 @@ namespace SabreTools.DatTools
 
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -429,7 +429,7 @@ namespace SabreTools.DatTools
 
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)
@@ -534,7 +534,7 @@ namespace SabreTools.DatTools
             // Loop through and add the items for this index to the output
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

@@ -113,7 +113,7 @@ namespace SabreTools.Filtering
             {
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    List<DatItem> items = datFile.Items[key];
+                    ConcurrentList<DatItem> items = datFile.Items[key];
                     for (int j = 0; j < items.Count; j++)
                     {
                         DatItemRemover.RemoveFields(items[j]);

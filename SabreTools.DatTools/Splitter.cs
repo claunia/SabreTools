@@ -66,7 +66,7 @@ namespace SabreTools.DatTools
             // Now separate the roms accordingly
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 foreach (DatItem item in items)
                 {
                     if (newExtA.Contains((item.GetName() ?? string.Empty).GetNormalizedExtension()))
@@ -147,7 +147,7 @@ namespace SabreTools.DatTools
             // Now populate each of the DAT objects in turn
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Disk, Media, or Rom, continue
@@ -248,7 +248,7 @@ namespace SabreTools.DatTools
                 }
 
                 // Clean the input list and set all games to be pathless
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 items.ForEach(item => item.Machine.Name = Path.GetFileName(item.Machine.Name));
                 items.ForEach(item => item.Machine.Description = Path.GetFileName(item.Machine.Description));
 
@@ -336,7 +336,7 @@ namespace SabreTools.DatTools
             // Now populate each of the DAT objects in turn
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 foreach (DatItem item in items)
                 {
                     // If the file is not a Rom, it automatically goes in the "lesser" dat
@@ -504,7 +504,7 @@ namespace SabreTools.DatTools
             // Loop through and add the items for this index to the output
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = DatItem.Merge(datFile.Items[key]);
+                ConcurrentList<DatItem> items = DatItem.Merge(datFile.Items[key]);
 
                 // If the rom list is empty or null, just skip it
                 if (items == null || items.Count == 0)

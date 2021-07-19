@@ -227,7 +227,7 @@ namespace SabreTools.Filtering
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
                 DatItem copyFrom = datFile.Items[game][0];
-                List<DatItem> parentItems = datFile.Items[parent];
+                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
                 foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
@@ -288,7 +288,7 @@ namespace SabreTools.Filtering
                             continue;
 
                         // Add to the list of new device reference names
-                        List<DatItem> devItems = datFile.Items[deviceReference];
+                        ConcurrentList<DatItem> devItems = datFile.Items[deviceReference];
                         newDeviceReferences.AddRange(devItems
                             .Where(i => i.ItemType == ItemType.DeviceReference)
                             .Select(i => (i as DeviceReference).Name));
@@ -331,7 +331,7 @@ namespace SabreTools.Filtering
                             continue;
 
                         // Add to the list of new slot option names
-                        List<DatItem> slotItems = datFile.Items[slotOption];
+                        ConcurrentList<DatItem> slotItems = datFile.Items[slotOption];
                         newSlotOptions.AddRange(slotItems
                             .Where(i => i.ItemType == ItemType.Slot)
                             .Where(s => (s as Slot).SlotOptionsSpecified)
@@ -396,7 +396,7 @@ namespace SabreTools.Filtering
 
                 // If the parent exists and has items, we copy the items from the parent to the current game
                 DatItem copyFrom = datFile.Items[game][0];
-                List<DatItem> parentItems = datFile.Items[parent];
+                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
                 foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
@@ -409,7 +409,7 @@ namespace SabreTools.Filtering
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the items
-                List<DatItem> items = datFile.Items[game];
+                ConcurrentList<DatItem> items = datFile.Items[game];
                 string romof = datFile.Items[parent][0].Machine.RomOf;
                 foreach (DatItem item in items)
                 {
@@ -454,7 +454,7 @@ namespace SabreTools.Filtering
                     copyFrom = datFile.Items[parent][0];
                 }
 
-                List<DatItem> items = datFile.Items[game];
+                ConcurrentList<DatItem> items = datFile.Items[game];
                 foreach (DatItem item in items)
                 {
                     // Special disk handling
@@ -582,7 +582,7 @@ namespace SabreTools.Filtering
                     continue;
 
                 // If the parent exists and has items, we remove the items that are in the parent from the current game
-                List<DatItem> parentItems = datFile.Items[parent];
+                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
                 foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
@@ -621,7 +621,7 @@ namespace SabreTools.Filtering
                     continue;
 
                 // If the parent exists and has items, we remove the parent items from the current game
-                List<DatItem> parentItems = datFile.Items[parent];
+                ConcurrentList<DatItem> parentItems = datFile.Items[parent];
                 foreach (DatItem item in parentItems)
                 {
                     DatItem datItem = (DatItem)item.Clone();
@@ -632,7 +632,7 @@ namespace SabreTools.Filtering
                 }
 
                 // Now we want to get the parent romof tag and put it in each of the remaining items
-                List<DatItem> items = datFile.Items[game];
+                ConcurrentList<DatItem> items = datFile.Items[game];
                 string romof = datFile.Items[parent][0].Machine.RomOf;
                 foreach (DatItem item in items)
                 {
@@ -650,7 +650,7 @@ namespace SabreTools.Filtering
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
             {
-                List<DatItem> items = datFile.Items[game];
+                ConcurrentList<DatItem> items = datFile.Items[game];
                 foreach (DatItem item in items)
                 {
                     item.Machine.CloneOf = null;

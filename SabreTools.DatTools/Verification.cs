@@ -133,7 +133,7 @@ namespace SabreTools.DatTools
             var keys = datFile.Items.SortedKeys.ToList();
             foreach (string key in keys)
             {
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 for (int i = 0; i < items.Count; i++)
                 {
                     // Unmatched items will have a source ID of int.MaxValue, remove all others

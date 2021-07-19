@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+using SabreTools.Core;
 using SabreTools.DatFiles;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -19,7 +20,7 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new List<DatItem>
+                ["game-1"] = new ConcurrentList<DatItem>
                 {
                     new Rom
                     {
@@ -38,7 +39,7 @@ namespace SabreTools.Test.DatFiles
                         Machine = new Machine { Name = "game-1" },
                     },
                 },
-                ["game-2"] = new List<DatItem>
+                ["game-2"] = new ConcurrentList<DatItem>
                 {
                     new Rom
                     {
@@ -69,8 +70,8 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new List<DatItem> { new Rom(), },
-                ["game-2"] = new List<DatItem>(),
+                ["game-1"] = new ConcurrentList<DatItem> { new Rom(), },
+                ["game-2"] = new ConcurrentList<DatItem>(),
                 ["game-3"] = null,
             };
 
@@ -84,7 +85,7 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new List<DatItem>
+                ["game-1"] = new ConcurrentList<DatItem>
                 {
                     new Rom
                     {
@@ -119,7 +120,7 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new List<DatItem>
+                ["game-1"] = new ConcurrentList<DatItem>
                 {
                     new Rom
                     {
@@ -158,7 +159,7 @@ namespace SabreTools.Test.DatFiles
             // Setup the dictionary
             var dict = new ItemDictionary
             {
-                ["game-1"] = new List<DatItem>
+                ["game-1"] = new ConcurrentList<DatItem>
                 {
                     new Rom
                     {

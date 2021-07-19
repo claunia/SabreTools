@@ -396,7 +396,7 @@ namespace SabreTools.Filtering
                 {
                     // For every item in the current key
                     bool machinePass = true;
-                    List<DatItem> items = datFile.Items[key];
+                    ConcurrentList<DatItem> items = datFile.Items[key];
                     foreach (DatItem item in items)
                     {
                         // If we have a null item, we can't pass it

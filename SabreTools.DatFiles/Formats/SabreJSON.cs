@@ -364,7 +364,7 @@ namespace SabreTools.DatFiles.Formats
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)
                 {
-                    List<DatItem> datItems = Items.FilteredItems(key);
+                    ConcurrentList<DatItem> datItems = Items.FilteredItems(key);
 
                     // If this machine doesn't contain any writable items, skip
                     if (!ContainsWritable(datItems))

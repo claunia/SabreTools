@@ -163,7 +163,7 @@ namespace SabreTools.Filtering
             foreach (string key in keys)
             {
                 // For every item in the current key
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 foreach (DatItem item in items)
                 {
                     // If we have a null item, we can't clean it it
@@ -250,7 +250,7 @@ namespace SabreTools.Filtering
                 ConcurrentDictionary<string, string> mapping = new ConcurrentDictionary<string, string>();
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    List<DatItem> items = datFile.Items[key];
+                    ConcurrentList<DatItem> items = datFile.Items[key];
                     foreach (DatItem item in items)
                     {
                         // If the key mapping doesn't exist, add it
@@ -261,8 +261,8 @@ namespace SabreTools.Filtering
                 // Now we loop through every item and update accordingly
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
-                    List<DatItem> items = datFile.Items[key];
-                    List<DatItem> newItems = new List<DatItem>();
+                    ConcurrentList<DatItem> items = datFile.Items[key];
+                    ConcurrentList<DatItem> newItems = new ConcurrentList<DatItem>();
                     foreach (DatItem item in items)
                     {
                         // Update machine name
@@ -543,7 +543,7 @@ namespace SabreTools.Filtering
             // For each rom, we want to update the game to be "<game name>/<rom name>"
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 for (int i = 0; i < items.Count; i++)
                 {
                     SetOneRomPerGame(items[i]);
@@ -580,7 +580,7 @@ namespace SabreTools.Filtering
             // Now process all of the roms
             Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
             {
-                List<DatItem> items = datFile.Items[key];
+                ConcurrentList<DatItem> items = datFile.Items[key];
                 for (int j = 0; j < items.Count; j++)
                 {
                     DatItem item = items[j];

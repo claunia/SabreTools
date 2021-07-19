@@ -118,7 +118,7 @@ namespace SabreTools.Filtering
                         continue;
 
                     // Get the list of DatItems for the machine
-                    List<DatItem> datItems = datFile.Items[machine];
+                    ConcurrentList<DatItem> datItems = datFile.Items[machine];
 
                     // Try to get the map values, if possible
                     combinedMachineMaps.TryGetValue(machine, out Dictionary<MachineField, string> machineMappings);
