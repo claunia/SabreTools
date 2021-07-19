@@ -45,6 +45,11 @@ namespace SabreTools.DatFiles
         /// </summary>
         OpenMSX = 1 << 6,
 
+        /// <summary>
+        /// Archive.org file list XML
+        /// </summary>
+        ArchiveDotOrg = 1 << 7,
+
         #endregion
 
         #region Propietary Formats
@@ -52,22 +57,22 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// ClrMamePro custom
         /// </summary>
-        ClrMamePro = 1 << 7,
+        ClrMamePro = 1 << 8,
 
         /// <summary>
         /// RomCenter INI-based
         /// </summary>
-        RomCenter = 1 << 8,
+        RomCenter = 1 << 9,
 
         /// <summary>
         /// DOSCenter custom
         /// </summary>
-        DOSCenter = 1 << 9,
+        DOSCenter = 1 << 10,
 
         /// <summary>
         /// AttractMode custom
         /// </summary>
-        AttractMode = 1 << 10,
+        AttractMode = 1 << 11,
 
         #endregion
 
@@ -76,37 +81,37 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// ClrMamePro missfile
         /// </summary>
-        MissFile = 1 << 11,
+        MissFile = 1 << 12,
 
         /// <summary>
         /// Comma-Separated Values (standardized)
         /// </summary>
-        CSV = 1 << 12,
+        CSV = 1 << 13,
 
         /// <summary>
         /// Semicolon-Separated Values (standardized)
         /// </summary>
-        SSV = 1 << 13,
+        SSV = 1 << 14,
 
         /// <summary>
         /// Tab-Separated Values (standardized)
         /// </summary>
-        TSV = 1 << 14,
+        TSV = 1 << 15,
 
         /// <summary>
         /// MAME Listrom output
         /// </summary>
-        Listrom = 1 << 15,
+        Listrom = 1 << 16,
 
         /// <summary>
         /// Everdrive Packs SMDB
         /// </summary>
-        EverdriveSMDB = 1 << 16,
+        EverdriveSMDB = 1 << 17,
 
         /// <summary>
         /// SabreJSON
         /// </summary>
-        SabreJSON = 1 << 17,
+        SabreJSON = 1 << 18,
 
         #endregion
 
@@ -115,37 +120,37 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// CRC32 hash list
         /// </summary>
-        RedumpSFV = 1 << 18,
+        RedumpSFV = 1 << 19,
 
         /// <summary>
         /// MD5 hash list
         /// </summary>
-        RedumpMD5 = 1 << 19,
+        RedumpMD5 = 1 << 20,
 
         /// <summary>
         /// SHA-1 hash list
         /// </summary>
-        RedumpSHA1 = 1 << 20,
+        RedumpSHA1 = 1 << 21,
 
         /// <summary>
         /// SHA-256 hash list
         /// </summary>
-        RedumpSHA256 = 1 << 21,
+        RedumpSHA256 = 1 << 22,
 
         /// <summary>
         /// SHA-384 hash list
         /// </summary>
-        RedumpSHA384 = 1 << 22,
+        RedumpSHA384 = 1 << 23,
 
         /// <summary>
         /// SHA-512 hash list
         /// </summary>
-        RedumpSHA512 = 1 << 23,
+        RedumpSHA512 = 1 << 24,
 
         /// <summary>
         /// SpamSum hash list
         /// </summary>
-        RedumpSpamSum = 1 << 24,
+        RedumpSpamSum = 1 << 25,
 
         #endregion
 

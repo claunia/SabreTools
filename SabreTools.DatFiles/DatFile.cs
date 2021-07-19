@@ -73,6 +73,7 @@ namespace SabreTools.DatFiles
         {
             return datFormat switch
             {
+                DatFormat.ArchiveDotOrg => new ArchiveDotOrg(baseDat),
                 DatFormat.AttractMode => new AttractMode(baseDat),
                 DatFormat.ClrMamePro => new ClrMamePro(baseDat, quotes),
                 DatFormat.CSV => new SeparatedValue(baseDat, ','),

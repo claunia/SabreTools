@@ -199,6 +199,9 @@ namespace SabreTools.DatTools
                 else if ((second.StartsWith("<dat") && !second.StartsWith("<datafile"))
                     || second.StartsWith("<?xml-stylesheet"))
                     return DatFormat.OfflineList;
+                
+                else if (second.StartsWith("<files"))
+                    return DatFormat.ArchiveDotOrg;
 
                 // Older and non-compliant DATs
                 else

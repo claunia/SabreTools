@@ -290,6 +290,7 @@ Features and Options:
 		  
 		  Possible values are:
 		  all				- All available DAT types
+		  ado, archive		- Archive.org file list
 		  am, attractmode	- AttractMode XML
 		  cmp, clrmamepro	- ClrMamePro
 		  csv				- Standardized Comma-Separated Value
@@ -642,6 +643,7 @@ Features and Options:
 		  
 		  Possible values are:
 		  all				- All available DAT types
+		  ado, archive		- Archive.org file list
 		  am, attractmode	- AttractMode XML
 		  cmp, clrmamepro	- ClrMamePro
 		  csv				- Standardized Comma-Separated Value
@@ -806,6 +808,7 @@ Features and Options:
 		  
 		  Possible values are:
 		  all				- All available DAT types
+		  ado, archive		- Archive.org file list
 		  am, attractmode	- AttractMode XML
 		  cmp, clrmamepro	- ClrMamePro
 		  csv				- Standardized Comma-Separated Value

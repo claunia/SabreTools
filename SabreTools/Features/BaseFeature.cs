@@ -1296,6 +1296,7 @@ namespace SabreTools.Features
 
 Possible values are:
     all              - All available DAT types
+    ado, archive     - Archive.org file list
     am, attractmode  - AttractMode XML
     cmp, clrmamepro  - ClrMamePro
     csv              - Standardized Comma-Separated Value
@@ -2297,6 +2298,9 @@ CREATE TABLE IF NOT EXISTS data (
             {
                 case "all":
                     return DatFormat.ALL;
+                case "ado":
+                case "archive":
+                    return DatFormat.ArchiveDotOrg;
                 case "am":
                 case "attractmode":
                     return DatFormat.AttractMode;

@@ -1029,6 +1029,21 @@ namespace SabreTools.DatFiles
                 }
             }
 
+            // Archive.org
+            if (DatFormat.HasFlag(DatFormat.ArchiveDotOrg))
+            {
+                if (usedExtensions.Contains(".xml"))
+                {
+                    outfileNames.Add(DatFormat.ArchiveDotOrg, CreateOutFileNamesHelper(outDir, ".ado.xml", overwrite));
+                    usedExtensions.Add(".ado.xml");
+                }
+                else
+                {
+                    outfileNames.Add(DatFormat.ArchiveDotOrg, CreateOutFileNamesHelper(outDir, ".xml", overwrite));
+                    usedExtensions.Add(".xml");
+                }
+            }
+
             #endregion
 
             return outfileNames;
