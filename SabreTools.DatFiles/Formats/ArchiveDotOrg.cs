@@ -165,9 +165,8 @@ namespace SabreTools.DatFiles.Formats
             Rom rom = new Rom
             {
                 Name = reader.GetAttribute("name"),
-                Value = reader.GetAttribute("source"), // TODO: Create new field for this
+                ArchiveDotOrgSource = reader.GetAttribute("source"),
 
-                // TODO: Derive from path, if possible
                 Machine = new Machine
                 {
                     Name = "Default",
@@ -180,6 +179,16 @@ namespace SabreTools.DatFiles.Formats
                     Name = filename,
                 }
             };
+
+            // If we have a path, update the machine name and description
+            if (rom.Name.Contains('/'))
+            {
+                string[] splitpath = rom.Name.Split('/');
+                rom.Machine.Name = splitpath[0];
+                rom.Machine.Description = splitpath[0];
+
+                rom.Name = rom.Name.Substring(splitpath[0].Length + 1);
+            }
 
             // TODO: Handle SuperDAT
             //if (Header.Type == "SuperDAT" && !keep)
@@ -221,24 +230,20 @@ namespace SabreTools.DatFiles.Formats
                         rom.Size = Utilities.CleanLong(reader.ReadElementContentAsString());
                         break;
 
-                    // TODO: Create new field for this
                     case "format":
-                        string format = reader.ReadElementContentAsString();
+                        rom.ArchiveDotOrgFormat = reader.ReadElementContentAsString();
                         break;
 
-                    // TODO: Create new field for this
                     case "original":
-                        string original = reader.ReadElementContentAsString();
+                        rom.OriginalFilename = reader.ReadElementContentAsString();
                         break;
 
-                    // TODO: Create new field for this, Int32?
                     case "rotation":
-                        string rotation = reader.ReadElementContentAsString();
+                        rom.Rotation = reader.ReadElementContentAsString();
                         break;
 
-                    // TODO: Create new field for this
                     case "summation":
-                        string summation = reader.ReadElementContentAsString();
+                        rom.Summation = reader.ReadElementContentAsString();
                         break;
 
                     default:
@@ -278,8 +283,8 @@ namespace SabreTools.DatFiles.Formats
                 XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
-                    IndentChar = '\t',
-                    Indentation = 1
+                    IndentChar = ' ',
+                    Indentation = 2
                 };
 
                 // Write out the header
@@ -361,17 +366,24 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Rom:
                     var rom = datItem as Rom;
                     xtw.WriteStartElement("file");
-                    xtw.WriteOptionalAttributeString("source", rom.Value);
+
+                    // Filename has to be derived from both machine and item, if possible
+                    string filename = rom.Name;
+                    if (!string.IsNullOrWhiteSpace(rom.Machine?.Name) && !rom.Machine.Name.Equals("Default", StringComparison.OrdinalIgnoreCase))
+                        filename = $"{rom.Machine.Name}/{filename}";
+
+                    xtw.WriteRequiredAttributeString("name", filename);
+                    xtw.WriteOptionalAttributeString("source", rom.ArchiveDotOrgSource);
 
                     xtw.WriteOptionalElementString("mtime", rom.Date);
                     xtw.WriteOptionalElementString("size", rom.Size?.ToString());
                     xtw.WriteOptionalElementString("md5", rom.MD5?.ToLowerInvariant());
                     xtw.WriteOptionalElementString("crc32", rom.CRC?.ToLowerInvariant());
                     xtw.WriteOptionalElementString("sha1", rom.SHA1?.ToLowerInvariant());
-                    //xtw.WriteOptionalElementString("format", rom.Format);
-                    //xtw.WriteOptionalElementString("original", rom.Original);
-                    //xtw.WriteOptionalElementString("rotation", rom.Rotation?.ToString());
-                    //xtw.WriteOptionalElementString("summation", rom.Summation);
+                    xtw.WriteOptionalElementString("format", rom.ArchiveDotOrgFormat);
+                    xtw.WriteOptionalElementString("original", rom.OriginalFilename);
+                    xtw.WriteOptionalElementString("rotation", rom.Rotation?.ToString());
+                    xtw.WriteOptionalElementString("summation", rom.Summation);
 
                     // End file
                     xtw.WriteEndElement();

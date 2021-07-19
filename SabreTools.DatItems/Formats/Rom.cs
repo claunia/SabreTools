@@ -195,6 +195,48 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
+        #region Archive.org
+
+        /// <summary>
+        /// Source of file
+        /// </summary>
+        [JsonProperty("ado_source", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("ado_source")]
+        public string ArchiveDotOrgSource { get; set; }
+
+        /// <summary>
+        /// Archive.org recognized file format
+        /// </summary>
+        [JsonProperty("ado_format", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("ado_format")]
+        public string ArchiveDotOrgFormat { get; set; }
+
+        /// <summary>
+        /// Original filename
+        /// </summary>
+        [JsonProperty("original_filename", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("original_filename")]
+        public string OriginalFilename { get; set; }
+
+        /// <summary>
+        /// Image rotation
+        /// </summary>
+        /// <remarks>
+        /// TODO: This might be Int32?
+        /// </remarks>
+        [JsonProperty("rotation", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("rotation")]
+        public string Rotation { get; set; }
+
+        /// <summary>
+        /// Image rotation
+        /// </summary>
+        [JsonProperty("summation", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("summation")]
+        public string Summation { get; set; }
+
+        #endregion
+
         #region AttractMode
 
         /// <summary>
