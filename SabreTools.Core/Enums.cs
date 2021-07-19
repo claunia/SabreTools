@@ -554,6 +554,13 @@ namespace SabreTools.Core
         Optional,
         Inverted,
 
+        // Rom (Archive.org)
+        ArchiveDotOrgSource,
+        ArchiveDotOrgFormat,
+        OriginalFilename,
+        Rotation,
+        Summation,
+
         // Rom (AttractMode)
         AltName,
         AltTitle,

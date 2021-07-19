@@ -44,6 +44,14 @@ namespace SabreTools.Filtering
         public FilterItem<bool?> Optional { get; private set; } = new FilterItem<bool?>() { Neutral = null };
         public FilterItem<bool?> Inverted { get; private set; } = new FilterItem<bool?>();
 
+        // Rom (Archive.org)
+        public FilterItem<string> ArchiveDotOrgSource { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> ArchiveDotOrgFormat { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> OriginalFilename { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Rotation { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Summation { get; private set; } = new FilterItem<string>();
+
+
         // Rom (AttractMode)
         public FilterItem<string> AltName { get; private set; } = new FilterItem<string>();
         public FilterItem<string> AltTitle { get; private set; } = new FilterItem<string>();
@@ -324,6 +332,27 @@ namespace SabreTools.Filtering
 
                 case DatItemField.Inverted:
                     SetBooleanFilter(Inverted, value, negate);
+                    break;
+
+                // Rom (Archive.org)
+                case DatItemField.ArchiveDotOrgSource:
+                    SetStringFilter(ArchiveDotOrgSource, value, negate);
+                    break;
+                
+                case DatItemField.ArchiveDotOrgFormat:
+                    SetStringFilter(ArchiveDotOrgFormat, value, negate);
+                    break;
+                
+                case DatItemField.OriginalFilename:
+                    SetStringFilter(OriginalFilename, value, negate);
+                    break;
+                
+                case DatItemField.Rotation:
+                    SetStringFilter(Rotation, value, negate);
+                    break;
+                
+                case DatItemField.Summation:
+                    SetStringFilter(Summation, value, negate);
                     break;
 
                 // Rom (AttractMode)
@@ -1750,6 +1779,30 @@ namespace SabreTools.Filtering
 
             // Filter on inverted
             if (!PassBoolFilter(Inverted, rom.Inverted))
+                return false;
+
+            #endregion
+
+            #region Archive.org
+
+            // Filter on file source
+            if (!PassStringFilter(ArchiveDotOrgSource, rom.ArchiveDotOrgSource))
+                return false;
+
+            // Filter on file format
+            if (!PassStringFilter(ArchiveDotOrgFormat, rom.ArchiveDotOrgFormat))
+                return false;
+
+            // Filter on original filename
+            if (!PassStringFilter(OriginalFilename, rom.OriginalFilename))
+                return false;
+
+            // Filter on rotation
+            if (!PassStringFilter(Rotation, rom.Rotation))
+                return false;
+
+            // Filter on summation
+            if (!PassStringFilter(Summation, rom.Summation))
                 return false;
 
             #endregion

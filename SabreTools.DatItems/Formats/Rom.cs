@@ -229,7 +229,7 @@ namespace SabreTools.DatItems.Formats
         public string Rotation { get; set; }
 
         /// <summary>
-        /// Image rotation
+        /// Summation value?
         /// </summary>
         [JsonProperty("summation", DefaultValueHandling = DefaultValueHandling.Ignore)]
         [XmlElement("summation")]

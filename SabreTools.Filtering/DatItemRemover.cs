@@ -921,6 +921,25 @@ namespace SabreTools.Filtering
 
             #endregion
 
+            #region Archive.org
+
+            if (DatItemFields.Contains(DatItemField.ArchiveDotOrgSource))
+                rom.ArchiveDotOrgSource = null;
+
+            if (DatItemFields.Contains(DatItemField.ArchiveDotOrgFormat))
+                rom.ArchiveDotOrgFormat = null;
+
+            if (DatItemFields.Contains(DatItemField.OriginalFilename))
+                rom.OriginalFilename = null;
+
+            if (DatItemFields.Contains(DatItemField.Rotation))
+                rom.Rotation = null;
+
+            if (DatItemFields.Contains(DatItemField.Summation))
+                rom.Summation = null;
+
+            #endregion
+
             #region AttractMode
 
             if (DatItemFields.Contains(DatItemField.AltName))

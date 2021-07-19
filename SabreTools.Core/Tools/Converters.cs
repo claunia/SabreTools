@@ -413,6 +413,25 @@ namespace SabreTools.Core.Tools
                 case "inverted":
                     return DatItemField.Inverted;
 
+                // Rom (Archive.org)
+                case "ado-source":
+                case "ado source":
+                    return DatItemField.ArchiveDotOrgSource;
+
+                case "ado-format":
+                case "ado format":
+                    return DatItemField.ArchiveDotOrgFormat;
+
+                case "original-filename":
+                case "original filename":
+                    return DatItemField.OriginalFilename;
+
+                case "rotation":
+                    return DatItemField.Rotation;
+
+                case "summation":
+                    return DatItemField.Summation;
+
                 // Rom (AttractMode)
                 case "altname":
                 case "alt name":

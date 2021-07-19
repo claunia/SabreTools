@@ -1081,6 +1081,25 @@ namespace SabreTools.DatFiles
 
             #endregion
 
+            #region Archive.org
+
+            if (DatItemMappings.Keys.Contains(DatItemField.ArchiveDotOrgSource))
+                rom.ArchiveDotOrgSource = DatItemMappings[DatItemField.ArchiveDotOrgSource];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.ArchiveDotOrgFormat))
+                rom.ArchiveDotOrgFormat = DatItemMappings[DatItemField.ArchiveDotOrgFormat];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.OriginalFilename))
+                rom.OriginalFilename = DatItemMappings[DatItemField.OriginalFilename];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Rotation))
+                rom.Rotation = DatItemMappings[DatItemField.Rotation];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Summation))
+                rom.Summation = DatItemMappings[DatItemField.Summation];
+
+            #endregion
+
             #region AttractMode
 
             if (DatItemMappings.Keys.Contains(DatItemField.AltName))
