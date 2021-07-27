@@ -200,18 +200,18 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write the start of an attribute node
         /// </summary>
-        public void WriteStartAttribute(string name)
+        public void WriteStartAttribute(string name, bool? quoteOverride = null)
         {
             try
             {
                 // If we're writing quotes, don't write out quote characters internally
-                if (Quotes)
+                if ((quoteOverride == null && Quotes) || (quoteOverride == true))
                     name = name.Replace("\"", "''");
 
                 AutoComplete(Token.StartAttribute);
                 sw.Write(name);
                 sw.Write(" ");
-                if (Quotes)
+                if ((quoteOverride == null && Quotes) || (quoteOverride == true))
                     sw.Write("\"");
             }
             catch
@@ -224,11 +224,11 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write the end of an attribute node
         /// </summary>
-        public void WriteEndAttribute()
+        public void WriteEndAttribute(bool? quoteOverride = null)
         {
             try
             {
-                AutoComplete(Token.EndAttribute);
+                AutoComplete(Token.EndAttribute, quoteOverride);
             }
             catch
             {
@@ -240,28 +240,28 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a complete attribute with content
         /// </summary>
-        public void WriteAttributeString(string name, string value)
+        public void WriteAttributeString(string name, string value, bool? quoteOverride = null)
         {
-            WriteStartAttribute(name);
+            WriteStartAttribute(name, quoteOverride);
             WriteString(value);
-            WriteEndAttribute();
+            WriteEndAttribute(quoteOverride);
         }
 
         /// <summary>
         /// Ensure writing writing null values as empty strings
         /// </summary>
-        public void WriteRequiredAttributeString(string name, string value)
+        public void WriteRequiredAttributeString(string name, string value, bool? quoteOverride = null)
         {
-            WriteAttributeString(name, value ?? string.Empty);
+            WriteAttributeString(name, value ?? string.Empty, quoteOverride);
         }
 
         /// <summary>
         /// Write an attribute, if the value is not null or empty
         /// </summary>
-        public void WriteOptionalAttributeString(string name, string value)
+        public void WriteOptionalAttributeString(string name, string value, bool? quoteOverride = null)
         {
             if (!string.IsNullOrEmpty(value))
-                WriteAttributeString(name, value);
+                WriteAttributeString(name, value, quoteOverride);
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Prepare for the next token to be written
         /// </summary>
-        private void AutoComplete(Token token)
+        private void AutoComplete(Token token, bool? quoteOverride = null)
         {
             // Handle the error cases
             if (currentState == State.Closed)
@@ -405,7 +405,7 @@ namespace SabreTools.IO.Writers
                 case Token.Standalone:
                     if (currentState == State.Attribute)
                     {
-                        WriteEndAttributeQuote();
+                        WriteEndAttributeQuote(quoteOverride);
                         WriteEndStartTag(false);
                     }
                     else if (currentState == State.Element)
@@ -421,7 +421,7 @@ namespace SabreTools.IO.Writers
                 case Token.EndElement:
                 case Token.LongEndElement:
                     if (currentState == State.Attribute)
-                        WriteEndAttributeQuote();
+                        WriteEndAttributeQuote(quoteOverride);
 
                     if (currentState == State.Content)
                         token = Token.LongEndElement;
@@ -433,7 +433,7 @@ namespace SabreTools.IO.Writers
                 case Token.StartAttribute:
                     if (currentState == State.Attribute)
                     {
-                        WriteEndAttributeQuote();
+                        WriteEndAttributeQuote(quoteOverride);
                         sw.Write(' ');
                     }
                     else if (currentState == State.Element)
@@ -444,7 +444,7 @@ namespace SabreTools.IO.Writers
                     break;
 
                 case Token.EndAttribute:
-                    WriteEndAttributeQuote();
+                    WriteEndAttributeQuote(quoteOverride);
                     break;
 
                 case Token.Content:
@@ -513,9 +513,9 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Internal helper to write the end of an attribute
         /// </summary>
-        private void WriteEndAttributeQuote()
+        private void WriteEndAttributeQuote(bool? quoteOverride = null)
         {
-            if (Quotes)
+            if ((quoteOverride == null && Quotes) || (quoteOverride == true))
                 sw.Write("\"");
         }
 
