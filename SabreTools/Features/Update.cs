@@ -103,8 +103,9 @@ namespace SabreTools.Features
                 ? Header.ReplaceExtension
                 : $".{Header.ReplaceExtension}");
 
-            // If we're in a special update mode and the names aren't set, set defaults
-            if (updateMode != 0)
+            // If we're in a non-replacement special update mode and the names aren't set, set defaults
+            if (updateMode != 0
+                && !(updateMode.HasFlag(UpdateMode.DiffAgainst) || updateMode.HasFlag(UpdateMode.BaseReplace)))
             {
                 // Get the values that will be used
                 if (string.IsNullOrWhiteSpace(Header.Date))
@@ -291,7 +292,7 @@ namespace SabreTools.Features
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
+                    DatFile repDat = DatFile.Create(Header);
                     Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
@@ -317,7 +318,7 @@ namespace SabreTools.Features
                 Parallel.ForEach(inputPaths, Globals.ParallelOptions, inputPath =>
                 {
                     // Parse the path to a new DatFile
-                    DatFile repDat = DatFile.Create(userInputDat.Header.CloneFiltering());
+                    DatFile repDat = DatFile.Create(Header);
                     Parser.ParseInto(repDat, inputPath, indexId: 1, keep: true);
 
                     // Perform additional processing steps
