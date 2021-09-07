@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 using System.Text;
+using Compress.SevenZip.Compress.ZSTD;
 using Compress.SevenZip.Structure;
 using FileInfo = RVIO.FileInfo;
 
@@ -9,6 +11,14 @@ namespace Compress.SevenZip
 {
     public partial class SevenZ : ICompress
     {
+
+        public enum sevenZipCompressType
+        {
+            uncompressed,
+            lzma,
+            zstd
+        }
+
         public static bool supportZstd
         {
             get;
@@ -17,7 +27,14 @@ namespace Compress.SevenZip
 
         public static void TestForZstd()
         {
-            supportZstd = RVIO.File.Exists("libzstd.dll");
+            supportZstd = false;
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            {
+                var root = Path.GetDirectoryName(typeof(ZstandardInterop).Assembly.Location);
+                var path = Environment.Is64BitProcess ? "x64" : "x86";
+                var file = Path.Combine(root, path, "libzstd.dll");
+                supportZstd = RVIO.File.Exists(file);
+            }
         }
 
 
@@ -43,7 +60,7 @@ namespace Compress.SevenZip
 
         private SignatureHeader _signatureHeader;
 
-        private bool _compressed = true;
+        private sevenZipCompressType _compressed = sevenZipCompressType.lzma;
 
 
         private long _baseOffset;
