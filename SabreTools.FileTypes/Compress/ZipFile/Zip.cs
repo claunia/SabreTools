@@ -33,6 +33,11 @@ namespace Compress.ZipFile
 
         public ZipStatus ZipStatus { get; set; }
 
+        public Zip()
+        {
+            ZipUtils.EncodeSetup();
+        }
+
         public int LocalFilesCount()
         {
             return _localFiles.Count;

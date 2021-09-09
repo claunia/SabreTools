@@ -17,11 +17,19 @@ namespace SabreTools.IO
             // If the stream is null, don't even try
             if (input == null)
                 return -1;
-            
+
             // If the input is not seekable, just return the current position
             if (!input.CanSeek)
-                return input.Position;
-
+            {
+                try
+                {
+                    return input.Position;
+                }
+                catch
+                {
+                    return -1;
+                }
+            }
             // Attempt to seek to the offset
             try
             {
