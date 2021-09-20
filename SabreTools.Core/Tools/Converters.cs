@@ -1699,7 +1699,7 @@ namespace SabreTools.Core.Tools
             return packing switch
             {
                 PackingFlag.Zip => yesno ? "yes" : "zip",
-                PackingFlag.Unzip => yesno ? "yes" : "zip",
+                PackingFlag.Unzip => yesno ? "no" : "unzip",
                 PackingFlag.Partial => "partial",
                 PackingFlag.Flat => "flat",
                 _ => null,
