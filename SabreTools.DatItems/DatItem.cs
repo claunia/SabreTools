@@ -749,25 +749,40 @@ namespace SabreTools.DatItems
                 try
                 {
                     NaturalComparer nc = new NaturalComparer();
-                    if (x.Source.Index == y.Source.Index)
-                    {
-                        if (x.Machine.Name == y.Machine.Name)
-                        {
-                            if (x.ItemType == y.ItemType)
-                            {
-                                if (Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)) == Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)))
-                                    return nc.Compare(Path.GetFileName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetFileName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
 
-                                return nc.Compare(Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty)), Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty)));
+                    // If machine names match, more refinement is needed
+                    if (x.Machine.Name == y.Machine.Name)
+                    {
+                        // If item types match, more refinement is needed
+                        if (x.ItemType == y.ItemType)
+                        {
+                            string xDirectoryName = Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                            string yDirectoryName = Path.GetDirectoryName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+
+                            // If item directory names match, more refinement is needed
+                            if (xDirectoryName == yDirectoryName)
+                            {
+                                string xName = Path.GetFileName(Utilities.RemovePathUnsafeCharacters(x.GetName() ?? string.Empty));
+                                string yName = Path.GetFileName(Utilities.RemovePathUnsafeCharacters(y.GetName() ?? string.Empty));
+
+                                // If item names match, then compare on machine or source, depending on the flag
+                                if (xName == yName)
+                                    return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : x.Source.Index - y.Source.Index);
+
+                                // Otherwise, just sort based on item names
+                                return nc.Compare(xName, yName);
                             }
 
-                            return x.ItemType - y.ItemType;
+                            // Otherwise, just sort based on directory name
+                            return nc.Compare(xDirectoryName, yDirectoryName);
                         }
 
-                        return nc.Compare(x.Machine.Name, y.Machine.Name);
+                        // Otherwise, just sort based on item type
+                        return x.ItemType - y.ItemType;
                     }
 
-                    return (norename ? nc.Compare(x.Machine.Name, y.Machine.Name) : x.Source.Index - y.Source.Index);
+                    // Otherwise, just sort based on machine name
+                    return nc.Compare(x.Machine.Name, y.Machine.Name);
                 }
                 catch
                 {
