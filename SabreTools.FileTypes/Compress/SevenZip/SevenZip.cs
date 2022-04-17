@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Policy;
 using System.Text;
 using Compress.SevenZip.Compress.ZSTD;
 using Compress.SevenZip.Structure;
