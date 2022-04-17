@@ -1806,6 +1806,7 @@ Some special strings that can be used:
         {
             AddFeature(FilterListInput);
             AddFeature(MatchOfTagsFlag);
+            AddFeature(PerMachineFlag);
         }
 
         /// <summary>
