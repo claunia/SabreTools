@@ -28,12 +28,10 @@ build:
 after_build:
 - cd SabreTools\bin\Debug
 - 7z a SabreTools_netcoreapp3.1.zip netcoreapp3.1\*
-- 7z a SabreTools_net5.0.zip net5.0\*
 - 7z a SabreTools_net6.0.zip net6.0\*
 
 - cd ..\..\..\RombaSharp\bin\Debug
 - 7z a RombaSharp_netcoreapp3.1.zip netcoreapp3.1\*
-- 7z a RombaSharp_net5.0.zip net5.0\*
 - 7z a RombaSharp_net6.0.zip net6.0\*
 
 # testing step
@@ -53,14 +51,10 @@ on_failure:
 artifacts:
 - path: SabreTools\bin\Debug\SabreTools_netcoreapp3.1.zip
   name: SabreTools (.NET Core 3.1)
-- path: SabreTools\bin\Debug\SabreTools_net5.0.zip
-  name: SabreTools (.NET 5.0)
 - path: SabreTools\bin\Debug\SabreTools_net6.0.zip
   name: SabreTools (.NET 6.0)
 
 - path: RombaSharp\bin\Debug\RombaSharp_netcoreapp3.1.zip
   name: RombaSharp (.NET Core 3.1)
-- path: RombaSharp\bin\Debug\RombaSharp_net5.0.zip
-  name: RombaSharp (.NET 5.0)
 - path: RombaSharp\bin\Debug\RombaSharp_net6.0.zip
   name: RombaSharp (.NET 6.0)
