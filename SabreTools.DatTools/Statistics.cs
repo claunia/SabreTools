@@ -89,7 +89,6 @@ namespace SabreTools.DatTools
 
                 List<string> machines = new List<string>();
                 DatFile datdata = Parser.CreateAndParse(file.CurrentPath, statsOnly: true, throwOnError: throwOnError);
-                datdata.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
                 // Add single DAT stats (if asked)
                 if (single)
