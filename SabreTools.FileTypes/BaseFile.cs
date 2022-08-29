@@ -354,10 +354,8 @@ namespace SabreTools.FileTypes
                     hashers.Add(new Hasher(Hash.SpamSum));
 
                 // Initialize the hashing helpers
-                var loadBuffer = new ThreadLoadBuffer(input);
                 int buffersize = 3 * 1024 * 1024;
-                byte[] buffer0 = new byte[buffersize];
-                byte[] buffer1 = new byte[buffersize];
+                byte[] buffer = new byte[buffersize];
 
                 /*
                 Please note that some of the following code is adapted from
@@ -367,38 +365,26 @@ namespace SabreTools.FileTypes
                 been tweaked to better fit this code base.
                 */
 
-                // Pre load the first buffer
+                // Pre load the buffer
+                int next = buffersize > size ? (int)size : buffersize;
+                int current = input.Read(buffer, 0, next);
                 long refsize = size;
-                int next = refsize > buffersize ? buffersize : (int)refsize;
-                input.Read(buffer0, 0, next);
-                int current = next;
-                refsize -= next;
-                bool bufferSelect = true;
 
-                while (current > 0)
+                while (refsize > 0)
                 {
-                    // Trigger the buffer load on the second buffer
-                    next = refsize > buffersize ? buffersize : (int)refsize;
-                    if (next > 0)
-                        loadBuffer.Trigger(bufferSelect ? buffer1 : buffer0, next);
-
-                    byte[] buffer = bufferSelect ? buffer0 : buffer1;
-
                     // Run hashes in parallel
-                    Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Process(buffer, current));
+                    if (current > 0)
+                        Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Process(buffer, current));
 
-                    // Wait for the load buffer worker, if needed
+                    // Load the next buffer
+                    refsize -= current;
+                    next = buffersize > refsize ? (int)refsize : buffersize;
+
                     if (next > 0)
-                        loadBuffer.Wait();
-
-                    // Setup for the next hashing step
-                    current = next;
-                    refsize -= next;
-                    bufferSelect = !bufferSelect;
+                        current = input.Read(buffer, 0, next);
                 }
 
                 // Finalize all hashing helpers
-                loadBuffer.Finish();
                 Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Terminate());
 
                 // Get the results
@@ -415,7 +401,6 @@ namespace SabreTools.FileTypes
                 };
 
                 // Dispose of the hashers
-                loadBuffer.Dispose();
                 hashers.ForEach(h => h.Dispose());
 
                 return baseFile;
