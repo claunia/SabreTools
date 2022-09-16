@@ -1,5 +1,6 @@
 ﻿using System.Xml;
 
+// TODO: Introduce a "strict" flag or a "lenient" flag to throw an exception on WriteRequired*
 namespace SabreTools.IO
 {
     /// <summary>
