@@ -976,6 +976,23 @@ namespace SabreTools.Features
             }
         }
 
+        // TODO: Should this just skip the item instead of the entire DAT?
+        // The rationale behind skipping the entire DAT is that if one thing is missing, likely a lot more is missing
+        // TDOO: Add to documentation
+        internal const string StrictValue = "strict";
+        internal static Feature StrictFlag
+        {
+            get
+            {
+                return new Feature(
+                    StrictValue,
+                    new List<string>() { "-str", "--strict" },
+                    "Enable strict DAT creation",
+                    ParameterType.Flag,
+                    longDescription: "Instead of writing empty strings for null values when set as required, cancel writing the DAT entirely.");
+            }
+        }
+
         internal const string SuperdatValue = "superdat";
         internal static Feature SuperdatFlag
         {
