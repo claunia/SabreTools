@@ -507,6 +507,16 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
+        /// Determine if an item has all required fields to write out
+        /// </summary>
+        /// <param name="datItem">DatItem to check</param>
+        /// <returns>True if the item has all required fields, false otherwise</returns>
+        /// <remarks>
+        /// TODO: Implement this in all relevant DatFile types
+        /// </remarks>
+        protected virtual bool HasRequiredFields(DatItem datItem) => true;
+
+        /// <summary>
         /// Get if a machine contains any writable items
         /// </summary>
         /// <param name="datItems">DatItems to check</param>
@@ -563,16 +573,6 @@ namespace SabreTools.DatFiles
 
             return false;
         }
-
-        /// <summary>
-        /// Determine if an item has all required fields to write out
-        /// </summary>
-        /// <param name="datItem">DatItem to check</param>
-        /// <returns>True if the item has all required fields, false otherwise</returns>
-        /// <remarks>
-        /// TODO: Implement this in all relevant DatFile types
-        /// </remarks>
-        protected virtual bool HasRequiredFields(DatItem datItem) => true;
 
         #endregion
     }

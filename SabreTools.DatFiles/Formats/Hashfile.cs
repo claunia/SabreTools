@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 using SabreTools.Core;
@@ -105,6 +107,31 @@ namespace SabreTools.DatFiles.Formats
         protected override ItemType[] GetSupportedTypes()
         {
             return new ItemType[] { ItemType.Disk, ItemType.Media, ItemType.Rom };
+        }
+
+        /// <inheritdoc/>
+        protected override bool HasRequiredFields(DatItem datItem)
+        {
+            return true;
+
+            // TODO: Use this code once `strict` rules determined
+            return (_hash, datItem.ItemType) switch
+            {
+                (Hash.CRC, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.CRC),
+                (Hash.MD5, ItemType.Disk) => !string.IsNullOrEmpty((datItem as Disk)?.MD5),
+                (Hash.MD5, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.MD5),
+                (Hash.MD5, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.MD5),
+                (Hash.SHA1, ItemType.Disk) => !string.IsNullOrEmpty((datItem as Disk)?.SHA1),
+                (Hash.SHA1, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.SHA1),
+                (Hash.SHA1, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA1),
+                (Hash.SHA256, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.SHA256),
+                (Hash.SHA256, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA256),
+                (Hash.SHA384, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA384),
+                (Hash.SHA512, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA512),
+                (Hash.SpamSum, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.SpamSum),
+                (Hash.SpamSum, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SpamSum),
+                _ => false,
+            };
         }
 
         /// <inheritdoc/>
