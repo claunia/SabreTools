@@ -1,9 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
-using System.Security.Cryptography;
 using System.Text;
-
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
