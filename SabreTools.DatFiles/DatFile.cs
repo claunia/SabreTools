@@ -559,6 +559,9 @@ namespace SabreTools.DatFiles
             if (!GetSupportedTypes().Contains(datItem.ItemType))
                 return true;
 
+            // TODO: Add code to filter out items missing fields
+            // Maybe it should be an abstract method that's overridden per type?
+
             return false;
         }
 
