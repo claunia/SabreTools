@@ -112,6 +112,8 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override bool HasRequiredFields(DatItem datItem)
         {
+            // TODO: Add code to ensure name as well
+
             return (_hash, datItem.ItemType) switch
             {
                 (Hash.CRC, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.CRC),
