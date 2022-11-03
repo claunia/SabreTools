@@ -513,6 +513,7 @@ namespace SabreTools.DatFiles
         /// <returns>True if the item has all required fields, false otherwise</returns>
         /// <remarks>
         /// TODO: Implement this in all relevant DatFile types
+        /// TODO: Return list of missing fields?
         /// </remarks>
         protected virtual bool HasRequiredFields(DatItem datItem) => true;
 
@@ -545,15 +546,21 @@ namespace SabreTools.DatFiles
         /// <returns>True if the item should be skipped on write, false otherwise</returns>
         protected bool ShouldIgnore(DatItem datItem, bool ignoreBlanks)
         {
-            // TODO: Add non-error, non-warning logging to this method to capture ignore reasons
-
             // If the item is supposed to be removed, we ignore
             if (datItem.Remove)
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was marked for removal");
                 return true;
+            }
 
             // If we have the Blank dat item, we ignore
             if (datItem.ItemType == ItemType.Blank)
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was of type 'Blank'");
                 return true;
+            }
 
             // If we're ignoring blanks and we have a Rom
             if (ignoreBlanks && datItem.ItemType == ItemType.Rom)
@@ -562,16 +569,28 @@ namespace SabreTools.DatFiles
 
                 // If we have a 0-size or blank rom, then we ignore
                 if (rom.Size == 0 || rom.Size == null)
+                {
+                    string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                    logger?.Verbose($"Item '{itemString}' was skipped because it had an invalid size");
                     return true;
+                }
             }
 
             // If we have an item type not in the list of supported values
             if (!GetSupportedTypes().Contains(datItem.ItemType))
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was not supported in {Header?.DatFormat}");
                 return true;
+            }
 
             // If we have an item with missing required fields
             if (!HasRequiredFields(datItem))
+            {
+                string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}");
                 return true;
+            }
 
             return false;
         }
