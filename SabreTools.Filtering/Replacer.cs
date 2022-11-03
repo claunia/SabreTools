@@ -608,6 +608,18 @@ namespace SabreTools.Filtering
 
             if (datItemFields.Contains(DatItemField.SaveStateStatus))
                 driver.SaveState = newItem.SaveState;
+
+            if (datItemFields.Contains(DatItemField.RequiresArtwork))
+                driver.RequiresArtwork = newItem.RequiresArtwork;
+
+            if (datItemFields.Contains(DatItemField.Unofficial))
+                driver.Unofficial = newItem.Unofficial;
+
+            if (datItemFields.Contains(DatItemField.NoSoundHardware))
+                driver.NoSoundHardware = newItem.NoSoundHardware;
+
+            if (datItemFields.Contains(DatItemField.Incomplete))
+                driver.Incomplete = newItem.Incomplete;
         }
 
         /// <summary>

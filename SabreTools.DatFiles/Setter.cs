@@ -826,6 +826,18 @@ namespace SabreTools.DatFiles
 
             if (DatItemMappings.Keys.Contains(DatItemField.SaveStateStatus))
                 driver.SaveState = DatItemMappings[DatItemField.SaveStateStatus].AsSupported();
+
+            if (DatItemMappings.Keys.Contains(DatItemField.RequiresArtwork))
+                driver.RequiresArtwork = DatItemMappings[DatItemField.RequiresArtwork].AsYesNo();
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Unofficial))
+                driver.Unofficial = DatItemMappings[DatItemField.Unofficial].AsYesNo();
+
+            if (DatItemMappings.Keys.Contains(DatItemField.NoSoundHardware))
+                driver.NoSoundHardware = DatItemMappings[DatItemField.NoSoundHardware].AsYesNo();
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Incomplete))
+                driver.Incomplete = DatItemMappings[DatItemField.Incomplete].AsYesNo();
         }
 
         /// <summary>

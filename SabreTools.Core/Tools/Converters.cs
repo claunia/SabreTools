@@ -665,6 +665,18 @@ namespace SabreTools.Core.Tools
                 case "savestatestatus":
                     return DatItemField.SaveStateStatus;
 
+                case "requiresartwork":
+                    return DatItemField.RequiresArtwork;
+
+                case "unofficial":
+                    return DatItemField.Unofficial;
+
+                case "nosoundhardware":
+                    return DatItemField.NoSoundHardware;
+
+                case "incomplete":
+                    return DatItemField.Incomplete;
+
                 // Extension
                 case "extension_name":
                     return DatItemField.Extension_Name;

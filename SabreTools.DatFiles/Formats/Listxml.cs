@@ -569,6 +569,10 @@ namespace SabreTools.DatFiles.Formats
                             Emulation = reader.GetAttribute("emulation").AsSupportStatus(),
                             Cocktail = reader.GetAttribute("cocktail").AsSupportStatus(),
                             SaveState = reader.GetAttribute("savestate").AsSupported(),
+                            RequiresArtwork = reader.GetAttribute("requiresartwork").AsYesNo(),
+                            Unofficial = reader.GetAttribute("unofficial").AsYesNo(),
+                            NoSoundHardware = reader.GetAttribute("nosoundhardware").AsYesNo(),
+                            Incomplete = reader.GetAttribute("incomplete").AsYesNo(),
 
                             Source = new Source
                             {
@@ -1592,6 +1596,18 @@ namespace SabreTools.DatFiles.Formats
                             xtw.WriteRequiredAttributeString("name", setting.Name);
                             xtw.WriteRequiredAttributeString("value", setting.Value);
                             xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
+                            if (setting.ConditionsSpecified)
+                            {
+                                foreach (var confsettingCondition in setting.Conditions)
+                                {
+                                    xtw.WriteStartElement("condition");
+                                    xtw.WriteRequiredAttributeString("tag", confsettingCondition.Tag);
+                                    xtw.WriteRequiredAttributeString("mask", confsettingCondition.Mask);
+                                    xtw.WriteRequiredAttributeString("relation", confsettingCondition.Relation.FromRelation());
+                                    xtw.WriteRequiredAttributeString("value", confsettingCondition.Value);
+                                    xtw.WriteEndElement();
+                                }
+                            }
                             xtw.WriteEndElement();
                         }
                     }
@@ -1731,6 +1747,10 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteRequiredAttributeString("emulation", driver.Emulation.FromSupportStatus());
                     xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail.FromSupportStatus());
                     xtw.WriteRequiredAttributeString("savestate", driver.SaveState.FromSupported(true));
+                    xtw.WriteOptionalAttributeString("requiresartwork", driver.RequiresArtwork.FromYesNo());
+                    xtw.WriteOptionalAttributeString("unofficial", driver.Unofficial.FromYesNo());
+                    xtw.WriteOptionalAttributeString("nosoundhardware", driver.NoSoundHardware.FromYesNo());
+                    xtw.WriteOptionalAttributeString("incomplete", driver.Incomplete.FromYesNo());
                     xtw.WriteEndElement();
                     break;
 

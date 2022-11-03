@@ -143,6 +143,10 @@ namespace SabreTools.Filtering
         public FilterItem<SupportStatus> EmulationStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = Core.SupportStatus.NULL, Negative = Core.SupportStatus.NULL };
         public FilterItem<SupportStatus> CocktailStatus { get; private set; } = new FilterItem<SupportStatus>() { Positive = Core.SupportStatus.NULL, Negative = Core.SupportStatus.NULL };
         public FilterItem<Supported> SaveStateStatus { get; private set; } = new FilterItem<Supported>() { Positive = Supported.NULL, Negative = Supported.NULL };
+        public FilterItem<bool?> RequiresArtwork { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Unofficial { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> NoSoundHardware { get; private set; } = new FilterItem<bool?>() { Neutral = null };
+        public FilterItem<bool?> Incomplete { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // Extension
         public FilterItem<string> Extension_Name { get; private set; } = new FilterItem<string>();
@@ -651,6 +655,22 @@ namespace SabreTools.Filtering
                         SaveStateStatus.Negative |= value.AsSupported();
                     else
                         SaveStateStatus.Positive |= value.AsSupported();
+                    break;
+
+                case DatItemField.RequiresArtwork:
+                    SetBooleanFilter(RequiresArtwork, value, negate);
+                    break;
+
+                case DatItemField.Unofficial:
+                    SetBooleanFilter(Unofficial, value, negate);
+                    break;
+
+                case DatItemField.NoSoundHardware:
+                    SetBooleanFilter(NoSoundHardware, value, negate);
+                    break;
+
+                case DatItemField.Incomplete:
+                    SetBooleanFilter(Incomplete, value, negate);
                     break;
 
                 // Extension
@@ -1430,7 +1450,23 @@ namespace SabreTools.Filtering
                 return false;
             if (SaveStateStatus.MatchesNegative(Supported.NULL, driver.SaveState) == true)
                 return false;
-            
+
+            // Filter on requires artwork
+            if (!PassBoolFilter(RequiresArtwork, driver.RequiresArtwork))
+                return false;
+
+            // Filter on unofficial
+            if (!PassBoolFilter(Unofficial, driver.Unofficial))
+                return false;
+
+            // Filter on no sound hardware
+            if (!PassBoolFilter(NoSoundHardware, driver.NoSoundHardware))
+                return false;
+
+            // Filter on incomplete
+            if (!PassBoolFilter(Incomplete, driver.Incomplete))
+                return false;
+
             return true;
         }
 

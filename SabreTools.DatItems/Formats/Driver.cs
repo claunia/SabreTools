@@ -58,6 +58,46 @@ namespace SabreTools.DatItems.Formats
         [JsonIgnore]
         public bool SaveStateSpecified { get { return SaveState != Supported.NULL; } }
 
+        /// <summary>
+        /// Requires artwork
+        /// </summary>
+        [JsonProperty("requiresartwork", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("requiresartwork")]
+        public bool? RequiresArtwork { get; set; }
+
+        [JsonIgnore]
+        public bool RequiresArtworkSpecified { get { return RequiresArtwork != null; } }
+
+        /// <summary>
+        /// Unofficial
+        /// </summary>
+        [JsonProperty("unofficial", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("unofficial")]
+        public bool? Unofficial { get; set; }
+
+        [JsonIgnore]
+        public bool UnofficialSpecified { get { return Unofficial != null; } }
+
+        /// <summary>
+        /// No sound hardware
+        /// </summary>
+        [JsonProperty("nosoundhardware", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("nosoundhardware")]
+        public bool? NoSoundHardware { get; set; }
+
+        [JsonIgnore]
+        public bool NoSoundHardwareSpecified { get { return NoSoundHardware != null; } }
+
+        /// <summary>
+        /// Incomplete
+        /// </summary>
+        [JsonProperty("incomplete", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("incomplete")]
+        public bool? Incomplete { get; set; }
+
+        [JsonIgnore]
+        public bool IncompleteSpecified { get { return Incomplete != null; } }
+
         #endregion
 
         #region Constructors
@@ -89,6 +129,10 @@ namespace SabreTools.DatItems.Formats
                 Emulation = this.Emulation,
                 Cocktail = this.Cocktail,
                 SaveState = this.SaveState,
+                RequiresArtwork = this.RequiresArtwork,
+                Unofficial = this.Unofficial,
+                NoSoundHardware = this.NoSoundHardware,
+                Incomplete = this.Incomplete,
             };
         }
 
@@ -109,7 +153,11 @@ namespace SabreTools.DatItems.Formats
             return (Status == newOther.Status
                 && Emulation == newOther.Emulation
                 && Cocktail == newOther.Cocktail
-                && SaveState == newOther.SaveState);
+                && SaveState == newOther.SaveState
+                && RequiresArtwork == newOther.RequiresArtwork
+                && Unofficial == newOther.Unofficial
+                && NoSoundHardware == newOther.NoSoundHardware
+                && Incomplete == newOther.Incomplete);
         }
 
         #endregion

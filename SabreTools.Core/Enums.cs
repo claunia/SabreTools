@@ -652,6 +652,10 @@ namespace SabreTools.Core
         EmulationStatus,
         CocktailStatus,
         SaveStateStatus,
+        RequiresArtwork,
+        Unofficial,
+        NoSoundHardware,
+        Incomplete,
 
         // Extension
         Extension_Name,
