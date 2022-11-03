@@ -184,14 +184,23 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Ensure writing writing null values as empty strings
         /// </summary>
-        public void WriteRequiredElementString(string name, string value)
+        /// <param name="name">Name of the element</param>
+        /// <param name="value">Value to write in the element</param>
+        /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
+        public void WriteRequiredElementString(string name, string value, bool throwOnError = false)
         {
+            // Throw an exception if we are configured to
+            if (value == null && throwOnError)
+                throw new ArgumentNullException(nameof(value));
+
             WriteElementString(name, value ?? string.Empty);
         }
 
         /// <summary>
         /// Write an element, if the value is not null or empty
         /// </summary>
+        /// <param name="name">Name of the element</param>
+        /// <param name="value">Value to write in the element</param>
         public void WriteOptionalElementString(string name, string value)
         {
             if (!string.IsNullOrEmpty(value))
@@ -201,6 +210,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write the start of an attribute node
         /// </summary>
+        /// <param name="name">Name of the attribute</param>
         public void WriteStartAttribute(string name, bool? quoteOverride = null)
         {
             try
@@ -241,6 +251,9 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a complete attribute with content
         /// </summary>
+        /// <param name="name">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
         public void WriteAttributeString(string name, string value, bool? quoteOverride = null)
         {
             WriteStartAttribute(name, quoteOverride);
@@ -251,14 +264,25 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Ensure writing writing null values as empty strings
         /// </summary>
-        public void WriteRequiredAttributeString(string name, string value, bool? quoteOverride = null)
+        /// <param name="name">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
+        /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
+        public void WriteRequiredAttributeString(string name, string value, bool? quoteOverride = null, bool throwOnError = false)
         {
+            // Throw an exception if we are configured to
+            if (value == null && throwOnError)
+                throw new ArgumentNullException(nameof(value));
+
             WriteAttributeString(name, value ?? string.Empty, quoteOverride);
         }
 
         /// <summary>
         /// Write an attribute, if the value is not null or empty
         /// </summary>
+        /// <param name="name">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
         public void WriteOptionalAttributeString(string name, string value, bool? quoteOverride = null)
         {
             if (!string.IsNullOrEmpty(value))
@@ -268,6 +292,9 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a standalone attribute
         /// </summary>
+        /// <param name="name">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
         public void WriteStandalone(string name, string value, bool? quoteOverride = null)
         {
             try
@@ -308,14 +335,25 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Ensure writing writing null values as empty strings
         /// </summary>
-        public void WriteRequiredStandalone(string name, string value, bool? quoteOverride = null)
+        /// <param name="name">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
+        /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
+        public void WriteRequiredStandalone(string name, string value, bool? quoteOverride = null, bool throwOnError = false)
         {
+            // Throw an exception if we are configured to
+            if (value == null && throwOnError)
+                throw new ArgumentNullException(nameof(value));
+
             WriteStandalone(name, value ?? string.Empty, quoteOverride);
         }
 
         /// <summary>
         /// Write an standalone, if the value is not null or empty
         /// </summary>
+        /// <param name="name">Name of the attribute</param>
+        /// <param name="value">Value to write in the attribute</param>
+        /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
         public void WriteOptionalStandalone(string name, string value, bool? quoteOverride = null)
         {
             if (!string.IsNullOrEmpty(value))

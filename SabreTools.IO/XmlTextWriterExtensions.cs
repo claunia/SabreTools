@@ -1,6 +1,6 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 
-// TODO: Introduce a "strict" flag or a "lenient" flag to throw an exception on WriteRequired*
 namespace SabreTools.IO
 {
     /// <summary>
@@ -14,8 +14,13 @@ namespace SabreTools.IO
         /// <param name="writer">XmlTextWriter to write out with</param>
         /// <param name="localName">Name of the element</param>
         /// <param name="value">Value to write in the element</param>
-        public static void WriteRequiredAttributeString(this XmlTextWriter writer, string localName, string value)
+        /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
+        public static void WriteRequiredAttributeString(this XmlTextWriter writer, string localName, string value, bool throwOnError = false)
         {
+            // Throw an exception if we are configured to
+            if (value == null && throwOnError)
+                throw new ArgumentNullException(nameof(value));
+
             writer.WriteAttributeString(localName, value ?? string.Empty);
         }
 
@@ -25,8 +30,13 @@ namespace SabreTools.IO
         /// <param name="writer">XmlTextWriter to write out with</param>
         /// <param name="localName">Name of the element</param>
         /// <param name="value">Value to write in the element</param>
-        public static void WriteRequiredElementString(this XmlTextWriter writer, string localName, string value)
+        /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
+        public static void WriteRequiredElementString(this XmlTextWriter writer, string localName, string value, bool throwOnError = false)
         {
+            // Throw an exception if we are configured to
+            if (value == null && throwOnError)
+                throw new ArgumentNullException(nameof(value));
+
             writer.WriteStartElement(localName);
             if (value == null)
                 writer.WriteRaw(string.Empty);
