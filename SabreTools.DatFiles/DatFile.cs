@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -507,15 +508,13 @@ namespace SabreTools.DatFiles
         }
 
         /// <summary>
-        /// Determine if an item has all required fields to write out
+        /// Return list of required fields missing from a DatItem
         /// </summary>
-        /// <param name="datItem">DatItem to check</param>
-        /// <returns>True if the item has all required fields, false otherwise</returns>
+        /// <returns>List of missing required fields, null or empty if none were found</returns>
         /// <remarks>
         /// TODO: Implement this in all relevant DatFile types
-        /// TODO: Return list of missing fields?
         /// </remarks>
-        protected virtual bool HasRequiredFields(DatItem datItem) => true;
+        protected virtual List<DatItemField> GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
         /// Get if a machine contains any writable items
@@ -592,10 +591,11 @@ namespace SabreTools.DatFiles
             }
 
             // If we have an item with missing required fields
-            if (!HasRequiredFields(datItem))
+            List<DatItemField> missingFields = GetMissingRequiredFields(datItem);
+            if (missingFields == null || missingFields.Count == 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
-                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}");
+                logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields)}");
                 return true;
             }
 

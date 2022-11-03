@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using SabreTools.Core;
@@ -107,27 +108,128 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <inheritdoc/>
-        protected override bool HasRequiredFields(DatItem datItem)
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            // TODO: Add code to ensure name as well
+            List<DatItemField> missingFields = new List<DatItemField>();
 
-            return (_hash, datItem.ItemType) switch
+            // Check item name
+            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+                missingFields.Add(DatItemField.Name);
+
+            // Check hash linked to specific Hashfile type
+            switch (_hash)
             {
-                (Hash.CRC, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.CRC),
-                (Hash.MD5, ItemType.Disk) => !string.IsNullOrEmpty((datItem as Disk)?.MD5),
-                (Hash.MD5, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.MD5),
-                (Hash.MD5, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.MD5),
-                (Hash.SHA1, ItemType.Disk) => !string.IsNullOrEmpty((datItem as Disk)?.SHA1),
-                (Hash.SHA1, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.SHA1),
-                (Hash.SHA1, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA1),
-                (Hash.SHA256, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.SHA256),
-                (Hash.SHA256, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA256),
-                (Hash.SHA384, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA384),
-                (Hash.SHA512, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SHA512),
-                (Hash.SpamSum, ItemType.Media) => !string.IsNullOrEmpty((datItem as Media)?.SpamSum),
-                (Hash.SpamSum, ItemType.Rom) => !string.IsNullOrEmpty((datItem as Rom)?.SpamSum),
-                _ => false,
-            };
+                case Hash.CRC:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.CRC))
+                                missingFields.Add(DatItemField.CRC);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.CRC);
+                            break;
+                    }
+                    break;
+                case Hash.MD5:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Disk:
+                            if (!string.IsNullOrEmpty((datItem as Disk)?.MD5))
+                                missingFields.Add(DatItemField.MD5);
+                            break;
+                        case ItemType.Media:
+                            if (!string.IsNullOrEmpty((datItem as Media)?.MD5))
+                                missingFields.Add(DatItemField.MD5);
+                            break;
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.MD5))
+                                missingFields.Add(DatItemField.MD5);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.MD5);
+                            break;
+                    }
+                    break;
+                case Hash.SHA1:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Disk:
+                            if (!string.IsNullOrEmpty((datItem as Disk)?.SHA1))
+                                missingFields.Add(DatItemField.SHA1);
+                            break;
+                        case ItemType.Media:
+                            if (!string.IsNullOrEmpty((datItem as Media)?.SHA1))
+                                missingFields.Add(DatItemField.SHA1);
+                            break;
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA1))
+                                missingFields.Add(DatItemField.SHA1);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.SHA1);
+                            break;
+                    }
+                    break;
+                case Hash.SHA256:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Media:
+                            if (!string.IsNullOrEmpty((datItem as Media)?.SHA256))
+                                missingFields.Add(DatItemField.SHA256);
+                            break;
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA256))
+                                missingFields.Add(DatItemField.SHA256);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.SHA256);
+                            break;
+                    }
+                    break;
+                case Hash.SHA384:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA384))
+                                missingFields.Add(DatItemField.SHA384);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.SHA384);
+                            break;
+                    }
+                    break;
+                case Hash.SHA512:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA512))
+                                missingFields.Add(DatItemField.SHA512);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.SHA512);
+                            break;
+                    }
+                    break;
+                case Hash.SpamSum:
+                    switch (datItem.ItemType)
+                    {
+                        case ItemType.Media:
+                            if (!string.IsNullOrEmpty((datItem as Media)?.SpamSum))
+                                missingFields.Add(DatItemField.SpamSum);
+                            break;
+                        case ItemType.Rom:
+                            if (!string.IsNullOrEmpty((datItem as Rom)?.SpamSum))
+                                missingFields.Add(DatItemField.SpamSum);
+                            break;
+                        default:
+                            missingFields.Add(DatItemField.SpamSum);
+                            break;
+                    }
+                    break;
+            }
+
+            return missingFields;
         }
 
         /// <inheritdoc/>
