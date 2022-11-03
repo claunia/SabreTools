@@ -22,164 +22,167 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// DTD for original MAME XML DATs
         /// </summary>
-        private const string MAMEDTD = @"<!ELEMENT mame (machine+)>
-    <!ATTLIST mame build CDATA #IMPLIED>
-    <!ATTLIST mame debug (yes|no) string.Emptynostring.Empty>
-    <!ATTLIST mame mameconfig CDATA #REQUIRED>
-    <!ELEMENT machine (description, year?, manufacturer?, biosset*, rom*, disk*, device_ref*, sample*, chip*, display*, sound?, input?, dipswitch*, configuration*, port*, adjuster*, driver?, feature*, device*, slot*, softwarelist*, ramoption*)>
-        <!ATTLIST machine name CDATA #REQUIRED>
-        <!ATTLIST machine sourcefile CDATA #IMPLIED>
-        <!ATTLIST machine isbios (yes|no) string.Emptynostring.Empty>
-        <!ATTLIST machine isdevice (yes|no) string.Emptynostring.Empty>
-        <!ATTLIST machine ismechanical (yes|no) string.Emptynostring.Empty>
-        <!ATTLIST machine runnable (yes|no) string.Emptyyesstring.Empty>
-        <!ATTLIST machine cloneof CDATA #IMPLIED>
-        <!ATTLIST machine romof CDATA #IMPLIED>
-        <!ATTLIST machine sampleof CDATA #IMPLIED>
-        <!ELEMENT description (#PCDATA)>
-        <!ELEMENT year (#PCDATA)>
-        <!ELEMENT manufacturer (#PCDATA)>
-        <!ELEMENT biosset EMPTY>
-            <!ATTLIST biosset name CDATA #REQUIRED>
-            <!ATTLIST biosset description CDATA #REQUIRED>
-            <!ATTLIST biosset default (yes|no) string.Emptynostring.Empty>
-        <!ELEMENT rom EMPTY>
-            <!ATTLIST rom name CDATA #REQUIRED>
-            <!ATTLIST rom bios CDATA #IMPLIED>
-            <!ATTLIST rom size CDATA #REQUIRED>
-            <!ATTLIST rom crc CDATA #IMPLIED>
-            <!ATTLIST rom md5 CDATA #IMPLIED>
-            <!ATTLIST rom sha1 CDATA #IMPLIED>
-            <!ATTLIST rom sha256 CDATA #IMPLIED>
-            <!ATTLIST rom sha384 CDATA #IMPLIED>
-            <!ATTLIST rom sha512 CDATA #IMPLIED>
-            <!ATTLIST rom merge CDATA #IMPLIED>
-            <!ATTLIST rom region CDATA #IMPLIED>
-            <!ATTLIST rom offset CDATA #IMPLIED>
-            <!ATTLIST rom status (baddump|nodump|good) string.Emptygoodstring.Empty>
-            <!ATTLIST rom optional (yes|no) string.Emptynostring.Empty>
-        <!ELEMENT disk EMPTY>
-            <!ATTLIST disk name CDATA #REQUIRED>
-            <!ATTLIST disk md5 CDATA #IMPLIED>
-            <!ATTLIST disk sha1 CDATA #IMPLIED>
-            <!ATTLIST disk merge CDATA #IMPLIED>
-            <!ATTLIST disk region CDATA #IMPLIED>
-            <!ATTLIST disk index CDATA #IMPLIED>
-            <!ATTLIST disk writable (yes|no) string.Emptynostring.Empty>
-            <!ATTLIST disk status (baddump|nodump|good) string.Emptygoodstring.Empty>
-            <!ATTLIST disk optional (yes|no) string.Emptynostring.Empty>
-        <!ELEMENT device_ref EMPTY>
-            <!ATTLIST device_ref name CDATA #REQUIRED>
-        <!ELEMENT sample EMPTY>
-            <!ATTLIST sample name CDATA #REQUIRED>
-        <!ELEMENT chip EMPTY>
-            <!ATTLIST chip name CDATA #REQUIRED>
-            <!ATTLIST chip tag CDATA #IMPLIED>
-            <!ATTLIST chip type (cpu|audio) #REQUIRED>
-            <!ATTLIST chip clock CDATA #IMPLIED>
-        <!ELEMENT display EMPTY>
-            <!ATTLIST display tag CDATA #IMPLIED>
-            <!ATTLIST display type (raster|vector|lcd|svg|unknown) #REQUIRED>
-            <!ATTLIST display rotate (0|90|180|270) #IMPLIED>
-            <!ATTLIST display flipx (yes|no) string.Emptynostring.Empty>
-            <!ATTLIST display width CDATA #IMPLIED>
-            <!ATTLIST display height CDATA #IMPLIED>
-            <!ATTLIST display refresh CDATA #REQUIRED>
-            <!ATTLIST display pixclock CDATA #IMPLIED>
-            <!ATTLIST display htotal CDATA #IMPLIED>
-            <!ATTLIST display hbend CDATA #IMPLIED>
-            <!ATTLIST display hbstart CDATA #IMPLIED>
-            <!ATTLIST display vtotal CDATA #IMPLIED>
-            <!ATTLIST display vbend CDATA #IMPLIED>
-            <!ATTLIST display vbstart CDATA #IMPLIED>
-        <!ELEMENT sound EMPTY>
-            <!ATTLIST sound channels CDATA #REQUIRED>
-        <!ELEMENT condition EMPTY>
-            <!ATTLIST condition tag CDATA #REQUIRED>
-            <!ATTLIST condition mask CDATA #REQUIRED>
-            <!ATTLIST condition relation (eq|ne|gt|le|lt|ge) #REQUIRED>
-            <!ATTLIST condition value CDATA #REQUIRED>
-        <!ELEMENT input (control*)>
-            <!ATTLIST input service (yes|no) string.Emptynostring.Empty>
-            <!ATTLIST input tilt (yes|no) string.Emptynostring.Empty>
-            <!ATTLIST input players CDATA #REQUIRED>
-            <!ATTLIST input coins CDATA #IMPLIED>
-            <!ELEMENT control EMPTY>
-                <!ATTLIST control type CDATA #REQUIRED>
-                <!ATTLIST control player CDATA #IMPLIED>
-                <!ATTLIST control buttons CDATA #IMPLIED>
-                <!ATTLIST control reqbuttons CDATA #IMPLIED>
-                <!ATTLIST control minimum CDATA #IMPLIED>
-                <!ATTLIST control maximum CDATA #IMPLIED>
-                <!ATTLIST control sensitivity CDATA #IMPLIED>
-                <!ATTLIST control keydelta CDATA #IMPLIED>
-                <!ATTLIST control reverse (yes|no) string.Emptynostring.Empty>
-                <!ATTLIST control ways CDATA #IMPLIED>
-                <!ATTLIST control ways2 CDATA #IMPLIED>
-                <!ATTLIST control ways3 CDATA #IMPLIED>
-        <!ELEMENT dipswitch (condition?, diplocation*, dipvalue*)>
-            <!ATTLIST dipswitch name CDATA #REQUIRED>
-            <!ATTLIST dipswitch tag CDATA #REQUIRED>
-            <!ATTLIST dipswitch mask CDATA #REQUIRED>
-            <!ELEMENT diplocation EMPTY>
-                <!ATTLIST diplocation name CDATA #REQUIRED>
-                <!ATTLIST diplocation number CDATA #REQUIRED>
-                <!ATTLIST diplocation inverted (yes|no) string.Emptynostring.Empty>
-            <!ELEMENT dipvalue (condition?)>
-                <!ATTLIST dipvalue name CDATA #REQUIRED>
-                <!ATTLIST dipvalue value CDATA #REQUIRED>
-                <!ATTLIST dipvalue default (yes|no) string.Emptynostring.Empty>
-        <!ELEMENT configuration (condition?, conflocation*, confsetting*)>
-            <!ATTLIST configuration name CDATA #REQUIRED>
-            <!ATTLIST configuration tag CDATA #REQUIRED>
-            <!ATTLIST configuration mask CDATA #REQUIRED>
-            <!ELEMENT conflocation EMPTY>
-                <!ATTLIST conflocation name CDATA #REQUIRED>
-                <!ATTLIST conflocation number CDATA #REQUIRED>
-                <!ATTLIST conflocation inverted (yes|no) string.Emptynostring.Empty>
-            <!ELEMENT confsetting (condition?)>
-                <!ATTLIST confsetting name CDATA #REQUIRED>
-                <!ATTLIST confsetting value CDATA #REQUIRED>
-                <!ATTLIST confsetting default (yes|no) string.Emptynostring.Empty>
-        <!ELEMENT port (analog*)>
-            <!ATTLIST port tag CDATA #REQUIRED>
-            <!ELEMENT analog EMPTY>
-                <!ATTLIST analog mask CDATA #REQUIRED>
-        <!ELEMENT adjuster (condition?)>
-            <!ATTLIST adjuster name CDATA #REQUIRED>
-            <!ATTLIST adjuster default CDATA #REQUIRED>
-        <!ELEMENT driver EMPTY>
-            <!ATTLIST driver status (good|imperfect|preliminary) #REQUIRED>
-            <!ATTLIST driver emulation (good|imperfect|preliminary) #REQUIRED>
-            <!ATTLIST driver cocktail (good|imperfect|preliminary) #IMPLIED>
-            <!ATTLIST driver savestate (supported|unsupported) #REQUIRED>
-        <!ELEMENT feature EMPTY>
-            <!ATTLIST feature type (protection|palette|graphics|sound|controls|keyboard|mouse|microphone|camera|disk|printer|lan|wan|timing) #REQUIRED>
-            <!ATTLIST feature status (unemulated|imperfect) #IMPLIED>
-            <!ATTLIST feature overall (unemulated|imperfect) #IMPLIED>
-        <!ELEMENT device (instance?, extension*)>
-            <!ATTLIST device type CDATA #REQUIRED>
-            <!ATTLIST device tag CDATA #IMPLIED>
-            <!ATTLIST device fixed_image CDATA #IMPLIED>
-            <!ATTLIST device mandatory CDATA #IMPLIED>
-            <!ATTLIST device interface CDATA #IMPLIED>
-            <!ELEMENT instance EMPTY>
-                <!ATTLIST instance name CDATA #REQUIRED>
-                <!ATTLIST instance briefname CDATA #REQUIRED>
-            <!ELEMENT extension EMPTY>
-                <!ATTLIST extension name CDATA #REQUIRED>
-        <!ELEMENT slot (slotoption*)>
-            <!ATTLIST slot name CDATA #REQUIRED>
-            <!ELEMENT slotoption EMPTY>
-                <!ATTLIST slotoption name CDATA #REQUIRED>
-                <!ATTLIST slotoption devname CDATA #REQUIRED>
-                <!ATTLIST slotoption default (yes|no) string.Emptynostring.Empty>
-        <!ELEMENT softwarelist EMPTY>
-            <!ATTLIST softwarelist name CDATA #REQUIRED>
-            <!ATTLIST softwarelist status (original|compatible) #REQUIRED>
-            <!ATTLIST softwarelist filter CDATA #IMPLIED>
-        <!ELEMENT ramoption (#PCDATA)>
-            <!ATTLIST ramoption default CDATA #IMPLIED>
+        private const string MAMEDTD = @"<!DOCTYPE mame [
+<!ELEMENT mame (machine+)>
+	<!ATTLIST mame build CDATA #IMPLIED>
+	<!ATTLIST mame debug (yes|no) ""no"">
+	<!ATTLIST mame mameconfig CDATA #REQUIRED>
+	<!ELEMENT machine (description, year?, manufacturer?, biosset*, rom*, disk*, device_ref*, sample*, chip*, display*, sound?, input?, dipswitch*, configuration*, port*, adjuster*, driver?, feature*, device*, slot*, softwarelist*, ramoption*)>
+		<!ATTLIST machine name CDATA #REQUIRED>
+		<!ATTLIST machine sourcefile CDATA #IMPLIED>
+		<!ATTLIST machine isbios (yes|no) ""no"">
+		<!ATTLIST machine isdevice (yes|no) ""no"">
+		<!ATTLIST machine ismechanical (yes|no) ""no"">
+		<!ATTLIST machine runnable (yes|no) ""yes"">
+		<!ATTLIST machine cloneof CDATA #IMPLIED>
+		<!ATTLIST machine romof CDATA #IMPLIED>
+		<!ATTLIST machine sampleof CDATA #IMPLIED>
+		<!ELEMENT description (#PCDATA)>
+		<!ELEMENT year (#PCDATA)>
+		<!ELEMENT manufacturer (#PCDATA)>
+		<!ELEMENT biosset EMPTY>
+			<!ATTLIST biosset name CDATA #REQUIRED>
+			<!ATTLIST biosset description CDATA #REQUIRED>
+			<!ATTLIST biosset default (yes|no) ""no"">
+		<!ELEMENT rom EMPTY>
+			<!ATTLIST rom name CDATA #REQUIRED>
+			<!ATTLIST rom bios CDATA #IMPLIED>
+			<!ATTLIST rom size CDATA #REQUIRED>
+			<!ATTLIST rom crc CDATA #IMPLIED>
+			<!ATTLIST rom sha1 CDATA #IMPLIED>
+			<!ATTLIST rom merge CDATA #IMPLIED>
+			<!ATTLIST rom region CDATA #IMPLIED>
+			<!ATTLIST rom offset CDATA #IMPLIED>
+			<!ATTLIST rom status (baddump|nodump|good) ""good"">
+			<!ATTLIST rom optional (yes|no) ""no"">
+		<!ELEMENT disk EMPTY>
+			<!ATTLIST disk name CDATA #REQUIRED>
+			<!ATTLIST disk sha1 CDATA #IMPLIED>
+			<!ATTLIST disk merge CDATA #IMPLIED>
+			<!ATTLIST disk region CDATA #IMPLIED>
+			<!ATTLIST disk index CDATA #IMPLIED>
+			<!ATTLIST disk writable (yes|no) ""no"">
+			<!ATTLIST disk status (baddump|nodump|good) ""good"">
+			<!ATTLIST disk optional (yes|no) ""no"">
+		<!ELEMENT device_ref EMPTY>
+			<!ATTLIST device_ref name CDATA #REQUIRED>
+		<!ELEMENT sample EMPTY>
+			<!ATTLIST sample name CDATA #REQUIRED>
+		<!ELEMENT chip EMPTY>
+			<!ATTLIST chip name CDATA #REQUIRED>
+			<!ATTLIST chip tag CDATA #IMPLIED>
+			<!ATTLIST chip type (cpu|audio) #REQUIRED>
+			<!ATTLIST chip clock CDATA #IMPLIED>
+		<!ELEMENT display EMPTY>
+			<!ATTLIST display tag CDATA #IMPLIED>
+			<!ATTLIST display type (raster|vector|lcd|svg|unknown) #REQUIRED>
+			<!ATTLIST display rotate (0|90|180|270) #IMPLIED>
+			<!ATTLIST display flipx (yes|no) ""no"">
+			<!ATTLIST display width CDATA #IMPLIED>
+			<!ATTLIST display height CDATA #IMPLIED>
+			<!ATTLIST display refresh CDATA #REQUIRED>
+			<!ATTLIST display pixclock CDATA #IMPLIED>
+			<!ATTLIST display htotal CDATA #IMPLIED>
+			<!ATTLIST display hbend CDATA #IMPLIED>
+			<!ATTLIST display hbstart CDATA #IMPLIED>
+			<!ATTLIST display vtotal CDATA #IMPLIED>
+			<!ATTLIST display vbend CDATA #IMPLIED>
+			<!ATTLIST display vbstart CDATA #IMPLIED>
+		<!ELEMENT sound EMPTY>
+			<!ATTLIST sound channels CDATA #REQUIRED>
+		<!ELEMENT condition EMPTY>
+			<!ATTLIST condition tag CDATA #REQUIRED>
+			<!ATTLIST condition mask CDATA #REQUIRED>
+			<!ATTLIST condition relation (eq|ne|gt|le|lt|ge) #REQUIRED>
+			<!ATTLIST condition value CDATA #REQUIRED>
+		<!ELEMENT input (control*)>
+			<!ATTLIST input service (yes|no) ""no"">
+			<!ATTLIST input tilt (yes|no) ""no"">
+			<!ATTLIST input players CDATA #REQUIRED>
+			<!ATTLIST input coins CDATA #IMPLIED>
+			<!ELEMENT control EMPTY>
+				<!ATTLIST control type CDATA #REQUIRED>
+				<!ATTLIST control player CDATA #IMPLIED>
+				<!ATTLIST control buttons CDATA #IMPLIED>
+				<!ATTLIST control reqbuttons CDATA #IMPLIED>
+				<!ATTLIST control minimum CDATA #IMPLIED>
+				<!ATTLIST control maximum CDATA #IMPLIED>
+				<!ATTLIST control sensitivity CDATA #IMPLIED>
+				<!ATTLIST control keydelta CDATA #IMPLIED>
+				<!ATTLIST control reverse (yes|no) ""no"">
+				<!ATTLIST control ways CDATA #IMPLIED>
+				<!ATTLIST control ways2 CDATA #IMPLIED>
+				<!ATTLIST control ways3 CDATA #IMPLIED>
+		<!ELEMENT dipswitch (condition?, diplocation*, dipvalue*)>
+			<!ATTLIST dipswitch name CDATA #REQUIRED>
+			<!ATTLIST dipswitch tag CDATA #REQUIRED>
+			<!ATTLIST dipswitch mask CDATA #REQUIRED>
+			<!ELEMENT diplocation EMPTY>
+				<!ATTLIST diplocation name CDATA #REQUIRED>
+				<!ATTLIST diplocation number CDATA #REQUIRED>
+				<!ATTLIST diplocation inverted (yes|no) ""no"">
+			<!ELEMENT dipvalue (condition?)>
+				<!ATTLIST dipvalue name CDATA #REQUIRED>
+				<!ATTLIST dipvalue value CDATA #REQUIRED>
+				<!ATTLIST dipvalue default (yes|no) ""no"">
+		<!ELEMENT configuration (condition?, conflocation*, confsetting*)>
+			<!ATTLIST configuration name CDATA #REQUIRED>
+			<!ATTLIST configuration tag CDATA #REQUIRED>
+			<!ATTLIST configuration mask CDATA #REQUIRED>
+			<!ELEMENT conflocation EMPTY>
+				<!ATTLIST conflocation name CDATA #REQUIRED>
+				<!ATTLIST conflocation number CDATA #REQUIRED>
+				<!ATTLIST conflocation inverted (yes|no) ""no"">
+			<!ELEMENT confsetting (condition?)>
+				<!ATTLIST confsetting name CDATA #REQUIRED>
+				<!ATTLIST confsetting value CDATA #REQUIRED>
+				<!ATTLIST confsetting default (yes|no) ""no"">
+		<!ELEMENT port (analog*)>
+			<!ATTLIST port tag CDATA #REQUIRED>
+			<!ELEMENT analog EMPTY>
+				<!ATTLIST analog mask CDATA #REQUIRED>
+		<!ELEMENT adjuster (condition?)>
+			<!ATTLIST adjuster name CDATA #REQUIRED>
+			<!ATTLIST adjuster default CDATA #REQUIRED>
+		<!ELEMENT driver EMPTY>
+			<!ATTLIST driver status (good|imperfect|preliminary) #REQUIRED>
+			<!ATTLIST driver emulation (good|imperfect|preliminary) #REQUIRED>
+			<!ATTLIST driver cocktail (good|imperfect|preliminary) #IMPLIED>
+			<!ATTLIST driver savestate (supported|unsupported) #REQUIRED>
+			<!ATTLIST driver requiresartwork (yes|no) ""no"">
+			<!ATTLIST driver unofficial (yes|no) ""no"">
+			<!ATTLIST driver nosoundhardware (yes|no) ""no"">
+			<!ATTLIST driver incomplete (yes|no) ""no"">
+		<!ELEMENT feature EMPTY>
+			<!ATTLIST feature type (protection|timing|graphics|palette|sound|capture|camera|microphone|controls|keyboard|mouse|media|disk|printer|tape|punch|drum|rom|comms|lan|wan) #REQUIRED>
+			<!ATTLIST feature status (unemulated|imperfect) #IMPLIED>
+			<!ATTLIST feature overall (unemulated|imperfect) #IMPLIED>
+		<!ELEMENT device (instance?, extension*)>
+			<!ATTLIST device type CDATA #REQUIRED>
+			<!ATTLIST device tag CDATA #IMPLIED>
+			<!ATTLIST device fixed_image CDATA #IMPLIED>
+			<!ATTLIST device mandatory CDATA #IMPLIED>
+			<!ATTLIST device interface CDATA #IMPLIED>
+			<!ELEMENT instance EMPTY>
+				<!ATTLIST instance name CDATA #REQUIRED>
+				<!ATTLIST instance briefname CDATA #REQUIRED>
+			<!ELEMENT extension EMPTY>
+				<!ATTLIST extension name CDATA #REQUIRED>
+		<!ELEMENT slot (slotoption*)>
+			<!ATTLIST slot name CDATA #REQUIRED>
+			<!ELEMENT slotoption EMPTY>
+				<!ATTLIST slotoption name CDATA #REQUIRED>
+				<!ATTLIST slotoption devname CDATA #REQUIRED>
+				<!ATTLIST slotoption default (yes|no) ""no"">
+		<!ELEMENT softwarelist EMPTY>
+			<!ATTLIST softwarelist tag CDATA #REQUIRED>
+			<!ATTLIST softwarelist name CDATA #REQUIRED>
+			<!ATTLIST softwarelist status (original|compatible) #REQUIRED>
+			<!ATTLIST softwarelist filter CDATA #IMPLIED>
+		<!ELEMENT ramoption (#PCDATA)>
+			<!ATTLIST ramoption name CDATA #REQUIRED>
+			<!ATTLIST ramoption default CDATA #IMPLIED>
+]>
 ";
 
         /// <summary>
@@ -1506,16 +1509,16 @@ namespace SabreTools.DatFiles.Formats
                     var adjuster = datItem as Adjuster;
                     xtw.WriteStartElement("adjuster");
                     xtw.WriteRequiredAttributeString("name", adjuster.Name);
-                    xtw.WriteOptionalAttributeString("default", adjuster.Default.FromYesNo());
+                    xtw.WriteRequiredAttributeString("default", adjuster.Default.FromYesNo());
                     if (adjuster.ConditionsSpecified)
                     {
                         foreach (var adjusterCondition in adjuster.Conditions)
                         {
                             xtw.WriteStartElement("condition");
-                            xtw.WriteOptionalAttributeString("tag", adjusterCondition.Tag);
-                            xtw.WriteOptionalAttributeString("mask", adjusterCondition.Mask);
-                            xtw.WriteOptionalAttributeString("relation", adjusterCondition.Relation.FromRelation());
-                            xtw.WriteOptionalAttributeString("value", adjusterCondition.Value);
+                            xtw.WriteRequiredAttributeString("tag", adjusterCondition.Tag);
+                            xtw.WriteRequiredAttributeString("mask", adjusterCondition.Mask);
+                            xtw.WriteRequiredAttributeString("relation", adjusterCondition.Relation.FromRelation());
+                            xtw.WriteRequiredAttributeString("value", adjusterCondition.Value);
                             xtw.WriteEndElement();
                         }
                     }
@@ -1526,7 +1529,7 @@ namespace SabreTools.DatFiles.Formats
                     var biosSet = datItem as BiosSet;
                     xtw.WriteStartElement("biosset");
                     xtw.WriteRequiredAttributeString("name", biosSet.Name);
-                    xtw.WriteOptionalAttributeString("description", biosSet.Description);
+                    xtw.WriteRequiredAttributeString("description", biosSet.Description);
                     xtw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
                     xtw.WriteEndElement();
                     break;
@@ -1536,7 +1539,7 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteStartElement("chip");
                     xtw.WriteRequiredAttributeString("name", chip.Name);
                     xtw.WriteOptionalAttributeString("tag", chip.Tag);
-                    xtw.WriteOptionalAttributeString("type", chip.ChipType.FromChipType());
+                    xtw.WriteRequiredAttributeString("type", chip.ChipType.FromChipType());
                     xtw.WriteOptionalAttributeString("clock", chip.Clock?.ToString());
                     xtw.WriteEndElement();
                     break;
@@ -1544,29 +1547,29 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Condition:
                     var condition = datItem as Condition;
                     xtw.WriteStartElement("condition");
-                    xtw.WriteOptionalAttributeString("tag", condition.Tag);
-                    xtw.WriteOptionalAttributeString("mask", condition.Mask);
-                    xtw.WriteOptionalAttributeString("relation", condition.Relation.FromRelation());
-                    xtw.WriteOptionalAttributeString("value", condition.Value);
+                    xtw.WriteRequiredAttributeString("tag", condition.Tag);
+                    xtw.WriteRequiredAttributeString("mask", condition.Mask);
+                    xtw.WriteRequiredAttributeString("relation", condition.Relation.FromRelation());
+                    xtw.WriteRequiredAttributeString("value", condition.Value);
                     xtw.WriteEndElement();
                     break;
 
                 case ItemType.Configuration:
                     var configuration = datItem as Configuration;
                     xtw.WriteStartElement("configuration");
-                    xtw.WriteOptionalAttributeString("name", configuration.Name);
-                    xtw.WriteOptionalAttributeString("tag", configuration.Tag);
-                    xtw.WriteOptionalAttributeString("mask", configuration.Mask);
+                    xtw.WriteRequiredAttributeString("name", configuration.Name);
+                    xtw.WriteRequiredAttributeString("tag", configuration.Tag);
+                    xtw.WriteRequiredAttributeString("mask", configuration.Mask);
 
                     if (configuration.ConditionsSpecified)
                     {
                         foreach (var configurationCondition in configuration.Conditions)
                         {
                             xtw.WriteStartElement("condition");
-                            xtw.WriteOptionalAttributeString("tag", configurationCondition.Tag);
-                            xtw.WriteOptionalAttributeString("mask", configurationCondition.Mask);
-                            xtw.WriteOptionalAttributeString("relation", configurationCondition.Relation.FromRelation());
-                            xtw.WriteOptionalAttributeString("value", configurationCondition.Value);
+                            xtw.WriteRequiredAttributeString("tag", configurationCondition.Tag);
+                            xtw.WriteRequiredAttributeString("mask", configurationCondition.Mask);
+                            xtw.WriteRequiredAttributeString("relation", configurationCondition.Relation.FromRelation());
+                            xtw.WriteRequiredAttributeString("value", configurationCondition.Value);
                             xtw.WriteEndElement();
                         }
                     }
@@ -1575,8 +1578,8 @@ namespace SabreTools.DatFiles.Formats
                         foreach (var location in configuration.Locations)
                         {
                             xtw.WriteStartElement("conflocation");
-                            xtw.WriteOptionalAttributeString("name", location.Name);
-                            xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
+                            xtw.WriteRequiredAttributeString("name", location.Name);
+                            xtw.WriteRequiredAttributeString("number", location.Number?.ToString());
                             xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
                             xtw.WriteEndElement();
                         }
@@ -1586,8 +1589,8 @@ namespace SabreTools.DatFiles.Formats
                         foreach (var setting in configuration.Settings)
                         {
                             xtw.WriteStartElement("confsetting");
-                            xtw.WriteOptionalAttributeString("name", setting.Name);
-                            xtw.WriteOptionalAttributeString("value", setting.Value);
+                            xtw.WriteRequiredAttributeString("name", setting.Name);
+                            xtw.WriteRequiredAttributeString("value", setting.Value);
                             xtw.WriteOptionalAttributeString("default", setting.Default.FromYesNo());
                             xtw.WriteEndElement();
                         }
@@ -1598,7 +1601,7 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Device:
                     var device = datItem as Device;
                     xtw.WriteStartElement("device");
-                    xtw.WriteOptionalAttributeString("type", device.DeviceType.FromDeviceType());
+                    xtw.WriteRequiredAttributeString("type", device.DeviceType.FromDeviceType());
                     xtw.WriteOptionalAttributeString("tag", device.Tag);
                     xtw.WriteOptionalAttributeString("fixed_image", device.FixedImage);
                     xtw.WriteOptionalAttributeString("mandatory", device.Mandatory?.ToString());
@@ -1608,8 +1611,8 @@ namespace SabreTools.DatFiles.Formats
                         foreach (var instance in device.Instances)
                         {
                             xtw.WriteStartElement("instance");
-                            xtw.WriteOptionalAttributeString("name", instance.Name);
-                            xtw.WriteOptionalAttributeString("briefname", instance.BriefName);
+                            xtw.WriteRequiredAttributeString("name", instance.Name);
+                            xtw.WriteRequiredAttributeString("briefname", instance.BriefName);
                             xtw.WriteEndElement();
                         }
                     }
@@ -1618,7 +1621,7 @@ namespace SabreTools.DatFiles.Formats
                         foreach (var extension in device.Extensions)
                         {
                             xtw.WriteStartElement("extension");
-                            xtw.WriteOptionalAttributeString("name", extension.Name);
+                            xtw.WriteRequiredAttributeString("name", extension.Name);
                             xtw.WriteEndElement();
                         }
                     }
@@ -1635,18 +1638,18 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.DipSwitch:
                     var dipSwitch = datItem as DipSwitch;
                     xtw.WriteStartElement("dipswitch");
-                    xtw.WriteOptionalAttributeString("name", dipSwitch.Name);
-                    xtw.WriteOptionalAttributeString("tag", dipSwitch.Tag);
-                    xtw.WriteOptionalAttributeString("mask", dipSwitch.Mask);
+                    xtw.WriteRequiredAttributeString("name", dipSwitch.Name);
+                    xtw.WriteRequiredAttributeString("tag", dipSwitch.Tag);
+                    xtw.WriteRequiredAttributeString("mask", dipSwitch.Mask);
                     if (dipSwitch.ConditionsSpecified)
                     {
                         foreach (var dipSwitchCondition in dipSwitch.Conditions)
                         {
                             xtw.WriteStartElement("condition");
-                            xtw.WriteOptionalAttributeString("tag", dipSwitchCondition.Tag);
-                            xtw.WriteOptionalAttributeString("mask", dipSwitchCondition.Mask);
-                            xtw.WriteOptionalAttributeString("relation", dipSwitchCondition.Relation.FromRelation());
-                            xtw.WriteOptionalAttributeString("value", dipSwitchCondition.Value);
+                            xtw.WriteRequiredAttributeString("tag", dipSwitchCondition.Tag);
+                            xtw.WriteRequiredAttributeString("mask", dipSwitchCondition.Mask);
+                            xtw.WriteRequiredAttributeString("relation", dipSwitchCondition.Relation.FromRelation());
+                            xtw.WriteRequiredAttributeString("value", dipSwitchCondition.Value);
                             xtw.WriteEndElement();
                         }
                     }
@@ -1655,8 +1658,8 @@ namespace SabreTools.DatFiles.Formats
                         foreach (var location in dipSwitch.Locations)
                         {
                             xtw.WriteStartElement("diplocation");
-                            xtw.WriteOptionalAttributeString("name", location.Name);
-                            xtw.WriteOptionalAttributeString("number", location.Number?.ToString());
+                            xtw.WriteRequiredAttributeString("name", location.Name);
+                            xtw.WriteRequiredAttributeString("number", location.Number?.ToString());
                             xtw.WriteOptionalAttributeString("inverted", location.Inverted.FromYesNo());
                             xtw.WriteEndElement();
                         }
@@ -1666,18 +1669,18 @@ namespace SabreTools.DatFiles.Formats
                         foreach (var value in dipSwitch.Values)
                         {
                             xtw.WriteStartElement("dipvalue");
-                            xtw.WriteOptionalAttributeString("name", value.Name);
-                            xtw.WriteOptionalAttributeString("value", value.Value);
+                            xtw.WriteRequiredAttributeString("name", value.Name);
+                            xtw.WriteRequiredAttributeString("value", value.Value);
                             xtw.WriteOptionalAttributeString("default", value.Default.FromYesNo());
                             if (value.ConditionsSpecified)
                             {
                                 foreach (var dipValueCondition in value.Conditions)
                                 {
                                     xtw.WriteStartElement("condition");
-                                    xtw.WriteOptionalAttributeString("tag", dipValueCondition.Tag);
-                                    xtw.WriteOptionalAttributeString("mask", dipValueCondition.Mask);
-                                    xtw.WriteOptionalAttributeString("relation", dipValueCondition.Relation.FromRelation());
-                                    xtw.WriteOptionalAttributeString("value", dipValueCondition.Value);
+                                    xtw.WriteRequiredAttributeString("tag", dipValueCondition.Tag);
+                                    xtw.WriteRequiredAttributeString("mask", dipValueCondition.Mask);
+                                    xtw.WriteRequiredAttributeString("relation", dipValueCondition.Relation.FromRelation());
+                                    xtw.WriteRequiredAttributeString("value", dipValueCondition.Value);
                                     xtw.WriteEndElement();
                                 }
                             }
@@ -1705,12 +1708,12 @@ namespace SabreTools.DatFiles.Formats
                     var display = datItem as Display;
                     xtw.WriteStartElement("display");
                     xtw.WriteOptionalAttributeString("tag", display.Tag);
-                    xtw.WriteOptionalAttributeString("type", display.DisplayType.FromDisplayType());
+                    xtw.WriteRequiredAttributeString("type", display.DisplayType.FromDisplayType());
                     xtw.WriteOptionalAttributeString("rotate", display.Rotate?.ToString());
                     xtw.WriteOptionalAttributeString("flipx", display.FlipX.FromYesNo());
                     xtw.WriteOptionalAttributeString("width", display.Width?.ToString());
                     xtw.WriteOptionalAttributeString("height", display.Height?.ToString());
-                    xtw.WriteOptionalAttributeString("refresh", display.Refresh?.ToString("N6"));
+                    xtw.WriteRequiredAttributeString("refresh", display.Refresh?.ToString("N6"));
                     xtw.WriteOptionalAttributeString("pixclock", display.PixClock?.ToString());
                     xtw.WriteOptionalAttributeString("htotal", display.HTotal?.ToString());
                     xtw.WriteOptionalAttributeString("hbend", display.HBEnd?.ToString());
@@ -1724,17 +1727,17 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Driver:
                     var driver = datItem as Driver;
                     xtw.WriteStartElement("driver");
-                    xtw.WriteOptionalAttributeString("status", driver.Status.FromSupportStatus());
-                    xtw.WriteOptionalAttributeString("emulation", driver.Emulation.FromSupportStatus());
+                    xtw.WriteRequiredAttributeString("status", driver.Status.FromSupportStatus());
+                    xtw.WriteRequiredAttributeString("emulation", driver.Emulation.FromSupportStatus());
                     xtw.WriteOptionalAttributeString("cocktail", driver.Cocktail.FromSupportStatus());
-                    xtw.WriteOptionalAttributeString("savestate", driver.SaveState.FromSupported(true));
+                    xtw.WriteRequiredAttributeString("savestate", driver.SaveState.FromSupported(true));
                     xtw.WriteEndElement();
                     break;
 
                 case ItemType.Feature:
                     var feature = datItem as Feature;
                     xtw.WriteStartElement("feature");
-                    xtw.WriteOptionalAttributeString("type", feature.Type.FromFeatureType());
+                    xtw.WriteRequiredAttributeString("type", feature.Type.FromFeatureType());
                     xtw.WriteOptionalAttributeString("status", feature.Status.FromFeatureStatus());
                     xtw.WriteOptionalAttributeString("overall", feature.Overall.FromFeatureStatus());
                     xtw.WriteEndElement();
@@ -1745,14 +1748,14 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteStartElement("input");
                     xtw.WriteOptionalAttributeString("service", input.Service.FromYesNo());
                     xtw.WriteOptionalAttributeString("tilt", input.Tilt.FromYesNo());
-                    xtw.WriteOptionalAttributeString("players", input.Players?.ToString());
+                    xtw.WriteRequiredAttributeString("players", input.Players?.ToString());
                     xtw.WriteOptionalAttributeString("coins", input.Coins?.ToString());
                     if (input.ControlsSpecified)
                     {
                         foreach (var control in input.Controls)
                         {
                             xtw.WriteStartElement("control");
-                            xtw.WriteOptionalAttributeString("type", control.ControlType.FromControlType());
+                            xtw.WriteRequiredAttributeString("type", control.ControlType.FromControlType());
                             xtw.WriteOptionalAttributeString("player", control.Player?.ToString());
                             xtw.WriteOptionalAttributeString("buttons", control.Buttons?.ToString());
                             xtw.WriteOptionalAttributeString("reqbuttons", control.RequiredButtons?.ToString());
@@ -1773,13 +1776,13 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Port:
                     var port = datItem as Port;
                     xtw.WriteStartElement("port");
-                    xtw.WriteOptionalAttributeString("tag", port.Tag);
+                    xtw.WriteRequiredAttributeString("tag", port.Tag);
                     if (port.AnalogsSpecified)
                     {
                         foreach (var analog in port.Analogs)
                         {
                             xtw.WriteStartElement("analog");
-                            xtw.WriteOptionalAttributeString("mask", analog.Mask);
+                            xtw.WriteRequiredAttributeString("mask", analog.Mask);
                             xtw.WriteEndElement();
                         }
                     }
@@ -1799,10 +1802,10 @@ namespace SabreTools.DatFiles.Formats
                     var rom = datItem as Rom;
                     xtw.WriteStartElement("rom");
                     xtw.WriteRequiredAttributeString("name", rom.Name);
-                    xtw.WriteOptionalAttributeString("size", rom.Size?.ToString());
+                    xtw.WriteOptionalAttributeString("bios", rom.Bios);
+                    xtw.WriteRequiredAttributeString("size", rom.Size?.ToString());
                     xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("bios", rom.Bios);
                     xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
                     xtw.WriteOptionalAttributeString("region", rom.Region);
                     xtw.WriteOptionalAttributeString("offset", rom.Offset);
@@ -1821,14 +1824,14 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Slot:
                     var slot = datItem as Slot;
                     xtw.WriteStartElement("slot");
-                    xtw.WriteOptionalAttributeString("name", slot.Name);
+                    xtw.WriteRequiredAttributeString("name", slot.Name);
                     if (slot.SlotOptionsSpecified)
                     {
                         foreach (var slotOption in slot.SlotOptions)
                         {
                             xtw.WriteStartElement("slotoption");
-                            xtw.WriteOptionalAttributeString("name", slotOption.Name);
-                            xtw.WriteOptionalAttributeString("devname", slotOption.DeviceName);
+                            xtw.WriteRequiredAttributeString("name", slotOption.Name);
+                            xtw.WriteRequiredAttributeString("devname", slotOption.DeviceName);
                             xtw.WriteOptionalAttributeString("default", slotOption.Default.FromYesNo());
                             xtw.WriteEndElement();
                         }
@@ -1840,7 +1843,7 @@ namespace SabreTools.DatFiles.Formats
                     var softwareList = datItem as DatItems.Formats.SoftwareList;
                     xtw.WriteStartElement("softwarelist");
                     xtw.WriteRequiredAttributeString("name", softwareList.Name);
-                    xtw.WriteOptionalAttributeString("status", softwareList.Status.FromSoftwareListStatus());
+                    xtw.WriteRequiredAttributeString("status", softwareList.Status.FromSoftwareListStatus());
                     xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
                     xtw.WriteEndElement();
                     break;
@@ -1848,7 +1851,7 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.Sound:
                     var sound = datItem as Sound;
                     xtw.WriteStartElement("sound");
-                    xtw.WriteOptionalAttributeString("channels", sound.Channels?.ToString());
+                    xtw.WriteRequiredAttributeString("channels", sound.Channels?.ToString());
                     xtw.WriteEndElement();
                     break;
             }
