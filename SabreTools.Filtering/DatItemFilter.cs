@@ -952,7 +952,7 @@ namespace SabreTools.Filtering
         /// <returns>True if the item passed the filter, false otherwise</returns>
         private bool PassesFilters(Chip chip)
         {
-            // DatItem_Tag
+            // Filter on tag
             if (!PassStringFilter(Tag, chip.Tag))
                 return false;
 
@@ -2007,6 +2007,10 @@ namespace SabreTools.Filtering
         /// <returns>True if the item passed the filter, false otherwise</returns>
         private bool PassesFilters(SoftwareList softwareList)
         {
+            // Filter on tag
+            if (!PassStringFilter(Tag, softwareList.Tag))
+                return false;
+
             // Filter on status
             if (SoftwareListStatus.MatchesPositive(Core.SoftwareListStatus.NULL, softwareList.Status) == false)
                 return false;

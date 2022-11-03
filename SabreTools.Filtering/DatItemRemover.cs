@@ -1069,6 +1069,9 @@ namespace SabreTools.Filtering
         /// <param name="softwareList">SoftwareList to remove fields from</param>
         private void RemoveFields(SoftwareList softwareList)
         {
+            if (DatItemFields.Contains(DatItemField.Tag))
+                softwareList.Tag = null;
+
             if (DatItemFields.Contains(DatItemField.SoftwareListStatus))
                 softwareList.Status = SoftwareListStatus.NULL;
 

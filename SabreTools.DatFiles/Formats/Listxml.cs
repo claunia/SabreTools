@@ -726,6 +726,7 @@ namespace SabreTools.DatFiles.Formats
                     case "softwarelist":
                         datItems.Add(new DatItems.Formats.SoftwareList
                         {
+                            Tag = reader.GetAttribute("tag"),
                             Name = reader.GetAttribute("name"),
                             Status = reader.GetAttribute("status").AsSoftwareListStatus(),
                             Filter = reader.GetAttribute("filter"),
@@ -1862,6 +1863,7 @@ namespace SabreTools.DatFiles.Formats
                 case ItemType.SoftwareList:
                     var softwareList = datItem as DatItems.Formats.SoftwareList;
                     xtw.WriteStartElement("softwarelist");
+                    xtw.WriteRequiredAttributeString("tag", softwareList.Tag);
                     xtw.WriteRequiredAttributeString("name", softwareList.Name);
                     xtw.WriteRequiredAttributeString("status", softwareList.Status.FromSoftwareListStatus());
                     xtw.WriteOptionalAttributeString("filter", softwareList.Filter);

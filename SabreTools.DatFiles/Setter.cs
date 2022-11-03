@@ -1233,6 +1233,9 @@ namespace SabreTools.DatFiles
         /// <param name="softwareList">SoftwareList to remove replace fields in</param>
         private void SetFields(SoftwareList softwareList)
         {
+            if (DatItemMappings.Keys.Contains(DatItemField.Tag))
+                softwareList.Tag = DatItemMappings[DatItemField.Tag];
+
             if (DatItemMappings.Keys.Contains(DatItemField.SoftwareListStatus))
                 softwareList.Status = DatItemMappings[DatItemField.SoftwareListStatus].AsSoftwareListStatus();
 

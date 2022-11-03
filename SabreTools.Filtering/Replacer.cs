@@ -1060,6 +1060,9 @@ namespace SabreTools.Filtering
         /// <param name="datItemFields">List of fields representing what should be updated</param>
         private static void ReplaceFields(SoftwareList softwareList, SoftwareList newItem, List<DatItemField> datItemFields)
         {
+            if (datItemFields.Contains(DatItemField.Tag))
+                softwareList.Tag = newItem.Tag;
+
             if (datItemFields.Contains(DatItemField.SoftwareListStatus))
                 softwareList.Status = newItem.Status;
 

@@ -15,6 +15,13 @@ namespace SabreTools.DatItems.Formats
         #region Fields
 
         /// <summary>
+        /// Tag for the software list
+        /// </summary>
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("tag")]
+        public string Tag { get; set; }
+
+        /// <summary>
         /// Name of the item
         /// </summary>
         [JsonProperty("name")]
@@ -77,6 +84,7 @@ namespace SabreTools.DatItems.Formats
                 Source = this.Source.Clone() as Source,
                 Remove = this.Remove,
 
+                Tag = this.Tag,
                 Name = this.Name,
                 Status = this.Status,
                 Filter = this.Filter,
@@ -97,7 +105,8 @@ namespace SabreTools.DatItems.Formats
             SoftwareList newOther = other as SoftwareList;
 
             // If the SoftwareList information matches
-            return (Name == newOther.Name
+            return (Tag == newOther.Tag
+                && Name == newOther.Name
                 && Status == newOther.Status
                 && Filter == newOther.Filter);
         }
