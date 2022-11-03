@@ -546,6 +546,13 @@ namespace SabreTools.DatFiles
         /// <returns>True if the item should be skipped on write, false otherwise</returns>
         protected bool ShouldIgnore(DatItem datItem, bool ignoreBlanks)
         {
+            // If this is invoked with a null DatItem, we ignore
+            if (datItem == null)
+            {
+                logger?.Verbose($"Item was skipped because it was null");
+                return true;
+            }
+
             // If the item is supposed to be removed, we ignore
             if (datItem.Remove)
             {
