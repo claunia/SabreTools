@@ -13,9 +13,6 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a hashfile such as an SFV, MD5, or SHA-1 file
     /// </summary>
-    /// <remarks>
-    /// TODO: Check and enforce required fields in output
-    /// </remarks>
     internal class Hashfile : DatFile
     {
         // Private instance variables specific to Hashfile DATs
