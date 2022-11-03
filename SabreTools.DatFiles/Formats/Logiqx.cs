@@ -18,6 +18,9 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a Logiqx-derived DAT
     /// </summary>
+    /// <remarks>
+    /// TODO: Check and enforce required fields in output
+    /// </remarks>
     internal class Logiqx : DatFile
     {
         // Private instance variables specific to Logiqx DATs

@@ -15,6 +15,9 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a Archive.org file list
     /// </summary>
+    /// <remarks>
+    /// TODO: Check and enforce required fields in output
+    /// </remarks>
     internal class ArchiveDotOrg : DatFile
     {
         /// <summary>

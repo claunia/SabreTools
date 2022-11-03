@@ -15,6 +15,9 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of an Everdrive SMDB file
     /// </summary>
+    /// <remarks>
+    /// TODO: Check and enforce required fields in output
+    /// </remarks>
     internal class EverdriveSMDB : DatFile
     {
         /// <summary>

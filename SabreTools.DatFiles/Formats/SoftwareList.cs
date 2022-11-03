@@ -18,6 +18,9 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a SoftwareList
     /// </summary>
+    /// <remarks>
+    /// TODO: Check and enforce required fields in output
+    /// </remarks>
     internal class SoftwareList : DatFile
     {
         /// <summary>

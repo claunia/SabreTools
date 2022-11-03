@@ -16,6 +16,9 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of an OfflineList XML DAT
     /// </summary>
+    /// <remarks>
+    /// TODO: Check and enforce required fields in output
+    /// </remarks>
     internal class OfflineList : DatFile
     {
         /// <summary>

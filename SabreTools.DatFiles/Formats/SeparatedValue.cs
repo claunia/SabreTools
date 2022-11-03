@@ -15,6 +15,9 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a value-separated DAT
     /// </summary>
+    /// <remarks>
+    /// TODO: Check and enforce required fields in output
+    /// </remarks>
     internal class SeparatedValue : DatFile
     {
         // Private instance variables specific to Separated Value DATs
