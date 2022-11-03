@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-
+using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatFiles.Formats;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 using SabreTools.Logging;
-using Newtonsoft.Json;
 
 namespace SabreTools.DatFiles
 {
@@ -251,7 +249,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="input">String to get value from</param>
         /// <returns>Date as a string, if possible</returns>
-        protected string CleanDate(string input)
+        protected static string CleanDate(string input)
         {
             // Null in, null out
             if (input == null)
@@ -274,7 +272,7 @@ namespace SabreTools.DatFiles
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanListromHashData(string hash)
+        protected static string CleanListromHashData(string hash)
         {
             if (hash.StartsWith("CRC"))
                 return hash.Substring(4, 8).ToLowerInvariant();
@@ -533,7 +531,7 @@ namespace SabreTools.DatFiles
         /// Get if an item should be ignored on write
         /// </summary>
         /// <param name="datItem">DatItem to check</param>
-        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        /// <param name="ignoreBlanks">True if blank roms should be skipped on output, false otherwise</param>
         /// <returns>True if the item should be skipped on write, false otherwise</returns>
         protected bool ShouldIgnore(DatItem datItem, bool ignoreBlanks)
         {
@@ -559,11 +557,22 @@ namespace SabreTools.DatFiles
             if (!GetSupportedTypes().Contains(datItem.ItemType))
                 return true;
 
-            // TODO: Add code to filter out items missing fields
-            // Maybe it should be an abstract method that's overridden per type?
+            // If we have an item with missing required fields
+            if (!HasRequiredFields(datItem))
+                return true;
 
             return false;
         }
+
+        /// <summary>
+        /// Determine if an item has all required fields to write out
+        /// </summary>
+        /// <param name="datItem">DatItem to check</param>
+        /// <returns>True if the item has all required fields, false otherwise</returns>
+        /// <remarks>
+        /// TODO: Implement this in all relevant DatFile types
+        /// </remarks>
+        protected virtual bool HasRequiredFields(DatItem datItem) => true;
 
         #endregion
     }
