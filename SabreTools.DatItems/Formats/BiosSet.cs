@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,22 +15,19 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Description of the BIOS
         /// </summary>
-        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("description")]
+        [JsonProperty("description", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("description")]
         public string Description { get; set; }
 
         /// <summary>
         /// Determine whether the BIOS is default
         /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("default")]
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default { get; set; }
 
         [JsonIgnore]
@@ -64,6 +60,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new BiosSet()
@@ -85,6 +82,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a BiosSet, return false

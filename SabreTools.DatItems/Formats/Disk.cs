@@ -1,10 +1,9 @@
 ﻿using System.Xml.Serialization;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -28,15 +27,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Data MD5 hash
         /// </summary>
-        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("md5")]
+        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
@@ -46,8 +43,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Data SHA-1 hash
         /// </summary>
-        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("sha1")]
+        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
@@ -57,29 +53,25 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Disk name to merge from parent
         /// </summary>
-        [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("merge")]
+        [JsonProperty("merge", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("merge")]
         public string MergeTag { get; set; }
 
         /// <summary>
         /// Disk region
         /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("region")]
+        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
         public string Region { get; set; }
 
         /// <summary>
         /// Disk index
         /// </summary>
-        [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("index")]
+        [JsonProperty("index", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("index")]
         public string Index { get; set; }
 
         /// <summary>
         /// Disk writable flag
         /// </summary>
-        [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("writable")]
+        [JsonProperty("writable", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("writable")]
         public bool? Writable { get; set; } = null;
 
         [JsonIgnore]
@@ -88,9 +80,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Disk dump status
         /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("status")]
         public ItemStatus ItemStatus { get; set; }
 
         [JsonIgnore]
@@ -99,8 +90,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Determine if the disk is optional in the set
         /// </summary>
-        [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("optional")]
+        [JsonProperty("optional", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("optional")]
         public bool? Optional { get; set; } = null;
 
         [JsonIgnore]
@@ -113,8 +103,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Disk area information
         /// </summary>
-        [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("diskarea")]
+        [JsonProperty("diskarea", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("diskarea")]
         public DiskArea DiskArea { get; set; } = null;
 
         [JsonIgnore]
@@ -130,8 +119,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
-        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("part")]
+        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
         public Part Part { get; set; } = null;
 
         [JsonIgnore]
@@ -191,6 +179,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Disk()
@@ -266,6 +255,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             bool dupefound = false;

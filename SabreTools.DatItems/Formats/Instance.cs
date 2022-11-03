@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,15 +15,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Short name for the instance
         /// </summary>
-        [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("briefname")]
+        [JsonProperty("briefname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("briefname")]
         public string BriefName { get; set; }
 
         #endregion
@@ -54,6 +51,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Instance()
@@ -74,6 +72,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Instance, return false
@@ -84,7 +83,8 @@ namespace SabreTools.DatItems.Formats
             Instance newOther = other as Instance;
 
             // If the Instance information matches
-            return (Name == newOther.Name && BriefName == newOther.BriefName);
+            return (Name == newOther.Name
+                && BriefName == newOther.BriefName);
         }
 
         #endregion

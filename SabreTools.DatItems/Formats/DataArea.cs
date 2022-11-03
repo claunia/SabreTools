@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,15 +16,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("name")]
+        [JsonProperty("name", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Total size of the area
         /// </summary>
-        [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("size")]
+        [JsonProperty("size", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("size")]
         public long? Size { get; set; }
 
         [JsonIgnore]
@@ -34,8 +31,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Word width for the area
         /// </summary>
-        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("width")]
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("width")]
         public long? Width { get; set; }
 
         [JsonIgnore]
@@ -44,8 +40,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Byte endianness of the area
         /// </summary>
-        [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("endianness")]
+        [JsonProperty("endianness", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("endianness")]
         public Endianness Endianness { get; set; }
 
         [JsonIgnore]
@@ -78,6 +73,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new DataArea()
@@ -100,6 +96,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a DataArea, return false

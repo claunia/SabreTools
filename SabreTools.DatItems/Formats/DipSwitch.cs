@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -19,29 +18,25 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Tag associated with the dipswitch
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Mask associated with the dipswitch
         /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("mask")]
+        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string Mask { get; set; }
 
         /// <summary>
         /// Conditions associated with the dipswitch
         /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("conditions")]
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition> Conditions { get; set; }
 
         [JsonIgnore]
@@ -50,8 +45,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Locations associated with the dipswitch
         /// </summary>
-        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("locations")]
+        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
         public List<Location> Locations { get; set; }
 
         [JsonIgnore]
@@ -60,8 +54,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Settings associated with the dipswitch
         /// </summary>
-        [JsonProperty("values", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("values")]
+        [JsonProperty("values", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("values")]
         public List<Setting> Values { get; set; }
 
         [JsonIgnore]
@@ -74,8 +67,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Original hardware part associated with the item
         /// </summary>
-        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("part")]
+        [JsonProperty("part", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("part")]
         public Part Part { get; set; } = null;
 
         [JsonIgnore]
@@ -118,6 +110,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new DipSwitch()
@@ -144,6 +137,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a DipSwitch, return false

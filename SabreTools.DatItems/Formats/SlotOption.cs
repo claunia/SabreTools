@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,22 +15,19 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Slot option name
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Referenced device name
         /// </summary>
-        [JsonProperty("devname")]
-        [XmlElement("devname")]
+        [JsonProperty("devname"), XmlElement("devname")]
         public string DeviceName { get; set; }
 
         /// <summary>
         /// Determines if this slot option is default or not
         /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("default")]
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default { get; set; }
 
         [JsonIgnore]
@@ -64,6 +60,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new SlotOption()
@@ -85,6 +82,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a SlotOption, return false

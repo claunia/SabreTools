@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,15 +15,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// PartFeature value
         /// </summary>
-        [JsonProperty("value")]
-        [XmlElement("value")]
+        [JsonProperty("value"), XmlElement("value")]
         public string Value { get; set; }
 
         #endregion
@@ -54,6 +51,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new PartFeature()
@@ -74,6 +72,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a sample, return false
@@ -84,7 +83,8 @@ namespace SabreTools.DatItems.Formats
             PartFeature newOther = other as PartFeature;
 
             // If the archive information matches
-            return (Name == newOther.Name && Value == newOther.Value);
+            return (Name == newOther.Name
+                && Value == newOther.Value);
         }
 
         #endregion

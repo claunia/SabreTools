@@ -1,8 +1,7 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,16 +16,14 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Display tag
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Display type
         /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("type")]
         public DisplayType DisplayType { get; set; }
 
         [JsonIgnore]
@@ -35,8 +32,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Display rotation
         /// </summary>
-        [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("rotate")]
+        [JsonProperty("rotate", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rotate")]
         public long? Rotate { get; set; }
 
         [JsonIgnore]
@@ -45,8 +41,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Determines if display is flipped in the X-coordinates
         /// </summary>
-        [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("flipx")]
+        [JsonProperty("flipx", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("flipx")]
         public bool? FlipX { get; set; }
 
         [JsonIgnore]
@@ -55,8 +50,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Display width
         /// </summary>
-        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("width")]
+        [JsonProperty("width", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("width")]
         public long? Width { get; set; }
 
         [JsonIgnore]
@@ -65,8 +59,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Display height
         /// </summary>
-        [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("height")]
+        [JsonProperty("height", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("height")]
         public long? Height { get; set; }
 
         [JsonIgnore]
@@ -75,8 +68,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Refresh rate
         /// </summary>
-        [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("refresh")]
+        [JsonProperty("refresh", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("refresh")]
         public double? Refresh { get; set; }
 
         [JsonIgnore]
@@ -85,8 +77,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Pixel clock timer
         /// </summary>
-        [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("pixclock")]
+        [JsonProperty("pixclock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("pixclock")]
         public long? PixClock { get; set; }
 
         [JsonIgnore]
@@ -95,8 +86,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Total horizontal lines
         /// </summary>
-        [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("htotal")]
+        [JsonProperty("htotal", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("htotal")]
         public long? HTotal { get; set; }
 
         [JsonIgnore]
@@ -105,8 +95,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Horizontal blank end
         /// </summary>
-        [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("hbend")]
+        [JsonProperty("hbend", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("hbend")]
         public long? HBEnd { get; set; }
 
         [JsonIgnore]
@@ -115,8 +104,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Horizontal blank start
         /// </summary>
-        [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("hbstart")]
+        [JsonProperty("hbstart", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("hbstart")]
         public long? HBStart { get; set; }
 
         [JsonIgnore]
@@ -125,8 +113,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Total vertical lines
         /// </summary>
-        [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("vtotal")]
+        [JsonProperty("vtotal", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vtotal")]
         public long? VTotal { get; set; }
 
         [JsonIgnore]
@@ -135,8 +122,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Vertical blank end
         /// </summary>
-        [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("vbend")]
+        [JsonProperty("vbend", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vbend")]
         public long? VBEnd { get; set; }
 
         [JsonIgnore]
@@ -145,8 +131,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Vertical blank start
         /// </summary>
-        [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("vbstart")]
+        [JsonProperty("vbstart", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("vbstart")]
         public long? VBStart { get; set; }
 
         [JsonIgnore]
@@ -168,6 +153,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Display()
@@ -200,6 +186,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Display, return false

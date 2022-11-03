@@ -1,10 +1,9 @@
 ﻿using System.Text;
 using System.Xml.Serialization;
-
+using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.FileTypes;
-using Newtonsoft.Json;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -28,15 +27,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Data MD5 hash
         /// </summary>
-        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("md5")]
+        [JsonProperty("md5", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("md5")]
         public string MD5
         {
             get { return _md5.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_md5); }
@@ -46,8 +43,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Data SHA-1 hash
         /// </summary>
-        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("sha1")]
+        [JsonProperty("sha1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha1")]
         public string SHA1
         {
             get { return _sha1.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha1); }
@@ -57,8 +53,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Data SHA-256 hash
         /// </summary>
-        [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("sha256")]
+        [JsonProperty("sha256", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sha256")]
         public string SHA256
         {
             get { return _sha256.IsNullOrEmpty() ? null : Utilities.ByteArrayToString(_sha256); }
@@ -68,8 +63,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// File SpamSum fuzzy hash
         /// </summary>
-        [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("spamsum")]
+        [JsonProperty("spamsum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("spamsum")]
         public string SpamSum
         {
             get { return _spamsum.IsNullOrEmpty() ? null : Encoding.UTF8.GetString(_spamsum); }
@@ -120,6 +114,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Media()
@@ -184,6 +179,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             bool dupefound = false;

@@ -1,14 +1,16 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
     /// <summary>
     /// Represents the a driver of the machine
     /// </summary>
+    /// <remarks>
+    /// TODO: Add new fields to documentation
+    /// </remarks>
     [JsonObject("driver"), XmlRoot("driver")]
     public class Driver : DatItem
     {
@@ -17,9 +19,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Overall driver status
         /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("status")]
         public SupportStatus Status { get; set; }
 
         [JsonIgnore]
@@ -28,31 +29,28 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Driver emulation status
         /// </summary>
-        [JsonProperty("emulation", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("emulation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("emulation")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("emulation")]
         public SupportStatus Emulation { get; set; }
 
         [JsonIgnore]
-        public bool EmulationSpecified { get { return Emulation != SupportStatus.NULL; ; } }
+        public bool EmulationSpecified { get { return Emulation != SupportStatus.NULL; } }
 
         /// <summary>
         /// Cocktail orientation status
         /// </summary>
-        [JsonProperty("cocktail", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("cocktail", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("cocktail")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("cocktail")]
         public SupportStatus Cocktail { get; set; }
 
         [JsonIgnore]
-        public bool CocktailSpecified { get { return Cocktail != SupportStatus.NULL; ; } }
+        public bool CocktailSpecified { get { return Cocktail != SupportStatus.NULL; } }
 
         /// <summary>
         /// Save state support status
         /// </summary>
-        [JsonProperty("savestate", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("savestate", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("savestate")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("savestate")]
         public Supported SaveState { get; set; }
 
         [JsonIgnore]
@@ -61,8 +59,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Requires artwork
         /// </summary>
-        [JsonProperty("requiresartwork", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("requiresartwork")]
+        [JsonProperty("requiresartwork", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("requiresartwork")]
         public bool? RequiresArtwork { get; set; }
 
         [JsonIgnore]
@@ -71,8 +68,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Unofficial
         /// </summary>
-        [JsonProperty("unofficial", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("unofficial")]
+        [JsonProperty("unofficial", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("unofficial")]
         public bool? Unofficial { get; set; }
 
         [JsonIgnore]
@@ -81,8 +77,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// No sound hardware
         /// </summary>
-        [JsonProperty("nosoundhardware", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("nosoundhardware")]
+        [JsonProperty("nosoundhardware", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("nosoundhardware")]
         public bool? NoSoundHardware { get; set; }
 
         [JsonIgnore]
@@ -91,8 +86,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Incomplete
         /// </summary>
-        [JsonProperty("incomplete", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("incomplete")]
+        [JsonProperty("incomplete", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("incomplete")]
         public bool? Incomplete { get; set; }
 
         [JsonIgnore]
@@ -114,6 +108,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Driver()
@@ -140,6 +135,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Driver, return false

@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,8 +15,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Analog mask value
         /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("mask")]
+        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string Mask { get; set; }
 
         #endregion
@@ -36,6 +34,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Analog()
@@ -55,6 +54,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Analog, return false

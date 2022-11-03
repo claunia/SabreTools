@@ -9,6 +9,9 @@ namespace SabreTools.DatItems.Formats
     /// <summary>
     /// Represents which SoftwareList(s) is associated with a set
     /// </summary>
+    /// <remarks>
+    /// TODO: Add new fields to documentation
+    /// </remarks>
     [JsonObject("softwarelist"), XmlRoot("softwarelist")]
     public class SoftwareList : DatItem
     {

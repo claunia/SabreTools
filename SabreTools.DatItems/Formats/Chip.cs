@@ -1,8 +1,7 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,23 +16,20 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Internal tag
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Type of the chip
         /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("type")]
         public ChipType ChipType { get; set; }
 
         [JsonIgnore]
@@ -42,8 +38,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Clock speed
         /// </summary>
-        [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("clock")]
+        [JsonProperty("clock", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("clock")]
         public long? Clock { get; set; }
 
         [JsonIgnore]
@@ -76,6 +71,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Chip()
@@ -98,6 +94,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a chip, return false

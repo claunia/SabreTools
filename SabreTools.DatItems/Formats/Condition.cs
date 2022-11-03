@@ -1,8 +1,7 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,23 +16,20 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Condition tag value
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Condition mask
         /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("mask")]
+        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string Mask { get; set; }
 
         /// <summary>
         /// Condition relationship
         /// </summary>
-        [JsonProperty("relation", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("relation", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("relation")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("relation")]
         public Relation Relation { get; set; }
 
         [JsonIgnore]
@@ -42,8 +38,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Condition value
         /// </summary>
-        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("value")]
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string Value { get; set; }
 
         #endregion
@@ -62,6 +57,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Condition()
@@ -84,6 +80,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Condition, return false

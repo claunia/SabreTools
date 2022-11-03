@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,15 +15,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Location name
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Location ID
         /// </summary>
-        [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("number")]
+        [JsonProperty("number", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("number")]
         public long? Number { get; set; }
 
         [JsonIgnore]
@@ -33,8 +30,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Determines if location is inverted or not
         /// </summary>
-        [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("inverted")]
+        [JsonProperty("inverted", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("inverted")]
         public bool? Inverted { get; set; }
 
         [JsonIgnore]
@@ -67,6 +63,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Location()
@@ -88,6 +85,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Location, return false

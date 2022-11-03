@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,15 +16,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Slot options associated with the slot
         /// </summary>
-        [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("slotoptions")]
+        [JsonProperty("slotoptions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("slotoptions")]
         public List<SlotOption> SlotOptions { get; set; }
 
         [JsonIgnore]
@@ -58,6 +55,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Slot()
@@ -78,6 +76,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Slot, return false

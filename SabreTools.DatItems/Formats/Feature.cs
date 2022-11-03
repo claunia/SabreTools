@@ -1,8 +1,7 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,9 +16,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Type of feature
         /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("type")]
         public FeatureType Type { get; set; }
 
         [JsonIgnore]
@@ -28,9 +26,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Emulation status
         /// </summary>
-        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("status", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("status")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("status")]
         public FeatureStatus Status { get; set; }
 
         [JsonIgnore]
@@ -39,9 +36,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Overall status
         /// </summary>
-        [JsonProperty("overall", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("overall", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("overall")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("overall")]
         public FeatureStatus Overall { get; set; }
 
         [JsonIgnore]
@@ -63,6 +59,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Feature()
@@ -84,6 +81,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Feature, return false
@@ -94,7 +92,9 @@ namespace SabreTools.DatItems.Formats
             Feature newOther = other as Feature;
 
             // If the Feature information matches
-            return (Type == newOther.Type && Status == newOther.Status && Overall == newOther.Overall);
+            return (Type == newOther.Type
+                && Status == newOther.Status
+                && Overall == newOther.Overall);
         }
 
         #endregion

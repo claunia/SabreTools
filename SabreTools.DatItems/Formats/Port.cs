@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,15 +16,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Tag for the port
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// List of analogs on the port
         /// </summary>
-        [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("analogs")]
+        [JsonProperty("analogs", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("analogs")]
         public List<Analog> Analogs { get; set; }
 
         [JsonIgnore]
@@ -47,6 +44,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Port()
@@ -67,6 +65,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Port, return false

@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-
 using Newtonsoft.Json;
 
 /// <summary>
@@ -17,10 +16,10 @@ namespace SabreTools.DatItems.Formats
     [JsonObject("original"), XmlRoot("original")]
     public class Original
     {
-        [JsonProperty("value")]
+        [JsonProperty("value"), XmlElement("value")]
         public bool? Value { get; set; }
 
-        [JsonProperty("content")]
+        [JsonProperty("content"), XmlElement("content")]
         public string Content { get; set; }
     }
 

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,22 +16,19 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Setting name
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Setting value
         /// </summary>
-        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("value")]
+        [JsonProperty("value", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("value")]
         public string Value { get; set; }
 
         /// <summary>
         /// Determines if the setting is default or not
         /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("default")]
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default { get; set; }
 
         [JsonIgnore]
@@ -41,8 +37,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// List of conditions on the setting
         /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("conditions")]
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition> Conditions { get; set; }
 
         [JsonIgnore]
@@ -75,6 +70,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Setting()
@@ -97,6 +93,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Setting, return false

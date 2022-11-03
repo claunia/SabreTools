@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -18,9 +17,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Device type
         /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("type")]
         public DeviceType DeviceType { get; set; }
 
         [JsonIgnore]
@@ -29,23 +27,20 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Device tag
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Fixed image format
         /// </summary>
-        [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("fixed_image")]
+        [JsonProperty("fixed_image", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("fixed_image")]
         public string FixedImage { get; set; }
 
         /// <summary>
         /// Determines if the devices is mandatory
         /// </summary>
         /// <remarks>Only value used seems to be 1. Used like bool, but actually int</remarks>
-        [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("mandatory")]
+        [JsonProperty("mandatory", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mandatory")]
         public long? Mandatory { get; set; }
 
         [JsonIgnore]
@@ -54,15 +49,13 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Device interface
         /// </summary>
-        [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("interface")]
+        [JsonProperty("interface", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("interface")]
         public string Interface { get; set; }
 
         /// <summary>
         /// Device instances
         /// </summary>
-        [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("instances")]
+        [JsonProperty("instances", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("instances")]
         public List<Instance> Instances { get; set; }
 
         [JsonIgnore]
@@ -71,8 +64,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Device extensions
         /// </summary>
-        [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("extensions")]
+        [JsonProperty("extensions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("extensions")]
         public List<Extension> Extensions { get; set; }
 
         [JsonIgnore]
@@ -94,6 +86,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Device()
@@ -119,6 +112,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Device, return false

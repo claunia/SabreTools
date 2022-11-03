@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,36 +15,31 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Release region(s)
         /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("region")]
+        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
         public string Region { get; set; }
 
         /// <summary>
         /// Release language(s)
         /// </summary>
-        [JsonProperty("language", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("language")]
+        [JsonProperty("language", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("language")]
         public string Language { get; set; }
 
         /// <summary>
         /// Date of release
         /// </summary>
-        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("date")]
+        [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
         public string Date { get; set; }
 
         /// <summary>
         /// Default release, if applicable
         /// </summary>
-        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("default")]
+        [JsonProperty("default", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("default")]
         public bool? Default { get; set; }
 
         [JsonIgnore]
@@ -82,6 +76,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Release()
@@ -105,6 +100,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a release return false

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,8 +16,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Input service ID
         /// </summary>
-        [JsonProperty("service", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("service")]
+        [JsonProperty("service", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("service")]
         public bool? Service { get; set; }
 
         [JsonIgnore]
@@ -27,8 +25,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Determins if this has a tilt sensor
         /// </summary>
-        [JsonProperty("tilt", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tilt")]
+        [JsonProperty("tilt", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tilt")]
         public bool? Tilt { get; set; }
 
         [JsonIgnore]
@@ -37,8 +34,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Number of players on the input
         /// </summary>
-        [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("players")]
+        [JsonProperty("players", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("players")]
         public long? Players { get; set; }
 
         [JsonIgnore]
@@ -47,8 +43,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Number of coins required
         /// </summary>
-        [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("coins")]
+        [JsonProperty("coins", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("coins")]
         public long? Coins { get; set; }
 
         [JsonIgnore]
@@ -57,8 +52,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Set of controls for the input
         /// </summary>
-        [JsonProperty("controls", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("controls")]
+        [JsonProperty("controls", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("controls")]
         public List<Control> Controls { get; set; }
 
         [JsonIgnore]
@@ -80,6 +74,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Input()
@@ -103,6 +98,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Input, return false

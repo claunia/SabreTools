@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -16,8 +15,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Number of speakers or channels
         /// </summary>
-        [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("channels")]
+        [JsonProperty("channels", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("channels")]
         public long? Channels { get; set; }
 
         [JsonIgnore]
@@ -39,6 +37,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Sound()
@@ -58,6 +57,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Sound, return false

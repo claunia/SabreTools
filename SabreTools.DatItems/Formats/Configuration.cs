@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,29 +16,25 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Name of the item
         /// </summary>
-        [JsonProperty("name")]
-        [XmlElement("name")]
+        [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
         /// <summary>
         /// Tag associated with the configuration
         /// </summary>
-        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("tag")]
+        [JsonProperty("tag", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("tag")]
         public string Tag { get; set; }
 
         /// <summary>
         /// Mask associated with the configuration
         /// </summary>
-        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("mask")]
+        [JsonProperty("mask", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mask")]
         public string Mask { get; set; }
 
         /// <summary>
         /// Conditions associated with the configuration
         /// </summary>
-        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("conditions")]
+        [JsonProperty("conditions", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("conditions")]
         public List<Condition> Conditions { get; set; }
 
         [JsonIgnore]
@@ -48,8 +43,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Locations associated with the configuration
         /// </summary>
-        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("locations")]
+        [JsonProperty("locations", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("locations")]
         public List<Location> Locations { get; set; }
 
         [JsonIgnore]
@@ -58,8 +52,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Settings associated with the configuration
         /// </summary>
-        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("settings")]
+        [JsonProperty("settings", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("settings")]
         public List<Setting> Settings { get; set; }
 
         [JsonIgnore]
@@ -92,6 +85,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Configuration()
@@ -116,6 +110,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Configuration, return false

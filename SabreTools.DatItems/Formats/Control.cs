@@ -1,8 +1,7 @@
 ﻿using System.Xml.Serialization;
-
-using SabreTools.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using SabreTools.Core;
 
 namespace SabreTools.DatItems.Formats
 {
@@ -17,9 +16,8 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// General type of input
         /// </summary>
-        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("type", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("type")]
         [JsonConverter(typeof(StringEnumConverter))]
-        [XmlElement("type")]
         public ControlType ControlType { get; set; }
 
         [JsonIgnore]
@@ -28,8 +26,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Player which the input belongs to
         /// </summary>
-        [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("player")]
+        [JsonProperty("player", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("player")]
         public long? Player { get; set; }
 
         [JsonIgnore]
@@ -38,8 +35,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Total number of buttons
         /// </summary>
-        [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("buttons")]
+        [JsonProperty("buttons", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("buttons")]
         public long? Buttons { get; set; }
 
         [JsonIgnore]
@@ -48,8 +44,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Total number of non-optional buttons
         /// </summary>
-        [JsonProperty("reqbuttons", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("reqbuttons")]
+        [JsonProperty("reqbuttons", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("reqbuttons")]
         public long? RequiredButtons { get; set; }
 
         [JsonIgnore]
@@ -58,8 +53,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Analog minimum value
         /// </summary>
-        [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("minimum")]
+        [JsonProperty("minimum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("minimum")]
         public long? Minimum { get; set; }
 
         [JsonIgnore]
@@ -68,8 +62,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Analog maximum value
         /// </summary>
-        [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("maximum")]
+        [JsonProperty("maximum", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("maximum")]
         public long? Maximum { get; set; }
 
         [JsonIgnore]
@@ -78,8 +71,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Default analog sensitivity
         /// </summary>
-        [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("sensitivity")]
+        [JsonProperty("sensitivity", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("sensitivity")]
         public long? Sensitivity { get; set; }
 
         [JsonIgnore]
@@ -88,8 +80,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Default analog keydelta
         /// </summary>
-        [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("keydelta")]
+        [JsonProperty("keydelta", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("keydelta")]
         public long? KeyDelta { get; set; }
 
         [JsonIgnore]
@@ -98,8 +89,7 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// Default analog reverse setting
         /// </summary>
-        [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("reverse")]
+        [JsonProperty("reverse", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("reverse")]
         public bool? Reverse { get; set; }
 
         [JsonIgnore]
@@ -108,22 +98,19 @@ namespace SabreTools.DatItems.Formats
         /// <summary>
         /// First set of ways
         /// </summary>
-        [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("ways")]
+        [JsonProperty("ways", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ways")]
         public string Ways { get; set; }
 
         /// <summary>
         /// Second set of ways
         /// </summary>
-        [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("ways2")]
+        [JsonProperty("ways2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ways2")]
         public string Ways2 { get; set; }
 
         /// <summary>
         /// Third set of ways
         /// </summary>
-        [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [XmlElement("ways3")]
+        [JsonProperty("ways3", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("ways3")]
         public string Ways3 { get; set; }
 
         #endregion
@@ -142,6 +129,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Cloning Methods
 
+        /// <inheritdoc/>
         public override object Clone()
         {
             return new Control()
@@ -172,6 +160,7 @@ namespace SabreTools.DatItems.Formats
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public override bool Equals(DatItem other)
         {
             // If we don't have a Control, return false
