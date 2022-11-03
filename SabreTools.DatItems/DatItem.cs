@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -18,6 +17,9 @@ namespace SabreTools.DatItems
     /// <summary>
     /// Base class for all items included in a set
     /// </summary>
+    /// <remarks>
+    /// TODO: Can this be made into a `record` type for easier comparison?
+    /// </remarks>
     [JsonObject("datitem"), XmlRoot("datitem")]
     [XmlInclude(typeof(Adjuster))]
     [XmlInclude(typeof(Analog))]
@@ -260,6 +262,7 @@ namespace SabreTools.DatItems
 
         #region Comparision Methods
 
+        /// <inheritdoc/>
         public int CompareTo(DatItem other)
         {
             try
@@ -279,7 +282,7 @@ namespace SabreTools.DatItems
         /// Determine if an item is a duplicate using partial matching logic
         /// </summary>
         /// <param name="other">DatItem to use as a baseline</param>
-        /// <returns>True if the roms are duplicates, false otherwise</returns>
+        /// <returns>True if the items are duplicates, false otherwise</returns>
         public abstract bool Equals(DatItem other);
 
         /// <summary>

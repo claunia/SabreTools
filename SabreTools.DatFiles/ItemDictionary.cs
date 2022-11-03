@@ -17,6 +17,10 @@ namespace SabreTools.DatFiles
     /// <summary>
     /// Item dictionary with statistics, bucketing, and sorting
     /// </summary>
+    /// <remarks>
+    /// TODO: Make this into a database model instead of just an in-memory object
+    /// This will help handle extremely large sets
+    /// </remarks>
     [JsonObject("items"), XmlRoot("items")]
     public class ItemDictionary : IDictionary<string, ConcurrentList<DatItem>>
     {
