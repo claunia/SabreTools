@@ -586,8 +586,108 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            // TODO: Check required fields
-            return null;
+            List<DatItemField> missingFields = new List<DatItemField>();
+
+            switch (datItem.ItemType)
+            {
+                case ItemType.DipSwitch:
+                    DipSwitch dipSwitch = datItem as DipSwitch;
+                    if (!dipSwitch.PartSpecified)
+                    {
+                        missingFields.Add(DatItemField.Part_Name);
+                        missingFields.Add(DatItemField.Part_Interface);
+                    }
+                    else
+                    {
+                        if (string.IsNullOrWhiteSpace(dipSwitch.Part.Name))
+                            missingFields.Add(DatItemField.Part_Name);
+                        if (string.IsNullOrWhiteSpace(dipSwitch.Part.Interface))
+                            missingFields.Add(DatItemField.Part_Interface);
+                    }
+                    if (string.IsNullOrWhiteSpace(dipSwitch.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(dipSwitch.Tag))
+                        missingFields.Add(DatItemField.Tag);
+                    if (string.IsNullOrWhiteSpace(dipSwitch.Mask))
+                        missingFields.Add(DatItemField.Mask);
+                    if (dipSwitch.ValuesSpecified)
+                    {
+                        if (dipSwitch.Values.Any(dv => string.IsNullOrWhiteSpace(dv.Name)))
+                            missingFields.Add(DatItemField.Part_Feature_Name);
+                        if (dipSwitch.Values.Any(dv => string.IsNullOrWhiteSpace(dv.Value)))
+                            missingFields.Add(DatItemField.Part_Feature_Value);
+                    }
+
+                    break;
+                case ItemType.Disk:
+                    Disk disk = datItem as Disk;
+                    if (!disk.PartSpecified)
+                    {
+                        missingFields.Add(DatItemField.Part_Name);
+                        missingFields.Add(DatItemField.Part_Interface);
+                    }
+                    else
+                    {
+                        if (string.IsNullOrWhiteSpace(disk.Part.Name))
+                            missingFields.Add(DatItemField.Part_Name);
+                        if (string.IsNullOrWhiteSpace(disk.Part.Interface))
+                            missingFields.Add(DatItemField.Part_Interface);
+                    }
+                    if (!disk.DiskAreaSpecified)
+                    {
+                        missingFields.Add(DatItemField.AreaName);
+                    }
+                    else
+                    {
+                        if (string.IsNullOrWhiteSpace(disk.DiskArea.Name))
+                            missingFields.Add(DatItemField.AreaName);
+                    }
+                    if (string.IsNullOrWhiteSpace(disk.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+                case ItemType.Info:
+                    Info info = datItem as Info;
+                    if (string.IsNullOrWhiteSpace(info.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+                case ItemType.Rom:
+                    Rom rom = datItem as Rom;
+                    if (!rom.PartSpecified)
+                    {
+                        missingFields.Add(DatItemField.Part_Name);
+                        missingFields.Add(DatItemField.Part_Interface);
+                    }
+                    else
+                    {
+                        if (string.IsNullOrWhiteSpace(rom.Part.Name))
+                            missingFields.Add(DatItemField.Part_Name);
+                        if (string.IsNullOrWhiteSpace(rom.Part.Interface))
+                            missingFields.Add(DatItemField.Part_Interface);
+                    }
+                    if (!rom.DataAreaSpecified)
+                    {
+                        missingFields.Add(DatItemField.AreaName);
+                        missingFields.Add(DatItemField.AreaSize);
+                    }
+                    else
+                    {
+                        if (string.IsNullOrWhiteSpace(rom.DataArea.Name))
+                            missingFields.Add(DatItemField.AreaName);
+                        if (!rom.DataArea.SizeSpecified)
+                            missingFields.Add(DatItemField.AreaSize);
+                    }
+                    break;
+                case ItemType.SharedFeature:
+                    SharedFeature sharedFeature = datItem as SharedFeature;
+                    if (string.IsNullOrWhiteSpace(sharedFeature.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+                default:
+                    // Unsupported ItemTypes should be caught already
+                    return null;
+            }
+
+            return missingFields;
         }
 
         /// <inheritdoc/>
