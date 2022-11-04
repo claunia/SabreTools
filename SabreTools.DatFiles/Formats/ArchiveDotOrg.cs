@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -15,9 +15,6 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a Archive.org file list
     /// </summary>
-    /// <remarks>
-    /// TODO: Check and enforce required fields in output
-    /// </remarks>
     internal class ArchiveDotOrg : DatFile
     {
         /// <summary>
@@ -266,6 +263,13 @@ namespace SabreTools.DatFiles.Formats
             {
                 ItemType.Rom,
             };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            // TODO: Check required fields
+            return null;
         }
 
         /// <inheritdoc/>

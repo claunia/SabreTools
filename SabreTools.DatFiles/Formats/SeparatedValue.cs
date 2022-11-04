@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -15,9 +15,6 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a value-separated DAT
     /// </summary>
-    /// <remarks>
-    /// TODO: Check and enforce required fields in output
-    /// </remarks>
     internal class SeparatedValue : DatFile
     {
         // Private instance variables specific to Separated Value DATs
@@ -96,6 +93,13 @@ namespace SabreTools.DatFiles.Formats
         protected override ItemType[] GetSupportedTypes()
         {
             return new ItemType[] { ItemType.Disk, ItemType.Media, ItemType.Rom };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            // TODO: Check required fields
+            return null;
         }
 
         /// <inheritdoc/>

@@ -4,7 +4,6 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -16,9 +15,6 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of an OfflineList XML DAT
     /// </summary>
-    /// <remarks>
-    /// TODO: Check and enforce required fields in output
-    /// </remarks>
     internal class OfflineList : DatFile
     {
         /// <summary>
@@ -663,6 +659,13 @@ namespace SabreTools.DatFiles.Formats
         protected override ItemType[] GetSupportedTypes()
         {
             return new ItemType[] { ItemType.Rom };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            // TODO: Check required fields
+            return null;
         }
 
         /// <inheritdoc/>

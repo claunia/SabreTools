@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -15,9 +15,6 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a ClrMamePro DAT
     /// </summary>
-    /// <remarks>
-    /// TODO: Check and enforce required fields in output
-    /// </remarks>
     internal class ClrMamePro : DatFile
     {
         #region Fields
@@ -434,6 +431,13 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Rom,
                 ItemType.Sample,
             };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            // TODO: Check required fields
+            return null;
         }
 
         /// <inheritdoc/>

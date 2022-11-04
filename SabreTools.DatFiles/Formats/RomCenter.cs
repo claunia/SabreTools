@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -15,9 +14,6 @@ namespace SabreTools.DatFiles.Formats
     /// <summary>
     /// Represents parsing and writing of a RomCenter DAT
     /// </summary>
-    /// <remarks>
-    /// TODO: Check and enforce required fields in output
-    /// </remarks>
     internal class RomCenter : DatFile
     {
         /// <summary>
@@ -365,6 +361,13 @@ namespace SabreTools.DatFiles.Formats
         protected override ItemType[] GetSupportedTypes()
         {
             return new ItemType[] { ItemType.Rom };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            // TODO: Check required fields
+            return null;
         }
 
         /// <inheritdoc/>

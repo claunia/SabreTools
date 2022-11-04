@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-
 using SabreTools.Core;
 using SabreTools.DatItems;
 

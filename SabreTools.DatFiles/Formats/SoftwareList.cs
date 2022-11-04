@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -26,6 +25,9 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// DTD for original MAME Software List DATs
         /// </summary>
+        /// <remarks>
+        /// TODO: See if there's an updated DTD and then check for required fields
+        /// </remarks>
         private const string SoftwareListDTD = @"<!ELEMENT softwarelist (software+)>
     <!ATTLIST softwarelist name CDATA #REQUIRED>
     <!ATTLIST softwarelist description CDATA #IMPLIED>
@@ -583,6 +585,13 @@ namespace SabreTools.DatFiles.Formats
                 ItemType.Rom,
                 ItemType.SharedFeature,
             };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            // TODO: Check required fields
+            return null;
         }
 
         /// <inheritdoc/>

@@ -511,9 +511,6 @@ namespace SabreTools.DatFiles
         /// Return list of required fields missing from a DatItem
         /// </summary>
         /// <returns>List of missing required fields, null or empty if none were found</returns>
-        /// <remarks>
-        /// TODO: Implement this in all relevant DatFile types
-        /// </remarks>
         protected virtual List<DatItemField> GetMissingRequiredFields(DatItem datItem) => null;
 
         /// <summary>
