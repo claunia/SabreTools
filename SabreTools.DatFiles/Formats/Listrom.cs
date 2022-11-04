@@ -261,7 +261,14 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            // TODO: Check required fields
+            List<DatItemField> missingFields = new List<DatItemField>();
+
+            // Check item name
+            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+                missingFields.Add(DatItemField.Name);
+
+            // TODO: Should CRC/SHA1 be included here? Unclear right now if fully required. Probably is, though
+
             return null;
         }
 
