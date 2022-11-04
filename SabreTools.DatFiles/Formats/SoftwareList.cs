@@ -747,7 +747,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             xtw.WriteStartElement("dipvalue");
                             xtw.WriteRequiredAttributeString("name", dipValue.Name);
-                            xtw.WriteOptionalAttributeString("value", dipValue.Value);
+                            xtw.WriteRequiredAttributeString("value", dipValue.Value);
                             xtw.WriteOptionalAttributeString("default", dipValue.Default.FromYesNo());
                             xtw.WriteEndElement();
                         }
@@ -771,7 +771,7 @@ namespace SabreTools.DatFiles.Formats
                         {
                             xtw.WriteStartElement("feature");
                             xtw.WriteRequiredAttributeString("name", partFeature.Name);
-                            xtw.WriteRequiredAttributeString("value", partFeature.Value);
+                            xtw.WriteOptionalAttributeString("value", partFeature.Value);
                             xtw.WriteEndElement();
                         }
                     }
@@ -798,7 +798,7 @@ namespace SabreTools.DatFiles.Formats
                     var info = datItem as Info;
                     xtw.WriteStartElement("info");
                     xtw.WriteRequiredAttributeString("name", info.Name);
-                    xtw.WriteRequiredAttributeString("value", info.Value);
+                    xtw.WriteOptionalAttributeString("value", info.Value);
                     xtw.WriteEndElement();
                     break;
 
@@ -818,13 +818,13 @@ namespace SabreTools.DatFiles.Formats
                         {
                             xtw.WriteStartElement("feature");
                             xtw.WriteRequiredAttributeString("name", kvp.Name);
-                            xtw.WriteRequiredAttributeString("value", kvp.Value);
+                            xtw.WriteOptionalAttributeString("value", kvp.Value);
                             xtw.WriteEndElement();
                         }
                     }
 
                     xtw.WriteStartElement("dataarea");
-                    xtw.WriteRequiredAttributeString("name", dataAreaName);
+                    xtw.WriteOptionalAttributeString("name", dataAreaName);
                     xtw.WriteOptionalAttributeString("size", rom.DataArea?.Size.ToString());
                     xtw.WriteOptionalAttributeString("width", rom.DataArea?.Width?.ToString());
                     xtw.WriteOptionalAttributeString("endianness", rom.DataArea?.Endianness.FromEndianness());
@@ -855,7 +855,7 @@ namespace SabreTools.DatFiles.Formats
                     var sharedFeature = datItem as SharedFeature;
                     xtw.WriteStartElement("sharedfeat");
                     xtw.WriteRequiredAttributeString("name", sharedFeature.Name);
-                    xtw.WriteRequiredAttributeString("value", sharedFeature.Value);
+                    xtw.WriteOptionalAttributeString("value", sharedFeature.Value);
                     xtw.WriteEndElement();
                     break;
             }
