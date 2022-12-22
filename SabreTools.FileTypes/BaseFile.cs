@@ -10,7 +10,6 @@ using SabreTools.FileTypes.CHD;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Skippers;
-using Compress.ThreadReaders;
 
 namespace SabreTools.FileTypes
 {
@@ -381,7 +380,11 @@ namespace SabreTools.FileTypes
                     next = buffersize > refsize ? (int)refsize : buffersize;
 
                     if (next > 0)
+                    {
                         current = input.Read(buffer, 0, next);
+                        if (current == 0)
+                            break;
+                    }
                 }
 
                 // Finalize all hashing helpers
