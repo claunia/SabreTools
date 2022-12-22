@@ -9,11 +9,11 @@ namespace SabreTools.Test.Core
         [InlineData(null, null)]
         [InlineData("null", null)]
         [InlineData("0b00001", null)]
-        [InlineData("12345", 12345)]
-        [InlineData("00000000012345", 12345)]
+        [InlineData("12345", 12345L)]
+        [InlineData("00000000012345", 12345L)]
         [InlineData("10h", null)]
-        [InlineData("0x10", 16)]
-        [InlineData(" 12345 ", 12345)]
+        [InlineData("0x10", 16L)]
+        [InlineData(" 12345 ", 12345L)]
         public void CleanLongTest(string input, long? expected)
         {
             long? actual = Utilities.CleanLong(input);
