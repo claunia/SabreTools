@@ -29,3 +29,47 @@ There's another hard part here: should there be separate tables for each item ty
 ## Design
 
 This section is reserved for database design ideas.
+
+### (WIP) Header Table
+
+Should there be separate internal header models for every DAT type that has a header?
+Should there be multiple tables for "extensions" to the header? Like things that are only in OfflineList, etc.
+
+| Column Name | Description | Notes |
+| --- | --- | --- |
+| ID | DAT ID | This should either be sequential or GUID-based, primary key, not in current model |
+| FileName | External name of the DAT | This should be a full file path, not just the filename with extension |
+| Name | Internal name of the DAT | |
+| Description | DAT description | |
+| RootDir | Root directory for the files | Currently TruRip/EmuARC-exclusive |
+| Category | General category of items found in the DAT | |
+| Version | Version of the DAT | |
+| Date | Creation or modification date | |
+| Author | List of authors who contributed to the DAT | |
+| Email | Email address for DAT author(s) | |
+| Homepage | Author or distribution homepage name | |
+| Url | Author or distribution URL | |
+| Comment | Any comment that does not already fit an existing field | |
+| HeaderSkipper | Header skipper to be used when loading the DAT | |
+| Type | Classification of the DAT | Generally only used for SuperDAT |
+| ForceMerging | Force a merging style when loaded | |
+| ForceNodump | Force nodump handling when loaded | |
+| ForcePacking | Force output packing when loaded | |
+| DatFormat | Read or write format | |
+| Debug | Debug build flag | *ListXML and Logiqx |
+| MameConfig | MAME configuration name | *ListXML |
+| Build | Build version | *Logiqx |
+| System | Logiqx/RomCenter plugin, OfflineList System | *Logiqx, OfflineList |
+| RomMode | RomCenter rom mode | *Logiqx |
+| BiosMode | RomCenter bios mode | *Logiqx |
+| SampleMode | RomCenter sample mode | *Logiqx |
+| LockRomMode | RomCenter lock rom mode | *Logiqx |
+| LockBiosMode | RomCenter lock bios mode | *Logiqx |
+| LockSampleMode | RomCenter lock sample mode | *Logiqx |
+| ScreenshotsWidth | Screenshots width | *OfflineList |
+| ScreenshotsHeight | Screenshots height | *OfflineList |
+| Infos | OfflineList info list | List of objects, how to handle? *OfflineList |
+| CanOpen | OfflineList can-open extensions | List of strings, how to handle? *OfflineList |
+| (MISSING) | (MISSING) | See `DatHeader.cs` for missing fields. *OfflineList |
+| RomTitle | Rom title | *OfflineList |
+| RomCenterVersion | RomCenter DAT format version | *RomCenter |
