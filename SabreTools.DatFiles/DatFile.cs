@@ -589,7 +589,7 @@ namespace SabreTools.DatFiles
 
             // If we have an item with missing required fields
             List<DatItemField> missingFields = GetMissingRequiredFields(datItem);
-            if (missingFields == null || missingFields.Count == 0)
+            if (missingFields != null && missingFields.Count != 0)
             {
                 string itemString = JsonConvert.SerializeObject(datItem, Formatting.None);
                 logger?.Verbose($"Item '{itemString}' was skipped because it was missing required fields for {Header?.DatFormat}: {string.Join(", ", missingFields)}");
