@@ -27,14 +27,14 @@ build:
 # post-build step
 after_build:
 - cd  %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net6.0
-- 7z a a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net6.0.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net6.0.zip *
 - cd  %APPVEYOR_BUILD_FOLDER%\SabreTools\bin\Debug\net7.0
-- 7z a a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net7.0.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\SabreTools_net7.0.zip *
 
 - cd  %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net6.0
-- 7z a a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net6.0.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net6.0.zip *
 - cd  %APPVEYOR_BUILD_FOLDER%\RombaSharp\bin\Debug\net7.0
-- 7z a a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp.0.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\RombaSharp_net7.0.zip *
 
 # testing step
 test:
