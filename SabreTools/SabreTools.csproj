@@ -4,6 +4,10 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RuntimeIdentifiers>win-x86;win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
+    <Authors>Matt Nadareski</Authors>
+    <Copyright>Copyright (c)2016-2023 Matt Nadareski</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/SabreTools/SabreTools</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

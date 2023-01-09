@@ -76,12 +76,6 @@ Last stable releases can be found on [the Releases tab](https://github.com/Sabre
 
 Latest unstable builds can be found on [AppVeyor](https://ci.appveyor.com/project/mnadareski/sabretools/branch/main).
 
-## Licensing
-
-All other external code is marked as such within the source and correctly attributed to the site and/or person(s) that originally wrote the code.
-
-All code written by project members is licensed under GPL v3. See LICENSE for more details.
-
 ## Contributions
 
 Any feature suggestions or code contributions are accepted. Please take the time to look over the existing code to see proper coding and documentation patterns.

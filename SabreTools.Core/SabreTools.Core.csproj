@@ -9,12 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Licenses\LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Licenses\LICENSE.sharpcompress.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="README.1ST">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
