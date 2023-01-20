@@ -172,10 +172,6 @@ namespace SabreTools.IO
         /// <summary>
         /// Get the current runtime directory
         /// </summary>
-        public static string GetRuntimeDirectory()
-        {
-            string exeName = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
-            return Path.GetDirectoryName(exeName);
-        }
+        public static string GetRuntimeDirectory() => Directory.GetCurrentDirectory();
     }
 }
