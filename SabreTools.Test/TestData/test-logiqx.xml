@@ -20,7 +20,7 @@
 	</header>
 
 	<dir name="topdir">
-		<machine name="game1" sourcefile="blah.c" board="newboard" rebuildto="game1" runnable="partial" cloneof="game2" romof="game2" sampleof="game2" isbios="yes" isdevice="no" ismechanical="yes">
+		<machine name="game1" sourcefile="blah.c" board="newboard" rebuildto="game1" runnable="partial" cloneof="game2" romof="game2" sampleof="game2" isbios="yes" isdevice="no" ismechanical="yes" id="0001">
 			<comment>Not a real game, sorry</comment>
 			<description>Game! (Version 1)</description>
 			<year>1980</year>

@@ -34,7 +34,7 @@ namespace SabreTools.DatFiles
         public Dictionary<DatItemField, string> DatItemMappings { get; set; }
 
         #endregion
-        
+
         #region Logging
 
         /// <summary>
@@ -367,6 +367,9 @@ namespace SabreTools.DatFiles
             if (MachineMappings.Keys.Contains(MachineField.RebuildTo))
                 machine.RebuildTo = MachineMappings[MachineField.RebuildTo];
 
+            if (MachineMappings.Keys.Contains(MachineField.NoIntroId))
+                machine.NoIntroId = MachineMappings[MachineField.NoIntroId];
+
             #endregion
 
             #region Logiqx EmuArc
@@ -420,7 +423,7 @@ namespace SabreTools.DatFiles
 
             #endregion
         }
-    
+
         /// <summary>
         /// Set fields with given values
         /// </summary>
@@ -708,7 +711,7 @@ namespace SabreTools.DatFiles
         private void SetFields(Disk disk)
         {
             #region Common
-                
+
             if (DatItemMappings.Keys.Contains(DatItemField.MD5))
                 disk.MD5 = DatItemMappings[DatItemField.MD5];
 

@@ -212,6 +212,9 @@ namespace SabreTools.Filtering
             if (MachineFields.Contains(MachineField.RebuildTo))
                 machine.RebuildTo = null;
 
+            if (MachineFields.Contains(MachineField.NoIntroId))
+                machine.NoIntroId = null;
+
             #endregion
 
             #region Logiqx EmuArc

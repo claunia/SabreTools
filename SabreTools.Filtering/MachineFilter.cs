@@ -56,6 +56,7 @@ namespace SabreTools.Filtering
 
         public FilterItem<string> Board { get; private set; } = new FilterItem<string>();
         public FilterItem<string> RebuildTo { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> NoIntroId { get; private set; } = new FilterItem<string>();
 
         #endregion
 
@@ -253,6 +254,10 @@ namespace SabreTools.Filtering
 
                 case MachineField.RebuildTo:
                     SetStringFilter(RebuildTo, value, negate);
+                    break;
+
+                case MachineField.NoIntroId:
+                    SetStringFilter(NoIntroId, value, negate);
                     break;
 
                 #endregion
@@ -454,6 +459,10 @@ namespace SabreTools.Filtering
 
             // Machine_RebuildTo
             if (!PassStringFilter(RebuildTo, machine.RebuildTo))
+                return false;
+
+            // Machine_NoIntroId
+            if (!PassStringFilter(NoIntroId, machine.NoIntroId))
                 return false;
 
             #endregion

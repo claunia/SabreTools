@@ -410,6 +410,7 @@ namespace SabreTools.DatFiles.Formats
                 SourceFile = reader.GetAttribute("sourcefile"),
                 Board = reader.GetAttribute("board"),
                 RebuildTo = reader.GetAttribute("rebuildto"),
+                NoIntroId = reader.GetAttribute("id"),
                 Runnable = reader.GetAttribute("runnable").AsRunnable(), // Used by older DATs
 
                 CloneOf = reader.GetAttribute("cloneof"),
@@ -950,6 +951,7 @@ namespace SabreTools.DatFiles.Formats
                 xtw.WriteAttributeString("ismechanical", "yes");
 
             xtw.WriteOptionalAttributeString("runnable", datItem.Machine.Runnable.FromRunnable());
+            xtw.WriteOptionalAttributeString("id", datItem.Machine.NoIntroId);
 
             if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
                 xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);

@@ -1120,6 +1120,12 @@ namespace SabreTools.Core.Tools
                 case "rebuild_to":
                     return MachineField.RebuildTo;
 
+                case "id":
+                case "nointroid":
+                case "nointro_id":
+                case "no_intro_id":
+                    return MachineField.NoIntroId;
+
                 #endregion
 
                 #region Logiqx EmuArc
