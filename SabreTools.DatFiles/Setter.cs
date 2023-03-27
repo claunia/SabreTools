@@ -1123,6 +1123,9 @@ namespace SabreTools.DatFiles
             if (DatItemMappings.Keys.Contains(DatItemField.AltTitle))
                 rom.AltTitle = DatItemMappings[DatItemField.AltTitle];
 
+            if (DatItemMappings.Keys.Contains(DatItemField.MIA))
+                rom.MIA = DatItemMappings[DatItemField.MIA].AsYesNo();
+
             #endregion
 
             #region OpenMSX

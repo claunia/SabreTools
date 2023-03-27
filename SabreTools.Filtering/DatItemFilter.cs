@@ -51,10 +51,12 @@ namespace SabreTools.Filtering
         public FilterItem<string> Rotation { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Summation { get; private set; } = new FilterItem<string>();
 
-
         // Rom (AttractMode)
         public FilterItem<string> AltName { get; private set; } = new FilterItem<string>();
         public FilterItem<string> AltTitle { get; private set; } = new FilterItem<string>();
+
+        // Rom (Logiqx)
+        public FilterItem<bool?> MIA { get; private set; } = new FilterItem<bool?>();
 
         // Rom (OpenMSX)
         public FilterItem<string> Original { get; private set; } = new FilterItem<string>();
@@ -366,6 +368,11 @@ namespace SabreTools.Filtering
 
                 case DatItemField.AltTitle:
                     SetStringFilter(AltTitle, value, negate);
+                    break;
+
+                // Rom (Logiqx)
+                case DatItemField.MIA:
+                    SetBooleanFilter(MIA, value, negate);
                     break;
 
                 // Rom (OpenMSX)
@@ -1851,6 +1858,14 @@ namespace SabreTools.Filtering
 
             // Filter on alt title
             if (!PassStringFilter(AltTitle, rom.AltTitle))
+                return false;
+
+            #endregion
+
+            #region Logiqx
+
+            // Filter on MIA>
+            if (!PassBoolFilter(MIA, rom.MIA))
                 return false;
 
             #endregion

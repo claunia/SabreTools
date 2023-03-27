@@ -449,6 +449,10 @@ namespace SabreTools.Core.Tools
                 case "alt-romtitle":
                     return DatItemField.AltTitle;
 
+                // Rom (Logiqx)
+                case "mia":
+                    return DatItemField.MIA;
+
                 // Rom (OpenMSX)
                 case "original":
                     return DatItemField.Original;

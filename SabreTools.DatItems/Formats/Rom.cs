@@ -230,6 +230,19 @@ namespace SabreTools.DatItems.Formats
 
         #endregion
 
+        #region Logiqx
+
+        /// <summary>
+        /// Alternate title for the item
+        /// </summary>
+        [JsonProperty("mia", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("mia")]
+        public bool? MIA { get; set; } = null;
+
+        [JsonIgnore]
+        public bool MIASpecified { get { return MIA != null; } }
+
+        #endregion
+
         #region OpenMSX
 
         /// <summary>
@@ -431,6 +444,8 @@ namespace SabreTools.DatItems.Formats
 
                 AltName = this.AltName,
                 AltTitle = this.AltTitle,
+
+                MIA = this.MIA,
 
                 Original = this.Original,
                 OpenMSXSubType = this.OpenMSXSubType,

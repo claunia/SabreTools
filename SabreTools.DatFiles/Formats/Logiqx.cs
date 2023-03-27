@@ -606,6 +606,7 @@ namespace SabreTools.DatFiles.Formats
                             ItemStatus = reader.GetAttribute("status").AsItemStatus(),
                             Date = CleanDate(reader.GetAttribute("date")),
                             Inverted = reader.GetAttribute("inverted").AsYesNo(),
+                            MIA = reader.GetAttribute("mia").AsYesNo(),
 
                             Source = new Source
                             {
@@ -1090,6 +1091,7 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteOptionalAttributeString("date", rom.Date);
                     xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                     xtw.WriteOptionalAttributeString("inverted", rom.Inverted.FromYesNo());
+                    xtw.WriteOptionalAttributeString("mia", rom.MIA.FromYesNo());
                     xtw.WriteEndElement();
                     break;
 

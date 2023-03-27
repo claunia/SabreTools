@@ -565,6 +565,9 @@ namespace SabreTools.Core
         AltName,
         AltTitle,
 
+        // Rom (Logiqx)
+        MIA,
+
         // Rom (OpenMSX)
         Original,
         OpenMSXSubType,

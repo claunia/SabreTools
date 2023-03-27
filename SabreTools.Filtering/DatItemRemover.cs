@@ -965,6 +965,13 @@ namespace SabreTools.Filtering
 
             #endregion
 
+            #region Logiqx
+
+            if (DatItemFields.Contains(DatItemField.MIA))
+                rom.MIA = null;
+
+            #endregion
+
             #region OpenMSX
 
             if (DatItemFields.Contains(DatItemField.Original))
