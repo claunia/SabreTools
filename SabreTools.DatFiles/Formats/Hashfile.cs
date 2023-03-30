@@ -50,13 +50,13 @@ namespace SabreTools.DatFiles.Formats
                     // If we have CRC, then it's an SFV file and the name is first
                     if (_hash.HasFlag(Hash.CRC))
                     {
-                        name = string.Join(" ", split[..^1]).Replace("*", String.Empty);
+                        name = string.Join(" ", split[..^1]).Replace("*", String.Empty).Trim();
                         hash = split[^1];
                     }
                     // Otherwise, the name is second
                     else
                     {
-                        name = string.Join(" ", split[1..]).Replace("*", String.Empty);
+                        name = string.Join(" ", split[1..]).Replace("*", String.Empty).Trim();
                         hash = split[0];
                     }
 
