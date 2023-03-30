@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -44,20 +43,20 @@ namespace SabreTools.DatFiles.Formats
                     string line = sr.ReadLine();
 
                     // Split the line and get the name and hash
-                    string[] split = Regex.Replace(line, @"\s+", " ").Split(' ');
+                    string[] split = line.Split(' ');
                     string name = string.Empty;
                     string hash = string.Empty;
 
                     // If we have CRC, then it's an SFV file and the name is first
                     if (_hash.HasFlag(Hash.CRC))
                     {
-                        name = split[0].Replace("*", String.Empty);
-                        hash = split[1];
+                        name = string.Join(" ", split[..^1]).Replace("*", String.Empty);
+                        hash = split[^1];
                     }
                     // Otherwise, the name is second
                     else
                     {
-                        name = split[1].Replace("*", String.Empty);
+                        name = string.Join(" ", split[1..]).Replace("*", String.Empty);
                         hash = split[0];
                     }
 
