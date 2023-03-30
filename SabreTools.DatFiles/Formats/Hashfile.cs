@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -43,7 +44,7 @@ namespace SabreTools.DatFiles.Formats
                     string line = sr.ReadLine();
 
                     // Split the line and get the name and hash
-                    string[] split = line.Split(' ');
+                    string[] split = Regex.Replace(line, @"\s+", " ").Split(' ');
                     string name = string.Empty;
                     string hash = string.Empty;
 
@@ -58,6 +59,21 @@ namespace SabreTools.DatFiles.Formats
                     {
                         name = split[1].Replace("*", String.Empty);
                         hash = split[0];
+                    }
+
+                    // If the name contains a path, use that path as the machine
+                    string machine = Path.GetFileNameWithoutExtension(filename);
+                    if (name.Contains('/'))
+                    {
+                        split = name.Split('/');
+                        machine = split[0];
+                        name = name.Substring(machine.Length + 1);
+                    }
+                    else if (name.Contains('\\'))
+                    {
+                        split = name.Split('\\');
+                        machine = split[0];
+                        name = name.Substring(machine.Length + 1);
                     }
 
                     Rom rom = new Rom
@@ -75,7 +91,7 @@ namespace SabreTools.DatFiles.Formats
 
                         Machine = new Machine
                         {
-                            Name = Path.GetFileNameWithoutExtension(filename),
+                            Name = machine,
                         },
 
                         Source = new Source
