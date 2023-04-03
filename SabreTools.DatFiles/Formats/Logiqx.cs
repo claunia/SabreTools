@@ -122,6 +122,73 @@ namespace SabreTools.DatFiles.Formats
 ";
 
         /// <summary>
+        /// XSD for No-Intro Logiqx-derived DATs
+        /// </summary>
+        private const string NoIntroXSD = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<xs:schema attributeFormDefault=""unqualified"" elementFormDefault=""qualified"" xmlns:xs=""http://www.w3.org/2001/XMLSchema"">
+  <xs:element name=""datafile"">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name=""header"">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name=""id"" type=""xs:int""/>
+              <xs:element name=""name"" type=""xs:string""/>
+              <xs:element name=""description"" type=""xs:string""/>
+              <xs:element name=""version"" type=""xs:string""/>
+              <xs:element name=""author"" type=""xs:string""/>
+              <xs:element name=""homepage"" type=""xs:string""/>
+              <xs:element name=""url"" type=""xs:string""/>
+              <xs:element name=""clrmamepro"">
+                <xs:complexType>
+                  <xs:attribute name=""forcenodump"" default=""obsolete"" use=""optional"">
+                    <xs:simpleType>
+                      <xs:restriction base=""xs:token"">
+                        <xs:enumeration value=""obsolete""/>
+                        <xs:enumeration value=""required""/>
+                        <xs:enumeration value=""ignore""/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name=""header"" type=""xs:string"" use=""optional""/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name=""romcenter"" minOccurs=""0"">
+                <xs:complexType>
+                  <xs:attribute name=""plugin"" type=""xs:string"" use=""optional""/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs=""unbounded"" name=""game"">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name=""description"" type=""xs:string""/>
+              <xs:element name=""rom"">
+                <xs:complexType>
+                  <xs:attribute name=""name"" type=""xs:string"" use=""required""/>
+                  <xs:attribute name=""size"" type=""xs:unsignedInt"" use=""required""/>
+                  <xs:attribute name=""crc"" type=""xs:string"" use=""required""/>
+                  <xs:attribute name=""md5"" type=""xs:string"" use=""required""/>
+                  <xs:attribute name=""sha1"" type=""xs:string"" use=""required""/>
+                  <xs:attribute name=""sha256"" type=""xs:string"" use=""optional""/>
+                  <xs:attribute name=""status"" type=""xs:string"" use=""optional""/>
+                  <xs:attribute name=""serial"" type=""xs:string"" use=""optional""/>
+                  <xs:attribute name=""header"" type=""xs:string"" use=""optional""/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name=""name"" type=""xs:string"" use=""required""/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
+";
+
+        /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
         /// <param name="datFile">Parent DatFile to copy from</param>
