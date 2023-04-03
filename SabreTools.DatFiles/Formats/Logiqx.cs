@@ -941,14 +941,21 @@ namespace SabreTools.DatFiles.Formats
         private void WriteHeader(XmlTextWriter xtw)
         {
             xtw.WriteStartDocument();
-            xtw.WriteDocType("datafile", "-//Logiqx//DTD ROM Management Datafile//EN", "http://www.logiqx.com/Dats/datafile.dtd", null);
+            if (Header.NoIntroID == null)
+                xtw.WriteDocType("datafile", "-//Logiqx//DTD ROM Management Datafile//EN", "http://www.logiqx.com/Dats/datafile.dtd", null);
 
             xtw.WriteStartElement("datafile");
             xtw.WriteOptionalAttributeString("build", Header.Build);
             xtw.WriteOptionalAttributeString("debug", Header.Debug.FromYesNo());
+            if (Header.NoIntroID != null)
+            {
+                xtw.WriteRequiredAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                xtw.WriteRequiredAttributeString("xsi:schemaLocation", "https://datomatic.no-intro.org/stuff https://datomatic.no-intro.org/stuff/schema_nointro_datfile_v3.xsd");
+            }
 
             xtw.WriteStartElement("header");
 
+            xtw.WriteOptionalElementString("id", Header.NoIntroID);
             xtw.WriteRequiredElementString("name", Header.Name);
             xtw.WriteRequiredElementString("description", Header.Description);
             xtw.WriteOptionalElementString("rootdir", Header.RootDir);
