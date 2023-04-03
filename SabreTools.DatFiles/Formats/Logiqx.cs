@@ -270,7 +270,7 @@ namespace SabreTools.DatFiles.Formats
 
                     case "category":
                         content = reader.ReadElementContentAsString();
-                        Header.Category ??= content;
+                        Header.Category = (Header.Category == null ? content : $"{Header.Category};{content}");
                         break;
 
                     case "version":
@@ -879,7 +879,14 @@ namespace SabreTools.DatFiles.Formats
             xtw.WriteRequiredElementString("name", Header.Name);
             xtw.WriteRequiredElementString("description", Header.Description);
             xtw.WriteOptionalElementString("rootdir", Header.RootDir);
-            xtw.WriteOptionalElementString("category", Header.Category);
+            if (!string.IsNullOrWhiteSpace(Header.Category))
+            {
+                var categories = Header.Category.Split(';');
+                foreach (string category in categories)
+                {
+                    xtw.WriteOptionalElementString("category", category);
+                }
+            }
             xtw.WriteRequiredElementString("version", Header.Version);
             xtw.WriteOptionalElementString("date", Header.Date);
             xtw.WriteRequiredElementString("author", Header.Author);
