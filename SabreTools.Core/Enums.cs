@@ -767,6 +767,7 @@ namespace SabreTools.Core
         Board,
         RebuildTo,
         NoIntroId,
+        NoIntroCloneOfId,
 
         #endregion
 

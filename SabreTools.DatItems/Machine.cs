@@ -208,6 +208,13 @@ namespace SabreTools.DatItems
         [XmlElement("nointroid")]
         public string NoIntroId { get; set; } = null;
 
+        /// <summary>
+        /// No-Intro ID for the game
+        /// </summary>
+        [JsonProperty("nointrocloneofid", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [XmlElement("nointrocloneofid")]
+        public string NoIntroCloneOfId { get; set; } = null;
+
         #endregion
 
         // TODO: Should this be a separate object for TruRip?
@@ -395,6 +402,7 @@ namespace SabreTools.DatItems
                 Board = this.Board,
                 RebuildTo = this.RebuildTo,
                 NoIntroId = this.NoIntroId,
+                NoIntroCloneOfId = this.NoIntroCloneOfId,
 
                 #endregion
 

@@ -1130,6 +1130,13 @@ namespace SabreTools.Core.Tools
                 case "no_intro_id":
                     return MachineField.NoIntroId;
 
+                case "cloneofid":
+                case "nointrocloneofid":
+                case "nointro_cloneofid":
+                case "no_intro_cloneofid":
+                case "no_intro_clone_of_id":
+                    return MachineField.NoIntroCloneOfId;
+
                 #endregion
 
                 #region Logiqx EmuArc

@@ -169,6 +169,9 @@ namespace SabreTools.Filtering
             if (machineFields.Contains(MachineField.NoIntroId))
                 machine.NoIntroId = repMachine.NoIntroId;
 
+            if (machineFields.Contains(MachineField.NoIntroCloneOfId))
+                machine.NoIntroCloneOfId = repMachine.NoIntroCloneOfId;
+
             #endregion
 
             #region Logiqx EmuArc

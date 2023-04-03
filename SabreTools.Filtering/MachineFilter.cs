@@ -57,6 +57,7 @@ namespace SabreTools.Filtering
         public FilterItem<string> Board { get; private set; } = new FilterItem<string>();
         public FilterItem<string> RebuildTo { get; private set; } = new FilterItem<string>();
         public FilterItem<string> NoIntroId { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> NoIntroCloneOfId { get; private set; } = new FilterItem<string>();
 
         #endregion
 
@@ -258,6 +259,10 @@ namespace SabreTools.Filtering
 
                 case MachineField.NoIntroId:
                     SetStringFilter(NoIntroId, value, negate);
+                    break;
+
+                case MachineField.NoIntroCloneOfId:
+                    SetStringFilter(NoIntroCloneOfId, value, negate);
                     break;
 
                 #endregion
@@ -464,6 +469,11 @@ namespace SabreTools.Filtering
             // Machine_NoIntroId
             if (!PassStringFilter(NoIntroId, machine.NoIntroId))
                 return false;
+
+            // Machine_NoIntroCloneOfId
+            if (!PassStringFilter(NoIntroCloneOfId, value: machine.NoIntroCloneOfId))
+                return false;
+
 
             #endregion
 

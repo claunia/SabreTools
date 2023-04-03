@@ -370,6 +370,9 @@ namespace SabreTools.DatFiles
             if (MachineMappings.Keys.Contains(MachineField.NoIntroId))
                 machine.NoIntroId = MachineMappings[MachineField.NoIntroId];
 
+            if (MachineMappings.Keys.Contains(MachineField.NoIntroCloneOfId))
+                machine.NoIntroCloneOfId = MachineMappings[MachineField.NoIntroCloneOfId];
+
             #endregion
 
             #region Logiqx EmuArc
