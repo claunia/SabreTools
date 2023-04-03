@@ -485,6 +485,7 @@ namespace SabreTools.Core
 
         #region Logiqx
 
+        NoIntroID,
         Build,
         RomMode,
         BiosMode,

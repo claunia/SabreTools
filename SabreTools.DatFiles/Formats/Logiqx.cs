@@ -315,6 +315,11 @@ namespace SabreTools.DatFiles.Formats
                 string content;
                 switch (reader.Name)
                 {
+                    case "id":
+                        content = reader.ReadElementContentAsString();
+                        Header.NoIntroID ??= content;
+                        break;
+
                     case "name":
                         content = reader.ReadElementContentAsString();
                         Header.Name ??= content;

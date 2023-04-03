@@ -199,6 +199,11 @@ namespace SabreTools.Core.Tools
 
                 #region Logiqx
 
+                case "id":
+                case "nointroid":
+                case "no_intro_id":
+                    return DatHeaderField.NoIntroID;
+
                 case "build":
                     return DatHeaderField.Build;
 

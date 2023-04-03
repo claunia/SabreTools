@@ -170,6 +170,9 @@ namespace SabreTools.DatFiles
 
             #region Logiqx
 
+            if (DatHeaderMappings.Keys.Contains(DatHeaderField.NoIntroID))
+                datHeader.NoIntroID = DatHeaderMappings[DatHeaderField.NoIntroID];
+
             if (DatHeaderMappings.Keys.Contains(DatHeaderField.Build))
                 datHeader.Build = DatHeaderMappings[DatHeaderField.Build];
 

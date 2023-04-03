@@ -182,6 +182,13 @@ namespace SabreTools.DatFiles
         #region Logiqx
 
         /// <summary>
+        /// No-Intro system ID
+        /// </summary>
+        [JsonProperty("nointroid", DefaultValueHandling = DefaultValueHandling.Include)]
+        [XmlElement("nointroid")]
+        public string NoIntroID { get; set; }
+
+        /// <summary>
         /// Build version
         /// </summary>
         [JsonProperty("build", DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -475,6 +482,9 @@ namespace SabreTools.DatFiles
 
             #region Logiqx
 
+            if (mappings.Keys.Contains(DatHeaderField.NoIntroID))
+                NoIntroID = mappings[DatHeaderField.NoIntroID];
+
             if (mappings.Keys.Contains(DatHeaderField.Build))
                 Build = mappings[DatHeaderField.Build];
 
@@ -554,6 +564,27 @@ namespace SabreTools.DatFiles
                 ForceNodump = this.ForceNodump,
                 ForcePacking = this.ForcePacking,
                 DatFormat = this.DatFormat,
+
+                Debug = this.Debug,
+                MameConfig = this.MameConfig,
+
+                NoIntroID = this.NoIntroID,
+                Build = this.Build,
+                System = this.System,
+                RomMode = this.RomMode,
+                BiosMode = this.BiosMode,
+                SampleMode = this.SampleMode,
+                LockRomMode = this.LockRomMode,
+                LockBiosMode = this.LockBiosMode,
+                LockSampleMode = this.LockSampleMode,
+
+                ScreenshotsWidth = this.ScreenshotsWidth,
+                ScreenshotsHeight = this.ScreenshotsHeight,
+                Infos = this.Infos, // TODO: Perform a deep clone
+                CanOpen = this.CanOpen, // TODO: Perform a deep clone
+                RomTitle = this.RomTitle,
+
+                RomCenterVersion = this.RomCenterVersion,
 
                 UseRomName = this.UseRomName,
                 Prefix = this.Prefix,
