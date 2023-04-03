@@ -180,6 +180,8 @@ namespace SabreTools.DatTools
             {
                 if (second.StartsWith("<!doctype datafile"))
                     return DatFormat.Logiqx;
+                else if (second.StartsWith("<datafile xmlns:xsi"))
+                    return DatFormat.Logiqx;
 
                 else if (second.StartsWith("<!doctype mame")
                     || second.StartsWith("<!doctype m1")
