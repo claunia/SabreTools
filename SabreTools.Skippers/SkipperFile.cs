@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace SabreTools.Skippers
 {
@@ -20,26 +21,31 @@ namespace SabreTools.Skippers
         /// <summary>
         /// Skipper name
         /// </summary>
+        [XmlElement("name")]
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Author names
         /// </summary>
+        [XmlElement("author")]
         public string Author { get; set; } = string.Empty;
 
         /// <summary>
         /// File version
         /// </summary>
+        [XmlElement("version")]
         public string Version { get; set; } = string.Empty;
 
         /// <summary>
         /// Set of all rules in the skipper
         /// </summary>
+        [XmlArray("rule")]
         public List<SkipperRule> Rules { get; set; } = new List<SkipperRule>();
 
         /// <summary>
         /// Filename the skipper lives in
         /// </summary>
+        [XmlIgnore]
         public string SourceFile { get; set; } = string.Empty;
 
         #endregion
@@ -129,7 +135,7 @@ namespace SabreTools.Skippers
                             SkipperRule rule = ParseRule(xtr);
                             if (rule != null)
                                 Rules.Add(rule);
-                            
+
                             xtr.Read();
                             break;
 
@@ -227,7 +233,7 @@ namespace SabreTools.Skippers
 
                                 subreader.Read();
                                 break;
-                                
+
                             default:
                                 subreader.Read();
                                 break;
@@ -256,41 +262,27 @@ namespace SabreTools.Skippers
             try
             {
                 // Get the test type
-                SkipperTest test = new SkipperTest
+                SkipperTest test = xtr.Name.ToLowerInvariant() switch
                 {
-                    Offset = 0,
-                    Value = new byte[0],
-                    Result = true,
-                    Mask = new byte[0],
-                    Size = 0,
-                    Operator = HeaderSkipTestFileOperator.Equal,
+                    "and" => new AndSkipperTest(),
+                    "data" => new DataSkipperTest(),
+                    "file" => new FileSkipperTest(),
+                    "or" => new OrSkipperTest(),
+                    "xor" => new XorSkipperTest(),
+                    _ => null,
                 };
 
-                switch (xtr.Name.ToLowerInvariant())
-                {
-                    case "data":
-                        test.Type = HeaderSkipTest.Data;
-                        break;
+                // If we had an invalid test type
+                if (test == null)
+                    return null;
 
-                    case "or":
-                        test.Type = HeaderSkipTest.Or;
-                        break;
-
-                    case "xor":
-                        test.Type = HeaderSkipTest.Xor;
-                        break;
-
-                    case "and":
-                        test.Type = HeaderSkipTest.And;
-                        break;
-
-                    case "file":
-                        test.Type = HeaderSkipTest.File;
-                        break;
-
-                    default:
-                        return null;
-                }
+                // Set the default values
+                test.Offset = 0;
+                test.Value = Array.Empty<byte>();
+                test.Result = true;
+                test.Mask = Array.Empty<byte>();
+                test.Size = 0;
+                test.Operator = HeaderSkipTestFileOperator.Equal;
 
                 // Now populate all the parts that we can
                 if (xtr.GetAttribute("offset") != null)

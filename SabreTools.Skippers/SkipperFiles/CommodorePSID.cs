@@ -11,41 +11,36 @@ namespace SabreTools.Skippers.SkipperFiles
         public CommodorePSID()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x50, 0x53, 0x49, 0x44, 0x00, 0x01, 0x00, 0x76 },
                 Result = true,
             };
 
-            var rule2Test1 = new SkipperTest
+            var rule2Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x50, 0x53, 0x49, 0x44, 0x00, 0x03, 0x00, 0x7c },
                 Result = true,
             };
 
-            var rule3Test1 = new SkipperTest
+            var rule3Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x50, 0x53, 0x49, 0x44, 0x00, 0x02, 0x00, 0x7c },
                 Result = true,
             };
 
-            var rule4Test1 = new SkipperTest
+            var rule4Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x50, 0x53, 0x49, 0x44, 0x00, 0x01, 0x00, 0x7c },
                 Result = true,
             };
 
-            var rule5Test1 = new SkipperTest
+            var rule5Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x52, 0x53, 0x49, 0x44, 0x00, 0x02, 0x00, 0x7c },
                 Result = true,

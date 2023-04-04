@@ -11,17 +11,15 @@ namespace SabreTools.Skippers.SkipperFiles
         public Atari7800()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x01,
                 Value = new byte[] { 0x41, 0x54, 0x41, 0x52, 0x49, 0x37, 0x38, 0x30, 0x30 },
                 Result = true,
             };
 
-            var rule2Test1 = new SkipperTest
+            var rule2Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x64,
                 Value = new byte[] { 0x41, 0x43, 0x54, 0x55, 0x41, 0x4C, 0x20, 0x43, 0x41, 0x52, 0x54, 0x20, 0x44, 0x41, 0x54, 0x41, 0x20, 0x53, 0x54, 0x41, 0x52, 0x54, 0x53, 0x20, 0x48, 0x45, 0x52, 0x45 },
                 Result = true,

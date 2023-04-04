@@ -11,17 +11,15 @@ namespace SabreTools.Skippers.SkipperFiles
         public AtariLynx()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x4C, 0x59, 0x4E, 0x58 },
                 Result = true,
             };
 
-            var rule2Test1 = new SkipperTest
+            var rule2Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x06,
                 Value = new byte[] { 0x42, 0x53, 0x39 },
                 Result = true,

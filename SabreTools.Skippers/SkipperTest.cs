@@ -1,49 +1,52 @@
 using System;
 using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace SabreTools.Skippers
 {
     /// <summary>
     /// Individual test that applies to a SkipperRule
     /// </summary>
-    public class SkipperTest
+    public abstract class SkipperTest
     {
         #region Fields
-
-        /// <summary>
-        /// Type of test to be run
-        /// </summary>
-        public HeaderSkipTest Type { get; set; }
 
         /// <summary>
         /// File offset to run the test
         /// </summary>
         /// <remarks>null is EOF</remarks>
+        [XmlAttribute("offset")]
         public long? Offset { get; set; }
 
         /// <summary>
         /// Static value to be checked at the offset
         /// </summary>
+        [XmlAttribute("value")]
         public byte[] Value { get; set; }
 
         /// <summary>
         /// Determines whether a pass or failure is expected
         /// </summary>
+        [XmlAttribute("result")]
         public bool Result { get; set; }
 
         /// <summary>
         /// Byte mask to be applied to the tested bytes
         /// </summary>
+        [XmlAttribute("mask")]
         public byte[] Mask { get; set; }
 
         /// <summary>
         /// Expected size of the input byte array, used with the Operator
         /// </summary>
+        [XmlAttribute("size")]
         public long? Size { get; set; } // null is PO2, "power of 2" filesize
 
         /// <summary>
         /// Expected range value for the input byte array size, used with Size
         /// </summary>
+        [XmlAttribute("operator")]
         public HeaderSkipTestFileOperator Operator { get; set; }
 
         #endregion
@@ -53,27 +56,50 @@ namespace SabreTools.Skippers
         /// </summary>
         /// <param name="input">Stream to check rule against</param>
         /// <remarks>The Stream is assumed to be in the proper position for a given test</remarks>
-        public bool Passes(Stream input)
-        {
-            return Type switch
-            {
-                HeaderSkipTest.And => CheckAnd(input),
-                HeaderSkipTest.Data => CheckData(input),
-                HeaderSkipTest.File => CheckFile(input),
-                HeaderSkipTest.Or => CheckOr(input),
-                HeaderSkipTest.Xor => CheckXor(input),
-                _ => true,
-            };
-        }
+        public abstract bool Passes(Stream input);
 
         #region Checking Helpers
 
         /// <summary>
-        /// Run an And test against an input stream
+        /// Seek an input stream based on the test value
         /// </summary>
-        /// <param name="input">Stream to check rule against</param>
-        /// <returns>True if the stream passed, false otherwise</returns>
-        private bool CheckAnd(Stream input)
+        /// <param name="input">Stream to seek</param>
+        /// <returns>True if the stream could seek, false on error</returns>
+        protected bool Seek(Stream input)
+        {
+            try
+            {
+                // Null offset means EOF
+                if (Offset == null)
+                    input.Seek(0, SeekOrigin.End);
+
+                // Positive offset means from beginning
+                else if (Offset >= 0 && Offset <= input.Length)
+                    input.Seek(Offset.Value, SeekOrigin.Begin);
+
+                // Negative offset means from end
+                else if (Offset < 0 && Math.Abs(Offset.Value) <= input.Length)
+                    input.Seek(Offset.Value, SeekOrigin.End);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Skipper test using AND
+    /// </summary>
+    [XmlRoot("and")]
+    public class AndSkipperTest : SkipperTest
+    {
+        /// <inheritdoc/>
+        public override bool Passes(Stream input)
         {
             // First seek to the correct position
             Seek(input);
@@ -109,13 +135,16 @@ namespace SabreTools.Skippers
             // Return if the expected and actual results match
             return result == Result;
         }
+    }
 
-        /// <summary>
-        /// Run a Data test against an input stream
-        /// </summary>
-        /// <param name="input">Stream to check rule against</param>
-        /// <returns>True if the stream passed, false otherwise</returns>
-        private bool CheckData(Stream input)
+    /// <summary>
+    /// Skipper test using DATA
+    /// </summary>
+    [XmlRoot("data")]
+    public class DataSkipperTest : SkipperTest
+    {
+        /// <inheritdoc/>
+        public override bool Passes(Stream input)
         {
             // First seek to the correct position
             if (!Seek(input))
@@ -143,13 +172,16 @@ namespace SabreTools.Skippers
             // Return if the expected and actual results match
             return result == Result;
         }
+    }
 
-        /// <summary>
-        /// Run a File test against an input stream
-        /// </summary>
-        /// <param name="input">Stream to check rule against</param>
-        /// <returns>True if the stream passed, false otherwise</returns>
-        private bool CheckFile(Stream input)
+    /// <summary>
+    /// Skipper test using FILE
+    /// </summary>
+    [XmlRoot("file")]
+    public class FileSkipperTest : SkipperTest
+    {
+        /// <inheritdoc/>
+        public override bool Passes(Stream input)
         {
             // First get the file size from stream
             long size = input.Length;
@@ -177,13 +209,16 @@ namespace SabreTools.Skippers
             // Return if the expected and actual results match
             return result == Result;
         }
+    }
 
-        /// <summary>
-        /// Run an Or test against an input stream
-        /// </summary>
-        /// <param name="input">Stream to check rule against</param>
-        /// <returns>True if the stream passed, false otherwise</returns>
-        private bool CheckOr(Stream input)
+    /// <summary>
+    /// Skipper test using OR
+    /// </summary>
+    [XmlRoot("or")]
+    public class OrSkipperTest : SkipperTest
+    {
+        /// <inheritdoc/>
+        public override bool Passes(Stream input)
         {
             // First seek to the correct position
             Seek(input);
@@ -219,13 +254,16 @@ namespace SabreTools.Skippers
             // Return if the expected and actual results match
             return result == Result;
         }
+    }
 
-        /// <summary>
-        /// Run an Xor test against an input stream
-        /// </summary>
-        /// <param name="input">Stream to check rule against</param>
-        /// <returns>True if the stream passed, false otherwise</returns>
-        private bool CheckXor(Stream input)
+    /// <summary>
+    /// Skipper test using XOR
+    /// </summary>
+    [XmlRoot("xor")]
+    public class XorSkipperTest : SkipperTest
+    {
+        /// <inheritdoc/>
+        public override bool Passes(Stream input)
         {
             // First seek to the correct position
             Seek(input);
@@ -261,36 +299,5 @@ namespace SabreTools.Skippers
             // Return if the expected and actual results match
             return result == Result;
         }
-
-        /// <summary>
-        /// Seek an input stream based on the test value
-        /// </summary>
-        /// <param name="input">Stream to seek</param>
-        /// <returns>True if the stream could seek, false on error</returns>
-        private bool Seek(Stream input)
-        {
-            try
-            {
-                // Null offset means EOF
-                if (Offset == null)
-                    input.Seek(0, SeekOrigin.End);
-
-                // Positive offset means from beginning
-                else if (Offset >= 0 && Offset <= input.Length)
-                    input.Seek(Offset.Value, SeekOrigin.Begin);
-
-                // Negative offset means from end
-                else if (Offset < 0 && Math.Abs(Offset.Value) <= input.Length)
-                    input.Seek(Offset.Value, SeekOrigin.End);
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        #endregion
     }
 }

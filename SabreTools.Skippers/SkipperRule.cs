@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 
 using SabreTools.Logging;
 
@@ -13,26 +14,36 @@ namespace SabreTools.Skippers
         /// <summary>
         /// Starting offset for applying rule
         /// </summary>
+        [XmlAttribute("start_offset")]
         public long? StartOffset { get; set; } // null is EOF
 
         /// <summary>
         /// Ending offset for applying rule
         /// </summary>
+        [XmlAttribute("end_offset")]
         public long? EndOffset { get; set; } // null if EOF
 
         /// <summary>
         /// Byte manipulation operation
         /// </summary>
+        [XmlAttribute("operation")]
         public HeaderSkipOperation Operation { get; set; }
 
         /// <summary>
         /// List of matching tests in a rule
         /// </summary>
+        [XmlArray]
+        [XmlArrayItem("data")]
+        [XmlArrayItem("or")]
+        [XmlArrayItem("xor")]
+        [XmlArrayItem("and")]
+        [XmlArrayItem("file")]
         public List<SkipperTest> Tests { get; set; }
 
         /// <summary>
         /// Filename the skipper rule lives in
         /// </summary>
+        [XmlIgnore]
         public string SourceFile { get; set; }
 
         #endregion

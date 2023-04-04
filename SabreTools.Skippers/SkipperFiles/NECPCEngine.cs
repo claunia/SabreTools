@@ -11,9 +11,8 @@ namespace SabreTools.Skippers.SkipperFiles
         public NECPCEngine()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xAA, 0xBB, 0x02 },
                 Result = true,

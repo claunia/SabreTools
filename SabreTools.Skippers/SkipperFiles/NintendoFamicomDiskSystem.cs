@@ -11,33 +11,29 @@ namespace SabreTools.Skippers.SkipperFiles
         public NintendoFamicomDiskSystem()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x46, 0x44, 0x53, 0x1A, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
                 Result = true,
             };
 
-            var rule2Test1 = new SkipperTest
+            var rule2Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x46, 0x44, 0x53, 0x1A, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
                 Result = true,
             };
 
-            var rule3Test1 = new SkipperTest
+            var rule3Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x46, 0x44, 0x53, 0x1A, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
                 Result = true,
             };
 
-            var rule4Test1 = new SkipperTest
+            var rule4Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x46, 0x44, 0x53, 0x1A, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 },
                 Result = true,

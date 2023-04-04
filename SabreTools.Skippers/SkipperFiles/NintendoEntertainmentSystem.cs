@@ -11,9 +11,8 @@ namespace SabreTools.Skippers.SkipperFiles
         public NintendoEntertainmentSystem()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x4E, 0x45, 0x53, 0x1A },
                 Result = true,

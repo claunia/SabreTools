@@ -11,25 +11,22 @@ namespace SabreTools.Skippers.SkipperFiles
         public Nintendo64()
         {
             // Create tests
-            var rule1Test1 = new SkipperTest
+            var rule1Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x80, 0x37, 0x12, 0x40 },
                 Result = true,
             };
 
-            var rule2Test1 = new SkipperTest
+            var rule2Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x37, 0x80, 0x40, 0x12 },
                 Result = true,
             };
 
-            var rule3Test1 = new SkipperTest
+            var rule3Test1 = new DataSkipperTest
             {
-                Type = HeaderSkipTest.Data,
                 Offset = 0x00,
                 Value = new byte[] { 0x40, 0x12, 0x37, 0x80 },
                 Result = true,
