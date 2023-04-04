@@ -1,4 +1,6 @@
-﻿namespace SabreTools.Skippers
+﻿using System.Xml.Serialization;
+
+namespace SabreTools.Skippers
 {
     /// <summary>
     /// Determines the header skip operation
@@ -6,9 +8,17 @@
     public enum HeaderSkipOperation
     {
         None = 0,
+
+        [XmlEnum("bitswap")]
         Bitswap,
+
+        [XmlEnum("byteswap")]
         Byteswap,
+
+        [XmlEnum("wordswap")]
         Wordswap,
+
+        [XmlEnum("wordbyteswap")]
         WordByteswap,
     }
 
@@ -17,8 +27,13 @@
     /// </summary>
     public enum HeaderSkipTestFileOperator
     {
+        [XmlEnum("equal")]
         Equal = 0,
+
+        [XmlEnum("less")]
         Less,
+
+        [XmlEnum("greater")]
         Greater,
     }
 }

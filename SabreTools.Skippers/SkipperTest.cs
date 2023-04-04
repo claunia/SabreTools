@@ -95,7 +95,7 @@ namespace SabreTools.Skippers
     /// <summary>
     /// Skipper test using AND
     /// </summary>
-    [XmlRoot("and")]
+    [XmlType("and")]
     public class AndSkipperTest : SkipperTest
     {
         /// <inheritdoc/>
@@ -140,7 +140,7 @@ namespace SabreTools.Skippers
     /// <summary>
     /// Skipper test using DATA
     /// </summary>
-    [XmlRoot("data")]
+    [XmlType("data")]
     public class DataSkipperTest : SkipperTest
     {
         /// <inheritdoc/>
@@ -177,7 +177,7 @@ namespace SabreTools.Skippers
     /// <summary>
     /// Skipper test using FILE
     /// </summary>
-    [XmlRoot("file")]
+    [XmlType("file")]
     public class FileSkipperTest : SkipperTest
     {
         /// <inheritdoc/>
@@ -214,7 +214,7 @@ namespace SabreTools.Skippers
     /// <summary>
     /// Skipper test using OR
     /// </summary>
-    [XmlRoot("or")]
+    [XmlType("or")]
     public class OrSkipperTest : SkipperTest
     {
         /// <inheritdoc/>
@@ -259,7 +259,7 @@ namespace SabreTools.Skippers
     /// <summary>
     /// Skipper test using XOR
     /// </summary>
-    [XmlRoot("xor")]
+    [XmlType("xor")]
     public class XorSkipperTest : SkipperTest
     {
         /// <inheritdoc/>
