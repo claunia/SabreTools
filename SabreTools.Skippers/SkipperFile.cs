@@ -207,6 +207,9 @@ namespace SabreTools.Skippers
                         case "wordswap":
                             rule.Operation = HeaderSkipOperation.Wordswap;
                             break;
+                        case "wordbyteswap":
+                            rule.Operation = HeaderSkipOperation.WordByteswap;
+                            break;
                     }
                 }
 
