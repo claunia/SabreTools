@@ -1,48 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using SabreTools.Skippers.Tests;
 
-namespace SabreTools.Skippers.SkipperFiles
+namespace SabreTools.Skippers.Detectors
 {
     /// <summary>
-    /// SkipperFile for Atari Lynx headers
+    /// Detector for Atari Lynx headers
     /// </summary>
     /// <remarks>Originally from lynx.xml</remarks>
-    internal class AtariLynx : SkipperFile
+    internal class AtariLynx : Detector
     {
         public AtariLynx()
         {
             // Create tests
-            var rule1Test1 = new DataSkipperTest
+            var rule1Test1 = new DataTest
             {
-                Offset = 0x00,
-                Value = new byte[] { 0x4C, 0x59, 0x4E, 0x58 },
+                Offset = "0",
+                Value = "4C594E58",
                 Result = true,
             };
 
-            var rule2Test1 = new DataSkipperTest
+            var rule2Test1 = new DataTest
             {
-                Offset = 0x06,
-                Value = new byte[] { 0x42, 0x53, 0x39 },
+                Offset = "6",
+                Value = "425339",
                 Result = true,
             };
 
             // Create rules
-            var rule1 = new SkipperRule
+            var rule1 = new Rule
             {
-                StartOffset = 0x40,
-                EndOffset = null,
+                StartOffset = "40",
+                EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new List<SkipperTest>
+                Tests = new Test[]
                 {
                     rule1Test1,
                 }
             };
 
-            var rule2 = new SkipperRule
+            var rule2 = new Rule
             {
-                StartOffset = 0x40,
-                EndOffset = null,
+                StartOffset = "40",
+                EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new List<SkipperTest>
+                Tests = new Test[]
                 {
                     rule2Test1,
                 }
@@ -53,7 +53,7 @@ namespace SabreTools.Skippers.SkipperFiles
             Author = "Roman Scherzer";
             Version = "1.0";
             SourceFile = "lynx";
-            Rules = new List<SkipperRule>
+            Rules = new Rule[]
             {
                 rule1,
                 rule2,

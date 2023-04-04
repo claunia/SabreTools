@@ -1,30 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using SabreTools.Skippers.Tests;
 
-namespace SabreTools.Skippers.SkipperFiles
+namespace SabreTools.Skippers.Detectors
 {
     /// <summary>
-    /// SkipperFile for Super Famicom SPC headers
+    /// Detector for Super Famicom SPC headers
     /// </summary>
     /// <remarks>Originally from spc.xml</remarks>
-    internal class SuperFamicomSPC : SkipperFile
+    internal class SuperFamicomSPC : Detector
     {
         public SuperFamicomSPC()
         {
             // Create tests
-            var rule1Test1 = new DataSkipperTest
+            var rule1Test1 = new DataTest
             {
-                Offset = 0x00,
-                Value = new byte[] { 0x53, 0x4E, 0x45, 0x53, 0x2D, 0x53, 0x50, 0x43 },
+                Offset = "0",
+                Value = "534E45532D535043",
                 Result = true,
             };
 
             // Create rules
-            var rule1 = new SkipperRule
+            var rule1 = new Rule
             {
-                StartOffset = 0x100,
-                EndOffset = null,
+                StartOffset = "00100",
+                EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new List<SkipperTest>
+                Tests = new Test[]
                 {
                     rule1Test1,
                 }
@@ -35,7 +35,7 @@ namespace SabreTools.Skippers.SkipperFiles
             Author = "Yori Yoshizuki";
             Version = "1.0";
             SourceFile = "spc";
-            Rules = new List<SkipperRule>
+            Rules = new Rule[]
             {
                 rule1,
             };

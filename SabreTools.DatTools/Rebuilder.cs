@@ -421,10 +421,10 @@ namespace SabreTools.DatTools
             {
                 // Check to see if we have a matching header first
                 SkipperMatch.Init();
-                SkipperRule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.HeaderSkipper));
+                Rule rule = SkipperMatch.GetMatchingRule(fileStream, Path.GetFileNameWithoutExtension(datFile.Header.HeaderSkipper));
 
                 // If there's a match, create the new file to write
-                if (rule.Tests != null && rule.Tests.Count != 0)
+                if (rule.Tests != null && rule.Tests.Length != 0)
                 {
                     // If the file could be transformed correctly
                     MemoryStream transformStream = new MemoryStream();

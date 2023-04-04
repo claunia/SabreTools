@@ -1,27 +1,49 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-
 using SabreTools.Logging;
+using SabreTools.Skippers.Tests;
 
 namespace SabreTools.Skippers
 {
-    public class SkipperRule
+    [XmlType("rule")]
+    public class Rule
     {
         #region Fields
 
         /// <summary>
         /// Starting offset for applying rule
         /// </summary>
+        /// <remarks>Either numeric or the literal "EOF"</remarks>
         [XmlAttribute("start_offset")]
-        public long? StartOffset { get; set; } // null is EOF
+        public string? StartOffset
+        {
+            get => _startOffset == null ? "EOF" : _startOffset.Value.ToString();
+            set
+            {
+                if (value == null || value.ToLowerInvariant() == "eof")
+                    _startOffset = null;
+                else
+                    _startOffset = Convert.ToInt64(value, fromBase: 16);
+            }
+        }
 
         /// <summary>
         /// Ending offset for applying rule
         /// </summary>
+        /// <remarks>Either numeric or the literal "EOF"</remarks>
         [XmlAttribute("end_offset")]
-        public long? EndOffset { get; set; } // null if EOF
+        public string? EndOffset
+        {
+            get => _endOffset == null ? "EOF" : _endOffset.Value.ToString();
+            set
+            {
+                if (value == null || value.ToLowerInvariant() == "eof")
+                    _endOffset = null;
+                else
+                    _endOffset = Convert.ToInt64(value, fromBase: 16);
+            }
+        }
 
         /// <summary>
         /// Byte manipulation operation
@@ -32,19 +54,34 @@ namespace SabreTools.Skippers
         /// <summary>
         /// List of matching tests in a rule
         /// </summary>
-        [XmlArray]
-        [XmlArrayItem("data")]
-        [XmlArrayItem("or")]
-        [XmlArrayItem("xor")]
-        [XmlArrayItem("and")]
-        [XmlArrayItem("file")]
-        public List<SkipperTest> Tests { get; set; }
+        [XmlElement("and", typeof(AndTest))]
+        [XmlElement("data", typeof(DataTest))]
+        [XmlElement("file", typeof(FileTest))]
+        [XmlElement("or", typeof(OrTest))]
+        [XmlElement("xor", typeof(XorTest))]
+        public Test[]? Tests { get; set; }
 
         /// <summary>
         /// Filename the skipper rule lives in
         /// </summary>
         [XmlIgnore]
-        public string SourceFile { get; set; }
+        public string? SourceFile { get; set; }
+
+        #endregion
+
+        #region Private instance variables
+
+        /// <summary>
+        /// Starting offset for applying rule
+        /// </summary>
+        /// <remarks>null is EOF</remarks>
+        private long? _startOffset = null;
+
+        /// <summary>
+        /// Ending offset for applying rule
+        /// </summary>
+        /// <remarks>null is EOF</remarks>
+        private long? _endOffset = null;
 
         #endregion
 
@@ -57,27 +94,25 @@ namespace SabreTools.Skippers
 
         #endregion
 
-        #region Constructors
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SkipperRule()
+        public Rule()
         {
             logger = new Logger(this);
         }
 
-        #endregion
-
         /// <summary>
-        /// Check if a Stream passes all tests in the SkipperRule
+        /// Check if a Stream passes all tests in the Rule
         /// </summary>
         /// <param name="input">Stream to check</param>
         /// <returns>True if all tests passed, false otherwise</returns>
         public bool PassesAllTests(Stream input)
         {
             bool success = true;
-            foreach (SkipperTest test in Tests)
+
+            // If there are no tests
+            if (Tests == null || Tests.Length == 0)
+                return success;
+
+            foreach (Test test in Tests)
             {
                 bool result = test.Passes(input);
                 success &= result;
@@ -94,16 +129,23 @@ namespace SabreTools.Skippers
         /// <returns>True if the file was transformed properly, false otherwise</returns>
         public bool TransformFile(string input, string output)
         {
-            // If the input file doesn't exist, fail
-            if (!File.Exists(input))
+            // If the input file doesn't exist
+            if (string.IsNullOrWhiteSpace(input) || !File.Exists(input))
             {
-                logger.Error($"I'm sorry but '{input}' doesn't exist!");
+                logger.Error($"'{input}' doesn't exist and cannot be transformed!");
+                return false;
+            }
+
+            // If we have an invalid output directory name
+            if (string.IsNullOrWhiteSpace(output))
+            {
+                logger.Error($"Output path was null or empty, cannot write transformed file!");
                 return false;
             }
 
             // Create the output directory if it doesn't already
-            if (!Directory.Exists(Path.GetDirectoryName(output)))
-                Directory.CreateDirectory(Path.GetDirectoryName(output));
+            string parentDirectory = Path.GetDirectoryName(output) ?? string.Empty;
+            Directory.CreateDirectory(parentDirectory);
 
             //logger.User($"Attempting to apply rule to '{input}'");
             bool success = TransformStream(File.OpenRead(input), File.Create(output));
@@ -134,15 +176,15 @@ namespace SabreTools.Skippers
             long extsize = input.Length;
             if ((Operation > HeaderSkipOperation.Bitswap && (extsize % 2) != 0)
                 || (Operation > HeaderSkipOperation.Byteswap && (extsize % 4) != 0)
-                || (Operation > HeaderSkipOperation.Bitswap && (StartOffset == null || StartOffset % 2 != 0)))
+                || (Operation > HeaderSkipOperation.Bitswap && (_startOffset == null || _startOffset % 2 != 0)))
             {
                 logger.Error("The stream did not have the correct size to be transformed!");
                 return false;
             }
 
             // Now read the proper part of the file and apply the rule
-            BinaryWriter bw = null;
-            BinaryReader br = null;
+            BinaryWriter? bw = null;
+            BinaryReader? br = null;
             try
             {
                 logger.User("Applying found rule to input stream");
@@ -150,24 +192,24 @@ namespace SabreTools.Skippers
                 br = new BinaryReader(input);
 
                 // Seek to the beginning offset
-                if (StartOffset == null)
+                if (_startOffset == null)
                     success = false;
 
-                else if (Math.Abs((long)StartOffset) > input.Length)
+                else if (Math.Abs((long)_startOffset) > input.Length)
                     success = false;
 
-                else if (StartOffset > 0)
-                    input.Seek((long)StartOffset, SeekOrigin.Begin);
+                else if (_startOffset > 0)
+                    input.Seek((long)_startOffset, SeekOrigin.Begin);
 
-                else if (StartOffset < 0)
-                    input.Seek((long)StartOffset, SeekOrigin.End);
+                else if (_startOffset < 0)
+                    input.Seek((long)_startOffset, SeekOrigin.End);
 
                 // Then read and apply the operation as you go
                 if (success)
                 {
                     byte[] buffer = new byte[4];
                     int pos = 0;
-                    while (input.Position < (EndOffset ?? input.Length)
+                    while (input.Position < (_endOffset ?? input.Length)
                         && input.Position < input.Length)
                     {
                         byte b = br.ReadByte();

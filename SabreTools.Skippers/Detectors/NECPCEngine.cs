@@ -1,30 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using SabreTools.Skippers.Tests;
 
-namespace SabreTools.Skippers.SkipperFiles
+namespace SabreTools.Skippers.Detectors
 {
     /// <summary>
-    /// SkipperFile for NEC PC-Engine / TurboGrafx 16 headers
+    /// Detector for NEC PC-Engine / TurboGrafx 16 headers
     /// </summary>
     /// <remarks>Originally from pce.xml</remarks>
-    internal class NECPCEngine : SkipperFile
+    internal class NECPCEngine : Detector
     {
         public NECPCEngine()
         {
             // Create tests
-            var rule1Test1 = new DataSkipperTest
+            var rule1Test1 = new DataTest
             {
-                Offset = 0x00,
-                Value = new byte[] { 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xAA, 0xBB, 0x02 },
+                Offset = "0",
+                Value = "4000000000000000AABB02",
                 Result = true,
             };
 
             // Create rules
-            var rule1 = new SkipperRule
+            var rule1 = new Rule
             {
-                StartOffset = 0x200,
-                EndOffset = null,
+                StartOffset = "200",
                 Operation = HeaderSkipOperation.None,
-                Tests = new List<SkipperTest>
+                Tests = new Test[]
                 {
                     rule1Test1,
                 }
@@ -35,7 +34,7 @@ namespace SabreTools.Skippers.SkipperFiles
             Author = "Matt Nadareski (darksabre76)";
             Version = "1.0";
             SourceFile = "pce";
-            Rules = new List<SkipperRule>
+            Rules = new Rule[]
             {
                 rule1,
             };

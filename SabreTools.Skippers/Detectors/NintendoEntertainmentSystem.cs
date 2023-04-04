@@ -1,30 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using SabreTools.Skippers.Tests;
 
-namespace SabreTools.Skippers.SkipperFiles
+namespace SabreTools.Skippers.Detectors
 {
     /// <summary>
-    /// SkipperFile for Nintendo Entertainment System headers
+    /// Detector for Nintendo Entertainment System headers
     /// </summary>
     /// <remarks>Originally from nes.xml</remarks>
-    internal class NintendoEntertainmentSystem : SkipperFile
+    internal class NintendoEntertainmentSystem : Detector
     {
         public NintendoEntertainmentSystem()
         {
             // Create tests
-            var rule1Test1 = new DataSkipperTest
+            var rule1Test1 = new DataTest
             {
-                Offset = 0x00,
-                Value = new byte[] { 0x4E, 0x45, 0x53, 0x1A },
+                Offset = "0",
+                Value = "4E45531A",
                 Result = true,
             };
 
             // Create rules
-            var rule1 = new SkipperRule
+            var rule1 = new Rule
             {
-                StartOffset = 0x10,
-                EndOffset = null,
+                StartOffset = "10",
+                EndOffset = "EOF",
                 Operation = HeaderSkipOperation.None,
-                Tests = new List<SkipperTest>
+                Tests = new Test[]
                 {
                     rule1Test1,
                 }
@@ -35,7 +35,7 @@ namespace SabreTools.Skippers.SkipperFiles
             Author = "Roman Scherzer";
             Version = "1.1";
             SourceFile = "nes";
-            Rules = new List<SkipperRule>
+            Rules = new Rule[]
             {
                 rule1,
             };

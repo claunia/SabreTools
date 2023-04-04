@@ -6,9 +6,9 @@ using Xunit;
 namespace SabreTools.Test.Skippers
 {
     [Collection("SkipperMatch")]
-    public class SkipperRuleTransformTests
+    public class RuleTransformTests
     {
-        public SkipperRuleTransformTests()
+        public RuleTransformTests()
         {
             SkipperMatch.Init(false);
         }
@@ -231,7 +231,7 @@ namespace SabreTools.Test.Skippers
         /// <summary>
         /// Pad the stream to 1KiB then seek to beginning
         /// </summary>
-        private void PadAndReset(MemoryStream ms)
+        private static void PadAndReset(MemoryStream ms)
         {
             for (long i = ms.Length; i < 1024; i++)
             {

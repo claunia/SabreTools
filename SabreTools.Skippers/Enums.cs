@@ -7,6 +7,7 @@ namespace SabreTools.Skippers
     /// </summary>
     public enum HeaderSkipOperation
     {
+        [XmlEnum("none")]
         None = 0,
 
         [XmlEnum("bitswap")]

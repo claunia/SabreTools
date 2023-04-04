@@ -288,7 +288,7 @@ namespace SabreTools.FileTypes
                 var rule = SkipperMatch.GetMatchingRule(input, Path.GetFileNameWithoutExtension(header));
 
                 // If there's a match, transform the stream before getting info
-                if (rule.Tests != null && rule.Tests.Count != 0)
+                if (rule.Tests != null && rule.Tests.Length != 0)
                 {
                     // Create the output stream
                     MemoryStream outputStream = new MemoryStream();

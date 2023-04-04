@@ -77,10 +77,10 @@ The following systems have headers that this program can work with:
 
             // Get the skipper rule that matches the file, if any
             SkipperMatch.Init();
-            SkipperRule rule = SkipperMatch.GetMatchingRule(file, string.Empty);
+            Rule rule = SkipperMatch.GetMatchingRule(file, string.Empty);
 
             // If we have an empty rule, return false
-            if (rule.Tests == null || rule.Tests.Count == 0 || rule.Operation != HeaderSkipOperation.None)
+            if (rule.Tests == null || rule.Tests.Length == 0 || rule.Operation != HeaderSkipOperation.None)
                 return false;
 
             logger.User("File has a valid copier header");
@@ -91,8 +91,8 @@ The following systems have headers that this program can work with:
             {
                 // Extract the header as a string for the database
                 using var fs = File.OpenRead(file);
-                byte[] hbin = new byte[(int)rule.StartOffset];
-                fs.Read(hbin, 0, (int)rule.StartOffset);
+                byte[] hbin = new byte[int.Parse(rule.StartOffset)];
+                fs.Read(hbin, 0, int.Parse(rule.StartOffset));
                 hstr = Utilities.ByteArrayToString(hbin);
             }
             catch

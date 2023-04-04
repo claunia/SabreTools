@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 using SabreTools.IO;
 using SabreTools.Logging;
 
@@ -23,9 +26,9 @@ namespace SabreTools.Skippers
     public static class SkipperMatch
     {
         /// <summary>
-        /// Header skippers represented by a list of skipper objects
+        /// Header detectors represented by a list of detector objects
         /// </summary>
-        private static List<SkipperFile> Skippers = null;
+        private static List<Detector>? Skippers = null;
 
         /// <summary>
         /// Local paths
@@ -37,7 +40,7 @@ namespace SabreTools.Skippers
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -70,13 +73,43 @@ namespace SabreTools.Skippers
         private static void PopulateSkippers()
         {
             // Ensure the list exists
-            if (Skippers == null)
-                Skippers = new List<SkipperFile>();
+            Skippers ??= new List<Detector>();
+
+            // Create the XML serializer
+            var xts = new XmlSerializer(typeof(Detector));
 
             // Get skippers for each known header type
-            foreach (string skipperFile in Directory.EnumerateFiles(LocalPath, "*", SearchOption.AllDirectories))
+            foreach (string skipperPath in Directory.EnumerateFiles(LocalPath, "*", SearchOption.AllDirectories))
             {
-                Skippers.Add(new SkipperFile(Path.GetFullPath(skipperFile)));
+                try
+                {
+                    // Create the XML reader
+                    var xtr = XmlReader.Create(skipperPath, new XmlReaderSettings
+                    {
+                        CheckCharacters = false,
+                        DtdProcessing = DtdProcessing.Ignore,
+                        IgnoreComments = true,
+                        IgnoreWhitespace = true,
+                        ValidationFlags = XmlSchemaValidationFlags.None,
+                        ValidationType = ValidationType.None,
+                    });
+
+                    // Deserialize the detector, if possible
+                    if (xts.Deserialize(xtr) is not Detector detector)
+                        continue;
+
+                    // Set the source file
+                    string sourceFile = Path.GetFileNameWithoutExtension(skipperPath);
+                    detector.SourceFile = sourceFile;
+                    for (int i = 0; i < (detector.Rules?.Length ?? 0); i++)
+                    {
+                        detector.Rules[i].SourceFile = sourceFile;
+                    }
+
+                    // Add the skipper to the set
+                    Skippers.Add(detector);
+                }
+                catch { }
             }
         }
 
@@ -90,63 +123,64 @@ namespace SabreTools.Skippers
         private static void PopulateSkippersInternal()
         {
             // Ensure the list exists
-            if (Skippers == null)
-                Skippers = new List<SkipperFile>();
+            Skippers ??= new List<Detector>();
 
             // Get skippers for each known header type
-            Skippers.Add(new SkipperFiles.Atari7800());
-            Skippers.Add(new SkipperFiles.AtariLynx());
-            Skippers.Add(new SkipperFiles.CommodorePSID());
-            Skippers.Add(new SkipperFiles.NECPCEngine());
-            Skippers.Add(new SkipperFiles.Nintendo64());
-            Skippers.Add(new SkipperFiles.NintendoEntertainmentSystem());
-            Skippers.Add(new SkipperFiles.NintendoFamicomDiskSystem());
-            Skippers.Add(new SkipperFiles.SuperNintendoEntertainmentSystem());
-            Skippers.Add(new SkipperFiles.SuperFamicomSPC());
+            Skippers.Add(new Detectors.Atari7800());
+            Skippers.Add(new Detectors.AtariLynx());
+            Skippers.Add(new Detectors.CommodorePSID());
+            Skippers.Add(new Detectors.NECPCEngine());
+            Skippers.Add(new Detectors.Nintendo64());
+            Skippers.Add(new Detectors.NintendoEntertainmentSystem());
+            Skippers.Add(new Detectors.NintendoFamicomDiskSystem());
+            Skippers.Add(new Detectors.SuperNintendoEntertainmentSystem());
+            Skippers.Add(new Detectors.SuperFamicomSPC());
         }
 
         /// <summary>
-        /// Get the SkipperRule associated with a given file
+        /// Get the Rule associated with a given file
         /// </summary>
         /// <param name="input">Name of the file to be checked</param>
         /// <param name="skipperName">Name of the skipper to be used, blank to find a matching skipper</param>
         /// <param name="logger">Logger object for file and console output</param>
-        /// <returns>The SkipperRule that matched the file</returns>
-        public static SkipperRule GetMatchingRule(string input, string skipperName)
+        /// <returns>The Rule that matched the file</returns>
+        public static Rule GetMatchingRule(string input, string skipperName)
         {
             // If the file doesn't exist, return a blank skipper rule
             if (!File.Exists(input))
             {
                 logger.Error($"The file '{input}' does not exist so it cannot be tested");
-                return new SkipperRule();
+                return new Rule();
             }
 
             return GetMatchingRule(File.OpenRead(input), skipperName);
         }
 
         /// <summary>
-        /// Get the SkipperRule associated with a given stream
+        /// Get the Rule associated with a given stream
         /// </summary>
         /// <param name="input">Name of the file to be checked</param>
         /// <param name="skipperName">Name of the skipper to be used, blank to find a matching skipper</param>
         /// <param name="keepOpen">True if the underlying stream should be kept open, false otherwise</param>
-        /// <returns>The SkipperRule that matched the file</returns>
-        public static SkipperRule GetMatchingRule(Stream input, string skipperName, bool keepOpen = false)
+        /// <returns>The Rule that matched the file</returns>
+        public static Rule GetMatchingRule(Stream input, string skipperName, bool keepOpen = false)
         {
-            SkipperRule skipperRule = new SkipperRule();
+            var skipperRule = new Rule();
 
-            // If we have a null skipper name, we return since we're not matching skippers
-            if (skipperName == null)
+            // If we have an invalid set of skippers or skipper name
+            if (Skippers == null || skipperName == null)
                 return skipperRule;
 
             // Loop through and find a Skipper that has the right name
             logger.Verbose("Beginning search for matching header skip rules");
-            List<SkipperFile> tempList = new List<SkipperFile>();
-            tempList.AddRange(Skippers);
 
-            // Loop through all known SkipperFiles
-            foreach (SkipperFile skipper in tempList)
+            // Loop through all known Detectors
+            foreach (Detector? skipper in Skippers)
             {
+                // This should not happen
+                if (skipper == null)
+                    continue;
+
                 skipperRule = skipper.GetMatchingRule(input, skipperName);
                 if (skipperRule != null)
                     break;
@@ -156,9 +190,8 @@ namespace SabreTools.Skippers
             if (!keepOpen)
                 input.Dispose();
 
-            // If the SkipperRule is null, make it empty
-            if (skipperRule == null)
-                skipperRule = new SkipperRule();
+            // If the Rule is null, make it empty
+            skipperRule ??= new Rule();
 
             // If we have a blank rule, inform the user
             if (skipperRule.Tests == null)
