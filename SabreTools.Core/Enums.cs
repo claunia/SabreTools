@@ -292,6 +292,7 @@ namespace SabreTools.Core
         RamOption,
         Release,
         Sample,
+        Serials,
         Setting,
         SharedFeature,
         Slot,
