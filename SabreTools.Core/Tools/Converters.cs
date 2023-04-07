@@ -549,6 +549,19 @@ namespace SabreTools.Core.Tools
                 case "languages":
                     return DatItemField.Languages;
 
+                case "devstatus":
+                case "dev_status":
+                    return DatItemField.DevStatus;
+
+                case "physical":
+                    return DatItemField.Physical;
+
+                case "complete":
+                    return DatItemField.Complete;
+
+                case "categories":
+                    return DatItemField.Categories;
+
                 // BiosSet
                 case "description":
                 case "biosdescription":

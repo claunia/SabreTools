@@ -277,6 +277,18 @@ namespace SabreTools.Filtering
 
             if (datItemFields.Contains(DatItemField.Languages))
                 archive.Languages = newItem.Languages;
+
+            if (datItemFields.Contains(DatItemField.DevStatus))
+                archive.DevStatus = newItem.DevStatus;
+
+            if (datItemFields.Contains(DatItemField.Physical))
+                archive.Physical = newItem.Physical;
+
+            if (datItemFields.Contains(DatItemField.Complete))
+                archive.Complete = newItem.Complete;
+
+            if (datItemFields.Contains(DatItemField.Categories))
+                archive.Categories = newItem.Categories;
         }
 
         /// <summary>

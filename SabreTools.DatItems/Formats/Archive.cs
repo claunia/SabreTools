@@ -26,32 +26,62 @@ namespace SabreTools.DatItems.Formats
         public string Number { get; set; }
 
         /// <summary>
-        /// Clone
+        /// Clone value
         /// </summary>
         /// <remarks>No-Intro database export only</remarks>
         [JsonProperty("clone"), XmlElement("clone")]
         public string CloneValue { get; set; }
 
         /// <summary>
-        /// Regional parent
+        /// Regional parent value
         /// </summary>
         /// <remarks>No-Intro database export only</remarks>
         [JsonProperty("regparent"), XmlElement("regparent")]
         public string RegParent { get; set; }
 
         /// <summary>
-        /// Region
+        /// Region value
         /// </summary>
         /// <remarks>No-Intro database export only</remarks>
         [JsonProperty("region"), XmlElement("region")]
         public string Region { get; set; }
 
         /// <summary>
-        /// Region
+        /// Languages value
         /// </summary>
         /// <remarks>No-Intro database export only</remarks>
         [JsonProperty("languages"), XmlElement("languages")]
         public string Languages { get; set; }
+
+        /// <summary>
+        /// Development status value
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("devstatus"), XmlElement("devstatus")]
+        public string DevStatus { get; set; }
+
+        /// <summary>
+        /// Physical value
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        /// <remarks>TODO: Is this numeric or a flag?</remarks>
+        [JsonProperty("physical"), XmlElement("physical")]
+        public string Physical { get; set; }
+
+        /// <summary>
+        /// Complete value
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        /// <remarks>TODO: Is this numeric or a flag?</remarks>
+        [JsonProperty("complete"), XmlElement("complete")]
+        public string Complete { get; set; }
+
+        /// <summary>
+        /// Categories value
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("categories"), XmlElement("categories")]
+        public string Categories { get; set; }
 
         #endregion
 
@@ -97,6 +127,10 @@ namespace SabreTools.DatItems.Formats
                 RegParent = this.RegParent,
                 Region = this.Region,
                 Languages = this.Languages,
+                DevStatus = this.DevStatus,
+                Physical = this.Physical,
+                Complete = this.Complete,
+                Categories = this.Categories,
             };
         }
 
@@ -120,7 +154,11 @@ namespace SabreTools.DatItems.Formats
                 && CloneValue == newOther.CloneValue
                 && RegParent == newOther.RegParent
                 && Region == newOther.Region
-                && Languages == newOther.Languages);
+                && Languages == newOther.Languages
+                && DevStatus == newOther.DevStatus
+                && Physical == newOther.Physical
+                && Complete == newOther.Complete
+                && Categories == newOther.Categories);
         }
 
         #endregion

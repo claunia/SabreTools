@@ -601,6 +601,10 @@ namespace SabreTools.Core
         Clone,
         RegParent,
         Languages,
+        DevStatus,
+        Physical,
+        Complete,
+        Categories,
 
         // BiosSet
         Description,

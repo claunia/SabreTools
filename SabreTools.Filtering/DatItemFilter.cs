@@ -88,6 +88,10 @@ namespace SabreTools.Filtering
         public FilterItem<string> Clone { get; private set; } = new FilterItem<string>();
         public FilterItem<string> RegParent { get; private set; } = new FilterItem<string>();
         public FilterItem<string> Languages { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> DevStatus { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Physical { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Complete { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Categories { get; private set; } = new FilterItem<string>();
 
         // BiosSet
         public FilterItem<string> Description { get; private set; } = new FilterItem<string>();
@@ -455,6 +459,22 @@ namespace SabreTools.Filtering
 
                 case DatItemField.Languages:
                     SetStringFilter(Languages, value, negate);
+                    break;
+
+                case DatItemField.DevStatus:
+                    SetStringFilter(DevStatus, value, negate);
+                    break;
+
+                case DatItemField.Physical:
+                    SetStringFilter(Physical, value, negate);
+                    break;
+
+                case DatItemField.Complete:
+                    SetStringFilter(Complete, value, negate);
+                    break;
+
+                case DatItemField.Categories:
+                    SetStringFilter(Categories, value, negate);
                     break;
 
                 // BiosSet
@@ -983,6 +1003,22 @@ namespace SabreTools.Filtering
 
             // Filter on languages
             if (!PassStringFilter(Languages, archive.Languages))
+                return false;
+
+            // Filter on dev status
+            if (!PassStringFilter(DevStatus, archive.DevStatus))
+                return false;
+
+            // Filter on physical
+            if (!PassStringFilter(Physical, archive.Physical))
+                return false;
+
+            // Filter on complete
+            if (!PassStringFilter(Complete, archive.Complete))
+                return false;
+
+            // Filter on categories
+            if (!PassStringFilter(Categories, archive.Categories))
                 return false;
 
             return true;

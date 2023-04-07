@@ -480,6 +480,18 @@ namespace SabreTools.DatFiles
 
             if (DatItemMappings.Keys.Contains(DatItemField.Languages))
                 archive.Languages = DatItemMappings[DatItemField.Languages];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.DevStatus))
+                archive.DevStatus = DatItemMappings[DatItemField.DevStatus];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Physical))
+                archive.Physical = DatItemMappings[DatItemField.Physical];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Complete))
+                archive.Complete = DatItemMappings[DatItemField.Complete];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Categories))
+                archive.Categories = DatItemMappings[DatItemField.Categories];
         }
 
         /// <summary>
