@@ -169,6 +169,7 @@ namespace SabreTools.DatItems
                 ItemType.Chip => new Chip(),
                 ItemType.Condition => new Condition(),
                 ItemType.Configuration => new Configuration(),
+                ItemType.Details => new Details(),
                 ItemType.Device => new Device(),
                 ItemType.DeviceReference => new DeviceReference(),
                 ItemType.DipSwitch => new DipSwitch(),
@@ -177,6 +178,7 @@ namespace SabreTools.DatItems
                 ItemType.Driver => new Driver(),
                 ItemType.Extension => new Extension(),
                 ItemType.Feature => new Feature(),
+                ItemType.File => new Formats.File(),
                 ItemType.Info => new Info(),
                 ItemType.Instance => new Instance(),
                 ItemType.Location => new Location(),
@@ -187,6 +189,7 @@ namespace SabreTools.DatItems
                 ItemType.Release => new Release(),
                 ItemType.Rom => new Rom(),
                 ItemType.Sample => new Sample(),
+                ItemType.Serials => new Serials(),
                 ItemType.SharedFeature => new SharedFeature(),
                 ItemType.Slot => new Slot(),
                 ItemType.SlotOption => new SlotOption(),
@@ -548,9 +551,12 @@ namespace SabreTools.DatItems
                 if (file == null)
                     continue;
 
-                // If we don't have a Disk, Media, or Rom, we skip checking for duplicates
-                if (file.ItemType != ItemType.Disk && file.ItemType != ItemType.Media && file.ItemType != ItemType.Rom)
+                // If we don't have a Disk, File, Media, or Rom, we skip checking for duplicates
+                if (file.ItemType != ItemType.Disk && file.ItemType != ItemType.File
+                    && file.ItemType != ItemType.Media && file.ItemType != ItemType.Rom)
+                {
                     continue;
+                }
 
                 // If it's a nodump, add and skip
                 if (file.ItemType == ItemType.Rom && (file as Rom).ItemStatus == ItemStatus.Nodump)
@@ -592,6 +598,8 @@ namespace SabreTools.DatItems
                         // Disks, Media, and Roms have more information to fill
                         if (file.ItemType == ItemType.Disk)
                             (saveditem as Disk).FillMissingInformation(file as Disk);
+                        else if (file.ItemType == ItemType.File)
+                            (saveditem as Formats.File).FillMissingInformation(file as Formats.File);
                         else if (file.ItemType == ItemType.Media)
                             (saveditem as Media).FillMissingInformation(file as Media);
                         else if (file.ItemType == ItemType.Rom)
@@ -682,7 +690,8 @@ namespace SabreTools.DatItems
                 {
                     staticLogger.Verbose($"Name duplicate found for '{datItemName}'");
 
-                    if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
+                    if (datItem.ItemType == ItemType.Disk || datItem.ItemType == ItemType.File
+                        || datItem.ItemType == ItemType.Media || datItem.ItemType == ItemType.Rom)
                     {
                         datItemName += GetDuplicateSuffix(datItem);
                         lastrenamed ??= datItemName;
@@ -731,6 +740,8 @@ namespace SabreTools.DatItems
         {
             if (datItem.ItemType == ItemType.Disk)
                 return (datItem as Disk).GetDuplicateSuffix();
+            else if (datItem.ItemType == ItemType.File)
+                return (datItem as Formats.File).GetDuplicateSuffix();
             else if (datItem.ItemType == ItemType.Media)
                 return (datItem as Media).GetDuplicateSuffix();
             else if (datItem.ItemType == ItemType.Rom)

@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
+using SabreTools.FileTypes;
 
 // TODO: Add item mappings for all fields
 namespace SabreTools.DatItems.Formats
@@ -104,6 +105,21 @@ namespace SabreTools.DatItems.Formats
             ItemType = ItemType.File;
         }
 
+        /// <summary>
+        /// Create a File object from a BaseFile
+        /// </summary>
+        /// <param name="baseFile"></param>
+        public File(BaseFile baseFile)
+        {
+            _crc = baseFile.CRC;
+            _md5 = baseFile.MD5;
+            _sha1 = baseFile.SHA1;
+            _sha256 = baseFile.SHA256;
+
+            ItemType = ItemType.File;
+            DupeType = 0x00;
+        }
+
         #endregion
 
         #region Cloning Methods
@@ -129,6 +145,46 @@ namespace SabreTools.DatItems.Formats
                 _sha256 = this._sha256,
                 Format = this.Format,
             };
+        }
+
+        /// <summary>
+        /// Convert Disk object to a BaseFile
+        /// </summary>
+        public BaseFile ConvertToBaseFile()
+        {
+            return new BaseFile()
+            {
+                Parent = this.Machine?.Name,
+                CRC = this._crc,
+                MD5 = this._md5,
+                SHA1 = this._sha1,
+                SHA256 = this._sha256,
+            };
+        }
+
+        /// <summary>
+        /// Convert a disk to the closest Rom approximation
+        /// </summary>
+        /// <returns></returns>
+        public Rom ConvertToRom()
+        {
+            var rom = new Rom()
+            {
+                Name = $"{this.Id}.{this.Extension}",
+                ItemType = ItemType.Rom,
+                DupeType = this.DupeType,
+
+                Machine = this.Machine.Clone() as Machine,
+                Source = this.Source.Clone() as Source,
+                Remove = this.Remove,
+
+                CRC = this.CRC,
+                MD5 = this.MD5,
+                SHA1 = this.SHA1,
+                SHA256 = this.SHA256,
+            };
+
+            return rom;
         }
 
         #endregion

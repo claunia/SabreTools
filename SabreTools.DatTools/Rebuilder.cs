@@ -114,7 +114,7 @@ namespace SabreTools.DatTools
                 string foundpath = null;
                 foreach (string directory in directories)
                 {
-                    if (File.Exists(Path.Combine(directory, subpath)))
+                    if (System.IO.File.Exists(Path.Combine(directory, subpath)))
                     {
                         foundpath = Path.Combine(directory, subpath);
                         break;
@@ -143,15 +143,17 @@ namespace SabreTools.DatTools
                 // Otherwise, we rebuild that file to all locations that we need to
                 bool usedInternally;
                 if (datFile.Items[hash][0].ItemType == ItemType.Disk)
-                    usedInternally = RebuildIndividualFile(datFile, new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(datFile, new Disk(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
+                else if (datFile.Items[hash][0].ItemType == ItemType.File)
+                    usedInternally = RebuildIndividualFile(datFile, new DatItems.Formats.File(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else if (datFile.Items[hash][0].ItemType == ItemType.Media)
-                    usedInternally = RebuildIndividualFile(datFile, new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(datFile, new Media(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
                 else
-                    usedInternally = RebuildIndividualFile(datFile, new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, false /* isZip */);
+                    usedInternally = RebuildIndividualFile(datFile, new Rom(fileinfo), foundpath, outDir, date, inverse, outputFormat, isZip: false);
 
                 // If we are supposed to delete the depot file, do so
                 if (delete && usedInternally)
-                    File.Delete(foundpath);
+                    System.IO.File.Delete(foundpath);
             }
 
             watch.Stop();
@@ -219,14 +221,14 @@ namespace SabreTools.DatTools
             foreach (string input in inputs)
             {
                 // If the input is a file
-                if (File.Exists(input))
+                if (System.IO.File.Exists(input))
                 {
                     logger.User($"Checking file: {input}");
                     bool rebuilt = RebuildGenericHelper(datFile, input, outDir, quickScan, date, inverse, outputFormat, asFiles);
 
                     // If we are supposed to delete the file, do so
                     if (delete && rebuilt)
-                        File.Delete(input);
+                        System.IO.File.Delete(input);
                 }
 
                 // If the input is a directory
@@ -240,7 +242,7 @@ namespace SabreTools.DatTools
 
                         // If we are supposed to delete the file, do so
                         if (delete && rebuilt)
-                            File.Delete(input);
+                            System.IO.File.Delete(input);
                     }
                 }
             }
@@ -300,7 +302,7 @@ namespace SabreTools.DatTools
             }
 
             // If the entries list is null, we encountered an error or have a file and should scan externally
-            if (entries == null && File.Exists(file))
+            if (entries == null && System.IO.File.Exists(file))
             {
                 BaseFile internalFileInfo = BaseFile.GetInfo(file, asFiles: asFiles);
 
@@ -361,9 +363,11 @@ namespace SabreTools.DatTools
                 outputFormat = OutputFormat.Folder;
             }
 
-            // If we have a Disk or Media, change it into a Rom for later use
+            // If we have a Disk, File, or Media, change it into a Rom for later use
             if (datItem.ItemType == ItemType.Disk)
                 datItem = (datItem as Disk).ConvertToRom();
+            else if (datItem.ItemType == ItemType.File)
+                datItem = (datItem as DatItems.Formats.File).ConvertToRom();
             else if (datItem.ItemType == ItemType.Media)
                 datItem = (datItem as Media).ConvertToRom();
 
@@ -558,7 +562,7 @@ namespace SabreTools.DatTools
                 // Now copy the file over
                 try
                 {
-                    File.Copy(file, outDir);
+                    System.IO.File.Copy(file, outDir);
                     return true;
                 }
                 catch
@@ -602,7 +606,7 @@ namespace SabreTools.DatTools
                 // Now copy the file over
                 try
                 {
-                    File.Copy(file, outDir);
+                    System.IO.File.Copy(file, outDir);
                     return true;
                 }
                 catch
@@ -637,7 +641,7 @@ namespace SabreTools.DatTools
             // Otherwise, just open the filestream
             else
             {
-                stream = File.OpenRead(file);
+                stream = System.IO.File.OpenRead(file);
             }
 
             // If the stream is null, then continue

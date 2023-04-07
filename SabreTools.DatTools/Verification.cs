@@ -75,7 +75,7 @@ namespace SabreTools.DatTools
                 string foundpath = null;
                 foreach (string directory in directories)
                 {
-                    if (File.Exists(Path.Combine(directory, subpath)))
+                    if (System.IO.File.Exists(Path.Combine(directory, subpath)))
                     {
                         foundpath = Path.Combine(directory, subpath);
                         break;
