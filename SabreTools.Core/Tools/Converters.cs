@@ -535,6 +535,20 @@ namespace SabreTools.Core.Tools
                 case "analog_mask":
                     return DatItemField.Analog_Mask;
 
+                // Archive
+                case "number":
+                    return DatItemField.Number;
+
+                case "clone":
+                    return DatItemField.Clone;
+
+                case "regparent":
+                case "reg_parent":
+                    return DatItemField.RegParent;
+
+                case "languages":
+                    return DatItemField.Languages;
+
                 // BiosSet
                 case "description":
                 case "biosdescription":

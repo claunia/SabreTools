@@ -243,6 +243,7 @@ namespace SabreTools.DatFiles
 
             if (datItem is Adjuster) SetFields(datItem as Adjuster);
             else if (datItem is Analog) SetFields(datItem as Analog);
+            else if (datItem is Archive) SetFields(datItem as Archive);
             else if (datItem is BiosSet) SetFields(datItem as BiosSet);
             else if (datItem is Chip) SetFields(datItem as Chip);
             else if (datItem is Condition) SetFields(datItem as Condition);
@@ -457,6 +458,28 @@ namespace SabreTools.DatFiles
         {
             if (DatItemMappings.Keys.Contains(DatItemField.Analog_Mask))
                 analog.Mask = DatItemMappings[DatItemField.Analog_Mask];
+        }
+
+        /// <summary>
+        /// Set fields with given values
+        /// </summary>
+        /// <param name="archive">Archive to remove replace fields in</param>
+        private void SetFields(Archive archive)
+        {
+            if (DatItemMappings.Keys.Contains(DatItemField.Number))
+                analog.Number = DatItemMappings[DatItemField.Number];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Clone))
+                analog.Clone = DatItemMappings[DatItemField.Clone];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.RegParent))
+                analog.RegParent = DatItemMappings[DatItemField.RegParent];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Region))
+                analog.Region = DatItemMappings[DatItemField.Region];
+
+            if (DatItemMappings.Keys.Contains(DatItemField.Languages))
+                analog.Languages = DatItemMappings[DatItemField.Languages];
         }
 
         /// <summary>
