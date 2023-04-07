@@ -83,6 +83,12 @@ namespace SabreTools.Filtering
         // Analog
         public FilterItem<string> Analog_Mask { get; private set; } = new FilterItem<string>();
 
+        // Archive
+        public FilterItem<string> Number { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Clone { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> RegParent { get; private set; } = new FilterItem<string>();
+        public FilterItem<string> Languages { get; private set; } = new FilterItem<string>();
+
         // BiosSet
         public FilterItem<string> Description { get; private set; } = new FilterItem<string>();
 
@@ -432,6 +438,23 @@ namespace SabreTools.Filtering
                 // Analog
                 case DatItemField.Analog_Mask:
                     SetStringFilter(Analog_Mask, value, negate);
+                    break;
+
+                // Archive
+                case DatItemField.Number:
+                    SetStringFilter(Number, value, negate);
+                    break;
+
+                case DatItemField.Clone:
+                    SetStringFilter(Clone, value, negate);
+                    break;
+
+                case DatItemField.RegParent:
+                    SetStringFilter(RegParent, value, negate);
+                    break;
+
+                case DatItemField.Languages:
+                    SetStringFilter(Languages, value, negate);
                     break;
 
                 // BiosSet
@@ -859,6 +882,7 @@ namespace SabreTools.Filtering
             {
                 Adjuster adjuster => PassesFilters(adjuster),
                 Analog analog => PassesFilters(analog),
+                Archive archive => PassesFilters(archive),
                 BiosSet biosSet => PassesFilters(biosSet),
                 Chip chip => PassesFilters(chip),
                 Condition condition => PassesFilters(condition),
@@ -929,6 +953,36 @@ namespace SabreTools.Filtering
         {
             // Filter on mask
             if (!PassStringFilter(Analog_Mask, analog.Mask))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check to see if an Archive passes the filters
+        /// </summary>
+        /// <param name="archive">Archive to check</param>
+        /// <returns>True if the item passed the filter, false otherwise</returns>
+        private bool PassesFilters(Archive archive)
+        {
+            // Filter on number
+            if (!PassStringFilter(Number, archive.Number))
+                return false;
+
+            // Filter on clone
+            if (!PassStringFilter(Clone, analog.Clone))
+                return false;
+
+            // Filter on regional parent
+            if (!PassStringFilter(RegParent, analog.RegParent))
+                return false;
+
+            // Filter on region
+            if (!PassStringFilter(Region, analog.Region))
+                return false;
+
+            // Filter on languages
+            if (!PassStringFilter(Languages, analog.Languages))
                 return false;
 
             return true;

@@ -594,6 +594,12 @@ namespace SabreTools.Core
         // Analog
         Analog_Mask,
 
+        // Archive
+        Number,
+        Clone,
+        RegParent,
+        Languages,
+
         // BiosSet
         Description,
 

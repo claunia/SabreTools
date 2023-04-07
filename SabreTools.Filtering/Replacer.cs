@@ -36,6 +36,7 @@ namespace SabreTools.Filtering
 
             if (datItem is Adjuster) ReplaceFields(datItem as Adjuster, repDatItem as Adjuster, datItemFields);
             else if (datItem is Analog) ReplaceFields(datItem as Analog, repDatItem as Analog, datItemFields);
+            else if (datItem is Archive) ReplaceFields(datItem as Archive, repDatItem as Archive, datItemFields);
             else if (datItem is BiosSet) ReplaceFields(datItem as BiosSet, repDatItem as BiosSet, datItemFields);
             else if (datItem is Chip) ReplaceFields(datItem as Chip, repDatItem as Chip, datItemFields);
             else if (datItem is Condition) ReplaceFields(datItem as Condition, repDatItem as Condition, datItemFields);
@@ -252,6 +253,30 @@ namespace SabreTools.Filtering
         {
             if (datItemFields.Contains(DatItemField.Analog_Mask))
                 analog.Mask = newItem.Mask;
+        }
+
+        /// <summary>
+        /// Replace fields with given values
+        /// </summary>
+        /// <param name="archive">Archive to remove replace fields in</param>
+        /// <param name="newItem">Archive to pull new information from</param>
+        /// <param name="datItemFields">List of fields representing what should be updated</param>
+        private static void ReplaceFields(Archive archive, Archive newItem, List<DatItemField> datItemFields)
+        {
+            if (datItemFields.Contains(DatItemField.Number))
+                archive.Number = newItem.Number;
+
+            if (datItemFields.Contains(DatItemField.Clone))
+                archive.Clone = newItem.Clone;
+
+            if (datItemFields.Contains(DatItemField.RegParent))
+                archive.RegParent = newItem.RegParent;
+
+            if (datItemFields.Contains(DatItemField.Region))
+                archive.Region = newItem.Region;
+
+            if (datItemFields.Contains(DatItemField.Languages))
+                archive.Languages = newItem.Languages;
         }
 
         /// <summary>

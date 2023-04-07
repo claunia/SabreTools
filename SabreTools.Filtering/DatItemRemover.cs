@@ -88,6 +88,7 @@ namespace SabreTools.Filtering
 
             if (datItem is Adjuster) RemoveFields(datItem as Adjuster);
             else if (datItem is Analog) RemoveFields(datItem as Analog);
+            else if (datItem is Archive) RemoveFields(datItem as Archive);
             else if (datItem is BiosSet) RemoveFields(datItem as BiosSet);
             else if (datItem is Chip) RemoveFields(datItem as Chip);
             else if (datItem is Condition) RemoveFields(datItem as Condition);
@@ -298,6 +299,28 @@ namespace SabreTools.Filtering
         {
             if (DatItemFields.Contains(DatItemField.Analog_Mask))
                 analog.Mask = null;
+        }
+
+        /// <summary>
+        /// Remove fields with given values
+        /// </summary>
+        /// <param name="archive">Archive to remove fields from</param>
+        private void RemoveFields(Archive archive)
+        {
+            if (DatItemFields.Contains(DatItemField.Number))
+                archive.Number = null;
+
+            if (DatItemFields.Contains(DatItemField.Clone))
+                archive.Clone = null;
+
+            if (DatItemFields.Contains(DatItemField.RegParent))
+                archive.RegParent = null;
+
+            if (DatItemFields.Contains(DatItemField.Region))
+                archive.Region = null;
+
+            if (DatItemFields.Contains(DatItemField.Languages))
+                archive.Languages = null;
         }
 
         /// <summary>

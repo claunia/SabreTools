@@ -18,6 +18,41 @@ namespace SabreTools.DatItems.Formats
         [JsonProperty("name"), XmlElement("name")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Archive ID number
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("number"), XmlElement("number")]
+        public string Number { get; set; }
+
+        /// <summary>
+        /// Clone
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("clone"), XmlElement("clone")]
+        public string Clone { get; set; }
+
+        /// <summary>
+        /// Regional parent
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("regparent"), XmlElement("regparent")]
+        public string RegParent { get; set; }
+
+        /// <summary>
+        /// Region
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("region"), XmlElement("region")]
+        public string Region { get; set; }
+
+        /// <summary>
+        /// Region
+        /// </summary>
+        /// <remarks>No-Intro database export only</remarks>
+        [JsonProperty("languages"), XmlElement("languages")]
+        public string Languages { get; set; }
+
         #endregion
 
         #region Accessors
@@ -57,6 +92,11 @@ namespace SabreTools.DatItems.Formats
                 Remove = this.Remove,
 
                 Name = this.Name,
+                Number = this.Number,
+                Clone = this.Clone,
+                RegParent = this.RegParent,
+                Region = this.Region,
+                Languages = this.Languages,
             };
         }
 
@@ -75,7 +115,12 @@ namespace SabreTools.DatItems.Formats
             Archive newOther = other as Archive;
 
             // If the archive information matches
-            return (Name == newOther.Name);
+            return (Name == newOther.Name
+                && Number == newOther.Number
+                && Clone == newOther.Clone
+                && RegParent == newOther.RegParent
+                && Region == newOther.Region
+                && Languages = newOther.Languages);
         }
 
         #endregion
