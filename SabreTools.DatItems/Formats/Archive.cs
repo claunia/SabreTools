@@ -30,7 +30,7 @@ namespace SabreTools.DatItems.Formats
         /// </summary>
         /// <remarks>No-Intro database export only</remarks>
         [JsonProperty("clone"), XmlElement("clone")]
-        public string Clone { get; set; }
+        public string CloneValue { get; set; }
 
         /// <summary>
         /// Regional parent
@@ -93,7 +93,7 @@ namespace SabreTools.DatItems.Formats
 
                 Name = this.Name,
                 Number = this.Number,
-                Clone = this.Clone,
+                CloneValue = this.CloneValue,
                 RegParent = this.RegParent,
                 Region = this.Region,
                 Languages = this.Languages,
@@ -117,10 +117,10 @@ namespace SabreTools.DatItems.Formats
             // If the archive information matches
             return (Name == newOther.Name
                 && Number == newOther.Number
-                && Clone == newOther.Clone
+                && CloneValue == newOther.CloneValue
                 && RegParent == newOther.RegParent
                 && Region == newOther.Region
-                && Languages = newOther.Languages);
+                && Languages == newOther.Languages);
         }
 
         #endregion

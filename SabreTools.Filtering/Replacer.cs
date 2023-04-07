@@ -267,7 +267,7 @@ namespace SabreTools.Filtering
                 archive.Number = newItem.Number;
 
             if (datItemFields.Contains(DatItemField.Clone))
-                archive.Clone = newItem.Clone;
+                archive.CloneValue = newItem.CloneValue;
 
             if (datItemFields.Contains(DatItemField.RegParent))
                 archive.RegParent = newItem.RegParent;

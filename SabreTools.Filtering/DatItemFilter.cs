@@ -970,19 +970,19 @@ namespace SabreTools.Filtering
                 return false;
 
             // Filter on clone
-            if (!PassStringFilter(Clone, analog.Clone))
+            if (!PassStringFilter(Clone, archive.CloneValue))
                 return false;
 
             // Filter on regional parent
-            if (!PassStringFilter(RegParent, analog.RegParent))
+            if (!PassStringFilter(RegParent, archive.RegParent))
                 return false;
 
             // Filter on region
-            if (!PassStringFilter(Region, analog.Region))
+            if (!PassStringFilter(Region, archive.Region))
                 return false;
 
             // Filter on languages
-            if (!PassStringFilter(Languages, analog.Languages))
+            if (!PassStringFilter(Languages, archive.Languages))
                 return false;
 
             return true;

@@ -311,7 +311,7 @@ namespace SabreTools.Filtering
                 archive.Number = null;
 
             if (DatItemFields.Contains(DatItemField.Clone))
-                archive.Clone = null;
+                archive.CloneValue = null;
 
             if (DatItemFields.Contains(DatItemField.RegParent))
                 archive.RegParent = null;

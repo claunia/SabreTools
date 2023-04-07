@@ -467,19 +467,19 @@ namespace SabreTools.DatFiles
         private void SetFields(Archive archive)
         {
             if (DatItemMappings.Keys.Contains(DatItemField.Number))
-                analog.Number = DatItemMappings[DatItemField.Number];
+                archive.Number = DatItemMappings[DatItemField.Number];
 
             if (DatItemMappings.Keys.Contains(DatItemField.Clone))
-                analog.Clone = DatItemMappings[DatItemField.Clone];
+                archive.CloneValue = DatItemMappings[DatItemField.Clone];
 
             if (DatItemMappings.Keys.Contains(DatItemField.RegParent))
-                analog.RegParent = DatItemMappings[DatItemField.RegParent];
+                archive.RegParent = DatItemMappings[DatItemField.RegParent];
 
             if (DatItemMappings.Keys.Contains(DatItemField.Region))
-                analog.Region = DatItemMappings[DatItemField.Region];
+                archive.Region = DatItemMappings[DatItemField.Region];
 
             if (DatItemMappings.Keys.Contains(DatItemField.Languages))
-                analog.Languages = DatItemMappings[DatItemField.Languages];
+                archive.Languages = DatItemMappings[DatItemField.Languages];
         }
 
         /// <summary>
