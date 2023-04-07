@@ -274,6 +274,7 @@ namespace SabreTools.Core
         Configuration,
         Control,
         DataArea,
+        Details,
         Device,
         DeviceReference,
         DipSwitch,
