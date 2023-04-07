@@ -283,6 +283,7 @@ namespace SabreTools.Core
         Driver,
         Extension,
         Feature,
+        File,
         Info,
         Input,
         Instance,
