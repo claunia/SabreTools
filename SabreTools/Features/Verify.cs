@@ -67,7 +67,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(datdata);
-                    Splitter.ApplySplitting(datdata, true);
+                    Splitter.ApplySplitting(datdata, true, false);
                     Filter.ApplyFilters(datdata);
                     Cleaner.ApplyCleaning(datdata);
                     Remover.ApplyRemovals(datdata);
@@ -115,7 +115,7 @@ namespace SabreTools.Features
 
                 // Perform additional processing steps
                 Extras.ApplyExtras(datdata);
-                Splitter.ApplySplitting(datdata, true);
+                Splitter.ApplySplitting(datdata, true, false);
                 Filter.ApplyFilters(datdata);
                 Cleaner.ApplyCleaning(datdata);
                 Remover.ApplyRemovals(datdata);

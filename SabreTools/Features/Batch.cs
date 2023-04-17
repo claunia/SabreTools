@@ -587,7 +587,7 @@ Reset the internal state:           reset();";
 
                 // Apply the merging flag
                 Filtering.Splitter splitter = new Filtering.Splitter { SplitType = mergingFlag };
-                splitter.ApplySplitting(batchState.DatFile, false);
+                splitter.ApplySplitting(batchState.DatFile, false, false);
             }
         }
 

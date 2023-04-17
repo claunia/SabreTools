@@ -165,7 +165,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(datFile);
-                    Splitter.ApplySplitting(datFile, false);
+                    Splitter.ApplySplitting(datFile, false, false);
                     Filter.ApplyFilters(datFile);
                     Cleaner.ApplyCleaning(datFile);
                     Remover.ApplyRemovals(datFile);
@@ -204,7 +204,7 @@ namespace SabreTools.Features
 
             // Perform additional processing steps
             Extras.ApplyExtras(userInputDat);
-            Splitter.ApplySplitting(userInputDat, false);
+            Splitter.ApplySplitting(userInputDat, false, false);
             Filter.ApplyFilters(userInputDat);
             Cleaner.ApplyCleaning(userInputDat);
             Remover.ApplyRemovals(userInputDat);
@@ -297,7 +297,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
-                    Splitter.ApplySplitting(repDat, false);
+                    Splitter.ApplySplitting(repDat, false, false);
                     Filter.ApplyFilters(repDat);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
@@ -323,7 +323,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
-                    Splitter.ApplySplitting(repDat, false);
+                    Splitter.ApplySplitting(repDat, false, false);
                     Filter.ApplyFilters(repDat);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
