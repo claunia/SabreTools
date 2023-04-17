@@ -1361,7 +1361,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 logger.User($"Writing to '{outfile}'...");
-                FileStream fs = File.Create(outfile);
+                FileStream fs = System.IO.File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

@@ -1099,8 +1099,8 @@ namespace SabreTools.DatFiles
         protected void EnsureDatabase()
         {
             // Make sure the file exists
-            if (!File.Exists(ItemDictionaryFileName))
-                File.Create(ItemDictionaryFileName);
+            if (!System.IO.File.Exists(ItemDictionaryFileName))
+                System.IO.File.Create(ItemDictionaryFileName);
 
             // If we have no database connection, we can't do anything
             if (dbc == null)

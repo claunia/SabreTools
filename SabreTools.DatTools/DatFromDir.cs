@@ -80,7 +80,7 @@ namespace SabreTools.DatTools
                 if (addBlanks)
                     ProcessDirectoryBlanks(datFile, basePath);
             }
-            else if (File.Exists(basePath))
+            else if (System.IO.File.Exists(basePath))
             {
                 logger.Verbose($"File found: {basePath}");
 

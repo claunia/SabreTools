@@ -55,7 +55,7 @@ contents of any changed dats.";
             }
 
             // Make sure the file exists
-            if (!File.Exists(_db))
+            if (!System.IO.File.Exists(_db))
                 EnsureDatabase(_db, _connectionString);
 
             // Make sure the dats dir is set

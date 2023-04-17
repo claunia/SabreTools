@@ -39,7 +39,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            StreamReader sr = new StreamReader(File.OpenRead(filename), enc);
+            StreamReader sr = new StreamReader(System.IO.File.OpenRead(filename), enc);
 
             string gamename = string.Empty;
             while (!sr.EndOfStream)
@@ -278,7 +278,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 logger.User($"Writing to '{outfile}'...");
-                FileStream fs = File.Create(outfile);
+                FileStream fs = System.IO.File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

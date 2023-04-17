@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
-            StreamReader sr = new StreamReader(File.OpenRead(filename), new UTF8Encoding(false));
+            StreamReader sr = new StreamReader(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
             JsonTextReader jtr = new JsonTextReader(sr);
 
             // If we got a null reader, just return
@@ -337,7 +337,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 logger.User($"Writing to '{outfile}'...");
-                FileStream fs = File.Create(outfile);
+                FileStream fs = System.IO.File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

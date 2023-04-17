@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            SeparatedValueReader svr = new SeparatedValueReader(File.OpenRead(filename), enc)
+            SeparatedValueReader svr = new SeparatedValueReader(System.IO.File.OpenRead(filename), enc)
             {
                 Header = false,
                 Quotes = false,
@@ -122,7 +122,7 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 logger.User($"Writing to '{outfile}'...");
-                FileStream fs = File.Create(outfile);
+                FileStream fs = System.IO.File.Create(outfile);
 
                 // If we get back null for some reason, just log and return
                 if (fs == null)

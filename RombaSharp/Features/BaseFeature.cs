@@ -465,8 +465,8 @@ Possible values are: Verbose, User, Warning, Error");
         public void EnsureDatabase(string db, string connectionString)
         {
             // Make sure the file exists
-            if (!File.Exists(db))
-                File.Create(db);
+            if (!System.IO.File.Exists(db))
+                System.IO.File.Create(db);
 
             // Open the database connection
             SqliteConnection dbc = new SqliteConnection(connectionString);
@@ -734,16 +734,16 @@ CREATE TABLE IF NOT EXISTS dat (
                 if (!Directory.Exists(key))
                 {
                     Directory.CreateDirectory(key);
-                    File.CreateText(Path.Combine(key, ".romba_size"));
-                    File.CreateText(Path.Combine(key, ".romba_size.backup"));
+                    System.IO.File.CreateText(Path.Combine(key, ".romba_size"));
+                    System.IO.File.CreateText(Path.Combine(key, ".romba_size.backup"));
                 }
                 else
                 {
-                    if (!File.Exists(Path.Combine(key, ".romba_size")))
-                        File.CreateText(Path.Combine(key, ".romba_size"));
+                    if (!System.IO.File.Exists(Path.Combine(key, ".romba_size")))
+                        System.IO.File.CreateText(Path.Combine(key, ".romba_size"));
 
-                    if (!File.Exists(Path.Combine(key, ".romba_size.backup")))
-                        File.CreateText(Path.Combine(key, ".romba_size.backup"));
+                    if (!System.IO.File.Exists(Path.Combine(key, ".romba_size.backup")))
+                        System.IO.File.CreateText(Path.Combine(key, ".romba_size.backup"));
                 }
             }
 
