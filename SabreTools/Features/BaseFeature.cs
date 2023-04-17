@@ -430,6 +430,21 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string ForceRomParentingValue = "force-rom-parenting";
+        internal static Feature ForceRomParentingFlag
+        {
+            get
+            {
+                return new Feature(
+                    ForceRomParentingValue,
+                    new List<string>() { "-frp", "--force-rom-parenting" },
+                    "Force ROMs to be added to parent",
+                    ParameterType.Flag,
+                    "By default, a merged DAT will take the first instance of a given ROM in the parent as the file existing. To be more strict to the source, this flag allows overriding that where if the file is in the child, it will be added to the resulting combined parent in call cases that are not controlled by a merge tag."
+                );
+            }
+        }
+
         internal const string GameDedupValue = "game-dedup";
         internal static Feature GameDedupFlag
         {
@@ -1864,6 +1879,7 @@ Some special strings that can be used:
         protected void AddInternalSplitFeatures()
         {
             AddFeature(DatMergedFlag);
+            this[DatMergedFlag].AddFeature(ForceRomParentingFlag);
             AddFeature(DatSplitFlag);
             AddFeature(DatNonMergedFlag);
             AddFeature(DatDeviceNonMergedFlag);

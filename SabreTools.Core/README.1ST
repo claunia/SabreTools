@@ -608,6 +608,13 @@ Features and Options:
 		  children based on the cloneof tag. This is incompatible with the
 		  other --dat-X flags.
 
+		  --frp, --force-rom-parenting	Force ROMs to be added to parent
+			  By default, a merged DAT will take the first instance of a given
+			  ROM in the parent as the file existing. To be more strict to the
+			  source, this flag allows overriding that where if the file is in
+			  the child, it will be added to the resulting combined parent in
+			  call cases that are not controlled by a merge tag.
+
 	  -ds, --dat-split			Force creating split sets
 		  Preprocess the DAT to remove redundant files between parents and
 		  children based on the romof and cloneof tags. This is incompatible
@@ -1003,6 +1010,13 @@ Features and Options:
 		  children based on the cloneof tag. This is incompatible with the
 		  other --dat-X flags.
 
+		  --frp, --force-rom-parenting	Force ROMs to be added to parent
+			  By default, a merged DAT will take the first instance of a given
+			  ROM in the parent as the file existing. To be more strict to the
+			  source, this flag allows overriding that where if the file is in
+			  the child, it will be added to the resulting combined parent in
+			  call cases that are not controlled by a merge tag.
+
 	  -ds, --dat-split			Force creating split sets
 		  Preprocess the DAT to remove redundant files between parents and
 		  children based on the romof and cloneof tags. This is incompatible
@@ -1249,6 +1263,13 @@ Features and Options:
 		  Preprocess the DAT to have parent sets contain all items from the
 		  children based on the cloneof tag. This is incompatible with the
 		  other --dat-X flags.
+
+		  --frp, --force-rom-parenting	Force ROMs to be added to parent
+			  By default, a merged DAT will take the first instance of a given
+			  ROM in the parent as the file existing. To be more strict to the
+			  source, this flag allows overriding that where if the file is in
+			  the child, it will be added to the resulting combined parent in
+			  call cases that are not controlled by a merge tag.
 
 	  -ds, --dat-split			Force creating split sets
 		  Preprocess the DAT to remove redundant files between parents and
