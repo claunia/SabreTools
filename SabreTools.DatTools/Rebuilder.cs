@@ -242,7 +242,7 @@ namespace SabreTools.DatTools
 
                         // If we are supposed to delete the file, do so
                         if (delete && rebuilt)
-                            System.IO.File.Delete(input);
+                            System.IO.File.Delete(file);
                     }
                 }
             }
