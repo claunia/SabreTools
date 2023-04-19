@@ -120,7 +120,7 @@ namespace SabreTools.DatItems
         /// Static logger for static methods
         /// </summary>
         [JsonIgnore, XmlIgnore]
-        protected static Logger staticLogger = new Logger();
+        protected static Logger staticLogger = new();
 
         #endregion
 
@@ -207,31 +207,23 @@ namespace SabreTools.DatItems
         /// <returns>DatItem of the specific internal type that corresponds to the inputs</returns>
         public static DatItem Create(BaseFile baseFile)
         {
-            switch (baseFile.Type)
+            return baseFile.Type switch
             {
-                case FileType.AaruFormat:
-                    return new Media(baseFile);
-
-                case FileType.CHD:
-                    return new Disk(baseFile);
-
-                case FileType.GZipArchive:
-                case FileType.LRZipArchive:
-                case FileType.LZ4Archive:
-                case FileType.None:
-                case FileType.RarArchive:
-                case FileType.SevenZipArchive:
-                case FileType.TapeArchive:
-                case FileType.XZArchive:
-                case FileType.ZipArchive:
-                case FileType.ZPAQArchive:
-                case FileType.ZstdArchive:
-                    return new Rom(baseFile);
-
-                case FileType.Folder:
-                default:
-                    return null;
-            }
+                FileType.AaruFormat => new Media(baseFile),
+                FileType.CHD => new Disk(baseFile),
+                FileType.GZipArchive => new Rom(baseFile),
+                FileType.LRZipArchive => new Rom(baseFile),
+                FileType.LZ4Archive => new Rom(baseFile),
+                FileType.None => new Rom(baseFile),
+                FileType.RarArchive => new Rom(baseFile),
+                FileType.SevenZipArchive => new Rom(baseFile),
+                FileType.TapeArchive => new Rom(baseFile),
+                FileType.XZArchive => new Rom(baseFile),
+                FileType.ZipArchive => new Rom(baseFile),
+                FileType.ZPAQArchive => new Rom(baseFile),
+                FileType.ZstdArchive => new Rom(baseFile),
+                _ => null,
+            };
         }
 
         #endregion
@@ -332,7 +324,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanCRC32(string hash)
+        protected static string CleanCRC32(string hash)
         {
             return CleanHashData(hash, Constants.CRCLength);
         }
@@ -342,7 +334,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanMD5(string hash)
+        protected static string CleanMD5(string hash)
         {
             return CleanHashData(hash, Constants.MD5Length);
         }
@@ -352,7 +344,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanSHA1(string hash)
+        protected static string CleanSHA1(string hash)
         {
             return CleanHashData(hash, Constants.SHA1Length);
         }
@@ -362,7 +354,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanSHA256(string hash)
+        protected static string CleanSHA256(string hash)
         {
             return CleanHashData(hash, Constants.SHA256Length);
         }
@@ -372,7 +364,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanSHA384(string hash)
+        protected static string CleanSHA384(string hash)
         {
             return CleanHashData(hash, Constants.SHA384Length);
         }
@@ -382,7 +374,7 @@ namespace SabreTools.DatItems
         /// </summary>
         /// <param name="hash">Hash string to sanitize</param>
         /// <returns>Cleaned string</returns>
-        protected string CleanSHA512(string hash)
+        protected static string CleanSHA512(string hash)
         {
             return CleanHashData(hash, Constants.SHA512Length);
         }
@@ -393,7 +385,7 @@ namespace SabreTools.DatItems
         /// <param name="hash">Hash string to sanitize</param>
         /// <param name="padding">Amount of characters to pad to</param>
         /// <returns>Cleaned string</returns>
-        private string CleanHashData(string hash, int padding)
+        private static string CleanHashData(string hash, int padding)
         {
             // If we have a known blank hash, return blank
             if (string.IsNullOrWhiteSpace(hash) || hash == "-" || hash == "_")
@@ -463,8 +455,7 @@ namespace SabreTools.DatItems
                     if (lower)
                         key = key.ToLowerInvariant();
 
-                    if (key == null)
-                        key = "null";
+                    key ??= "null";
 
                     break;
 
@@ -494,8 +485,7 @@ namespace SabreTools.DatItems
             }
 
             // Double and triple check the key for corner cases
-            if (key == null)
-                key = string.Empty;
+            key ??= string.Empty;
 
             return key;
         }
@@ -540,7 +530,7 @@ namespace SabreTools.DatItems
                 return new ConcurrentList<DatItem>();
 
             // Create output list
-            ConcurrentList<DatItem> outfiles = new ConcurrentList<DatItem>();
+            ConcurrentList<DatItem> outfiles = new();
 
             // Then deduplicate them by checking to see if data matches previous saved roms
             int nodumpCount = 0;
@@ -652,7 +642,7 @@ namespace SabreTools.DatItems
         public static ConcurrentList<DatItem> ResolveNames(ConcurrentList<DatItem> infiles)
         {
             // Create the output list
-            ConcurrentList<DatItem> output = new ConcurrentList<DatItem>();
+            ConcurrentList<DatItem> output = new();
 
             // First we want to make sure the list is in alphabetical order
             Sort(ref infiles, true);
@@ -763,7 +753,7 @@ namespace SabreTools.DatItems
             {
                 try
                 {
-                    NaturalComparer nc = new NaturalComparer();
+                    NaturalComparer nc = new();
 
                     // If machine names match, more refinement is needed
                     if (x.Machine.Name == y.Machine.Name)

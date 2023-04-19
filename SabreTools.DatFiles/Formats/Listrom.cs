@@ -39,7 +39,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            StreamReader sr = new StreamReader(System.IO.File.OpenRead(filename), enc);
+            StreamReader sr = new(System.IO.File.OpenRead(filename), enc);
 
             string gamename = string.Empty;
             while (!sr.EndOfStream)
@@ -90,12 +90,12 @@ namespace SabreTools.DatFiles.Formats
                         line = line[romname.Length..];
 
                         // Next we separate the ROM into pieces
-                        split = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+                        split = line.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
 
                         // Standard Disks have 2 pieces (name, sha1)
                         if (split.Length == 1)
                         {
-                            Disk disk = new Disk()
+                            Disk disk = new()
                             {
                                 Name = romname,
                                 SHA1 = CleanListromHashData(split[0]),
@@ -118,7 +118,7 @@ namespace SabreTools.DatFiles.Formats
                         // Baddump Disks have 4 pieces (name, BAD, sha1, BAD_DUMP)
                         else if (split.Length == 3 && line.EndsWith("BAD_DUMP"))
                         {
-                            Disk disk = new Disk()
+                            Disk disk = new()
                             {
                                 Name = romname,
                                 SHA1 = CleanListromHashData(split[1]),
@@ -142,7 +142,7 @@ namespace SabreTools.DatFiles.Formats
                         // Standard ROMs have 4 pieces (name, size, crc, sha1)
                         else if (split.Length == 3)
                         {
-                            Rom rom = new Rom()
+                            Rom rom = new()
                             {
                                 Name = romname,
                                 Size = Utilities.CleanLong(split[0]),
@@ -167,7 +167,7 @@ namespace SabreTools.DatFiles.Formats
                         // Nodump Disks have 5 pieces (name, NO, GOOD, DUMP, KNOWN)
                         else if (split.Length == 4 && line.EndsWith("NO GOOD DUMP KNOWN"))
                         {
-                            Disk disk = new Disk()
+                            Disk disk = new()
                             {
                                 Name = romname,
                                 ItemStatus = ItemStatus.Nodump,
@@ -190,7 +190,7 @@ namespace SabreTools.DatFiles.Formats
                         // Baddump ROMs have 6 pieces (name, size, BAD, crc, sha1, BAD_DUMP)
                         else if (split.Length == 5 && line.EndsWith("BAD_DUMP"))
                         {
-                            Rom rom = new Rom()
+                            Rom rom = new()
                             {
                                 Name = romname,
                                 Size = Utilities.CleanLong(split[0]),
@@ -216,7 +216,7 @@ namespace SabreTools.DatFiles.Formats
                         // Nodump ROMs have 6 pieces (name, size, NO, GOOD, DUMP, KNOWN)
                         else if (split.Length == 5 && line.EndsWith("NO GOOD DUMP KNOWN"))
                         {
-                            Rom rom = new Rom()
+                            Rom rom = new()
                             {
                                 Name = romname,
                                 Size = Utilities.CleanLong(split[0]),
@@ -261,7 +261,7 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new List<DatItemField>();
+            List<DatItemField> missingFields = new();
 
             // Check item name
             if (string.IsNullOrWhiteSpace(datItem.GetName()))
@@ -287,7 +287,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                StreamWriter sw = new StreamWriter(fs, new UTF8Encoding(false));
+                StreamWriter sw = new(fs, new UTF8Encoding(false));
 
                 // Write out each of the machines and roms
                 string lastgame = null;

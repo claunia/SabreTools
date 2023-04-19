@@ -182,26 +182,24 @@ namespace SabreTools.Core.Tools
             string ext = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
 
             // Check against the list of known DAT extensions
-            switch (ext)
+            return ext switch
             {
-                case "csv":
-                case "dat":
-                case "json":
-                case "md5":
-                case "sfv":
-                case "sha1":
-                case "sha256":
-                case "sha384":
-                case "sha512":
-                case "spamsum":
-                case "ssv":
-                case "tsv":
-                case "txt":
-                case "xml":
-                    return true;
-                default:
-                    return false;
-            }
+                "csv" => true,
+                "dat" => true,
+                "json" => true,
+                "md5" => true,
+                "sfv" => true,
+                "sha1" => true,
+                "sha256" => true,
+                "sha384" => true,
+                "sha512" => true,
+                "spamsum" => true,
+                "ssv" => true,
+                "tsv" => true,
+                "txt" => true,
+                "xml" => true,
+                _ => false,
+            };
         }
 
         /// Indicates whether the specified array is null or has a length of zero
@@ -213,7 +211,7 @@ namespace SabreTools.Core.Tools
         {
             return array == null || array.Length == 0;
         }
-    
+
         /// <summary>
         /// Remove all chars that are considered path unsafe
         /// </summary>
@@ -224,7 +222,7 @@ namespace SabreTools.Core.Tools
             List<char> invalidPath = Path.GetInvalidPathChars().ToList();
             return new string(s.Where(c => !invalidPath.Contains(c)).ToArray());
         }
-    
+
         /// <summary>
         /// Returns if the first byte array starts with the second array
         /// </summary>

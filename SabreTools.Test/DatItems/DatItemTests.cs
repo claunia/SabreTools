@@ -200,7 +200,7 @@ namespace SabreTools.Test.DatItems
         /// <summary>
         /// Create a BaseFile for testing
         /// </summary>
-        private BaseFile CreateBaseFile(FileType fileType)
+        private static BaseFile CreateBaseFile(FileType fileType)
         {
             return fileType switch
             {

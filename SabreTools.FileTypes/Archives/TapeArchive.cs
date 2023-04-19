@@ -129,7 +129,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             string realEntry = null;
 
             try
@@ -163,7 +163,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile> GetChildren()
         {
-            List<BaseFile> found = new List<BaseFile>();
+            List<BaseFile> found = new();
             string gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
@@ -172,7 +172,7 @@ namespace SabreTools.FileTypes.Archives
                 foreach (TarArchiveEntry entry in ta.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
-                    BaseFile tarEntryRom = new BaseFile();
+                    BaseFile tarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
                     if (this.AvailableHashes == Hash.CRC)
@@ -209,7 +209,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
-            List<string> empties = new List<string>();
+            List<string> empties = new();
 
             try
             {
@@ -309,7 +309,7 @@ namespace SabreTools.FileTypes.Archives
                     List<string> entries = oldTarFile.Entries.Select(i => i.Key).ToList();
 
                     // Map all inputs to index
-                    Dictionary<string, int> inputIndexMap = new Dictionary<string, int>();
+                    Dictionary<string, int> inputIndexMap = new();
 
                     // If the old one doesn't contain the new file, then add it
                     if (!entries.Contains(baseFile.Filename.Replace('\\', '/')))
@@ -356,7 +356,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Get the stream from the original archive
                             TarArchiveEntry tae = oldTarFile.Entries.ElementAt(index);
-                            MemoryStream entry = new MemoryStream();
+                            MemoryStream entry = new();
                             tae.OpenEntryStream().CopyTo(entry);
 
                             // Copy the input stream to the output
@@ -436,7 +436,7 @@ namespace SabreTools.FileTypes.Archives
                 if (!File.Exists(archiveFileName))
                 {
                     // Map all inputs to index
-                    Dictionary<string, int> inputIndexMap = new Dictionary<string, int>();
+                    Dictionary<string, int> inputIndexMap = new();
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
                         inputIndexMap.Add(baseFiles[i].Filename.Replace('\\', '/'), i);
@@ -472,7 +472,7 @@ namespace SabreTools.FileTypes.Archives
                     List<string> entries = oldTarFile.Entries.Select(i => i.Key).ToList();
 
                     // Map all inputs to index
-                    Dictionary<string, int> inputIndexMap = new Dictionary<string, int>();
+                    Dictionary<string, int> inputIndexMap = new();
                     for (int i = 0; i < inputFiles.Count; i++)
                     {
                         // If the old one contains the new file, then just skip out
@@ -524,7 +524,7 @@ namespace SabreTools.FileTypes.Archives
                         {
                             // Get the stream from the original archive
                             TarArchiveEntry tae = oldTarFile.Entries.ElementAt(index);
-                            MemoryStream entry = new MemoryStream();
+                            MemoryStream entry = new();
                             tae.OpenEntryStream().CopyTo(entry);
 
                             // Copy the input stream to the output

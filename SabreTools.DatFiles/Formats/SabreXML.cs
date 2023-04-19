@@ -57,7 +57,7 @@ namespace SabreTools.DatFiles.Formats
                     switch (xtr.Name)
                     {
                         case "header":
-                            XmlSerializer xs = new XmlSerializer(typeof(DatHeader));
+                            XmlSerializer xs = new(typeof(DatHeader));
                             DatHeader header = xs.Deserialize(xtr.ReadSubtree()) as DatHeader;
                             Header.ConditionalCopy(header);
                             xtr.Skip();
@@ -116,7 +116,7 @@ namespace SabreTools.DatFiles.Formats
                 switch (xtr.Name)
                 {
                     case "machine":
-                        XmlSerializer xs = new XmlSerializer(typeof(Machine));
+                        XmlSerializer xs = new(typeof(Machine));
                         machine = xs.Deserialize(xtr.ReadSubtree()) as Machine;
                         xtr.Skip();
                         break;
@@ -162,7 +162,7 @@ namespace SabreTools.DatFiles.Formats
                 switch (xtr.Name)
                 {
                     case "datitem":
-                        XmlSerializer xs = new XmlSerializer(typeof(DatItem));
+                        XmlSerializer xs = new(typeof(DatItem));
                         DatItem item = xs.Deserialize(xtr.ReadSubtree()) as DatItem;
                         item.CopyMachineInformation(machine);
                         item.Source = new Source { Name = filename, Index = indexId };
@@ -191,7 +191,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',
@@ -266,8 +266,8 @@ namespace SabreTools.DatFiles.Formats
 
             xtw.WriteStartElement("datafile");
 
-            XmlSerializer xs = new XmlSerializer(typeof(DatHeader));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            XmlSerializer xs = new(typeof(DatHeader));
+            XmlSerializerNamespaces ns = new();
             ns.Add("", "");
             xs.Serialize(xtw, Header, ns);
 
@@ -288,8 +288,8 @@ namespace SabreTools.DatFiles.Formats
 
             // Write the machine
             xtw.WriteStartElement("directory");
-            XmlSerializer xs = new XmlSerializer(typeof(Machine));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            XmlSerializer xs = new(typeof(Machine));
+            XmlSerializerNamespaces ns = new();
             ns.Add("", "");
             xs.Serialize(xtw, datItem.Machine, ns);
 
@@ -324,8 +324,8 @@ namespace SabreTools.DatFiles.Formats
             ProcessItemName(datItem, true);
 
             // Write the DatItem
-            XmlSerializer xs = new XmlSerializer(typeof(DatItem));
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+            XmlSerializer xs = new(typeof(DatItem));
+            XmlSerializerNamespaces ns = new();
             ns.Add("", "");
             xs.Serialize(xtw, datItem, ns);
 

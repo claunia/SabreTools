@@ -16,7 +16,7 @@ namespace SabreTools.Help
         /// <summary>
         /// List of files, directories, and potential wildcard paths
         /// </summary>
-        public List<string> Inputs = new List<string>();
+        public List<string> Inputs = new();
 
         #endregion
 
@@ -60,7 +60,7 @@ namespace SabreTools.Help
                     }
 
                     // Special precautions for wildcarded inputs (potential paths)
-                    else if (args[i].Contains("*") || args[i].Contains("?"))
+                    else if (args[i].Contains('*') || args[i].Contains('?'))
                     {
                         Inputs.Add(args[i]);
                     }
@@ -92,7 +92,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get boolean value from nullable feature
         /// </summary>
-        protected bool GetBoolean(Dictionary<string, Feature> features, string key)
+        protected static bool GetBoolean(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
                 return false;
@@ -103,7 +103,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get int value from nullable feature
         /// </summary>
-        protected int GetInt32(Dictionary<string, Feature> features, string key)
+        protected static int GetInt32(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
                 return Int32.MinValue;
@@ -114,7 +114,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get long value from nullable feature
         /// </summary>
-        protected long GetInt64(Dictionary<string, Feature> features, string key)
+        protected static long GetInt64(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
                 return Int64.MinValue;
@@ -125,7 +125,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get list value from nullable feature
         /// </summary>
-        protected List<string> GetList(Dictionary<string, Feature> features, string key)
+        protected static List<string> GetList(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
                 return new List<string>();
@@ -136,7 +136,7 @@ namespace SabreTools.Help
         /// <summary>
         /// Get string value from nullable feature
         /// </summary>
-        protected string GetString(Dictionary<string, Feature> features, string key)
+        protected static string GetString(Dictionary<string, Feature> features, string key)
         {
             if (!features.ContainsKey(key))
                 return null;

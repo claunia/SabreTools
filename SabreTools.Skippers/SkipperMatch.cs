@@ -95,15 +95,23 @@ namespace SabreTools.Skippers
                     });
 
                     // Deserialize the detector, if possible
-                    if (xts.Deserialize(xtr) is not Detector detector)
+                    if (xts.Deserialize(xtr) is not Detector detector || detector == null)
                         continue;
 
-                    // Set the source file
+                    // Set the source file on the detector
                     string sourceFile = Path.GetFileNameWithoutExtension(skipperPath);
                     detector.SourceFile = sourceFile;
-                    for (int i = 0; i < (detector.Rules?.Length ?? 0); i++)
+
+                    // Set the source file on the rules
+                    if (detector.Rules != null)
                     {
-                        detector.Rules[i].SourceFile = sourceFile;
+                        for (int i = 0; i < detector.Rules.Length; i++)
+                        {
+                            if (detector.Rules[i] == null)
+                                continue;
+
+                            detector.Rules[i].SourceFile = sourceFile;
+                        }
                     }
 
                     // Add the skipper to the set

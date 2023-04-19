@@ -26,7 +26,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace SabreTools.Filtering
         /// <returns>True if the DatFile was split, false on error</returns>
         public bool ApplySplitting(DatFile datFile, bool useTags, bool throwOnError = false)
         {
-            InternalStopwatch watch = new InternalStopwatch("Applying splitting to DAT");
+            InternalStopwatch watch = new("Applying splitting to DAT");
 
             try
             {
@@ -260,7 +260,7 @@ namespace SabreTools.Filtering
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (datFile.Items[game].Where(i => i.GetName() == datItem.GetName()).Count() == 0 && !datFile.Items[game].Contains(datItem))
+                    if (!datFile.Items[game].Where(i => i.GetName() == datItem.GetName()).Any() && !datFile.Items[game].Contains(datItem))
                         datFile.Items.Add(game, datItem);
                 }
             }
@@ -308,7 +308,7 @@ namespace SabreTools.Filtering
                 if (deviceReferences.Any())
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newDeviceReferences = new List<string>();
+                    List<string> newDeviceReferences = new();
                     foreach (string deviceReference in deviceReferences)
                     {
                         // If the machine doesn't exist then we continue
@@ -351,7 +351,7 @@ namespace SabreTools.Filtering
                 if (useSlotOptions && slotOptions.Any())
                 {
                     // Loop through all names and check the corresponding machines
-                    List<string> newSlotOptions = new List<string>();
+                    List<string> newSlotOptions = new();
                     foreach (string slotOption in slotOptions)
                     {
                         // If the machine doesn't exist then we continue
@@ -429,7 +429,7 @@ namespace SabreTools.Filtering
                 {
                     DatItem datItem = (DatItem)item.Clone();
                     datItem.CopyMachineInformation(copyFrom);
-                    if (datFile.Items[game].Where(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Count() == 0
+                    if (!datFile.Items[game].Where(i => i.GetName()?.ToLowerInvariant() == datItem.GetName()?.ToLowerInvariant()).Any()
                         && !datFile.Items[game].Contains(datItem))
                     {
                         datFile.Items.Add(game, datItem);

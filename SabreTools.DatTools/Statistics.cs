@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using SabreTools.Core;
 using SabreTools.DatFiles;
-using SabreTools.DatItems;
 using SabreTools.IO;
 using SabreTools.Logging;
 using SabreTools.Reports;
@@ -25,7 +24,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -38,7 +37,7 @@ namespace SabreTools.DatTools
         public static List<DatStatistics> CalculateStatistics(List<string> inputs, bool single, bool throwOnError = false)
         {
             // Create the output list
-            List<DatStatistics> stats = new List<DatStatistics>();
+            List<DatStatistics> stats = new();
 
             // Make sure we have all files and then order them
             List<ParentablePath> files = PathTool.GetFilesOnly(inputs);
@@ -48,7 +47,7 @@ namespace SabreTools.DatTools
                 .ToList();
 
             // Init total
-            DatStatistics totalStats = new DatStatistics
+            DatStatistics totalStats = new()
             {
                 Statistics = new ItemDictionary(),
                 DisplayName = "DIR: All DATs",
@@ -58,7 +57,7 @@ namespace SabreTools.DatTools
 
             // Init directory-level variables
             string lastdir = null;
-            DatStatistics dirStats = new DatStatistics
+            DatStatistics dirStats = new()
             {
                 Statistics = new ItemDictionary(),
                 MachineCount = 0,
@@ -85,15 +84,15 @@ namespace SabreTools.DatTools
                     };
                 }
 
-                InternalStopwatch watch = new InternalStopwatch($"Collecting statistics for '{file.CurrentPath}'");
+                InternalStopwatch watch = new($"Collecting statistics for '{file.CurrentPath}'");
 
-                List<string> machines = new List<string>();
+                List<string> machines = new();
                 DatFile datdata = Parser.CreateAndParse(file.CurrentPath, statsOnly: true, throwOnError: throwOnError);
 
                 // Add single DAT stats (if asked)
                 if (single)
                 {
-                    DatStatistics individualStats = new DatStatistics
+                    DatStatistics individualStats = new()
                     {
                         Statistics = datdata.Items,
                         DisplayName = datdata.Header.FileName,
@@ -105,11 +104,11 @@ namespace SabreTools.DatTools
 
                 // Add single DAT stats to dir
                 dirStats.Statistics.AddStatistics(datdata.Items);
-                dirStats.Statistics.GameCount += datdata.Items.Keys.Count();
+                dirStats.Statistics.GameCount += datdata.Items.Keys.Count;
 
                 // Add single DAT stats to totals
                 totalStats.Statistics.AddStatistics(datdata.Items);
-                totalStats.Statistics.GameCount += datdata.Items.Keys.Count();
+                totalStats.Statistics.GameCount += datdata.Items.Keys.Count;
 
                 // Make sure to assign the new directory
                 lastdir = thisdir;
@@ -165,7 +164,7 @@ namespace SabreTools.DatTools
             // Get the proper output directory name
             outDir = outDir.Ensure();
 
-            InternalStopwatch watch = new InternalStopwatch($"Writing out report data to '{outDir}'");
+            InternalStopwatch watch = new($"Writing out report data to '{outDir}'");
 
             // Get the dictionary of desired output report names
             Dictionary<StatReportFormat, string> outfiles = CreateOutStatsNames(outDir, statDatFormat, reportName);
@@ -209,7 +208,7 @@ namespace SabreTools.DatTools
         /// <returns>Dictionary of output formats mapped to file names</returns>
         private static Dictionary<StatReportFormat, string> CreateOutStatsNames(string outDir, StatReportFormat statDatFormat, string reportName, bool overwrite = true)
         {
-            Dictionary<StatReportFormat, string> output = new Dictionary<StatReportFormat, string>();
+            Dictionary<StatReportFormat, string> output = new();
 
             // First try to create the output directory if we need to
             if (!Directory.Exists(outDir))

@@ -22,7 +22,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -54,7 +54,7 @@ namespace SabreTools.DatTools
             // Ensure the output directory is set and created
             outDir = outDir.Ensure(create: true);
 
-            InternalStopwatch watch = new InternalStopwatch($"Writing out internal dat to '{outDir}'");
+            InternalStopwatch watch = new($"Writing out internal dat to '{outDir}'");
 
             // If the DAT has no output format, default to XML
             if (datFile.Header.DatFormat == 0)
@@ -122,7 +122,7 @@ namespace SabreTools.DatTools
                 {
                     Statistics = datFile.Items,
                     DisplayName = datFile.Header.FileName,
-                    MachineCount = datFile.Items.Keys.Count(),
+                    MachineCount = datFile.Items.Keys.Count,
                     IsDirectory = false,
                 },
             };

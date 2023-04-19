@@ -299,7 +299,7 @@ namespace SabreTools.IO.Writers
             try
             {
                 if (string.IsNullOrEmpty(name))
-                    throw new ArgumentException();
+                    throw new ArgumentException("Name cannot be null or empty", nameof(name));
 
                 // If we're writing quotes, don't write out quote characters internally
                 if ((quoteOverride == null && Quotes)

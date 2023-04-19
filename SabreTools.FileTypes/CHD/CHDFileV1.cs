@@ -58,9 +58,9 @@ namespace SabreTools.FileTypes.CHD
         /// </summary>
         public static CHDFileV1 Deserialize(Stream stream)
         {
-            CHDFileV1 chd = new CHDFileV1();
+            CHDFileV1 chd = new();
 
-            using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+            using (BinaryReader br = new(stream, Encoding.Default, true))
             {
                 chd.tag = br.ReadChars(8);
                 chd.length = br.ReadUInt32BigEndian();

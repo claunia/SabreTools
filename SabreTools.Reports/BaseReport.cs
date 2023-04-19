@@ -15,7 +15,7 @@ namespace SabreTools.Reports
         /// <summary>
         /// Logging object
         /// </summary>
-        protected readonly Logger logger = new Logger();
+        protected readonly Logger logger = new();
 
         #endregion
 

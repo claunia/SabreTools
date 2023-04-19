@@ -30,7 +30,7 @@ namespace SabreTools.Test.Filtering
         /// <summary>
         /// Generate a consistent DatItem for testing
         /// </summary>
-        private DatItem CreateDatItem()
+        private static DatItem CreateDatItem()
         {
             return new Rom
             {

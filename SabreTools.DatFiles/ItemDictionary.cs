@@ -44,7 +44,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Lock for statistics calculation
         /// </summary>
-        private readonly object statsLock = new object();
+        private readonly object statsLock = new();
 
         /// <summary>
         /// Logging object
@@ -981,7 +981,7 @@ namespace SabreTools.DatFiles
         public void BucketBy(ItemKey bucketBy, DedupeType dedupeType, bool lower = true, bool norename = true)
         {
             // If we have a situation where there's no dictionary or no keys at all, we skip
-            if (items == null || items.Count == 0)
+            if (items == null || items.IsEmpty)
                 return;
 
             // If the sorted type isn't the same, we want to sort the dictionary accordingly
@@ -1084,7 +1084,7 @@ namespace SabreTools.DatFiles
                     items.TryRemove(key, out _);
 
                 // If there are no non-blank items, remove
-                else if (items[key].Count(i => i != null && i.ItemType != ItemType.Blank) == 0)
+                else if (!items[key].Any(i => i != null && i.ItemType != ItemType.Blank))
                     items.TryRemove(key, out _);
             }
         }
@@ -1113,7 +1113,7 @@ namespace SabreTools.DatFiles
         /// <returns>List of matched DatItem objects</returns>
         public ConcurrentList<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            ConcurrentList<DatItem> output = new ConcurrentList<DatItem>();
+            ConcurrentList<DatItem> output = new();
 
             // Check for an empty rom list first
             if (TotalCount == 0)
@@ -1128,7 +1128,7 @@ namespace SabreTools.DatFiles
 
             // Try to find duplicates
             ConcurrentList<DatItem> roms = this[key];
-            ConcurrentList<DatItem> left = new ConcurrentList<DatItem>();
+            ConcurrentList<DatItem> left = new();
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];

@@ -23,7 +23,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
         
@@ -37,10 +37,10 @@ namespace SabreTools.DatTools
         {
             bool success = true;
 
-            InternalStopwatch watch = new InternalStopwatch("Verifying all from supplied depots");
+            InternalStopwatch watch = new("Verifying all from supplied depots");
 
             // Now loop through and get only directories from the input paths
-            List<string> directories = new List<string>();
+            List<string> directories = new();
             foreach (string input in inputs)
             {
                 // Add to the list if the input is a directory
@@ -87,7 +87,7 @@ namespace SabreTools.DatTools
                     continue;
 
                 // If we have a path, we want to try to get the rom information
-                GZipArchive tgz = new GZipArchive(foundpath);
+                GZipArchive tgz = new(foundpath);
                 BaseFile fileinfo = tgz.GetTorrentGZFileInfo();
 
                 // If the file information is null, then we continue
@@ -120,7 +120,7 @@ namespace SabreTools.DatTools
         {
             bool success = true;
 
-            InternalStopwatch watch = new InternalStopwatch("Verifying all from supplied paths");
+            InternalStopwatch watch = new("Verifying all from supplied paths");
 
             // Force bucketing according to the flags
             datFile.Items.SetBucketedBy(ItemKey.NULL);

@@ -96,7 +96,7 @@ namespace SabreTools.Filtering
             if (filters == null || filters.Count == 0)
                 return;
 
-            InternalStopwatch watch = new InternalStopwatch("Populating filters from list");
+            InternalStopwatch watch = new("Populating filters from list");
 
             foreach (string filterPair in filters)
             {
@@ -138,7 +138,7 @@ namespace SabreTools.Filtering
         protected (string field, string value, bool negate) ProcessFilterPair(string filter)
         {
             // If we don't even have a possible filter pair
-            if (!filter.Contains(":"))
+            if (!filter.Contains(':'))
             {
                 logger.Warning($"'{filter}` is not a valid filter string. Valid filter strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
                 return (null, null, false);
@@ -163,7 +163,7 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected void SetBooleanFilter(FilterItem<bool?> filterItem, string value, bool negate)
+        protected static void SetBooleanFilter(FilterItem<bool?> filterItem, string value, bool negate)
         {
             if (negate || value.Equals("false", StringComparison.OrdinalIgnoreCase))
                 filterItem.Neutral = false;
@@ -177,7 +177,7 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected void SetDoubleFilter(FilterItem<double?> filterItem, string value, bool negate)
+        protected static void SetDoubleFilter(FilterItem<double?> filterItem, string value, bool negate)
         {
             bool? operation = null;
             if (value.StartsWith(">"))
@@ -235,7 +235,7 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected void SetLongFilter(FilterItem<long?> filterItem, string value, bool negate)
+        protected static void SetLongFilter(FilterItem<long?> filterItem, string value, bool negate)
         {
             bool? operation = null;
             if (value.StartsWith(">"))
@@ -294,7 +294,7 @@ namespace SabreTools.Filtering
         /// <param name="filterItem">FilterItem to populate</param>
         /// <param name="value">String value to add</param>
         /// <param name="negate">True to set negative filter, false otherwise</param>
-        protected void SetStringFilter(FilterItem<string> filterItem, string value, bool negate)
+        protected static void SetStringFilter(FilterItem<string> filterItem, string value, bool negate)
         {
             if (negate)
                 filterItem.NegativeSet.Add(value);
@@ -382,7 +382,7 @@ namespace SabreTools.Filtering
             if (!MachineFilter.HasFilters && !DatItemFilter.HasFilters)
                 return true;
 
-            InternalStopwatch watch = new InternalStopwatch("Applying filters to DAT");
+            InternalStopwatch watch = new("Applying filters to DAT");
 
             // If we're filtering per machine, bucket by machine first
             if (perMachine)

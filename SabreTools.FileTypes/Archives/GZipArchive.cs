@@ -162,7 +162,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             string realEntry;
 
             try
@@ -221,14 +221,14 @@ namespace SabreTools.FileTypes.Archives
                     try
                     {
                         // Create a blank item for the entry
-                        BaseFile gzipEntryRom = new BaseFile();
+                        BaseFile gzipEntryRom = new();
 
                         // Perform a quickscan, if flagged to
                         if (this.AvailableHashes == Hash.CRC)
                         {
                             gzipEntryRom.Filename = gamename;
                             
-                            using BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+                            using BinaryReader br = new(File.OpenRead(this.Filename));
                             br.BaseStream.Seek(-8, SeekOrigin.End);
                             gzipEntryRom.CRC = br.ReadBytesBigEndian(4);
                             gzipEntryRom.Size = br.ReadInt32BigEndian();
@@ -300,7 +300,7 @@ namespace SabreTools.FileTypes.Archives
             }
 
             // Get the Romba-specific header data
-            BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+            BinaryReader br = new(File.OpenRead(this.Filename));
             byte[] header = br.ReadBytes(12); // Get preamble header for checking
             br.ReadBytes(16); // headermd5
             br.ReadBytes(4); // headercrc
@@ -365,7 +365,7 @@ namespace SabreTools.FileTypes.Archives
             byte[] headermd5; // MD5
             byte[] headercrc; // CRC
             ulong headersz; // Int64 size
-            BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+            BinaryReader br = new(File.OpenRead(this.Filename));
             header = br.ReadBytes(12);
             headermd5 = br.ReadBytes(16);
             headercrc = br.ReadBytes(4);
@@ -391,7 +391,7 @@ namespace SabreTools.FileTypes.Archives
             // Now convert the data and get the right position
             long extractedsize = (long)headersz;
 
-            BaseFile baseFile = new BaseFile
+            BaseFile baseFile = new()
             {
                 Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
                 Size = extractedsize,
@@ -457,7 +457,7 @@ namespace SabreTools.FileTypes.Archives
                 FileStream outputStream = File.Create(outfile);
 
                 // Open the output file for writing
-                BinaryWriter sw = new BinaryWriter(outputStream);
+                BinaryWriter sw = new(outputStream);
 
                 // Write standard header and TGZ info
                 byte[] data = TorrentGZHeader
@@ -468,7 +468,7 @@ namespace SabreTools.FileTypes.Archives
                 sw.Write((ulong)(baseFile.Size ?? 0)); // Long size (Unsigned, Mirrored)
 
                 // Now create a deflatestream from the input file
-                ZlibBaseStream ds = new ZlibBaseStream(outputStream, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
+                ZlibBaseStream ds = new(outputStream, CompressionMode.Compress, CompressionLevel.BestCompression, ZlibStreamFlavor.DEFLATE, true);
 
                 // Copy the input stream to the output
                 byte[] ibuffer = new byte[_bufferSize];

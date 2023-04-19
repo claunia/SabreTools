@@ -214,7 +214,7 @@ namespace SabreTools.Features
             {
                 DatFile dupeData = DatFileTool.DiffDuplicates(userInputDat, inputPaths);
 
-                InternalStopwatch watch = new InternalStopwatch("Outputting duplicate DAT");
+                InternalStopwatch watch = new("Outputting duplicate DAT");
                 Writer.Write(dupeData, OutputDir, overwrite: false);
                 watch.Stop();
             }
@@ -224,7 +224,7 @@ namespace SabreTools.Features
             {
                 DatFile outerDiffData = DatFileTool.DiffNoDuplicates(userInputDat, inputPaths);
 
-                InternalStopwatch watch = new InternalStopwatch("Outputting no duplicate DAT");
+                InternalStopwatch watch = new("Outputting no duplicate DAT");
                 Writer.Write(outerDiffData, OutputDir, overwrite: false);
                 watch.Stop();
             }
@@ -236,7 +236,7 @@ namespace SabreTools.Features
                 List<DatFile> datFiles = DatFileTool.DiffIndividuals(userInputDat, inputPaths);
 
                 // Loop through and output the new DatFiles
-                InternalStopwatch watch = new InternalStopwatch("Outputting all individual DATs");
+                InternalStopwatch watch = new("Outputting all individual DATs");
 
                 Parallel.For(0, inputPaths.Count, Globals.ParallelOptions, j =>
                 {
@@ -271,7 +271,7 @@ namespace SabreTools.Features
                 List<DatFile> datFiles = DatFileTool.DiffCascade(userInputDat, datHeaders);
 
                 // Loop through and output the new DatFiles
-                InternalStopwatch watch = new InternalStopwatch("Outputting all created DATs");
+                InternalStopwatch watch = new("Outputting all created DATs");
 
                 int startIndex = GetBoolean(features, SkipFirstOutputValue) ? 1 : 0;
                 Parallel.For(startIndex, inputPaths.Count, Globals.ParallelOptions, j =>

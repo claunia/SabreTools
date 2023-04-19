@@ -176,7 +176,7 @@ namespace SabreTools.DatFiles.Formats
             bool containsItems = false;
 
             // Create a new machine
-            Machine machine = new Machine
+            Machine machine = new()
             {
                 Name = reader.GetAttribute("name"),
                 CloneOf = reader.GetAttribute("cloneof"),
@@ -262,7 +262,7 @@ namespace SabreTools.DatFiles.Formats
             // If no items were found for this machine, add a Blank placeholder
             if (!containsItems)
             {
-                Blank blank = new Blank()
+                Blank blank = new()
                 {
                     Source = new Source
                     {
@@ -295,7 +295,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Get lists ready
             part.Features = new List<PartFeature>();
-            List<DatItem> items = new List<DatItem>();
+            List<DatItem> items = new();
 
             while (!reader.EOF)
             {
@@ -434,7 +434,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="dataArea">DataArea representing the enclosing area</param>
         private List<DatItem> ReadDataArea(XmlReader reader, DataArea dataArea)
         {
-            List<DatItem> items = new List<DatItem>();
+            List<DatItem> items = new();
 
             while (!reader.EOF)
             {
@@ -483,7 +483,7 @@ namespace SabreTools.DatFiles.Formats
         /// <param name="diskArea">DiskArea representing the enclosing area</param>
         private List<DatItem> ReadDiskArea(XmlReader reader, DiskArea diskArea)
         {
-            List<DatItem> items = new List<DatItem>();
+            List<DatItem> items = new();
 
             while (!reader.EOF)
             {
@@ -586,7 +586,7 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new List<DatItemField>();
+            List<DatItemField> missingFields = new();
 
             switch (datItem.ItemType)
             {
@@ -705,7 +705,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',

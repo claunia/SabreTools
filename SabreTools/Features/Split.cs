@@ -77,7 +77,7 @@ namespace SabreTools.Features
                 {
                     (DatFile extADat, DatFile extBDat) = DatTools.Splitter.SplitByExtension(internalDat, GetList(features, ExtAListValue), GetList(features, ExtBListValue));
 
-                    InternalStopwatch watch = new InternalStopwatch("Outputting extension-split DATs");
+                    InternalStopwatch watch = new("Outputting extension-split DATs");
 
                     // Output both possible DatFiles
                     Writer.Write(extADat, OutputDir);
@@ -91,7 +91,7 @@ namespace SabreTools.Features
                 {
                     Dictionary<DatItemField, DatFile> typeDats = DatTools.Splitter.SplitByHash(internalDat);
 
-                    InternalStopwatch watch = new InternalStopwatch("Outputting hash-split DATs");
+                    InternalStopwatch watch = new("Outputting hash-split DATs");
 
                     // Loop through each type DatFile
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>
@@ -118,7 +118,7 @@ namespace SabreTools.Features
                 {
                     (DatFile lessThan, DatFile greaterThan) = DatTools.Splitter.SplitBySize(internalDat, GetInt64(features, RadixInt64Value));
 
-                    InternalStopwatch watch = new InternalStopwatch("Outputting size-split DATs");
+                    InternalStopwatch watch = new("Outputting size-split DATs");
 
                     // Output both possible DatFiles
                     Writer.Write(lessThan, OutputDir);
@@ -133,7 +133,7 @@ namespace SabreTools.Features
                     logger.Warning("This feature is not implemented: level-split");
                     List<DatFile> sizedDats = DatTools.Splitter.SplitByTotalSize(internalDat, GetInt64(features, ChunkSizeInt64Value));
 
-                    InternalStopwatch watch = new InternalStopwatch("Outputting total-size-split DATs");
+                    InternalStopwatch watch = new("Outputting total-size-split DATs");
 
                     // Loop through each type DatFile
                     Parallel.ForEach(sizedDats, Globals.ParallelOptions, sizedDat =>
@@ -149,7 +149,7 @@ namespace SabreTools.Features
                 {
                     Dictionary<ItemType, DatFile> typeDats = DatTools.Splitter.SplitByType(internalDat);
 
-                    InternalStopwatch watch = new InternalStopwatch("Outputting ItemType DATs");
+                    InternalStopwatch watch = new("Outputting ItemType DATs");
 
                     // Loop through each type DatFile
                     Parallel.ForEach(typeDats.Keys, Globals.ParallelOptions, itemType =>

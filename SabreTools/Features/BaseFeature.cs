@@ -23,7 +23,7 @@ namespace SabreTools.Features
         /// <summary>
         /// Logging object
         /// </summary>
-        protected Logger logger = new Logger();
+        protected Logger logger = new();
 
         #endregion
 
@@ -1916,7 +1916,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get include from scan from feature list
         /// </summary>
-        protected Hash GetIncludeInScan(Dictionary<string, Feature> features)
+        protected static Hash GetIncludeInScan(Dictionary<string, Feature> features)
         {
             Hash includeInScan = 0x00;
 
@@ -1945,7 +1945,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get OutputFormat from feature list
         /// </summary>
-        protected OutputFormat GetOutputFormat(Dictionary<string, Feature> features)
+        protected static OutputFormat GetOutputFormat(Dictionary<string, Feature> features)
         {
             if (GetBoolean(features, TarValue))
                 return OutputFormat.TapeArchive;
@@ -1974,7 +1974,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get SkipFileType from feature list
         /// </summary>
-        protected SkipFileType GetSkipFileType(Dictionary<string, Feature> features)
+        protected static SkipFileType GetSkipFileType(Dictionary<string, Feature> features)
         {
             if (GetBoolean(features, SkipArchivesValue))
                 return SkipFileType.Archive;
@@ -1987,7 +1987,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get SplittingMode from feature list
         /// </summary>
-        protected SplittingMode GetSplittingMode(Dictionary<string, Feature> features)
+        protected static SplittingMode GetSplittingMode(Dictionary<string, Feature> features)
         {
             SplittingMode splittingMode = SplittingMode.None;
 
@@ -2010,7 +2010,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get StatReportFormat from feature list
         /// </summary>
-        protected StatReportFormat GetStatReportFormat(Dictionary<string, Feature> features)
+        protected static StatReportFormat GetStatReportFormat(Dictionary<string, Feature> features)
         {
             StatReportFormat statDatFormat = StatReportFormat.None;
 
@@ -2025,7 +2025,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get TreatAsFiles from feature list
         /// </summary>
-        protected TreatAsFile GetTreatAsFiles(Dictionary<string, Feature> features)
+        protected static TreatAsFile GetTreatAsFiles(Dictionary<string, Feature> features)
         {
             TreatAsFile asFiles = 0x00;
             if (GetBoolean(features, AaruFormatsAsFilesValue))
@@ -2041,9 +2041,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get update DatItem fields from feature list
         /// </summary>
-        protected List<DatItemField> GetUpdateDatItemFields(Dictionary<string, Feature> features)
+        protected static List<DatItemField> GetUpdateDatItemFields(Dictionary<string, Feature> features)
         {
-            List<DatItemField> updateFields = new List<DatItemField>();
+            List<DatItemField> updateFields = new();
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
                 updateFields.Add(fieldName.AsDatItemField());
@@ -2055,9 +2055,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get update Machine fields from feature list
         /// </summary>
-        protected List<MachineField> GetUpdateMachineFields(Dictionary<string, Feature> features)
+        protected static List<MachineField> GetUpdateMachineFields(Dictionary<string, Feature> features)
         {
-            List<MachineField> updateFields = new List<MachineField>();
+            List<MachineField> updateFields = new();
             foreach (string fieldName in GetList(features, UpdateFieldListValue))
             {
                 updateFields.Add(fieldName.AsMachineField());
@@ -2069,7 +2069,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get UpdateMode from feature list
         /// </summary>
-        protected UpdateMode GetUpdateMode(Dictionary<string, Feature> features)
+        protected static UpdateMode GetUpdateMode(Dictionary<string, Feature> features)
         {
             UpdateMode updateMode = UpdateMode.None;
 
@@ -2113,9 +2113,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get Cleaner from feature list
         /// </summary>
-        private Cleaner GetCleaner(Dictionary<string, Feature> features)
+        private static Cleaner GetCleaner(Dictionary<string, Feature> features)
         {
-            Cleaner cleaner = new Cleaner()
+            Cleaner cleaner = new()
             {
                 Clean = GetBoolean(features, CleanValue),
                 DedupeRoms = GetDedupeType(features),
@@ -2140,7 +2140,7 @@ Some special strings that can be used:
         private DatHeader GetDatHeader(Dictionary<string, Feature> features)
         {
             // TODO: Sort this by region, like the actual header
-            DatHeader datHeader = new DatHeader
+            DatHeader datHeader = new()
             {
                 AddExtension = GetString(features, AddExtensionStringValue),
                 Author = GetString(features, AuthorStringValue),
@@ -2167,15 +2167,14 @@ Some special strings that can be used:
                 Url = GetString(features, UrlStringValue),
                 UseRomName = GetBoolean(features, RomsValue),
                 Version = GetString(features, VersionStringValue),
-            };
-
-            // Get the depot information
-            datHeader.InputDepot = new DepotInformation(
+                // Get the depot information
+                InputDepot = new DepotInformation(
                 GetBoolean(features, DepotValue),
-                GetInt32(features, DepotDepthInt32Value));
-            datHeader.OutputDepot = new DepotInformation(
+                GetInt32(features, DepotDepthInt32Value)),
+                OutputDepot = new DepotInformation(
                 GetBoolean(features, RombaValue),
-                GetInt32(features, RombaDepthInt32Value));
+                GetInt32(features, RombaDepthInt32Value))
+            };
 
             bool deprecated = GetBoolean(features, DeprecatedValue);
             foreach (string ot in GetList(features, OutputTypeListValue))
@@ -2202,7 +2201,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get DedupeType from feature list
         /// </summary>
-        private DedupeType GetDedupeType(Dictionary<string, Feature> features)
+        private static DedupeType GetDedupeType(Dictionary<string, Feature> features)
         {
             if (GetBoolean(features, DedupValue))
                 return DedupeType.Full;
@@ -2215,9 +2214,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get ExtraIni from feature list
         /// </summary>
-        private ExtraIni GetExtras(Dictionary<string, Feature> features)
+        private static ExtraIni GetExtras(Dictionary<string, Feature> features)
         {
-            ExtraIni extraIni = new ExtraIni();
+            ExtraIni extraIni = new();
             extraIni.PopulateFromList(GetList(features, ExtraIniListValue));
             return extraIni;
         }
@@ -2225,9 +2224,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get Filter from feature list
         /// </summary>
-        private Filter GetFilter(Dictionary<string, Feature> features)
+        private static Filter GetFilter(Dictionary<string, Feature> features)
         {
-            Filter filter = new Filter()
+            Filter filter = new()
             {
                 DatItemFilter = new DatItemFilter(),
                 MachineFilter = new MachineFilter(),
@@ -2246,9 +2245,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get Remover from feature list
         /// </summary>
-        private Remover GetRemover(Dictionary<string, Feature> features)
+        private static Remover GetRemover(Dictionary<string, Feature> features)
         {
-            Remover remover = new Remover();
+            Remover remover = new();
             
             // Populate field exclusions
             List<string> exclusionFields = GetList(features, ExcludeFieldListValue);
@@ -2260,9 +2259,9 @@ Some special strings that can be used:
         /// <summary>
         /// Get Splitter from feature list
         /// </summary>
-        private Filtering.Splitter GetSplitter(Dictionary<string, Feature> features)
+        private static Filtering.Splitter GetSplitter(Dictionary<string, Feature> features)
         {
-            Filtering.Splitter splitter = new Filtering.Splitter
+            Filtering.Splitter splitter = new()
             {
                 SplitType = GetSplitType(features),
             };
@@ -2272,7 +2271,7 @@ Some special strings that can be used:
         /// <summary>
         /// Get SplitType from feature list
         /// </summary>
-        private MergingFlag GetSplitType(Dictionary<string, Feature> features)
+        private static MergingFlag GetSplitType(Dictionary<string, Feature> features)
         {
             MergingFlag splitType = MergingFlag.None;
             if (GetBoolean(features, DatDeviceNonMergedValue))
@@ -2305,7 +2304,7 @@ Some special strings that can be used:
                 File.Create(HeadererFileName);
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
+            SqliteConnection dbc = new(HeadererConnectionString);
             dbc.Open();
 
             // Make sure the database has the correct schema
@@ -2316,7 +2315,7 @@ CREATE TABLE IF NOT EXISTS data (
     'type'		TEXT		NOT NULL,
     PRIMARY KEY (sha1, header, type)
 )";
-            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteCommand slc = new(query, dbc);
             slc.ExecuteNonQuery();
             slc.Dispose();
             dbc.Dispose();
@@ -2329,81 +2328,36 @@ CREATE TABLE IF NOT EXISTS data (
         /// <returns>DatFormat value corresponding to the string</returns>
         protected static DatFormat GetDatFormat(string input)
         {
-            switch (input?.Trim().ToLowerInvariant())
+            return (input?.Trim().ToLowerInvariant()) switch
             {
-                case "all":
-                    return DatFormat.ALL;
-                case "ado":
-                case "archive":
-                    return DatFormat.ArchiveDotOrg;
-                case "am":
-                case "attractmode":
-                    return DatFormat.AttractMode;
-                case "cmp":
-                case "clrmamepro":
-                    return DatFormat.ClrMamePro;
-                case "csv":
-                    return DatFormat.CSV;
-                case "dc":
-                case "doscenter":
-                    return DatFormat.DOSCenter;
-                case "everdrive":
-                case "smdb":
-                    return DatFormat.EverdriveSMDB;
-                case "json":
-                case "sj":
-                case "sabrejson":
-                    return DatFormat.SabreJSON;
-                case "lr":
-                case "listrom":
-                    return DatFormat.Listrom;
-                case "lx":
-                case "listxml":
-                    return DatFormat.Listxml;
-                case "md5":
-                    return DatFormat.RedumpMD5;
-                case "miss":
-                case "missfile":
-                    return DatFormat.MissFile;
-                case "msx":
-                case "openmsx":
-                    return DatFormat.OpenMSX;
-                case "ol":
-                case "offlinelist":
-                    return DatFormat.OfflineList;
-                case "rc":
-                case "romcenter":
-                    return DatFormat.RomCenter;
-                case "sd":
-                case "sabredat":
-                case "sx":
-                case "sabrexml":
-                    return DatFormat.SabreXML;
-                case "sfv":
-                    return DatFormat.RedumpSFV;
-                case "sha1":
-                    return DatFormat.RedumpSHA1;
-                case "sha256":
-                    return DatFormat.RedumpSHA256;
-                case "sha384":
-                    return DatFormat.RedumpSHA384;
-                case "sha512":
-                    return DatFormat.RedumpSHA512;
-                case "sl":
-                case "softwarelist":
-                    return DatFormat.SoftwareList;
-                case "spamsum":
-                    return DatFormat.RedumpSpamSum;
-                case "ssv":
-                    return DatFormat.SSV;
-                case "tsv":
-                    return DatFormat.TSV;
-                case "xml":
-                case "logiqx":
-                    return DatFormat.Logiqx;
-                default:
-                    return 0x0;
-            }
+                "all" => DatFormat.ALL,
+                "ado" or "archive" => DatFormat.ArchiveDotOrg,
+                "am" or "attractmode" => DatFormat.AttractMode,
+                "cmp" or "clrmamepro" => DatFormat.ClrMamePro,
+                "csv" => DatFormat.CSV,
+                "dc" or "doscenter" => DatFormat.DOSCenter,
+                "everdrive" or "smdb" => DatFormat.EverdriveSMDB,
+                "json" or "sj" or "sabrejson" => DatFormat.SabreJSON,
+                "lr" or "listrom" => DatFormat.Listrom,
+                "lx" or "listxml" => DatFormat.Listxml,
+                "md5" => DatFormat.RedumpMD5,
+                "miss" or "missfile" => DatFormat.MissFile,
+                "msx" or "openmsx" => DatFormat.OpenMSX,
+                "ol" or "offlinelist" => DatFormat.OfflineList,
+                "rc" or "romcenter" => DatFormat.RomCenter,
+                "sd" or "sabredat" or "sx" or "sabrexml" => DatFormat.SabreXML,
+                "sfv" => DatFormat.RedumpSFV,
+                "sha1" => DatFormat.RedumpSHA1,
+                "sha256" => DatFormat.RedumpSHA256,
+                "sha384" => DatFormat.RedumpSHA384,
+                "sha512" => DatFormat.RedumpSHA512,
+                "sl" or "softwarelist" => DatFormat.SoftwareList,
+                "spamsum" => DatFormat.RedumpSpamSum,
+                "ssv" => DatFormat.SSV,
+                "tsv" => DatFormat.TSV,
+                "xml" or "logiqx" => DatFormat.Logiqx,
+                _ => 0x0,
+            };
         }
 
         #endregion

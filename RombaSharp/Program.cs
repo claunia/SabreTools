@@ -30,7 +30,7 @@ namespace RombaSharp
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace RombaSharp
             // Credits take precidence over all
             if ((new List<string>(args)).Contains("--credits"))
             {
-                _help.OutputCredits();
+                FeatureSet.OutputCredits();
                 LoggerImpl.Close();
                 return;
             }
@@ -174,7 +174,7 @@ namespace RombaSharp
         {
             // Create and add the header to the Help object
             string barrier = "-----------------------------------------";
-            List<string> helpHeader = new List<string>()
+            List<string> helpHeader = new()
             {
                 "RombaSharp - C# port of the Romba rom management tool",
                 barrier,
@@ -183,7 +183,7 @@ namespace RombaSharp
             };
 
             // Create the base help object with header
-            FeatureSet help = new FeatureSet(helpHeader);
+            FeatureSet help = new(helpHeader);
 
             // Add all of the features
             help.Add(new DisplayHelp());

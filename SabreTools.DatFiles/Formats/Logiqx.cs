@@ -213,7 +213,7 @@ namespace SabreTools.DatFiles.Formats
                 ValidationType = ValidationType.None,
             });
 
-            List<string> dirs = new List<string>();
+            List<string> dirs = new();
 
             // If we got a null reader, just return
             if (xtr == null)
@@ -474,8 +474,8 @@ namespace SabreTools.DatFiles.Formats
             if (reader.GetAttribute("ismechanical").AsYesNo() == true) // Listxml-specific, used by older DATs
                 machineType |= MachineType.Mechanical;
 
-            string dirsString = (dirs != null && dirs.Count() > 0 ? string.Join("/", dirs) + "/" : string.Empty);
-            Machine machine = new Machine
+            string dirsString = (dirs != null && dirs.Count > 0 ? string.Join("/", dirs) + "/" : string.Empty);
+            Machine machine = new()
             {
                 Name = dirsString + reader.GetAttribute("name"),
                 Description = dirsString + reader.GetAttribute("name"),
@@ -727,7 +727,7 @@ namespace SabreTools.DatFiles.Formats
             // If no items were found for this machine, add a Blank placeholder
             if (!containsItems)
             {
-                Blank blank = new Blank()
+                Blank blank = new()
                 {
                     Source = new Source
                     {
@@ -869,7 +869,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',

@@ -20,7 +20,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace SabreTools.DatTools
             bool statsOnly = false,
             bool throwOnError = false)
         {
-            ParentablePath path = new ParentablePath(filename.Trim('"'));
+            ParentablePath path = new(filename.Trim('"'));
             ParseInto(datFile, path, indexId, keep, keepext, quotes, statsOnly, throwOnError);
         }
 
@@ -102,7 +102,7 @@ namespace SabreTools.DatTools
             datFile.Header.DatFormat = datFile.Header.DatFormat == 0 ? currentPathFormat : datFile.Header.DatFormat;
             datFile.Items.SetBucketedBy(ItemKey.CRC); // Setting this because it can reduce issues later
             
-            InternalStopwatch watch = new InternalStopwatch($"Parsing '{currentPath}' into internal DAT");
+            InternalStopwatch watch = new($"Parsing '{currentPath}' into internal DAT");
 
             // Now parse the correct type of DAT
             try
@@ -215,7 +215,7 @@ namespace SabreTools.DatTools
                 return DatFormat.EverdriveSMDB;
 
             // If we have an INI-based DAT
-            else if (first.Contains("[") && first.Contains("]"))
+            else if (first.Contains('[') && first.Contains(']'))
                 return DatFormat.RomCenter;
 
             // If we have a listroms DAT

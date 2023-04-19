@@ -105,7 +105,7 @@ namespace SabreTools.IO.Readers
             }
 
             // KeyValuePair
-            else if (CurrentLine.Contains("="))
+            else if (CurrentLine.Contains('='))
             {
                 // Split the line by '=' for key-value pairs
                 string[] data = CurrentLine.Split('=');

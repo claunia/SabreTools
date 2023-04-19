@@ -21,7 +21,7 @@ namespace SabreTools.IO
         /// <returns>List of strings representing just directories from the inputs</returns>
         public static List<ParentablePath> GetDirectoriesOnly(List<string> inputs, bool appendparent = false)
         {
-            List<ParentablePath> outputs = new List<ParentablePath>();
+            List<ParentablePath> outputs = new();
             for (int i = 0; i < inputs.Count; i++)
             {
                 string input = inputs[i];
@@ -32,10 +32,10 @@ namespace SabreTools.IO
 
                 // If we have a wildcard
                 string pattern = "*";
-                if (input.Contains("*") || input.Contains("?"))
+                if (input.Contains('*') || input.Contains('?'))
                 {
                     pattern = Path.GetFileName(input);
-                    input = input.Substring(0, input.Length - pattern.Length);
+                    input = input[..^pattern.Length];
                 }
 
                 // Get the parent path in case of appending
@@ -96,7 +96,7 @@ namespace SabreTools.IO
         /// <returns>List of strings representing just files from the inputs</returns>
         public static List<ParentablePath> GetFilesOnly(List<string> inputs, bool appendparent = false)
         {
-            List<ParentablePath> outputs = new List<ParentablePath>();
+            List<ParentablePath> outputs = new();
             for (int i = 0; i < inputs.Count; i++)
             {
                 string input = inputs[i].Trim('"');
@@ -107,10 +107,10 @@ namespace SabreTools.IO
 
                 // If we have a wildcard
                 string pattern = "*";
-                if (input.Contains("*") || input.Contains("?"))
+                if (input.Contains('*') || input.Contains('?'))
                 {
                     pattern = Path.GetFileName(input);
-                    input = input.Substring(0, input.Length - pattern.Length);
+                    input = input[..^pattern.Length];
                 }
 
                 // Get the parent path in case of appending

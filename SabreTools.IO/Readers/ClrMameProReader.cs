@@ -278,7 +278,7 @@ namespace SabreTools.IO.Readers
         /// <param name="s">Line to split</param>
         /// <returns>Line split</returns>
         /// <remarks>Uses code from http://stackoverflow.com/questions/554013/regular-expression-to-split-on-spaces-unless-in-quotes</remarks>
-        private string[] SplitLineAsCMP(string s)
+        private static string[] SplitLineAsCMP(string s)
         {
             // Get the opening and closing brace locations
             int openParenLoc = s.IndexOf('(');

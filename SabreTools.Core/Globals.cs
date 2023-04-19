@@ -18,7 +18,7 @@ namespace SabreTools.Core
         /// <summary>
         /// ParallelOptions object for use in parallel operations
         /// </summary>
-        public static ParallelOptions ParallelOptions => new ParallelOptions()
+        public static ParallelOptions ParallelOptions => new()
         {
             MaxDegreeOfParallelism = MaxThreads
         };

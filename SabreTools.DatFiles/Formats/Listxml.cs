@@ -295,7 +295,7 @@ namespace SabreTools.DatFiles.Formats
             if (reader.GetAttribute("ismechanical").AsYesNo() == true)
                 machineType |= MachineType.Mechanical;
 
-            Machine machine = new Machine
+            Machine machine = new()
             {
                 Name = reader.GetAttribute("name"),
                 Description = reader.GetAttribute("name"),
@@ -309,7 +309,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             // Get list for new DatItems
-            List<DatItem> datItems = new List<DatItem>();
+            List<DatItem> datItems = new();
 
             while (!reader.EOF)
             {
@@ -776,7 +776,7 @@ namespace SabreTools.DatFiles.Formats
             // If no items were found for this machine, add a Blank placeholder
             else
             {
-                Blank blank = new Blank()
+                Blank blank = new()
                 {
                     Source = new Source
                     {
@@ -1370,7 +1370,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',

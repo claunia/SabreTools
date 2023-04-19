@@ -100,14 +100,14 @@ The following systems have headers that this program can work with:
             EnsureDatabase();
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
+            SqliteConnection dbc = new(HeadererConnectionString);
             dbc.Open();
 
             // Create the output list of headers
-            List<string> headers = new List<string>();
+            List<string> headers = new();
 
             string query = $"SELECT header, type FROM data WHERE sha1='{SHA1}'";
-            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteCommand slc = new(query, dbc);
             SqliteDataReader sldr = slc.ExecuteReader();
 
             if (sldr.HasRows)
@@ -138,7 +138,7 @@ The following systems have headers that this program can work with:
         /// <param name="output">Outputted file</param>
         /// <param name="bytesToAddToHead">Bytes to be added to head of file</param>
         /// <param name="bytesToAddToTail">Bytes to be added to tail of file</param>
-        private void AppendBytes(string input, string output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
+        private static void AppendBytes(string input, string output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
         {
             // If any of the inputs are invalid, skip
             if (!File.Exists(input))
@@ -146,7 +146,7 @@ The following systems have headers that this program can work with:
 
             using FileStream fsr = File.OpenRead(input);
             using FileStream fsw = File.OpenWrite(output);
-            
+
             AppendBytes(fsr, fsw, bytesToAddToHead, bytesToAddToTail);
         }
 
@@ -157,7 +157,7 @@ The following systems have headers that this program can work with:
         /// <param name="output">Outputted stream</param>
         /// <param name="bytesToAddToHead">Bytes to be added to head of stream</param>
         /// <param name="bytesToAddToTail">Bytes to be added to tail of stream</param>
-        private void AppendBytes(Stream input, Stream output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
+        private static void AppendBytes(Stream input, Stream output, byte[] bytesToAddToHead, byte[] bytesToAddToTail)
         {
             // Write out prepended bytes
             if (bytesToAddToHead != null && bytesToAddToHead.Length > 0)

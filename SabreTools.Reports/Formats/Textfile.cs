@@ -27,7 +27,7 @@ namespace SabreTools.Reports.Formats
         /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
-            InternalStopwatch watch = new InternalStopwatch($"Writing statistics to '{outfile}");
+            InternalStopwatch watch = new($"Writing statistics to '{outfile}");
 
             try
             {
@@ -39,7 +39,7 @@ namespace SabreTools.Reports.Formats
                     return false;
                 }
 
-                StreamWriter sw = new StreamWriter(fs);
+                StreamWriter sw = new(fs);
 
                 // Now process each of the statistics
                 for (int i = 0; i < Statistics.Count; i++)

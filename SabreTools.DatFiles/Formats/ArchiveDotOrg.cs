@@ -162,7 +162,7 @@ namespace SabreTools.DatFiles.Formats
             reader.MoveToContent();
 
             // Create the Rom to store the info
-            Rom rom = new Rom
+            Rom rom = new()
             {
                 Name = reader.GetAttribute("name"),
                 ArchiveDotOrgSource = reader.GetAttribute("source"),
@@ -187,7 +187,7 @@ namespace SabreTools.DatFiles.Formats
                 rom.Machine.Name = splitpath[0];
                 rom.Machine.Description = splitpath[0];
 
-                rom.Name = rom.Name.Substring(splitpath[0].Length + 1);
+                rom.Name = rom.Name[(splitpath[0].Length + 1)..];
             }
 
             // TODO: Handle SuperDAT
@@ -287,7 +287,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = ' ',

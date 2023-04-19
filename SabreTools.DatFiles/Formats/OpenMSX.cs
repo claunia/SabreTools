@@ -125,7 +125,7 @@ namespace SabreTools.DatFiles.Formats
             bool containsItems = false;
 
             // Create a new machine
-            Machine machine = new Machine();
+            Machine machine = new();
 
             while (!reader.EOF)
             {
@@ -180,7 +180,7 @@ namespace SabreTools.DatFiles.Formats
             // If no items were found for this machine, add a Blank placeholder
             if (!containsItems)
             {
-                Blank blank = new Blank()
+                Blank blank = new()
                 {
                     Source = new Source
                     {
@@ -215,7 +215,7 @@ namespace SabreTools.DatFiles.Formats
             string filename,
             int indexId)
         {
-            List<DatItem> items = new List<DatItem>();
+            List<DatItem> items = new();
             Original original = null;
 
             while (!reader.EOF)
@@ -556,7 +556,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',

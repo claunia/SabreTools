@@ -14,7 +14,7 @@ namespace SabreTools.Test.DatFiles
         public void SetFieldsDatItemTest()
         {
             var datItem = CreateDatItem();
-            Setter setter = new Setter
+            Setter setter = new()
             {
                 DatItemMappings = new Dictionary<DatItemField, string> { [DatItemField.Name] = "bar" }
             };
@@ -26,7 +26,7 @@ namespace SabreTools.Test.DatFiles
         public void SetFieldsMachineTest()
         {
             var datItem = CreateDatItem();
-            Setter setter = new Setter
+            Setter setter = new()
             {
                 MachineMappings = new Dictionary<MachineField, string> { [MachineField.Name] = "foo" }
             };
@@ -37,7 +37,7 @@ namespace SabreTools.Test.DatFiles
         /// <summary>
         /// Generate a consistent DatItem for testing
         /// </summary>
-        private DatItem CreateDatItem()
+        private static DatItem CreateDatItem()
         {
             return new Rom
             {

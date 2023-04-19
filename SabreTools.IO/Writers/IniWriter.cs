@@ -33,7 +33,7 @@ namespace SabreTools.IO.Writers
         public void WriteSection(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException(nameof(value));
+                throw new ArgumentException("Section tag cannot be null or empty", nameof(value));
 
             sw.WriteLine($"[{value.TrimStart('[').TrimEnd(']')}]");
         }
@@ -44,11 +44,9 @@ namespace SabreTools.IO.Writers
         public void WriteKeyValuePair(string key, string value)
         {
             if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentException(nameof(key));
+                throw new ArgumentException("Key cannot be null or empty", nameof(key));
 
-            if (value == null)
-                value = string.Empty;
-
+            value ??= string.Empty;
             sw.WriteLine($"{key}={value}");
         }
 
@@ -57,9 +55,7 @@ namespace SabreTools.IO.Writers
         /// </summary>
         public void WriteComment(string value)
         {
-            if (value == null)
-                value = string.Empty;
-
+            value ??= string.Empty;
             sw.WriteLine($";{value}");
         }
 
@@ -68,9 +64,7 @@ namespace SabreTools.IO.Writers
         /// </summary>
         public void WriteString(string value)
         {
-            if (value == null)
-                value = string.Empty;
-
+            value ??= string.Empty;
             sw.Write(value);
         }
 

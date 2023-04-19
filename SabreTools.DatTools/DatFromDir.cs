@@ -26,7 +26,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace SabreTools.DatTools
             long totalSize = 0;
             long currentSize = 0;
 
-            InternalStopwatch watch = new InternalStopwatch($"Populating DAT from {basePath}");
+            InternalStopwatch watch = new($"Populating DAT from {basePath}");
 
             // Process the input
             if (Directory.Exists(basePath))
@@ -187,14 +187,14 @@ namespace SabreTools.DatTools
                 return false;
 
             // Check the file as if it were in a depot
-            GZipArchive gzarc = new GZipArchive(item);
+            GZipArchive gzarc = new(item);
             BaseFile baseFile = gzarc.GetTorrentGZFileInfo();
 
             // If the rom is valid, add it
             if (baseFile != null && baseFile.Filename != null)
             {
                 // Add the list if it doesn't exist already
-                Rom rom = new Rom(baseFile);
+                Rom rom = new(baseFile);
                 datFile.Items.Add(rom.GetKey(ItemKey.CRC), rom);
                 logger.Verbose($"File added: {Path.GetFileNameWithoutExtension(item)}");
             }
@@ -236,7 +236,7 @@ namespace SabreTools.DatTools
         /// <param name="archive">BaseArchive to get blanks from</param>
         private static void ProcessArchiveBlanks(DatFile datFile, string item, string basePath, BaseArchive archive)
         {
-            List<string> empties = new List<string>();
+            List<string> empties = new();
 
             // Get the parent path for all items
             string parent = (Path.GetDirectoryName(Path.GetFullPath(item)) + Path.DirectorySeparatorChar).Remove(0, basePath.Length) + Path.GetFileNameWithoutExtension(item);
@@ -248,7 +248,7 @@ namespace SabreTools.DatTools
             // Add add all of the found empties to the DAT
             Parallel.ForEach(empties, Globals.ParallelOptions, empty =>
             {
-                Rom emptyRom = new Rom(Path.Combine(empty, "_"), item);
+                Rom emptyRom = new(Path.Combine(empty, "_"), item);
                 ProcessFileHelper(datFile, item, emptyRom, basePath, parent);
             });
         }
@@ -324,7 +324,7 @@ namespace SabreTools.DatTools
         private static void ProcessFileHelper(DatFile datFile, string item, DatItem datItem, string basepath, string parent)
         {
             // If we didn't get an accepted parsed type somehow, cancel out
-            List<ItemType> parsed = new List<ItemType> { ItemType.Disk, ItemType.Media, ItemType.Rom };
+            List<ItemType> parsed = new() { ItemType.Disk, ItemType.File, ItemType.Media, ItemType.Rom };
             if (!parsed.Contains(datItem.ItemType))
                 return;
 

@@ -200,7 +200,7 @@ namespace SabreTools.FileTypes
                 return outFileType;
 
             // Read the first bytes of the file and get the magic number
-            BinaryReader br = new BinaryReader(File.OpenRead(input));
+            BinaryReader br = new(File.OpenRead(input));
             byte[] magic = br.ReadBytes(8);
             br.Dispose();
 
@@ -291,7 +291,7 @@ namespace SabreTools.FileTypes
                 if (rule.Tests != null && rule.Tests.Length != 0)
                 {
                     // Create the output stream
-                    MemoryStream outputStream = new MemoryStream();
+                    MemoryStream outputStream = new();
 
                     // Transform the stream and get the information from it
                     rule.TransformStream(inputStream, outputStream, keepReadOpen: false, keepWriteOpen: true);
@@ -335,7 +335,7 @@ namespace SabreTools.FileTypes
             try
             {
                 // Get a list of hashers to run over the buffer
-                List<Hasher> hashers = new List<Hasher>();
+                List<Hasher> hashers = new();
 
                 if (hashes.HasFlag(Hash.CRC))
                     hashers.Add(new Hasher(Hash.CRC));
@@ -391,7 +391,7 @@ namespace SabreTools.FileTypes
                 Parallel.ForEach(hashers, Globals.ParallelOptions, h => h.Terminate());
 
                 // Get the results
-                BaseFile baseFile = new BaseFile()
+                BaseFile baseFile = new()
                 {
                     Size = size,
                     CRC = hashes.HasFlag(Hash.CRC) ? hashers.First(h => h.HashType == Hash.CRC).GetHash() : null,
@@ -433,35 +433,34 @@ namespace SabreTools.FileTypes
             string ext = path.GetNormalizedExtension();
 
             // Check against the list of known archive extensions
-            switch (ext)
+            return ext switch
             {
                 // Aaruformat
-                case "aaru":
-                case "aaruf":
-                case "aaruformat":
-                case "aif":
-                case "dicf":
-
-                // Archives
-                case "7z":
-                case "gz":
-                case "lzma":
-                case "rar":
-                case "rev":
-                case "r00":
-                case "r01":
-                case "tar":
-                case "tgz":
-                case "tlz":
-                case "zip":
-                case "zipx":
-
+                "aaru" => true,
+                "aaruf" => true,
+                "aaruformat" => true,
+                "aif" => true,
+                "dicf" => true,
+                
+                // Archive
+                "7z" => true,
+                "gz" => true,
+                "lzma" => true,
+                "rar" => true,
+                "rev" => true,
+                "r00" => true,
+                "r01" => true,
+                "tar" => true,
+                "tgz" => true,
+                "tlz" => true,
+                "zip" => true,
+                "zipx" => true,
+                
                 // CHD
-                case "chd":
-                    return true;
-                default:
-                    return false;
-            }
+                "chd" => true,
+                
+                _ => false,
+            };
         }
 
         #endregion

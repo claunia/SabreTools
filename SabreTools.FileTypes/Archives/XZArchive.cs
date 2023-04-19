@@ -148,7 +148,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             string realEntry;
 
             try
@@ -205,14 +205,14 @@ namespace SabreTools.FileTypes.Archives
                     try
                     {
                         // Create a blank item for the entry
-                        BaseFile xzEntryRom = new BaseFile();
+                        BaseFile xzEntryRom = new();
 
                         // Perform a quickscan, if flagged to
                         if (this.AvailableHashes == Hash.CRC)
                         {
                             xzEntryRom.Filename = gamename;
                             
-                            using BinaryReader br = new BinaryReader(File.OpenRead(this.Filename));
+                            using BinaryReader br = new(File.OpenRead(this.Filename));
                             br.BaseStream.Seek(-8, SeekOrigin.End);
                             xzEntryRom.CRC = br.ReadBytesBigEndian(4);
                             xzEntryRom.Size = br.ReadInt32BigEndian();
@@ -286,7 +286,7 @@ namespace SabreTools.FileTypes.Archives
                 return null;
             }
 
-            BaseFile baseFile = new BaseFile
+            BaseFile baseFile = new()
             {
                 Filename = Path.GetFileNameWithoutExtension(this.Filename).ToLowerInvariant(),
                 SHA1 = Utilities.StringToByteArray(Path.GetFileNameWithoutExtension(this.Filename)),
@@ -347,7 +347,7 @@ namespace SabreTools.FileTypes.Archives
             if (!File.Exists(outfile))
             {
                 // Compress the input stream
-                XZStream outputStream = new XZStream(File.Create(outfile));
+                XZStream outputStream = new(File.Create(outfile));
                 inputStream.CopyTo(outputStream);
 
                 // Dispose of everything

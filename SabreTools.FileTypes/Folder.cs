@@ -27,7 +27,7 @@ namespace SabreTools.FileTypes
         /// <summary>
         /// Static logger for static methods
         /// </summary>
-        protected static Logger staticLogger = new Logger();
+        protected static Logger staticLogger = new();
 
         /// <summary>
         /// Flag specific to Folder to omit Machine name from output path
@@ -70,49 +70,24 @@ namespace SabreTools.FileTypes
         /// <returns>Archive object representing the inputs</returns>
         public static Folder Create(OutputFormat outputFormat)
         {
-            switch (outputFormat)
+            return outputFormat switch
             {
-                case OutputFormat.Folder:
-                    return new Folder(false);
-
-                case OutputFormat.ParentFolder:
-                    return new Folder(true);
-
-                case OutputFormat.TapeArchive:
-                    return new TapeArchive();
-
-                case OutputFormat.Torrent7Zip:
-                    return new SevenZipArchive();
-
-                case OutputFormat.TorrentGzip:
-                case OutputFormat.TorrentGzipRomba:
-                    return new GZipArchive();
-
-                case OutputFormat.TorrentLRZip:
-                    return new LRZipArchive();
-
-                case OutputFormat.TorrentLZ4:
-                    return new LZ4Archive();
-
-                case OutputFormat.TorrentRar:
-                    return new RarArchive();
-
-                case OutputFormat.TorrentXZ:
-                case OutputFormat.TorrentXZRomba:
-                    return new XZArchive();
-
-                case OutputFormat.TorrentZip:
-                    return new ZipArchive();
-
-                case OutputFormat.TorrentZPAQ:
-                    return new ZPAQArchive();
-
-                case OutputFormat.TorrentZstd:
-                    return new ZstdArchive();
-
-                default:
-                    return null;
-            }
+                OutputFormat.Folder => new Folder(false),
+                OutputFormat.ParentFolder => new Folder(true),
+                OutputFormat.TapeArchive => new TapeArchive(),
+                OutputFormat.Torrent7Zip => new SevenZipArchive(),
+                OutputFormat.TorrentGzip => new GZipArchive(),
+                OutputFormat.TorrentGzipRomba => new GZipArchive(),
+                OutputFormat.TorrentLRZip => new LRZipArchive(),
+                OutputFormat.TorrentLZ4 => new LZ4Archive(),
+                OutputFormat.TorrentRar => new RarArchive(),
+                OutputFormat.TorrentXZ => new XZArchive(),
+                OutputFormat.TorrentXZRomba => new XZArchive(),
+                OutputFormat.TorrentZip => new ZipArchive(),
+                OutputFormat.TorrentZPAQ => new ZPAQArchive(),
+                OutputFormat.TorrentZstd => new ZstdArchive(),
+                _ => null,
+            };
         }
 
         #endregion
@@ -148,7 +123,7 @@ namespace SabreTools.FileTypes
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             // Get the subdirectories for the specified directory.
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+            DirectoryInfo dir = new(sourceDirName);
 
             if (!dir.Exists)
             {
@@ -229,7 +204,7 @@ namespace SabreTools.FileTypes
         /// <returns>MemoryStream representing the entry, null on error</returns>
         public virtual (MemoryStream, string) CopyToStream(string entryName)
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             string realentry = null;
 
             // Copy single file from the current folder to the output directory, if exists
@@ -281,7 +256,7 @@ namespace SabreTools.FileTypes
 
                 foreach (string dir in Directory.EnumerateDirectories(this.Filename, "*", SearchOption.TopDirectoryOnly))
                 {
-                    Folder fl = new Folder(dir);
+                    Folder fl = new(dir);
                     _children.Add(fl);
                 }
             }

@@ -26,7 +26,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -73,10 +73,10 @@ namespace SabreTools.DatTools
             #region Rebuild from depots in order
 
             string format = FromOutputFormat(outputFormat) ?? string.Empty;
-            InternalStopwatch watch = new InternalStopwatch($"Rebuilding all files to {format}");
+            InternalStopwatch watch = new($"Rebuilding all files to {format}");
 
             // Now loop through and get only directories from the input paths
-            List<string> directories = new List<string>();
+            List<string> directories = new();
             Parallel.ForEach(inputs, Globals.ParallelOptions, input =>
             {
                 // Add to the list if the input is a directory
@@ -126,7 +126,7 @@ namespace SabreTools.DatTools
                     continue;
 
                 // If we have a path, we want to try to get the rom information
-                GZipArchive archive = new GZipArchive(foundpath);
+                GZipArchive archive = new(foundpath);
                 BaseFile fileinfo = archive.GetTorrentGZFileInfo();
 
                 // If the file information is null, then we continue
@@ -215,7 +215,7 @@ namespace SabreTools.DatTools
             #region Rebuild from sources in order
 
             string format = FromOutputFormat(outputFormat) ?? string.Empty;
-            InternalStopwatch watch = new InternalStopwatch($"Rebuilding all files to {format}");
+            InternalStopwatch watch = new($"Rebuilding all files to {format}");
 
             // Now loop through all of the files in all of the inputs
             foreach (string input in inputs)
@@ -287,8 +287,8 @@ namespace SabreTools.DatTools
             List<BaseFile> entries = null;
 
             // Get the TGZ and TXZ status for later
-            GZipArchive tgz = new GZipArchive(file);
-            XZArchive txz = new XZArchive(file);
+            GZipArchive tgz = new(file);
+            XZArchive txz = new(file);
             bool isSingleTorrent = tgz.IsTorrent() || txz.IsTorrent();
 
             // Get the base archive first
@@ -431,11 +431,11 @@ namespace SabreTools.DatTools
                 if (rule.Tests != null && rule.Tests.Length != 0)
                 {
                     // If the file could be transformed correctly
-                    MemoryStream transformStream = new MemoryStream();
+                    MemoryStream transformStream = new();
                     if (rule.TransformStream(fileStream, transformStream, keepReadOpen: true, keepWriteOpen: true))
                     {
                         // Get the file informations that we will be using
-                        Rom headerless = new Rom(BaseFile.GetInfo(transformStream, keepReadOpen: true));
+                        Rom headerless = new(BaseFile.GetInfo(transformStream, keepReadOpen: true));
 
                         // If we have duplicates and we're not filtering
                         if (ShouldRebuild(datFile, headerless, transformStream, false, out dupes))
@@ -508,7 +508,7 @@ namespace SabreTools.DatTools
                 string machinename = null;
 
                 // Get the item from the current file
-                Rom item = new Rom(BaseFile.GetInfo(stream, keepReadOpen: true));
+                Rom item = new(BaseFile.GetInfo(stream, keepReadOpen: true));
                 item.Machine.Name = Path.GetFileNameWithoutExtension(item.Name);
                 item.Machine.Description = Path.GetFileNameWithoutExtension(item.Name);
 
@@ -543,7 +543,7 @@ namespace SabreTools.DatTools
         private static bool RebuildTorrentGzip(DatFile datFile, DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
         {
             // If we have a very specific TGZ->TGZ case, just copy it accordingly
-            GZipArchive tgz = new GZipArchive(file);
+            GZipArchive tgz = new(file);
             BaseFile tgzRom = tgz.GetTorrentGZFileInfo();
             if (isZip == false && tgzRom != null && (outputFormat == OutputFormat.TorrentGzip || outputFormat == OutputFormat.TorrentGzipRomba))
             {
@@ -587,7 +587,7 @@ namespace SabreTools.DatTools
         private static bool RebuildTorrentXz(DatFile datFile, DatItem datItem, string file, string outDir, OutputFormat outputFormat, bool? isZip)
         {
             // If we have a very specific TGZ->TGZ case, just copy it accordingly
-            XZArchive txz = new XZArchive(file);
+            XZArchive txz = new(file);
             BaseFile txzRom = txz.GetTorrentXZFileInfo();
             if (isZip == false && txzRom != null && (outputFormat == OutputFormat.TorrentXZ || outputFormat == OutputFormat.TorrentXZRomba))
             {

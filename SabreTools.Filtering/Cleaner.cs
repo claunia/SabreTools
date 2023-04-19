@@ -90,7 +90,7 @@ namespace SabreTools.Filtering
         /// <summary>
         /// Logging object
         /// </summary>
-        private readonly Logger logger = new Logger();
+        private readonly Logger logger = new();
 
         #endregion
 
@@ -104,7 +104,7 @@ namespace SabreTools.Filtering
         /// <returns>True if cleaning was successful, false on error</returns>
         public bool ApplyCleaning(DatFile datFile, bool throwOnError = false)
         {
-            InternalStopwatch watch = new InternalStopwatch("Applying cleaning steps to DAT");
+            InternalStopwatch watch = new("Applying cleaning steps to DAT");
 
             try
             {
@@ -212,7 +212,7 @@ namespace SabreTools.Filtering
                 if (datItem.GetName().Length > usableLength)
                 {
                     string ext = Path.GetExtension(datItem.GetName());
-                    datItem.SetName(datItem.GetName().Substring(0, usableLength - ext.Length) + ext);
+                    datItem.SetName(datItem.GetName()[..(usableLength - ext.Length)] + ext);
                 }
             }
         }
@@ -222,7 +222,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="game">Name of the game to be cleaned</param>
         /// <returns>The cleaned name</returns>
-        internal string CleanGameName(string game)
+        internal static string CleanGameName(string game)
         {
             if (game == null)
                 return null;
@@ -247,7 +247,7 @@ namespace SabreTools.Filtering
             try
             {
                 // First we want to get a mapping for all games to description
-                ConcurrentDictionary<string, string> mapping = new ConcurrentDictionary<string, string>();
+                ConcurrentDictionary<string, string> mapping = new();
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
                     ConcurrentList<DatItem> items = datFile.Items[key];
@@ -262,7 +262,7 @@ namespace SabreTools.Filtering
                 Parallel.ForEach(datFile.Items.Keys, Globals.ParallelOptions, key =>
                 {
                     ConcurrentList<DatItem> items = datFile.Items[key];
-                    ConcurrentList<DatItem> newItems = new ConcurrentList<DatItem>();
+                    ConcurrentList<DatItem> newItems = new();
                     foreach (DatItem item in items)
                     {
                         // Update machine name
@@ -301,7 +301,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="input">String to be parsed</param>
         /// <returns>String with characters replaced</returns>
-        internal string NormalizeChars(string input)
+        internal static string NormalizeChars(string input)
         {
             if (input == null)
                 return null;
@@ -357,7 +357,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="s">Input string to clean</param>
         /// <returns>Cleaned string</returns>
-        internal string RemoveUnicodeCharacters(string s)
+        internal static string RemoveUnicodeCharacters(string s)
         {
             if (s == null)
                 return null;
@@ -370,7 +370,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="input">String to be parsed</param>
         /// <returns>String with characters replaced</returns>
-        internal string RussianToLatin(string input)
+        internal static string RussianToLatin(string input)
         {
             if (input == null)
                 return null;
@@ -405,7 +405,7 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="input">String to be parsed</param>
         /// <returns>String with characters replaced</returns>
-        internal string SearchPattern(string input)
+        internal static string SearchPattern(string input)
         {
             if (input == null)
                 return null;
@@ -464,14 +464,13 @@ namespace SabreTools.Filtering
         internal void SetOneGamePerRegion(DatFile datFile)
         {
             // If we have null region list, make it empty
-            if (RegionList == null)
-                RegionList = new List<string>();
+            RegionList ??= new List<string>();
 
             // For sake of ease, the first thing we want to do is bucket by game
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Then we want to get a mapping of all machines to parents
-            Dictionary<string, List<string>> parents = new Dictionary<string, List<string>>();
+            Dictionary<string, List<string>> parents = new();
             foreach (string key in datFile.Items.Keys)
             {
                 DatItem item = datFile.Items[key][0];
@@ -535,7 +534,7 @@ namespace SabreTools.Filtering
         /// Ensure that all roms are in their own game (or at least try to ensure)
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
-        internal void SetOneRomPerGame(DatFile datFile)
+        internal static void SetOneRomPerGame(DatFile datFile)
         {
             // Because this introduces subfolders, we need to set the SuperDAT type
             datFile.Header.Type = "SuperDAT";
@@ -555,7 +554,7 @@ namespace SabreTools.Filtering
         /// Set internal names to match One Rom Per Game (ORPG) logic
         /// </summary>
         /// <param name="datItem">DatItem to run logic on</param>
-        internal void SetOneRomPerGame(DatItem datItem)
+        internal static void SetOneRomPerGame(DatItem datItem)
         {
             if (datItem.GetName() == null)
                 return;

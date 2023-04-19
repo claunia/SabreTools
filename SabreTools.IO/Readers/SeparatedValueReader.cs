@@ -166,7 +166,7 @@ namespace SabreTools.IO.Readers
                 return null;
 
             int index = HeaderValues.IndexOf(key);
-            if (Line.Count() < index)
+            if (Line.Count < index)
                 throw new ArgumentException($"Current line doesn't have index {index}");
 
             return Line[index];
@@ -177,7 +177,7 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public string GetValue(int index)
         {
-            if (Line.Count() < index)
+            if (Line.Count < index)
                 throw new ArgumentException($"Current line doesn't have index {index}");
 
             return Line[index];

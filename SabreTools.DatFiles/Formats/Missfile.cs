@@ -50,7 +50,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                StreamWriter sw = new StreamWriter(fs, new UTF8Encoding(false));
+                StreamWriter sw = new(fs, new UTF8Encoding(false));
 
                 // Write out each of the machines and roms
                 string lastgame = null;

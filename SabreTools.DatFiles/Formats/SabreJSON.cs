@@ -31,8 +31,8 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all internal variables
-            StreamReader sr = new StreamReader(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
-            JsonTextReader jtr = new JsonTextReader(sr);
+            StreamReader sr = new(System.IO.File.OpenRead(filename), new UTF8Encoding(false));
+            JsonTextReader jtr = new(sr);
 
             // If we got a null reader, just return
             if (jtr == null)
@@ -91,7 +91,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Read in the header and apply any new fields
             jtr.Read();
-            JsonSerializer js = new JsonSerializer();
+            JsonSerializer js = new();
             DatHeader header = js.Deserialize<DatHeader>(jtr);
             Header.ConditionalCopy(header);
         }
@@ -111,7 +111,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Read in the machine array
             jtr.Read();
-            JsonSerializer js = new JsonSerializer();
+            JsonSerializer js = new();
             JArray machineArray = js.Deserialize<JArray>(jtr);
 
             // Loop through each machine object and process
@@ -355,8 +355,8 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                StreamWriter sw = new StreamWriter(fs, new UTF8Encoding(false));
-                JsonTextWriter jtw = new JsonTextWriter(sw)
+                StreamWriter sw = new(fs, new UTF8Encoding(false));
+                JsonTextWriter jtw = new(sw)
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',
@@ -431,7 +431,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Write the DatHeader
             jtw.WritePropertyName("header");
-            JsonSerializer js = new JsonSerializer() { Formatting = Formatting.Indented };
+            JsonSerializer js = new() { Formatting = Formatting.Indented };
             js.Serialize(jtw, Header);
 
             jtw.WritePropertyName("machines");
@@ -455,7 +455,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Write the Machine
             jtw.WritePropertyName("machine");
-            JsonSerializer js = new JsonSerializer() { Formatting = Formatting.Indented };
+            JsonSerializer js = new() { Formatting = Formatting.Indented };
             js.Serialize(jtw, datItem.Machine);
 
             jtw.WritePropertyName("items");
@@ -494,7 +494,7 @@ namespace SabreTools.DatFiles.Formats
 
             // Write the DatItem
             jtw.WritePropertyName("datitem");
-            JsonSerializer js = new JsonSerializer() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
+            JsonSerializer js = new() { ContractResolver = new BaseFirstContractResolver(), Formatting = Formatting.Indented };
             js.Serialize(jtw, datItem);
 
             // End item

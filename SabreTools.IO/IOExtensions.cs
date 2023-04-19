@@ -113,12 +113,12 @@ namespace SabreTools.IO
                 return null;
 
             // If it does and it is empty, return a blank enumerable
-            if (Directory.EnumerateFileSystemEntries(root, "*", SearchOption.AllDirectories).Count() == 0)
+            if (!Directory.EnumerateFileSystemEntries(root, "*", SearchOption.AllDirectories).Any())
                 return new List<string>();
 
             // Otherwise, get the complete list
             return Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories)
-                .Where(dir => Directory.EnumerateFileSystemEntries(dir, "*", SearchOption.AllDirectories).Count() == 0)
+                .Where(dir => !Directory.EnumerateFileSystemEntries(dir, "*", SearchOption.AllDirectories).Any())
                 .ToList();
         }
     }

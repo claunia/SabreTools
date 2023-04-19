@@ -99,17 +99,11 @@ namespace SabreTools.Test.Filtering
         [Fact]
         public void SetOneRomPerGameTest()
         {
-            // Setup cleaner
-            var cleaner = new Cleaner
-            {
-                OneRomPerGame = true,
-            };
-
             // Setup DatItem
             var datItem = CreateDatItem("name", "name-2", "name-3");
 
             // Run cleaning
-            cleaner.SetOneRomPerGame(datItem);
+            Cleaner.SetOneRomPerGame(datItem);
 
             // Check the fields
             Assert.Equal("name", datItem.GetName());
@@ -119,7 +113,7 @@ namespace SabreTools.Test.Filtering
         /// <summary>
         /// Generate a consistent DatItem for testing
         /// </summary>
-        private DatItem CreateDatItem(string name, string machine, string desc)
+        private static DatItem CreateDatItem(string name, string machine, string desc)
         {
             return new Rom
             {

@@ -71,7 +71,7 @@ namespace SabreTools.Logging
         /// <summary>
         /// Object lock for multithreaded logging
         /// </summary>
-        private static readonly object _lock = new object();
+        private static readonly object _lock = new();
 
         #endregion
 

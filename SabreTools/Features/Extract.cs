@@ -130,11 +130,11 @@ The following systems have headers that this program can work with:
             EnsureDatabase();
 
             // Open the database connection
-            SqliteConnection dbc = new SqliteConnection(HeadererConnectionString);
+            SqliteConnection dbc = new(HeadererConnectionString);
             dbc.Open();
 
             string query = $"SELECT * FROM data WHERE sha1='{SHA1}' AND header='{header}'";
-            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteCommand slc = new(query, dbc);
             SqliteDataReader sldr = slc.ExecuteReader();
             bool exists = sldr.HasRows;
 

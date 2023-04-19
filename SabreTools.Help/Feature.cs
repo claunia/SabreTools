@@ -87,9 +87,7 @@ namespace SabreTools.Help
         /// <param name="feature"></param>
         public void AddFeature(Feature feature)
         {
-            if (this.Features == null)
-                this.Features = new Dictionary<string, Feature>();
-
+            this.Features ??= new Dictionary<string, Feature>();
             lock (this.Features)
             {
                 this.Features[feature.Name] = feature;
@@ -102,9 +100,7 @@ namespace SabreTools.Help
         /// <param name="flag">Flag to add for this feature</param>
         public void AddFlag(string flag)
         {
-            if (this.Flags == null)
-                this.Flags = new List<string>();
-
+            this.Flags ??= new List<string>();
             lock (this.Flags)
             {
                 this.Flags.Add(flag);
@@ -117,9 +113,7 @@ namespace SabreTools.Help
         /// <param name="flags">List of flags to add to this feature</param>
         public void AddFlags(List<string> flags)
         {
-            if (this.Flags == null)
-                this.Flags = new List<string>();
-
+            this.Flags ??= new List<string>();
             lock (this.Flags)
             {
                 this.Flags.AddRange(flags);
@@ -159,7 +153,7 @@ namespace SabreTools.Help
         public List<string> Output(int pre = 0, int midpoint = 0, bool includeLongDescription = false)
         {
             // Create the output list
-            List<string> outputList = new List<string>();
+            List<string> outputList = new();
 
             // Build the output string first
             string output = string.Empty;
@@ -216,7 +210,7 @@ namespace SabreTools.Help
                 for (int i = 0; i < split.Length; i++)
                 {
                     // If we have a newline character, reset the line and continue
-                    if (split[i].Contains("\n"))
+                    if (split[i].Contains('\n'))
                     {
                         string[] subsplit = split[i].Replace("\r", string.Empty).Split('\n');
                         for (int j = 0; j < subsplit.Length - 1; j++)
@@ -269,7 +263,7 @@ namespace SabreTools.Help
         /// </summary>
         /// <param name="spaces">Number of padding spaces to add</param>
         /// <returns>String with requested number of blank spaces</returns>
-        private string CreatePadding(int spaces)
+        private static string CreatePadding(int spaces)
         {
             return string.Empty.PadRight(spaces);
         }
@@ -284,7 +278,7 @@ namespace SabreTools.Help
         public List<string> OutputRecursive(int tabLevel, int pre = 0, int midpoint = 0, bool includeLongDescription = false)
         {
             // Create the output list
-            List<string> outputList = new List<string>();
+            List<string> outputList = new();
 
             // Build the output string first
             string output = string.Empty;
@@ -350,7 +344,7 @@ namespace SabreTools.Help
                 for (int i = 0; i < split.Length; i++)
                 {
                     // If we have a newline character, reset the line and continue
-                    if (split[i].Contains("\n"))
+                    if (split[i].Contains('\n'))
                     {
                         string[] subsplit = split[i].Replace("\r", string.Empty).Split('\n');
                         for (int j = 0; j < subsplit.Length - 1; j++)
@@ -420,7 +414,7 @@ namespace SabreTools.Help
             {
                 // If we have a flag, make sure it doesn't have an equal sign in it 
                 case ParameterType.Flag:
-                    valid = !input.Contains("=") && this.Flags.Contains(input);
+                    valid = !input.Contains('=') && this.Flags.Contains(input);
                     if (valid)
                     {
                         _value = true;
@@ -436,7 +430,7 @@ namespace SabreTools.Help
 
                 // If we have an Int32, try to parse it if at all possible
                 case ParameterType.Int32:
-                    valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         if (!Int32.TryParse(input.Split('=')[1], out int value))
@@ -455,7 +449,7 @@ namespace SabreTools.Help
 
                 // If we have an Int32, try to parse it if at all possible
                 case ParameterType.Int64:
-                    valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         if (!Int64.TryParse(input.Split('=')[1], out long value))
@@ -474,19 +468,17 @@ namespace SabreTools.Help
 
                 // If we have an input, make sure it has an equals sign in it
                 case ParameterType.List:
-                    valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
-                        if (_value == null)
-                            _value = new List<string>();
-
+                        _value ??= new List<string>();
                         (_value as List<string>).Add(input.Split('=')[1]);
                     }
 
                     break;
 
                 case ParameterType.String:
-                    valid = input.Contains("=") && this.Flags.Contains(input.Split('=')[0]);
+                    valid = input.Contains('=') && this.Flags.Contains(input.Split('=')[0]);
                     if (valid)
                     {
                         _value = input.Split('=')[1];

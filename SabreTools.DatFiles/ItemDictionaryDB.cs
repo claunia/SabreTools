@@ -47,7 +47,7 @@ namespace SabreTools.DatFiles
         /// <summary>
         /// Lock for statistics calculation
         /// </summary>
-        private readonly object statsLock = new object();
+        private readonly object statsLock = new();
 
         /// <summary>
         /// Logging object
@@ -100,10 +100,10 @@ namespace SabreTools.DatFiles
                 dbc.Open();
 
                 string query = $"SELECT key FROM keys";
-                SqliteCommand slc = new SqliteCommand(query, dbc);
+                SqliteCommand slc = new(query, dbc);
                 SqliteDataReader sldr = slc.ExecuteReader();
 
-                List<string> keys = new List<string>();
+                List<string> keys = GetKeys();
                 if (sldr.HasRows)
                 {
                     while (sldr.Read())
@@ -119,6 +119,11 @@ namespace SabreTools.DatFiles
 
                 return keys;
             }
+        }
+
+        private static List<string> GetKeys()
+        {
+            return new List<string>();
         }
 
         /// <summary>
@@ -457,10 +462,10 @@ namespace SabreTools.DatFiles
                     dbc.Open();
 
                     string query = $"SELECT item FROM groups WHERE key='{key}'";
-                    SqliteCommand slc = new SqliteCommand(query, dbc);
+                    SqliteCommand slc = new(query, dbc);
                     SqliteDataReader sldr = slc.ExecuteReader();
 
-                    ConcurrentList<DatItem> items = new ConcurrentList<DatItem>();
+                    ConcurrentList<DatItem> items = new();
                     if (sldr.HasRows)
                     {
                         while (sldr.Read())
@@ -495,7 +500,7 @@ namespace SabreTools.DatFiles
                     // Now remove the value
                     string itemString = JsonConvert.SerializeObject(value);
                     string query = $"DELETE FROM groups WHERE key='{key}'";
-                    SqliteCommand slc = new SqliteCommand(query, dbc);
+                    SqliteCommand slc = new(query, dbc);
                     slc.ExecuteNonQuery();
 
                     // Dispose of database objects
@@ -536,7 +541,7 @@ namespace SabreTools.DatFiles
                 // Now add the value
                 string itemString = JsonConvert.SerializeObject(value);
                 string query = $"INSERT INTO groups (key, item) VALUES ('{key}', '{itemString}')";
-                SqliteCommand slc = new SqliteCommand(query, dbc);
+                SqliteCommand slc = new(query, dbc);
                 slc.ExecuteNonQuery();
 
                 // Dispose of database objects
@@ -836,7 +841,7 @@ namespace SabreTools.DatFiles
             dbc.Open();
 
             string query = $"INSERT INTO keys (key) VALUES ('{key}')";
-            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteCommand slc = new(query, dbc);
             slc.ExecuteNonQuery();
 
             // Dispose of database objects
@@ -917,7 +922,7 @@ namespace SabreTools.DatFiles
                 // Now remove the value
                 string itemString = JsonConvert.SerializeObject(value);
                 string query = $"DELETE FROM groups WHERE key='{key}' AND item='{itemString}'";
-                SqliteCommand slc = new SqliteCommand(query, dbc);
+                SqliteCommand slc = new(query, dbc);
                 slc.ExecuteNonQuery();
 
                 // Dispose of database objects
@@ -1142,7 +1147,7 @@ CREATE TABLE IF NOT EXISTS keys (
     'key'		TEXT		NOT NULL
     PRIMARY KEY (key)
 )";
-            SqliteCommand slc = new SqliteCommand(query, dbc);
+            SqliteCommand slc = new(query, dbc);
             slc.ExecuteNonQuery();
 
             query = @"
@@ -1275,7 +1280,7 @@ CREATE TABLE IF NOT EXISTS groups (
                     this[key] = null;
 
                 // If there are no non-blank items, remove
-                else if (this[key].Count(i => i != null && i.ItemType != ItemType.Blank) == 0)
+                else if (!this[key].Any(i => i != null && i.ItemType != ItemType.Blank))
                     this[key] = null;
             }
         }
@@ -1304,7 +1309,7 @@ CREATE TABLE IF NOT EXISTS groups (
         /// <returns>List of matched DatItem objects</returns>
         public ConcurrentList<DatItem> GetDuplicates(DatItem datItem, bool sorted = false)
         {
-            ConcurrentList<DatItem> output = new ConcurrentList<DatItem>();
+            ConcurrentList<DatItem> output = new();
 
             // Check for an empty rom list first
             if (TotalCount == 0)
@@ -1319,7 +1324,7 @@ CREATE TABLE IF NOT EXISTS groups (
 
             // Try to find duplicates
             ConcurrentList<DatItem> roms = this[key];
-            ConcurrentList<DatItem> left = new ConcurrentList<DatItem>();
+            ConcurrentList<DatItem> left = new();
             for (int i = 0; i < roms.Count; i++)
             {
                 DatItem other = roms[i];

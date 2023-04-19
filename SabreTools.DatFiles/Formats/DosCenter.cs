@@ -32,7 +32,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            ClrMameProReader cmpr = new ClrMameProReader(System.IO.File.OpenRead(filename), enc)
+            ClrMameProReader cmpr = new(System.IO.File.OpenRead(filename), enc)
             {
                 DosCenter = true
             };
@@ -143,7 +143,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Prepare all internal variables
             bool containsItems = false;
-            Machine machine = new Machine()
+            Machine machine = new()
             {
                 MachineType = MachineType.NULL,
             };
@@ -236,7 +236,7 @@ namespace SabreTools.DatFiles.Formats
             // If no items were found for this machine, add a Blank placeholder
             if (!containsItems)
             {
-                Blank blank = new Blank()
+                Blank blank = new()
                 {
                     Source = new Source
                     {
@@ -280,7 +280,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                ClrMameProWriter cmpw = new ClrMameProWriter(fs, new UTF8Encoding(false))
+                ClrMameProWriter cmpw = new(fs, new UTF8Encoding(false))
                 {
                     Quotes = false
                 };

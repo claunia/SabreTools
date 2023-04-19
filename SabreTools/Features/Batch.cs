@@ -60,7 +60,7 @@ Reset the internal state:           reset();";
             // Try to read each input as a batch run file
             foreach (string path in Inputs)
             {
-                InternalStopwatch watch = new InternalStopwatch($"Processing '{path}'...");
+                InternalStopwatch watch = new($"Processing '{path}'...");
                 ProcessScript(path);
                 watch.Stop();
             }
@@ -88,7 +88,7 @@ Reset the internal state:           reset();";
                 string[] lines = File.ReadAllLines(path);
 
                 // Each batch file has its own state
-                BatchState batchState = new BatchState();
+                BatchState batchState = new();
 
                 // Process each command line
                 foreach (string line in lines)
@@ -244,7 +244,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner descNameCleaner = new Cleaner { DescriptionAsName = true };
+                Cleaner descNameCleaner = new() { DescriptionAsName = true };
                 descNameCleaner.ApplyCleaning(batchState.DatFile);
             }
         }
@@ -286,7 +286,7 @@ Reset the internal state:           reset();";
                 }
 
                 // TODO: We might not want to remove dates in the future
-                Remover dfdRemover = new Remover();
+                Remover dfdRemover = new();
                 dfdRemover.PopulateExclusionsFromList(new List<string> { "DatItem.Date" });
                 dfdRemover.ApplyRemovals(batchState.DatFile);
             }
@@ -345,8 +345,8 @@ Reset the internal state:           reset();";
                 string extraFile = Arguments[1];
 
                 // Create the extra INI
-                ExtraIni extraIni = new ExtraIni();
-                ExtraIniItem extraIniItem = new ExtraIniItem
+                ExtraIni extraIni = new();
+                ExtraIniItem extraIniItem = new()
                 {
                     MachineField = extraMachineField,
                     DatItemField = extraDatItemField,
@@ -430,7 +430,7 @@ Reset the internal state:           reset();";
                     filterPerMachine = Arguments[3].AsYesNo();
 
                 // Create filter to run filters from
-                Filter filter = new Filter
+                Filter filter = new()
                 {
                     MachineFilter = new MachineFilter { HasFilters = true },
                     DatItemFilter = new DatItemFilter { HasFilters = true },
@@ -474,7 +474,7 @@ Reset the internal state:           reset();";
                 }
 
                 // Check all inputs to be valid formats
-                List<string> unmappedFormats = new List<string>();
+                List<string> unmappedFormats = new();
                 foreach (string format in Arguments)
                 {
                     if (GetDatFormat(format) == 0x0)
@@ -586,7 +586,7 @@ Reset the internal state:           reset();";
                 MergingFlag mergingFlag = Arguments[0].AsMergingFlag();
 
                 // Apply the merging flag
-                Filtering.Splitter splitter = new Filtering.Splitter { SplitType = mergingFlag };
+                Filtering.Splitter splitter = new() { SplitType = mergingFlag };
                 splitter.ApplySplitting(batchState.DatFile, false, false);
             }
         }
@@ -620,7 +620,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner ogorCleaner = new Cleaner { OneGamePerRegion = true, RegionList = Arguments }; 
+                Cleaner ogorCleaner = new() { OneGamePerRegion = true, RegionList = Arguments }; 
                 ogorCleaner.ApplyCleaning(batchState.DatFile);
             }
         }
@@ -654,7 +654,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner orpgCleaner = new Cleaner { OneRomPerGame = true }; 
+                Cleaner orpgCleaner = new() { OneRomPerGame = true }; 
                 orpgCleaner.ApplyCleaning(batchState.DatFile);
             }
         }
@@ -721,7 +721,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Remover remover = new Remover();
+                Remover remover = new();
                 remover.PopulateExclusionsFromList(Arguments);
                 remover.ApplyRemovals(batchState.DatFile);
             }
@@ -789,7 +789,7 @@ Reset the internal state:           reset();";
             /// <inheritdoc/>
             public override void Process(BatchState batchState)
             {
-                Cleaner stripCleaner = new Cleaner { SceneDateStrip = true }; 
+                Cleaner stripCleaner = new() { SceneDateStrip = true }; 
                 stripCleaner.ApplyCleaning(batchState.DatFile);
             }
         }

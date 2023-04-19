@@ -36,7 +36,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            SeparatedValueReader svr = new SeparatedValueReader(System.IO.File.OpenRead(filename), enc)
+            SeparatedValueReader svr = new(System.IO.File.OpenRead(filename), enc)
             {
                 Header = true,
                 Quotes = true,
@@ -60,11 +60,11 @@ namespace SabreTools.DatFiles.Formats
                     svr.ReadNextLine();
 
                     // Create mapping dictionaries
-                    Setter setter = new Setter();
+                    Setter setter = new();
                     setter.PopulateSettersFromList(svr.HeaderValues, svr.Line);
 
                     // Set DatHeader fields
-                    DatHeader datHeader = new DatHeader();
+                    DatHeader datHeader = new();
                     setter.SetFields(datHeader);
                     Header.ConditionalCopy(datHeader);
 
@@ -117,7 +117,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
+                SeparatedValueWriter svw = new(fs, new UTF8Encoding(false))
                 {
                     Quotes = true,
                     Separator = this._delim,

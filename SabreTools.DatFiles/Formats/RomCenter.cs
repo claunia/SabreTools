@@ -29,7 +29,7 @@ namespace SabreTools.DatFiles.Formats
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
             // Prepare all intenral variables
-            IniReader ir = new IniReader(filename) { ValidateRows = false };
+            IniReader ir = new(filename) { ValidateRows = false };
 
             // If we got a null reader, just return
             if (ir == null)
@@ -326,7 +326,7 @@ namespace SabreTools.DatFiles.Formats
                 9 - merge name
                 */
                 string[] rominfo = line.Split('¬');
-                Rom rom = new Rom
+                Rom rom = new()
                 {
                     Name = rominfo[5],
                     Size = Utilities.CleanLong(rominfo[7]),
@@ -385,14 +385,14 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                IniWriter iw = new IniWriter(fs, new UTF8Encoding(false));
+                IniWriter iw = new(fs, new UTF8Encoding(false));
 
                 // Write out the header
                 WriteHeader(iw);
 
                 // Write out each of the machines and roms
                 string lastgame = null;
-                List<string> splitpath = new List<string>();
+                List<string> splitpath = new();
 
                 // Use a sorted list of games to output
                 foreach (string key in Items.SortedKeys)

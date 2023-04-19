@@ -25,7 +25,7 @@ namespace NaturalSort
 			table = new Dictionary<string, string[]>();
 		}
 
-		public void Dispose()
+        public void Dispose()
 		{
 			table.Clear();
 			table = null;

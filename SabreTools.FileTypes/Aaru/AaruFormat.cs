@@ -118,9 +118,9 @@ namespace SabreTools.FileTypes.Aaru
         {
             try
             {
-                AaruFormat aif = new AaruFormat();
+                AaruFormat aif = new();
 
-                using (BinaryReader br = new BinaryReader(stream, Encoding.Default, true))
+                using (BinaryReader br = new(stream, Encoding.Default, true))
                 {
                     aif.Identifier = br.ReadUInt64();
                     aif.Application = Encoding.Unicode.GetString(br.ReadBytes(64), 0, 64);

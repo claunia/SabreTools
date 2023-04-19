@@ -29,7 +29,7 @@ namespace SabreTools.Reports.Formats
         /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
-            InternalStopwatch watch = new InternalStopwatch($"Writing statistics to '{outfile}");
+            InternalStopwatch watch = new($"Writing statistics to '{outfile}");
 
             try
             {
@@ -41,7 +41,7 @@ namespace SabreTools.Reports.Formats
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, Encoding.UTF8)
+                SeparatedValueWriter svw = new(fs, Encoding.UTF8)
                 {
                     Separator = _separator,
                     Quotes = true,

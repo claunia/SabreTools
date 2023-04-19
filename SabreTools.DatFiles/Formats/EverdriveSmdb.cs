@@ -31,7 +31,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            SeparatedValueReader svr = new SeparatedValueReader(System.IO.File.OpenRead(filename), enc)
+            SeparatedValueReader svr = new(System.IO.File.OpenRead(filename), enc)
             {
                 Header = false,
                 Quotes = false,
@@ -63,7 +63,7 @@ namespace SabreTools.DatFiles.Formats
 
                     string[] fullname = svr.Line[1].Split('/');
 
-                    Rom rom = new Rom
+                    Rom rom = new()
                     {
                         Name = svr.Line[1][(fullname[0].Length + 1)..],
                         Size = null, // No size provided, but we don't want the size being 0
@@ -131,7 +131,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
+                SeparatedValueWriter svw = new(fs, new UTF8Encoding(false))
                 {
                     Quotes = false,
                     Separator = '\t',

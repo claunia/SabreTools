@@ -22,7 +22,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace SabreTools.DatTools
             Parallel.ForEach(keys, Globals.ParallelOptions, key =>
             {
                 ConcurrentList<DatItem> items = datFile.Items[key];
-                ConcurrentList<DatItem> newItems = new ConcurrentList<DatItem>();
+                ConcurrentList<DatItem> newItems = new();
                 foreach (DatItem item in items)
                 {
                     DatItem newItem = item;
@@ -75,7 +75,7 @@ namespace SabreTools.DatTools
             List<DatItemField> datItemFields,
             bool onlySame)
         {
-            InternalStopwatch watch = new InternalStopwatch($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
+            InternalStopwatch watch = new($"Replacing items in '{intDat.Header.FileName}' from the base DAT");
 
             // If we are matching based on DatItem fields of any sort
             if (datItemFields.Any())
@@ -88,7 +88,7 @@ namespace SabreTools.DatTools
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
                     ConcurrentList<DatItem> datItems = intDat.Items[key];
-                    ConcurrentList<DatItem> newDatItems = new ConcurrentList<DatItem>();
+                    ConcurrentList<DatItem> newDatItems = new();
                     foreach (DatItem datItem in datItems)
                     {
                         ConcurrentList<DatItem> dupes = datFile.Items.GetDuplicates(datItem, sorted: true);
@@ -118,11 +118,11 @@ namespace SabreTools.DatTools
                 Parallel.ForEach(intDat.Items.Keys, Globals.ParallelOptions, key =>
                 {
                     ConcurrentList<DatItem> datItems = intDat.Items[key];
-                    ConcurrentList<DatItem> newDatItems = new ConcurrentList<DatItem>();
+                    ConcurrentList<DatItem> newDatItems = new();
                     foreach (DatItem datItem in datItems)
                     {
                         DatItem newDatItem = datItem.Clone() as DatItem;
-                        if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count() > 0)
+                        if (datFile.Items.ContainsKey(key) && datFile.Items[key].Count > 0)
                             Replacer.ReplaceFields(newDatItem.Machine, datFile.Items[key][0].Machine, machineFields, onlySame);
 
                         newDatItems.Add(newDatItem);
@@ -151,7 +151,7 @@ namespace SabreTools.DatTools
             else
                 datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
-            InternalStopwatch watch = new InternalStopwatch($"Comparing '{intDat.Header.FileName}' to base DAT");
+            InternalStopwatch watch = new($"Comparing '{intDat.Header.FileName}' to base DAT");
 
             // For comparison's sake, we want to a the base bucketing
             if (useGames)
@@ -195,7 +195,7 @@ namespace SabreTools.DatTools
                 else
                 {
                     ConcurrentList<DatItem> datItems = intDat.Items[key];
-                    ConcurrentList<DatItem> keepDatItems = new ConcurrentList<DatItem>();
+                    ConcurrentList<DatItem> keepDatItems = new();
                     foreach (DatItem datItem in datItems)
                     {
                         if (!datFile.Items.HasDuplicates(datItem, true))
@@ -220,13 +220,13 @@ namespace SabreTools.DatTools
         public static List<DatFile> DiffCascade(DatFile datFile, List<DatHeader> datHeaders)
         {
             // Create a list of DatData objects representing output files
-            List<DatFile> outDats = new List<DatFile>();
+            List<DatFile> outDats = new();
 
             // Ensure the current DatFile is sorted optimally
             datFile.Items.BucketBy(ItemKey.CRC, DedupeType.None);
 
             // Loop through each of the inputs and get or create a new DatData object
-            InternalStopwatch watch = new InternalStopwatch("Initializing and filling all output DATs");
+            InternalStopwatch watch = new("Initializing and filling all output DATs");
 
             // Create the DatFiles from the set of headers
             DatFile[] outDatsArray = new DatFile[datHeaders.Count];
@@ -262,7 +262,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile DiffDuplicates(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new InternalStopwatch("Initializing duplicate DAT");
+            InternalStopwatch watch = new("Initializing duplicate DAT");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
@@ -330,7 +330,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static List<DatFile> DiffIndividuals(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new InternalStopwatch("Initializing all individual DATs");
+            InternalStopwatch watch = new("Initializing all individual DATs");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
@@ -403,7 +403,7 @@ namespace SabreTools.DatTools
         /// <param name="inputs">List of inputs to write out from</param>
         public static DatFile DiffNoDuplicates(DatFile datFile, List<ParentablePath> inputs)
         {
-            InternalStopwatch watch = new InternalStopwatch("Initializing no duplicate DAT");
+            InternalStopwatch watch = new("Initializing no duplicate DAT");
 
             // Fill in any information not in the base DAT
             if (string.IsNullOrWhiteSpace(datFile.Header.FileName))
@@ -473,7 +473,7 @@ namespace SabreTools.DatTools
         public static List<DatHeader> PopulateUserData(DatFile datFile, List<ParentablePath> inputs)
         {
             DatFile[] datFiles = new DatFile[inputs.Count];
-            InternalStopwatch watch = new InternalStopwatch("Processing individual DATs");
+            InternalStopwatch watch = new("Processing individual DATs");
 
             // Parse all of the DATs into their own DatFiles in the array
             Parallel.For(0, inputs.Count, Globals.ParallelOptions, i =>

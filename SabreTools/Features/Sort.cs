@@ -127,7 +127,7 @@ namespace SabreTools.Features
             // Otherwise, process all DATs into the same output
             else
             {
-                InternalStopwatch watch = new InternalStopwatch("Populating internal DAT");
+                InternalStopwatch watch = new("Populating internal DAT");
 
                 // Add all of the input DATs into one huge internal DAT
                 DatFile datdata = DatFile.Create();

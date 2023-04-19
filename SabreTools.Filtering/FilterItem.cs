@@ -110,7 +110,7 @@ namespace SabreTools.Filtering
         /// <param name="def">Default value to check filter value</param>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in the supplied filter, null on default value, false otherwise</returns>
-        private bool? Matches(T single, T def, T value)
+        private static bool? Matches(T single, T def, T value)
         {
             // If the filter is default, we ignore
             if (single.Equals(def))
@@ -129,12 +129,12 @@ namespace SabreTools.Filtering
         /// <param name="set">Set to check against</param>
         /// <param name="value">Value to check</param>
         /// <returns>True if the value was found in the supplied filter, null on an empty set, false otherwise</returns>
-        private bool? MatchesSet(List<T> set, T value)
+        private static bool? MatchesSet(List<T> set, T value)
         {
             if (set.Count == 0)
                 return null;
 
-            if (this.FindValueInList(set, value))
+            if (FindValueInList(set, value))
                 return true;
 
             return false;
@@ -146,7 +146,7 @@ namespace SabreTools.Filtering
         /// <param name="haystack">List to search for the value in</param>
         /// <param name="needle">Value to search the list for</param>
         /// <returns>True if the value could be found, false otherwise</returns>
-        private bool FindValueInList(List<T> haystack, T needle)
+        private static bool FindValueInList(List<T> haystack, T needle)
         {
             bool found = false;
             foreach (T straw in haystack)

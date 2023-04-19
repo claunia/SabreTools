@@ -26,7 +26,7 @@ namespace SabreTools.DatTools
         /// <summary>
         /// Logging object
         /// </summary>
-        private static readonly Logger logger = new Logger();
+        private static readonly Logger logger = new();
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace SabreTools.DatTools
             if (datFile.Items.TotalCount == 0)
                 return (null, null);
 
-            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by extension");
+            InternalStopwatch watch = new($"Splitting DAT by extension");
 
             // Make sure all of the extensions don't have a dot at the beginning
             var newExtA = extA.Select(s => s.TrimStart('.').ToLowerInvariant());
@@ -98,10 +98,10 @@ namespace SabreTools.DatTools
         public static Dictionary<DatItemField, DatFile> SplitByHash(DatFile datFile)
         {
             // Create each of the respective output DATs
-            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by best available hashes");
+            InternalStopwatch watch = new($"Splitting DAT by best available hashes");
 
             // Create the set of field-to-dat mappings
-            Dictionary<DatItemField, DatFile> fieldDats = new Dictionary<DatItemField, DatFile>();
+            Dictionary<DatItemField, DatFile> fieldDats = new();
 
             // TODO: Can this be made into a loop?
             fieldDats[DatItemField.Status] = DatFile.Create(datFile.Header.CloneStandard());
@@ -223,7 +223,7 @@ namespace SabreTools.DatTools
         /// <returns>True if split succeeded, false otherwise</returns>
         public static bool SplitByLevel(DatFile datFile, string outDir, bool shortname, bool basedat)
         {
-            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by level");
+            InternalStopwatch watch = new($"Splitting DAT by level");
 
             // First, bucket by games so that we can do the right thing
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, lower: false, norename: true);
@@ -271,7 +271,7 @@ namespace SabreTools.DatTools
         /// <returns>-1 for a coming before b, 0 for a == b, 1 for a coming after b</returns>
         private static int SplitByLevelSort(string a, string b)
         {
-            NaturalComparer nc = new NaturalComparer();
+            NaturalComparer nc = new();
             int adeep = a.Count(c => c == '/' || c == '\\');
             int bdeep = b.Count(c => c == '/' || c == '\\');
 
@@ -321,7 +321,7 @@ namespace SabreTools.DatTools
         public static (DatFile lessThan, DatFile greaterThan) SplitBySize(DatFile datFile, long radix)
         {
             // Create each of the respective output DATs
-            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by size");
+            InternalStopwatch watch = new($"Splitting DAT by size");
 
             DatFile lessThan = DatFile.Create(datFile.Header.CloneStandard());
             lessThan.Header.FileName += $" (less than {radix})";
@@ -375,7 +375,7 @@ namespace SabreTools.DatTools
                 return new List<DatFile>();
 
             // Create each of the respective output DATs
-            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by total size");
+            InternalStopwatch watch = new($"Splitting DAT by total size");
 
             // Sort the DatFile by machine name
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None);
@@ -384,7 +384,7 @@ namespace SabreTools.DatTools
             var keys = datFile.Items.SortedKeys;
 
             // Get the output list
-            List<DatFile> datFiles = new List<DatFile>();
+            List<DatFile> datFiles = new();
 
             // Initialize everything
             long currentSize = 0;
@@ -459,13 +459,13 @@ namespace SabreTools.DatTools
         public static Dictionary<ItemType, DatFile> SplitByType(DatFile datFile)
         {
             // Create each of the respective output DATs
-            InternalStopwatch watch = new InternalStopwatch($"Splitting DAT by item type");
+            InternalStopwatch watch = new($"Splitting DAT by item type");
 
             // Create the set of type-to-dat mappings
-            Dictionary<ItemType, DatFile> typeDats = new Dictionary<ItemType, DatFile>();
+            Dictionary<ItemType, DatFile> typeDats = new();
 
             // We only care about a subset of types
-            List<ItemType> outputTypes = new List<ItemType>
+            List<ItemType> outputTypes = new()
             {
                 ItemType.Disk,
                 ItemType.Media,

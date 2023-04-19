@@ -27,7 +27,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionEmptyListTest()
         {
             // Setup the list
-            List<string> exclusions = new List<string>();
+            List<string> exclusions = new();
 
             // Setup the remover
             var remover = new Remover();
@@ -43,7 +43,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionHeaderFieldTest()
         {
             // Setup the list
-            List<string> exclusions = new List<string>
+            List<string> exclusions = new()
             {
                 "header.datname",
             };
@@ -62,7 +62,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionMachineFieldTest()
         {
             // Setup the list
-            List<string> exclusions = new List<string>
+            List<string> exclusions = new()
             {
                 "machine.name",
             };
@@ -81,7 +81,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateExclusionDatItemFieldTest()
         {
             // Setup the list
-            List<string> exclusions = new List<string>
+            List<string> exclusions = new()
             {
                 "item.name",
             };
@@ -115,7 +115,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateFilterEmptyListTest()
         {
             // Setup the list
-            List<string> filters = new List<string>();
+            List<string> filters = new();
 
             // Setup the filter
             var filter = new Filter();
@@ -130,7 +130,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateFilterMachineFieldTest()
         {
             // Setup the list
-            List<string> filters = new List<string>
+            List<string> filters = new()
             {
                 "machine.name:foo",
                 "!machine.name:bar",
@@ -150,7 +150,7 @@ namespace SabreTools.Test.Filtering
         public void PopulateFilterDatItemFieldTest()
         {
             // Setup the list
-            List<string> filters = new List<string>
+            List<string> filters = new()
             {
                 "item.name:foo",
                 "!item.name:bar"

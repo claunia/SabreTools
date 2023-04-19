@@ -358,8 +358,7 @@ namespace SabreTools.DatItems.Formats
             }
 
             // Double and triple check the key for corner cases
-            if (key == null)
-                key = string.Empty;
+            key ??= string.Empty;
 
             return key;
         }

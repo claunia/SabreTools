@@ -27,7 +27,7 @@ namespace SabreTools.Reports.Formats
         /// <inheritdoc/>
         public override bool WriteToFile(string outfile, bool baddumpCol, bool nodumpCol, bool throwOnError = false)
         {
-            InternalStopwatch watch = new InternalStopwatch($"Writing statistics to '{outfile}");
+            InternalStopwatch watch = new($"Writing statistics to '{outfile}");
 
             try
             {
@@ -39,7 +39,7 @@ namespace SabreTools.Reports.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, Encoding.UTF8)
+                XmlTextWriter xtw = new(fs, Encoding.UTF8)
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',

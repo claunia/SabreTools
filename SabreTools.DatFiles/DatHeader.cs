@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 
 using SabreTools.Core;
@@ -417,119 +416,119 @@ namespace SabreTools.DatFiles
         {
             #region Common
 
-            if (mappings.Keys.Contains(DatHeaderField.FileName))
+            if (mappings.ContainsKey(DatHeaderField.FileName))
                 FileName = mappings[DatHeaderField.FileName];
 
-            if (mappings.Keys.Contains(DatHeaderField.Name))
+            if (mappings.ContainsKey(DatHeaderField.Name))
                 Name = mappings[DatHeaderField.Name];
 
-            if (mappings.Keys.Contains(DatHeaderField.Description))
+            if (mappings.ContainsKey(DatHeaderField.Description))
                 Description = mappings[DatHeaderField.Description];
 
-            if (mappings.Keys.Contains(DatHeaderField.RootDir))
+            if (mappings.ContainsKey(DatHeaderField.RootDir))
                 RootDir = mappings[DatHeaderField.RootDir];
 
-            if (mappings.Keys.Contains(DatHeaderField.Category))
+            if (mappings.ContainsKey(DatHeaderField.Category))
                 Category = mappings[DatHeaderField.Category];
 
-            if (mappings.Keys.Contains(DatHeaderField.Version))
+            if (mappings.ContainsKey(DatHeaderField.Version))
                 Version = mappings[DatHeaderField.Version];
 
-            if (mappings.Keys.Contains(DatHeaderField.Date))
+            if (mappings.ContainsKey(DatHeaderField.Date))
                 Date = mappings[DatHeaderField.Date];
 
-            if (mappings.Keys.Contains(DatHeaderField.Author))
+            if (mappings.ContainsKey(DatHeaderField.Author))
                 Author = mappings[DatHeaderField.Author];
 
-            if (mappings.Keys.Contains(DatHeaderField.Email))
+            if (mappings.ContainsKey(DatHeaderField.Email))
                 Email = mappings[DatHeaderField.Email];
 
-            if (mappings.Keys.Contains(DatHeaderField.Homepage))
+            if (mappings.ContainsKey(DatHeaderField.Homepage))
                 Homepage = mappings[DatHeaderField.Homepage];
 
-            if (mappings.Keys.Contains(DatHeaderField.Url))
+            if (mappings.ContainsKey(DatHeaderField.Url))
                 Url = mappings[DatHeaderField.Url];
 
-            if (mappings.Keys.Contains(DatHeaderField.Comment))
+            if (mappings.ContainsKey(DatHeaderField.Comment))
                 Comment = mappings[DatHeaderField.Comment];
 
-            if (mappings.Keys.Contains(DatHeaderField.HeaderSkipper))
+            if (mappings.ContainsKey(DatHeaderField.HeaderSkipper))
                 HeaderSkipper = mappings[DatHeaderField.HeaderSkipper];
 
-            if (mappings.Keys.Contains(DatHeaderField.Type))
+            if (mappings.ContainsKey(DatHeaderField.Type))
                 Type = mappings[DatHeaderField.Type];
 
-            if (mappings.Keys.Contains(DatHeaderField.ForceMerging))
+            if (mappings.ContainsKey(DatHeaderField.ForceMerging))
                 ForceMerging = mappings[DatHeaderField.ForceMerging].AsMergingFlag();
 
-            if (mappings.Keys.Contains(DatHeaderField.ForceNodump))
+            if (mappings.ContainsKey(DatHeaderField.ForceNodump))
                 ForceNodump = mappings[DatHeaderField.ForceNodump].AsNodumpFlag();
 
-            if (mappings.Keys.Contains(DatHeaderField.ForcePacking))
+            if (mappings.ContainsKey(DatHeaderField.ForcePacking))
                 ForcePacking = mappings[DatHeaderField.ForcePacking].AsPackingFlag();
 
             #endregion
 
             #region ListXML
 
-            if (mappings.Keys.Contains(DatHeaderField.Debug))
+            if (mappings.ContainsKey(DatHeaderField.Debug))
                 Debug = mappings[DatHeaderField.Debug].AsYesNo();
 
-            if (mappings.Keys.Contains(DatHeaderField.MameConfig))
+            if (mappings.ContainsKey(DatHeaderField.MameConfig))
                 MameConfig = mappings[DatHeaderField.MameConfig];
 
             #endregion
 
             #region Logiqx
 
-            if (mappings.Keys.Contains(DatHeaderField.NoIntroID))
+            if (mappings.ContainsKey(DatHeaderField.NoIntroID))
                 NoIntroID = mappings[DatHeaderField.NoIntroID];
 
-            if (mappings.Keys.Contains(DatHeaderField.Build))
+            if (mappings.ContainsKey(DatHeaderField.Build))
                 Build = mappings[DatHeaderField.Build];
 
-            if (mappings.Keys.Contains(DatHeaderField.RomMode))
+            if (mappings.ContainsKey(DatHeaderField.RomMode))
                 RomMode = mappings[DatHeaderField.RomMode].AsMergingFlag();
 
-            if (mappings.Keys.Contains(DatHeaderField.BiosMode))
+            if (mappings.ContainsKey(DatHeaderField.BiosMode))
                 BiosMode = mappings[DatHeaderField.BiosMode].AsMergingFlag();
 
-            if (mappings.Keys.Contains(DatHeaderField.SampleMode))
+            if (mappings.ContainsKey(DatHeaderField.SampleMode))
                 SampleMode = mappings[DatHeaderField.SampleMode].AsMergingFlag();
 
-            if (mappings.Keys.Contains(DatHeaderField.LockRomMode))
+            if (mappings.ContainsKey(DatHeaderField.LockRomMode))
                 LockRomMode = mappings[DatHeaderField.LockRomMode].AsYesNo();
 
-            if (mappings.Keys.Contains(DatHeaderField.LockBiosMode))
+            if (mappings.ContainsKey(DatHeaderField.LockBiosMode))
                 LockBiosMode = mappings[DatHeaderField.LockBiosMode].AsYesNo();
 
-            if (mappings.Keys.Contains(DatHeaderField.LockSampleMode))
+            if (mappings.ContainsKey(DatHeaderField.LockSampleMode))
                 LockSampleMode = mappings[DatHeaderField.LockSampleMode].AsYesNo();
 
             #endregion
 
             #region OfflineList
 
-            if (mappings.Keys.Contains(DatHeaderField.System))
+            if (mappings.ContainsKey(DatHeaderField.System))
                 System = mappings[DatHeaderField.System];
 
-            if (mappings.Keys.Contains(DatHeaderField.ScreenshotsWidth))
+            if (mappings.ContainsKey(DatHeaderField.ScreenshotsWidth))
                 ScreenshotsWidth = mappings[DatHeaderField.ScreenshotsWidth];
 
-            if (mappings.Keys.Contains(DatHeaderField.ScreenshotsHeight))
+            if (mappings.ContainsKey(DatHeaderField.ScreenshotsHeight))
                 ScreenshotsHeight = mappings[DatHeaderField.ScreenshotsHeight];
 
             // TODO: Add DatHeader_Info*
             // TDOO: Add DatHeader_CanOpen*
 
-            if (mappings.Keys.Contains(DatHeaderField.RomTitle))
+            if (mappings.ContainsKey(DatHeaderField.RomTitle))
                 RomTitle = mappings[DatHeaderField.RomTitle];
 
             #endregion
 
             #region RomCenter
 
-            if (mappings.Keys.Contains(DatHeaderField.RomCenterVersion))
+            if (mappings.ContainsKey(DatHeaderField.RomCenterVersion))
                 RomCenterVersion = mappings[DatHeaderField.RomCenterVersion];
 
             #endregion
@@ -742,14 +741,14 @@ namespace SabreTools.DatFiles
         public Dictionary<DatFormat, string> CreateOutFileNames(string outDir, bool overwrite = true)
         {
             // Create the output dictionary
-            Dictionary<DatFormat, string> outfileNames = new Dictionary<DatFormat, string>();
+            Dictionary<DatFormat, string> outfileNames = new();
 
             // Double check the outDir for the end delim
             if (!outDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 outDir += Path.DirectorySeparatorChar;
 
             // Get all used extensions
-            List<string> usedExtensions = new List<string>();
+            List<string> usedExtensions = new();
 
             // Get the extensions from the output type
 

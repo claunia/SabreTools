@@ -124,7 +124,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override (MemoryStream, string) CopyToStream(string entryName)
         {
-            MemoryStream ms = new MemoryStream();
+            MemoryStream ms = new();
             string realEntry = null;
 
             try
@@ -158,7 +158,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<BaseFile> GetChildren()
         {
-            List<BaseFile> found = new List<BaseFile>();
+            List<BaseFile> found = new();
             string gamename = Path.GetFileNameWithoutExtension(this.Filename);
 
             try
@@ -167,7 +167,7 @@ namespace SabreTools.FileTypes.Archives
                 foreach (RarArchiveEntry entry in ra.Entries.Where(e => e != null && !e.IsDirectory))
                 {
                     // Create a blank item for the entry
-                    BaseFile rarEntryRom = new BaseFile();
+                    BaseFile rarEntryRom = new();
 
                     // Perform a quickscan, if flagged to
                     if (this.AvailableHashes == Hash.CRC)
@@ -204,7 +204,7 @@ namespace SabreTools.FileTypes.Archives
         /// <inheritdoc/>
         public override List<string> GetEmptyFolders()
         {
-            List<string> empties = new List<string>();
+            List<string> empties = new();
 
             try
             {

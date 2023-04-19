@@ -12,7 +12,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public static List<DatItemField> AsDatItemFields(this Hash hash)
         {
-            List<DatItemField> fields = new List<DatItemField>();
+            List<DatItemField> fields = new();
 
             if (hash.HasFlag(Hash.CRC))
                 fields.Add(DatItemField.CRC);
@@ -106,199 +106,161 @@ namespace SabreTools.Core.Tools
                 .Replace('-', '_')
                 .Replace('.', '_');
 
-            switch (headerInput)
+            return headerInput switch
             {
                 #region Common
 
-                case "file":
-                case "filename":
-                case "file_name":
-                    return DatHeaderField.FileName;
+                "file" => DatHeaderField.FileName,
+                "filename" => DatHeaderField.FileName,
+                "file_name" => DatHeaderField.FileName,
 
-                case "dat":
-                case "datname":
-                case "dat_name":
-                case "internalname":
-                case "internal_name":
-                    return DatHeaderField.Name;
+                "dat" => DatHeaderField.Name,
+                "datname" => DatHeaderField.Name,
+                "dat_name" => DatHeaderField.Name,
+                "internalname" => DatHeaderField.Name,
+                "internal_name" => DatHeaderField.Name,
 
-                case "desc":
-                case "description":
-                    return DatHeaderField.Description;
+                "desc" => DatHeaderField.Description,
+                "description" => DatHeaderField.Description,
 
-                case "root":
-                case "rootdir":
-                case "root_dir":
-                case "rootdirectory":
-                case "root_directory":
-                    return DatHeaderField.RootDir;
+                "root" => DatHeaderField.RootDir,
+                "rootdir" => DatHeaderField.RootDir,
+                "root_dir" => DatHeaderField.RootDir,
+                "rootdirectory" => DatHeaderField.RootDir,
+                "root_directory" => DatHeaderField.RootDir,
 
-                case "category":
-                    return DatHeaderField.Category;
+                "category" => DatHeaderField.Category,
 
-                case "version":
-                    return DatHeaderField.Version;
+                "version" => DatHeaderField.Version,
 
-                case "date":
-                case "timestamp":
-                case "time_stamp":
-                    return DatHeaderField.Date;
+                "date" => DatHeaderField.Date,
+                "timestamp" => DatHeaderField.Date,
+                "time_stamp" => DatHeaderField.Date,
 
-                case "author":
-                    return DatHeaderField.Author;
+                "author" => DatHeaderField.Author,
 
-                case "email":
-                case "e_mail":
-                    return DatHeaderField.Email;
+                "email" => DatHeaderField.Email,
+                "e_mail" => DatHeaderField.Email,
 
-                case "homepage":
-                case "home_page":
-                    return DatHeaderField.Homepage;
+                "homepage" => DatHeaderField.Homepage,
+                "home_page" => DatHeaderField.Homepage,
 
-                case "url":
-                    return DatHeaderField.Url;
+                "url" => DatHeaderField.Url,
 
-                case "comment":
-                    return DatHeaderField.Comment;
+                "comment" => DatHeaderField.Comment,
 
-                case "header":
-                case "headerskipper":
-                case "header_skipper":
-                case "skipper":
-                    return DatHeaderField.HeaderSkipper;
+                "header" => DatHeaderField.HeaderSkipper,
+                "headerskipper" => DatHeaderField.HeaderSkipper,
+                "header_skipper" => DatHeaderField.HeaderSkipper,
+                "skipper" => DatHeaderField.HeaderSkipper,
 
-                case "dattype":
-                case "type":
-                case "superdat":
-                    return DatHeaderField.Type;
+                "dattype" => DatHeaderField.Type,
+                "type" => DatHeaderField.Type,
+                "superdat" => DatHeaderField.Type,
 
-                case "forcemerging":
-                case "force_merging":
-                    return DatHeaderField.ForceMerging;
+                "forcemerging" => DatHeaderField.ForceMerging,
+                "force_merging" => DatHeaderField.ForceMerging,
 
-                case "forcenodump":
-                case "force_nodump":
-                    return DatHeaderField.ForceNodump;
+                "forcenodump" => DatHeaderField.ForceNodump,
+                "force_nodump" => DatHeaderField.ForceNodump,
 
-                case "forcepacking":
-                case "force_packing":
-                    return DatHeaderField.ForcePacking;
+                "forcepacking" => DatHeaderField.ForcePacking,
+                "force_packing" => DatHeaderField.ForcePacking,
 
                 #endregion
 
                 #region ListXML
 
-                case "debug":
-                    return DatHeaderField.Debug;
+                "debug" => DatHeaderField.Debug,
 
-                case "mameconfig":
-                case "mame_config":
-                    return DatHeaderField.MameConfig;
+                "mameconfig" => DatHeaderField.MameConfig,
+                "mame_config" => DatHeaderField.MameConfig,
 
                 #endregion
 
                 #region Logiqx
 
-                case "id":
-                case "nointroid":
-                case "no_intro_id":
-                    return DatHeaderField.NoIntroID;
+                "id" => DatHeaderField.NoIntroID,
+                "nointroid" => DatHeaderField.NoIntroID,
+                "no_intro_id" => DatHeaderField.NoIntroID,
 
-                case "build":
-                    return DatHeaderField.Build;
+                "build" => DatHeaderField.Build,
 
-                case "rommode":
-                case "rom_mode":
-                    return DatHeaderField.RomMode;
+                "rommode" => DatHeaderField.RomMode,
+                "rom_mode" => DatHeaderField.RomMode,
 
-                case "biosmode":
-                case "bios_mode":
-                    return DatHeaderField.BiosMode;
+                "biosmode" => DatHeaderField.BiosMode,
+                "bios_mode" => DatHeaderField.BiosMode,
 
-                case "samplemode":
-                case "sample_mode":
-                    return DatHeaderField.SampleMode;
+                "samplemode" => DatHeaderField.SampleMode,
+                "sample_mode" => DatHeaderField.SampleMode,
 
-                case "lockrommode":
-                case "lockrom_mode":
-                case "lock_rommode":
-                case "lock_rom_mode":
-                    return DatHeaderField.LockRomMode;
+                "lockrommode" => DatHeaderField.LockRomMode,
+                "lockrom_mode" => DatHeaderField.LockRomMode,
+                "lock_rommode" => DatHeaderField.LockRomMode,
+                "lock_rom_mode" => DatHeaderField.LockRomMode,
 
-                case "lockbiosmode":
-                case "lockbios_mode":
-                case "lock_biosmode":
-                case "lock_bios_mode":
-                    return DatHeaderField.LockBiosMode;
+                "lockbiosmode" => DatHeaderField.LockBiosMode,
+                "lockbios_mode" => DatHeaderField.LockBiosMode,
+                "lock_biosmode" => DatHeaderField.LockBiosMode,
+                "lock_bios_mode" => DatHeaderField.LockBiosMode,
 
-                case "locksamplemode":
-                case "locksample_mode":
-                case "lock_samplemode":
-                case "lock_sample_mode":
-                    return DatHeaderField.LockSampleMode;
+                "locksamplemode" => DatHeaderField.LockSampleMode,
+                "locksample_mode" => DatHeaderField.LockSampleMode,
+                "lock_samplemode" => DatHeaderField.LockSampleMode,
+                "lock_sample_mode" => DatHeaderField.LockSampleMode,
 
                 #endregion
 
                 #region OfflineList
 
-                case "system":
-                case "plugin": // Used with RomCenter
-                    return DatHeaderField.System;
+                "system" => DatHeaderField.System,
+                "plugin" => DatHeaderField.System, // Used with RomCenter
 
-                case "screenshotwidth":
-                case "screenshotswidth":
-                case "screenshot_width":
-                case "screenshots_width":
-                    return DatHeaderField.ScreenshotsWidth;
+                "screenshotwidth" => DatHeaderField.ScreenshotsWidth,
+                "screenshotswidth" => DatHeaderField.ScreenshotsWidth,
+                "screenshot_width" => DatHeaderField.ScreenshotsWidth,
+                "screenshots_width" => DatHeaderField.ScreenshotsWidth,
 
-                case "screenshotheight":
-                case "screenshotsheight":
-                case "screenshot_height":
-                case "screenshots_height":
-                    return DatHeaderField.ScreenshotsHeight;
+                "screenshotheight" => DatHeaderField.ScreenshotsHeight,
+                "screenshotsheight" => DatHeaderField.ScreenshotsHeight,
+                "screenshot_height" => DatHeaderField.ScreenshotsHeight,
+                "screenshots_height" => DatHeaderField.ScreenshotsHeight,
 
-                case "info_name":
-                case "infos_name":
-                    return DatHeaderField.Info_Name;
+                "info_name" => DatHeaderField.Info_Name,
+                "infos_name" => DatHeaderField.Info_Name,
 
-                case "info_visible":
-                case "infos_visible":
-                    return DatHeaderField.Info_Visible;
+                "info_visible" => DatHeaderField.Info_Visible,
+                "infos_visible" => DatHeaderField.Info_Visible,
 
-                case "info_isnamingoption":
-                case "info_is_naming_option":
-                case "infos_isnamingoption":
-                case "infos_is_naming_option":
-                    return DatHeaderField.Info_IsNamingOption;
+                "info_isnamingoption" => DatHeaderField.Info_IsNamingOption,
+                "info_is_naming_option" => DatHeaderField.Info_IsNamingOption,
+                "infos_isnamingoption" => DatHeaderField.Info_IsNamingOption,
+                "infos_is_naming_option" => DatHeaderField.Info_IsNamingOption,
 
-                case "info_default":
-                case "infos_default":
-                    return DatHeaderField.Info_Default;
+                "info_default" => DatHeaderField.Info_Default,
+                "infos_default" => DatHeaderField.Info_Default,
 
-                case "canopen":
-                case "can_open":
-                    return DatHeaderField.CanOpen;
+                "canopen" => DatHeaderField.CanOpen,
+                "can_open" => DatHeaderField.CanOpen,
 
-                case "romtitle":
-                case "rom_title":
-                    return DatHeaderField.RomTitle;
+                "romtitle" => DatHeaderField.RomTitle,
+                "rom_title" => DatHeaderField.RomTitle,
 
                 #endregion
 
                 #region RomCenter
 
-                case "rcversion":
-                case "rc_version":
-                case "romcenterversion":
-                case "romcenter_version":
-                case "rom_center_version":
-                    return DatHeaderField.RomCenterVersion;
+                "rcversion" => DatHeaderField.RomCenterVersion,
+                "rc_version" => DatHeaderField.RomCenterVersion,
+                "romcenterversion" => DatHeaderField.RomCenterVersion,
+                "romcenter_version" => DatHeaderField.RomCenterVersion,
+                "rom_center_version" => DatHeaderField.RomCenterVersion,
 
                 #endregion
 
-                default:
-                    return DatHeaderField.NULL;
-            }
+                _ => DatHeaderField.NULL,
+            };
         }
 
         /// <summary>
@@ -328,12 +290,11 @@ namespace SabreTools.Core.Tools
                 .Replace('-', '_')
                 .Replace('.', '_');
 
-            switch (itemInput)
+            return itemInput switch
             {
                 #region Common
 
-                case "type":
-                    return DatItemField.Type;
+                "type" => DatItemField.Type,
 
                 #endregion
 
@@ -341,472 +302,447 @@ namespace SabreTools.Core.Tools
 
                 #region Actionable
 
-                // Rom
-                case "name":
-                    return DatItemField.Name;
+                #region Rom
 
-                case "bios":
-                    return DatItemField.Bios;
+                "name" => DatItemField.Name,
 
-                case "size":
-                    return DatItemField.Size;
+                "bios" => DatItemField.Bios,
 
-                case "crc":
-                case "crc32":
-                    return DatItemField.CRC;
+                "size" => DatItemField.Size,
 
-                case "md5":
-                case "md5_hash":
-                    return DatItemField.MD5;
+                "crc" => DatItemField.CRC,
+                "crc32" => DatItemField.CRC,
 
-                case "sha1":
-                case "sha_1":
-                case "sha1hash":
-                case "sha1_hash":
-                case "sha_1hash":
-                case "sha_1_hash":
-                    return DatItemField.SHA1;
+                "md5" => DatItemField.MD5,
+                "md5hash" => DatItemField.MD5,
+                "md5_hash" => DatItemField.MD5,
 
-                case "sha256":
-                case "sha_256":
-                case "sha256hash":
-                case "sha256_hash":
-                case "sha_256hash":
-                case "sha_256_hash":
-                    return DatItemField.SHA256;
+                "sha1" => DatItemField.SHA1,
+                "sha_1" => DatItemField.SHA1,
+                "sha1hash" => DatItemField.SHA1,
+                "sha1_hash" => DatItemField.SHA1,
+                "sha_1hash" => DatItemField.SHA1,
+                "sha_1_hash" => DatItemField.SHA1,
 
-                case "sha384":
-                case "sha_384":
-                case "sha384hash":
-                case "sha384_hash":
-                case "sha_384hash":
-                case "sha_384_hash":
-                    return DatItemField.SHA384;
+                "sha256" => DatItemField.SHA256,
+                "sha_256" => DatItemField.SHA256,
+                "sha256hash" => DatItemField.SHA256,
+                "sha256_hash" => DatItemField.SHA256,
+                "sha_256hash" => DatItemField.SHA256,
+                "sha_256_hash" => DatItemField.SHA256,
 
-                case "sha512":
-                case "sha_512":
-                case "sha512hash":
-                case "sha512_hash":
-                case "sha_512hash":
-                case "sha_512_hash":
-                    return DatItemField.SHA512;
-                    
-                case "spamsum":
-                case "spam_sum":
-                    return DatItemField.SpamSum;
+                "sha384" => DatItemField.SHA384,
+                "sha_384" => DatItemField.SHA384,
+                "sha384hash" => DatItemField.SHA384,
+                "sha384_hash" => DatItemField.SHA384,
+                "sha_384hash" => DatItemField.SHA384,
+                "sha_384_hash" => DatItemField.SHA384,
 
-                case "merge":
-                case "mergetag":
-                case "merge_tag":
-                    return DatItemField.Merge;
+                "sha512" => DatItemField.SHA512,
+                "sha_512" => DatItemField.SHA512,
+                "sha512hash" => DatItemField.SHA512,
+                "sha512_hash" => DatItemField.SHA512,
+                "sha_512hash" => DatItemField.SHA512,
+                "sha_512_hash" => DatItemField.SHA512,
 
-                case "region":
-                    return DatItemField.Region;
+                "spamsum" => DatItemField.SpamSum,
+                "spam_sum" => DatItemField.SpamSum,
 
-                case "offset":
-                    return DatItemField.Offset;
+                "merge" => DatItemField.Merge,
+                "mergetag" => DatItemField.Merge,
+                "merge_tag" => DatItemField.Merge,
 
-                case "date":
-                    return DatItemField.Date;
+                "region" => DatItemField.Region,
 
-                case "status":
-                    return DatItemField.Status;
+                "offset" => DatItemField.Offset,
 
-                case "optional":
-                    return DatItemField.Optional;
+                "date" => DatItemField.Date,
 
-                case "inverted":
-                    return DatItemField.Inverted;
+                "status" => DatItemField.Status,
 
-                // Rom (Archive.org)
-                case "ado-source":
-                case "ado source":
-                    return DatItemField.ArchiveDotOrgSource;
+                "optional" => DatItemField.Optional,
 
-                case "ado-format":
-                case "ado format":
-                    return DatItemField.ArchiveDotOrgFormat;
+                "inverted" => DatItemField.Inverted,
 
-                case "original-filename":
-                case "original filename":
-                    return DatItemField.OriginalFilename;
+                #endregion
 
-                case "rotation":
-                    return DatItemField.Rotation;
+                #region Rom (Archive.org)
 
-                case "summation":
-                    return DatItemField.Summation;
+                "ado_source" => DatItemField.ArchiveDotOrgSource,
 
-                // Rom (AttractMode)
-                case "altname":
-                case "alt name":
-                case "alt-name":
-                case "altromname":
-                case "alt romname":
-                case "alt-romname":
-                    return DatItemField.AltName;
+                "ado_format" => DatItemField.ArchiveDotOrgFormat,
 
-                case "alttitle":
-                case "alt title":
-                case "alt-title":
-                case "altromtitle":
-                case "alt romtitle":
-                case "alt-romtitle":
-                    return DatItemField.AltTitle;
+                "original_filename" => DatItemField.OriginalFilename,
 
-                // Rom (Logiqx)
-                case "mia":
-                    return DatItemField.MIA;
+                "rotation" => DatItemField.Rotation,
 
-                // Rom (OpenMSX)
-                case "original":
-                    return DatItemField.Original;
+                "summation" => DatItemField.Summation,
 
-                case "subtype":
-                case "sub_type":
-                case "openmsxsubtype":
-                case "openmsx_subtype":
-                    return DatItemField.OpenMSXSubType;
+                #endregion
 
-                case "openmsxtype":
-                case "openmsx_type":
-                    return DatItemField.OpenMSXType;
+                #region Rom (AttractMode)
 
-                case "remark":
-                    return DatItemField.Remark;
+                "altname" => DatItemField.AltName,
+                "alt_name" => DatItemField.AltName,
+                "altromname" => DatItemField.AltName,
+                "alt_romname" => DatItemField.AltName,
+                "alt_rom_name" => DatItemField.AltName,
 
-                case "boot":
-                    return DatItemField.Boot;
+                "alttitle" => DatItemField.AltTitle,
+                "alt_title" => DatItemField.AltTitle,
+                "altromtitle" => DatItemField.AltTitle,
+                "alt_romtitle" => DatItemField.AltTitle,
+                "alt_rom_title" => DatItemField.AltTitle,
 
-                // Rom (SoftwareList)
-                case "areaname":
-                case "area_name":
-                    return DatItemField.AreaName;
+                #endregion
 
-                case "areasize":
-                case "area_size":
-                    return DatItemField.AreaSize;
+                #region Rom (Logiqx)
 
-                case "areawidth":
-                case "area_width":
-                    return DatItemField.AreaWidth;
+                "mia" => DatItemField.MIA,
 
-                case "areaendinanness":
-                case "area_endianness":
-                    return DatItemField.AreaEndianness;
+                #endregion
 
-                case "loadflag":
-                case "load_flag":
-                    return DatItemField.LoadFlag;
+                #region Rom (OpenMSX)
 
-                case "partname":
-                case "part_name":
-                    return DatItemField.Part_Name;
+                "original" => DatItemField.Original,
 
-                case "partinterface":
-                case "part_interface":
-                    return DatItemField.Part_Interface;
+                "subtype" => DatItemField.OpenMSXSubType,
+                "sub_type" => DatItemField.OpenMSXSubType,
+                "openmsxsubtype" => DatItemField.OpenMSXSubType,
+                "openmsx_subtype" => DatItemField.OpenMSXSubType,
+                "openmsx_sub_type" => DatItemField.OpenMSXSubType,
 
-                case "part_feature_name":
-                    return DatItemField.Part_Feature_Name;
+                "openmsxtype" => DatItemField.OpenMSXType,
+                "openmsx_type" => DatItemField.OpenMSXType,
 
-                case "part_feature_value":
-                    return DatItemField.Part_Feature_Value;
+                "remark" => DatItemField.Remark,
 
-                case "value":
-                    return DatItemField.Value;
+                "boot" => DatItemField.Boot,
 
-                // Disk
-                case "index":
-                    return DatItemField.Index;
+                #endregion
 
-                case "writable":
-                    return DatItemField.Writable;
+                #region Rom (SoftwareList)
+
+                "areaname" => DatItemField.AreaName,
+                "area_name" => DatItemField.AreaName,
+
+                "areasize" => DatItemField.AreaSize,
+                "area_size" => DatItemField.AreaSize,
+
+                "areawidth" => DatItemField.AreaWidth,
+                "area_width" => DatItemField.AreaWidth,
+
+                "areaendinanness" => DatItemField.AreaEndianness,
+                "area_endianness" => DatItemField.AreaEndianness,
+
+                "loadflag" => DatItemField.LoadFlag,
+                "load_flag" => DatItemField.LoadFlag,
+
+                "partname" => DatItemField.Part_Name,
+                "part_name" => DatItemField.Part_Name,
+
+                "partinterface" => DatItemField.Part_Interface,
+                "part_interface" => DatItemField.Part_Interface,
+
+                "part_feature_name" => DatItemField.Part_Feature_Name,
+
+                "part_feature_value" => DatItemField.Part_Feature_Value,
+
+                "value" => DatItemField.Value,
+
+                #endregion
+
+                #region Disk
+
+                "index" => DatItemField.Index,
+
+                "writable" => DatItemField.Writable,
+
+                #endregion
 
                 #endregion
 
                 #region Auxiliary
 
-                // Adjuster
-                case "default":
-                    return DatItemField.Default;
+                #region Adjuster
 
-                // Analog
-                case "analog_mask":
-                    return DatItemField.Analog_Mask;
+                "default" => DatItemField.Default,
 
-                // Archive
-                case "number":
-                    return DatItemField.Number;
+                #endregion
 
-                case "clone":
-                    return DatItemField.Clone;
+                #region Analog
 
-                case "regparent":
-                case "reg_parent":
-                    return DatItemField.RegParent;
+                "analog_mask" => DatItemField.Analog_Mask,
 
-                case "languages":
-                    return DatItemField.Languages;
+                #endregion
 
-                case "devstatus":
-                case "dev_status":
-                    return DatItemField.DevStatus;
+                #region Archive
 
-                case "physical":
-                    return DatItemField.Physical;
+                "number" => DatItemField.Number,
 
-                case "complete":
-                    return DatItemField.Complete;
+                "clone" => DatItemField.Clone,
 
-                case "categories":
-                    return DatItemField.Categories;
+                "regparent" => DatItemField.RegParent,
+                "reg_parent" => DatItemField.RegParent,
 
-                // BiosSet
-                case "description":
-                case "biosdescription":
-                case "bios_description":
-                    return DatItemField.Description;
+                "languages" => DatItemField.Languages,
 
-                // Chip
-                case "tag":
-                    return DatItemField.Tag;
+                "devstatus" => DatItemField.DevStatus,
+                "dev_status" => DatItemField.DevStatus,
 
-                case "chiptype":
-                case "chip_type":
-                    return DatItemField.ChipType;
+                "physical" => DatItemField.Physical,
 
-                case "clock":
-                    return DatItemField.Clock;
+                "complete" => DatItemField.Complete,
 
-                // Condition
-                case "mask":
-                    return DatItemField.Mask;
+                "categories" => DatItemField.Categories,
 
-                case "relation":
-                    return DatItemField.Relation;
+                #endregion
 
-                case "condition_tag":
-                    return DatItemField.Condition_Tag;
+                #region BiosSet
 
-                case "condition_mask":
-                    return DatItemField.Condition_Mask;
+                "description" => DatItemField.Description,
+                "biosdescription" => DatItemField.Description,
+                "bios_description" => DatItemField.Description,
 
-                case "condition_relation":
-                    return DatItemField.Condition_Relation;
+                #endregion
 
-                case "condition_value":
-                    return DatItemField.Condition_Value;
+                #region Chip
 
-                // Control
-                case "control_type":
-                    return DatItemField.Control_Type;
+                "tag" => DatItemField.Tag,
 
-                case "control_player":
-                    return DatItemField.Control_Player;
+                "chiptype" => DatItemField.ChipType,
+                "chip_type" => DatItemField.ChipType,
 
-                case "control_buttons":
-                    return DatItemField.Control_Buttons;
+                "clock" => DatItemField.Clock,
 
-                case "control_reqbuttons":
-                    return DatItemField.Control_RequiredButtons;
+                #endregion
 
-                case "control_minimum":
-                    return DatItemField.Control_Minimum;
+                #region Condition
 
-                case "control_maximum":
-                    return DatItemField.Control_Maximum;
+                "mask" => DatItemField.Mask,
 
-                case "control_sensitivity":
-                    return DatItemField.Control_Sensitivity;
+                "relation" => DatItemField.Relation,
 
-                case "control_keydelta":
-                    return DatItemField.Control_KeyDelta;
+                "condition_tag" => DatItemField.Condition_Tag,
 
-                case "control_reverse":
-                    return DatItemField.Control_Reverse;
+                "condition_mask" => DatItemField.Condition_Mask,
 
-                case "control_ways":
-                    return DatItemField.Control_Ways;
+                "condition_relation" => DatItemField.Condition_Relation,
 
-                case "control_ways2":
-                    return DatItemField.Control_Ways2;
+                "condition_value" => DatItemField.Condition_Value,
 
-                case "control_ways3":
-                    return DatItemField.Control_Ways3;
+                #endregion
 
-                // Device
-                case "devicetype":
-                    return DatItemField.DeviceType;
+                #region Control
 
-                case "fixedimage":
-                    return DatItemField.FixedImage;
+                "control_type" => DatItemField.Control_Type,
 
-                case "mandatory":
-                    return DatItemField.Mandatory;
+                "control_player" => DatItemField.Control_Player,
 
-                case "interface":
-                    return DatItemField.Interface;
+                "control_buttons" => DatItemField.Control_Buttons,
 
-                // Display
-                case "displaytype":
-                    return DatItemField.DisplayType;
+                "control_reqbuttons" => DatItemField.Control_RequiredButtons,
+                "control_req_buttons" => DatItemField.Control_RequiredButtons,
 
-                case "rotate":
-                    return DatItemField.Rotate;
+                "control_minimum" => DatItemField.Control_Minimum,
 
-                case "flipx":
-                    return DatItemField.FlipX;
+                "control_maximum" => DatItemField.Control_Maximum,
 
-                case "width":
-                    return DatItemField.Width;
+                "control_sensitivity" => DatItemField.Control_Sensitivity,
 
-                case "height":
-                    return DatItemField.Height;
+                "control_keydelta" => DatItemField.Control_KeyDelta,
+                "control_key_delta" => DatItemField.Control_KeyDelta,
 
-                case "refresh":
-                    return DatItemField.Refresh;
+                "control_reverse" => DatItemField.Control_Reverse,
 
-                case "pixclock":
-                    return DatItemField.PixClock;
+                "control_ways" => DatItemField.Control_Ways,
 
-                case "htotal":
-                    return DatItemField.HTotal;
+                "control_ways2" => DatItemField.Control_Ways2,
 
-                case "hbend":
-                    return DatItemField.HBEnd;
+                "control_ways3" => DatItemField.Control_Ways3,
 
-                case "hbstart":
-                    return DatItemField.HBStart;
+                #endregion
 
-                case "vtotal":
-                    return DatItemField.VTotal;
+                #region Device
 
-                case "vbend":
-                    return DatItemField.VBEnd;
+                "devicetype" => DatItemField.DeviceType,
+                "device_type" => DatItemField.DeviceType,
 
-                case "vbstart":
-                    return DatItemField.VBStart;
+                "fixedimage" => DatItemField.FixedImage,
+                "fixed_image" => DatItemField.FixedImage,
 
-                // Driver
-                case "supportstatus":
-                    return DatItemField.SupportStatus;
+                "mandatory" => DatItemField.Mandatory,
 
-                case "emulationstatus":
-                    return DatItemField.EmulationStatus;
+                "interface" => DatItemField.Interface,
 
-                case "cocktailstatus":
-                    return DatItemField.CocktailStatus;
+                #endregion
 
-                case "savestatestatus":
-                    return DatItemField.SaveStateStatus;
+                #region Display
 
-                case "requiresartwork":
-                    return DatItemField.RequiresArtwork;
+                "displaytype" => DatItemField.DisplayType,
+                "display_type" => DatItemField.DisplayType,
 
-                case "unofficial":
-                    return DatItemField.Unofficial;
+                "rotate" => DatItemField.Rotate,
 
-                case "nosoundhardware":
-                    return DatItemField.NoSoundHardware;
+                "flipx" => DatItemField.FlipX,
 
-                case "incomplete":
-                    return DatItemField.Incomplete;
+                "width" => DatItemField.Width,
 
-                // Extension
-                case "extension_name":
-                    return DatItemField.Extension_Name;
+                "height" => DatItemField.Height,
 
-                // Feature
-                case "featuretype":
-                    return DatItemField.FeatureType;
+                "refresh" => DatItemField.Refresh,
 
-                case "featurestatus":
-                    return DatItemField.FeatureStatus;
+                "pixclock" => DatItemField.PixClock,
+                "pix_clock" => DatItemField.PixClock,
 
-                case "featureoverall":
-                    return DatItemField.FeatureOverall;
+                "htotal" => DatItemField.HTotal,
 
-                // Input
-                case "service":
-                    return DatItemField.Service;
+                "hbend" => DatItemField.HBEnd,
 
-                case "tilt":
-                    return DatItemField.Tilt;
+                "hbstart" => DatItemField.HBStart,
 
-                case "players":
-                    return DatItemField.Players;
+                "vtotal" => DatItemField.VTotal,
 
-                case "coins":
-                    return DatItemField.Coins;
+                "vbend" => DatItemField.VBEnd,
 
-                // Instance
-                case "instance_name":
-                    return DatItemField.Instance_Name;
+                "vbstart" => DatItemField.VBStart,
 
-                case "instance_briefname":
-                    return DatItemField.Instance_BriefName;
+                #endregion
 
-                // Location
-                case "location_name":
-                    return DatItemField.Location_Name;
+                #region Driver
 
-                case "location_number":
-                    return DatItemField.Location_Number;
+                "supportstatus" => DatItemField.SupportStatus,
+                "support_status" => DatItemField.SupportStatus,
 
-                case "location_inverted":
-                    return DatItemField.Location_Inverted;
+                "emulationstatus" => DatItemField.EmulationStatus,
+                "emulation_status" => DatItemField.EmulationStatus,
 
-                // RamOption
-                case "content":
-                    return DatItemField.Content;
+                "cocktailstatus" => DatItemField.CocktailStatus,
+                "cocktail_status" => DatItemField.CocktailStatus,
 
-                // Release
-                case "language":
-                    return DatItemField.Language;
+                "savestatestatus" => DatItemField.SaveStateStatus,
+                "savestate_status" => DatItemField.SaveStateStatus,
+                "save_state_status" => DatItemField.SaveStateStatus,
 
-                // Setting
-                case "setting_name":
-                case "value_name":
-                    return DatItemField.Setting_Name;
+                "requiresartwork" => DatItemField.RequiresArtwork,
+                "requires_artwork" => DatItemField.RequiresArtwork,
 
-                case "setting_value":
-                case "value_value":
-                    return DatItemField.Setting_Value;
+                "unofficial" => DatItemField.Unofficial,
 
-                case "setting_default":
-                case "value_default":
-                    return DatItemField.Setting_Default;
+                "nosoundhardware" => DatItemField.NoSoundHardware,
+                "no_sound_hardware" => DatItemField.NoSoundHardware,
 
-                // SlotOption
-                case "slotoption_name":
-                    return DatItemField.SlotOption_Name;
+                "incomplete" => DatItemField.Incomplete,
 
-                case "slotoption_devicename":
-                    return DatItemField.SlotOption_DeviceName;
+                #endregion
 
-                case "slotoption_default":
-                    return DatItemField.SlotOption_Default;
+                #region Extension
 
-                // SoftwareList
-                case "softwareliststatus":
-                case "softwarelist_status":
-                    return DatItemField.SoftwareListStatus;
+                "extension_name" => DatItemField.Extension_Name,
 
-                case "filter":
-                    return DatItemField.Filter;
+                #endregion
 
-                // Sound
-                case "channels":
-                    return DatItemField.Channels;
+                #region Feature
+
+                "featuretype" => DatItemField.FeatureType,
+                "feature_type" => DatItemField.FeatureType,
+
+                "featurestatus" => DatItemField.FeatureStatus,
+                "feature_status" => DatItemField.FeatureStatus,
+
+                "featureoverall" => DatItemField.FeatureOverall,
+                "feature_overall" => DatItemField.FeatureOverall,
+
+                #endregion
+
+                #region Input
+
+                "service" => DatItemField.Service,
+
+                "tilt" => DatItemField.Tilt,
+
+                "players" => DatItemField.Players,
+
+                "coins" => DatItemField.Coins,
+
+                #endregion
+
+                #region Instance
+
+                "instance_name" => DatItemField.Instance_Name,
+
+                "instance_briefname" => DatItemField.Instance_BriefName,
+                "instance_brief_name" => DatItemField.Instance_BriefName,
+
+                #endregion
+
+                #region Location
+
+                "location_name" => DatItemField.Location_Name,
+
+                "location_number" => DatItemField.Location_Number,
+
+                "location_inverted" => DatItemField.Location_Inverted,
+
+                #endregion
+
+                #region RamOption
+
+                "content" => DatItemField.Content,
+
+                #endregion
+
+                #region Release
+
+                "language" => DatItemField.Language,
+
+                #endregion
+
+                #region Setting
+
+                "setting_name" => DatItemField.Setting_Name,
+                "value_name" => DatItemField.Setting_Name,
+
+                "setting_value" => DatItemField.Setting_Value,
+                "value_value" => DatItemField.Setting_Value,
+
+                "setting_default" => DatItemField.Setting_Default,
+                "value_default" => DatItemField.Setting_Default,
+
+                #endregion
+
+                #region SlotOption
+
+                "slotoption_name" => DatItemField.SlotOption_Name,
+
+                "slotoption_devicename" => DatItemField.SlotOption_DeviceName,
+                "slotoption_device_name" => DatItemField.SlotOption_DeviceName,
+
+                "slotoption_default" => DatItemField.SlotOption_Default,
+
+                #endregion
+
+                #region SoftwareList
+
+                "softwareliststatus" => DatItemField.SoftwareListStatus,
+                "softwarelist_status" => DatItemField.SoftwareListStatus,
+
+                "filter" => DatItemField.Filter,
+
+                #endregion
+
+                #region Sound
+
+                "channels" => DatItemField.Channels,
+
+                #endregion
 
                 #endregion
 
                 #endregion // Item-Specific
 
-                default:
-                    return DatItemField.NULL;
-            }
+                _ => DatItemField.NULL,
+            };
         }
 
         /// <summary>
@@ -958,6 +894,7 @@ namespace SabreTools.Core.Tools
                 "control" => ItemType.Control,
                 "dataarea" => ItemType.DataArea,
                 "device" => ItemType.Device,
+                "deviceref" => ItemType.DeviceReference,
                 "device_ref" => ItemType.DeviceReference,
                 "dipswitch" => ItemType.DipSwitch,
                 "disk" => ItemType.Disk,
@@ -1065,181 +1002,144 @@ namespace SabreTools.Core.Tools
                 .Replace('-', '_')
                 .Replace('.', '_');
 
-            switch (machineInput)
+            return machineInput switch
             {
                 #region Common
 
-                case "name":
-                    return MachineField.Name;
+                "name" => MachineField.Name,
 
-                case "comment":
-                case "extra": // Used with AttractMode
-                    return MachineField.Comment;
+                "comment" => MachineField.Comment,
+                "extra" => MachineField.Comment, // Used with AttractMode
 
-                case "desc":
-                case "description":
-                    return MachineField.Description;
+                "desc" => MachineField.Description,
+                "description" => MachineField.Description,
 
-                case "year":
-                    return MachineField.Year;
+                "year" => MachineField.Year,
 
-                case "manufacturer":
-                    return MachineField.Manufacturer;
+                "manufacturer" => MachineField.Manufacturer,
 
-                case "publisher":
-                    return MachineField.Publisher;
+                "publisher" => MachineField.Publisher,
 
-                case "category":
-                    return MachineField.Category;
+                "category" => MachineField.Category,
 
-                case "romof":
-                case "rom_of":
-                    return MachineField.RomOf;
+                "romof" => MachineField.RomOf,
+                "rom_of" => MachineField.RomOf,
 
-                case "cloneof":
-                case "clone_of":
-                    return MachineField.CloneOf;
+                "cloneof" => MachineField.CloneOf,
+                "clone_of" => MachineField.CloneOf,
 
-                case "sampleof":
-                case "sample_of":
-                    return MachineField.SampleOf;
-
-                case "type":
-                    return MachineField.Type;
+                "sampleof" => MachineField.SampleOf,
+                "sample_of" => MachineField.SampleOf,
+                
+                "type" => MachineField.Type,
 
                 #endregion
 
                 #region AttractMode
+                
+                "players" => MachineField.Players,
 
-                case "players":
-                    return MachineField.Players;
+                "rotation" => MachineField.Rotation,
 
-                case "rotation":
-                    return MachineField.Rotation;
+                "control" => MachineField.Control,
 
-                case "control":
-                    return MachineField.Control;
+                "amstatus" => MachineField.Status,
+                "am_status" => MachineField.Status,
+                "gamestatus" => MachineField.Status,
+                "supportstatus" => MachineField.Status,
+                "support_status" => MachineField.Status,
 
-                case "amstatus":
-                case "am_status":
-                case "gamestatus":
-                case "supportstatus":
-                case "support_status":
-                    return MachineField.Status;
+                "displaycount" => MachineField.DisplayCount,
+                "display_count" => MachineField.DisplayCount,
 
-                case "displaycount":
-                    return MachineField.DisplayCount;
+                "displaytype" => MachineField.DisplayType,
+                "display_type" => MachineField.DisplayType,
 
-                case "displaytype":
-                    return MachineField.DisplayType;
-
-                case "buttons":
-                    return MachineField.Buttons;
+                "buttons" => MachineField.Buttons,
 
                 #endregion
 
                 #region ListXML
 
-                case "history":
-                    return MachineField.History;
+                "history" => MachineField.History,
 
-                case "sourcefile":
-                case "source_file":
-                    return MachineField.SourceFile;
+                "sourcefile" => MachineField.SourceFile,
+                "source_file" => MachineField.SourceFile,
 
-                case "runnable":
-                    return MachineField.Runnable;                    
+                "runnable" => MachineField.Runnable,
 
                 #endregion
 
                 #region Logiqx
 
-                case "board":
-                    return MachineField.Board;
+                "board" => MachineField.Board,
 
-                case "rebuildto":
-                case "rebuild_to":
-                    return MachineField.RebuildTo;
+                "rebuildto" => MachineField.RebuildTo,
+                "rebuild_to" => MachineField.RebuildTo,
 
-                case "id":
-                case "nointroid":
-                case "nointro_id":
-                case "no_intro_id":
-                    return MachineField.NoIntroId;
+                "id" => MachineField.NoIntroId,
+                "nointroid" => MachineField.NoIntroId,
+                "nointro_id" => MachineField.NoIntroId,
+                "no_intro_id" => MachineField.NoIntroId,
 
-                case "cloneofid":
-                case "nointrocloneofid":
-                case "nointro_cloneofid":
-                case "no_intro_cloneofid":
-                case "no_intro_clone_of_id":
-                    return MachineField.NoIntroCloneOfId;
+                "cloneofid" => MachineField.NoIntroCloneOfId,
+                "nointrocloneofid" => MachineField.NoIntroCloneOfId,
+                "nointro_cloneofid" => MachineField.NoIntroCloneOfId,
+                "no_intro_cloneofid" => MachineField.NoIntroCloneOfId,
+                "no_intro_clone_of_id" => MachineField.NoIntroCloneOfId,
 
                 #endregion
 
                 #region Logiqx EmuArc
 
-                case "titleid":
-                case "title_id":
-                    return MachineField.TitleID;
+                "titleid" => MachineField.TitleID,
+                "title_id" => MachineField.TitleID,
 
-                case "developer":
-                    return MachineField.Developer;
+                "developer" => MachineField.Developer,
 
-                case "genre":
-                    return MachineField.Genre;
+                "genre" => MachineField.Genre,
 
-                case "subgenre":
-                case "sub_genre":
-                    return MachineField.Subgenre;
+                "subgenre" => MachineField.Subgenre,
+                "sub_genre" => MachineField.Subgenre,
 
-                case "ratings":
-                    return MachineField.Ratings;
+                "ratings" => MachineField.Ratings,
 
-                case "score":
-                    return MachineField.Score;
+                "score" => MachineField.Score,
 
-                case "enabled":
-                    return MachineField.Enabled;
+                "enabled" => MachineField.Enabled,
 
-                case "crc":
-                case "hascrc":
-                case "has_crc":
-                    return MachineField.CRC;
+                "crc" => MachineField.CRC,
+                "hascrc" => MachineField.CRC,
+                "has_crc" => MachineField.CRC,
 
-                case "relatedto":
-                case "related_to":
-                    return MachineField.RelatedTo;
+                "relatedto" => MachineField.RelatedTo,
+                "related_to" => MachineField.RelatedTo,
 
                 #endregion
 
                 #region OpenMSX
 
-                case "genmsxid":
-                case "genmsx_id":
-                case "gen_msxid":
-                case "gen_msx_id":
-                    return MachineField.GenMSXID;
+                "genmsxid" => MachineField.GenMSXID,
+                "genmsx_id" => MachineField.GenMSXID,
+                "gen_msxid" => MachineField.GenMSXID,
+                "gen_msx_id" => MachineField.GenMSXID,
 
-                case "system":
-                case "msxsystem":
-                case "msx_system":
-                    return MachineField.System;
-
-                case "country":
-                    return MachineField.Country;
+                "system" => MachineField.System,
+                "msxsystem" => MachineField.System,
+                "msx_system" => MachineField.System,
+                
+                "country" => MachineField.Country,
 
                 #endregion
 
                 #region SoftwareList
-
-                case "supported":
-                    return MachineField.Supported;
+                
+                "supported" => MachineField.Supported,
 
                 #endregion
 
-                default:
-                    return MachineField.NULL;
-            }
+                _ => MachineField.NULL,
+            };
         }
 
         /// <summary>
@@ -1683,8 +1583,8 @@ namespace SabreTools.Core.Tools
                 ItemType.ReleaseDetails => "release_details",
                 ItemType.Rom => "rom",
                 ItemType.Sample => "sample",
-                ItemType.Serials => "sample",
-                ItemType.Setting => "serials",
+                ItemType.Serials => "serials",
+                ItemType.Setting => "setting",
                 ItemType.SharedFeature => "sharedfeat",
                 ItemType.Slot => "slot",
                 ItemType.SlotOption => "slotoption",

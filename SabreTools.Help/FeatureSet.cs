@@ -36,9 +36,7 @@ namespace SabreTools.Help
         {
             get
             {
-                if (_features == null)
-                    _features = new Dictionary<string, Feature>();
-
+                _features ??= new Dictionary<string, Feature>();
                 if (!_features.ContainsKey(name))
                     return null;
 
@@ -46,9 +44,7 @@ namespace SabreTools.Help
             }
             set
             {
-                if (_features == null)
-                    _features = new Dictionary<string, Feature>();
-
+                _features ??= new Dictionary<string, Feature>();
                 _features[name] = value;
             }
         }
@@ -57,9 +53,7 @@ namespace SabreTools.Help
         {
             get
             {
-                if (_features == null)
-                    _features = new Dictionary<string, Feature>();
-
+                _features ??= new Dictionary<string, Feature>();
                 if (!_features.ContainsKey(subfeature.Name))
                     return null;
 
@@ -67,9 +61,7 @@ namespace SabreTools.Help
             }
             set
             {
-                if (_features == null)
-                    _features = new Dictionary<string, Feature>();
-
+                _features ??= new Dictionary<string, Feature>();
                 _features[subfeature.Name] = value;
             }
         }
@@ -80,9 +72,7 @@ namespace SabreTools.Help
         /// <param name="feature">Feature object to map to</param>
         public void Add(Feature feature)
         {
-            if (_features == null)
-                _features = new Dictionary<string, Feature>();
-
+            _features ??= new Dictionary<string, Feature>();
             lock (_features)
             {
                 _features.Add(feature.Name, feature);
@@ -108,7 +98,7 @@ namespace SabreTools.Help
         public void OutputGenericHelp()
         {
             // Start building the output list
-            List<string> output = new List<string>();
+            List<string> output = new();
 
             // Append the header first
             output.AddRange(_header);
@@ -134,7 +124,7 @@ namespace SabreTools.Help
         public void OutputAllHelp()
         {
             // Start building the output list
-            List<string> output = new List<string>();
+            List<string> output = new();
 
             // Append the header first
             output.AddRange(_header);
@@ -153,9 +143,9 @@ namespace SabreTools.Help
         /// <summary>
         /// Output the SabreTools suite credits
         /// </summary>
-        public void OutputCredits()
+        public static void OutputCredits()
         {
-            List<string> credits = new List<string>
+            List<string> credits = new()
             {
                 _barrier,
                 "Credits",
@@ -178,7 +168,7 @@ namespace SabreTools.Help
         public void OutputIndividualFeature(string featurename, bool includeLongDescription = false)
         {
             // Start building the output list
-            List<string> output = new List<string>();
+            List<string> output = new();
 
             // If the feature name is null, empty, or just consisting of `-` characters, just show everything
             if (string.IsNullOrEmpty(featurename?.TrimStart('-')))
@@ -189,7 +179,7 @@ namespace SabreTools.Help
 
             // Now try to find the feature that has the name included
             string realname = null;
-            List<string> startsWith = new List<string>();
+            List<string> startsWith = new();
             foreach (string feature in _features.Keys)
             {
                 // If we have a match to the feature name somehow
@@ -250,7 +240,7 @@ namespace SabreTools.Help
         /// <returns>List of Features representing what is enabled</returns>
         public Dictionary<string, Feature> GetEnabledFeatures()
         {
-            Dictionary<string, Feature> enabled = new Dictionary<string, Feature>();
+            Dictionary<string, Feature> enabled = new();
 
             // Loop through the features
             foreach (KeyValuePair<string, Feature> feature in _features)
@@ -276,7 +266,7 @@ namespace SabreTools.Help
         /// <returns>List of Features representing what is enabled</returns>
         private Dictionary<string, Feature> GetEnabledSubfeatures(string key, Feature feature)
         {
-            Dictionary<string, Feature> enabled = new Dictionary<string, Feature>();
+            Dictionary<string, Feature> enabled = new();
 
             // First determine if the current feature is enabled
             if (feature.IsEnabled())
@@ -302,7 +292,7 @@ namespace SabreTools.Help
         /// Write out the help text with pauses, if needed
         /// </summary>
         /// <param name="helptext"></param>
-        private void WriteOutWithPauses(List<string> helptext)
+        private static void WriteOutWithPauses(List<string> helptext)
         {
             // Now output based on the size of the screen
             int i = 0;

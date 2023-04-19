@@ -65,7 +65,7 @@ namespace SabreTools.Filtering
             if (fields == null || fields.Count == 0)
                 return;
 
-            InternalStopwatch watch = new InternalStopwatch("Populating removals from list");
+            InternalStopwatch watch = new("Populating removals from list");
 
             foreach (string field in fields)
             {                
@@ -102,7 +102,7 @@ namespace SabreTools.Filtering
             if (DatHeaderRemover == null && DatItemRemover == null)
                 return;
 
-            InternalStopwatch watch = new InternalStopwatch("Applying removals to DAT");
+            InternalStopwatch watch = new("Applying removals to DAT");
 
             // Remove DatHeader fields
             if (DatHeaderRemover != null && DatHeaderRemover.DatHeaderFields.Any())

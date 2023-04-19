@@ -470,8 +470,8 @@ namespace SabreTools.DatFiles.Formats
             // Prepare all internal variables
             string releaseNumber = string.Empty, duplicateid;
             long? size = null;
-            List<Rom> datItems = new List<Rom>();
-            Machine machine = new Machine();
+            List<Rom> datItems = new();
+            Machine machine = new();
 
             // If there's no subtree to the configuration, skip it
             if (reader == null)
@@ -683,7 +683,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                XmlTextWriter xtw = new XmlTextWriter(fs, new UTF8Encoding(false))
+                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
                 {
                     Formatting = Formatting.Indented,
                     IndentChar = '\t',

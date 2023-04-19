@@ -34,7 +34,7 @@ namespace SabreTools.DatFiles.Formats
         {
             // Open a file reader
             Encoding enc = filename.GetEncoding();
-            StreamReader sr = new StreamReader(System.IO.File.OpenRead(filename), enc);
+            StreamReader sr = new(System.IO.File.OpenRead(filename), enc);
 
             while (!sr.EndOfStream)
             {
@@ -66,16 +66,16 @@ namespace SabreTools.DatFiles.Formats
                     {
                         split = name.Split('/');
                         machine = split[0];
-                        name = name.Substring(machine.Length + 1);
+                        name = name[(machine.Length + 1)..];
                     }
                     else if (name.Contains('\\'))
                     {
                         split = name.Split('\\');
                         machine = split[0];
-                        name = name.Substring(machine.Length + 1);
+                        name = name[(machine.Length + 1)..];
                     }
 
-                    Rom rom = new Rom
+                    Rom rom = new()
                     {
                         Name = name,
                         Size = null,
@@ -122,7 +122,7 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            List<DatItemField> missingFields = new List<DatItemField>();
+            List<DatItemField> missingFields = new();
 
             // Check item name
             if (string.IsNullOrWhiteSpace(datItem.GetName()))
@@ -259,7 +259,7 @@ namespace SabreTools.DatFiles.Formats
                     return false;
                 }
 
-                SeparatedValueWriter svw = new SeparatedValueWriter(fs, new UTF8Encoding(false))
+                SeparatedValueWriter svw = new(fs, new UTF8Encoding(false))
                 {
                     Quotes = false,
                     Separator = ' ',

@@ -54,14 +54,14 @@ namespace SabreTools.Filtering
             if (inputs == null || !inputs.Any())
                 return;
 
-            InternalStopwatch watch = new InternalStopwatch("Populating extras from list");
+            InternalStopwatch watch = new("Populating extras from list");
 
             foreach (string input in inputs)
             {
-                ExtraIniItem item = new ExtraIniItem();
+                ExtraIniItem item = new();
 
                 // If we don't even have a possible field and file combination
-                if (!input.Contains(":"))
+                if (!input.Contains(':'))
                 {
                     logger.Warning($"'{input}` is not a valid INI extras string. Valid INI extras strings are of the form 'key:value'. Please refer to README.1ST or the help feature for more details.");
                     return;
@@ -96,7 +96,7 @@ namespace SabreTools.Filtering
             if (Items == null || !Items.Any())
                 return true;
 
-            InternalStopwatch watch = new InternalStopwatch("Applying extra mappings to DAT");
+            InternalStopwatch watch = new("Applying extra mappings to DAT");
 
             try
             {
@@ -125,7 +125,7 @@ namespace SabreTools.Filtering
                     combinedDatItemMaps.TryGetValue(machine, out Dictionary<DatItemField, string> datItemMappings);
 
                     // Create a setter with the new mappings
-                    Setter setter = new Setter
+                    Setter setter = new()
                     {
                         MachineMappings = machineMappings,
                         DatItemMappings = datItemMappings,

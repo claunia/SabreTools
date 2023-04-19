@@ -92,7 +92,7 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public void Terminate()
         {
-            byte[] emptyBuffer = new byte[0];
+            byte[] emptyBuffer = Array.Empty<byte>();
             switch (HashType)
             {
                 case Hash.CRC:
@@ -118,23 +118,17 @@ namespace SabreTools.Core.Tools
         /// </summary>
         public byte[] GetHash()
         {
-            switch (HashType)
+            return HashType switch
             {
-                case Hash.CRC:
-                    return BitConverter.GetBytes((_hasher as OptimizedCRC.OptimizedCRC).Value).Reverse().ToArray();
-
-                case Hash.MD5:
-                case Hash.SHA1:
-                case Hash.SHA256:
-                case Hash.SHA384:
-                case Hash.SHA512:
-                    return (_hasher as HashAlgorithm).Hash;
-
-                case Hash.SpamSum:
-                    return (_hasher as SpamSumContext).Final();
-            }
-
-            return null;
+                Hash.CRC => BitConverter.GetBytes((_hasher as OptimizedCRC.OptimizedCRC).Value).Reverse().ToArray(),
+                Hash.MD5 => (_hasher as HashAlgorithm).Hash,
+                Hash.SHA1 => (_hasher as HashAlgorithm).Hash,
+                Hash.SHA256 => (_hasher as HashAlgorithm).Hash,
+                Hash.SHA384 => (_hasher as HashAlgorithm).Hash,
+                Hash.SHA512 => (_hasher as HashAlgorithm).Hash,
+                Hash.SpamSum => (_hasher as SpamSumContext).Final(),
+                _ => null,
+            };
         }
     }
 }
