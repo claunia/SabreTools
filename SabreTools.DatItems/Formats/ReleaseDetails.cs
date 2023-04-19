@@ -6,10 +6,10 @@ using SabreTools.Core;
 namespace SabreTools.DatItems.Formats
 {
     /// <summary>
-    /// Represents a single details item
+    /// Represents a single release details item
     /// </summary>
-    [JsonObject("details"), XmlRoot("details")]
-    public class Details : DatItem
+    [JsonObject("release_details"), XmlRoot("release_details")]
+    public class ReleaseDetails : DatItem
     {
         #region Fields
 
@@ -21,22 +21,22 @@ namespace SabreTools.DatItems.Formats
         public string Id { get; set; }
 
         /// <summary>
-        /// Section value
-        /// </summary>
-        [JsonProperty("section", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("section")]
-        public string Section { get; set; }
-
-        /// <summary>
-        /// Dumping date value
-        /// </summary>
-        [JsonProperty("d_date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("d_date")]
-        public string DDate { get; set; }
-
-        /// <summary>
         /// Directory name value
         /// </summary>
         [JsonProperty("dirname", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("dirname")]
         public string DirName { get; set; }
+
+        /// <summary>
+        /// Rom info value
+        /// </summary>
+        [JsonProperty("rominfo", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("rominfo")]
+        public string RomInfo { get; set; }
+
+        /// <summary>
+        /// Category value
+        /// </summary>
+        [JsonProperty("category", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("category")]
+        public string Category { get; set; }
 
         /// <summary>
         /// NFO name value
@@ -66,6 +66,12 @@ namespace SabreTools.DatItems.Formats
         public string ArchiveName { get; set; }
 
         /// <summary>
+        /// Original format value
+        /// </summary>
+        [JsonProperty("originalformat", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("originalformat")]
+        public string OriginalFormat { get; set; }
+
+        /// <summary>
         /// Date value
         /// </summary>
         [JsonProperty("date", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("date")]
@@ -78,34 +84,10 @@ namespace SabreTools.DatItems.Formats
         public string Group { get; set; }
 
         /// <summary>
-        /// Region value
+        /// Comment value
         /// </summary>
-        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
-        public string Region { get; set; }
-
-        /// <summary>
-        /// Media title value
-        /// </summary>
-        [JsonProperty("media_title", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("media_title")]
-        public string MediaTitle { get; set; }
-
-        /// <summary>
-        /// Dumper value
-        /// </summary>
-        [JsonProperty("dumper", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("dumper")]
-        public string Dumper { get; set; }
-
-        /// <summary>
-        /// Project value
-        /// </summary>
-        [JsonProperty("project", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("project")]
-        public string Project { get; set; }
-
-        /// <summary>
-        /// Original format value
-        /// </summary>
-        [JsonProperty("originalformat", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("originalformat")]
-        public string OriginalFormat { get; set; }
+        [JsonProperty("comment", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("comment")]
+        public string Comment { get; set; }
 
         /// <summary>
         /// Tool value
@@ -114,45 +96,27 @@ namespace SabreTools.DatItems.Formats
         public string Tool { get; set; }
 
         /// <summary>
-        /// Comment 1 value
+        /// Region value
         /// </summary>
-        [JsonProperty("comment1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("comment1")]
-        public string Comment1 { get; set; }
+        [JsonProperty("region", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("region")]
+        public string Region { get; set; }
 
         /// <summary>
-        /// Link 2 value
+        /// Origin value
         /// </summary>
-        [JsonProperty("comment2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("comment2")]
-        public string Comment2 { get; set; }
-
-        /// <summary>
-        /// Link 1 value
-        /// </summary>
-        [JsonProperty("link1", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("link1")]
-        public string Link1 { get; set; }
-
-        /// <summary>
-        /// Link 2 value
-        /// </summary>
-        [JsonProperty("link2", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("link2")]
-        public string Link2 { get; set; }
-
-        /// <summary>
-        /// Link 3 value
-        /// </summary>
-        [JsonProperty("link3", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("link3")]
-        public string Link3 { get; set; }
+        [JsonProperty("origin", DefaultValueHandling = DefaultValueHandling.Ignore), XmlElement("origin")]
+        public string Origin { get; set; }
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Create a default, empty Details object
+        /// Create a default, empty ReleaseDetails object
         /// </summary>
-        public Details()
+        public ReleaseDetails()
         {
-            ItemType = ItemType.Serials;
+            ItemType = ItemType.ReleaseDetails;
         }
 
         #endregion
@@ -162,7 +126,7 @@ namespace SabreTools.DatItems.Formats
         /// <inheritdoc/>
         public override object Clone()
         {
-            return new Details()
+            return new ReleaseDetails()
             {
                 ItemType = this.ItemType,
                 DupeType = this.DupeType,
@@ -172,26 +136,20 @@ namespace SabreTools.DatItems.Formats
                 Remove = this.Remove,
 
                 Id = this.Id,
-                Section = this.Section,
-                DDate = this.DDate,
                 DirName = this.DirName,
+                RomInfo = this.RomInfo,
+                Category = this.Category,
                 NfoName = this.NfoName,
                 NfoSize = this.NfoSize,
                 NfoCrc = this.NfoCrc,
                 ArchiveName = this.ArchiveName,
+                OriginalFormat = this.OriginalFormat,
                 Date = this.Date,
                 Group = this.Group,
-                Region = this.Region,
-                MediaTitle = this.MediaTitle,
-                Dumper = this.Dumper,
-                Project = this.Project,
-                OriginalFormat = this.OriginalFormat,
+                Comment = this.Comment,
                 Tool = this.Tool,
-                Comment1 = this.Comment1,
-                Comment2 = this.Comment2,
-                Link1 = this.Link1,
-                Link2 = this.Link2,
-                Link3 = this.Link3,
+                Region = this.Region,
+                Origin = this.Origin,
             };
         }
 
@@ -207,30 +165,24 @@ namespace SabreTools.DatItems.Formats
                 return false;
 
             // Otherwise, treat it as a Details
-            Details newOther = other as Details;
+            ReleaseDetails newOther = other as ReleaseDetails;
 
             // If the Details information matches
             return (Id == newOther.Id
-                && Section == newOther.Section
-                && DDate == newOther.DDate
                 && DirName == newOther.DirName
+                && RomInfo == newOther.RomInfo
+                && Category == newOther.Category
                 && NfoName == newOther.NfoName
                 && NfoSize == newOther.NfoSize
                 && NfoCrc == newOther.NfoCrc
                 && ArchiveName == newOther.ArchiveName
+                && OriginalFormat == newOther.OriginalFormat
                 && Date == newOther.Date
                 && Group == newOther.Group
-                && Region == newOther.Region
-                && MediaTitle == newOther.MediaTitle
-                && Dumper == newOther.Dumper
-                && Project == newOther.Project
-                && OriginalFormat == newOther.OriginalFormat
+                && Comment == newOther.Comment
                 && Tool == newOther.Tool
-                && Comment1 == newOther.Comment1
-                && Comment2 == newOther.Comment2
-                && Link1 == newOther.Link1
-                && Link2 == newOther.Link2
-                && Link3 == newOther.Link3);
+                && Region == newOther.Region
+                && Origin == newOther.Origin);
         }
 
         #endregion

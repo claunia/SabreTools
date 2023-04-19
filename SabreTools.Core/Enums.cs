@@ -279,7 +279,6 @@ namespace SabreTools.Core
         Configuration,
         Control,
         DataArea,
-        Details,
         Device,
         DeviceReference,
         DipSwitch,
@@ -298,6 +297,7 @@ namespace SabreTools.Core
         Port,
         RamOption,
         Release,
+        ReleaseDetails,
         Sample,
         Serials,
         Setting,
@@ -306,6 +306,7 @@ namespace SabreTools.Core
         SlotOption,
         SoftwareList,
         Sound,
+        SourceDetails,
 
         Blank = 99, // This is not a real type, only used internally
     }

@@ -295,11 +295,17 @@ namespace SabreTools.DatFiles.Formats
                     case ItemType.Release:
                         datItem = datItemObj.ToObject<Release>();
                         break;
+                    case ItemType.ReleaseDetails:
+                        datItem = datItemObj.ToObject<ReleaseDetails>();
+                        break;
                     case ItemType.Rom:
                         datItem = datItemObj.ToObject<Rom>();
                         break;
                     case ItemType.Sample:
                         datItem = datItemObj.ToObject<Sample>();
+                        break;
+                    case ItemType.Serials:
+                        datItem = datItemObj.ToObject<Serials>();
                         break;
                     case ItemType.Setting:
                         datItem = datItemObj.ToObject<Setting>();
@@ -318,6 +324,9 @@ namespace SabreTools.DatFiles.Formats
                         break;
                     case ItemType.Sound:
                         datItem = datItemObj.ToObject<Sound>();
+                        break;
+                    case ItemType.SourceDetails:
+                        datItem = datItemObj.ToObject<SourceDetails>();
                         break;
                 }
             }

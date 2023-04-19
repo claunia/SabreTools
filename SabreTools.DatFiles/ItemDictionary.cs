@@ -237,6 +237,12 @@ namespace SabreTools.DatFiles
         public long ReleaseCount { get; private set; } = 0;
 
         /// <summary>
+        /// Number of ReleaseDetails items
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        public long ReleaseDetailsCount { get; private set; } = 0;
+
+        /// <summary>
         /// Number of Rom items
         /// </summary>
         [JsonIgnore, XmlIgnore]
@@ -247,6 +253,12 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public long SampleCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of Serials items
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        public long SerialsCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of SharedFeature items
@@ -271,6 +283,12 @@ namespace SabreTools.DatFiles
         /// </summary>
         [JsonIgnore, XmlIgnore]
         public long SoundCount { get; private set; } = 0;
+
+        /// <summary>
+        /// Number of SourceDetails items
+        /// </summary>
+        [JsonIgnore, XmlIgnore]
+        public long SourceDetailsCount { get; private set; } = 0;
 
         /// <summary>
         /// Number of machines
@@ -530,6 +548,9 @@ namespace SabreTools.DatFiles
                     case ItemType.Release:
                         ReleaseCount++;
                         break;
+                    case ItemType.ReleaseDetails:
+                        ReleaseDetailsCount++;
+                        break;
                     case ItemType.Rom:
                         RomCount++;
                         if ((item as Rom).ItemStatus != ItemStatus.Nodump)
@@ -552,6 +573,9 @@ namespace SabreTools.DatFiles
                     case ItemType.Sample:
                         SampleCount++;
                         break;
+                    case ItemType.Serials:
+                        SerialsCount++;
+                        break;
                     case ItemType.SharedFeature:
                         SharedFeatureCount++;
                         break;
@@ -563,6 +587,9 @@ namespace SabreTools.DatFiles
                         break;
                     case ItemType.Sound:
                         SoundCount++;
+                        break;
+                    case ItemType.SourceDetails:
+                        SourceDetailsCount++;
                         break;
                 }
             }

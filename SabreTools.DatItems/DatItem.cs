@@ -169,7 +169,6 @@ namespace SabreTools.DatItems
                 ItemType.Chip => new Chip(),
                 ItemType.Condition => new Condition(),
                 ItemType.Configuration => new Configuration(),
-                ItemType.Details => new Details(),
                 ItemType.Device => new Device(),
                 ItemType.DeviceReference => new DeviceReference(),
                 ItemType.DipSwitch => new DipSwitch(),
@@ -187,6 +186,7 @@ namespace SabreTools.DatItems
                 ItemType.Port => new Port(),
                 ItemType.RamOption => new RamOption(),
                 ItemType.Release => new Release(),
+                ItemType.ReleaseDetails => new ReleaseDetails(),
                 ItemType.Rom => new Rom(),
                 ItemType.Sample => new Sample(),
                 ItemType.Serials => new Serials(),
@@ -195,6 +195,7 @@ namespace SabreTools.DatItems
                 ItemType.SlotOption => new SlotOption(),
                 ItemType.SoftwareList => new SoftwareList(),
                 ItemType.Sound => new Sound(),
+                ItemType.SourceDetails => new SourceDetails(),
                 _ => new Rom(),
             };
         }
