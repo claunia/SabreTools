@@ -1267,9 +1267,15 @@ namespace SabreTools.Core.Tools
             {
                 "split" => MergingFlag.Split,
                 "merged" => MergingFlag.Merged,
+                "fullmerged" => MergingFlag.FullMerged,
                 "nonmerged" => MergingFlag.NonMerged,
                 "unmerged" => MergingFlag.NonMerged,
-                "full" => MergingFlag.Full,
+                "full" => MergingFlag.FullNonMerged,
+                "fullnonmerged" => MergingFlag.FullNonMerged,
+                "fullunmerged" => MergingFlag.FullNonMerged,
+                "device" => MergingFlag.DeviceNonMerged,
+                "devicenonmerged" => MergingFlag.DeviceNonMerged,
+                "deviceunmerged" => MergingFlag.DeviceNonMerged,
                 "none" => MergingFlag.None,
                 _ => MergingFlag.None,
             };
@@ -1710,9 +1716,10 @@ namespace SabreTools.Core.Tools
             {
                 MergingFlag.Split => "split",
                 MergingFlag.Merged => "merged",
+                MergingFlag.FullMerged => "fullmerged",
                 MergingFlag.NonMerged => romCenter ? "unmerged" : "nonmerged",
-                MergingFlag.Full => "full",
-                MergingFlag.Device => "device",
+                MergingFlag.FullNonMerged => "full",
+                MergingFlag.DeviceNonMerged => "device",
                 _ => null,
             };
         }

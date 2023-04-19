@@ -53,7 +53,6 @@ namespace SabreTools.Features
 
             // Get feature flags
             TreatAsFile asFiles = GetTreatAsFiles(features);
-            bool forceAddRoms = GetBoolean(features, ForceRomParentingValue);
             bool hashOnly = GetBoolean(features, HashOnlyValue);
             bool quickScan = GetBoolean(features, QuickValue);
 
@@ -68,7 +67,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(datdata);
-                    Splitter.ApplySplitting(datdata, useTags: true, forceAddRoms);
+                    Splitter.ApplySplitting(datdata, useTags: true);
                     Filter.ApplyFilters(datdata);
                     Cleaner.ApplyCleaning(datdata);
                     Remover.ApplyRemovals(datdata);
@@ -116,7 +115,7 @@ namespace SabreTools.Features
 
                 // Perform additional processing steps
                 Extras.ApplyExtras(datdata);
-                Splitter.ApplySplitting(datdata, useTags: true, forceAddRoms);
+                Splitter.ApplySplitting(datdata, useTags: true);
                 Filter.ApplyFilters(datdata);
                 Cleaner.ApplyCleaning(datdata);
                 Remover.ApplyRemovals(datdata);

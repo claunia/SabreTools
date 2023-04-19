@@ -23,7 +23,7 @@ namespace SabreTools.Core
         Standard = CRC | MD5 | SHA1,
         DeepHashes = SHA256 | SHA384 | SHA512 | SpamSum,
         SecureHashes = MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
-        All =  CRC | MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
+        All = CRC | MD5 | SHA1 | SHA256 | SHA384 | SHA512 | SpamSum,
     }
 
     /// <summary>
@@ -35,10 +35,15 @@ namespace SabreTools.Core
         Split,
         Merged,
         NonMerged,
-        Full,
 
         /// <remarks>This is not usually defined for Merging flags</remarks>
-        Device,
+        FullMerged,
+
+        /// <remarks>This is not usually defined for Merging flags</remarks>
+        DeviceNonMerged,
+
+        /// <remarks>This is not usually defined for Merging flags</remarks>
+        FullNonMerged,
     }
 
     /// <summary>

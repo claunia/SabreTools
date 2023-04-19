@@ -450,7 +450,7 @@ namespace SabreTools.DatFiles.Formats
             iw.WriteKeyValuePair("version", Header.RomCenterVersion ?? "2.50");
             iw.WriteKeyValuePair("plugin", Header.System);
             iw.WriteKeyValuePair("split", Header.ForceMerging == MergingFlag.Split ? "1" : "0");
-            iw.WriteKeyValuePair("merge", Header.ForceMerging == MergingFlag.Full || Header.ForceMerging == MergingFlag.Merged ? "1" : "0");
+            iw.WriteKeyValuePair("merge", Header.ForceMerging == MergingFlag.FullNonMerged || Header.ForceMerging == MergingFlag.Merged ? "1" : "0");
 
             iw.WriteSection("EMULATOR");
             iw.WriteKeyValuePair("refname", Header.Name);

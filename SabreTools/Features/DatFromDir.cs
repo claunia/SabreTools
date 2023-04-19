@@ -63,7 +63,6 @@ namespace SabreTools.Features
             bool addBlankFiles = GetBoolean(features, AddBlankFilesValue);
             bool addFileDates = GetBoolean(features, AddDateValue);
             TreatAsFile asFiles = GetTreatAsFiles(features);
-            bool forceAddRoms = GetBoolean(features, ForceRomParentingValue);
             bool noAutomaticDate = GetBoolean(features, NoAutomaticDateValue);
             var includeInScan = GetIncludeInScan(features);
             var skipFileType = GetSkipFileType(features);
@@ -101,7 +100,7 @@ namespace SabreTools.Features
                     {
                         // Perform additional processing steps
                         Extras.ApplyExtras(datdata);
-                        Splitter.ApplySplitting(datdata, useTags: false, forceAddRoms);
+                        Splitter.ApplySplitting(datdata, useTags: false);
                         Filter.ApplyFilters(datdata);
                         Cleaner.ApplyCleaning(datdata);
                         Remover.ApplyRemovals(datdata);

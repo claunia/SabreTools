@@ -192,6 +192,20 @@ namespace SabreTools.Features
             }
         }
 
+        internal const string DatFullMergedValue = "dat-full-merged";
+        internal static Feature DatFullMergedFlag
+        {
+            get
+            {
+                return new Feature(
+                    DatFullMergedValue,
+                    new List<string>() { "-dfm", "--dat-full-merged" },
+                    "Create fully merged sets",
+                    ParameterType.Flag,
+                    longDescription: "Preprocess the DAT to have parent sets contain all items from the children based on the cloneof tag while also performing deduplication within a parent. This is incompatible with the other --dat-X flags.");
+            }
+        }
+
         internal const string DatFullNonMergedValue = "dat-full-non-merged";
         internal static Feature DatFullNonMergedFlag
         {
@@ -427,21 +441,6 @@ namespace SabreTools.Features
                     "Split DAT(s) by two file extensions",
                     ParameterType.Flag,
                     longDescription: "For a DAT, or set of DATs, allow for splitting based on a list of input extensions. This can allow for combined DAT files, such as those combining two separate systems, to be split. Files with any extensions not listed in the input lists will be included in both outputted DAT files.");
-            }
-        }
-
-        internal const string ForceRomParentingValue = "force-rom-parenting";
-        internal static Feature ForceRomParentingFlag
-        {
-            get
-            {
-                return new Feature(
-                    ForceRomParentingValue,
-                    new List<string>() { "-frp", "--force-rom-parenting" },
-                    "Force ROMs to be added to parent",
-                    ParameterType.Flag,
-                    "By default, a merged DAT will take the first instance of a given ROM in the parent as the file existing. To be more strict to the source, this flag allows overriding that where if the file is in the child, it will be added to the resulting combined parent in call cases that are not controlled by a merge tag."
-                );
             }
         }
 
@@ -1879,7 +1878,7 @@ Some special strings that can be used:
         protected void AddInternalSplitFeatures()
         {
             AddFeature(DatMergedFlag);
-            this[DatMergedFlag].AddFeature(ForceRomParentingFlag);
+            AddFeature(DatFullMergedFlag);
             AddFeature(DatSplitFlag);
             AddFeature(DatNonMergedFlag);
             AddFeature(DatDeviceNonMergedFlag);
@@ -2277,9 +2276,11 @@ Some special strings that can be used:
         {
             MergingFlag splitType = MergingFlag.None;
             if (GetBoolean(features, DatDeviceNonMergedValue))
-                splitType = MergingFlag.Device;
+                splitType = MergingFlag.DeviceNonMerged;
+            else if (GetBoolean(features, DatFullMergedValue))
+                splitType = MergingFlag.FullMerged;
             else if (GetBoolean(features, DatFullNonMergedValue))
-                splitType = MergingFlag.Full;
+                splitType = MergingFlag.FullNonMerged;
             else if (GetBoolean(features, DatMergedValue))
                 splitType = MergingFlag.Merged;
             else if (GetBoolean(features, DatNonMergedValue))

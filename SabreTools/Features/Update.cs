@@ -91,7 +91,6 @@ namespace SabreTools.Features
                 return false;
 
             // Get feature flags
-            bool forceAddRoms = GetBoolean(features, ForceRomParentingValue);
             var updateDatItemFields = GetUpdateDatItemFields(features);
             var updateMachineFields = GetUpdateMachineFields(features);
             var updateMode = GetUpdateMode(features);
@@ -166,7 +165,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(datFile);
-                    Splitter.ApplySplitting(datFile, useTags: false, forceAddRoms);
+                    Splitter.ApplySplitting(datFile, useTags: false);
                     Filter.ApplyFilters(datFile);
                     Cleaner.ApplyCleaning(datFile);
                     Remover.ApplyRemovals(datFile);
@@ -205,7 +204,7 @@ namespace SabreTools.Features
 
             // Perform additional processing steps
             Extras.ApplyExtras(userInputDat);
-            Splitter.ApplySplitting(userInputDat, useTags: false, forceAddRoms);
+            Splitter.ApplySplitting(userInputDat, useTags: false);
             Filter.ApplyFilters(userInputDat);
             Cleaner.ApplyCleaning(userInputDat);
             Remover.ApplyRemovals(userInputDat);
@@ -298,7 +297,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
-                    Splitter.ApplySplitting(repDat, useTags: false, forceAddRoms);
+                    Splitter.ApplySplitting(repDat, useTags: false);
                     Filter.ApplyFilters(repDat);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);
@@ -324,7 +323,7 @@ namespace SabreTools.Features
 
                     // Perform additional processing steps
                     Extras.ApplyExtras(repDat);
-                    Splitter.ApplySplitting(repDat, useTags: false, forceAddRoms);
+                    Splitter.ApplySplitting(repDat, useTags: false);
                     Filter.ApplyFilters(repDat);
                     Cleaner.ApplyCleaning(repDat);
                     Remover.ApplyRemovals(repDat);

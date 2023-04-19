@@ -29,7 +29,7 @@ namespace SabreTools.Filtering
         private static readonly Logger logger = new Logger();
 
         #endregion
-    
+
         // TODO: Should any of these create a new DatFile in the process?
         // The reason this comes up is that doing any of the splits or merges
         // is an inherently destructive process. Making it output a new DatFile
@@ -43,10 +43,9 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
         /// <param name="useTags">True if DatFile tags override splitting, false otherwise</param>
-        /// <param name="forceAddRoms">True to force adding ROMs to parent, false otherwise</param>
         /// <param name="throwOnError">True if the error that is thrown should be thrown back to the caller, false otherwise</param>
         /// <returns>True if the DatFile was split, false on error</returns>
-        public bool ApplySplitting(DatFile datFile, bool useTags, bool forceAddRoms, bool throwOnError = false)
+        public bool ApplySplitting(DatFile datFile, bool useTags, bool throwOnError = false)
         {
             InternalStopwatch watch = new InternalStopwatch("Applying splitting to DAT");
 
@@ -59,23 +58,29 @@ namespace SabreTools.Filtering
                 // Run internal splitting
                 switch (SplitType)
                 {
+                    // Standard
                     case MergingFlag.None:
                         // No-op
                         break;
-                    case MergingFlag.Device:
-                        CreateDeviceNonMergedSets(datFile);
+                    case MergingFlag.Split:
+                        CreateSplitSets(datFile);
                         break;
-                    case MergingFlag.Full:
-                        CreateFullyNonMergedSets(datFile);
+                    case MergingFlag.Merged:
+                        CreateMergedSets(datFile);
                         break;
                     case MergingFlag.NonMerged:
                         CreateNonMergedSets(datFile);
                         break;
-                    case MergingFlag.Merged:
-                        CreateMergedSets(datFile, forceAddRoms);
+
+                    // Nonstandard
+                    case MergingFlag.FullMerged:
+                        CreateFullyMergedSets(datFile);
                         break;
-                    case MergingFlag.Split:
-                        CreateSplitSets(datFile);
+                    case MergingFlag.DeviceNonMerged:
+                        CreateDeviceNonMergedSets(datFile);
+                        break;
+                    case MergingFlag.FullNonMerged:
+                        CreateFullyNonMergedSets(datFile);
                         break;
                 }
             }
@@ -112,6 +117,28 @@ namespace SabreTools.Filtering
         }
 
         /// <summary>
+        /// Use cloneof tags to create merged sets and remove the tags plus deduplicating if tags don't catch everything
+        /// </summary>
+        /// <param name="datFile">Current DatFile object to run operations on</param>
+        internal static void CreateFullyMergedSets(DatFile datFile)
+        {
+            logger.User("Creating fully merged sets from the DAT");
+
+            // For sake of ease, the first thing we want to do is bucket by game
+            datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
+
+            // Now we want to loop through all of the games and set the correct information
+            AddRomsFromChildren(datFile, skipDedup: false);
+
+            // Now that we have looped through the cloneof tags, we loop through the romof tags
+            RemoveBiosRomsFromChild(datFile, false);
+            RemoveBiosRomsFromChild(datFile, true);
+
+            // Finally, remove the romof and cloneof tags so it's not picked up by the manager
+            RemoveTagsFromChild(datFile);
+        }
+
+        /// <summary>
         /// Use cloneof tags to create non-merged sets and remove the tags plus using the device_ref tags to get full sets
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
@@ -138,8 +165,7 @@ namespace SabreTools.Filtering
         /// Use cloneof tags to create merged sets and remove the tags
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
-        /// <param name="forceAddRoms">True to force adding ROMs to parent, false otherwise</param>
-        internal static void CreateMergedSets(DatFile datFile, bool forceAddRoms = false)
+        internal static void CreateMergedSets(DatFile datFile)
         {
             logger.User("Creating merged sets from the DAT");
 
@@ -147,7 +173,7 @@ namespace SabreTools.Filtering
             datFile.Items.BucketBy(ItemKey.Machine, DedupeType.None, norename: true);
 
             // Now we want to loop through all of the games and set the correct information
-            AddRomsFromChildren(datFile, forceAddRoms: forceAddRoms);
+            AddRomsFromChildren(datFile, skipDedup: true);
 
             // Now that we have looped through the cloneof tags, we loop through the romof tags
             RemoveBiosRomsFromChild(datFile, false);
@@ -425,8 +451,8 @@ namespace SabreTools.Filtering
         /// </summary>
         /// <param name="datFile">Current DatFile object to run operations on</param>
         /// <param name="subfolder">True to add DatItems to subfolder of parent (not including Disk), false otherwise</param>
-        /// <param name="forceAddRoms">True to force adding ROMs to parent, false otherwise (requires subfolder)</param>
-        internal static void AddRomsFromChildren(DatFile datFile, bool subfolder = true, bool forceAddRoms = false)
+        /// <param name="skipDedup">True to skip checking for duplicate ROMs in parent, false otherwise</param>
+        internal static void AddRomsFromChildren(DatFile datFile, bool subfolder = true, bool skipDedup = false)
         {
             List<string> games = datFile.Items.Keys.OrderBy(g => g).ToList();
             foreach (string game in games)
@@ -508,7 +534,7 @@ namespace SabreTools.Filtering
                         }
 
                         // If the parent doesn't already contain this item, add to subfolder of parent
-                        else if (!datFile.Items[parent].Contains(item) || (subfolder && forceAddRoms))
+                        else if (!datFile.Items[parent].Contains(item) || skipDedup)
                         {
                             if (subfolder)
                                 rom.Name = $"{item.Machine.Name}\\{rom.Name}";
