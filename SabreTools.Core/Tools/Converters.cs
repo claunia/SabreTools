@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SabreTools.Core.Tools
@@ -1030,13 +1032,13 @@ namespace SabreTools.Core.Tools
 
                 "sampleof" => MachineField.SampleOf,
                 "sample_of" => MachineField.SampleOf,
-                
+
                 "type" => MachineField.Type,
 
                 #endregion
 
                 #region AttractMode
-                
+
                 "players" => MachineField.Players,
 
                 "rotation" => MachineField.Rotation,
@@ -1127,13 +1129,13 @@ namespace SabreTools.Core.Tools
                 "system" => MachineField.System,
                 "msxsystem" => MachineField.System,
                 "msx_system" => MachineField.System,
-                
+
                 "country" => MachineField.Country,
 
                 #endregion
 
                 #region SoftwareList
-                
+
                 "supported" => MachineField.Supported,
 
                 #endregion
@@ -1339,6 +1341,44 @@ namespace SabreTools.Core.Tools
                 "false" => false,
                 _ => null,
             };
+        }
+        
+        /// <summary>
+        /// Get a set of mappings from strings to enum values
+        /// </summary>
+        /// <param name="type">Enum type to generate from</param>
+        /// <returns>Dictionary of string to enum values</returns>
+        private static Dictionary<string, T> GenerateToEnum<T>(Type type)
+        {
+            try
+            {
+                // Get all of the values for the enum type
+                var values = Enum.GetValues(type);
+
+                // Build the output dictionary
+                Dictionary<string, T> mappings = new();
+                foreach (T value in values)
+                {
+                    // Try to get the mapping attribute
+                    MappingAttribute attr = AttributeHelper<T>.GetAttribute(value);
+                    if (attr?.Mappings == null || !attr.Mappings.Any())
+                        continue;
+
+                    // Loop through the mappings and add each
+                    foreach (string mapString in attr.Mappings)
+                    {
+                        mappings[mapString] = value;
+                    }
+                }
+
+                // Return the output dictionary
+                return mappings;
+            }
+            catch
+            {
+                // This should not happen, only if the type was not an enum
+                return new Dictionary<string, T>();
+            }
         }
 
         #endregion
@@ -1778,6 +1818,41 @@ namespace SabreTools.Core.Tools
                 false => "no",
                 _ => null,
             };
+        }
+
+        /// <summary>
+        /// Get a set of mappings from enum values to string
+        /// </summary>
+        /// <param name="type">Enum type to generate from</param>
+        /// <returns>Dictionary of enum to string values</returns>
+        private static Dictionary<T, string> GenerateToString<T>(Type type)
+        {
+            try
+            {
+                // Get all of the values for the enum type
+                var values = Enum.GetValues(type);
+
+                // Build the output dictionary
+                Dictionary<T, string> mappings = new();
+                foreach (T value in values)
+                {
+                    // Try to get the mapping attribute
+                    MappingAttribute attr = AttributeHelper<T>.GetAttribute(value);
+                    if (attr?.Mappings == null || !attr.Mappings.Any())
+                        continue;
+
+                    // Always use the first value in the list
+                    mappings[value] = attr.Mappings[0];
+                }
+
+                // Return the output dictionary
+                return mappings;
+            }
+            catch
+            {
+                // This should not happen, only if the type was not an enum
+                return new Dictionary<T, string>();
+            }
         }
 
         #endregion
