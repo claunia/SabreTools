@@ -359,7 +359,8 @@ namespace SabreTools.Core.Tools
                     // Loop through the mappings and add each
                     foreach (string mapString in attr.Mappings)
                     {
-                        mappings[mapString] = value;
+                        if (mapString != null)
+                            mappings[mapString] = value;
                     }
                 }
 
@@ -383,14 +384,7 @@ namespace SabreTools.Core.Tools
         /// <param name="chipType">ChipType to get value from</param>
         /// <returns>String value corresponding to the ChipType</returns>
         public static string FromChipType(this ChipType chipType)
-        {
-            return chipType switch
-            {
-                ChipType.CPU => "cpu",
-                ChipType.Audio => "audio",
-                _ => null,
-            };
-        }
+            => AsStringValue(chipType);
 
         /// <summary>
         /// Get string value from input ControlType
@@ -398,27 +392,7 @@ namespace SabreTools.Core.Tools
         /// <param name="controlType">ControlType to get value from</param>
         /// <returns>String value corresponding to the ControlType</returns>
         public static string FromControlType(this ControlType controlType)
-        {
-            return controlType switch
-            {
-                ControlType.Joy => "joy",
-                ControlType.Stick => "stick",
-                ControlType.Paddle => "paddle",
-                ControlType.Pedal => "pedal",
-                ControlType.Lightgun => "lightgun",
-                ControlType.Positional => "positional",
-                ControlType.Dial => "dial",
-                ControlType.Trackball => "trackball",
-                ControlType.Mouse => "mouse",
-                ControlType.OnlyButtons => "only_buttons",
-                ControlType.Keypad => "keypad",
-                ControlType.Keyboard => "keyboard",
-                ControlType.Mahjong => "mahjong",
-                ControlType.Hanafuda => "hanafuda",
-                ControlType.Gambling => "gambling",
-                _ => null,
-            };
-        }
+            => AsStringValue(controlType);
 
         /// <summary>
         /// Get string value from input DeviceType
@@ -426,33 +400,7 @@ namespace SabreTools.Core.Tools
         /// <param name="deviceType">vDeviceType to get value from</param>
         /// <returns>String value corresponding to the DeviceType</returns>
         public static string FromDeviceType(this DeviceType deviceType)
-        {
-            return deviceType switch
-            {
-                DeviceType.Unknown => "unknown",
-                DeviceType.Cartridge => "cartridge",
-                DeviceType.FloppyDisk => "floppydisk",
-                DeviceType.HardDisk => "harddisk",
-                DeviceType.Cylinder => "cylinder",
-                DeviceType.Cassette => "cassette",
-                DeviceType.PunchCard => "punchcard",
-                DeviceType.PunchTape => "punchtape",
-                DeviceType.Printout => "printout",
-                DeviceType.Serial => "serial",
-                DeviceType.Parallel => "parallel",
-                DeviceType.Snapshot => "snapshot",
-                DeviceType.QuickLoad => "quickload",
-                DeviceType.MemCard => "memcard",
-                DeviceType.CDROM => "cdrom",
-                DeviceType.MagTape => "magtape",
-                DeviceType.ROMImage => "romimage",
-                DeviceType.MIDIIn => "midiin",
-                DeviceType.MIDIOut => "midiout",
-                DeviceType.Picture => "picture",
-                DeviceType.VidFile => "vidfile",
-                _ => null,
-            };
-        }
+            => AsStringValue(deviceType);
 
         /// <summary>
         /// Get string value from input DisplayType
@@ -460,17 +408,7 @@ namespace SabreTools.Core.Tools
         /// <param name="displayType">DisplayType to get value from</param>
         /// <returns>String value corresponding to the DisplayType</returns>
         public static string FromDisplayType(this DisplayType displayType)
-        {
-            return displayType switch
-            {
-                DisplayType.Raster => "raster",
-                DisplayType.Vector => "vector",
-                DisplayType.LCD => "lcd",
-                DisplayType.SVG => "svg",
-                DisplayType.Unknown => "unknown",
-                _ => null,
-            };
-        }
+            => AsStringValue(displayType);
 
         /// <summary>
         /// Get string value from input Endianness
@@ -478,14 +416,7 @@ namespace SabreTools.Core.Tools
         /// <param name="endianness">Endianness to get value from</param>
         /// <returns>String value corresponding to the Endianness</returns>
         public static string FromEndianness(this Endianness endianness)
-        {
-            return endianness switch
-            {
-                Endianness.Big => "big",
-                Endianness.Little => "little",
-                _ => null,
-            };
-        }
+            => AsStringValue(endianness);
 
         /// <summary>
         /// Get string value from input FeatureStatus
@@ -493,14 +424,7 @@ namespace SabreTools.Core.Tools
         /// <param name="featureStatus">FeatureStatus to get value from</param>
         /// <returns>String value corresponding to the FeatureStatus</returns>
         public static string FromFeatureStatus(this FeatureStatus featureStatus)
-        {
-            return featureStatus switch
-            {
-                FeatureStatus.Unemulated => "unemulated",
-                FeatureStatus.Imperfect => "imperfect",
-                _ => null,
-            };
-        }
+            => AsStringValue(featureStatus);
 
         /// <summary>
         /// Get string value from input FeatureType
@@ -508,26 +432,7 @@ namespace SabreTools.Core.Tools
         /// <param name="featureType">FeatureType to get value from</param>
         /// <returns>String value corresponding to the FeatureType</returns>
         public static string FromFeatureType(this FeatureType featureType)
-        {
-            return featureType switch
-            {
-                FeatureType.Protection => "protection",
-                FeatureType.Palette => "palette",
-                FeatureType.Graphics => "graphics",
-                FeatureType.Sound => "sound",
-                FeatureType.Controls => "controls",
-                FeatureType.Keyboard => "keyboard",
-                FeatureType.Mouse => "mouse",
-                FeatureType.Microphone => "microphone",
-                FeatureType.Camera => "camera",
-                FeatureType.Disk => "disk",
-                FeatureType.Printer => "printer",
-                FeatureType.Lan => "lan",
-                FeatureType.Wan => "wan",
-                FeatureType.Timing => "timing",
-                _ => null,
-            };
-        }
+            => AsStringValue(featureType);
 
         /// <summary>
         /// Get string value from input ItemStatus
@@ -536,16 +441,15 @@ namespace SabreTools.Core.Tools
         /// <param name="yesno">True to use Yes/No format instead</param>
         /// <returns>String value corresponding to the ItemStatus</returns>
         public static string FromItemStatus(this ItemStatus status, bool yesno)
-        {
-            return status switch
-            {
-                ItemStatus.Good => "good",
-                ItemStatus.BadDump => "baddump",
-                ItemStatus.Nodump => yesno ? "yes" : "nodump",
-                ItemStatus.Verified => "verified",
-                _ => null,
-            };
-        }
+            => AsStringValue(status, yesno);
+
+        /// <summary>
+        /// Get string value from input ItemType?
+        /// </summary>
+        /// <param name="itemType">ItemType? to get value from</param>
+        /// <returns>String value corresponding to the ItemType?</returns>
+        public static string FromItemType(this ItemType itemType)
+            => AsStringValue(itemType);
 
         /// <summary>
         /// Get string value from input LoadFlag
@@ -553,79 +457,7 @@ namespace SabreTools.Core.Tools
         /// <param name="loadFlag">LoadFlag to get value from</param>
         /// <returns>String value corresponding to the LoadFlag</returns>
         public static string FromLoadFlag(this LoadFlag loadFlag)
-        {
-            return loadFlag switch
-            {
-                LoadFlag.Load16Byte => "load16_byte",
-                LoadFlag.Load16Word => "load16_word",
-                LoadFlag.Load16WordSwap => "load16_word_swap",
-                LoadFlag.Load32Byte => "load32_byte",
-                LoadFlag.Load32Word => "load32_word",
-                LoadFlag.Load32WordSwap => "load32_word_swap",
-                LoadFlag.Load32DWord => "load32_dword",
-                LoadFlag.Load64Word => "load64_word",
-                LoadFlag.Load64WordSwap => "load64_word_swap",
-                LoadFlag.Reload => "reload",
-                LoadFlag.Fill => "fill",
-                LoadFlag.Continue => "continue",
-                LoadFlag.ReloadPlain => "reload_plain",
-                LoadFlag.Ignore => "ignore",
-                _ => null,
-            };
-        }
-
-        /// <summary>
-        /// Get string value from input ItemType?
-        /// </summary>
-        /// <param name="itemType">ItemType? to get value from</param>
-        /// <returns>String value corresponding to the ItemType?</returns>
-        public static string FromItemType(this ItemType? itemType)
-        {
-            return itemType switch
-            {
-                ItemType.Adjuster => "adjuster",
-                ItemType.Analog => "analog",
-                ItemType.Archive => "archive",
-                ItemType.BiosSet => "biosset",
-                ItemType.Blank => "blank",
-                ItemType.Chip => "chip",
-                ItemType.Condition => "condition",
-                ItemType.Configuration => "configuration",
-                ItemType.Control => "control",
-                ItemType.DataArea => "dataarea",
-                ItemType.Device => "device",
-                ItemType.DeviceReference => "device_ref",
-                ItemType.DipSwitch => "dipswitch",
-                ItemType.Disk => "disk",
-                ItemType.DiskArea => "diskarea",
-                ItemType.Display => "display",
-                ItemType.Driver => "driver",
-                ItemType.Extension => "extension",
-                ItemType.Feature => "feature",
-                ItemType.Info => "info",
-                ItemType.Input => "input",
-                ItemType.Instance => "instance",
-                ItemType.Location => "location",
-                ItemType.Media => "media",
-                ItemType.Part => "part",
-                ItemType.PartFeature => "part_feature",
-                ItemType.Port => "port",
-                ItemType.RamOption => "ramoption",
-                ItemType.Release => "release",
-                ItemType.ReleaseDetails => "release_details",
-                ItemType.Rom => "rom",
-                ItemType.Sample => "sample",
-                ItemType.Serials => "serials",
-                ItemType.Setting => "setting",
-                ItemType.SharedFeature => "sharedfeat",
-                ItemType.Slot => "slot",
-                ItemType.SlotOption => "slotoption",
-                ItemType.SoftwareList => "softwarelist",
-                ItemType.Sound => "sound",
-                ItemType.SourceDetails => "source_details",
-                _ => null,
-            };
-        }
+            => AsStringValue(loadFlag);
 
         /// <summary>
         /// Get string value from input MachineType
@@ -634,15 +466,7 @@ namespace SabreTools.Core.Tools
         /// <param name="romCenter">True to use old naming instead</param>
         /// <returns>String value corresponding to the MachineType</returns>
         public static string FromMachineType(this MachineType gametype, bool old)
-        {
-            return gametype switch
-            {
-                MachineType.Bios => "bios",
-                MachineType.Device => old ? "dev" : "device",
-                MachineType.Mechanical => old ? "mech" : "mechanical",
-                _ => null,
-            };
-        }
+            => AsStringValue(gametype, old);
 
         /// <summary>
         /// Get string value from input MergingFlag
@@ -651,18 +475,7 @@ namespace SabreTools.Core.Tools
         /// <param name="romCenter">True to use RomCenter naming instead</param>
         /// <returns>String value corresponding to the MergingFlag</returns>
         public static string FromMergingFlag(this MergingFlag merging, bool romCenter)
-        {
-            return merging switch
-            {
-                MergingFlag.Split => "split",
-                MergingFlag.Merged => "merged",
-                MergingFlag.FullMerged => "fullmerged",
-                MergingFlag.NonMerged => romCenter ? "unmerged" : "nonmerged",
-                MergingFlag.FullNonMerged => "full",
-                MergingFlag.DeviceNonMerged => "device",
-                _ => null,
-            };
-        }
+            => AsStringValue(merging, romCenter);
 
         /// <summary>
         /// Get string value from input NodumpFlag
@@ -670,31 +483,15 @@ namespace SabreTools.Core.Tools
         /// <param name="nodump">NodumpFlag to get value from</param>
         /// <returns>String value corresponding to the NodumpFlag</returns>
         public static string FromNodumpFlag(this NodumpFlag nodump)
-        {
-            return nodump switch
-            {
-                NodumpFlag.Obsolete => "obsolete",
-                NodumpFlag.Required => "required",
-                NodumpFlag.Ignore => "ignore",
-                _ => null,
-            };
-        }
+            => AsStringValue(nodump);
 
         /// <summary>
         /// Get string value from input OpenMSXSubType
         /// </summary>
-        /// <param name="itemType">OpenMSXSubType to get value from</param>
+        /// <param name="subType">OpenMSXSubType to get value from</param>
         /// <returns>String value corresponding to the OpenMSXSubType</returns>
-        public static string FromOpenMSXSubType(this OpenMSXSubType itemType)
-        {
-            return itemType switch
-            {
-                OpenMSXSubType.Rom => "rom",
-                OpenMSXSubType.MegaRom => "megarom",
-                OpenMSXSubType.SCCPlusCart => "sccpluscart",
-                _ => null,
-            };
-        }
+        public static string FromOpenMSXSubType(this OpenMSXSubType subType)
+            => AsStringValue(subType);
 
         /// <summary>
         /// Get string value from input PackingFlag
@@ -703,16 +500,7 @@ namespace SabreTools.Core.Tools
         /// <param name="yesno">True to use Yes/No format instead</param>
         /// <returns>String value corresponding to the PackingFlag</returns>
         public static string FromPackingFlag(this PackingFlag packing, bool yesno)
-        {
-            return packing switch
-            {
-                PackingFlag.Zip => yesno ? "yes" : "zip",
-                PackingFlag.Unzip => yesno ? "no" : "unzip",
-                PackingFlag.Partial => "partial",
-                PackingFlag.Flat => "flat",
-                _ => null,
-            };
-        }
+            => AsStringValue(packing, yesno);
 
         /// <summary>
         /// Get string value from input Relation
@@ -720,18 +508,7 @@ namespace SabreTools.Core.Tools
         /// <param name="relation">Relation to get value from</param>
         /// <returns>String value corresponding to the Relation</returns>
         public static string FromRelation(this Relation relation)
-        {
-            return relation switch
-            {
-                Relation.Equal => "eq",
-                Relation.NotEqual => "ne",
-                Relation.GreaterThan => "gt",
-                Relation.LessThanOrEqual => "le",
-                Relation.LessThan => "lt",
-                Relation.GreaterThanOrEqual => "ge",
-                _ => null,
-            };
-        }
+            => AsStringValue(relation);
 
         /// <summary>
         /// Get string value from input Runnable
@@ -739,15 +516,7 @@ namespace SabreTools.Core.Tools
         /// <param name="runnable">Runnable to get value from</param>
         /// <returns>String value corresponding to the Runnable</returns>
         public static string FromRunnable(this Runnable runnable)
-        {
-            return runnable switch
-            {
-                Runnable.No => "no",
-                Runnable.Partial => "partial",
-                Runnable.Yes => "yes",
-                _ => null,
-            };
-        }
+            => AsStringValue(runnable);
 
         /// <summary>
         /// Get string value from input SoftwareListStatus
@@ -755,14 +524,7 @@ namespace SabreTools.Core.Tools
         /// <param name="status">SoftwareListStatus to get value from</param>
         /// <returns>String value corresponding to the SoftwareListStatus</returns>
         public static string FromSoftwareListStatus(this SoftwareListStatus status)
-        {
-            return status switch
-            {
-                SoftwareListStatus.Original => "original",
-                SoftwareListStatus.Compatible => "compatible",
-                _ => null,
-            };
-        }
+            => AsStringValue(status);
 
         /// <summary>
         /// Get string value from input Supported
@@ -771,15 +533,7 @@ namespace SabreTools.Core.Tools
         /// <param name="verbose">True to use verbose output, false otherwise</param>
         /// <returns>String value corresponding to the Supported</returns>
         public static string FromSupported(this Supported supported, bool verbose)
-        {
-            return supported switch
-            {
-                Supported.No => verbose ? "unsupported" : "no",
-                Supported.Partial => "partial",
-                Supported.Yes => verbose ? "supported" : "yes",
-                _ => null,
-            };
-        }
+            => AsStringValue(supported, verbose);
 
         /// <summary>
         /// Get string value from input SupportStatus
@@ -787,15 +541,7 @@ namespace SabreTools.Core.Tools
         /// <param name="supportStatus">SupportStatus to get value from</param>
         /// <returns>String value corresponding to the SupportStatus</returns>
         public static string FromSupportStatus(this SupportStatus supportStatus)
-        {
-            return supportStatus switch
-            {
-                SupportStatus.Good => "good",
-                SupportStatus.Imperfect => "imperfect",
-                SupportStatus.Preliminary => "preliminary",
-                _ => null,
-            };
-        }
+            => AsStringValue(supportStatus);
 
         /// <summary>
         /// Get string value from input bool?
@@ -815,13 +561,14 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Get the string value for an input enum, if possible
         /// </summary>
-        /// <param name="type">Enum value to parse/param>
+        /// <param name="value">Enum value to parse/param>
+        /// <param name="useSecond">True to use the second mapping option, if it exists</param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>String value representing the input, default on error</returns>
-        private static string? AsStringValue<T>(T value)
+        private static string? AsStringValue<T>(T value, bool useSecond = false)
         {
             // Get the mapping dictionary
-            var mappings = GenerateToString<T>();
+            var mappings = GenerateToString<T>(useSecond);
 
             // Try to get the value from the mappings
             if (mappings.ContainsKey(value))
@@ -834,9 +581,10 @@ namespace SabreTools.Core.Tools
         /// <summary>
         /// Get a set of mappings from enum values to string
         /// </summary>
-        /// <param name="type">Enum type to generate from</param>
+        /// <param name="useSecond">True to use the second mapping option, if it exists</param>
+        /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of enum to string values</returns>
-        private static Dictionary<T, string> GenerateToString<T>()
+        private static Dictionary<T, string> GenerateToString<T>(bool useSecond)
         {
             try
             {
@@ -852,8 +600,11 @@ namespace SabreTools.Core.Tools
                     if (attr?.Mappings == null || !attr.Mappings.Any())
                         continue;
 
-                    // Always use the first value in the list
-                    mappings[value] = attr.Mappings[0];
+                    // Use either the first or second item in the list
+                    if (attr.Mappings.Length > 1 && useSecond)
+                        mappings[value] = attr.Mappings[1];
+                    else
+                        mappings[value] = attr.Mappings[0];
                 }
 
                 // Return the output dictionary

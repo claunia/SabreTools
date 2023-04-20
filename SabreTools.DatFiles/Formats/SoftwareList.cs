@@ -883,7 +883,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteRequiredAttributeString("name", disk.Name);
                     xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
+                    if (disk.ItemStatus != ItemStatus.None)
+                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                     xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
                     xtw.WriteEndElement();
 
@@ -940,7 +941,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("offset", rom.Offset);
                     xtw.WriteOptionalAttributeString("value", rom.Value);
-                    xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
+                    if (rom.ItemStatus != ItemStatus.None)
+                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                     xtw.WriteOptionalAttributeString("loadflag", rom.LoadFlag.FromLoadFlag());
                     xtw.WriteEndElement();
 

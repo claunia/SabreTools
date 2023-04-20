@@ -983,9 +983,12 @@ namespace SabreTools.DatFiles.Formats
             {
                 xtw.WriteStartElement("clrmamepro");
 
-                xtw.WriteOptionalAttributeString("forcepacking", Header.ForcePacking.FromPackingFlag(false));
-                xtw.WriteOptionalAttributeString("forcemerging", Header.ForceMerging.FromMergingFlag(false));
-                xtw.WriteOptionalAttributeString("forcenodump", Header.ForceNodump.FromNodumpFlag());
+                if (Header.ForcePacking != PackingFlag.None)
+                    xtw.WriteOptionalAttributeString("forcepacking", Header.ForcePacking.FromPackingFlag(false));
+                if (Header.ForceMerging != MergingFlag.None)
+                    xtw.WriteOptionalAttributeString("forcemerging", Header.ForceMerging.FromMergingFlag(false));
+                if (Header.ForceNodump != NodumpFlag.None)
+                    xtw.WriteOptionalAttributeString("forcenodump", Header.ForceNodump.FromNodumpFlag());
                 xtw.WriteOptionalAttributeString("header", Header.HeaderSkipper);
 
                 // End clrmamepro
@@ -1000,9 +1003,12 @@ namespace SabreTools.DatFiles.Formats
                 xtw.WriteStartElement("romcenter");
 
                 xtw.WriteOptionalAttributeString("plugin", Header.System);
-                xtw.WriteOptionalAttributeString("rommode", Header.RomMode.FromMergingFlag(true));
-                xtw.WriteOptionalAttributeString("biosmode", Header.BiosMode.FromMergingFlag(true));
-                xtw.WriteOptionalAttributeString("samplemode", Header.SampleMode.FromMergingFlag(true));
+                if (Header.RomMode != MergingFlag.None)
+                    xtw.WriteOptionalAttributeString("rommode", Header.RomMode.FromMergingFlag(true));
+                if (Header.BiosMode != MergingFlag.None)
+                    xtw.WriteOptionalAttributeString("biosmode", Header.BiosMode.FromMergingFlag(true));
+                if (Header.SampleMode != MergingFlag.None)
+                    xtw.WriteOptionalAttributeString("samplemode", Header.SampleMode.FromMergingFlag(true));
                 xtw.WriteOptionalAttributeString("lockrommode", Header.LockRomMode.FromYesNo());
                 xtw.WriteOptionalAttributeString("lockbiosmode", Header.LockBiosMode.FromYesNo());
                 xtw.WriteOptionalAttributeString("locksamplemode", Header.LockSampleMode.FromYesNo());
@@ -1138,7 +1144,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteRequiredAttributeString("name", disk.Name);
                     xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
+                    if (disk.ItemStatus != ItemStatus.None)
+                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                     xtw.WriteEndElement();
                     break;
 
@@ -1177,7 +1184,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant());
                     xtw.WriteOptionalAttributeString("date", rom.Date);
-                    xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
+                    if (rom.ItemStatus != ItemStatus.None)
+                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                     xtw.WriteOptionalAttributeString("inverted", rom.Inverted.FromYesNo());
                     xtw.WriteOptionalAttributeString("mia", rom.MIA.FromYesNo());
                     xtw.WriteEndElement();

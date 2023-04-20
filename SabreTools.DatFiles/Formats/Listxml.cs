@@ -1722,7 +1722,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteOptionalAttributeString("region", disk.Region);
                     xtw.WriteOptionalAttributeString("index", disk.Index);
                     xtw.WriteOptionalAttributeString("writable", disk.Writable.FromYesNo());
-                    xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
+                    if (disk.ItemStatus != ItemStatus.None)
+                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
                     xtw.WriteOptionalAttributeString("optional", disk.Optional.FromYesNo());
                     xtw.WriteEndElement();
                     break;
@@ -1836,7 +1837,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteOptionalAttributeString("merge", rom.MergeTag);
                     xtw.WriteOptionalAttributeString("region", rom.Region);
                     xtw.WriteOptionalAttributeString("offset", rom.Offset);
-                    xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
+                    if (rom.ItemStatus != ItemStatus.None)
+                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
                     xtw.WriteOptionalAttributeString("optional", rom.Optional.FromYesNo());
                     xtw.WriteEndElement();
                     break;
@@ -1871,7 +1873,8 @@ namespace SabreTools.DatFiles.Formats
                     xtw.WriteStartElement("softwarelist");
                     xtw.WriteRequiredAttributeString("tag", softwareList.Tag);
                     xtw.WriteRequiredAttributeString("name", softwareList.Name);
-                    xtw.WriteRequiredAttributeString("status", softwareList.Status.FromSoftwareListStatus());
+                    if (softwareList.Status != SoftwareListStatus.None)
+                        xtw.WriteRequiredAttributeString("status", softwareList.Status.FromSoftwareListStatus());
                     xtw.WriteOptionalAttributeString("filter", softwareList.Filter);
                     xtw.WriteEndElement();
                     break;

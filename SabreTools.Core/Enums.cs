@@ -48,11 +48,11 @@ namespace SabreTools.Core
         FullMerged,
 
         /// <remarks>This is not usually defined for Merging flags</remarks>
-        [Mapping("device", "devicenonmerged", "deviceunmerged")]
+        [Mapping("device", "deviceunmerged", "devicenonmerged")]
         DeviceNonMerged,
 
         /// <remarks>This is not usually defined for Merging flags</remarks>
-        [Mapping("full", "fullnonmerged", "fullunmerged")]
+        [Mapping("full", "fullunmerged", "fullnonmerged")]
         FullNonMerged,
     }
 
@@ -85,13 +85,13 @@ namespace SabreTools.Core
         /// <summary>
         /// Force all sets to be in archives, except disk and media
         /// </summary>
-        [Mapping("yes", "zip")]
+        [Mapping("zip", "yes")]
         Zip,
 
         /// <summary>
         /// Force all sets to be extracted into subfolders
         /// </summary>
-        [Mapping("no", "unzip")]
+        [Mapping("unzip", "no")]
         Unzip,
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace SabreTools.Core
         [Mapping("device")]
         Device,
 
-        [Mapping("deviceref", "device_ref")]
+        [Mapping("device_ref", "deviceref")]
         DeviceReference,
 
         [Mapping("dipswitch")]
@@ -497,7 +497,7 @@ namespace SabreTools.Core
         [Mapping("part")]
         Part,
 
-        [Mapping("partfeature", "part_feature")]
+        [Mapping("part_feature", "partfeature")]
         PartFeature,
 
         [Mapping("port")]
@@ -509,7 +509,7 @@ namespace SabreTools.Core
         [Mapping("release")]
         Release,
 
-        [Mapping("releasedetails", "release_details")]
+        [Mapping("release_details", "releasedetails")]
         ReleaseDetails,
 
         [Mapping("sample")]
@@ -536,7 +536,7 @@ namespace SabreTools.Core
         [Mapping("sound")]
         Sound,
 
-        [Mapping("sourcedetails", "source_details")]
+        [Mapping("source_details", "sourcedetails")]
         SourceDetails,
 
         [Mapping("blank")]
@@ -609,10 +609,10 @@ namespace SabreTools.Core
         [Mapping("bios")]
         Bios = 1 << 0,
 
-        [Mapping("dev", "device")]
+        [Mapping("device", "dev")]
         Device = 1 << 1,
 
-        [Mapping("mech", "mechanical")]
+        [Mapping("mechanical", "mech")]
         Mechanical = 1 << 2,
     }
 

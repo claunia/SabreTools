@@ -338,7 +338,7 @@ namespace SabreTools.DatFiles.Formats
                                     (item as Media).SHA256 = attrVal;
                                 else if (item.ItemType == ItemType.Rom)
                                     (item as Rom).SHA256 = attrVal;
-                                
+
                                 break;
                             case "sha384":
                                 if (item.ItemType == ItemType.Rom)
@@ -539,8 +539,10 @@ namespace SabreTools.DatFiles.Formats
             cmpw.WriteOptionalStandalone("homepage", Header.Homepage);
             cmpw.WriteOptionalStandalone("url", Header.Url);
             cmpw.WriteOptionalStandalone("comment", Header.Comment);
-            cmpw.WriteOptionalStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
-            cmpw.WriteOptionalStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
+            if (Header.ForcePacking != PackingFlag.None)
+                cmpw.WriteOptionalStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
+            if (Header.ForceMerging != MergingFlag.None)
+                cmpw.WriteOptionalStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
 
             // End clrmamepro
             cmpw.WriteEndElement();
@@ -624,7 +626,8 @@ namespace SabreTools.DatFiles.Formats
                     cmpw.WriteRequiredAttributeString("name", disk.Name);
                     cmpw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant(), quoteOverride: false);
                     cmpw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("flags", disk.ItemStatus.FromItemStatus(false));
+                    if (disk.ItemStatus != ItemStatus.None)
+                        cmpw.WriteOptionalAttributeString("flags", disk.ItemStatus.FromItemStatus(false));
                     cmpw.WriteEndElement();
                     break;
 
@@ -663,7 +666,8 @@ namespace SabreTools.DatFiles.Formats
                     cmpw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant(), quoteOverride: false);
                     cmpw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant(), quoteOverride: false);
                     cmpw.WriteOptionalAttributeString("date", rom.Date);
-                    cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
+                    if (rom.ItemStatus != ItemStatus.None)
+                        cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
                     cmpw.WriteEndElement();
                     break;
 
