@@ -1121,7 +1121,7 @@ namespace SabreTools.Filtering
                 softwareList.Tag = null;
 
             if (DatItemFields.Contains(DatItemField.SoftwareListStatus))
-                softwareList.Status = SoftwareListStatus.NULL;
+                softwareList.Status = SoftwareListStatus.None;
 
             if (DatItemFields.Contains(DatItemField.Filter))
                 softwareList.Filter = null;

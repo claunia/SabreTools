@@ -145,7 +145,7 @@ namespace SabreTools.DatFiles.Formats
             bool containsItems = false;
             Machine machine = new()
             {
-                MachineType = MachineType.NULL,
+                MachineType = MachineType.None,
             };
 
             // If there's no subtree to the header, skip it

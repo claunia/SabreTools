@@ -40,7 +40,7 @@ namespace SabreTools.DatItems.Formats
         public SoftwareListStatus Status { get; set; }
 
         [JsonIgnore]
-        public bool StatusSpecified { get { return Status != SoftwareListStatus.NULL; } }
+        public bool StatusSpecified { get { return Status != SoftwareListStatus.None; } }
 
         /// <summary>
         /// Filter to apply to the software list

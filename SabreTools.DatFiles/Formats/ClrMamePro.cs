@@ -212,7 +212,7 @@ namespace SabreTools.DatFiles.Formats
             bool containsItems = false;
             Machine machine = new()
             {
-                MachineType = (resource ? MachineType.Bios : MachineType.NULL),
+                MachineType = (resource ? MachineType.Bios : MachineType.None),
             };
 
             // If there's no subtree to the header, skip it
@@ -276,7 +276,10 @@ namespace SabreTools.DatFiles.Formats
                     string itemKey = cmpr.InternalName;
 
                     // Create the proper DatItem based on the type
-                    ItemType itemType = itemKey.AsItemType() ?? ItemType.Rom;
+                    ItemType itemType = itemKey.AsItemType();
+                    if (itemType == ItemType.NULL)
+                        itemType = ItemType.Rom;
+
                     DatItem item = DatItem.Create(itemType);
 
                     // Then populate it with information

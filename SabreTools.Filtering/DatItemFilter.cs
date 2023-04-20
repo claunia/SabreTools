@@ -208,7 +208,7 @@ namespace SabreTools.Filtering
         public FilterItem<bool?> SlotOption_Default { get; private set; } = new FilterItem<bool?>() { Neutral = null };
 
         // SoftwareList
-        public FilterItem<SoftwareListStatus> SoftwareListStatus { get; private set; } = new FilterItem<SoftwareListStatus>() { Positive = Core.SoftwareListStatus.NULL, Negative = Core.SoftwareListStatus.NULL };
+        public FilterItem<SoftwareListStatus> SoftwareListStatus { get; private set; } = new FilterItem<SoftwareListStatus>() { Positive = Core.SoftwareListStatus.None, Negative = Core.SoftwareListStatus.None };
         public FilterItem<string> Filter { get; private set; } = new FilterItem<string>();
 
         // Sound
@@ -266,7 +266,7 @@ namespace SabreTools.Filtering
                 #region Common
 
                 case DatItemField.Type:
-                    if (value.AsItemType() == null)
+                    if (value.AsItemType() == ItemType.NULL)
                         return;
 
                     SetStringFilter(Type, value, negate);
@@ -2117,9 +2117,9 @@ namespace SabreTools.Filtering
                 return false;
 
             // Filter on status
-            if (SoftwareListStatus.MatchesPositive(Core.SoftwareListStatus.NULL, softwareList.Status) == false)
+            if (SoftwareListStatus.MatchesPositive(Core.SoftwareListStatus.None, softwareList.Status) == false)
                 return false;
-            if (SoftwareListStatus.MatchesNegative(Core.SoftwareListStatus.NULL, softwareList.Status) == true)
+            if (SoftwareListStatus.MatchesNegative(Core.SoftwareListStatus.None, softwareList.Status) == true)
                 return false;
 
             // Filter on filter

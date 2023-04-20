@@ -490,7 +490,7 @@ namespace SabreTools.DatFiles.Formats
                 RomOf = reader.GetAttribute("romof"),
                 SampleOf = reader.GetAttribute("sampleof"),
 
-                MachineType = (machineType == 0x0 ? MachineType.NULL : machineType),
+                MachineType = (machineType == 0x0 ? MachineType.None : machineType),
             };
 
             if (Header.Type == "SuperDAT" && !keep)

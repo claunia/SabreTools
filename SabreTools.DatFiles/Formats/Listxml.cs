@@ -302,7 +302,7 @@ namespace SabreTools.DatFiles.Formats
                 CloneOf = reader.GetAttribute("cloneof"),
                 RomOf = reader.GetAttribute("romof"),
                 SampleOf = reader.GetAttribute("sampleof"),
-                MachineType = (machineType == 0x0 ? MachineType.NULL : machineType),
+                MachineType = (machineType == 0x0 ? MachineType.None : machineType),
 
                 SourceFile = reader.GetAttribute("sourcefile"),
                 Runnable = reader.GetAttribute("runnable").AsRunnable(),

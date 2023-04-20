@@ -97,7 +97,7 @@ namespace SabreTools.DatItems
         public MachineType MachineType { get; set; } = 0x0;
 
         [JsonIgnore]
-        public bool MachineTypeSpecified { get { return MachineType != 0x0 && MachineType != MachineType.NULL; } }
+        public bool MachineTypeSpecified { get { return MachineType != 0x0 && MachineType != MachineType.None; } }
 
         #endregion
 
