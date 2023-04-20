@@ -760,139 +760,153 @@ namespace SabreTools.Core
         /// </summary>
         NULL = 0,
 
-        #region Common
-
-        [Mapping("file", "filename", "file_name")]
-        FileName,
-
-        [Mapping("dat", "datname", "dat_name", "internalname", "internal_name")]
-        Name,
-
-        [Mapping("desc", "description")]
-        Description,
-
-        [Mapping("root", "rootdir", "root_dir", "rootdirectory", "root_directory")]
-        RootDir,
-
-        [Mapping("category")]
-        Category,
-
-        [Mapping("version")]
-        Version,
-
-        [Mapping("date", "timestamp", "time_stamp")]
-        Date,
-
+        /// <remarks>Used in ClrMamePro, DOSCenter, Logiqx, and RomCenter</remarks>
         [Mapping("author")]
         Author,
 
-        [Mapping("email", "e_mail")]
-        Email,
-
-        [Mapping("homepage", "home_page")]
-        Homepage,
-
-        [Mapping("url")]
-        Url,
-
-        [Mapping("comment")]
-        Comment,
-
-        [Mapping("header", "headerskipper", "header_skipper", "skipper")]
-        HeaderSkipper,
-
-        [Mapping("dattype", "type", "superdat")]
-        Type,
-
-        [Mapping("forcemerging", "force_merging")]
-        ForceMerging,
-
-        [Mapping("forcenodump", "force_nodump")]
-        ForceNodump,
-
-        [Mapping("forcepacking", "force_packing")]
-        ForcePacking,
-
-        #endregion
-
-        #region ListXML
-
-        [Mapping("debug")]
-        Debug,
-
-        [Mapping("mameconfig", "mame_config")]
-        MameConfig,
-
-        #endregion
-
-        #region Logiqx
-
-        [Mapping("id", "nointroid", "no_intro_id")]
-        NoIntroID,
-
-        [Mapping("build")]
-        Build,
-
-        [Mapping("rommode", "rom_mode")]
-        RomMode,
-
+        /// <remarks>Used in Logiqx</remarks>
         [Mapping("biosmode", "bios_mode")]
         BiosMode,
 
-        [Mapping("samplemode", "sample_mode")]
-        SampleMode,
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("build")]
+        Build,
 
-        [Mapping("lockrommode", "lockrom_mode", "lock_rommode", "lock_rom_mode")]
-        LockRomMode,
-
-        [Mapping("lockbiosmode", "lockbios_mode", "lock_biosmode", "lock_bios_mode")]
-        LockBiosMode,
-
-        [Mapping("locksamplemode", "locksample_mode", "lock_samplemode", "lock_sample_mode")]
-        LockSampleMode,
-
-        #endregion
-
-        #region OfflineList
-
-        /// <remarks>"plugin" is used with RomCenter</remarks>
-        [Mapping("system", "plugin")]
-        System,
-
-        [Mapping("screenshotwidth", "screenshotswidth", "screenshot_width", "screenshots_width")]
-        ScreenshotsWidth,
-
-        [Mapping("screenshotheight", "screenshotsheight", "screenshot_height", "screenshots_height")]
-        ScreenshotsHeight,
-
+        /// <remarks>Used with OfflineList</remarks>
         [Mapping("canopen", "can_open")]
         CanOpen,
 
-        [Mapping("romtitle", "rom_title")]
-        RomTitle,
+        /// <remarks>Used in ClrMamePro and Logiqx</remarks>
+        [Mapping("category")]
+        Category,
 
-        // Infos
+        /// <remarks>Used in ClrMamePro, DOSCenter, Logiqx, and RomCenter</remarks>
+        [Mapping("comment")]
+        Comment,
 
-        [Mapping("info_name", "infos_name")]
-        Info_Name,
+        /// <remarks>Used in ClrMamePro, DOSCenter, Logiqx, OpenMSX, and RomCenter</remarks>
+        [Mapping("date", "timestamp", "time_stamp")]
+        Date,
 
-        [Mapping("info_visible", "infos_visible")]
-        Info_Visible,
+        /// <remarks>Used in Logiqx and ListXML</remarks>
+        [Mapping("debug")]
+        Debug,
 
-        [Mapping("info_isnamingoption", "info_is_naming_option", "infos_isnamingoption", "infos_is_naming_option")]
-        Info_IsNamingOption,
+        /// <remarks>Used in ClrMamePro, DOSCenter, ListXML, Logiqx, OpenMSX, RomCenter, Separated Value, and Software List</remarks>
+        [Mapping("desc", "description")]
+        Description,
 
+        /// <remarks>Used in ClrMamePro, Logiqx, and RomCenter</remarks>
+        [Mapping("email", "e_mail")]
+        Email,
+
+        /// <remarks>Used in AttractMode, OfflineList, and Separated Value</remarks>
+        [Mapping("file", "filename", "file_name")]
+        FileName,
+
+        /// <remarks>Used in ClrMamePro, Logiqx, and RomCenter</remarks>
+        [Mapping("forcemerging", "force_merging")]
+        ForceMerging,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("forcenodump", "force_nodump")]
+        ForceNodump,
+
+        /// <remarks>Used in ClrMamePro and Logiqx</remarks>
+        [Mapping("forcepacking", "force_packing")]
+        ForcePacking,
+
+        /// <remarks>Used in ClrMamePro and Logiqx</remarks>
+        [Mapping("header", "headerskipper", "header_skipper", "skipper")]
+        HeaderSkipper,
+
+        /// <remarks>Used in ClrMamePro, DOSCenter, Logiqx, and RomCenter</remarks>
+        [Mapping("homepage", "home_page")]
+        Homepage,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("id", "nointroid", "no_intro_id")]
+        ID,
+
+        /// <remarks>Used with OfflineList; Part of "Info" object</remarks>
         [Mapping("info_default", "infos_default")]
         Info_Default,
 
-        #endregion
+        /// <remarks>Used with OfflineList; Part of "Info" object</remarks>
+        [Mapping("info_isnamingoption", "info_is_naming_option", "infos_isnamingoption", "infos_is_naming_option")]
+        Info_IsNamingOption,
 
-        #region RomCenter
+        /// <remarks>Used with OfflineList; Part of "Info" object</remarks>
+        [Mapping("info_name", "infos_name")]
+        Info_Name,
 
+        /// <remarks>Used with OfflineList; Part of "Info" object</remarks>
+        [Mapping("info_visible", "infos_visible")]
+        Info_Visible,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("lockbiosmode", "lockbios_mode", "lock_biosmode", "lock_bios_mode")]
+        LockBiosMode,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("lockrommode", "lockrom_mode", "lock_rommode", "lock_rom_mode")]
+        LockRomMode,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("locksamplemode", "locksample_mode", "lock_samplemode", "lock_sample_mode")]
+        LockSampleMode,
+
+        /// <remarks>Used in ListXML</remarks>
+        [Mapping("mameconfig", "mame_config")]
+        MameConfig,
+
+        /// <remarks>Used in ClrMamePro, DOSCenter, ListXML, Logiqx, OfflineList, OpenMSX, RomCenter, Separated Value, and Software List</remarks>
+        [Mapping("dat", "datname", "dat_name", "internalname", "internal_name")]
+        Name,
+
+        /// <remarks>Used with RomCenter</remarks>
         [Mapping("rcversion", "rc_version", "romcenterversion", "romcenter_version", "rom_center_version")]
         RomCenterVersion,
 
-        #endregion
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("rommode", "rom_mode")]
+        RomMode,
+
+        /// <remarks>Used with OfflineList</remarks>
+        [Mapping("romtitle", "rom_title")]
+        RomTitle,
+
+        /// <remarks>Used with ClrMamePro and Logiqx</remarks>
+        [Mapping("root", "rootdir", "root_dir", "rootdirectory", "root_directory")]
+        RootDir,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("samplemode", "sample_mode")]
+        SampleMode,
+
+        /// <remarks>Used with OfflineList</remarks>
+        [Mapping("screenshotheight", "screenshotsheight", "screenshot_height", "screenshots_height")]
+        ScreenshotsHeight,
+
+        /// <remarks>Used with OfflineList</remarks>
+        [Mapping("screenshotwidth", "screenshotswidth", "screenshot_width", "screenshots_width")]
+        ScreenshotsWidth,
+
+        /// <remarks>Used with Logiqx, OfflineList, and RomCenter; "plugin" is used for RomCenter</remarks>
+        [Mapping("system", "plugin")]
+        System,
+
+        /// <remarks>Used with ClrMamePro, Logiqx, and OfflineList</remarks>
+        [Mapping("dattype", "type", "superdat")]
+        Type,
+
+        /// <remarks>Used with ClrMamePro, Logiqx, OfflineList, and RomCenter</remarks>
+        [Mapping("url")]
+        Url,
+
+        /// <remarks>Used with ClrMamePro, DOSCenter, ListXML, Logiqx, OfflineList, and RomCenter</remarks>
+        [Mapping("version")]
+        Version,
     }
 
     /// <summary>
@@ -1569,7 +1583,7 @@ namespace SabreTools.Core
         #endregion
     }
 
-    #endregion
+#endregion
 
     #region Logging
 

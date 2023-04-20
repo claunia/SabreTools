@@ -103,49 +103,37 @@ namespace SabreTools.DatFiles
             if (datHeader == null)
                 return;
 
-            #region Common
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Author))
+                datHeader.Author = DatHeaderMappings[DatHeaderField.Author];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.FileName))
-                datHeader.FileName = DatHeaderMappings[DatHeaderField.FileName];
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.BiosMode))
+                datHeader.BiosMode = DatHeaderMappings[DatHeaderField.BiosMode].AsMergingFlag();
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Name))
-                datHeader.Name = DatHeaderMappings[DatHeaderField.Name];
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Build))
+                datHeader.Build = DatHeaderMappings[DatHeaderField.Build];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Description))
-                datHeader.Description = DatHeaderMappings[DatHeaderField.Description];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RootDir))
-                datHeader.RootDir = DatHeaderMappings[DatHeaderField.RootDir];
+            // TODO: Support CanOpen
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.Category))
                 datHeader.Category = DatHeaderMappings[DatHeaderField.Category];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Version))
-                datHeader.Version = DatHeaderMappings[DatHeaderField.Version];
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Comment))
+                datHeader.Comment = DatHeaderMappings[DatHeaderField.Comment];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.Date))
                 datHeader.Date = DatHeaderMappings[DatHeaderField.Date];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Author))
-                datHeader.Author = DatHeaderMappings[DatHeaderField.Author];
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Debug))
+                datHeader.Debug = DatHeaderMappings[DatHeaderField.Debug].AsYesNo();
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Description))
+                datHeader.Description = DatHeaderMappings[DatHeaderField.Description];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.Email))
                 datHeader.Email = DatHeaderMappings[DatHeaderField.Email];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Homepage))
-                datHeader.Homepage = DatHeaderMappings[DatHeaderField.Homepage];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Url))
-                datHeader.Url = DatHeaderMappings[DatHeaderField.Url];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Comment))
-                datHeader.Comment = DatHeaderMappings[DatHeaderField.Comment];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.HeaderSkipper))
-                datHeader.HeaderSkipper = DatHeaderMappings[DatHeaderField.HeaderSkipper];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Type))
-                datHeader.Type = DatHeaderMappings[DatHeaderField.Type];
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.FileName))
+                datHeader.FileName = DatHeaderMappings[DatHeaderField.FileName];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.ForceMerging))
                 datHeader.ForceMerging = DatHeaderMappings[DatHeaderField.ForceMerging].AsMergingFlag();
@@ -156,71 +144,67 @@ namespace SabreTools.DatFiles
             if (DatHeaderMappings.ContainsKey(DatHeaderField.ForcePacking))
                 datHeader.ForcePacking = DatHeaderMappings[DatHeaderField.ForcePacking].AsPackingFlag();
 
-            #endregion
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.HeaderSkipper))
+                datHeader.HeaderSkipper = DatHeaderMappings[DatHeaderField.HeaderSkipper];
 
-            #region ListXML
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Homepage))
+                datHeader.Homepage = DatHeaderMappings[DatHeaderField.Homepage];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Debug))
-                datHeader.Debug = DatHeaderMappings[DatHeaderField.Debug].AsYesNo();
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.ID))
+                datHeader.NoIntroID = DatHeaderMappings[DatHeaderField.ID];
 
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.MameConfig))
-                datHeader.MameConfig = DatHeaderMappings[DatHeaderField.MameConfig];
-
-            #endregion
-
-            #region Logiqx
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.NoIntroID))
-                datHeader.NoIntroID = DatHeaderMappings[DatHeaderField.NoIntroID];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.Build))
-                datHeader.Build = DatHeaderMappings[DatHeaderField.Build];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomMode))
-                datHeader.RomMode = DatHeaderMappings[DatHeaderField.RomMode].AsMergingFlag();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.BiosMode))
-                datHeader.BiosMode = DatHeaderMappings[DatHeaderField.BiosMode].AsMergingFlag();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.SampleMode))
-                datHeader.SampleMode = DatHeaderMappings[DatHeaderField.SampleMode].AsMergingFlag();
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.LockRomMode))
-                datHeader.LockRomMode = DatHeaderMappings[DatHeaderField.LockRomMode].AsYesNo();
+            // TODO: Support Info_Default
+            // TODO: Support Info_IsNamingOption
+            // TODO: Support Info_Name
+            // TODO: Support Info_Visible
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.LockBiosMode))
                 datHeader.LockBiosMode = DatHeaderMappings[DatHeaderField.LockBiosMode].AsYesNo();
 
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.LockRomMode))
+                datHeader.LockRomMode = DatHeaderMappings[DatHeaderField.LockRomMode].AsYesNo();
+
             if (DatHeaderMappings.ContainsKey(DatHeaderField.LockSampleMode))
                 datHeader.LockSampleMode = DatHeaderMappings[DatHeaderField.LockSampleMode].AsYesNo();
 
-            #endregion
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.MameConfig))
+                datHeader.MameConfig = DatHeaderMappings[DatHeaderField.MameConfig];
 
-            #region OfflineList
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.System))
-                datHeader.System = DatHeaderMappings[DatHeaderField.System];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsWidth))
-                datHeader.ScreenshotsWidth = DatHeaderMappings[DatHeaderField.ScreenshotsWidth];
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsHeight))
-                datHeader.ScreenshotsHeight = DatHeaderMappings[DatHeaderField.ScreenshotsHeight];
-
-            // TODO: Add DatHeader_Info*
-            // TDOO: Add DatHeader_CanOpen*
-
-            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomTitle))
-                datHeader.RomTitle = DatHeaderMappings[DatHeaderField.RomTitle];
-
-            #endregion
-
-            #region RomCenter
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Name))
+                datHeader.Name = DatHeaderMappings[DatHeaderField.Name];
 
             if (DatHeaderMappings.ContainsKey(DatHeaderField.RomCenterVersion))
                 datHeader.RomCenterVersion = DatHeaderMappings[DatHeaderField.RomCenterVersion];
 
-            #endregion
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomMode))
+                datHeader.RomMode = DatHeaderMappings[DatHeaderField.RomMode].AsMergingFlag();
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.RomTitle))
+                datHeader.RomTitle = DatHeaderMappings[DatHeaderField.RomTitle];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.RootDir))
+                datHeader.RootDir = DatHeaderMappings[DatHeaderField.RootDir];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.SampleMode))
+                datHeader.SampleMode = DatHeaderMappings[DatHeaderField.SampleMode].AsMergingFlag();
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsHeight))
+                datHeader.ScreenshotsHeight = DatHeaderMappings[DatHeaderField.ScreenshotsHeight];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.ScreenshotsWidth))
+                datHeader.ScreenshotsWidth = DatHeaderMappings[DatHeaderField.ScreenshotsWidth];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.System))
+                datHeader.System = DatHeaderMappings[DatHeaderField.System];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Type))
+                datHeader.Type = DatHeaderMappings[DatHeaderField.Type];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Url))
+                datHeader.Url = DatHeaderMappings[DatHeaderField.Url];
+
+            if (DatHeaderMappings.ContainsKey(DatHeaderField.Version))
+                datHeader.Version = DatHeaderMappings[DatHeaderField.Version];
         }
 
         /// <summary>

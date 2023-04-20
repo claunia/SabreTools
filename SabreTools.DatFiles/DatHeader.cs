@@ -481,8 +481,8 @@ namespace SabreTools.DatFiles
 
             #region Logiqx
 
-            if (mappings.ContainsKey(DatHeaderField.NoIntroID))
-                NoIntroID = mappings[DatHeaderField.NoIntroID];
+            if (mappings.ContainsKey(DatHeaderField.ID))
+                NoIntroID = mappings[DatHeaderField.ID];
 
             if (mappings.ContainsKey(DatHeaderField.Build))
                 Build = mappings[DatHeaderField.Build];
