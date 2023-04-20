@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -130,56 +129,38 @@ namespace SabreTools.Filtering
         /// <param name="machine">Machine to remove fields from</param>
         private void RemoveFields(Machine machine)
         {
-            #region Common
+            if (MachineFields.Contains(MachineField.Board))
+                machine.Board = null;
 
-            if (MachineFields.Contains(MachineField.Name))
-                machine.Name = null;
-
-            if (MachineFields.Contains(MachineField.Comment))
-                machine.Comment = null;
-
-            if (MachineFields.Contains(MachineField.Description))
-                machine.Description = null;
-
-            if (MachineFields.Contains(MachineField.Year))
-                machine.Year = null;
-
-            if (MachineFields.Contains(MachineField.Manufacturer))
-                machine.Manufacturer = null;
-
-            if (MachineFields.Contains(MachineField.Publisher))
-                machine.Publisher = null;
+            if (MachineFields.Contains(MachineField.Buttons))
+                machine.Buttons = null;
 
             if (MachineFields.Contains(MachineField.Category))
                 machine.Category = null;
 
-            if (MachineFields.Contains(MachineField.RomOf))
-                machine.RomOf = null;
-
             if (MachineFields.Contains(MachineField.CloneOf))
                 machine.CloneOf = null;
 
-            if (MachineFields.Contains(MachineField.SampleOf))
-                machine.SampleOf = null;
+            if (MachineFields.Contains(MachineField.CloneOfID))
+                machine.NoIntroCloneOfId = null;
 
-            if (MachineFields.Contains(MachineField.Type))
-                machine.MachineType = 0x0;
-
-            #endregion
-
-            #region AttractMode
-
-            if (MachineFields.Contains(MachineField.Players))
-                machine.Players = null;
-
-            if (MachineFields.Contains(MachineField.Rotation))
-                machine.Rotation = null;
+            if (MachineFields.Contains(MachineField.Comment))
+                machine.Comment = null;
 
             if (MachineFields.Contains(MachineField.Control))
                 machine.Control = null;
 
-            if (MachineFields.Contains(MachineField.Status))
-                machine.Status = null;
+            if (MachineFields.Contains(MachineField.Country))
+                machine.Country = null;
+
+            if (MachineFields.Contains(MachineField.CRC))
+                machine.Crc = null;
+
+            if (MachineFields.Contains(MachineField.Description))
+                machine.Description = null;
+
+            if (MachineFields.Contains(MachineField.Developer))
+                machine.Developer = null;
 
             if (MachineFields.Contains(MachineField.DisplayCount))
                 machine.DisplayCount = null;
@@ -187,90 +168,80 @@ namespace SabreTools.Filtering
             if (MachineFields.Contains(MachineField.DisplayType))
                 machine.DisplayType = null;
 
-            if (MachineFields.Contains(MachineField.Buttons))
-                machine.Buttons = null;
-
-            #endregion
-
-            #region ListXML
-
-            if (MachineFields.Contains(MachineField.History))
-                machine.History = null;
-
-            if (MachineFields.Contains(MachineField.SourceFile))
-                machine.SourceFile = null;
-
-            if (MachineFields.Contains(MachineField.Runnable))
-                machine.Runnable = Runnable.NULL;
-
-            #endregion
-
-            #region Logiqx
-
-            if (MachineFields.Contains(MachineField.Board))
-                machine.Board = null;
-
-            if (MachineFields.Contains(MachineField.RebuildTo))
-                machine.RebuildTo = null;
-
-            if (MachineFields.Contains(MachineField.NoIntroId))
-                machine.NoIntroId = null;
-
-            if (MachineFields.Contains(MachineField.NoIntroCloneOfId))
-                machine.NoIntroCloneOfId = null;
-
-            #endregion
-
-            #region Logiqx EmuArc
-
-            if (MachineFields.Contains(MachineField.TitleID))
-                machine.TitleID = null;
-
-            if (MachineFields.Contains(MachineField.Developer))
-                machine.Developer = null;
-
-            if (MachineFields.Contains(MachineField.Genre))
-                machine.Genre = null;
-
-            if (MachineFields.Contains(MachineField.Subgenre))
-                machine.Subgenre = null;
-
-            if (MachineFields.Contains(MachineField.Ratings))
-                machine.Ratings = null;
-
-            if (MachineFields.Contains(MachineField.Score))
-                machine.Score = null;
-
             if (MachineFields.Contains(MachineField.Enabled))
                 machine.Enabled = null;
-
-            if (MachineFields.Contains(MachineField.CRC))
-                machine.Crc = null;
-
-            if (MachineFields.Contains(MachineField.RelatedTo))
-                machine.RelatedTo = null;
-
-            #endregion
-
-            #region OpenMSX
 
             if (MachineFields.Contains(MachineField.GenMSXID))
                 machine.GenMSXID = null;
 
-            if (MachineFields.Contains(MachineField.System))
-                machine.System = null;
+            if (MachineFields.Contains(MachineField.Genre))
+                machine.Genre = null;
 
-            if (MachineFields.Contains(MachineField.Country))
-                machine.Country = null;
+            if (MachineFields.Contains(MachineField.History))
+                machine.History = null;
 
-            #endregion
+            if (MachineFields.Contains(MachineField.ID))
+                machine.NoIntroId = null;
 
-            #region SoftwareList
+            if (MachineFields.Contains(MachineField.Manufacturer))
+                machine.Manufacturer = null;
+
+            if (MachineFields.Contains(MachineField.Name))
+                machine.Name = null;
+
+            if (MachineFields.Contains(MachineField.Players))
+                machine.Players = null;
+
+            if (MachineFields.Contains(MachineField.Publisher))
+                machine.Publisher = null;
+
+            if (MachineFields.Contains(MachineField.Ratings))
+                machine.Ratings = null;
+
+            if (MachineFields.Contains(MachineField.RebuildTo))
+                machine.RebuildTo = null;
+
+            if (MachineFields.Contains(MachineField.RelatedTo))
+                machine.RelatedTo = null;
+
+            if (MachineFields.Contains(MachineField.RomOf))
+                machine.RomOf = null;
+
+            if (MachineFields.Contains(MachineField.Rotation))
+                machine.Rotation = null;
+
+            if (MachineFields.Contains(MachineField.Runnable))
+                machine.Runnable = Runnable.NULL;
+
+            if (MachineFields.Contains(MachineField.SampleOf))
+                machine.SampleOf = null;
+
+            if (MachineFields.Contains(MachineField.Score))
+                machine.Score = null;
+
+            if (MachineFields.Contains(MachineField.SourceFile))
+                machine.SourceFile = null;
+
+            if (MachineFields.Contains(MachineField.Status))
+                machine.Status = null;
+
+            if (MachineFields.Contains(MachineField.Subgenre))
+                machine.Subgenre = null;
 
             if (MachineFields.Contains(MachineField.Supported))
                 machine.Supported = Supported.NULL;
 
-            #endregion
+            if (MachineFields.Contains(MachineField.System))
+                machine.System = null;
+
+            if (MachineFields.Contains(MachineField.TitleID))
+                machine.TitleID = null;
+
+            if (MachineFields.Contains(MachineField.Type))
+                machine.MachineType = 0x0;
+
+            if (MachineFields.Contains(MachineField.Year))
+                machine.Year = null;
         }
 
         /// <summary>

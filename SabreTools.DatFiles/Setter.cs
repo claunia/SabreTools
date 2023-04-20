@@ -269,56 +269,38 @@ namespace SabreTools.DatFiles
             if (machine == null || MachineMappings == null)
                 return;
 
-            #region Common
+            if (MachineMappings.ContainsKey(MachineField.Board))
+                machine.Board = MachineMappings[MachineField.Board];
 
-            if (MachineMappings.ContainsKey(MachineField.Name))
-                machine.Name = MachineMappings[MachineField.Name];
-
-            if (MachineMappings.ContainsKey(MachineField.Comment))
-                machine.Comment = MachineMappings[MachineField.Comment];
-
-            if (MachineMappings.ContainsKey(MachineField.Description))
-                machine.Description = MachineMappings[MachineField.Description];
-
-            if (MachineMappings.ContainsKey(MachineField.Year))
-                machine.Year = MachineMappings[MachineField.Year];
-
-            if (MachineMappings.ContainsKey(MachineField.Manufacturer))
-                machine.Manufacturer = MachineMappings[MachineField.Manufacturer];
-
-            if (MachineMappings.ContainsKey(MachineField.Publisher))
-                machine.Publisher = MachineMappings[MachineField.Publisher];
+            if (MachineMappings.ContainsKey(MachineField.Buttons))
+                machine.Buttons = MachineMappings[MachineField.Buttons];
 
             if (MachineMappings.ContainsKey(MachineField.Category))
                 machine.Category = MachineMappings[MachineField.Category];
 
-            if (MachineMappings.ContainsKey(MachineField.RomOf))
-                machine.RomOf = MachineMappings[MachineField.RomOf];
-
             if (MachineMappings.ContainsKey(MachineField.CloneOf))
                 machine.CloneOf = MachineMappings[MachineField.CloneOf];
 
-            if (MachineMappings.ContainsKey(MachineField.SampleOf))
-                machine.SampleOf = MachineMappings[MachineField.SampleOf];
+            if (MachineMappings.ContainsKey(MachineField.CloneOfID))
+                machine.NoIntroCloneOfId = MachineMappings[MachineField.CloneOfID];
 
-            if (MachineMappings.ContainsKey(MachineField.Type))
-                machine.MachineType = MachineMappings[MachineField.Type].AsMachineType();
-
-            #endregion
-
-            #region AttractMode
-
-            if (MachineMappings.ContainsKey(MachineField.Players))
-                machine.Players = MachineMappings[MachineField.Players];
-
-            if (MachineMappings.ContainsKey(MachineField.Rotation))
-                machine.Rotation = MachineMappings[MachineField.Rotation];
+            if (MachineMappings.ContainsKey(MachineField.Comment))
+                machine.Comment = MachineMappings[MachineField.Comment];
 
             if (MachineMappings.ContainsKey(MachineField.Control))
                 machine.Control = MachineMappings[MachineField.Control];
 
-            if (MachineMappings.ContainsKey(MachineField.Status))
-                machine.Status = MachineMappings[MachineField.Status];
+            if (MachineMappings.ContainsKey(MachineField.Country))
+                machine.Country = MachineMappings[MachineField.Country];
+
+            if (MachineMappings.ContainsKey(MachineField.CRC))
+                machine.Crc = MachineMappings[MachineField.CRC].AsYesNo();
+
+            if (MachineMappings.ContainsKey(MachineField.Description))
+                machine.Description = MachineMappings[MachineField.Description];
+
+            if (MachineMappings.ContainsKey(MachineField.Developer))
+                machine.Developer = MachineMappings[MachineField.Developer];
 
             if (MachineMappings.ContainsKey(MachineField.DisplayCount))
                 machine.DisplayCount = MachineMappings[MachineField.DisplayCount];
@@ -326,90 +308,80 @@ namespace SabreTools.DatFiles
             if (MachineMappings.ContainsKey(MachineField.DisplayType))
                 machine.DisplayType = MachineMappings[MachineField.DisplayType];
 
-            if (MachineMappings.ContainsKey(MachineField.Buttons))
-                machine.Buttons = MachineMappings[MachineField.Buttons];
-
-            #endregion
-
-            #region ListXML
-
-            if (MachineMappings.ContainsKey(MachineField.History))
-                machine.History = MachineMappings[MachineField.History];
-
-            if (MachineMappings.ContainsKey(MachineField.SourceFile))
-                machine.SourceFile = MachineMappings[MachineField.SourceFile];
-
-            if (MachineMappings.ContainsKey(MachineField.Runnable))
-                machine.Runnable = MachineMappings[MachineField.Runnable].AsRunnable();
-
-            #endregion
-
-            #region Logiqx
-
-            if (MachineMappings.ContainsKey(MachineField.Board))
-                machine.Board = MachineMappings[MachineField.Board];
-
-            if (MachineMappings.ContainsKey(MachineField.RebuildTo))
-                machine.RebuildTo = MachineMappings[MachineField.RebuildTo];
-
-            if (MachineMappings.ContainsKey(MachineField.NoIntroId))
-                machine.NoIntroId = MachineMappings[MachineField.NoIntroId];
-
-            if (MachineMappings.ContainsKey(MachineField.NoIntroCloneOfId))
-                machine.NoIntroCloneOfId = MachineMappings[MachineField.NoIntroCloneOfId];
-
-            #endregion
-
-            #region Logiqx EmuArc
-
-            if (MachineMappings.ContainsKey(MachineField.TitleID))
-                machine.TitleID = MachineMappings[MachineField.TitleID];
-
-            if (MachineMappings.ContainsKey(MachineField.Developer))
-                machine.Developer = MachineMappings[MachineField.Developer];
-
-            if (MachineMappings.ContainsKey(MachineField.Genre))
-                machine.Genre = MachineMappings[MachineField.Genre];
-
-            if (MachineMappings.ContainsKey(MachineField.Subgenre))
-                machine.Subgenre = MachineMappings[MachineField.Subgenre];
-
-            if (MachineMappings.ContainsKey(MachineField.Ratings))
-                machine.Ratings = MachineMappings[MachineField.Ratings];
-
-            if (MachineMappings.ContainsKey(MachineField.Score))
-                machine.Score = MachineMappings[MachineField.Score];
-
             if (MachineMappings.ContainsKey(MachineField.Enabled))
                 machine.Enabled = MachineMappings[MachineField.Enabled];
-
-            if (MachineMappings.ContainsKey(MachineField.CRC))
-                machine.Crc = MachineMappings[MachineField.CRC].AsYesNo();
-
-            if (MachineMappings.ContainsKey(MachineField.RelatedTo))
-                machine.RelatedTo = MachineMappings[MachineField.RelatedTo];
-
-            #endregion
-
-            #region OpenMSX
 
             if (MachineMappings.ContainsKey(MachineField.GenMSXID))
                 machine.GenMSXID = MachineMappings[MachineField.GenMSXID];
 
-            if (MachineMappings.ContainsKey(MachineField.System))
-                machine.System = MachineMappings[MachineField.System];
+            if (MachineMappings.ContainsKey(MachineField.Genre))
+                machine.Genre = MachineMappings[MachineField.Genre];
 
-            if (MachineMappings.ContainsKey(MachineField.Country))
-                machine.Country = MachineMappings[MachineField.Country];
+            if (MachineMappings.ContainsKey(MachineField.History))
+                machine.History = MachineMappings[MachineField.History];
 
-            #endregion
+            if (MachineMappings.ContainsKey(MachineField.ID))
+                machine.NoIntroId = MachineMappings[MachineField.ID];
 
-            #region SoftwareList
+            if (MachineMappings.ContainsKey(MachineField.Manufacturer))
+                machine.Manufacturer = MachineMappings[MachineField.Manufacturer];
+
+            if (MachineMappings.ContainsKey(MachineField.Name))
+                machine.Name = MachineMappings[MachineField.Name];
+
+            if (MachineMappings.ContainsKey(MachineField.Players))
+                machine.Players = MachineMappings[MachineField.Players];
+
+            if (MachineMappings.ContainsKey(MachineField.Publisher))
+                machine.Publisher = MachineMappings[MachineField.Publisher];
+
+            if (MachineMappings.ContainsKey(MachineField.Ratings))
+                machine.Ratings = MachineMappings[MachineField.Ratings];
+
+            if (MachineMappings.ContainsKey(MachineField.RebuildTo))
+                machine.RebuildTo = MachineMappings[MachineField.RebuildTo];
+
+            if (MachineMappings.ContainsKey(MachineField.RelatedTo))
+                machine.RelatedTo = MachineMappings[MachineField.RelatedTo];
+
+            if (MachineMappings.ContainsKey(MachineField.RomOf))
+                machine.RomOf = MachineMappings[MachineField.RomOf];
+
+            if (MachineMappings.ContainsKey(MachineField.Rotation))
+                machine.Rotation = MachineMappings[MachineField.Rotation];
+
+            if (MachineMappings.ContainsKey(MachineField.Runnable))
+                machine.Runnable = MachineMappings[MachineField.Runnable].AsRunnable();
+
+            if (MachineMappings.ContainsKey(MachineField.SampleOf))
+                machine.SampleOf = MachineMappings[MachineField.SampleOf];
+
+            if (MachineMappings.ContainsKey(MachineField.Score))
+                machine.Score = MachineMappings[MachineField.Score];
+
+            if (MachineMappings.ContainsKey(MachineField.SourceFile))
+                machine.SourceFile = MachineMappings[MachineField.SourceFile];
+
+            if (MachineMappings.ContainsKey(MachineField.Status))
+                machine.Status = MachineMappings[MachineField.Status];
+
+            if (MachineMappings.ContainsKey(MachineField.Subgenre))
+                machine.Subgenre = MachineMappings[MachineField.Subgenre];
 
             if (MachineMappings.ContainsKey(MachineField.Supported))
                 machine.Supported = MachineMappings[MachineField.Supported].AsSupported();
 
-            #endregion
+            if (MachineMappings.ContainsKey(MachineField.System))
+                machine.System = MachineMappings[MachineField.System];
+
+            if (MachineMappings.ContainsKey(MachineField.TitleID))
+                machine.TitleID = MachineMappings[MachineField.TitleID];
+
+            if (MachineMappings.ContainsKey(MachineField.Type))
+                machine.MachineType = MachineMappings[MachineField.Type].AsMachineType();
+
+            if (MachineMappings.ContainsKey(MachineField.Year))
+                machine.Year = MachineMappings[MachineField.Year];
         }
 
         /// <summary>

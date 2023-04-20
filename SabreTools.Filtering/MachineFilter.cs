@@ -257,11 +257,11 @@ namespace SabreTools.Filtering
                     SetStringFilter(RebuildTo, value, negate);
                     break;
 
-                case MachineField.NoIntroId:
+                case MachineField.ID:
                     SetStringFilter(NoIntroId, value, negate);
                     break;
 
-                case MachineField.NoIntroCloneOfId:
+                case MachineField.CloneOfID:
                     SetStringFilter(NoIntroCloneOfId, value, negate);
                     break;
 

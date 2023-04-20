@@ -914,6 +914,9 @@ namespace SabreTools.Core
     /// </summary>
     public enum DatItemField
     {
+        /// <summary>
+        /// This is a fake flag that is used for filter only
+        /// </summary>
         NULL = 0,
 
         /// <remarks>Used in Rom</remarks>
@@ -1423,148 +1426,157 @@ namespace SabreTools.Core
         /// </summary>
         NULL = 0,
 
-        #region Common
-
-        [Mapping("name")]
-        Name,
-
-        /// <remarks>"extra" is used with AttractMode</remarks>
-        [Mapping("comment", "extra")]
-        Comment,
-
-        [Mapping("desc", "description")]
-        Description,
-
-        [Mapping("year")]
-        Year,
-
-        [Mapping("manufacturer")]
-        Manufacturer,
-
-        [Mapping("publisher")]
-        Publisher,
-
-        [Mapping("category")]
-        Category,
-
-        [Mapping("romof", "rom_of")]
-        RomOf,
-
-        [Mapping("cloneof", "clone_of")]
-        CloneOf,
-
-        [Mapping("sampleof", "sample_of")]
-        SampleOf,
-
-        [Mapping("type")]
-        Type,
-
-        #endregion
-
-        #region AttractMode
-
-        [Mapping("players")]
-        Players,
-
-        [Mapping("rotation")]
-        Rotation,
-
-        [Mapping("control")]
-        Control,
-
-        [Mapping("amstatus", "am_status", "gamestatus", "supportstatus", "support_status")]
-        Status,
-
-        [Mapping("displaycount", "display_count")]
-        DisplayCount,
-
-        [Mapping("displaytype", "display_type")]
-        DisplayType,
-
-        [Mapping("buttons")]
-        Buttons,
-
-        #endregion
-
-        #region ListXML
-
-        [Mapping("history")]
-        History,
-
-        [Mapping("sourcefile", "source_file")]
-        SourceFile,
-
-        [Mapping("runnable")]
-        Runnable,
-
-        #endregion
-
-        #region Logiqx
-
+        /// <remarks>Used in Logiqx</remarks>
         [Mapping("board")]
         Board,
 
-        [Mapping("rebuildto", "rebuild_to")]
-        RebuildTo,
+        /// <remarks>Used in AttractMode</remarks>
+        [Mapping("buttons")]
+        Buttons,
 
-        [Mapping("id", "nointroid", "nointro_id", "no_intro_id")]
-        NoIntroId,
+        /// <remarks>Used in AttractMode, ClrMamePro, and Logiqx</remarks>
+        [Mapping("category")]
+        Category,
 
+        /// <remarks>Used in AttractMode, ClrMamePro, ListXML, Logiqx, OfflineList, RomCenter, and Software List</remarks>
+        [Mapping("cloneof", "clone_of")]
+        CloneOf,
+
+        /// <remarks>Used in Logiqx</remarks>
         [Mapping("cloneofid", "nointrocloneofid", "nointro_cloneofid", "no_intro_cloneofid", "no_intro_clone_of_id")]
-        NoIntroCloneOfId,
+        CloneOfID,
 
-        #endregion
+        /// <remarks>Used in AttractMode, Logiqx, and OfflineList; "extra" is used with AttractMode</remarks>
+        [Mapping("comment", "extra")]
+        Comment,
 
-        #region Logiqx EmuArc
+        /// <remarks>Used in AttractMode</remarks>
+        [Mapping("control")]
+        Control,
 
-        [Mapping("titleid", "title_id")]
-        TitleID,
-
-        [Mapping("developer")]
-        Developer,
-
-        [Mapping("genre")]
-        Genre,
-
-        [Mapping("subgenre", "sub_genre")]
-        Subgenre,
-
-        [Mapping("ratings")]
-        Ratings,
-
-        [Mapping("score")]
-        Score,
-
-        [Mapping("enabled")]
-        Enabled,
-
-        [Mapping("crc", "hascrc", "has_crc")]
-        CRC,
-
-        [Mapping("relatedto", "related_to")]
-        RelatedTo,
-
-        #endregion
-
-        #region OpenMSX
-
-        [Mapping("genmsxid", "genmsx_id", "gen_msxid", "gen_msx_id")]
-        GenMSXID,
-
-        [Mapping("system", "msxsystem", "msx_system")]
-        System,
-
+        /// <remarks>Used in OpenMSX</remarks>
         [Mapping("country")]
         Country,
 
-        #endregion
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("crc", "hascrc", "has_crc")]
+        CRC,
 
-        #region SoftwareList
+        /// <remarks>Used in ArchiveDotOrg, AttractMode, ClrMamePro, DOSCenter, Everdrive SMDB, ListXML, Logiqx, RomCenter, Separated Value, and Software List</remarks>
+        [Mapping("desc", "description")]
+        Description,
 
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("developer")]
+        Developer,
+
+        /// <remarks>Used in AttractMode</remarks>
+        [Mapping("displaycount", "display_count")]
+        DisplayCount,
+
+        /// <remarks>Used in AttractMode</remarks>
+        [Mapping("displaytype", "display_type")]
+        DisplayType,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("enabled")]
+        Enabled,
+
+        /// <remarks>Used in OpenMSX</remarks>
+        [Mapping("genmsxid", "genmsx_id", "gen_msxid", "gen_msx_id")]
+        GenMSXID,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("genre")]
+        Genre,
+
+        /// <remarks>Used in ListXML</remarks>
+        [Mapping("history")]
+        History,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("id", "nointroid", "nointro_id", "no_intro_id")]
+        ID,
+
+        /// <remarks>Used in AttractMode, ClrMamePro, ListXML, Logiqx, and OpenMSX</remarks>
+        [Mapping("manufacturer")]
+        Manufacturer,
+
+        /// <remarks>Used in ArchiveDotOrg, AttractMode, ClrMamePro, DOSCenter, Everdrive SMDB, Hashfile, ListROM, ListXML, Logiqx, Missfile, OfflineList, OpenMSX, RomCenter, Separated Value, and Software List</remarks>
+        [Mapping("name")]
+        Name,
+
+        /// <remarks>Used in AttractMode and Logiqx</remarks>
+        [Mapping("players")]
+        Players,
+
+        /// <remarks>Used in Logiqx, OfflineList, and Software List</remarks>
+        [Mapping("publisher")]
+        Publisher,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("ratings")]
+        Ratings,
+
+        /// <remarks>Used in Logiqx</remarks>
+        [Mapping("rebuildto", "rebuild_to")]
+        RebuildTo,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("relatedto", "related_to")]
+        RelatedTo,
+
+        /// <remarks>Used in ClrMamePro, ListXML, Logiqx, and RomCenter</remarks>
+        [Mapping("romof", "rom_of")]
+        RomOf,
+
+        /// <remarks>Used in AttractMode</remarks>
+        [Mapping("rotation")]
+        Rotation,
+
+        /// <remarks>Used in ListXML and Logiqx</remarks>
+        [Mapping("runnable")]
+        Runnable,
+
+        /// <remarks>Used in ClrMamePro, ListXML, and Logiqx</remarks>
+        [Mapping("sampleof", "sample_of")]
+        SampleOf,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("score")]
+        Score,
+
+        /// <remarks>Used in ListXML and Logiqx</remarks>
+        [Mapping("sourcefile", "source_file")]
+        SourceFile,
+
+        /// <remarks>Used in AttractMode</remarks>
+        [Mapping("amstatus", "am_status", "gamestatus", "supportstatus", "support_status")]
+        Status,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("subgenre", "sub_genre")]
+        Subgenre,
+
+        /// <remarks>Used in Software List</remarks>
         [Mapping("supported")]
         Supported,
 
-        #endregion
+        /// <remarks>Used in OpenMSX</remarks>
+        [Mapping("system", "msxsystem", "msx_system")]
+        System,
+
+        /// <remarks>Used in Logiqx (EmuArc Extension)</remarks>
+        [Mapping("titleid", "title_id")]
+        TitleID,
+
+        /// <remarks>Used in ClrMamePro, DOSCenter, ListXML, and Logiqx</remarks>
+        [Mapping("type")]
+        Type,
+
+        /// <remarks>Used in AttractMode, ClrMamePro, ListXML, Logiqx, OpenMSX, and Software List</remarks>
+        [Mapping("year")]
+        Year,
     }
 
 #endregion

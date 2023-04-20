@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -81,13 +80,32 @@ namespace SabreTools.Filtering
         /// <param name="onlySame">True if descriptions should only be replaced if the game name is the same, false otherwise</param>
         public static void ReplaceFields(Machine machine, Machine repMachine, List<MachineField> machineFields, bool onlySame)
         {
-            #region Common
+            if (machineFields.Contains(MachineField.Board))
+                machine.Board = repMachine.Board;
 
-            if (machineFields.Contains(MachineField.Name))
-                machine.Name = repMachine.Name;
+            if (machineFields.Contains(MachineField.Buttons))
+                machine.Buttons = repMachine.Buttons;
+
+            if (machineFields.Contains(MachineField.Category))
+                machine.Category = repMachine.Category;
+
+            if (machineFields.Contains(MachineField.CloneOf))
+                machine.CloneOf = repMachine.CloneOf;
+
+            if (machineFields.Contains(MachineField.CloneOfID))
+                machine.NoIntroCloneOfId = repMachine.NoIntroCloneOfId;
 
             if (machineFields.Contains(MachineField.Comment))
                 machine.Comment = repMachine.Comment;
+
+            if (machineFields.Contains(MachineField.Control))
+                machine.Control = repMachine.Control;
+
+            if (machineFields.Contains(MachineField.Country))
+                machine.Country = repMachine.Country;
+
+            if (machineFields.Contains(MachineField.CRC))
+                machine.Crc = repMachine.Crc;
 
             if (machineFields.Contains(MachineField.Description))
             {
@@ -95,45 +113,8 @@ namespace SabreTools.Filtering
                     machine.Description = repMachine.Description;
             }
 
-            if (machineFields.Contains(MachineField.Year))
-                machine.Year = repMachine.Year;
-
-            if (machineFields.Contains(MachineField.Manufacturer))
-                machine.Manufacturer = repMachine.Manufacturer;
-
-            if (machineFields.Contains(MachineField.Publisher))
-                machine.Publisher = repMachine.Publisher;
-
-            if (machineFields.Contains(MachineField.Category))
-                machine.Category = repMachine.Category;
-
-            if (machineFields.Contains(MachineField.RomOf))
-                machine.RomOf = repMachine.RomOf;
-
-            if (machineFields.Contains(MachineField.CloneOf))
-                machine.CloneOf = repMachine.CloneOf;
-
-            if (machineFields.Contains(MachineField.SampleOf))
-                machine.SampleOf = repMachine.SampleOf;
-
-            if (machineFields.Contains(MachineField.Type))
-                machine.MachineType = repMachine.MachineType;
-
-            #endregion
-
-            #region AttractMode
-
-            if (machineFields.Contains(MachineField.Players))
-                machine.Players = repMachine.Players;
-
-            if (machineFields.Contains(MachineField.Rotation))
-                machine.Rotation = repMachine.Rotation;
-
-            if (machineFields.Contains(MachineField.Control))
-                machine.Control = repMachine.Control;
-
-            if (machineFields.Contains(MachineField.Status))
-                machine.Status = repMachine.Status;
+            if (machineFields.Contains(MachineField.Developer))
+                machine.Developer = repMachine.Developer;
 
             if (machineFields.Contains(MachineField.DisplayCount))
                 machine.DisplayCount = repMachine.DisplayCount;
@@ -141,90 +122,80 @@ namespace SabreTools.Filtering
             if (machineFields.Contains(MachineField.DisplayType))
                 machine.DisplayType = repMachine.DisplayType;
 
-            if (machineFields.Contains(MachineField.Buttons))
-                machine.Buttons = repMachine.Buttons;
-
-            #endregion
-
-            #region ListXML
-
-            if (machineFields.Contains(MachineField.History))
-                machine.History = repMachine.History;
-
-            if (machineFields.Contains(MachineField.SourceFile))
-                machine.SourceFile = repMachine.SourceFile;
-
-            if (machineFields.Contains(MachineField.Runnable))
-                machine.Runnable = repMachine.Runnable;
-
-            #endregion
-
-            #region Logiqx
-
-            if (machineFields.Contains(MachineField.Board))
-                machine.Board = repMachine.Board;
-
-            if (machineFields.Contains(MachineField.RebuildTo))
-                machine.RebuildTo = repMachine.RebuildTo;
-
-            if (machineFields.Contains(MachineField.NoIntroId))
-                machine.NoIntroId = repMachine.NoIntroId;
-
-            if (machineFields.Contains(MachineField.NoIntroCloneOfId))
-                machine.NoIntroCloneOfId = repMachine.NoIntroCloneOfId;
-
-            #endregion
-
-            #region Logiqx EmuArc
-
-            if (machineFields.Contains(MachineField.TitleID))
-                machine.TitleID = repMachine.TitleID;
-
-            if (machineFields.Contains(MachineField.Developer))
-                machine.Developer = repMachine.Developer;
-
-            if (machineFields.Contains(MachineField.Genre))
-                machine.Genre = repMachine.Genre;
-
-            if (machineFields.Contains(MachineField.Subgenre))
-                machine.Subgenre = repMachine.Subgenre;
-
-            if (machineFields.Contains(MachineField.Ratings))
-                machine.Ratings = repMachine.Ratings;
-
-            if (machineFields.Contains(MachineField.Score))
-                machine.Score = repMachine.Score;
-
             if (machineFields.Contains(MachineField.Enabled))
                 machine.Enabled = repMachine.Enabled;
-
-            if (machineFields.Contains(MachineField.CRC))
-                machine.Crc = repMachine.Crc;
-
-            if (machineFields.Contains(MachineField.RelatedTo))
-                machine.RelatedTo = repMachine.RelatedTo;
-
-            #endregion
-
-            #region OpenMSX
 
             if (machineFields.Contains(MachineField.GenMSXID))
                 machine.GenMSXID = repMachine.GenMSXID;
 
-            if (machineFields.Contains(MachineField.System))
-                machine.System = repMachine.System;
+            if (machineFields.Contains(MachineField.Genre))
+                machine.Genre = repMachine.Genre;
 
-            if (machineFields.Contains(MachineField.Country))
-                machine.Country = repMachine.Country;
+            if (machineFields.Contains(MachineField.History))
+                machine.History = repMachine.History;
 
-            #endregion
+            if (machineFields.Contains(MachineField.ID))
+                machine.NoIntroId = repMachine.NoIntroId;
 
-            #region SoftwareList
+            if (machineFields.Contains(MachineField.Manufacturer))
+                machine.Manufacturer = repMachine.Manufacturer;
+
+            if (machineFields.Contains(MachineField.Name))
+                machine.Name = repMachine.Name;
+
+            if (machineFields.Contains(MachineField.Players))
+                machine.Players = repMachine.Players;
+
+            if (machineFields.Contains(MachineField.Publisher))
+                machine.Publisher = repMachine.Publisher;
+
+            if (machineFields.Contains(MachineField.Ratings))
+                machine.Ratings = repMachine.Ratings;
+
+            if (machineFields.Contains(MachineField.RebuildTo))
+                machine.RebuildTo = repMachine.RebuildTo;
+
+            if (machineFields.Contains(MachineField.RelatedTo))
+                machine.RelatedTo = repMachine.RelatedTo;
+
+            if (machineFields.Contains(MachineField.RomOf))
+                machine.RomOf = repMachine.RomOf;
+
+            if (machineFields.Contains(MachineField.Rotation))
+                machine.Rotation = repMachine.Rotation;
+
+            if (machineFields.Contains(MachineField.Runnable))
+                machine.Runnable = repMachine.Runnable;
+
+            if (machineFields.Contains(MachineField.SampleOf))
+                machine.SampleOf = repMachine.SampleOf;
+
+            if (machineFields.Contains(MachineField.Score))
+                machine.Score = repMachine.Score;
+
+            if (machineFields.Contains(MachineField.SourceFile))
+                machine.SourceFile = repMachine.SourceFile;
+
+            if (machineFields.Contains(MachineField.Status))
+                machine.Status = repMachine.Status;
+
+            if (machineFields.Contains(MachineField.Subgenre))
+                machine.Subgenre = repMachine.Subgenre;
 
             if (machineFields.Contains(MachineField.Supported))
                 machine.Supported = repMachine.Supported;
 
-            #endregion
+            if (machineFields.Contains(MachineField.System))
+                machine.System = repMachine.System;
+
+            if (machineFields.Contains(MachineField.TitleID))
+                machine.TitleID = repMachine.TitleID;
+
+            if (machineFields.Contains(MachineField.Type))
+                machine.MachineType = repMachine.MachineType;
+
+            if (machineFields.Contains(MachineField.Year))
+                machine.Year = repMachine.Year;
         }
 
         /// <summary>
