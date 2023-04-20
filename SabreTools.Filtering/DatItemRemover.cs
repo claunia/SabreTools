@@ -307,32 +307,32 @@ namespace SabreTools.Filtering
         /// <param name="archive">Archive to remove fields from</param>
         private void RemoveFields(Archive archive)
         {
-            if (DatItemFields.Contains(DatItemField.Number))
-                archive.Number = null;
+            if (DatItemFields.Contains(DatItemField.Categories))
+                archive.Categories = null;
 
             if (DatItemFields.Contains(DatItemField.Clone))
                 archive.CloneValue = null;
 
-            if (DatItemFields.Contains(DatItemField.RegParent))
-                archive.RegParent = null;
-
-            if (DatItemFields.Contains(DatItemField.Region))
-                archive.Region = null;
-
-            if (DatItemFields.Contains(DatItemField.Languages))
-                archive.Languages = null;
+            if (DatItemFields.Contains(DatItemField.Complete))
+                archive.Complete = null;
 
             if (DatItemFields.Contains(DatItemField.DevStatus))
                 archive.DevStatus = null;
 
+            if (DatItemFields.Contains(DatItemField.Languages))
+                archive.Languages = null;
+
+            if (DatItemFields.Contains(DatItemField.Number))
+                archive.Number = null;
+
             if (DatItemFields.Contains(DatItemField.Physical))
                 archive.Physical = null;
 
-            if (DatItemFields.Contains(DatItemField.Complete))
-                archive.Complete = null;
+            if (DatItemFields.Contains(DatItemField.Region))
+                archive.Region = null;
 
-            if (DatItemFields.Contains(DatItemField.Categories))
-                archive.Categories = null;
+            if (DatItemFields.Contains(DatItemField.RegParent))
+                archive.RegParent = null;
         }
 
         /// <summary>
@@ -341,11 +341,11 @@ namespace SabreTools.Filtering
         /// <param name="biosSet">BiosSet to remove fields from</param>
         private void RemoveFields(BiosSet biosSet)
         {
-            if (DatItemFields.Contains(DatItemField.Description))
-                biosSet.Description = null;
-
             if (DatItemFields.Contains(DatItemField.Default))
                 biosSet.Default = null;
+
+            if (DatItemFields.Contains(DatItemField.Description))
+                biosSet.Description = null;
         }
 
         /// <summary>
@@ -354,14 +354,14 @@ namespace SabreTools.Filtering
         /// <param name="chip">Chip to remove fields from</param>
         private void RemoveFields(Chip chip)
         {
-            if (DatItemFields.Contains(DatItemField.Tag))
-                chip.Tag = null;
-
             if (DatItemFields.Contains(DatItemField.ChipType))
                 chip.ChipType = ChipType.NULL;
 
             if (DatItemFields.Contains(DatItemField.Clock))
                 chip.Clock = null;
+
+            if (DatItemFields.Contains(DatItemField.Tag))
+                chip.Tag = null;
         }
 
         /// <summary>
@@ -373,28 +373,28 @@ namespace SabreTools.Filtering
         {
             if (sub)
             {
-                if (DatItemFields.Contains(DatItemField.Condition_Tag))
-                    condition.Tag = null;
-
                 if (DatItemFields.Contains(DatItemField.Condition_Mask))
                     condition.Mask = null;
 
                 if (DatItemFields.Contains(DatItemField.Condition_Relation))
                     condition.Relation = Relation.NULL;
 
+                if (DatItemFields.Contains(DatItemField.Condition_Tag))
+                    condition.Tag = null;
+
                 if (DatItemFields.Contains(DatItemField.Condition_Value))
                     condition.Value = null;
             }
             else
             {
-                if (DatItemFields.Contains(DatItemField.Tag))
-                    condition.Tag = null;
-
                 if (DatItemFields.Contains(DatItemField.Mask))
                     condition.Mask = null;
 
                 if (DatItemFields.Contains(DatItemField.Relation))
                     condition.Relation = Relation.NULL;
+
+                if (DatItemFields.Contains(DatItemField.Tag))
+                    condition.Tag = null;
 
                 if (DatItemFields.Contains(DatItemField.Value))
                     condition.Value = null;
@@ -407,11 +407,11 @@ namespace SabreTools.Filtering
         /// <param name="configuration">Configuration to remove fields from</param>
         private void RemoveFields(Configuration configuration)
         {
-            if (DatItemFields.Contains(DatItemField.Tag))
-                configuration.Tag = null;
-
             if (DatItemFields.Contains(DatItemField.Mask))
                 configuration.Mask = null;
+
+            if (DatItemFields.Contains(DatItemField.Tag))
+                configuration.Tag = null;
 
             if (configuration.ConditionsSpecified)
             {
@@ -444,32 +444,32 @@ namespace SabreTools.Filtering
         /// <param name="control">Control to remove fields from</param>
         private void RemoveFields(Control control)
         {
-            if (DatItemFields.Contains(DatItemField.Control_Type))
-                control.ControlType = ControlType.NULL;
-
-            if (DatItemFields.Contains(DatItemField.Control_Player))
-                control.Player = null;
-
             if (DatItemFields.Contains(DatItemField.Control_Buttons))
                 control.Buttons = null;
-
-            if (DatItemFields.Contains(DatItemField.Control_RequiredButtons))
-                control.RequiredButtons = null;
-
-            if (DatItemFields.Contains(DatItemField.Control_Minimum))
-                control.Minimum = null;
-
-            if (DatItemFields.Contains(DatItemField.Control_Maximum))
-                control.Maximum = null;
-
-            if (DatItemFields.Contains(DatItemField.Control_Sensitivity))
-                control.Sensitivity = null;
 
             if (DatItemFields.Contains(DatItemField.Control_KeyDelta))
                 control.KeyDelta = null;
 
+            if (DatItemFields.Contains(DatItemField.Control_Maximum))
+                control.Maximum = null;
+
+            if (DatItemFields.Contains(DatItemField.Control_Minimum))
+                control.Minimum = null;
+
+            if (DatItemFields.Contains(DatItemField.Control_Player))
+                control.Player = null;
+
+            if (DatItemFields.Contains(DatItemField.Control_RequiredButtons))
+                control.RequiredButtons = null;
+
             if (DatItemFields.Contains(DatItemField.Control_Reverse))
                 control.Reverse = null;
+
+            if (DatItemFields.Contains(DatItemField.Control_Sensitivity))
+                control.Sensitivity = null;
+
+            if (DatItemFields.Contains(DatItemField.Control_Type))
+                control.ControlType = ControlType.NULL;
 
             if (DatItemFields.Contains(DatItemField.Control_Ways))
                 control.Ways = null;
@@ -487,6 +487,9 @@ namespace SabreTools.Filtering
         /// <param name="dataArea">DataArea to remove fields from</param>
         private void RemoveFields(DataArea dataArea)
         {
+            if (DatItemFields.Contains(DatItemField.AreaEndianness))
+                dataArea.Endianness = Endianness.NULL;
+
             if (DatItemFields.Contains(DatItemField.AreaName))
                 dataArea.Name = null;
 
@@ -495,9 +498,6 @@ namespace SabreTools.Filtering
 
             if (DatItemFields.Contains(DatItemField.AreaWidth))
                 dataArea.Width = null;
-
-            if (DatItemFields.Contains(DatItemField.AreaEndianness))
-                dataArea.Endianness = Endianness.NULL;
         }
 
         /// <summary>
@@ -509,31 +509,31 @@ namespace SabreTools.Filtering
             if (DatItemFields.Contains(DatItemField.DeviceType))
                 device.DeviceType = DeviceType.NULL;
 
-            if (DatItemFields.Contains(DatItemField.Tag))
-                device.Tag = null;
-
             if (DatItemFields.Contains(DatItemField.FixedImage))
                 device.FixedImage = null;
-
-            if (DatItemFields.Contains(DatItemField.Mandatory))
-                device.Mandatory = null;
 
             if (DatItemFields.Contains(DatItemField.Interface))
                 device.Interface = null;
 
-            if (device.InstancesSpecified)
-            {
-                foreach (Instance subInstance in device.Instances)
-                {
-                    RemoveFields(subInstance);
-                }
-            }
+            if (DatItemFields.Contains(DatItemField.Tag))
+                device.Tag = null;
+
+            if (DatItemFields.Contains(DatItemField.Mandatory))
+                device.Mandatory = null;
 
             if (device.ExtensionsSpecified)
             {
                 foreach (Extension subExtension in device.Extensions)
                 {
                     RemoveFields(subExtension);
+                }
+            }
+
+            if (device.InstancesSpecified)
+            {
+                foreach (Instance subInstance in device.Instances)
+                {
+                    RemoveFields(subInstance);
                 }
             }
         }
@@ -544,13 +544,11 @@ namespace SabreTools.Filtering
         /// <param name="dipSwitch">DipSwitch to remove fields from</param>
         private void RemoveFields(DipSwitch dipSwitch)
         {
-            #region Common
+            if (DatItemFields.Contains(DatItemField.Mask))
+                dipSwitch.Mask = null;
 
             if (DatItemFields.Contains(DatItemField.Tag))
                 dipSwitch.Tag = null;
-
-            if (DatItemFields.Contains(DatItemField.Mask))
-                dipSwitch.Mask = null;
 
             if (dipSwitch.ConditionsSpecified)
             {
@@ -576,14 +574,8 @@ namespace SabreTools.Filtering
                 }
             }
 
-            #endregion
-
-            #region SoftwareList
-
             if (dipSwitch.PartSpecified)
                 RemoveFields(dipSwitch.Part);
-
-            #endregion
         }
 
         /// <summary>
@@ -592,43 +584,35 @@ namespace SabreTools.Filtering
         /// <param name="disk">Disk to remove fields from</param>
         private void RemoveFields(Disk disk)
         {
-            #region Common
-
-            if (DatItemFields.Contains(DatItemField.MD5))
-                disk.MD5 = null;
-
-            if (DatItemFields.Contains(DatItemField.SHA1))
-                disk.SHA1 = null;
-
-            if (DatItemFields.Contains(DatItemField.Merge))
-                disk.MergeTag = null;
-
-            if (DatItemFields.Contains(DatItemField.Region))
-                disk.Region = null;
-
             if (DatItemFields.Contains(DatItemField.Index))
                 disk.Index = null;
-
-            if (DatItemFields.Contains(DatItemField.Writable))
-                disk.Writable = null;
 
             if (DatItemFields.Contains(DatItemField.Status))
                 disk.ItemStatus = ItemStatus.NULL;
 
+            if (DatItemFields.Contains(DatItemField.MD5))
+                disk.MD5 = null;
+
+            if (DatItemFields.Contains(DatItemField.Merge))
+                disk.MergeTag = null;
+
             if (DatItemFields.Contains(DatItemField.Optional))
                 disk.Optional = null;
 
-            #endregion
+            if (DatItemFields.Contains(DatItemField.Region))
+                disk.Region = null;
 
-            #region SoftwareList
+            if (DatItemFields.Contains(DatItemField.SHA1))
+                disk.SHA1 = null;
+
+            if (DatItemFields.Contains(DatItemField.Writable))
+                disk.Writable = null;
 
             if (disk.DiskAreaSpecified)
                 RemoveFields(disk.DiskArea);
 
             if (disk.PartSpecified)
                 RemoveFields(disk.Part);
-
-            #endregion
         }
 
         /// <summary>
@@ -647,32 +631,11 @@ namespace SabreTools.Filtering
         /// <param name="display">Display to remove fields from</param>
         private void RemoveFields(Display display)
         {
-            if (DatItemFields.Contains(DatItemField.Tag))
-                display.Tag = null;
-
             if (DatItemFields.Contains(DatItemField.DisplayType))
                 display.DisplayType = DisplayType.NULL;
 
-            if (DatItemFields.Contains(DatItemField.Rotate))
-                display.Rotate = null;
-
             if (DatItemFields.Contains(DatItemField.FlipX))
                 display.FlipX = null;
-
-            if (DatItemFields.Contains(DatItemField.Width))
-                display.Width = null;
-
-            if (DatItemFields.Contains(DatItemField.Height))
-                display.Height = null;
-
-            if (DatItemFields.Contains(DatItemField.Refresh))
-                display.Refresh = null;
-
-            if (DatItemFields.Contains(DatItemField.PixClock))
-                display.PixClock = null;
-
-            if (DatItemFields.Contains(DatItemField.HTotal))
-                display.HTotal = null;
 
             if (DatItemFields.Contains(DatItemField.HBEnd))
                 display.HBEnd = null;
@@ -680,14 +643,35 @@ namespace SabreTools.Filtering
             if (DatItemFields.Contains(DatItemField.HBStart))
                 display.HBStart = null;
 
-            if (DatItemFields.Contains(DatItemField.VTotal))
-                display.VTotal = null;
+            if (DatItemFields.Contains(DatItemField.Height))
+                display.Height = null;
+
+            if (DatItemFields.Contains(DatItemField.HTotal))
+                display.HTotal = null;
+
+            if (DatItemFields.Contains(DatItemField.PixClock))
+                display.PixClock = null;
+
+            if (DatItemFields.Contains(DatItemField.Refresh))
+                display.Refresh = null;
+
+            if (DatItemFields.Contains(DatItemField.Rotate))
+                display.Rotate = null;
+
+            if (DatItemFields.Contains(DatItemField.Tag))
+                display.Tag = null;
 
             if (DatItemFields.Contains(DatItemField.VBEnd))
                 display.VBEnd = null;
 
             if (DatItemFields.Contains(DatItemField.VBStart))
                 display.VBStart = null;
+
+            if (DatItemFields.Contains(DatItemField.VTotal))
+                display.VTotal = null;
+
+            if (DatItemFields.Contains(DatItemField.Width))
+                display.Width = null;
         }
 
         /// <summary>
@@ -696,29 +680,29 @@ namespace SabreTools.Filtering
         /// <param name="driver">Driver to remove fields from</param>
         private void RemoveFields(Driver driver)
         {
-            if (DatItemFields.Contains(DatItemField.SupportStatus))
-                driver.Status = SupportStatus.NULL;
+            if (DatItemFields.Contains(DatItemField.CocktailStatus))
+                driver.Cocktail = SupportStatus.NULL;
 
             if (DatItemFields.Contains(DatItemField.EmulationStatus))
                 driver.Emulation = SupportStatus.NULL;
 
-            if (DatItemFields.Contains(DatItemField.CocktailStatus))
-                driver.Cocktail = SupportStatus.NULL;
-
-            if (DatItemFields.Contains(DatItemField.SaveStateStatus))
-                driver.SaveState = Supported.NULL;
-
-            if (DatItemFields.Contains(DatItemField.RequiresArtwork))
-                driver.RequiresArtwork = null;
-
-            if (DatItemFields.Contains(DatItemField.Unofficial))
-                driver.Unofficial = null;
+            if (DatItemFields.Contains(DatItemField.Incomplete))
+                driver.Incomplete = null;
 
             if (DatItemFields.Contains(DatItemField.NoSoundHardware))
                 driver.NoSoundHardware = null;
 
-            if (DatItemFields.Contains(DatItemField.Incomplete))
-                driver.Incomplete = null;
+            if (DatItemFields.Contains(DatItemField.RequiresArtwork))
+                driver.RequiresArtwork = null;
+
+            if (DatItemFields.Contains(DatItemField.SaveStateStatus))
+                driver.SaveState = Supported.NULL;
+
+            if (DatItemFields.Contains(DatItemField.SupportStatus))
+                driver.Status = SupportStatus.NULL;
+
+            if (DatItemFields.Contains(DatItemField.Unofficial))
+                driver.Unofficial = null;
         }
 
         /// <summary>
@@ -737,14 +721,14 @@ namespace SabreTools.Filtering
         /// <param name="feature">Feature to remove fields from</param>
         private void RemoveFields(Feature feature)
         {
-            if (DatItemFields.Contains(DatItemField.FeatureType))
-                feature.Type = FeatureType.NULL;
+            if (DatItemFields.Contains(DatItemField.FeatureOverall))
+                feature.Overall = FeatureStatus.NULL;
 
             if (DatItemFields.Contains(DatItemField.FeatureStatus))
                 feature.Status = FeatureStatus.NULL;
 
-            if (DatItemFields.Contains(DatItemField.FeatureOverall))
-                feature.Overall = FeatureStatus.NULL;
+            if (DatItemFields.Contains(DatItemField.FeatureType))
+                feature.Type = FeatureType.NULL;
         }
 
         /// <summary>
@@ -763,17 +747,17 @@ namespace SabreTools.Filtering
         /// <param name="input">Input to remove fields from</param>
         private void RemoveFields(Input input)
         {
+            if (DatItemFields.Contains(DatItemField.Coins))
+                input.Coins = null;
+
+            if (DatItemFields.Contains(DatItemField.Players))
+                input.Players = 0;
+
             if (DatItemFields.Contains(DatItemField.Service))
                 input.Service = null;
 
             if (DatItemFields.Contains(DatItemField.Tilt))
                 input.Tilt = null;
-
-            if (DatItemFields.Contains(DatItemField.Players))
-                input.Players = 0;
-
-            if (DatItemFields.Contains(DatItemField.Coins))
-                input.Coins = null;
 
             if (input.ControlsSpecified)
             {
@@ -790,11 +774,11 @@ namespace SabreTools.Filtering
         /// <param name="instance">Instance to remove fields from</param>
         private void RemoveFields(Instance instance)
         {
-            if (DatItemFields.Contains(DatItemField.Instance_Name))
-                instance.Name = null;
-
             if (DatItemFields.Contains(DatItemField.Instance_BriefName))
                 instance.BriefName = null;
+
+            if (DatItemFields.Contains(DatItemField.Instance_Name))
+                instance.Name = null;
         }
 
         /// <summary>
@@ -803,14 +787,14 @@ namespace SabreTools.Filtering
         /// <param name="location">Location to remove fields from</param>
         private void RemoveFields(Location location)
         {
+            if (DatItemFields.Contains(DatItemField.Location_Inverted))
+                location.Inverted = null;
+
             if (DatItemFields.Contains(DatItemField.Location_Name))
                 location.Name = null;
 
             if (DatItemFields.Contains(DatItemField.Location_Number))
                 location.Number = null;
-
-            if (DatItemFields.Contains(DatItemField.Location_Inverted))
-                location.Inverted = null;
         }
 
         /// <summary>
@@ -838,11 +822,11 @@ namespace SabreTools.Filtering
         /// <param name="part">Part to remove fields from</param>
         private void RemoveFields(Part part)
         {
-            if (DatItemFields.Contains(DatItemField.Part_Name))
-                part.Name = null;
-
             if (DatItemFields.Contains(DatItemField.Part_Interface))
                 part.Interface = null;
+
+            if (DatItemFields.Contains(DatItemField.Part_Name))
+                part.Name = null;
 
             if (part.FeaturesSpecified)
             {
@@ -890,11 +874,11 @@ namespace SabreTools.Filtering
         /// <param name="ramOption">RamOption to remove fields from</param>
         private void RemoveFields(RamOption ramOption)
         {
-            if (DatItemFields.Contains(DatItemField.Default))
-                ramOption.Default = null;
-
             if (DatItemFields.Contains(DatItemField.Content))
                 ramOption.Content = null;
+
+            if (DatItemFields.Contains(DatItemField.Default))
+                ramOption.Default = null;
         }
 
         /// <summary>
@@ -903,17 +887,17 @@ namespace SabreTools.Filtering
         /// <param name="release">Release to remove fields from</param>
         private void RemoveFields(Release release)
         {
-            if (DatItemFields.Contains(DatItemField.Region))
-                release.Region = null;
-
-            if (DatItemFields.Contains(DatItemField.Language))
-                release.Language = null;
-
             if (DatItemFields.Contains(DatItemField.Date))
                 release.Date = null;
 
             if (DatItemFields.Contains(DatItemField.Default))
                 release.Default = null;
+
+            if (DatItemFields.Contains(DatItemField.Language))
+                release.Language = null;
+
+            if (DatItemFields.Contains(DatItemField.Region))
+                release.Region = null;
         }
 
         /// <summary>
@@ -922,19 +906,71 @@ namespace SabreTools.Filtering
         /// <param name="rom">Rom to remove fields from</param>
         private void RemoveFields(Rom rom)
         {
-            #region Common
+            if (DatItemFields.Contains(DatItemField.AltName))
+                rom.AltName = null;
+
+            if (DatItemFields.Contains(DatItemField.AltTitle))
+                rom.AltTitle = null;
+
+            if (DatItemFields.Contains(DatItemField.ArchiveDotOrgFormat))
+                rom.ArchiveDotOrgFormat = null;
+
+            if (DatItemFields.Contains(DatItemField.ArchiveDotOrgSource))
+                rom.ArchiveDotOrgSource = null;
 
             if (DatItemFields.Contains(DatItemField.Bios))
                 rom.Bios = null;
 
-            if (DatItemFields.Contains(DatItemField.Size))
-                rom.Size = 0;
+            if (DatItemFields.Contains(DatItemField.Boot))
+                rom.Boot = null;
 
             if (DatItemFields.Contains(DatItemField.CRC))
                 rom.CRC = null;
 
+            if (DatItemFields.Contains(DatItemField.Date))
+                rom.Date = null;
+
+            if (DatItemFields.Contains(DatItemField.Inverted))
+                rom.Inverted = null;
+
+            if (DatItemFields.Contains(DatItemField.LoadFlag))
+                rom.LoadFlag = LoadFlag.NULL;
+
             if (DatItemFields.Contains(DatItemField.MD5))
                 rom.MD5 = null;
+
+            if (DatItemFields.Contains(DatItemField.Merge))
+                rom.MergeTag = null;
+
+            if (DatItemFields.Contains(DatItemField.MIA))
+                rom.MIA = null;
+
+            if (DatItemFields.Contains(DatItemField.Offset))
+                rom.Offset = null;
+
+            if (DatItemFields.Contains(DatItemField.OpenMSXSubType))
+                rom.OpenMSXSubType = OpenMSXSubType.NULL;
+
+            if (DatItemFields.Contains(DatItemField.OpenMSXType))
+                rom.OpenMSXType = null;
+
+            if (DatItemFields.Contains(DatItemField.Optional))
+                rom.Optional = null;
+
+            if (DatItemFields.Contains(DatItemField.Original))
+                rom.Original = null;
+
+            if (DatItemFields.Contains(DatItemField.OriginalFilename))
+                rom.OriginalFilename = null;
+
+            if (DatItemFields.Contains(DatItemField.Region))
+                rom.Region = null;
+
+            if (DatItemFields.Contains(DatItemField.Remark))
+                rom.Remark = null;
+
+            if (DatItemFields.Contains(DatItemField.Rotation))
+                rom.Rotation = null;
 
             if (DatItemFields.Contains(DatItemField.SHA1))
                 rom.SHA1 = null;
@@ -948,91 +984,17 @@ namespace SabreTools.Filtering
             if (DatItemFields.Contains(DatItemField.SHA512))
                 rom.SHA512 = null;
 
+            if (DatItemFields.Contains(DatItemField.Size))
+                rom.Size = 0;
+
             if (DatItemFields.Contains(DatItemField.SpamSum))
                 rom.SpamSum = null;
-
-            if (DatItemFields.Contains(DatItemField.Merge))
-                rom.MergeTag = null;
-
-            if (DatItemFields.Contains(DatItemField.Region))
-                rom.Region = null;
-
-            if (DatItemFields.Contains(DatItemField.Offset))
-                rom.Offset = null;
-
-            if (DatItemFields.Contains(DatItemField.Date))
-                rom.Date = null;
 
             if (DatItemFields.Contains(DatItemField.Status))
                 rom.ItemStatus = ItemStatus.NULL;
 
-            if (DatItemFields.Contains(DatItemField.Optional))
-                rom.Optional = null;
-
-            if (DatItemFields.Contains(DatItemField.Inverted))
-                rom.Inverted = null;
-
-            #endregion
-
-            #region Archive.org
-
-            if (DatItemFields.Contains(DatItemField.ArchiveDotOrgSource))
-                rom.ArchiveDotOrgSource = null;
-
-            if (DatItemFields.Contains(DatItemField.ArchiveDotOrgFormat))
-                rom.ArchiveDotOrgFormat = null;
-
-            if (DatItemFields.Contains(DatItemField.OriginalFilename))
-                rom.OriginalFilename = null;
-
-            if (DatItemFields.Contains(DatItemField.Rotation))
-                rom.Rotation = null;
-
             if (DatItemFields.Contains(DatItemField.Summation))
                 rom.Summation = null;
-
-            #endregion
-
-            #region AttractMode
-
-            if (DatItemFields.Contains(DatItemField.AltName))
-                rom.AltName = null;
-
-            if (DatItemFields.Contains(DatItemField.AltTitle))
-                rom.AltTitle = null;
-
-            #endregion
-
-            #region Logiqx
-
-            if (DatItemFields.Contains(DatItemField.MIA))
-                rom.MIA = null;
-
-            #endregion
-
-            #region OpenMSX
-
-            if (DatItemFields.Contains(DatItemField.Original))
-                rom.Original = null;
-
-            if (DatItemFields.Contains(DatItemField.OpenMSXSubType))
-                rom.OpenMSXSubType = OpenMSXSubType.NULL;
-
-            if (DatItemFields.Contains(DatItemField.OpenMSXType))
-                rom.OpenMSXType = null;
-
-            if (DatItemFields.Contains(DatItemField.Remark))
-                rom.Remark = null;
-
-            if (DatItemFields.Contains(DatItemField.Boot))
-                rom.Boot = null;
-
-            #endregion
-
-            #region SoftwareList
-
-            if (DatItemFields.Contains(DatItemField.LoadFlag))
-                rom.LoadFlag = LoadFlag.NULL;
 
             if (DatItemFields.Contains(DatItemField.Value))
                 rom.Value = null;
@@ -1042,8 +1004,6 @@ namespace SabreTools.Filtering
 
             if (rom.PartSpecified)
                 RemoveFields(rom.Part);
-
-            #endregion
         }
 
         /// <summary>
@@ -1052,14 +1012,14 @@ namespace SabreTools.Filtering
         /// <param name="setting">Setting to remove fields from</param>
         private void RemoveFields(Setting setting)
         {
+            if (DatItemFields.Contains(DatItemField.Setting_Default))
+                setting.Default = null;
+
             if (DatItemFields.Contains(DatItemField.Setting_Name))
                 setting.Name = null;
 
             if (DatItemFields.Contains(DatItemField.Setting_Value))
                 setting.Value = null;
-
-            if (DatItemFields.Contains(DatItemField.Setting_Default))
-                setting.Default = null;
 
             if (setting.ConditionsSpecified)
             {
@@ -1101,14 +1061,14 @@ namespace SabreTools.Filtering
         /// <param name="slotOption">SlotOption to remove fields from</param>
         private void RemoveFields(SlotOption slotOption)
         {
-            if (DatItemFields.Contains(DatItemField.SlotOption_Name))
-                slotOption.Name = null;
+            if (DatItemFields.Contains(DatItemField.SlotOption_Default))
+                slotOption.Default = null;
 
             if (DatItemFields.Contains(DatItemField.SlotOption_DeviceName))
                 slotOption.DeviceName = null;
-
-            if (DatItemFields.Contains(DatItemField.SlotOption_Default))
-                slotOption.Default = null;
+            
+            if (DatItemFields.Contains(DatItemField.SlotOption_Name))
+                slotOption.Name = null;
         }
 
         /// <summary>
@@ -1117,14 +1077,14 @@ namespace SabreTools.Filtering
         /// <param name="softwareList">SoftwareList to remove fields from</param>
         private void RemoveFields(SoftwareList softwareList)
         {
-            if (DatItemFields.Contains(DatItemField.Tag))
-                softwareList.Tag = null;
+            if (DatItemFields.Contains(DatItemField.Filter))
+                softwareList.Filter = null;
 
             if (DatItemFields.Contains(DatItemField.SoftwareListStatus))
                 softwareList.Status = SoftwareListStatus.None;
 
-            if (DatItemFields.Contains(DatItemField.Filter))
-                softwareList.Filter = null;
+            if (DatItemFields.Contains(DatItemField.Tag))
+                softwareList.Tag = null;
         }
 
         /// <summary>

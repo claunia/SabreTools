@@ -916,517 +916,501 @@ namespace SabreTools.Core
     {
         NULL = 0,
 
-        #region Common
-
-        [Mapping("type")]
-        Type,
-
-        #endregion
-
-        #region Item-Specific
-
-        #region Actionable
-
-        #region Rom
-
-        [Mapping("name")]
-        Name,
-
-        [Mapping("bios")]
-        Bios,
-
-        [Mapping("size")]
-        Size,
-
-        [Mapping("crc", "crc32")]
-        CRC,
-
-        [Mapping("md5", "md5hash", "md5_hash")]
-        MD5,
-
-        [Mapping("sha1", "sha_1", "sha1hash", "sha1_hash", "sha_1hash", "sha_1_hash")]
-        SHA1,
-
-        [Mapping("sha256", "sha_256", "sha256hash", "sha256_hash", "sha_256hash", "sha_256_hash")]
-        SHA256,
-
-        [Mapping("sha384", "sha_384", "sha384hash", "sha384_hash", "sha_384hash", "sha_384_hash")]
-        SHA384,
-
-        [Mapping("sha512", "sha_512", "sha512hash", "sha512_hash", "sha_512hash", "sha_512_hash")]
-        SHA512,
-
-        [Mapping("spamsum", "spam_sum")]
-        SpamSum,
-
-        [Mapping("merge", "mergetag", "merge_tag")]
-        Merge,
-
-        [Mapping("region")]
-        Region,
-
-        [Mapping("offset")]
-        Offset,
-
-        [Mapping("date")]
-        Date,
-
-        [Mapping("status")]
-        Status,
-
-        [Mapping("optional")]
-        Optional,
-
-        [Mapping("inverted")]
-        Inverted,
-
-        #endregion
-
-        #region Rom (Archive.org)
-
-        [Mapping("ado_source")]
-        ArchiveDotOrgSource,
-
-        [Mapping("ado_format")]
-        ArchiveDotOrgFormat,
-
-        [Mapping("original_filename")]
-        OriginalFilename,
-
-        [Mapping("rotation")]
-        Rotation,
-
-        [Mapping("summation")]
-        Summation,
-
-        #endregion
-
-        #region Rom (AttractMode)
-
+        /// <remarks>Used in Rom</remarks>
         [Mapping("altname", "alt_name", "altromname", "alt_romname", "alt_rom_name")]
         AltName,
 
+        /// <remarks>Used in Rom</remarks>
         [Mapping("alttitle", "alt_title", "altromtitle", "alt_romtitle", "alt_rom_title")]
         AltTitle,
 
-        #endregion
-
-        #region Rom (Logiqx)
-
-        [Mapping("mia")]
-        MIA,
-
-        #endregion
-
-        #region Rom (OpenMSX)
-
-        [Mapping("original")]
-        Original,
-
-        [Mapping("subtype", "sub_type", "openmsxsubtype", "openmsx_subtype", "openmsx_sub_type")]
-        OpenMSXSubType,
-
-        [Mapping("openmsxtype", "openmsx_type")]
-        OpenMSXType,
-
-        [Mapping("remark")]
-        Remark,
-
-        [Mapping("boot")]
-        Boot,
-
-        #endregion
-
-        #region Rom (SoftwareList)
-
-        [Mapping("loadflag", "load_flag")]
-        LoadFlag,
-
-        [Mapping("value")]
-        Value,
-
-        #endregion
-
-        #region Disk
-
-        [Mapping("index")]
-        Index,
-
-        [Mapping("writable")]
-        Writable,
-
-        #endregion
-
-        #endregion
-
-        #region Auxiliary
-
-        #region Adjuster
-
-        [Mapping("default")]
-        Default,
-
-        #endregion
-
-        #region Analog
-
+        /// <remarks>Used in Analog</remarks>
         [Mapping("analog_mask")]
         Analog_Mask,
 
-        #endregion
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("ado_format")]
+        ArchiveDotOrgFormat,
 
-        #region Archive
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("ado_source")]
+        ArchiveDotOrgSource,
 
-        [Mapping("number")]
-        Number,
-
-        [Mapping("clone")]
-        Clone,
-
-        [Mapping("regparent", "reg_parent")]
-        RegParent,
-
-        [Mapping("languages")]
-        Languages,
-
-        [Mapping("devstatus", "dev_status")]
-        DevStatus,
-
-        [Mapping("physical")]
-        Physical,
-
-        [Mapping("complete")]
-        Complete,
-
-        [Mapping("categories")]
-        Categories,
-
-        #endregion
-
-        #region BiosSet
-
-        [Mapping("description", "biosdescription", "bios_description")]
-        Description,
-
-        #endregion
-
-        #region Chip
-
-        [Mapping("tag")]
-        Tag,
-
-        [Mapping("chiptype", "chip_type")]
-        ChipType,
-
-        [Mapping("clock")]
-        Clock,
-
-        #endregion
-
-        #region Condition
-
-        [Mapping("mask")]
-        Mask,
-
-        [Mapping("relation")]
-        Relation,
-
-        [Mapping("condition_tag")]
-        Condition_Tag,
-
-        [Mapping("condition_mask")]
-        Condition_Mask,
-
-        [Mapping("condition_relation")]
-        Condition_Relation,
-
-        [Mapping("condition_value")]
-        Condition_Value,
-
-        #endregion
-
-        #region Control
-
-        [Mapping("control_type")]
-        Control_Type,
-
-        [Mapping("control_player")]
-        Control_Player,
-
-        [Mapping("control_buttons")]
-        Control_Buttons,
-
-        [Mapping("control_reqbuttons", "control_req_buttons")]
-        Control_RequiredButtons,
-
-        [Mapping("control_minimum")]
-        Control_Minimum,
-
-        [Mapping("control_maximum")]
-        Control_Maximum,
-
-        [Mapping("control_sensitivity")]
-        Control_Sensitivity,
-
-        [Mapping("control_keydelta", "control_key_delta")]
-        Control_KeyDelta,
-
-        [Mapping("control_reverse")]
-        Control_Reverse,
-
-        [Mapping("control_ways")]
-        Control_Ways,
-
-        [Mapping("control_ways2")]
-        Control_Ways2,
-
-        [Mapping("control_ways3")]
-        Control_Ways3,
-
-        #endregion
-
-        #region DataArea
-
-        [Mapping("areaname", "area_name")]
-        AreaName,
-
-        [Mapping("areasize", "area_size")]
-        AreaSize,
-
-        [Mapping("areawidth", "area_width")]
-        AreaWidth,
-
+        /// <remarks>Used in DataArea</remarks>
         [Mapping("areaendinanness", "area_endianness")]
         AreaEndianness,
 
-        #endregion
-
-        #region Device
-
-        [Mapping("devicetype", "device_type")]
-        DeviceType,
-
-        [Mapping("fixedimage", "fixed_image")]
-        FixedImage,
-
-        [Mapping("mandatory")]
-        Mandatory,
-
-        [Mapping("interface")]
-        Interface,
-
-        #endregion
-
-        #region Display
-
-        [Mapping("displaytype", "display_type")]
-        DisplayType,
-
-        [Mapping("rotate")]
-        Rotate,
-
-        [Mapping("flipx")]
-        FlipX,
-
-        [Mapping("width")]
-        Width,
-
-        [Mapping("height")]
-        Height,
-
-        [Mapping("refresh")]
-        Refresh,
-
-        [Mapping("pixclock", "pix_clock")]
-        PixClock,
-
-        [Mapping("htotal")]
-        HTotal,
-
-        [Mapping("hbend")]
-        HBEnd,
-
-        [Mapping("hbstart")]
-        HBStart,
-
-        [Mapping("vtotal")]
-        VTotal,
-
-        [Mapping("vbend")]
-        VBEnd,
-
-        [Mapping("vbstart")]
-        VBStart,
-
-        #endregion
-
-        #region Driver
-
-        [Mapping("supportstatus", "support_status")]
-        SupportStatus,
-
-        [Mapping("emulationstatus", "emulation_status")]
-        EmulationStatus,
-
-        [Mapping("cocktailstatus", "cocktail_status")]
-        CocktailStatus,
-
-        [Mapping("savestatestatus", "savestate_status", "save_state_status")]
-        SaveStateStatus,
-
-        [Mapping("requiresartwork", "requires_artwork")]
-        RequiresArtwork,
-
-        [Mapping("unofficial")]
-        Unofficial,
-
-        [Mapping("nosoundhardware", "no_sound_hardware")]
-        NoSoundHardware,
-
-        [Mapping("incomplete")]
-        Incomplete,
-
-        #endregion
-
-        #region Extension
-
-        [Mapping("extension_name")]
-        Extension_Name,
-
-        #endregion
-
-        #region Feature
-
-        [Mapping("featuretype", "feature_type")]
-        FeatureType,
-
-        [Mapping("featurestatus", "feature_status")]
-        FeatureStatus,
-
-        [Mapping("featureoverall", "feature_overall")]
-        FeatureOverall,
-
-        #endregion
-
-        #region Input
-
-        [Mapping("service")]
-        Service,
-
-        [Mapping("tilt")]
-        Tilt,
-
-        [Mapping("players")]
-        Players,
-
-        [Mapping("coins")]
-        Coins,
-
-        #endregion
-
-        #region Instance
-
-        [Mapping("instance_name")]
-        Instance_Name,
-
-        [Mapping("instance_briefname", "instance_brief_name")]
-        Instance_BriefName,
-
-        #endregion
-
-        #region Location
-
-        [Mapping("location_name")]
-        Location_Name,
-
-        [Mapping("location_number")]
-        Location_Number,
-
-        [Mapping("location_inverted")]
-        Location_Inverted,
-
-        #endregion
-
-        #region Part
-
-        [Mapping("partname", "part_name")]
-        Part_Name,
-
-        [Mapping("partinterface", "part_interface")]
-        Part_Interface,
-
-        #endregion
-
-        #region PartFeature
-
-        [Mapping("part_feature_name")]
-        Part_Feature_Name,
-
-        [Mapping("part_feature_value")]
-        Part_Feature_Value,
-
-        #endregion
-
-        #region RamOption
-
-        [Mapping("content")]
-        Content,
-
-        #endregion
-
-        #region Release
-
-        [Mapping("language")]
-        Language,
-
-        #endregion
-
-        #region Setting
-
-        [Mapping("setting_name", "value_name")]
-        Setting_Name,
-
-        [Mapping("setting_value", "value_value")]
-        Setting_Value,
-
-        [Mapping("setting_default", "value_default")]
-        Setting_Default,
-
-        #endregion
-
-        #region SlotOption
-
-        [Mapping("slotoption_name")]
-        SlotOption_Name,
-
-        [Mapping("slotoption_devicename", "slotoption_device_name")]
-        SlotOption_DeviceName,
-
-        [Mapping("slotoption_default")]
-        SlotOption_Default,
-
-        #endregion
-
-        #region SoftwareList
-
-        [Mapping("softwareliststatus", "softwarelist_status")]
-        SoftwareListStatus,
-
-        [Mapping("filter")]
-        Filter,
-
-        #endregion
-
-        #region Sound
-
+        /// <remarks>Used in DataArea and DiskArea</remarks>
+        [Mapping("areaname", "area_name")]
+        AreaName,
+
+        /// <remarks>Used in DataArea</remarks>
+        [Mapping("areasize", "area_size")]
+        AreaSize,
+
+        /// <remarks>Used in DataArea</remarks>
+        [Mapping("areawidth", "area_width")]
+        AreaWidth,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("bios")]
+        Bios,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("boot")]
+        Boot,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("categories")]
+        Categories,
+
+        /// <remarks>Used in Sound</remarks>
         [Mapping("channels")]
         Channels,
 
-        #endregion
+        /// <remarks>Used in Chip</remarks>
+        [Mapping("chiptype", "chip_type")]
+        ChipType,
 
-        #endregion
+        /// <remarks>Used in Chip</remarks>
+        [Mapping("clock")]
+        Clock,
 
-        #endregion // Item-Specific
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("clone")]
+        Clone,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("cocktailstatus", "cocktail_status")]
+        CocktailStatus,
+
+        /// <remarks>Used in Input</remarks>
+        [Mapping("coins")]
+        Coins,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("complete")]
+        Complete,
+
+        /// <remarks>Used in Condition</remarks>
+        [Mapping("condition_mask")]
+        Condition_Mask,
+
+        /// <remarks>Used in Condition</remarks>
+        [Mapping("condition_relation")]
+        Condition_Relation,
+
+        /// <remarks>Used in Condition</remarks>
+        [Mapping("condition_tag")]
+        Condition_Tag,
+
+        /// <remarks>Used in Condition</remarks>
+        [Mapping("condition_value")]
+        Condition_Value,
+
+        /// <remarks>Used in RamOption</remarks>
+        [Mapping("content")]
+        Content,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_buttons")]
+        Control_Buttons,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_keydelta", "control_key_delta")]
+        Control_KeyDelta,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_maximum")]
+        Control_Maximum,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_minimum")]
+        Control_Minimum,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_player")]
+        Control_Player,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_reqbuttons", "control_req_buttons")]
+        Control_RequiredButtons,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_reverse")]
+        Control_Reverse,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_sensitivity")]
+        Control_Sensitivity,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_type")]
+        Control_Type,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_ways")]
+        Control_Ways,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_ways2")]
+        Control_Ways2,
+
+        /// <remarks>Used in Control</remarks>
+        [Mapping("control_ways3")]
+        Control_Ways3,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("crc", "crc32")]
+        CRC,
+
+        /// <remarks>Used in Release and Rom</remarks>
+        [Mapping("date")]
+        Date,
+
+        /// <remarks>Used in Adjuster, BiosSet, RamOption, and Release</remarks>
+        [Mapping("default")]
+        Default,
+
+        /// <remarks>Used in BiosSet</remarks>
+        [Mapping("description", "biosdescription", "bios_description")]
+        Description,
+
+        /// <remarks>Used in Device</remarks>
+        [Mapping("devicetype", "device_type")]
+        DeviceType,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("devstatus", "dev_status")]
+        DevStatus,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("displaytype", "display_type")]
+        DisplayType,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("emulationstatus", "emulation_status")]
+        EmulationStatus,
+
+        /// <remarks>Used in Extension</remarks>
+        [Mapping("extension_name")]
+        Extension_Name,
+
+        /// <remarks>Used in Feature</remarks>
+        [Mapping("featureoverall", "feature_overall")]
+        FeatureOverall,
+
+        /// <remarks>Used in Feature</remarks>
+        [Mapping("featurestatus", "feature_status")]
+        FeatureStatus,
+
+        /// <remarks>Used in Feature</remarks>
+        [Mapping("featuretype", "feature_type")]
+        FeatureType,
+
+        /// <remarks>Used in SoftwareList</remarks>
+        [Mapping("filter")]
+        Filter,
+
+        /// <remarks>Used in Device</remarks>
+        [Mapping("fixedimage", "fixed_image")]
+        FixedImage,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("flipx")]
+        FlipX,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("hbend")]
+        HBEnd,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("hbstart")]
+        HBStart,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("height")]
+        Height,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("htotal")]
+        HTotal,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("incomplete")]
+        Incomplete,
+
+        /// <remarks>Used in Disk</remarks>
+        [Mapping("index")]
+        Index,
+
+        /// <remarks>Used in Instance</remarks>
+        [Mapping("instance_briefname", "instance_brief_name")]
+        Instance_BriefName,
+
+        /// <remarks>Used in Instance</remarks>
+        [Mapping("instance_name")]
+        Instance_Name,
+
+        /// <remarks>Used in Device</remarks>
+        [Mapping("interface")]
+        Interface,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("inverted")]
+        Inverted,
+
+        /// <remarks>Used in Release</remarks>
+        [Mapping("language")]
+        Language,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("languages")]
+        Languages,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("loadflag", "load_flag")]
+        LoadFlag,
+
+        /// <remarks>Used in Location</remarks>
+        [Mapping("location_inverted")]
+        Location_Inverted,
+
+        /// <remarks>Used in Location</remarks>
+        [Mapping("location_name")]
+        Location_Name,
+
+        /// <remarks>Used in Location</remarks>
+        [Mapping("location_number")]
+        Location_Number,
+
+        /// <remarks>Used in Device</remarks>
+        [Mapping("mandatory")]
+        Mandatory,
+
+        /// <remarks>Used in Condition, Configuration, and DipSwitch</remarks>
+        [Mapping("mask")]
+        Mask,
+
+        /// <remarks>Used in Disk, Media, and Rom</remarks>
+        [Mapping("md5", "md5hash", "md5_hash")]
+        MD5,
+
+        /// <remarks>Used in Disk and Rom</remarks>
+        [Mapping("merge", "mergetag", "merge_tag")]
+        Merge,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("mia")]
+        MIA,
+
+        /// <remarks>Used in Adjuster, Archive, BiosSet, Chip, Configuration, DataArea, DeviceReference, DipSwitch, Disk, DiskArea, Extension, Info, Instance, Location, Media, Part, PartFeature, RamOption, Release, Rom, Sample, Setting, SharedFeature, Slot, SlotOption, and SoftwareList</remarks>
+        [Mapping("name")]
+        Name,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("nosoundhardware", "no_sound_hardware")]
+        NoSoundHardware,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("number")]
+        Number,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("offset")]
+        Offset,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("subtype", "sub_type", "openmsxsubtype", "openmsx_subtype", "openmsx_sub_type")]
+        OpenMSXSubType,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("openmsxtype", "openmsx_type")]
+        OpenMSXType,
+
+        /// <remarks>Used in Disk and Rom</remarks>
+        [Mapping("optional")]
+        Optional,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("original")]
+        Original,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("original_filename")]
+        OriginalFilename,
+
+        /// <remarks>Used in PartFeature</remarks>
+        [Mapping("part_feature_name")]
+        Part_Feature_Name,
+
+        /// <remarks>Used in PartFeature</remarks>
+        [Mapping("part_feature_value")]
+        Part_Feature_Value,
+
+        /// <remarks>Used in Part</remarks>
+        [Mapping("partinterface", "part_interface")]
+        Part_Interface,
+
+        /// <remarks>Used in Part</remarks>
+        [Mapping("partname", "part_name")]
+        Part_Name,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("physical")]
+        Physical,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("pixclock", "pix_clock")]
+        PixClock,
+
+        /// <remarks>Used in Input</remarks>
+        [Mapping("players")]
+        Players,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("refresh")]
+        Refresh,
+
+        /// <remarks>Used in Archive, Disk, Release, and Rom</remarks>
+        [Mapping("region")]
+        Region,
+
+        /// <remarks>Used in Archive</remarks>
+        [Mapping("regparent", "reg_parent")]
+        RegParent,
+
+        /// <remarks>Used in Condition</remarks>
+        [Mapping("relation")]
+        Relation,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("remark")]
+        Remark,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("requiresartwork", "requires_artwork")]
+        RequiresArtwork,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("rotate")]
+        Rotate,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("rotation")]
+        Rotation,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("savestatestatus", "savestate_status", "save_state_status")]
+        SaveStateStatus,
+
+        /// <remarks>Used in Input</remarks>
+        [Mapping("service")]
+        Service,
+
+        /// <remarks>Used in Setting</remarks>
+        [Mapping("setting_default", "value_default")]
+        Setting_Default,
+
+        /// <remarks>Used in Setting</remarks>
+        [Mapping("setting_name", "value_name")]
+        Setting_Name,
+
+        /// <remarks>Used in Setting</remarks>
+        [Mapping("setting_value", "value_value")]
+        Setting_Value,
+
+        /// <remarks>Used in Disk, Media, and Rom</remarks>
+        [Mapping("sha1", "sha_1", "sha1hash", "sha1_hash", "sha_1hash", "sha_1_hash")]
+        SHA1,
+
+        /// <remarks>Used in Media and Rom</remarks>
+        [Mapping("sha256", "sha_256", "sha256hash", "sha256_hash", "sha_256hash", "sha_256_hash")]
+        SHA256,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("sha384", "sha_384", "sha384hash", "sha384_hash", "sha_384hash", "sha_384_hash")]
+        SHA384,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("sha512", "sha_512", "sha512hash", "sha512_hash", "sha_512hash", "sha_512_hash")]
+        SHA512,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("size")]
+        Size,
+
+        /// <remarks>Used in SlotOption</remarks>
+        [Mapping("slotoption_default")]
+        SlotOption_Default,
+
+        /// <remarks>Used in SlotOption</remarks>
+        [Mapping("slotoption_devicename", "slotoption_device_name")]
+        SlotOption_DeviceName,
+
+        /// <remarks>Used in SlotOption</remarks>
+        [Mapping("slotoption_name")]
+        SlotOption_Name,
+
+        /// <remarks>Used in SoftwareList</remarks>
+        [Mapping("softwareliststatus", "softwarelist_status")]
+        SoftwareListStatus,
+
+        /// <remarks>Used in Media and Rom</remarks>
+        [Mapping("spamsum", "spam_sum")]
+        SpamSum,
+
+        /// <remarks>Used in Disk and Rom</remarks>
+        [Mapping("status")]
+        Status,
+
+        /// <remarks>Used in Rom</remarks>
+        [Mapping("summation")]
+        Summation,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("supportstatus", "support_status")]
+        SupportStatus,
+
+        /// <remarks>Used in Chip, Condition, Configuration, Device, DipSwitch, Display, Port, and SoftwareList</remarks>
+        [Mapping("tag")]
+        Tag,
+
+        /// <remarks>Used in Input</remarks>
+        [Mapping("tilt")]
+        Tilt,
+
+        /// <remarks>Internal value, common to all DatItems</remarks>
+        [Mapping("type")]
+        Type,
+
+        /// <remarks>Used in Driver</remarks>
+        [Mapping("unofficial")]
+        Unofficial,
+
+        /// <remarks>Used in Condition, Info, Rom, and SharedFeature</remarks>
+        [Mapping("value")]
+        Value,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("vbend")]
+        VBEnd,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("vbstart")]
+        VBStart,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("vtotal")]
+        VTotal,
+
+        /// <remarks>Used in Display</remarks>
+        [Mapping("width")]
+        Width,
+
+        /// <remarks>Used in Disk</remarks>
+        [Mapping("writable")]
+        Writable,
     }
 
     /// <summary>

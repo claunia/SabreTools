@@ -92,6 +92,7 @@ namespace SabreTools.DatItems.Formats
 
         /// <inheritdoc/>
         public override void SetName(string name) => Name = name;
+        
         #endregion
 
         #region Constructors

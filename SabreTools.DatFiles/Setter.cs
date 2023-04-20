@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -450,32 +447,32 @@ namespace SabreTools.DatFiles
         /// <param name="archive">Archive to remove replace fields in</param>
         private void SetFields(Archive archive)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Number))
-                archive.Number = DatItemMappings[DatItemField.Number];
+            if (DatItemMappings.ContainsKey(DatItemField.Categories))
+                archive.Categories = DatItemMappings[DatItemField.Categories];
 
             if (DatItemMappings.ContainsKey(DatItemField.Clone))
                 archive.CloneValue = DatItemMappings[DatItemField.Clone];
 
-            if (DatItemMappings.ContainsKey(DatItemField.RegParent))
-                archive.RegParent = DatItemMappings[DatItemField.RegParent];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Region))
-                archive.Region = DatItemMappings[DatItemField.Region];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Languages))
-                archive.Languages = DatItemMappings[DatItemField.Languages];
+            if (DatItemMappings.ContainsKey(DatItemField.Complete))
+                archive.Complete = DatItemMappings[DatItemField.Complete];
 
             if (DatItemMappings.ContainsKey(DatItemField.DevStatus))
                 archive.DevStatus = DatItemMappings[DatItemField.DevStatus];
 
+            if (DatItemMappings.ContainsKey(DatItemField.Languages))
+                archive.Languages = DatItemMappings[DatItemField.Languages];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Number))
+                archive.Number = DatItemMappings[DatItemField.Number];
+
             if (DatItemMappings.ContainsKey(DatItemField.Physical))
                 archive.Physical = DatItemMappings[DatItemField.Physical];
 
-            if (DatItemMappings.ContainsKey(DatItemField.Complete))
-                archive.Complete = DatItemMappings[DatItemField.Complete];
+            if (DatItemMappings.ContainsKey(DatItemField.Region))
+                archive.Region = DatItemMappings[DatItemField.Region];
 
-            if (DatItemMappings.ContainsKey(DatItemField.Categories))
-                archive.Categories = DatItemMappings[DatItemField.Categories];
+            if (DatItemMappings.ContainsKey(DatItemField.RegParent))
+                archive.RegParent = DatItemMappings[DatItemField.RegParent];
         }
 
         /// <summary>
@@ -484,11 +481,11 @@ namespace SabreTools.DatFiles
         /// <param name="biosSet">BiosSet to remove replace fields in</param>
         private void SetFields(BiosSet biosSet)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Description))
-                biosSet.Description = DatItemMappings[DatItemField.Description];
-
             if (DatItemMappings.ContainsKey(DatItemField.Default))
                 biosSet.Default = DatItemMappings[DatItemField.Default].AsYesNo();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Description))
+                biosSet.Description = DatItemMappings[DatItemField.Description];
         }
 
         /// <summary>
@@ -497,14 +494,14 @@ namespace SabreTools.DatFiles
         /// <param name="chip">Chip to remove replace fields in</param>
         private void SetFields(Chip chip)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Tag))
-                chip.Tag = DatItemMappings[DatItemField.Tag];
-
             if (DatItemMappings.ContainsKey(DatItemField.ChipType))
                 chip.ChipType = DatItemMappings[DatItemField.ChipType].AsChipType();
 
             if (DatItemMappings.ContainsKey(DatItemField.Clock))
                 chip.Clock = Utilities.CleanLong(DatItemMappings[DatItemField.Clock]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Tag))
+                chip.Tag = DatItemMappings[DatItemField.Tag];
         }
 
         /// <summary>
@@ -516,28 +513,28 @@ namespace SabreTools.DatFiles
         {
             if (sub)
             {
-                if (DatItemMappings.ContainsKey(DatItemField.Condition_Tag))
-                    condition.Tag = DatItemMappings[DatItemField.Condition_Tag];
-
                 if (DatItemMappings.ContainsKey(DatItemField.Condition_Mask))
                     condition.Mask = DatItemMappings[DatItemField.Condition_Mask];
 
                 if (DatItemMappings.ContainsKey(DatItemField.Condition_Relation))
                     condition.Relation = DatItemMappings[DatItemField.Condition_Relation].AsRelation();
 
+                if (DatItemMappings.ContainsKey(DatItemField.Condition_Tag))
+                    condition.Tag = DatItemMappings[DatItemField.Condition_Tag];
+
                 if (DatItemMappings.ContainsKey(DatItemField.Condition_Value))
                     condition.Value = DatItemMappings[DatItemField.Condition_Value];
             }
             else
             {
-                if (DatItemMappings.ContainsKey(DatItemField.Tag))
-                    condition.Tag = DatItemMappings[DatItemField.Tag];
-
                 if (DatItemMappings.ContainsKey(DatItemField.Mask))
                     condition.Mask = DatItemMappings[DatItemField.Mask];
 
                 if (DatItemMappings.ContainsKey(DatItemField.Relation))
                     condition.Relation = DatItemMappings[DatItemField.Relation].AsRelation();
+
+                if (DatItemMappings.ContainsKey(DatItemField.Tag))
+                    condition.Tag = DatItemMappings[DatItemField.Tag];
 
                 if (DatItemMappings.ContainsKey(DatItemField.Value))
                     condition.Value = DatItemMappings[DatItemField.Value];
@@ -550,11 +547,11 @@ namespace SabreTools.DatFiles
         /// <param name="configuration">Configuration to remove replace fields in</param>
         private void SetFields(Configuration configuration)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Tag))
-                configuration.Tag = DatItemMappings[DatItemField.Tag];
-
             if (DatItemMappings.ContainsKey(DatItemField.Mask))
                 configuration.Mask = DatItemMappings[DatItemField.Mask];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Tag))
+                configuration.Tag = DatItemMappings[DatItemField.Tag];
 
             if (configuration.ConditionsSpecified)
             {
@@ -587,32 +584,32 @@ namespace SabreTools.DatFiles
         /// <param name="control">Control to remove replace fields in</param>
         private void SetFields(Control control)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Control_Type))
-                control.ControlType = DatItemMappings[DatItemField.Control_Type].AsControlType();
-
-            if (DatItemMappings.ContainsKey(DatItemField.Control_Player))
-                control.Player = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Player]);
-
             if (DatItemMappings.ContainsKey(DatItemField.Control_Buttons))
                 control.Buttons = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Buttons]);
 
-            if (DatItemMappings.ContainsKey(DatItemField.Control_RequiredButtons))
-                control.RequiredButtons = Utilities.CleanLong(DatItemMappings[DatItemField.Control_RequiredButtons]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.Control_Minimum))
-                control.Minimum = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Minimum]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.Control_Maximum))
-                control.Maximum = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Maximum]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.Control_Sensitivity))
-                control.Sensitivity = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Sensitivity]);
+            if (DatItemMappings.ContainsKey(DatItemField.Control_Type))
+                control.ControlType = DatItemMappings[DatItemField.Control_Type].AsControlType();
 
             if (DatItemMappings.ContainsKey(DatItemField.Control_KeyDelta))
                 control.KeyDelta = Utilities.CleanLong(DatItemMappings[DatItemField.Control_KeyDelta]);
 
+            if (DatItemMappings.ContainsKey(DatItemField.Control_Maximum))
+                control.Maximum = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Maximum]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Control_Minimum))
+                control.Minimum = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Minimum]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Control_Player))
+                control.Player = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Player]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Control_RequiredButtons))
+                control.RequiredButtons = Utilities.CleanLong(DatItemMappings[DatItemField.Control_RequiredButtons]);
+
             if (DatItemMappings.ContainsKey(DatItemField.Control_Reverse))
                 control.Reverse = DatItemMappings[DatItemField.Control_Reverse].AsYesNo();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Control_Sensitivity))
+                control.Sensitivity = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Sensitivity]);
 
             if (DatItemMappings.ContainsKey(DatItemField.Control_Ways))
                 control.Ways = DatItemMappings[DatItemField.Control_Ways];
@@ -630,14 +627,17 @@ namespace SabreTools.DatFiles
         /// <param name="dataArea">DataArea to remove replace fields in</param>
         private void SetFields(DataArea dataArea)
         {
+            if (DatItemMappings.ContainsKey(DatItemField.AreaEndianness))
+                dataArea.Endianness = DatItemMappings[DatItemField.AreaEndianness].AsEndianness();
+
+            if (DatItemMappings.ContainsKey(DatItemField.AreaName))
+                dataArea.Name = DatItemMappings[DatItemField.AreaName];
+
             if (DatItemMappings.ContainsKey(DatItemField.AreaSize))
                 dataArea.Size = Utilities.CleanLong(DatItemMappings[DatItemField.AreaSize]);
 
             if (DatItemMappings.ContainsKey(DatItemField.AreaWidth))
                 dataArea.Width = Utilities.CleanLong(DatItemMappings[DatItemField.AreaWidth]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.AreaEndianness))
-                dataArea.Endianness = DatItemMappings[DatItemField.AreaEndianness].AsEndianness();
         }
 
         /// <summary>
@@ -649,31 +649,31 @@ namespace SabreTools.DatFiles
             if (DatItemMappings.ContainsKey(DatItemField.DeviceType))
                 device.DeviceType = DatItemMappings[DatItemField.DeviceType].AsDeviceType();
 
-            if (DatItemMappings.ContainsKey(DatItemField.Tag))
-                device.Tag = DatItemMappings[DatItemField.Tag];
-
             if (DatItemMappings.ContainsKey(DatItemField.FixedImage))
                 device.FixedImage = DatItemMappings[DatItemField.FixedImage];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Mandatory))
-                device.Mandatory = Utilities.CleanLong(DatItemMappings[DatItemField.Mandatory]);
 
             if (DatItemMappings.ContainsKey(DatItemField.Interface))
                 device.Interface = DatItemMappings[DatItemField.Interface];
 
-            if (device.InstancesSpecified)
-            {
-                foreach (Instance subInstance in device.Instances)
-                {
-                    SetFields(subInstance);
-                }
-            }
+            if (DatItemMappings.ContainsKey(DatItemField.Mandatory))
+                device.Mandatory = Utilities.CleanLong(DatItemMappings[DatItemField.Mandatory]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Tag))
+                device.Tag = DatItemMappings[DatItemField.Tag];
 
             if (device.ExtensionsSpecified)
             {
                 foreach (Extension subExtension in device.Extensions)
                 {
                     SetFields(subExtension);
+                }
+            }
+
+            if (device.InstancesSpecified)
+            {
+                foreach (Instance subInstance in device.Instances)
+                {
+                    SetFields(subInstance);
                 }
             }
         }
@@ -684,13 +684,11 @@ namespace SabreTools.DatFiles
         /// <param name="dipSwitch">DipSwitch to remove replace fields in</param>
         private void SetFields(DipSwitch dipSwitch)
         {
-            #region Common
+            if (DatItemMappings.ContainsKey(DatItemField.Mask))
+                dipSwitch.Mask = DatItemMappings[DatItemField.Mask];
 
             if (DatItemMappings.ContainsKey(DatItemField.Tag))
                 dipSwitch.Tag = DatItemMappings[DatItemField.Tag];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Mask))
-                dipSwitch.Mask = DatItemMappings[DatItemField.Mask];
 
             if (dipSwitch.ConditionsSpecified)
             {
@@ -716,16 +714,8 @@ namespace SabreTools.DatFiles
                 }
             }
 
-            #endregion
-
-            #region SoftwareList
-
-            // Handle Part-specific fields
             dipSwitch.Part ??= new Part();
-
             SetFields(dipSwitch.Part);
-
-            #endregion
         }
 
         /// <summary>
@@ -734,45 +724,35 @@ namespace SabreTools.DatFiles
         /// <param name="disk">Disk to remove replace fields in</param>
         private void SetFields(Disk disk)
         {
-            #region Common
+            if (DatItemMappings.ContainsKey(DatItemField.Index))
+                disk.Index = DatItemMappings[DatItemField.Index];
 
             if (DatItemMappings.ContainsKey(DatItemField.MD5))
                 disk.MD5 = DatItemMappings[DatItemField.MD5];
 
-            if (DatItemMappings.ContainsKey(DatItemField.SHA1))
-                disk.SHA1 = DatItemMappings[DatItemField.SHA1];
-
             if (DatItemMappings.ContainsKey(DatItemField.Merge))
                 disk.MergeTag = DatItemMappings[DatItemField.Merge];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Region))
-                disk.Region = DatItemMappings[DatItemField.Region];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Index))
-                disk.Index = DatItemMappings[DatItemField.Index];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Writable))
-                disk.Writable = DatItemMappings[DatItemField.Writable].AsYesNo();
-
-            if (DatItemMappings.ContainsKey(DatItemField.Status))
-                disk.ItemStatus = DatItemMappings[DatItemField.Status].AsItemStatus();
 
             if (DatItemMappings.ContainsKey(DatItemField.Optional))
                 disk.Optional = DatItemMappings[DatItemField.Optional].AsYesNo();
 
-            #endregion
+            if (DatItemMappings.ContainsKey(DatItemField.Region))
+                disk.Region = DatItemMappings[DatItemField.Region];
 
-            #region SoftwareList
+            if (DatItemMappings.ContainsKey(DatItemField.SHA1))
+                disk.SHA1 = DatItemMappings[DatItemField.SHA1];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Status))
+                disk.ItemStatus = DatItemMappings[DatItemField.Status].AsItemStatus();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Writable))
+                disk.Writable = DatItemMappings[DatItemField.Writable].AsYesNo();
 
             disk.DiskArea ??= new DiskArea();
-
             SetFields(disk.DiskArea);
 
             disk.Part ??= new Part();
-
             SetFields(disk.Part);
-
-            #endregion
         }
 
         /// <summary>
@@ -791,32 +771,14 @@ namespace SabreTools.DatFiles
         /// <param name="display">Display to remove replace fields in</param>
         private void SetFields(Display display)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Tag))
-                display.Tag = DatItemMappings[DatItemField.Tag];
-
             if (DatItemMappings.ContainsKey(DatItemField.DisplayType))
                 display.DisplayType = DatItemMappings[DatItemField.DisplayType].AsDisplayType();
-
-            if (DatItemMappings.ContainsKey(DatItemField.Rotate))
-                display.Rotate = Utilities.CleanLong(DatItemMappings[DatItemField.Rotate]);
 
             if (DatItemMappings.ContainsKey(DatItemField.FlipX))
                 display.FlipX = DatItemMappings[DatItemField.FlipX].AsYesNo();
 
-            if (DatItemMappings.ContainsKey(DatItemField.Width))
-                display.Width = Utilities.CleanLong(DatItemMappings[DatItemField.Width]);
-
             if (DatItemMappings.ContainsKey(DatItemField.Height))
                 display.Height = Utilities.CleanLong(DatItemMappings[DatItemField.Height]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.Refresh))
-                display.Refresh = Utilities.CleanDouble(DatItemMappings[DatItemField.Refresh]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.PixClock))
-                display.PixClock = Utilities.CleanLong(DatItemMappings[DatItemField.PixClock]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.HTotal))
-                display.HTotal = Utilities.CleanLong(DatItemMappings[DatItemField.HTotal]);
 
             if (DatItemMappings.ContainsKey(DatItemField.HBEnd))
                 display.HBEnd = Utilities.CleanLong(DatItemMappings[DatItemField.HBEnd]);
@@ -824,14 +786,32 @@ namespace SabreTools.DatFiles
             if (DatItemMappings.ContainsKey(DatItemField.HBStart))
                 display.HBStart = Utilities.CleanLong(DatItemMappings[DatItemField.HBStart]);
 
-            if (DatItemMappings.ContainsKey(DatItemField.VTotal))
-                display.VTotal = Utilities.CleanLong(DatItemMappings[DatItemField.VTotal]);
+            if (DatItemMappings.ContainsKey(DatItemField.HTotal))
+                display.HTotal = Utilities.CleanLong(DatItemMappings[DatItemField.HTotal]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.PixClock))
+                display.PixClock = Utilities.CleanLong(DatItemMappings[DatItemField.PixClock]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Refresh))
+                display.Refresh = Utilities.CleanDouble(DatItemMappings[DatItemField.Refresh]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Rotate))
+                display.Rotate = Utilities.CleanLong(DatItemMappings[DatItemField.Rotate]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Tag))
+                display.Tag = DatItemMappings[DatItemField.Tag];
 
             if (DatItemMappings.ContainsKey(DatItemField.VBEnd))
                 display.VBEnd = Utilities.CleanLong(DatItemMappings[DatItemField.VBEnd]);
 
             if (DatItemMappings.ContainsKey(DatItemField.VBStart))
                 display.VBStart = Utilities.CleanLong(DatItemMappings[DatItemField.VBStart]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.VTotal))
+                display.VTotal = Utilities.CleanLong(DatItemMappings[DatItemField.VTotal]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Width))
+                display.Width = Utilities.CleanLong(DatItemMappings[DatItemField.Width]);
         }
 
         /// <summary>
@@ -840,29 +820,29 @@ namespace SabreTools.DatFiles
         /// <param name="driver">Driver to remove replace fields in</param>
         private void SetFields(Driver driver)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.SupportStatus))
-                driver.Status = DatItemMappings[DatItemField.SupportStatus].AsSupportStatus();
+            if (DatItemMappings.ContainsKey(DatItemField.CocktailStatus))
+                driver.Cocktail = DatItemMappings[DatItemField.CocktailStatus].AsSupportStatus();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Incomplete))
+                driver.Incomplete = DatItemMappings[DatItemField.Incomplete].AsYesNo();
 
             if (DatItemMappings.ContainsKey(DatItemField.EmulationStatus))
                 driver.Emulation = DatItemMappings[DatItemField.EmulationStatus].AsSupportStatus();
 
-            if (DatItemMappings.ContainsKey(DatItemField.CocktailStatus))
-                driver.Cocktail = DatItemMappings[DatItemField.CocktailStatus].AsSupportStatus();
-
-            if (DatItemMappings.ContainsKey(DatItemField.SaveStateStatus))
-                driver.SaveState = DatItemMappings[DatItemField.SaveStateStatus].AsSupported();
+            if (DatItemMappings.ContainsKey(DatItemField.NoSoundHardware))
+                driver.NoSoundHardware = DatItemMappings[DatItemField.NoSoundHardware].AsYesNo();
 
             if (DatItemMappings.ContainsKey(DatItemField.RequiresArtwork))
                 driver.RequiresArtwork = DatItemMappings[DatItemField.RequiresArtwork].AsYesNo();
 
+            if (DatItemMappings.ContainsKey(DatItemField.SaveStateStatus))
+                driver.SaveState = DatItemMappings[DatItemField.SaveStateStatus].AsSupported();
+
+            if (DatItemMappings.ContainsKey(DatItemField.SupportStatus))
+                driver.Status = DatItemMappings[DatItemField.SupportStatus].AsSupportStatus();
+
             if (DatItemMappings.ContainsKey(DatItemField.Unofficial))
                 driver.Unofficial = DatItemMappings[DatItemField.Unofficial].AsYesNo();
-
-            if (DatItemMappings.ContainsKey(DatItemField.NoSoundHardware))
-                driver.NoSoundHardware = DatItemMappings[DatItemField.NoSoundHardware].AsYesNo();
-
-            if (DatItemMappings.ContainsKey(DatItemField.Incomplete))
-                driver.Incomplete = DatItemMappings[DatItemField.Incomplete].AsYesNo();
         }
 
         /// <summary>
@@ -881,14 +861,14 @@ namespace SabreTools.DatFiles
         /// <param name="feature">Feature to remove replace fields in</param>
         private void SetFields(Feature feature)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.FeatureType))
-                feature.Type = DatItemMappings[DatItemField.FeatureType].AsFeatureType();
+            if (DatItemMappings.ContainsKey(DatItemField.FeatureOverall))
+                feature.Overall = DatItemMappings[DatItemField.FeatureOverall].AsFeatureStatus();
 
             if (DatItemMappings.ContainsKey(DatItemField.FeatureStatus))
                 feature.Status = DatItemMappings[DatItemField.FeatureStatus].AsFeatureStatus();
 
-            if (DatItemMappings.ContainsKey(DatItemField.FeatureOverall))
-                feature.Overall = DatItemMappings[DatItemField.FeatureOverall].AsFeatureStatus();
+            if (DatItemMappings.ContainsKey(DatItemField.FeatureType))
+                feature.Type = DatItemMappings[DatItemField.FeatureType].AsFeatureType();
         }
 
         /// <summary>
@@ -907,17 +887,17 @@ namespace SabreTools.DatFiles
         /// <param name="input">Input to remove replace fields in</param>
         private void SetFields(Input input)
         {
+            if (DatItemMappings.ContainsKey(DatItemField.Coins))
+                input.Coins = Utilities.CleanLong(DatItemMappings[DatItemField.Coins]);
+
+            if (DatItemMappings.ContainsKey(DatItemField.Players))
+                input.Players = Utilities.CleanLong(DatItemMappings[DatItemField.Players]);
+
             if (DatItemMappings.ContainsKey(DatItemField.Service))
                 input.Service = DatItemMappings[DatItemField.Service].AsYesNo();
 
             if (DatItemMappings.ContainsKey(DatItemField.Tilt))
                 input.Tilt = DatItemMappings[DatItemField.Tilt].AsYesNo();
-
-            if (DatItemMappings.ContainsKey(DatItemField.Players))
-                input.Players = Utilities.CleanLong(DatItemMappings[DatItemField.Players]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.Coins))
-                input.Coins = Utilities.CleanLong(DatItemMappings[DatItemField.Coins]);
 
             if (input.ControlsSpecified)
             {
@@ -934,11 +914,11 @@ namespace SabreTools.DatFiles
         /// <param name="instance">Instance to remove replace fields in</param>
         private void SetFields(Instance instance)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Instance_Name))
-                instance.BriefName = DatItemMappings[DatItemField.Instance_Name];
-
             if (DatItemMappings.ContainsKey(DatItemField.Instance_BriefName))
                 instance.BriefName = DatItemMappings[DatItemField.Instance_BriefName];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Instance_Name))
+                instance.BriefName = DatItemMappings[DatItemField.Instance_Name];
         }
 
         /// <summary>
@@ -947,14 +927,14 @@ namespace SabreTools.DatFiles
         /// <param name="location">Location to remove replace fields in</param>
         private void SetFields(Location location)
         {
+            if (DatItemMappings.ContainsKey(DatItemField.Location_Inverted))
+                location.Inverted = DatItemMappings[DatItemField.Location_Inverted].AsYesNo();
+
             if (DatItemMappings.ContainsKey(DatItemField.Location_Name))
                 location.Name = DatItemMappings[DatItemField.Location_Name];
 
             if (DatItemMappings.ContainsKey(DatItemField.Location_Number))
                 location.Number = Utilities.CleanLong(DatItemMappings[DatItemField.Location_Number]);
-
-            if (DatItemMappings.ContainsKey(DatItemField.Location_Inverted))
-                location.Inverted = DatItemMappings[DatItemField.Location_Inverted].AsYesNo();
         }
 
         /// <summary>
@@ -982,11 +962,11 @@ namespace SabreTools.DatFiles
         /// <param name="part">Part to remove replace fields in</param>
         private void SetFields(Part part)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Part_Name))
-                part.Name = DatItemMappings[DatItemField.Part_Name];
-
             if (DatItemMappings.ContainsKey(DatItemField.Part_Interface))
                 part.Interface = DatItemMappings[DatItemField.Part_Interface];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Part_Name))
+                part.Name = DatItemMappings[DatItemField.Part_Name];
 
             if (part.FeaturesSpecified)
             {
@@ -1034,11 +1014,11 @@ namespace SabreTools.DatFiles
         /// <param name="ramOption">RamOption to remove replace fields in</param>
         private void SetFields(RamOption ramOption)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Default))
-                ramOption.Default = DatItemMappings[DatItemField.Default].AsYesNo();
-
             if (DatItemMappings.ContainsKey(DatItemField.Content))
                 ramOption.Content = DatItemMappings[DatItemField.Content];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Default))
+                ramOption.Default = DatItemMappings[DatItemField.Default].AsYesNo();
         }
 
         /// <summary>
@@ -1047,17 +1027,17 @@ namespace SabreTools.DatFiles
         /// <param name="release">Release to remove replace fields in</param>
         private void SetFields(Release release)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Region))
-                release.Region = DatItemMappings[DatItemField.Region];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Language))
-                release.Language = DatItemMappings[DatItemField.Language];
-
             if (DatItemMappings.ContainsKey(DatItemField.Date))
                 release.Date = DatItemMappings[DatItemField.Date];
 
             if (DatItemMappings.ContainsKey(DatItemField.Default))
                 release.Default = DatItemMappings[DatItemField.Default].AsYesNo();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Language))
+                release.Language = DatItemMappings[DatItemField.Language];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Region))
+                release.Region = DatItemMappings[DatItemField.Region];
         }
 
         /// <summary>
@@ -1066,19 +1046,71 @@ namespace SabreTools.DatFiles
         /// <param name="rom">Rom to remove replace fields in</param>
         private void SetFields(Rom rom)
         {
-            #region Common
+            if (DatItemMappings.ContainsKey(DatItemField.AltName))
+                rom.AltName = DatItemMappings[DatItemField.AltName];
+
+            if (DatItemMappings.ContainsKey(DatItemField.AltTitle))
+                rom.AltTitle = DatItemMappings[DatItemField.AltTitle];
+
+            if (DatItemMappings.ContainsKey(DatItemField.ArchiveDotOrgFormat))
+                rom.ArchiveDotOrgFormat = DatItemMappings[DatItemField.ArchiveDotOrgFormat];
+
+            if (DatItemMappings.ContainsKey(DatItemField.ArchiveDotOrgSource))
+                rom.ArchiveDotOrgSource = DatItemMappings[DatItemField.ArchiveDotOrgSource];
 
             if (DatItemMappings.ContainsKey(DatItemField.Bios))
                 rom.Bios = DatItemMappings[DatItemField.Bios];
 
-            if (DatItemMappings.ContainsKey(DatItemField.Size))
-                rom.Size = Utilities.CleanLong(DatItemMappings[DatItemField.Size]);
+            if (DatItemMappings.ContainsKey(DatItemField.Boot))
+                rom.Boot = DatItemMappings[DatItemField.Boot];
 
             if (DatItemMappings.ContainsKey(DatItemField.CRC))
                 rom.CRC = DatItemMappings[DatItemField.CRC];
 
+            if (DatItemMappings.ContainsKey(DatItemField.Date))
+                rom.Date = DatItemMappings[DatItemField.Date];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Inverted))
+                rom.Inverted = DatItemMappings[DatItemField.Inverted].AsYesNo();
+
+            if (DatItemMappings.ContainsKey(DatItemField.LoadFlag))
+                rom.LoadFlag = DatItemMappings[DatItemField.LoadFlag].AsLoadFlag();
+
             if (DatItemMappings.ContainsKey(DatItemField.MD5))
                 rom.MD5 = DatItemMappings[DatItemField.MD5];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Merge))
+                rom.MergeTag = DatItemMappings[DatItemField.Merge];
+
+            if (DatItemMappings.ContainsKey(DatItemField.MIA))
+                rom.MIA = DatItemMappings[DatItemField.MIA].AsYesNo();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Offset))
+                rom.Offset = DatItemMappings[DatItemField.Offset];
+
+            if (DatItemMappings.ContainsKey(DatItemField.OpenMSXSubType))
+                rom.OpenMSXSubType = DatItemMappings[DatItemField.OpenMSXSubType].AsOpenMSXSubType();
+
+            if (DatItemMappings.ContainsKey(DatItemField.OpenMSXType))
+                rom.OpenMSXType = DatItemMappings[DatItemField.OpenMSXType];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Optional))
+                rom.Optional = DatItemMappings[DatItemField.Optional].AsYesNo();
+
+            if (DatItemMappings.ContainsKey(DatItemField.Original))
+                rom.Original = new Original() { Content = DatItemMappings[DatItemField.Original] };
+
+            if (DatItemMappings.ContainsKey(DatItemField.OriginalFilename))
+                rom.OriginalFilename = DatItemMappings[DatItemField.OriginalFilename];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Region))
+                rom.Region = DatItemMappings[DatItemField.Region];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Remark))
+                rom.Remark = DatItemMappings[DatItemField.Remark];
+
+            if (DatItemMappings.ContainsKey(DatItemField.Rotation))
+                rom.Rotation = DatItemMappings[DatItemField.Rotation];
 
             if (DatItemMappings.ContainsKey(DatItemField.SHA1))
                 rom.SHA1 = DatItemMappings[DatItemField.SHA1];
@@ -1092,100 +1124,26 @@ namespace SabreTools.DatFiles
             if (DatItemMappings.ContainsKey(DatItemField.SHA512))
                 rom.SHA512 = DatItemMappings[DatItemField.SHA512];
 
+            if (DatItemMappings.ContainsKey(DatItemField.Size))
+                rom.Size = Utilities.CleanLong(DatItemMappings[DatItemField.Size]);
+
             if (DatItemMappings.ContainsKey(DatItemField.SpamSum))
                 rom.SpamSum = DatItemMappings[DatItemField.SpamSum];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Merge))
-                rom.MergeTag = DatItemMappings[DatItemField.Merge];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Region))
-                rom.Region = DatItemMappings[DatItemField.Region];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Offset))
-                rom.Offset = DatItemMappings[DatItemField.Offset];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Date))
-                rom.Date = DatItemMappings[DatItemField.Date];
 
             if (DatItemMappings.ContainsKey(DatItemField.Status))
                 rom.ItemStatus = DatItemMappings[DatItemField.Status].AsItemStatus();
 
-            if (DatItemMappings.ContainsKey(DatItemField.Optional))
-                rom.Optional = DatItemMappings[DatItemField.Optional].AsYesNo();
-
-            if (DatItemMappings.ContainsKey(DatItemField.Inverted))
-                rom.Inverted = DatItemMappings[DatItemField.Optional].AsYesNo();
-
-            #endregion
-
-            #region Archive.org
-
-            if (DatItemMappings.ContainsKey(DatItemField.ArchiveDotOrgSource))
-                rom.ArchiveDotOrgSource = DatItemMappings[DatItemField.ArchiveDotOrgSource];
-
-            if (DatItemMappings.ContainsKey(DatItemField.ArchiveDotOrgFormat))
-                rom.ArchiveDotOrgFormat = DatItemMappings[DatItemField.ArchiveDotOrgFormat];
-
-            if (DatItemMappings.ContainsKey(DatItemField.OriginalFilename))
-                rom.OriginalFilename = DatItemMappings[DatItemField.OriginalFilename];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Rotation))
-                rom.Rotation = DatItemMappings[DatItemField.Rotation];
-
             if (DatItemMappings.ContainsKey(DatItemField.Summation))
                 rom.Summation = DatItemMappings[DatItemField.Summation];
-
-            #endregion
-
-            #region AttractMode
-
-            if (DatItemMappings.ContainsKey(DatItemField.AltName))
-                rom.AltName = DatItemMappings[DatItemField.AltName];
-
-            if (DatItemMappings.ContainsKey(DatItemField.AltTitle))
-                rom.AltTitle = DatItemMappings[DatItemField.AltTitle];
-
-            if (DatItemMappings.ContainsKey(DatItemField.MIA))
-                rom.MIA = DatItemMappings[DatItemField.MIA].AsYesNo();
-
-            #endregion
-
-            #region OpenMSX
-
-            if (DatItemMappings.ContainsKey(DatItemField.Original))
-                rom.Original = new Original() { Content = DatItemMappings[DatItemField.Original] };
-
-            if (DatItemMappings.ContainsKey(DatItemField.OpenMSXSubType))
-                rom.OpenMSXSubType = DatItemMappings[DatItemField.OpenMSXSubType].AsOpenMSXSubType();
-
-            if (DatItemMappings.ContainsKey(DatItemField.OpenMSXType))
-                rom.OpenMSXType = DatItemMappings[DatItemField.OpenMSXType];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Remark))
-                rom.Remark = DatItemMappings[DatItemField.Remark];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Boot))
-                rom.Boot = DatItemMappings[DatItemField.Boot];
-
-            #endregion
-
-            #region SoftwareList
-
-            if (DatItemMappings.ContainsKey(DatItemField.LoadFlag))
-                rom.LoadFlag = DatItemMappings[DatItemField.LoadFlag].AsLoadFlag();
 
             if (DatItemMappings.ContainsKey(DatItemField.Value))
                 rom.Value = DatItemMappings[DatItemField.Value];
 
             rom.DataArea ??= new DataArea();
-
             SetFields(rom.DataArea);
 
             rom.Part ??= new Part();
-
             SetFields(rom.Part);
-
-            #endregion
         }
 
         /// <summary>
@@ -1194,14 +1152,14 @@ namespace SabreTools.DatFiles
         /// <param name="setting">Setting to remove replace fields in</param>
         private void SetFields(Setting setting)
         {
+            if (DatItemMappings.ContainsKey(DatItemField.Setting_Default))
+                setting.Default = DatItemMappings[DatItemField.Setting_Default].AsYesNo();
+
             if (DatItemMappings.ContainsKey(DatItemField.Setting_Name))
                 setting.Name = DatItemMappings[DatItemField.Setting_Name];
 
             if (DatItemMappings.ContainsKey(DatItemField.Setting_Value))
                 setting.Value = DatItemMappings[DatItemField.Setting_Value];
-
-            if (DatItemMappings.ContainsKey(DatItemField.Setting_Default))
-                setting.Default = DatItemMappings[DatItemField.Setting_Default].AsYesNo();
 
             if (setting.ConditionsSpecified)
             {
@@ -1243,14 +1201,14 @@ namespace SabreTools.DatFiles
         /// <param name="slotOption">SlotOption to remove replace fields in</param>
         private void SetFields(SlotOption slotOption)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.SlotOption_Name))
-                slotOption.Name = DatItemMappings[DatItemField.SlotOption_Name];
+            if (DatItemMappings.ContainsKey(DatItemField.SlotOption_Default))
+                slotOption.Default = DatItemMappings[DatItemField.SlotOption_Default].AsYesNo();
 
             if (DatItemMappings.ContainsKey(DatItemField.SlotOption_DeviceName))
                 slotOption.DeviceName = DatItemMappings[DatItemField.SlotOption_DeviceName];
 
-            if (DatItemMappings.ContainsKey(DatItemField.SlotOption_Default))
-                slotOption.Default = DatItemMappings[DatItemField.SlotOption_Default].AsYesNo();
+            if (DatItemMappings.ContainsKey(DatItemField.SlotOption_Name))
+                slotOption.Name = DatItemMappings[DatItemField.SlotOption_Name];
         }
 
         /// <summary>
@@ -1259,14 +1217,14 @@ namespace SabreTools.DatFiles
         /// <param name="softwareList">SoftwareList to remove replace fields in</param>
         private void SetFields(SoftwareList softwareList)
         {
-            if (DatItemMappings.ContainsKey(DatItemField.Tag))
-                softwareList.Tag = DatItemMappings[DatItemField.Tag];
+            if (DatItemMappings.ContainsKey(DatItemField.Filter))
+                softwareList.Filter = DatItemMappings[DatItemField.Filter];
 
             if (DatItemMappings.ContainsKey(DatItemField.SoftwareListStatus))
                 softwareList.Status = DatItemMappings[DatItemField.SoftwareListStatus].AsSoftwareListStatus();
 
-            if (DatItemMappings.ContainsKey(DatItemField.Filter))
-                softwareList.Filter = DatItemMappings[DatItemField.Filter];
+            if (DatItemMappings.ContainsKey(DatItemField.Tag))
+                softwareList.Tag = DatItemMappings[DatItemField.Tag];
         }
 
         /// <summary>
