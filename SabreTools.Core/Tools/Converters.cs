@@ -317,7 +317,7 @@ namespace SabreTools.Core.Tools
         /// <param name="value">String value to parse/param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Enum value representing the input, default on error</returns>
-        private static T AsEnumValue<T>(string value)
+        internal static T AsEnumValue<T>(string value)
         {
             // Get the mapping dictionary
             var mappings = GenerateToEnum<T>();
@@ -334,13 +334,13 @@ namespace SabreTools.Core.Tools
             // Otherwise, return the default value for the enum
             return default;
         }
-        
+
         /// <summary>
         /// Get a set of mappings from strings to enum values
         /// </summary>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of string to enum values</returns>
-        private static Dictionary<string, T> GenerateToEnum<T>()
+        internal static Dictionary<string, T> GenerateToEnum<T>()
         {
             try
             {
@@ -565,7 +565,7 @@ namespace SabreTools.Core.Tools
         /// <param name="useSecond">True to use the second mapping option, if it exists</param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>String value representing the input, default on error</returns>
-        private static string? AsStringValue<T>(T value, bool useSecond = false)
+        internal static string? AsStringValue<T>(T value, bool useSecond = false)
         {
             // Get the mapping dictionary
             var mappings = GenerateToString<T>(useSecond);
@@ -577,14 +577,14 @@ namespace SabreTools.Core.Tools
             // Otherwise, return null
             return null;
         }
-        
+
         /// <summary>
         /// Get a set of mappings from enum values to string
         /// </summary>
         /// <param name="useSecond">True to use the second mapping option, if it exists</param>
         /// <typeparam name="T">Enum type that is expected</typeparam>
         /// <returns>Dictionary of enum to string values</returns>
-        private static Dictionary<T, string> GenerateToString<T>(bool useSecond)
+        internal static Dictionary<T, string> GenerateToString<T>(bool useSecond)
         {
             try
             {

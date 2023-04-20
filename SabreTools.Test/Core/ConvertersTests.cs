@@ -857,5 +857,41 @@ namespace SabreTools.Test.Core
         }
 
         #endregion
+
+        #region Generators
+
+        [Theory]
+        [InlineData(ChipType.NULL, 2)]
+        [InlineData(ControlType.NULL, 15)]
+        [InlineData(DatHeaderField.NULL, 94)]
+        [InlineData(DatItemField.NULL, 197)]
+        [InlineData(DeviceType.NULL, 21)]
+        [InlineData(DisplayType.NULL, 5)]
+        [InlineData(Endianness.NULL, 2)]
+        [InlineData(FeatureStatus.NULL, 2)]
+        [InlineData(FeatureType.NULL, 14)]
+        [InlineData(ItemStatus.NULL, 7)]
+        [InlineData(ItemType.NULL, 51)]
+        [InlineData(LoadFlag.NULL, 14)]
+        [InlineData(LogLevel.VERBOSE, 4)]
+        [InlineData(MachineField.NULL, 68)]
+        [InlineData(MachineType.None, 6)]
+        [InlineData(MergingFlag.None, 12)]
+        [InlineData(NodumpFlag.None, 4)]
+        [InlineData(OpenMSXSubType.NULL, 3)]
+        [InlineData(PackingFlag.None, 7)]
+        [InlineData(Relation.NULL, 6)]
+        [InlineData(Runnable.NULL, 3)]
+        [InlineData(SoftwareListStatus.None, 3)]
+        [InlineData(Supported.NULL, 5)]
+        [InlineData(SupportStatus.NULL, 3)]
+        public void GenerateToEnumTest<T>(T value, int expected)
+        {
+            var actual = Converters.GenerateToEnum<T>();
+            Assert.Equal(default, value);
+            Assert.Equal(expected, actual.Keys.Count);
+        }
+
+        #endregion
     }
 }
