@@ -9,7 +9,7 @@ using SabreTools.Core.Tools;
 using SabreTools.IO;
 using Compress;
 using Compress.gZip;
-using Compress.ZipFile.ZLib;
+using Compress.Support.Compression.Deflate;
 
 namespace SabreTools.FileTypes.Archives
 {
@@ -240,7 +240,7 @@ namespace SabreTools.FileTypes.Archives
                             ZipReturn ret = gz.ZipFileOpen(this.Filename);
                             ret = gz.ZipFileOpenReadStream(0, out Stream gzstream, out ulong streamSize);
                             gzipEntryRom = GetInfo(gzstream, hashes: this.AvailableHashes);
-                            gzipEntryRom.Filename = gz.Filename(0);
+                            gzipEntryRom.Filename = gz.GetLocalFile(0).Filename;
                             gzipEntryRom.Parent = gamename;
                             gzipEntryRom.Date = (gz.TimeStamp > 0 ? gz.TimeStamp.ToString() : null);
                             gzstream.Dispose();

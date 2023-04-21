@@ -5,7 +5,7 @@ using System.Linq;
 
 using SabreTools.Core;
 using SabreTools.Core.Tools;
-using Compress.ZipFile;
+using Compress;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Tar;
 using SharpCompress.Common;
@@ -330,7 +330,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Get the order for the entries with the new file
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipUtils.TrrntZipStringCompare);
+                    keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
                     foreach (string key in keys)
@@ -444,7 +444,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Sort the keys in TZIP order
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipUtils.TrrntZipStringCompare);
+                    keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Now add all of the files in order
                     foreach (string key in keys)
@@ -499,7 +499,7 @@ namespace SabreTools.FileTypes.Archives
 
                     // Get the order for the entries with the new file
                     List<string> keys = inputIndexMap.Keys.ToList();
-                    keys.Sort(ZipUtils.TrrntZipStringCompare);
+                    keys.Sort(CompressUtils.TrrntZipStringCompare);
 
                     // Copy over all files to the new archive
                     foreach (string key in keys)
