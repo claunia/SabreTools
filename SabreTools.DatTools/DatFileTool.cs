@@ -44,8 +44,12 @@ namespace SabreTools.DatTools
                     string filename = inputs[newItem.Source.Index].CurrentPath;
                     string rootpath = inputs[newItem.Source.Index].ParentPath;
 
-                    if (!string.IsNullOrWhiteSpace(rootpath))
+                    if (!string.IsNullOrWhiteSpace(rootpath)
+                        && !rootpath.EndsWith(Path.DirectorySeparatorChar)
+                        && !rootpath.EndsWith(Path.AltDirectorySeparatorChar))
+                    {
                         rootpath += Path.DirectorySeparatorChar.ToString();
+                    }
 
                     filename = filename.Remove(0, rootpath.Length);
                     newItem.Machine.Name = Path.GetDirectoryName(filename) + Path.DirectorySeparatorChar
