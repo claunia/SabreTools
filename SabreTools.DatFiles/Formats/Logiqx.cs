@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -25,6 +24,7 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// DTD for original Logiqx DATs
         /// </summary>
+        /// <remarks>This has been edited to reflect actual current standards</remarks>
         private const string LogiqxDTD = @"<!--
    ROM Management Datafile - DTD
 
@@ -32,8 +32,8 @@ namespace SabreTools.DatFiles.Formats
 
    This DTD module is identified by the PUBLIC and SYSTEM identifiers:
 
-   PUBLIC string.Empty -//Logiqx//DTD ROM Management Datafile//ENstring.Empty
-   SYSTEM string.Emptyhttp://www.logiqx.com/Dats/datafile.dtdstring.Empty
+   PUBLIC "" -//Logiqx//DTD ROM Management Datafile//EN""
+   SYSTEM ""http://www.logiqx.com/Dats/datafile.dtd""
 
    $Revision: 1.5 $
    $Date: 2008/10/28 21:39:16 $
@@ -42,10 +42,13 @@ namespace SabreTools.DatFiles.Formats
 
 <!ELEMENT datafile(header?, game*, machine*)>
     <!ATTLIST datafile build CDATA #IMPLIED>
-    <!ATTLIST datafile debug (yes|no) string.Emptynostring.Empty>
-    <!ELEMENT header(name, description, category?, version, date?, author, email?, homepage?, url?, comment?, clrmamepro?, romcenter?)>
+    <!ATTLIST datafile debug (yes|no) ""no"">
+    <!ELEMENT header (id?, name, description, rootdir?, type?, category?, version, date?, author, email?, homepage?, url?, comment?, clrmamepro?, romcenter?)>
+        <!ELEMENT id (#PCDATA)>
         <!ELEMENT name(#PCDATA)>
         <!ELEMENT description (#PCDATA)>
+        <!ELEMENT rootdir (#PCDATA)>
+        <!ELEMENT type (#PCDATA)>
         <!ELEMENT category (#PCDATA)>
         <!ELEMENT version (#PCDATA)>
         <!ELEMENT date (#PCDATA)>
@@ -56,38 +59,56 @@ namespace SabreTools.DatFiles.Formats
         <!ELEMENT comment (#PCDATA)>
         <!ELEMENT clrmamepro EMPTY>
             <!ATTLIST clrmamepro header CDATA #IMPLIED>
-            <!ATTLIST clrmamepro forcemerging (none|split|full) string.Emptysplitstring.Empty>
-            <!ATTLIST clrmamepro forcenodump(obsolete|required|ignore) string.Emptyobsoletestring.Empty>
-            <!ATTLIST clrmamepro forcepacking(zip|unzip) string.Emptyzipstring.Empty>
+            <!ATTLIST clrmamepro forcemerging (none|split|merged|nonmerged|fullmerged|device|full) ""split"">
+            <!ATTLIST clrmamepro forcenodump(obsolete|required|ignore) ""obsolete"">
+            <!ATTLIST clrmamepro forcepacking(zip|unzip) ""zip"">
         <!ELEMENT romcenter EMPTY>
             <!ATTLIST romcenter plugin CDATA #IMPLIED>
-            <!ATTLIST romcenter rommode (merged|split|unmerged) string.Emptysplitstring.Empty>
-            <!ATTLIST romcenter biosmode(merged|split|unmerged) string.Emptysplitstring.Empty>
-            <!ATTLIST romcenter samplemode(merged|unmerged) string.Emptymergedstring.Empty>
-            <!ATTLIST romcenter lockrommode(yes|no) string.Emptynostring.Empty>
-            <!ATTLIST romcenter lockbiosmode(yes|no) string.Emptynostring.Empty>
-            <!ATTLIST romcenter locksamplemode(yes|no) string.Emptynostring.Empty>
-    <!ELEMENT game(comment*, description, year?, manufacturer?, release*, biosset*, rom*, disk*, sample*, archive*)>
+            <!ATTLIST romcenter rommode (none|split|merged|unmerged|fullmerged|device|full) ""split"">
+            <!ATTLIST romcenter biosmode (none|split|merged|unmerged|fullmerged|device|full) ""split"">
+            <!ATTLIST romcenter samplemode (none|split|merged|unmerged|fullmerged|device|full) ""merged"">
+            <!ATTLIST romcenter lockrommode(yes|no) ""no"">
+            <!ATTLIST romcenter lockbiosmode(yes|no) ""no"">
+            <!ATTLIST romcenter locksamplemode(yes|no) ""no"">
+    <!ELEMENT game (comment*, description, year?, manufacturer?, publisher?, category?, trurip?, release*, biosset*, rom*, disk*, media*, sample*, archive*)>
         <!ATTLIST game name CDATA #REQUIRED>
         <!ATTLIST game sourcefile CDATA #IMPLIED>
-        <!ATTLIST game isbios (yes|no) string.Emptynostring.Empty>
+        <!ATTLIST game isbios (yes|no) ""no"">
         <!ATTLIST game cloneof CDATA #IMPLIED>
         <!ATTLIST game romof CDATA #IMPLIED>
         <!ATTLIST game sampleof CDATA #IMPLIED>
         <!ATTLIST game board CDATA #IMPLIED>
         <!ATTLIST game rebuildto CDATA #IMPLIED>
+        <!ATTLIST game id CDATA #IMPLIED>
+        <!ATTLIST game cloneofid CDATA #IMPLIED>
+        <!ATTLIST game runnable (no|partial|yes) ""no"" #IMPLIED>
         <!ELEMENT year (#PCDATA)>
         <!ELEMENT manufacturer (#PCDATA)>
+        <!ELEMENT publisher (#PCDATA)>
+        <!ELEMENT trurip (titleid?, publisher?, developer?, year?, genre?, subgenre?, ratings?, score?, players?, enabled?, crc?, source?, cloneof?, relatedto?)>
+            <!ELEMENT titleid (#PCDATA)>
+            <!ELEMENT developer (#PCDATA)>
+            <!ELEMENT year (#PCDATA)>
+            <!ELEMENT genre (#PCDATA)>
+            <!ELEMENT subgenre (#PCDATA)>
+            <!ELEMENT ratings (#PCDATA)>
+            <!ELEMENT score (#PCDATA)>
+            <!ELEMENT players (#PCDATA)>
+            <!ELEMENT enabled (#PCDATA)>
+            <!ELEMENT crc (#PCDATA)>
+            <!ELEMENT source (#PCDATA)>
+            <!ELEMENT cloneof (#PCDATA)>
+            <!ELEMENT relatedto (#PCDATA)>
         <!ELEMENT release EMPTY>
             <!ATTLIST release name CDATA #REQUIRED>
             <!ATTLIST release region CDATA #REQUIRED>
             <!ATTLIST release language CDATA #IMPLIED>
             <!ATTLIST release date CDATA #IMPLIED>
-            <!ATTLIST release default (yes|no) string.Emptynostring.Empty>
+            <!ATTLIST release default (yes|no) ""no"">
         <!ELEMENT biosset EMPTY>
             <!ATTLIST biosset name CDATA #REQUIRED>
             <!ATTLIST biosset description CDATA #REQUIRED>
-            <!ATTLIST biosset default (yes|no) string.Emptynostring.Empty>
+            <!ATTLIST biosset default (yes|no) ""no"">
         <!ELEMENT rom EMPTY>
             <!ATTLIST rom name CDATA #REQUIRED>
             <!ATTLIST rom size CDATA #REQUIRED>
@@ -97,28 +118,46 @@ namespace SabreTools.DatFiles.Formats
             <!ATTLIST rom sha256 CDATA #IMPLIED>
             <!ATTLIST rom sha384 CDATA #IMPLIED>
             <!ATTLIST rom sha512 CDATA #IMPLIED>
+            <!ATTLIST rom spamsum CDATA #IMPLIED>
+            <!ATTLIST rom xxh3_64 CDATA #IMPLIED>
+            <!ATTLIST rom xxh3_128 CDATA #IMPLIED>
             <!ATTLIST rom merge CDATA #IMPLIED>
-            <!ATTLIST rom status (baddump|nodump|good|verified) string.Emptygoodstring.Empty>
+            <!ATTLIST rom status (baddump|nodump|good|verified) ""good"">
+            <!ATTLIST rom serial CDATA #IMPLIED>
+            <!ATTLIST rom header CDATA #IMPLIED>
             <!ATTLIST rom date CDATA #IMPLIED>
+            <!ATTLIST rom inverted CDATA #IMPLIED>
+            <!ATTLIST rom mia CDATA #IMPLIED>
         <!ELEMENT disk EMPTY>
             <!ATTLIST disk name CDATA #REQUIRED>
             <!ATTLIST disk md5 CDATA #IMPLIED>
             <!ATTLIST disk sha1 CDATA #IMPLIED>
             <!ATTLIST disk merge CDATA #IMPLIED>
-            <!ATTLIST disk status (baddump|nodump|good|verified) string.Emptygoodstring.Empty>
+            <!ATTLIST disk status (baddump|nodump|good|verified) ""good"">
+        <!ELEMENT media EMPTY>
+            <!ATTLIST media name CDATA #REQUIRED>
+            <!ATTLIST media md5 CDATA #IMPLIED>
+            <!ATTLIST media sha1 CDATA #IMPLIED>
+            <!ATTLIST media sha256 CDATA #IMPLIED>
+            <!ATTLIST media spamsum CDATA #IMPLIED>
         <!ELEMENT sample EMPTY>
             <!ATTLIST sample name CDATA #REQUIRED>
         <!ELEMENT archive EMPTY>
             <!ATTLIST archive name CDATA #REQUIRED>
-    <!ELEMENT machine (comment*, description, year?, manufacturer?, release*, biosset*, rom*, disk*, sample*, archive*)>
-        <!ATTLIST machine name CDATA #REQUIRED>
-        <!ATTLIST machine sourcefile CDATA #IMPLIED>
-        <!ATTLIST machine isbios (yes|no) string.Emptynostring.Empty>
-        <!ATTLIST machine cloneof CDATA #IMPLIED>
-        <!ATTLIST machine romof CDATA #IMPLIED>
-        <!ATTLIST machine sampleof CDATA #IMPLIED>
-        <!ATTLIST machine board CDATA #IMPLIED>
-        <!ATTLIST machine rebuildto CDATA #IMPLIED>
+    <!ELEMENT machine (comment*, description, year?, manufacturer?, publisher?, category?, trurip?, release*, biosset*, rom*, disk*, media*, sample*, archive*)>
+        <!ATTLIST game name CDATA #REQUIRED>
+        <!ATTLIST game sourcefile CDATA #IMPLIED>
+        <!ATTLIST game isbios (yes|no) ""no"">
+        <!ATTLIST game cloneof CDATA #IMPLIED>
+        <!ATTLIST game romof CDATA #IMPLIED>
+        <!ATTLIST game sampleof CDATA #IMPLIED>
+        <!ATTLIST game board CDATA #IMPLIED>
+        <!ATTLIST game rebuildto CDATA #IMPLIED>
+        <!ATTLIST game id CDATA #IMPLIED>
+        <!ATTLIST game cloneofid CDATA #IMPLIED>
+        <!ATTLIST game runnable (no|partial|yes) ""no"" #IMPLIED>
+    <!ELEMENT dir (game*, machine*)>
+        <!ATTLIST dir name CDATA #REQUIRED>
 ";
 
         /// <summary>
@@ -467,12 +506,6 @@ namespace SabreTools.DatFiles.Formats
             MachineType machineType = 0x0;
             if (reader.GetAttribute("isbios").AsYesNo() == true)
                 machineType |= MachineType.Bios;
-
-            if (reader.GetAttribute("isdevice").AsYesNo() == true) // Listxml-specific, used by older DATs
-                machineType |= MachineType.Device;
-
-            if (reader.GetAttribute("ismechanical").AsYesNo() == true) // Listxml-specific, used by older DATs
-                machineType |= MachineType.Mechanical;
 
             string dirsString = (dirs != null && dirs.Count > 0 ? string.Join("/", dirs) + "/" : string.Empty);
             Machine machine = new()
