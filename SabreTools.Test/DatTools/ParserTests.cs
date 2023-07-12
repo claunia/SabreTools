@@ -1,8 +1,6 @@
 using System;
 using System.IO;
-
 using SabreTools.DatFiles;
-using SabreTools.DatTools;
 using Xunit;
 
 namespace SabreTools.Test.DatTools
@@ -43,7 +41,7 @@ namespace SabreTools.Test.DatTools
             if (filename != null)
                 filename = Path.Combine(Environment.CurrentDirectory, "TestData", filename);
         
-            var datFile = Parser.CreateAndParse(filename, throwOnError: true);
+            var datFile = SabreTools.DatTools.Parser.CreateAndParse(filename, throwOnError: true);
             Assert.Equal(datFormat, datFile.Header.DatFormat);
             Assert.Equal(totalCount, datFile.Items.TotalCount);
         }

@@ -49,17 +49,55 @@ namespace SabreTools.Models.ArchiveDotOrg
         [XmlElement("rotation")]
         public long? Rotation { get; set; }
 
-        [XmlElement("hocr_char_to_word_module_version")]
-        public string? hOCRCharToWordModuleVersion { get; set; }
+        #region OCR-Related
+
+        [XmlElement("cloth_cover_detection_module_version")]
+        public string? ClothCoverDetectionModuleVersion { get; set; }
 
         [XmlElement("hocr_char_to_word_hocr_version")]
         public string? hOCRCharToWordhOCRVersion { get; set; }
 
-        [XmlElement("ocr_module_version")]
-        public string? TesseractOCRModuleVersion { get; set; }
+        [XmlElement("hocr_char_to_word_module_version")]
+        public string? hOCRCharToWordModuleVersion { get; set; }
+
+        [XmlElement("hocr_fts_text_hocr_version")]
+        public string? hOCRFtsTexthOCRVersion { get; set; }
+
+        [XmlElement("hocr_fts_text_module_version")]
+        public string? hOCRFtsTextModuleVersion { get; set; }
+
+        [XmlElement("hocr_pageindex_hocr_version")]
+        public string? hOCRPageIndexhOCRVersion { get; set; }
+
+        [XmlElement("hocr_pageindex_module_version")]
+        public string? hOCRPageIndexModuleVersion { get; set; }
+
+        [XmlElement("ocr")]
+        public string? TesseractOCR { get; set; }
 
         [XmlElement("ocr_converted")]
         public string? TesseractOCRConverted { get; set; }
+
+        [XmlElement("ocr_detected_lang")]
+        public string? TesseractOCRDetectedLang { get; set; }
+
+        [XmlElement("ocr_detected_lang_conf")]
+        public string? TesseractOCRDetectedLangConf { get; set; }
+
+        [XmlElement("ocr_detected_script")]
+        public string? TesseractOCRDetectedScript { get; set; }
+
+        [XmlElement("ocr_detected_script_conf")]
+        public string? TesseractOCRDetectedScriptConf { get; set; }
+
+        [XmlElement("ocr_parameters")]
+        public string? TesseractOCRParameters { get; set; }
+
+        [XmlElement("ocr_module_version")]
+        public string? TesseractOCRModuleVersion { get; set; }
+
+        [XmlElement("pdf_module_version")]
+        public string? PDFModuleVersion { get; set; }
 
         [XmlElement("word_conf_0_10")]
         public long? WordConfidenceInterval0To10 { get; set; }
@@ -90,5 +128,19 @@ namespace SabreTools.Models.ArchiveDotOrg
 
         [XmlElement("word_conf_91_100")]
         public long? WordConfidenceInterval91To100 { get; set; }
+
+        #endregion
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }
