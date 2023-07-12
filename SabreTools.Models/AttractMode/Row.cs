@@ -1,5 +1,8 @@
 namespace SabreTools.Models.AttractMode
 {
+    /// <summary>
+    /// #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
+    /// </summary>
     public class Row
     {
         public string Name { get; set; }

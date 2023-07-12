@@ -29,11 +29,14 @@ namespace SabreTools.DatFiles.Formats
         /// <remarks>
         /// In a new style MAME listrom DAT, each game has the following format:
         /// 
-        /// ROMs required for driver "005".
+        /// ROMs required for driver "testdriver".
         /// Name                                   Size Checksum
-        /// 1346b.cpu-u25                          2048 CRC(8e68533e) SHA1(a257c556d31691068ed5c991f1fb2b51da4826db)
-        /// 6331.sound-u8                            32 BAD CRC(1d298cb0) SHA1(bb0bb62365402543e3154b9a77be9c75010e6abc) BAD_DUMP
-        /// 16v8h-blue.u24                          279 NO GOOD DUMP KNOWN
+        /// abcd.bin                               1024 CRC(00000000) SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709)
+        /// efgh.bin                               1024 BAD CRC(00000000) SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709) BAD_DUMP
+        /// ijkl.bin                               1024 NO GOOD DUMP KNOWN
+        /// abcd.chd                                    SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709)
+        /// efgh.chd                                    BAD (da39a3ee5e6b4b0d3255bfef95601890afd80709) BAD_DUMP
+        /// ijkl.chd                                    NO GOOD DUMP KNOWN
         /// </remarks>
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
