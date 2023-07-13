@@ -49,6 +49,32 @@ namespace SabreTools.Test.Parser
         }
 
         [Fact]
+        public void DosCenterDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-doscenter-files.dat.gz");
+
+            // Deserialize the file
+            var dat = Serialization.DosCenter.Deserialize(filename);
+
+            // Validate the values
+            Assert.NotNull(dat?.DosCenter);
+            Assert.Equal(34965, dat.Game.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Empty(dat.ADDITIONAL_ELEMENTS);
+            Assert.Empty(dat.DosCenter.ADDITIONAL_ELEMENTS);
+            foreach (var game in dat.Game)
+            {
+                Assert.Empty(game.ADDITIONAL_ELEMENTS);
+                foreach (var file in game.File)
+                {
+                    Assert.Empty(file.ADDITIONAL_ELEMENTS);
+                }
+            }
+        }
+
+        [Fact]
         public void ListxmlDeserializeTest()
         {
             // Open the file for reading

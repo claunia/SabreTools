@@ -175,7 +175,7 @@ namespace SabreTools.IO.Readers
                         {
                             while (++i < linegc.Length
                                 && linegc[i] != "size"
-                                && linegc[i] != "date"
+                                && !(linegc[i] == "date" && char.IsDigit(linegc[i + 1][0]))
                                 && linegc[i] != "crc")
                             {
                                 value += $" {linegc[i]}";
@@ -235,7 +235,7 @@ namespace SabreTools.IO.Readers
                     Internal[key] = value;
                     RowType = CmpRowType.Internal;
                     Standalone = null;
-                }    
+                }
 
                 InternalName = normalizedValue;
             }
