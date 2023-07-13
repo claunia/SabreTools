@@ -10,11 +10,11 @@ namespace SabreTools.Models.SoftwareList
         public string Name { get; set; }
 
         [XmlAttribute("size")]
-        public long Size { get; set; }
+        public string Size { get; set; }
         
         /// <remarks>(8|16|32|64) "8"</remarks>
         [XmlAttribute("width")]
-        public long? Width { get; set; }
+        public string? Width { get; set; }
         
         /// <remarks>(big|little) "little"</remarks>
         [XmlAttribute("endianness")]
@@ -22,5 +22,17 @@ namespace SabreTools.Models.SoftwareList
 
         [XmlElement("rom")]
         public Rom[]? Rom { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

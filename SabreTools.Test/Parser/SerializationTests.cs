@@ -261,7 +261,7 @@ namespace SabreTools.Test.Parser
                 }
             }
         }
-    
+
         [Fact]
         public void OpenMSXDeserializeTest()
         {
@@ -316,6 +316,95 @@ namespace SabreTools.Test.Parser
                     {
                         Assert.Null(dump.SCCPlusCart.ADDITIONAL_ATTRIBUTES);
                         Assert.Null(dump.SCCPlusCart.ADDITIONAL_ELEMENTS);
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void SoftwareListDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-softwarelist-files.xml");
+            using var fs = System.IO.File.OpenRead(filename);
+            using var xr = System.Xml.XmlReader.Create(fs, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
+
+            // Setup the serializer
+            var serializer = new XmlSerializer(typeof(Models.SoftwareList.SoftwareList));
+
+            // Deserialize the file
+            var dat = serializer.Deserialize(xr) as Models.SoftwareList.SoftwareList;
+
+            // Validate the values
+            Assert.NotNull(dat);
+            Assert.NotNull(dat.Software);
+            Assert.Equal(5447, dat.Software.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
+            Assert.Null(dat.ADDITIONAL_ELEMENTS);
+            foreach (var software in dat.Software)
+            {
+                Assert.Null(software.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(software.ADDITIONAL_ELEMENTS);
+
+                foreach (var info in software.Info ?? Array.Empty<Models.SoftwareList.Info>())
+                {
+                    Assert.Null(info.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(info.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var sharedfeat in software.SharedFeat ?? Array.Empty<Models.SoftwareList.SharedFeat>())
+                {
+                    Assert.Null(sharedfeat.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(sharedfeat.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var part in software.Part ?? Array.Empty<Models.SoftwareList.Part>())
+                {
+                    Assert.Null(part.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(part.ADDITIONAL_ELEMENTS);
+
+                    foreach (var feature in part.Feature ?? Array.Empty<Models.SoftwareList.Feature>())
+                    {
+                        Assert.Null(feature.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(feature.ADDITIONAL_ELEMENTS);
+                    }
+
+                    foreach (var dataarea in part.DataArea ?? Array.Empty<Models.SoftwareList.DataArea>())
+                    {
+                        Assert.Null(dataarea.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(dataarea.ADDITIONAL_ELEMENTS);
+
+                        foreach (var rom in dataarea.Rom ?? Array.Empty<Models.SoftwareList.Rom>())
+                        {
+                            Assert.Null(rom.ADDITIONAL_ATTRIBUTES);
+                            Assert.Null(rom.ADDITIONAL_ELEMENTS);
+                        }
+                    }
+
+                    foreach (var diskarea in part.DiskArea ?? Array.Empty<Models.SoftwareList.DiskArea>())
+                    {
+                        Assert.Null(diskarea.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(diskarea.ADDITIONAL_ELEMENTS);
+
+                        foreach (var disk in diskarea.Disk ?? Array.Empty<Models.SoftwareList.Disk>())
+                        {
+                            Assert.Null(disk.ADDITIONAL_ATTRIBUTES);
+                            Assert.Null(disk.ADDITIONAL_ELEMENTS);
+                        }
+                    }
+
+                    foreach (var dipswitch in part.DipSwitch ?? Array.Empty<Models.SoftwareList.DipSwitch>())
+                    {
+                        Assert.Null(dipswitch.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(dipswitch.ADDITIONAL_ELEMENTS);
+
+                        foreach (var dipvalue in dipswitch.DipValue ?? Array.Empty<Models.SoftwareList.DipValue>())
+                        {
+                            Assert.Null(dipvalue.ADDITIONAL_ATTRIBUTES);
+                            Assert.Null(dipvalue.ADDITIONAL_ELEMENTS);
+                        }
                     }
                 }
             }
