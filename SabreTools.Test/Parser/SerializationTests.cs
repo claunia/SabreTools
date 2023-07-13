@@ -75,6 +75,26 @@ namespace SabreTools.Test.Parser
             }
         }
 
+        [Fact]
+        public void EverdriveSMDBDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-smdb-files.txt");
+
+            // Deserialize the file
+            var dat = Serialization.EverdriveSMDB.Deserialize(filename);
+
+            // Validate the values
+            Assert.NotNull(dat?.Row);
+            Assert.Equal(6113, dat.Row.Length);
+
+            // Validate we're not missing any attributes or elements
+            foreach (var file in dat.Row)
+            {
+                Assert.Null(file.ADDITIONAL_ELEMENTS);
+            }
+        }
+
         [Theory]
         [InlineData("test-sfv.sfv", Hash.CRC)]
         [InlineData("test-md5.md5", Hash.MD5)]
