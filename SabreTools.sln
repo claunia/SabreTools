@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Test", "SabreToo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Models", "SabreTools.Models\SabreTools.Models.csproj", "{EF2EFD36-B6C4-4555-8604-2DDCA3AD6518}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SabreTools.Serialization", "SabreTools.Serialization\SabreTools.Serialization.csproj", "{E610285C-10E6-4724-B22C-4EADC11789B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,6 +170,14 @@ Global
 		{EF2EFD36-B6C4-4555-8604-2DDCA3AD6518}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF2EFD36-B6C4-4555-8604-2DDCA3AD6518}.Release|x64.ActiveCfg = Release|Any CPU
 		{EF2EFD36-B6C4-4555-8604-2DDCA3AD6518}.Release|x64.Build.0 = Release|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Debug|x64.Build.0 = Debug|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|x64.ActiveCfg = Release|Any CPU
+		{E610285C-10E6-4724-B22C-4EADC11789B1}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
