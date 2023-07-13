@@ -11,17 +11,12 @@ namespace SabreTools.Test.Parser
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-archivedotorg-files.xml");
-            using var fs = System.IO.File.OpenRead(filename);
-
-            // Setup the serializer
-            var serializer = new XmlSerializer(typeof(Models.ArchiveDotOrg.Files));
 
             // Deserialize the file
-            var dat = serializer.Deserialize(fs) as Models.ArchiveDotOrg.Files;
+            var dat = Serialization.ArchiveDotOrg.Deserialize(filename);
 
             // Validate the values
-            Assert.NotNull(dat);
-            Assert.NotNull(dat.File);
+            Assert.NotNull(dat?.File);
             Assert.Equal(22, dat.File.Length);
 
             // Validate we're not missing any attributes or elements
@@ -39,19 +34,12 @@ namespace SabreTools.Test.Parser
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-listxml-files.xml.gz");
-            using var fs = System.IO.File.OpenRead(filename);
-            using var gz = new System.IO.Compression.GZipStream(fs, System.IO.Compression.CompressionMode.Decompress);
-            using var xr = System.Xml.XmlReader.Create(gz, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
-
-            // Setup the serializer
-            var serializer = new XmlSerializer(typeof(Models.Listxml.Mame));
 
             // Deserialize the file
-            var dat = serializer.Deserialize(xr) as Models.Listxml.Mame;
+            var dat = Serialization.Listxml.Deserialize(filename);
 
             // Validate the values
-            Assert.NotNull(dat);
-            Assert.NotNull(dat.Machine);
+            Assert.NotNull(dat?.Machine);
             Assert.Equal(45861, dat.Machine.Length);
 
             // Validate we're not missing any attributes or elements
@@ -267,19 +255,12 @@ namespace SabreTools.Test.Parser
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-offlinelist-files.xml");
-            using var fs = System.IO.File.OpenRead(filename);
-            using var xr = System.Xml.XmlReader.Create(fs, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
-
-            // Setup the serializer
-            var serializer = new XmlSerializer(typeof(Models.OfflineList.Dat));
 
             // Deserialize the file
-            var dat = serializer.Deserialize(xr) as Models.OfflineList.Dat;
+            var dat = Serialization.OfflineList.Deserialize(filename);
 
             // Validate the values
-            Assert.NotNull(dat);
-            Assert.NotNull(dat.Games);
-            Assert.NotNull(dat.Games.Game);
+            Assert.NotNull(dat?.Games?.Game);
             Assert.Equal(6750, dat.Games.Game.Length);
 
             // Validate we're not missing any attributes or elements
@@ -478,14 +459,9 @@ namespace SabreTools.Test.Parser
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-openmsx-files.xml");
-            using var fs = System.IO.File.OpenRead(filename);
-            using var xr = System.Xml.XmlReader.Create(fs, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
-
-            // Setup the serializer
-            var serializer = new XmlSerializer(typeof(Models.OpenMSX.SoftwareDb));
 
             // Deserialize the file
-            var dat = serializer.Deserialize(xr) as Models.OpenMSX.SoftwareDb;
+            var dat = Serialization.OpenMSX.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat);
@@ -537,14 +513,9 @@ namespace SabreTools.Test.Parser
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-softwarelist-files.xml");
-            using var fs = System.IO.File.OpenRead(filename);
-            using var xr = System.Xml.XmlReader.Create(fs, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
-
-            // Setup the serializer
-            var serializer = new XmlSerializer(typeof(Models.SoftwareList.SoftwareList));
 
             // Deserialize the file
-            var dat = serializer.Deserialize(xr) as Models.SoftwareList.SoftwareList;
+            var dat = Serialization.SoftawreList.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat);

@@ -14,6 +14,7 @@
     <ProjectReference Include="..\SabreTools.Filtering\SabreTools.Filtering.csproj" />
     <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Models\SabreTools.Models.csproj" />
+    <ProjectReference Include="..\SabreTools.Serialization\SabreTools.Serialization.csproj" />
     <ProjectReference Include="..\SabreTools.Skippers\SabreTools.Skippers.csproj" />
   </ItemGroup>
 
