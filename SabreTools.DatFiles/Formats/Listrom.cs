@@ -34,9 +34,9 @@ namespace SabreTools.DatFiles.Formats
         /// abcd.bin                               1024 CRC(00000000) SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709)
         /// efgh.bin                               1024 BAD CRC(00000000) SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709) BAD_DUMP
         /// ijkl.bin                               1024 NO GOOD DUMP KNOWN
-        /// abcd.chd                                    SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709)
-        /// efgh.chd                                    BAD (da39a3ee5e6b4b0d3255bfef95601890afd80709) BAD_DUMP
-        /// ijkl.chd                                    NO GOOD DUMP KNOWN
+        /// abcd                                        SHA1(da39a3ee5e6b4b0d3255bfef95601890afd80709)
+        /// efgh                                        BAD (da39a3ee5e6b4b0d3255bfef95601890afd80709) BAD_DUMP
+        /// ijkl                                        NO GOOD DUMP KNOWN
         /// </remarks>
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
