@@ -15,7 +15,7 @@ namespace SabreTools.Models.Listxml
 
         /// <remarks>(0|90|180|270)</remarks>
         [XmlAttribute("rotate")]
-        public long? Rotate { get; set; }
+        public string? Rotate { get; set; }
 
         /// <remarks>(yes|no) "no"</remarks>
         [XmlAttribute("flipx")]
@@ -60,5 +60,17 @@ namespace SabreTools.Models.Listxml
         /// <remarks>Numeric?</remarks>
         [XmlAttribute("vbstart")]
         public string? VBStart { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

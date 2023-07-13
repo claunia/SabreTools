@@ -1,0 +1,20 @@
+# SabreTools.Models
+
+This library comprises of models that represent either directly serializable or representative structures for all DAT types. This library is currently unused by any other library in SabreTools, as there are no ways of properly dealing with conversion between models, filtering, or many of the other features. All of the main models representing metadata files should have parsers created outside of the current code. The parser code will likely be partially patterned off of the code being used to create the serialization tests.
+
+In each completed model, there is a section that looks like the following:
+```
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
+```
+
+This code should be removed before the models are used. This is only included during debugging and implementation as to ensure that there are no notable holes in the models that would disallow 1:1 replication of inputs.
