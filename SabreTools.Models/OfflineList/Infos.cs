@@ -18,6 +18,9 @@ namespace SabreTools.Models.OfflineList
         [XmlElement("sourceRom")]
         public SourceRom? SourceRom { get; set; }
 
+        [XmlElement("saveType")]
+        public SaveType? SaveType { get; set; }
+
         [XmlElement("romSize")]
         public RomSize? RomSize { get; set; }
 
@@ -41,5 +44,17 @@ namespace SabreTools.Models.OfflineList
 
         [XmlElement("languages")]
         public Languages? Languages { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

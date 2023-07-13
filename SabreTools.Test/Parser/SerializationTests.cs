@@ -263,6 +263,217 @@ namespace SabreTools.Test.Parser
         }
 
         [Fact]
+        public void OfflineListDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-offlinelist-files.xml");
+            using var fs = System.IO.File.OpenRead(filename);
+            using var xr = System.Xml.XmlReader.Create(fs, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
+
+            // Setup the serializer
+            var serializer = new XmlSerializer(typeof(Models.OfflineList.Dat));
+
+            // Deserialize the file
+            var dat = serializer.Deserialize(xr) as Models.OfflineList.Dat;
+
+            // Validate the values
+            Assert.NotNull(dat);
+            Assert.NotNull(dat.Games);
+            Assert.NotNull(dat.Games.Game);
+            Assert.Equal(6750, dat.Games.Game.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
+            Assert.Null(dat.ADDITIONAL_ELEMENTS);
+            if (dat.Configuration != null)
+            {
+                var configuration = dat.Configuration;
+                Assert.Null(configuration.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(configuration.ADDITIONAL_ELEMENTS);
+
+                if (configuration.Infos != null)
+                {
+                    var infos = configuration.Infos;
+                    Assert.Null(infos.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(infos.ADDITIONAL_ELEMENTS);
+
+                    if (infos.Title != null)
+                    {
+                        var title = infos.Title;
+                        Assert.Null(title.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(title.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.Location != null)
+                    {
+                        var location = infos.Location;
+                        Assert.Null(location.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(location.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.Publisher != null)
+                    {
+                        var publisher = infos.Publisher;
+                        Assert.Null(publisher.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(publisher.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.SourceRom != null)
+                    {
+                        var sourceRom = infos.SourceRom;
+                        Assert.Null(sourceRom.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(sourceRom.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.SaveType != null)
+                    {
+                        var saveType = infos.SaveType;
+                        Assert.Null(saveType.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(saveType.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.RomSize != null)
+                    {
+                        var romSize = infos.RomSize;
+                        Assert.Null(romSize.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(romSize.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.ReleaseNumber != null)
+                    {
+                        var releaseNumber = infos.ReleaseNumber;
+                        Assert.Null(releaseNumber.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(releaseNumber.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.LanguageNumber != null)
+                    {
+                        var languageNumber = infos.LanguageNumber;
+                        Assert.Null(languageNumber.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(languageNumber.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.Comment != null)
+                    {
+                        var comment = infos.Comment;
+                        Assert.Null(comment.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(comment.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.RomCRC != null)
+                    {
+                        var romCRC = infos.RomCRC;
+                        Assert.Null(romCRC.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(romCRC.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.Im1CRC != null)
+                    {
+                        var im1CRC = infos.Im1CRC;
+                        Assert.Null(im1CRC.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(im1CRC.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.Im2CRC != null)
+                    {
+                        var im2CRC = infos.Im2CRC;
+                        Assert.Null(im2CRC.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(im2CRC.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (infos.Languages != null)
+                    {
+                        var languages = infos.Languages;
+                        Assert.Null(languages.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(languages.ADDITIONAL_ELEMENTS);
+                    }
+                }
+
+                if (configuration.CanOpen != null)
+                {
+                    var canOpen = configuration.CanOpen;
+                    Assert.Null(canOpen.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(canOpen.ADDITIONAL_ELEMENTS);
+                }
+
+                if (configuration.NewDat != null)
+                {
+                    var newDat = configuration.NewDat;
+                    Assert.Null(newDat.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(newDat.ADDITIONAL_ELEMENTS);
+
+                    if (newDat.DatUrl != null)
+                    {
+                        var datURL = newDat.DatUrl;
+                        Assert.Null(datURL.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(datURL.ADDITIONAL_ELEMENTS);
+                    }
+                }
+
+                if (configuration.Search != null)
+                {
+                    var search = configuration.Search;
+                    Assert.Null(search.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(search.ADDITIONAL_ELEMENTS);
+
+                    foreach (var to in search.To ?? Array.Empty<Models.OfflineList.To>())
+                    {
+                        Assert.Null(to.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(to.ADDITIONAL_ELEMENTS);
+
+                        foreach (var find in to.Find ?? Array.Empty<Models.OfflineList.Find>())
+                        {
+                            Assert.Null(find.ADDITIONAL_ATTRIBUTES);
+                            Assert.Null(find.ADDITIONAL_ELEMENTS);
+                        }
+                    }
+                }
+            }
+
+            Assert.Null(dat.Games.ADDITIONAL_ATTRIBUTES);
+            Assert.Null(dat.Games.ADDITIONAL_ELEMENTS);
+
+            foreach (var game in dat.Games.Game)
+            {
+                Assert.Null(game.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(game.ADDITIONAL_ELEMENTS);
+
+                if (game.Files != null)
+                {
+                    var files = game.Files;
+                    Assert.Null(files.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(files.ADDITIONAL_ELEMENTS);
+
+                    foreach (var romCRC in files.RomCRC ?? Array.Empty<Models.OfflineList.FileRomCRC>())
+                    {
+                        Assert.Null(romCRC.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(romCRC.ADDITIONAL_ELEMENTS);
+                    }
+                }
+            }
+
+            if (dat.GUI != null)
+            {
+                var gui = dat.GUI;
+                Assert.Null(gui.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(gui.ADDITIONAL_ELEMENTS);
+
+                if (gui.Images != null)
+                {
+                    var images = gui.Images;
+                    Assert.Null(images.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(images.ADDITIONAL_ELEMENTS);
+
+                    foreach (var image in images.Image ?? Array.Empty<Models.OfflineList.Image>())
+                    {
+                        Assert.Null(image.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(image.ADDITIONAL_ELEMENTS);
+                    }
+                }
+            }
+        }
+
+        [Fact]
         public void OpenMSXDeserializeTest()
         {
             // Open the file for reading

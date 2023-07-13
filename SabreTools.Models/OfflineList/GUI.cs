@@ -3,11 +3,11 @@ using System.Xml.Serialization;
 
 namespace SabreTools.Models.OfflineList
 {
-    [XmlRoot("games")]
-    public class Games
+    [XmlRoot("gui")]
+    public class GUI
     {
-        [XmlElement("game")]
-        public Game[]? Game { get; set; }
+        [XmlElement("images")]
+        public Images? Images { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

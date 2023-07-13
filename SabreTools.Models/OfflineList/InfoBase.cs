@@ -5,14 +5,29 @@ namespace SabreTools.Models.OfflineList
 {
     public class InfoBase
     {
+        /// <remarks>Boolean</remarks>
         [XmlAttribute("visible")]
-        public bool? Visible { get; set; }
+        public string? Visible { get; set; }
 
+        /// <remarks>Boolean</remarks>
         [XmlAttribute("inNamingOption")]
-        public bool? InNamingOption { get; set; }
+        public string? InNamingOption { get; set; }
 
+        /// <remarks>Boolean</remarks>
         [XmlAttribute("default")]
-        public bool? Default { get; set; }
+        public string? Default { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 
     [XmlRoot("title")]
@@ -26,6 +41,9 @@ namespace SabreTools.Models.OfflineList
 
     [XmlRoot("sourceRom")]
     public class SourceRom : InfoBase { }
+
+    [XmlRoot("saveType")]
+    public class SaveType : InfoBase { }
 
     [XmlRoot("romSize")]
     public class RomSize : InfoBase { }
