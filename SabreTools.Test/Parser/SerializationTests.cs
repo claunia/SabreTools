@@ -1,4 +1,5 @@
 using System;
+using SabreTools.Core;
 using Xunit;
 
 namespace SabreTools.Test.Parser
@@ -71,6 +72,53 @@ namespace SabreTools.Test.Parser
                 {
                     Assert.Empty(file.ADDITIONAL_ELEMENTS);
                 }
+            }
+        }
+
+        [Theory]
+        [InlineData("test-sfv.sfv", Hash.CRC)]
+        [InlineData("test-md5.md5", Hash.MD5)]
+        [InlineData("test-sha1.sha1", Hash.SHA1)]
+        [InlineData("test-sha256.sha256", Hash.SHA256)]
+        [InlineData("test-sha384.sha384", Hash.SHA384)]
+        [InlineData("test-sha512.sha512", Hash.SHA512)]
+        [InlineData("test-spamsum.spamsum", Hash.SpamSum)]
+        public void HashfileDeserializeTest(string file, Hash hash)
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", file);
+
+            // Deserialize the file
+            var dat = Serialization.Hashfile.Deserialize(filename, hash);
+
+            // Validate the values
+            Assert.NotNull(dat);
+
+            switch (hash)
+            {
+                case Hash.CRC:
+                    Assert.Single(dat.SFV);
+                    break;
+                case Hash.MD5:
+                    Assert.Single(dat.MD5);
+                    break;
+                case Hash.SHA1:
+                    Assert.Single(dat.SHA1);
+                    break;
+                case Hash.SHA256:
+                    Assert.Single(dat.SHA256);
+                    break;
+                case Hash.SHA384:
+                    Assert.Single(dat.SHA384);
+                    break;
+                case Hash.SHA512:
+                    Assert.Single(dat.SHA512);
+                    break;
+                case Hash.SpamSum:
+                    Assert.Single(dat.SpamSum);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(hash));
             }
         }
 
