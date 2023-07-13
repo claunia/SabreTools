@@ -5,9 +5,9 @@ using System.Xml.Serialization;
 namespace SabreTools.Serialization
 {
     /// <summary>
-    /// XML deserializer for nullable types
+    /// XML serializer for nullable types
     /// </summary>
-    public abstract class Serializer<T>
+    public abstract class XmlSerializer<T>
     {
         /// <summary>
         /// Deserializes an XML file to the defined type
