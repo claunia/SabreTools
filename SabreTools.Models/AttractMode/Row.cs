@@ -1,10 +1,8 @@
 namespace SabreTools.Models.AttractMode
 {
-    /// <summary>
-    /// #Name;Title;Emulator;CloneOf;Year;Manufacturer;Category;Players;Rotation;Control;Status;DisplayCount;DisplayType;AltRomname;AltTitle;Extra;Buttons
-    /// </summary>
     public class Row
     {
+        /// <remarks>Also called Romname</remarks>
         public string Name { get; set; }
 
         public string Title { get; set; }
@@ -38,5 +36,22 @@ namespace SabreTools.Models.AttractMode
         public string Extra { get; set; }
 
         public string Buttons { get; set; }
+
+        public string Favorite { get; set; }
+
+        public string Tags { get; set; }
+
+        public string PlayedCount { get; set; }
+
+        public string PlayedTime { get; set; }
+
+        public string FileIsAvailable { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        public string[] ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

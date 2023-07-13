@@ -1,5 +1,4 @@
 using System;
-using System.Xml.Serialization;
 using Xunit;
 
 namespace SabreTools.Test.Parser
@@ -25,6 +24,26 @@ namespace SabreTools.Test.Parser
             foreach (var file in dat.File)
             {
                 Assert.Null(file.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(file.ADDITIONAL_ELEMENTS);
+            }
+        }
+
+        [Fact]
+        public void AttractModeDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-attractmode-files.txt");
+
+            // Deserialize the file
+            var dat = Serialization.AttractMode.Deserialize(filename);
+
+            // Validate the values
+            Assert.NotNull(dat?.Row);
+            Assert.Equal(11, dat.Row.Length);
+
+            // Validate we're not missing any attributes or elements
+            foreach (var file in dat.Row)
+            {
                 Assert.Null(file.ADDITIONAL_ELEMENTS);
             }
         }
