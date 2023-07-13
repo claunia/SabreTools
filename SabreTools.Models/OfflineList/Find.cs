@@ -13,6 +13,7 @@ namespace SabreTools.Models.OfflineList
         [XmlAttribute("value")]
         public string? Value { get; set; }
 
+        [XmlText]
         public string? Content { get; set; }
     }
 }

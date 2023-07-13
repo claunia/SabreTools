@@ -41,7 +41,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-listxml-files.xml.gz");
             using var fs = System.IO.File.OpenRead(filename);
             using var gz = new System.IO.Compression.GZipStream(fs, System.IO.Compression.CompressionMode.Decompress);
-            using var xr = System.Xml.XmlReader.Create(gz, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Parse });
+            using var xr = System.Xml.XmlReader.Create(gz, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
 
             // Setup the serializer
             var serializer = new XmlSerializer(typeof(Models.Listxml.Mame));
@@ -258,6 +258,65 @@ namespace SabreTools.Test.Parser
                 {
                     Assert.Null(ramoption.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(ramoption.ADDITIONAL_ELEMENTS);
+                }
+            }
+        }
+    
+        [Fact]
+        public void OpenMSXDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-openmsx-files.xml");
+            using var fs = System.IO.File.OpenRead(filename);
+            using var xr = System.Xml.XmlReader.Create(fs, new System.Xml.XmlReaderSettings { DtdProcessing = System.Xml.DtdProcessing.Ignore });
+
+            // Setup the serializer
+            var serializer = new XmlSerializer(typeof(Models.OpenMSX.SoftwareDb));
+
+            // Deserialize the file
+            var dat = serializer.Deserialize(xr) as Models.OpenMSX.SoftwareDb;
+
+            // Validate the values
+            Assert.NotNull(dat);
+            Assert.NotNull(dat.Software);
+            Assert.Equal(2550, dat.Software.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
+            Assert.Null(dat.ADDITIONAL_ELEMENTS);
+            foreach (var software in dat.Software)
+            {
+                Assert.Null(software.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(software.ADDITIONAL_ELEMENTS);
+
+                foreach (var dump in software.Dump ?? Array.Empty<Models.OpenMSX.Dump>())
+                {
+                    Assert.Null(dump.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(dump.ADDITIONAL_ELEMENTS);
+
+                    if (dump.Original != null)
+                    {
+                        Assert.Null(dump.Original.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(dump.Original.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (dump.Rom != null)
+                    {
+                        Assert.Null(dump.Rom.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(dump.Rom.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (dump.MegaRom != null)
+                    {
+                        Assert.Null(dump.MegaRom.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(dump.MegaRom.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (dump.SCCPlusCart != null)
+                    {
+                        Assert.Null(dump.SCCPlusCart.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(dump.SCCPlusCart.ADDITIONAL_ELEMENTS);
+                    }
                 }
             }
         }

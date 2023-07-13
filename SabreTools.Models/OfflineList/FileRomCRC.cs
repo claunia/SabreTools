@@ -9,6 +9,7 @@ namespace SabreTools.Models.OfflineList
         [XmlAttribute("extension")]
         public string? Extension { get; set; }
 
+        [XmlText]
         public string? Content { get; set; }
     }
 }

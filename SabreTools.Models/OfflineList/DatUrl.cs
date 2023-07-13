@@ -9,6 +9,7 @@ namespace SabreTools.Models.OfflineList
         [XmlAttribute("fileName")]
         public string? FileName { get; set; }
 
+        [XmlText]
         public string? Content { get; set; }
     }
 }
