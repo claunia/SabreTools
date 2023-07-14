@@ -817,6 +817,32 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
+        [InlineData("test-csv-files1.csv", ',', 2)]
+        [InlineData("test-csv-files2.csv", ',', 2)]
+        [InlineData("test-ssv-files1.ssv", ';', 2)]
+        [InlineData("test-ssv-files2.ssv", ';', 2)]
+        [InlineData("test-tsv-files2.tsv", '\t', 2)]
+        [InlineData("test-tsv-files1.tsv", '\t', 2)]
+        public void SeparatedValueDeserializeTest(string path, char delim, long count)
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
+
+            // Deserialize the file
+            var dat = Serialization.SeparatedValue.Deserialize(filename, delim);
+
+            // Validate the values
+            Assert.NotNull(dat);
+            Assert.Equal(count, dat.Row.Length);
+
+            // Validate we're not missing any attributes or elements
+            foreach (var rom in dat.Row ?? Array.Empty<Models.SeparatedValue.Row>())
+            {
+                Assert.Null(rom.ADDITIONAL_ELEMENTS);
+            }
+        }
+
+        [Theory]
         [InlineData("test-softwarelist-files1.xml", 4531)]
         [InlineData("test-softwarelist-files2.xml", 2797)]
         [InlineData("test-softwarelist-files3.xml", 274)]

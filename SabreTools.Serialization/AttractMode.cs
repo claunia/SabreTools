@@ -73,7 +73,7 @@ namespace SabreTools.Serialization
                         break;
 
                     // Parse the line into a row
-                    Row row = null;
+                    Row? row = null;
                     if (reader.Line.Count < HeaderWithRomnameCount)
                     {
                         row = new Row
