@@ -4,7 +4,7 @@ using Xunit;
 
 namespace SabreTools.Test.Parser
 {
-    public class SerializationTests
+    public class DeserializationTests
     {
         [Fact]
         public void ArchiveDotOrgDeserializeTest()
