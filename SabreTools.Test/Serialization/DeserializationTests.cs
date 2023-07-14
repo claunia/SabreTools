@@ -429,6 +429,87 @@ namespace SabreTools.Test.Parser
             }
         }
 
+        [Theory]
+        [InlineData("test-logiqx-files1.xml.gz", 45875)]
+        [InlineData("test-logiqx-files2.xml", 761)]
+        public void LogiqxDeserializeTest(string file, long count)
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", file);
+
+            // Deserialize the file
+            var dat = Serialization.Logiqx.Deserialize(filename);
+
+            // Validate the values
+            Assert.NotNull(dat?.Game);
+            Assert.Equal(count, dat.Game.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
+            Assert.Null(dat.ADDITIONAL_ELEMENTS);
+            if (dat.Header != null)
+            {
+                var header = dat.Header;
+                Assert.Null(header.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(header.ADDITIONAL_ELEMENTS);
+
+                if (header.ClrMamePro != null)
+                {
+                    var cmp = header.ClrMamePro;
+                    Assert.Null(cmp.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(cmp.ADDITIONAL_ELEMENTS);
+                }
+
+                if (header.RomCenter != null)
+                {
+                    var rc = header.RomCenter;
+                    Assert.Null(rc.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(rc.ADDITIONAL_ELEMENTS);
+                }
+            }
+
+            foreach (var game in dat.Game)
+            {
+                Assert.Null(game.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(game.ADDITIONAL_ELEMENTS);
+
+                foreach (var item in game.Item ?? Array.Empty<Models.Logiqx.ItemBase>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                if (game.Trurip != null)
+                {
+                    var trurip = game.Trurip;
+                    Assert.Null(trurip.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(trurip.ADDITIONAL_ELEMENTS);
+                }
+            }
+
+            foreach (var dir in dat.Dir ?? Array.Empty<Models.Logiqx.Dir>())
+            {
+                foreach (var game in dir.Game)
+                {
+                    Assert.Null(game.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(game.ADDITIONAL_ELEMENTS);
+
+                    foreach (var item in game.Item ?? Array.Empty<Models.Logiqx.ItemBase>())
+                    {
+                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    }
+
+                    if (game.Trurip != null)
+                    {
+                        var trurip = game.Trurip;
+                        Assert.Null(trurip.ADDITIONAL_ATTRIBUTES);
+                        Assert.Null(trurip.ADDITIONAL_ELEMENTS);
+                    }
+                }
+            }
+        }
+
         [Fact]
         public void OfflineListDeserializeTest()
         {
@@ -692,13 +773,13 @@ namespace SabreTools.Test.Parser
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
             if (dat.Credits != null)
                 Assert.Empty(dat.Credits.ADDITIONAL_ELEMENTS);
-            
+
             if (dat.Dat != null)
                 Assert.Empty(dat.Dat.ADDITIONAL_ELEMENTS);
-            
+
             if (dat.Emulator != null)
                 Assert.Empty(dat.Emulator.ADDITIONAL_ELEMENTS);
-            
+
             if (dat.Games != null)
             {
                 Assert.Empty(dat.Games.ADDITIONAL_ELEMENTS);
@@ -709,11 +790,14 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void SoftwareListDeserializeTest()
+        [Theory]
+        [InlineData("test-softwarelist-files1.xml", 4531)]
+        [InlineData("test-softwarelist-files2.xml", 2797)]
+        [InlineData("test-softwarelist-files3.xml", 274)]
+        public void SoftwareListDeserializeTest(string file, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-softwarelist-files.xml");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", file);
 
             // Deserialize the file
             var dat = Serialization.SoftawreList.Deserialize(filename);
@@ -721,7 +805,7 @@ namespace SabreTools.Test.Parser
             // Validate the values
             Assert.NotNull(dat);
             Assert.NotNull(dat.Software);
-            Assert.Equal(5447, dat.Software.Length);
+            Assert.Equal(count, dat.Software.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Null(dat.ADDITIONAL_ATTRIBUTES);

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SabreTools.Models.Logiqx
 {
     [XmlRoot("disk")]
-    public class Disk
+    public class Disk : ItemBase
     {
         [XmlAttribute("name")]
         public string Name { get; set; }
@@ -21,5 +21,13 @@ namespace SabreTools.Models.Logiqx
         /// <remarks>(baddump|nodump|good|verified) "good"</remarks>
         [XmlAttribute("status")]
         public string? Status { get; set; }
+
+        #region MAME Extensions
+
+        /// <remarks>Appears after Status</remarks>
+        [XmlAttribute("region")]
+        public string? Region { get; set; }
+
+        #endregion
     }
 }

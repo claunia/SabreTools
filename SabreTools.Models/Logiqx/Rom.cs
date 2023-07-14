@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SabreTools.Models.Logiqx
 {
     [XmlRoot("rom")]
-    public class Rom
+    public class Rom : ItemBase
     {
         [XmlAttribute("name")]
         public string Name { get; set; }
@@ -79,11 +79,11 @@ namespace SabreTools.Models.Logiqx
 
         /// <remarks>Boolean; Appears after Date</remarks>
         [XmlAttribute("inverted")]
-        public bool? Inverted { get; set; }
+        public string? Inverted { get; set; }
 
         /// <remarks>Boolean; Appears after Inverted</remarks>
         [XmlAttribute("mia")]
-        public bool? MIA { get; set; }
+        public string? MIA { get; set; }
 
         #endregion
     }

@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace SabreTools.Models.Logiqx
 {
     [XmlRoot("release")]
-    public class Release
+    public class Release : ItemBase
     {
         [XmlAttribute("name")]
         public string Name { get; set; }

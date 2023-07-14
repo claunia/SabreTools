@@ -16,17 +16,34 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("header")]
         public Header? Header { get; set; }
 
-        [XmlElement("game")]
-        public Game[]? Game { get; set; }
+        [XmlElement("game", typeof(Game))]
+        [XmlElement("machine", typeof(Machine))]
+        public GameBase[]? Game { get; set; }
 
-        [XmlElement("machine")]
-        public Machine[]? Machine { get; set; }
+        #region No-Intro Extensions
+
+        /// <remarks>Appears after Debug</remarks>
+        [XmlAttribute(Namespace = "http://www.w3.org/2001/XMLSchema-instance", AttributeName = "schemaLocation")]
+        public string? SchemaLocation { get; set; }
+
+        #endregion
 
         #region RomVault Extensions
 
-        /// <remarks>Boolean; Appears after Header</remarks>
-        [XmlAttribute("dir")]
+        [XmlElement("dir")]
         public Dir[]? Dir { get; set; }
+
+        #endregion
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
 
         #endregion
     }
