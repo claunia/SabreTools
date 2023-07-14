@@ -1,6 +1,6 @@
 namespace SabreTools.Models.Listrom
 {
-    public class Dat
+    public class MetadataFile
     {
         public Set[]? Set { get; set; }
 

@@ -1,6 +1,6 @@
 namespace SabreTools.Models.EverdriveSMDB
 {
-    public class Dat
+    public class MetadataFile
     {
         public Row[]? Row { get; set; }
     }
