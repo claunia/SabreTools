@@ -16,7 +16,7 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="path">Path to the file to deserialize</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static Dat? Deserialize(string path)
+        public static MetadataFile? Deserialize(string path)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="stream">Stream to deserialize</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static Dat? Deserialize(Stream? stream)
+        public static MetadataFile? Deserialize(Stream? stream)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace SabreTools.Serialization
 
                 // Setup the reader and output
                 var reader = new StreamReader(stream, Encoding.UTF8);
-                var dat = new Dat();
+                var dat = new MetadataFile();
 
                 Set? set = null;
                 var sets = new List<Set?>();

@@ -17,7 +17,7 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="path">Path to the file to deserialize</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static Dat? Deserialize(string path)
+        public static MetadataFile? Deserialize(string path)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="stream">Stream to deserialize</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static Dat? Deserialize(Stream? stream)
+        public static MetadataFile? Deserialize(Stream? stream)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace SabreTools.Serialization
                     Separator = '\t',
                     VerifyFieldCount = false,
                 };
-                var dat = new Dat();
+                var dat = new MetadataFile();
 
                 // Loop through the rows and parse out values
                 var rows = new List<Row>();
