@@ -4,6 +4,10 @@ using Xunit;
 
 namespace SabreTools.Test.Parser
 {
+    /// <remarks>
+    /// Filenames that end in `-files` are real examples.
+    /// All other files are artificial and may not fully represent real examples.
+    /// </remarks>
     public class DeserializationTests
     {
         [Theory]
@@ -150,9 +154,9 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
-        [InlineData("test-sfv.sfv", Hash.CRC, 1)]
-        [InlineData("test-md5.md5", Hash.MD5, 1)]
-        [InlineData("test-sha1.sha1", Hash.SHA1, 1)]
+        [InlineData("test-sfv-files.sfv", Hash.CRC, 100)]
+        [InlineData("test-md5-files.md5", Hash.MD5, 100)]
+        [InlineData("test-sha1-files.sha1", Hash.SHA1, 100)]
         [InlineData("test-sha256.sha256", Hash.SHA256, 1)]
         [InlineData("test-sha384.sha384", Hash.SHA384, 1)]
         [InlineData("test-sha512.sha512", Hash.SHA512, 1)]

@@ -57,11 +57,8 @@ namespace SabreTools.Serialization
                     // Read and split the line
                     string? line = reader.ReadLine();
                     string[]? lineParts = line?.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                    if (lineParts == null || lineParts.Length != 2)
-                    {
-                        additional.Add(line);
+                    if (lineParts == null)
                         continue;
-                    }
 
                     // Parse the line into a hash
                     switch (hash)
@@ -69,8 +66,8 @@ namespace SabreTools.Serialization
                         case Hash.CRC:
                             var sfv = new Models.Hashfile.SFV
                             {
-                                File = lineParts[0],
-                                Hash = lineParts[1],
+                                File = string.Join(" ", lineParts[..^1]),
+                                Hash = string.Join(" ", lineParts[^1]),
                             };
                             hashes.Add(sfv);
                             break;
@@ -78,7 +75,7 @@ namespace SabreTools.Serialization
                             var md5 = new Models.Hashfile.MD5
                             {
                                 Hash = lineParts[0],
-                                File = lineParts[1],
+                                File = string.Join(" ", lineParts[1..]),
                             };
                             hashes.Add(md5);
                             break;
@@ -86,7 +83,7 @@ namespace SabreTools.Serialization
                             var sha1 = new Models.Hashfile.SHA1
                             {
                                 Hash = lineParts[0],
-                                File = lineParts[1],
+                                File = string.Join(" ", lineParts[1..]),
                             };
                             hashes.Add(sha1);
                             break;
@@ -94,7 +91,7 @@ namespace SabreTools.Serialization
                             var sha256 = new Models.Hashfile.SHA256
                             {
                                 Hash = lineParts[0],
-                                File = lineParts[1],
+                                File = string.Join(" ", lineParts[1..]),
                             };
                             hashes.Add(sha256);
                             break;
@@ -102,7 +99,7 @@ namespace SabreTools.Serialization
                             var sha384 = new Models.Hashfile.SHA384
                             {
                                 Hash = lineParts[0],
-                                File = lineParts[1],
+                                File = string.Join(" ", lineParts[1..]),
                             };
                             hashes.Add(sha384);
                             break;
@@ -110,7 +107,7 @@ namespace SabreTools.Serialization
                             var sha512 = new Models.Hashfile.SHA512
                             {
                                 Hash = lineParts[0],
-                                File = lineParts[1],
+                                File = string.Join(" ", lineParts[1..]),
                             };
                             hashes.Add(sha512);
                             break;
@@ -118,7 +115,7 @@ namespace SabreTools.Serialization
                             var spamSum = new Models.Hashfile.SpamSum
                             {
                                 Hash = lineParts[0],
-                                File = lineParts[1],
+                                File = string.Join(" ", lineParts[1..]),
                             };
                             hashes.Add(spamSum);
                             break;
