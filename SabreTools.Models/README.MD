@@ -18,3 +18,14 @@ In each completed model, there is a section that looks like the following:
 ```
 
 This code should be removed before the models are used. This is only included during debugging and implementation as to ensure that there are no notable holes in the models that would disallow 1:1 replication of inputs.
+
+## Missing Formats
+
+The following formats do not have models included in this library yet and, as such, do not have serializers:
+
+- Comma-Separated Value (CSV)
+- Missfile
+- SabreJSON
+- SabreDAT XML
+- Semicolon-Separated Value (SSV)
+- Tab-Separated Value (TSV)
