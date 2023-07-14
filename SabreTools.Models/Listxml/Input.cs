@@ -18,11 +18,18 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("players")]
         public string Players { get; set; }
 
+        /// <remarks>Only present in older versions</remarks>
+        [XmlAttribute("control")]
+        public string? ControlAttr { get; set; }
+
+        /// <remarks>Only present in older versions, Numeric?</remarks>
+        [XmlAttribute("buttons")]
+        public string Buttons { get; set; }
+
         /// <remarks>Numeric?</remarks>
         [XmlAttribute("coins")]
         public string? Coins { get; set; }
 
-        /// <remarks>Numeric?</remarks>
         [XmlElement("control")]
         public Control[]? Control { get; set; }
 

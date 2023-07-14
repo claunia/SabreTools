@@ -16,6 +16,10 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("type")]
         public string Type { get; set; }
 
+        /// <remarks>Only present in older versions</remarks>
+        [XmlAttribute("soundonly")]
+        public string SoundOnly { get; set; }
+
         [XmlAttribute("clock")]
         public string? Clock { get; set; }
 

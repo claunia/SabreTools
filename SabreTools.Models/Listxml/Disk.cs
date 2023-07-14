@@ -9,6 +9,10 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("name")]
         public string Name { get; set; }
 
+        /// <remarks>Only present in older versions</remarks>
+        [XmlAttribute("md5")]
+        public string? MD5 { get; set; }
+
         [XmlAttribute("sha1")]
         public string? SHA1 { get; set; }
 

@@ -224,7 +224,8 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
-        [InlineData("test-listxml-files.xml.gz", 45861)]
+        [InlineData("test-listxml-files1.xml.gz", 45861)]
+        [InlineData("test-listxml-files2.xml", 3998)]
         public void ListxmlDeserializeTest(string path, long count)
         {
             // Open the file for reading
@@ -234,78 +235,84 @@ namespace SabreTools.Test.Parser
             var dat = Serialization.Listxml.Deserialize(filename);
 
             // Validate the values
-            Assert.NotNull(dat?.Machine);
-            Assert.Equal(count, dat.Machine.Length);
+            Assert.NotNull(dat?.Game);
+            Assert.Equal(count, dat.Game.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
             Assert.Null(dat.ADDITIONAL_ELEMENTS);
-            foreach (var machine in dat.Machine)
+            foreach (var game in dat.Game)
             {
-                Assert.Null(machine.ADDITIONAL_ATTRIBUTES);
-                Assert.Null(machine.ADDITIONAL_ELEMENTS);
+                Assert.Null(game.ADDITIONAL_ATTRIBUTES);
+                Assert.Null(game.ADDITIONAL_ELEMENTS);
 
-                foreach (var biosset in machine.BiosSet ?? Array.Empty<Models.Listxml.BiosSet>())
+                foreach (var biosset in game.BiosSet ?? Array.Empty<Models.Listxml.BiosSet>())
                 {
                     Assert.Null(biosset.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(biosset.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var rom in machine.Rom ?? Array.Empty<Models.Listxml.Rom>())
+                foreach (var rom in game.Rom ?? Array.Empty<Models.Listxml.Rom>())
                 {
                     Assert.Null(rom.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(rom.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var disk in machine.Disk ?? Array.Empty<Models.Listxml.Disk>())
+                foreach (var disk in game.Disk ?? Array.Empty<Models.Listxml.Disk>())
                 {
                     Assert.Null(disk.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(disk.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var deviceRef in machine.DeviceRef ?? Array.Empty<Models.Listxml.DeviceRef>())
+                foreach (var deviceRef in game.DeviceRef ?? Array.Empty<Models.Listxml.DeviceRef>())
                 {
                     Assert.Null(deviceRef.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(deviceRef.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var sample in machine.Sample ?? Array.Empty<Models.Listxml.Sample>())
+                foreach (var sample in game.Sample ?? Array.Empty<Models.Listxml.Sample>())
                 {
                     Assert.Null(sample.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(sample.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var chip in machine.Chip ?? Array.Empty<Models.Listxml.Chip>())
+                foreach (var chip in game.Chip ?? Array.Empty<Models.Listxml.Chip>())
                 {
                     Assert.Null(chip.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(chip.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var display in machine.Display ?? Array.Empty<Models.Listxml.Display>())
+                foreach (var display in game.Display ?? Array.Empty<Models.Listxml.Display>())
                 {
                     Assert.Null(display.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(display.ADDITIONAL_ELEMENTS);
                 }
 
-                if (machine.Sound != null)
+                foreach (var video in game.Video ?? Array.Empty<Models.Listxml.Video>())
                 {
-                    Assert.Null(machine.Sound.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(machine.Sound.ADDITIONAL_ELEMENTS);
+                    Assert.Null(video.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(video.ADDITIONAL_ELEMENTS);
                 }
 
-                if (machine.Input != null)
+                if (game.Sound != null)
                 {
-                    Assert.Null(machine.Input.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(machine.Input.ADDITIONAL_ELEMENTS);
+                    Assert.Null(game.Sound.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(game.Sound.ADDITIONAL_ELEMENTS);
+                }
 
-                    foreach (var control in machine.Input.Control ?? Array.Empty<Models.Listxml.Control>())
+                if (game.Input != null)
+                {
+                    Assert.Null(game.Input.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(game.Input.ADDITIONAL_ELEMENTS);
+
+                    foreach (var control in game.Input.Control ?? Array.Empty<Models.Listxml.Control>())
                     {
                         Assert.Null(control.ADDITIONAL_ATTRIBUTES);
                         Assert.Null(control.ADDITIONAL_ELEMENTS);
                     }
                 }
 
-                foreach (var dipswitch in machine.DipSwitch ?? Array.Empty<Models.Listxml.DipSwitch>())
+                foreach (var dipswitch in game.DipSwitch ?? Array.Empty<Models.Listxml.DipSwitch>())
                 {
                     Assert.Null(dipswitch.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(dipswitch.ADDITIONAL_ELEMENTS);
@@ -335,7 +342,7 @@ namespace SabreTools.Test.Parser
                     }
                 }
 
-                foreach (var configuration in machine.Configuration ?? Array.Empty<Models.Listxml.Configuration>())
+                foreach (var configuration in game.Configuration ?? Array.Empty<Models.Listxml.Configuration>())
                 {
                     Assert.Null(configuration.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(configuration.ADDITIONAL_ELEMENTS);
@@ -365,7 +372,7 @@ namespace SabreTools.Test.Parser
                     }
                 }
 
-                foreach (var port in machine.Port ?? Array.Empty<Models.Listxml.Port>())
+                foreach (var port in game.Port ?? Array.Empty<Models.Listxml.Port>())
                 {
                     Assert.Null(port.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(port.ADDITIONAL_ELEMENTS);
@@ -377,7 +384,7 @@ namespace SabreTools.Test.Parser
                     }
                 }
 
-                foreach (var adjuster in machine.Adjuster ?? Array.Empty<Models.Listxml.Adjuster>())
+                foreach (var adjuster in game.Adjuster ?? Array.Empty<Models.Listxml.Adjuster>())
                 {
                     Assert.Null(adjuster.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(adjuster.ADDITIONAL_ELEMENTS);
@@ -389,19 +396,19 @@ namespace SabreTools.Test.Parser
                     }
                 }
 
-                if (machine.Driver != null)
+                if (game.Driver != null)
                 {
-                    Assert.Null(machine.Driver.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(machine.Driver.ADDITIONAL_ELEMENTS);
+                    Assert.Null(game.Driver.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(game.Driver.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var feature in machine.Feature ?? Array.Empty<Models.Listxml.Feature>())
+                foreach (var feature in game.Feature ?? Array.Empty<Models.Listxml.Feature>())
                 {
                     Assert.Null(feature.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(feature.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var device in machine.Device ?? Array.Empty<Models.Listxml.Device>())
+                foreach (var device in game.Device ?? Array.Empty<Models.Listxml.Device>())
                 {
                     Assert.Null(device.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(device.ADDITIONAL_ELEMENTS);
@@ -419,7 +426,7 @@ namespace SabreTools.Test.Parser
                     }
                 }
 
-                foreach (var slot in machine.Slot ?? Array.Empty<Models.Listxml.Slot>())
+                foreach (var slot in game.Slot ?? Array.Empty<Models.Listxml.Slot>())
                 {
                     Assert.Null(slot.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(slot.ADDITIONAL_ELEMENTS);
@@ -431,13 +438,13 @@ namespace SabreTools.Test.Parser
                     }
                 }
 
-                foreach (var softwarelist in machine.SoftwareList ?? Array.Empty<Models.Listxml.SoftwareList>())
+                foreach (var softwarelist in game.SoftwareList ?? Array.Empty<Models.Listxml.SoftwareList>())
                 {
                     Assert.Null(softwarelist.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(softwarelist.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var ramoption in machine.RamOption ?? Array.Empty<Models.Listxml.RamOption>())
+                foreach (var ramoption in game.RamOption ?? Array.Empty<Models.Listxml.RamOption>())
                 {
                     Assert.Null(ramoption.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(ramoption.ADDITIONAL_ELEMENTS);

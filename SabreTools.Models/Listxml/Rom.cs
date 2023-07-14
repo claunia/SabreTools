@@ -39,6 +39,14 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("optional")]
         public string? Optional { get; set; }
 
+        /// <remarks>(yes|no) "no", Only present in older versions</remarks>
+        [XmlAttribute("dispose")]
+        public string? Dispose { get; set; }
+
+        /// <remarks>(yes|no) "no", Only present in older versions</remarks>
+        [XmlAttribute("soundonly")]
+        public string? SoundOnly { get; set; }
+
         #region DO NOT USE IN PRODUCTION
 
         /// <remarks>Should be empty</remarks>

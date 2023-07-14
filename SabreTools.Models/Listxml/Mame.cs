@@ -16,8 +16,9 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("mameconfig")]
         public string MameConfig { get; set; }
 
-        [XmlElement("machine")]
-        public Machine[] Machine { get; set; }
+        [XmlElement("machine", typeof(Machine))]
+        [XmlElement("game", typeof(Game))]
+        public GameBase[] Game { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 
