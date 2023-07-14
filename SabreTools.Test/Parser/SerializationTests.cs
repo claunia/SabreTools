@@ -98,7 +98,7 @@ namespace SabreTools.Test.Parser
         [Theory]
         [InlineData("test-sfv.sfv", Hash.CRC)]
         [InlineData("test-md5.md5", Hash.MD5)]
-        [InlineData("test-sha1.sha1", Hash.SHA1)] 
+        [InlineData("test-sha1.sha1", Hash.SHA1)]
         [InlineData("test-sha256.sha256", Hash.SHA256)]
         [InlineData("test-sha384.sha384", Hash.SHA384)]
         [InlineData("test-sha512.sha512", Hash.SHA512)]
@@ -634,6 +634,40 @@ namespace SabreTools.Test.Parser
                         Assert.Null(dump.SCCPlusCart.ADDITIONAL_ATTRIBUTES);
                         Assert.Null(dump.SCCPlusCart.ADDITIONAL_ELEMENTS);
                     }
+                }
+            }
+        }
+
+        [Fact]
+        public void RomCenterDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-romcenter-files.dat");
+
+            // Deserialize the file
+            var dat = Serialization.RomCenter.Deserialize(filename);
+
+            // Validate the values
+            Assert.NotNull(dat?.Games?.Rom);
+            Assert.Equal(901, dat.Games.Rom.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Empty(dat.ADDITIONAL_ELEMENTS);
+            if (dat.Credits != null)
+                Assert.Empty(dat.Credits.ADDITIONAL_ELEMENTS);
+            
+            if (dat.Dat != null)
+                Assert.Empty(dat.Dat.ADDITIONAL_ELEMENTS);
+            
+            if (dat.Emulator != null)
+                Assert.Empty(dat.Emulator.ADDITIONAL_ELEMENTS);
+            
+            if (dat.Games != null)
+            {
+                Assert.Empty(dat.Games.ADDITIONAL_ELEMENTS);
+                foreach (var rom in dat.Games.Rom ?? Array.Empty<Models.RomCenter.Rom>())
+                {
+                    Assert.Null(rom.ADDITIONAL_ELEMENTS);
                 }
             }
         }

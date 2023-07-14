@@ -4,9 +4,16 @@ namespace SabreTools.Models.RomCenter
     public class Emulator
     {
         /// <remarks>refname</remarks>
-        public string RefName { get; set; }
+        public string? RefName { get; set; }
 
         /// <remarks>version</remarks>
-        public string Version { get; set; }
+        public string? Version { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        public string[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

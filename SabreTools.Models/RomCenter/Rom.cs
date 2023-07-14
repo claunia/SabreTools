@@ -22,12 +22,19 @@ namespace SabreTools.Models.RomCenter
         public string? RomCRC { get; set; }
 
         /// <remarks>6</remarks>
-        public long? RomSize { get; set; }
+        public string? RomSize { get; set; }
 
         /// <remarks>7</remarks>
         public string? RomOf { get; set; }
 
         /// <remarks>8</remarks>
         public string? MergeName { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        public string[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }
