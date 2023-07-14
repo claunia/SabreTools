@@ -110,7 +110,8 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
-        [InlineData("test-doscenter-files.dat.gz", 34965)]
+        [InlineData("test-doscenter-files1.dat.gz", 34965)]
+        [InlineData("test-doscenter-files2.dat.gz", 7189)]
         public void DosCenterDeserializeTest(string path, long count)
         {
             // Open the file for reading
