@@ -1,7 +1,7 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>disk</remarks>
-    public class Disk
+    public class Disk : ItemBase
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }
@@ -17,5 +17,15 @@ namespace SabreTools.Models.ClrMamePro
 
         /// <remarks>status</remarks>
         public string? Status { get; set; }
+
+        /// <remarks>flags</remarks>
+        public string? Flags { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        public string[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

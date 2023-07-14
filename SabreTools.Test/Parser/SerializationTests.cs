@@ -50,6 +50,55 @@ namespace SabreTools.Test.Parser
         }
 
         [Fact]
+        public void ClrMameProDeserializeTest()
+        {
+            // Open the file for reading
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-cmp-files.dat");
+
+            // Deserialize the file
+            var dat = Serialization.ClrMamePro.Deserialize(filename);
+
+            // Validate the values
+            Assert.NotNull(dat?.ClrMamePro);
+            Assert.Equal(59, dat.Game.Length);
+
+            // Validate we're not missing any attributes or elements
+            Assert.Empty(dat.ADDITIONAL_ELEMENTS);
+            Assert.Null(dat.ClrMamePro.ADDITIONAL_ELEMENTS);
+            foreach (var game in dat.Game)
+            {
+                Assert.Empty(game.ADDITIONAL_ELEMENTS);
+                foreach (var item in game.Item)
+                {
+                    switch (item)
+                    {
+                        case Models.ClrMamePro.Release release:
+                            Assert.Empty(release.ADDITIONAL_ELEMENTS);
+                            break;
+                        case Models.ClrMamePro.BiosSet biosset:
+                            Assert.Empty(biosset.ADDITIONAL_ELEMENTS);
+                            break;
+                        case Models.ClrMamePro.Rom rom:
+                            Assert.Empty(rom.ADDITIONAL_ELEMENTS);
+                            break;
+                        case Models.ClrMamePro.Disk disk:
+                            Assert.Empty(disk.ADDITIONAL_ELEMENTS);
+                            break;
+                        case Models.ClrMamePro.Media media:
+                            Assert.Empty(media.ADDITIONAL_ELEMENTS);
+                            break;
+                        case Models.ClrMamePro.Sample sample:
+                            Assert.Empty(sample.ADDITIONAL_ELEMENTS);
+                            break;
+                        case Models.ClrMamePro.Archive archive:
+                            Assert.Empty(archive.ADDITIONAL_ELEMENTS);
+                            break;
+                    }
+                }
+            }
+        }
+
+        [Fact]
         public void DosCenterDeserializeTest()
         {
             // Open the file for reading

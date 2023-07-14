@@ -1,7 +1,7 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>media</remarks>
-    public class Media
+    public class Media : ItemBase
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }
@@ -17,5 +17,12 @@ namespace SabreTools.Models.ClrMamePro
 
         /// <remarks>spamsum</remarks>
         public string? SpamSum { get; set; }
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        public string[]? ADDITIONAL_ELEMENTS { get; set; }
+
+        #endregion
     }
 }

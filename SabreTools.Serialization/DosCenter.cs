@@ -168,6 +168,13 @@ namespace SabreTools.Serialization
                     {
                         // Create the block
                         var file = new Models.DosCenter.File();
+                        
+                        // If we have an unknown type, log it
+                        if (reader.InternalName != "file")
+                        {
+                            gameAdditional.Add(reader.CurrentLine);
+                            continue;
+                        }
 
                         foreach (var kvp in reader.Internal)
                         {

@@ -1,13 +1,13 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>rom</remarks>
-    public class Rom
+    public class Rom : ItemBase
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }
 
-        /// <remarks>size</remarks>
-        public long Size { get; set; }
+        /// <remarks>size, Numeric</remarks>
+        public string Size { get; set; }
 
         /// <remarks>crc</remarks>
         public string? CRC { get; set; }
@@ -23,6 +23,9 @@ namespace SabreTools.Models.ClrMamePro
 
         /// <remarks>status</remarks>
         public string? Status { get; set; }
+
+        /// <remarks>flags</remarks>
+        public string? Flags { get; set; }
 
         /// <remarks>date</remarks>
         public string? Date { get; set; }
@@ -66,10 +69,17 @@ namespace SabreTools.Models.ClrMamePro
         #region RomVault Extensions
 
         /// <remarks>inverted; Boolean; Appears after Date</remarks>
-        public bool? Inverted { get; set; }
+        public string? Inverted { get; set; }
 
         /// <remarks>mia; Boolean; Appears after Inverted</remarks>
-        public bool? MIA { get; set; }
+        public string? MIA { get; set; }
+
+        #endregion
+
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        public string[]? ADDITIONAL_ELEMENTS { get; set; }
 
         #endregion
     }
