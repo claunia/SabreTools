@@ -45,9 +45,42 @@ namespace SabreTools.Models.ArchiveDotOrg
         [XmlElement("summation")]
         public string? Summation { get; set; }
 
-        /// <remarks>Is this a set of defined values?</remarks>
-        [XmlElement("rotation")]
-        public long? Rotation { get; set; }
+        [XmlElement("matrix_number")]
+        public string? MatrixNumber { get; set; }
+
+        [XmlElement("collection-catalog-number")]
+        public string? CollectionCatalogNumber { get; set; }
+
+        [XmlElement("publisher")]
+        public string? Publisher { get; set; }
+
+        [XmlElement("comment")]
+        public string? Comment { get; set; }
+
+        #region ASR-Related
+
+        [XmlElement("asr_detected_lang")]
+        public string? ASRDetectedLang { get; set; }
+
+        [XmlElement("asr_detected_lang_conf")]
+        public string? ASRDetectedLangConf { get; set; }
+
+        [XmlElement("asr_transcribed_lang")]
+        public string? ASRTranscribedLang { get; set; }
+
+        [XmlElement("whisper_asr_module_version")]
+        public string? WhisperASRModuleVersion { get; set; }
+
+        [XmlElement("whisper_model_hash")]
+        public string? WhisperModelHash { get; set; }
+
+        [XmlElement("whisper_model_name")]
+        public string? WhisperModelName { get; set; }
+
+        [XmlElement("whisper_version")]
+        public string? WhisperVersion { get; set; }
+
+        #endregion
 
         #region OCR-Related
 
@@ -128,6 +161,44 @@ namespace SabreTools.Models.ArchiveDotOrg
 
         [XmlElement("word_conf_91_100")]
         public long? WordConfidenceInterval91To100 { get; set; }
+
+        #endregion
+
+        #region Media-Related
+
+        [XmlElement("album")]
+        public string? Album { get; set; }
+
+        [XmlElement("artist")]
+        public string? Artist { get; set; }
+
+        [XmlElement("bitrate")]
+        public long? Bitrate { get; set; }
+
+        [XmlElement("creator")]
+        public string? Creator { get; set; }
+
+        [XmlElement("height")]
+        public long? Height { get; set; }
+
+        [XmlElement("length")]
+        public double? Length { get; set; }
+
+        [XmlElement("preview-image")]
+        public string? PreviewImage { get; set; }
+
+        /// <remarks>Is this a set of defined values?</remarks>
+        [XmlElement("rotation")]
+        public long? Rotation { get; set; }
+
+        [XmlElement("title")]
+        public string? Title { get; set; }
+
+        [XmlElement("track")]
+        public long? Track { get; set; }
+
+        [XmlElement("width")]
+        public long? Width { get; set; }
 
         #endregion
 

@@ -11,7 +11,11 @@ namespace SabreTools.Test.Parser
     public class DeserializationTests
     {
         [Theory]
-        [InlineData("test-archivedotorg-files.xml", 22)]
+        [InlineData("test-archivedotorg-files1.xml", 22)]
+        [InlineData("test-archivedotorg-files2.xml", 13)]
+        [InlineData("test-archivedotorg-files3.xml", 21)]
+        [InlineData("test-archivedotorg-files4.xml", 19)]
+        [InlineData("test-archivedotorg-files5.xml", 1390)]
         public void ArchiveDotOrgDeserializeTest(string path, long count)
         {
             // Open the file for reading
