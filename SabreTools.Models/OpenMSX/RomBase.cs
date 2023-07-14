@@ -3,16 +3,22 @@ using System.Xml.Serialization;
 
 namespace SabreTools.Models.OpenMSX
 {
-    [XmlRoot("dump")]
-    public class Dump
+    /// <summary>
+    /// Base class to unify the various rom types
+    /// </summary>
+    public abstract class RomBase
     {
-        [XmlElement("original")]
-        public Original? Original { get; set; }
+        [XmlElement("start")]
+        public string? Start { get; set; }
 
-        [XmlElement("rom", typeof(Rom))]
-        [XmlElement("megarom", typeof(MegaRom))]
-        [XmlElement("sccpluscart", typeof(SCCPlusCart))]
-        public RomBase? Rom { get; set; }
+        [XmlElement("type")]
+        public string? Type { get; set; }
+
+        [XmlElement("hash")]
+        public string? Hash { get; set; }
+
+        [XmlElement("remark")]
+        public string? Remark { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

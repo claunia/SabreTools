@@ -671,18 +671,6 @@ namespace SabreTools.Test.Parser
                         Assert.Null(dump.Rom.ADDITIONAL_ATTRIBUTES);
                         Assert.Null(dump.Rom.ADDITIONAL_ELEMENTS);
                     }
-
-                    if (dump.MegaRom != null)
-                    {
-                        Assert.Null(dump.MegaRom.ADDITIONAL_ATTRIBUTES);
-                        Assert.Null(dump.MegaRom.ADDITIONAL_ELEMENTS);
-                    }
-
-                    if (dump.SCCPlusCart != null)
-                    {
-                        Assert.Null(dump.SCCPlusCart.ADDITIONAL_ATTRIBUTES);
-                        Assert.Null(dump.SCCPlusCart.ADDITIONAL_ELEMENTS);
-                    }
                 }
             }
         }
