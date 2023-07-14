@@ -23,9 +23,6 @@ This code should be removed before the models are used. This is only included du
 
 The following formats do not have models included in this library yet and, as such, do not have serializers:
 
-- Comma-Separated Value (CSV)
 - Missfile
 - SabreJSON
 - SabreDAT XML
-- Semicolon-Separated Value (SSV)
-- Tab-Separated Value (TSV)
