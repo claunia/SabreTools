@@ -6,18 +6,19 @@ namespace SabreTools.Test.Parser
 {
     public class DeserializationTests
     {
-        [Fact]
-        public void ArchiveDotOrgDeserializeTest()
+        [Theory]
+        [InlineData("test-archivedotorg-files.xml", 22)]
+        public void ArchiveDotOrgDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-archivedotorg-files.xml");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.ArchiveDotOrg.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.File);
-            Assert.Equal(22, dat.File.Length);
+            Assert.Equal(count, dat.File.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
@@ -29,18 +30,19 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void AttractModeDeserializeTest()
+        [Theory]
+        [InlineData("test-attractmode-files.txt", 11)]
+        public void AttractModeDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-attractmode-files.txt");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.AttractMode.Deserialize(filename);
 
-            // Validate the values
+            // Validate texpected: he values
             Assert.NotNull(dat?.Row);
-            Assert.Equal(11, dat.Row.Length);
+            Assert.Equal(count, dat.Row.Length);
 
             // Validate we're not missing any attributes or elements
             foreach (var file in dat.Row)
@@ -49,18 +51,19 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void ClrMameProDeserializeTest()
+        [Theory]
+        [InlineData("test-cmp-files.dat", 59)]
+        public void ClrMameProDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-cmp-files.dat");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.ClrMamePro.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.ClrMamePro);
-            Assert.Equal(59, dat.Game.Length);
+            Assert.Equal(count, dat.Game.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
@@ -98,18 +101,19 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void DosCenterDeserializeTest()
+        [Theory]
+        [InlineData("test-doscenter-files.dat.gz", 34965)]
+        public void DosCenterDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-doscenter-files.dat.gz");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.DosCenter.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.DosCenter);
-            Assert.Equal(34965, dat.Game.Length);
+            Assert.Equal(count, dat.Game.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
@@ -124,18 +128,19 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void EverdriveSMDBDeserializeTest()
+        [Theory]
+        [InlineData("test-smdb-files.txt", 6113)]
+        public void EverdriveSMDBDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-smdb-files.txt");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.EverdriveSMDB.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Row);
-            Assert.Equal(6113, dat.Row.Length);
+            Assert.Equal(count, dat.Row.Length);
 
             // Validate we're not missing any attributes or elements
             foreach (var file in dat.Row)
@@ -145,17 +150,17 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
-        [InlineData("test-sfv.sfv", Hash.CRC)]
-        [InlineData("test-md5.md5", Hash.MD5)]
-        [InlineData("test-sha1.sha1", Hash.SHA1)]
-        [InlineData("test-sha256.sha256", Hash.SHA256)]
-        [InlineData("test-sha384.sha384", Hash.SHA384)]
-        [InlineData("test-sha512.sha512", Hash.SHA512)]
-        [InlineData("test-spamsum.spamsum", Hash.SpamSum)]
-        public void HashfileDeserializeTest(string file, Hash hash)
+        [InlineData("test-sfv.sfv", Hash.CRC, 1)]
+        [InlineData("test-md5.md5", Hash.MD5, 1)]
+        [InlineData("test-sha1.sha1", Hash.SHA1, 1)]
+        [InlineData("test-sha256.sha256", Hash.SHA256, 1)]
+        [InlineData("test-sha384.sha384", Hash.SHA384, 1)]
+        [InlineData("test-sha512.sha512", Hash.SHA512, 1)]
+        [InlineData("test-spamsum.spamsum", Hash.SpamSum, 1)]
+        public void HashfileDeserializeTest(string path, Hash hash, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", file);
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.Hashfile.Deserialize(filename, hash);
@@ -166,60 +171,62 @@ namespace SabreTools.Test.Parser
             switch (hash)
             {
                 case Hash.CRC:
-                    Assert.Single(dat.SFV);
+                    Assert.Equal(count, dat.SFV.Length);
                     break;
                 case Hash.MD5:
-                    Assert.Single(dat.MD5);
+                    Assert.Equal(count, dat.MD5.Length);
                     break;
                 case Hash.SHA1:
-                    Assert.Single(dat.SHA1);
+                    Assert.Equal(count, dat.SHA1.Length);
                     break;
                 case Hash.SHA256:
-                    Assert.Single(dat.SHA256);
+                    Assert.Equal(count, dat.SHA256.Length);
                     break;
                 case Hash.SHA384:
-                    Assert.Single(dat.SHA384);
+                    Assert.Equal(count, dat.SHA384.Length);
                     break;
                 case Hash.SHA512:
-                    Assert.Single(dat.SHA512);
+                    Assert.Equal(count, dat.SHA512.Length);
                     break;
                 case Hash.SpamSum:
-                    Assert.Single(dat.SpamSum);
+                    Assert.Equal(count, dat.SpamSum.Length);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(hash));
             }
         }
 
-        [Fact]
-        public void ListromDeserializeTest()
+        [Theory]
+        [InlineData("test-listrom-files.txt.gz", 45861)]
+        public void ListromDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-listrom-files.txt.gz");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.Listrom.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Set);
-            Assert.Equal(45861, dat.Set.Length);
+            Assert.Equal(count, dat.Set.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
         }
 
-        [Fact]
-        public void ListxmlDeserializeTest()
+        [Theory]
+        [InlineData("test-listxml-files.xml.gz", 45861)]
+        public void ListxmlDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-listxml-files.xml.gz");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.Listxml.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Machine);
-            Assert.Equal(45861, dat.Machine.Length);
+            Assert.Equal(count, dat.Machine.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
@@ -432,10 +439,10 @@ namespace SabreTools.Test.Parser
         [Theory]
         [InlineData("test-logiqx-files1.xml.gz", 45875)]
         [InlineData("test-logiqx-files2.xml", 761)]
-        public void LogiqxDeserializeTest(string file, long count)
+        public void LogiqxDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", file);
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.Logiqx.Deserialize(filename);
@@ -510,18 +517,19 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void OfflineListDeserializeTest()
+        [Theory]
+        [InlineData("test-offlinelist-files.xml", 6750)]
+        public void OfflineListDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-offlinelist-files.xml");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.OfflineList.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Games?.Game);
-            Assert.Equal(6750, dat.Games.Game.Length);
+            Assert.Equal(count, dat.Games.Game.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
@@ -714,11 +722,12 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void OpenMSXDeserializeTest()
+        [Theory]
+        [InlineData("test-openmsx-files.xml", 2550)]
+        public void OpenMSXDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-openmsx-files.xml");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.OpenMSX.Deserialize(filename);
@@ -726,7 +735,7 @@ namespace SabreTools.Test.Parser
             // Validate the values
             Assert.NotNull(dat);
             Assert.NotNull(dat.Software);
-            Assert.Equal(2550, dat.Software.Length);
+            Assert.Equal(count, dat.Software.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Null(dat.ADDITIONAL_ATTRIBUTES);
@@ -756,18 +765,19 @@ namespace SabreTools.Test.Parser
             }
         }
 
-        [Fact]
-        public void RomCenterDeserializeTest()
+        [Theory]
+        [InlineData("test-romcenter-files.dat", 901)]
+        public void RomCenterDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", "test-romcenter-files.dat");
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.RomCenter.Deserialize(filename);
 
             // Validate the values
             Assert.NotNull(dat?.Games?.Rom);
-            Assert.Equal(901, dat.Games.Rom.Length);
+            Assert.Equal(count, dat.Games.Rom.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
@@ -794,10 +804,10 @@ namespace SabreTools.Test.Parser
         [InlineData("test-softwarelist-files1.xml", 4531)]
         [InlineData("test-softwarelist-files2.xml", 2797)]
         [InlineData("test-softwarelist-files3.xml", 274)]
-        public void SoftwareListDeserializeTest(string file, long count)
+        public void SoftwareListDeserializeTest(string path, long count)
         {
             // Open the file for reading
-            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", file);
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
             var dat = Serialization.SoftawreList.Deserialize(filename);
