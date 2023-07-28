@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using SabreTools.IO.Readers;
+using SabreTools.IO.Writers;
 using SabreTools.Models.ClrMamePro;
-
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -12,17 +12,20 @@ namespace SabreTools.Serialization
     /// </summary>
     public class ClrMamePro
     {
+        #region Deserialization
+
         /// <summary>
         /// Deserializes a ClrMamePro metadata file to the defined type
         /// </summary>
         /// <param name="path">Path to the file to deserialize</param>
+        /// <param name="quotes">Enable quotes on read and write, false otherwise</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static MetadataFile? Deserialize(string path)
+        public static MetadataFile? Deserialize(string path, bool quotes)
         {
             try
             {
                 using var stream = PathProcessor.OpenStream(path);
-                return Deserialize(stream);
+                return Deserialize(stream, quotes);
             }
             catch
             {
@@ -35,8 +38,9 @@ namespace SabreTools.Serialization
         /// Deserializes a ClrMamePro metadata file in a stream to the defined type
         /// </summary>
         /// <param name="stream">Stream to deserialize</param>
+        /// <param name="quotes">Enable quotes on read and write, false otherwise</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static MetadataFile? Deserialize(Stream? stream)
+        public static MetadataFile? Deserialize(Stream? stream, bool quotes)
         {
             try
             {
@@ -45,7 +49,7 @@ namespace SabreTools.Serialization
                     return default;
 
                 // Setup the reader and output
-                var reader = new ClrMameProReader(stream, Encoding.UTF8);
+                var reader = new ClrMameProReader(stream, Encoding.UTF8) { Quotes = quotes };
                 var dat = new MetadataFile();
 
                 // Loop through and parse out the values
@@ -737,5 +741,59 @@ namespace SabreTools.Serialization
                 return default;
             }
         }
+    
+        #endregion
+
+        #region Serialization
+
+        /// <summary>
+        /// Serializes the defined type to a ClrMamePro metadata file
+        /// </summary>
+        /// <param name="metadataFile">Data to serialize</param>
+        /// <param name="path">Path to the file to serialize to</param>
+        /// <returns>True on successful serialization, false otherwise</returns>
+        public static bool SerializeToFile(MetadataFile? metadataFile, string path)
+        {
+            try
+            {
+                using var stream = SerializeToStream(metadataFile);
+                if (stream == null)
+                    return false;
+
+                using var fs = File.OpenWrite(path);
+                stream.CopyTo(fs);
+                return true;
+            }
+            catch
+            {
+                // TODO: Handle logging the exception
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Serializes the defined type to a stream
+        /// </summary>
+        /// <param name="metadataFile">Data to serialize</param>
+        /// <returns>Stream containing serialized data on success, null otherwise</returns>
+        public static Stream? SerializeToStream(MetadataFile? metadataFile)
+        {
+            try
+            {
+                // If the metadata file is null
+                if (metadataFile == null)
+                    return null;
+
+                // TODO: Implement writing
+                return null;
+            }
+            catch
+            {
+                // TODO: Handle logging the exception
+                return null;
+            }
+        }
+
+        #endregion
     }
 }

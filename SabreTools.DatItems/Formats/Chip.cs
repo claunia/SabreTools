@@ -42,7 +42,7 @@ namespace SabreTools.DatItems.Formats
         public long? Clock { get; set; }
 
         [JsonIgnore]
-        public bool ClockTypeSpecified { get { return Clock != null; } }
+        public bool ClockSpecified { get { return Clock != null; } }
 
         #endregion
 

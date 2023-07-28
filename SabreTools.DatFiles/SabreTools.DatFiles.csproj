@@ -9,6 +9,8 @@
     <ProjectReference Include="..\SabreTools.DatItems\SabreTools.DatItems.csproj" />
     <ProjectReference Include="..\SabreTools.IO\SabreTools.IO.csproj" />
     <ProjectReference Include="..\SabreTools.Logging\SabreTools.Logging.csproj" />
+    <ProjectReference Include="..\SabreTools.Models\SabreTools.Models.csproj" />
+    <ProjectReference Include="..\SabreTools.Serialization\SabreTools.Serialization.csproj" />
   </ItemGroup>
 
   <ItemGroup>

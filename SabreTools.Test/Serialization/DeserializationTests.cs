@@ -68,7 +68,7 @@ namespace SabreTools.Test.Parser
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
 
             // Deserialize the file
-            var dat = Serialization.ClrMamePro.Deserialize(filename);
+            var dat = Serialization.ClrMamePro.Deserialize(filename, quotes: true);
 
             // Validate the values
             if (expectHeader)

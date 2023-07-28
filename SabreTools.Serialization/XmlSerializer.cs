@@ -9,6 +9,8 @@ namespace SabreTools.Serialization
     /// </summary>
     public abstract class XmlSerializer<T>
     {
+        #region Deserialization
+
         /// <summary>
         /// Deserializes an XML file to the defined type
         /// </summary>
@@ -60,6 +62,10 @@ namespace SabreTools.Serialization
                 return default;
             }
         }
+
+        #endregion
+
+        #region Serialization
 
         /// <summary>
         /// Serializes the defined type to an XML file
@@ -119,5 +125,7 @@ namespace SabreTools.Serialization
                 return null;
             }
         }
+    
+        #endregion
     }
 }

@@ -12,7 +12,7 @@ namespace SabreTools.Models.ClrMamePro
         /// <remarks>flags</remarks>
         public string? Flags { get; set; }
 
-        /// <remarks>clock</remarks>
+        /// <remarks>clock, Numeric?</remarks>
         public string? Clock { get; set; }
 
         #region DO NOT USE IN PRODUCTION

@@ -15,10 +15,10 @@ namespace SabreTools.Models.ClrMamePro
         /// <remarks>coins, Numeric?</remarks>
         public string? Coins { get; set; }
 
-        /// <remarks>tilt</remarks>
+        /// <remarks>tilt, Boolean?</remarks>
         public string? Tilt { get; set; }
 
-        /// <remarks>service</remarks>
+        /// <remarks>service, Boolean?</remarks>
         public string? Service { get; set; }
 
         #region DO NOT USE IN PRODUCTION
