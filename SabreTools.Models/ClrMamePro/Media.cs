@@ -1,7 +1,7 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>media</remarks>
-    public class Media : ItemBase
+    public class Media
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }

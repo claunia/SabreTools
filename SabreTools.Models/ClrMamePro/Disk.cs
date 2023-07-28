@@ -1,7 +1,7 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>disk</remarks>
-    public class Disk : ItemBase
+    public class Disk
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }

@@ -60,8 +60,9 @@ namespace SabreTools.Test.Parser
         }
 
         [Theory]
-        [InlineData("test-cmp-files.dat", 59)]
-        public void ClrMameProDeserializeTest(string path, long count)
+        [InlineData("test-cmp-files1.dat", 59, true)]
+        [InlineData("test-cmp-files2.dat", 312, false)]
+        public void ClrMameProDeserializeTest(string path, long count, bool expectHeader)
         {
             // Open the file for reading
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "TestData", path);
@@ -70,41 +71,85 @@ namespace SabreTools.Test.Parser
             var dat = Serialization.ClrMamePro.Deserialize(filename);
 
             // Validate the values
-            Assert.NotNull(dat?.ClrMamePro);
+            if (expectHeader)
+            {
+                Assert.NotNull(dat?.ClrMamePro);
+                Assert.Null(dat.ClrMamePro.ADDITIONAL_ELEMENTS);
+            }
+            else
+            {
+                Assert.Null(dat?.ClrMamePro);
+            }
             Assert.Equal(count, dat.Game.Length);
 
             // Validate we're not missing any attributes or elements
             Assert.Empty(dat.ADDITIONAL_ELEMENTS);
-            Assert.Null(dat.ClrMamePro.ADDITIONAL_ELEMENTS);
             foreach (var game in dat.Game)
             {
                 Assert.Empty(game.ADDITIONAL_ELEMENTS);
-                foreach (var item in game.Item)
+                foreach (var release in game.Release ?? Array.Empty<Models.ClrMamePro.Release>())
                 {
-                    switch (item)
-                    {
-                        case Models.ClrMamePro.Release release:
-                            Assert.Empty(release.ADDITIONAL_ELEMENTS);
-                            break;
-                        case Models.ClrMamePro.BiosSet biosset:
-                            Assert.Empty(biosset.ADDITIONAL_ELEMENTS);
-                            break;
-                        case Models.ClrMamePro.Rom rom:
-                            Assert.Empty(rom.ADDITIONAL_ELEMENTS);
-                            break;
-                        case Models.ClrMamePro.Disk disk:
-                            Assert.Empty(disk.ADDITIONAL_ELEMENTS);
-                            break;
-                        case Models.ClrMamePro.Media media:
-                            Assert.Empty(media.ADDITIONAL_ELEMENTS);
-                            break;
-                        case Models.ClrMamePro.Sample sample:
-                            Assert.Empty(sample.ADDITIONAL_ELEMENTS);
-                            break;
-                        case Models.ClrMamePro.Archive archive:
-                            Assert.Empty(archive.ADDITIONAL_ELEMENTS);
-                            break;
-                    }
+                    Assert.Empty(release.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var biosset in game.BiosSet ?? Array.Empty<Models.ClrMamePro.BiosSet>())
+                {
+                    Assert.Empty(biosset.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var rom in game.Rom ?? Array.Empty<Models.ClrMamePro.Rom>())
+                {
+                    Assert.Empty(rom.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var disk in game.Disk ?? Array.Empty<Models.ClrMamePro.Disk>())
+                {
+                    Assert.Empty(disk.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var media in game.Media ?? Array.Empty<Models.ClrMamePro.Media>())
+                {
+                    Assert.Empty(media.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var sample in game.Sample ?? Array.Empty<Models.ClrMamePro.Sample>())
+                {
+                    Assert.Empty(sample.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var archive in game.Archive ?? Array.Empty<Models.ClrMamePro.Archive>())
+                {
+                    Assert.Empty(archive.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var chip in game.Chip ?? Array.Empty<Models.ClrMamePro.Chip>())
+                {
+                    Assert.Empty(chip.ADDITIONAL_ELEMENTS);
+                }
+
+                if (game.Video != null)
+                {
+                    Assert.Empty(game.Video.ADDITIONAL_ELEMENTS);
+                }
+
+                if (game.Sound != null)
+                {
+                    Assert.Empty(game.Sound.ADDITIONAL_ELEMENTS);
+                }
+
+                if (game.Input != null)
+                {
+                    Assert.Empty(game.Input.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var dipswitch in game.DipSwitch ?? Array.Empty<Models.ClrMamePro.DipSwitch>())
+                {
+                    Assert.Empty(dipswitch.ADDITIONAL_ELEMENTS);
+                }
+
+                if (game.Driver != null)
+                {
+                    Assert.Empty(game.Driver.ADDITIONAL_ELEMENTS);
                 }
             }
         }

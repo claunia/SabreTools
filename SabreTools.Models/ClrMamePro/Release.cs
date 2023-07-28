@@ -1,7 +1,7 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>release</remarks>
-    public class Release : ItemBase
+    public class Release
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }

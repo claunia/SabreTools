@@ -1,7 +1,7 @@
 namespace SabreTools.Models.ClrMamePro
 {
     /// <remarks>rom</remarks>
-    public class Rom : ItemBase
+    public class Rom
     {
         /// <remarks>name</remarks>
         public string Name { get; set; }
@@ -56,9 +56,19 @@ namespace SabreTools.Models.ClrMamePro
 
         #endregion
 
+        #region MAME Extensions
+
+        /// <remarks>region; Appears after Status</remarks>
+        public string? Region { get; set; }
+
+        /// <remarks>offs; Appears after Flags</remarks>
+        public string? Offs { get; set; }
+
+        #endregion
+
         #region No-Intro Extensions
 
-        /// <remarks>serial; Appears after Status</remarks>
+        /// <remarks>serial; Appears after Offs</remarks>
         public string? Serial { get; set; }
 
         /// <remarks>header; Appears after Serial</remarks>

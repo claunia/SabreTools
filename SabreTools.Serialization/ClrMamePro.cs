@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -51,8 +52,16 @@ namespace SabreTools.Serialization
                 string lastTopLevel = reader.TopLevel;
 
                 GameBase? game = null;
-                var games = new List<GameBase?>();
-                var items = new List<ItemBase?>();
+                var games = new List<GameBase>();
+                var releases = new List<Release>();
+                var biosSets = new List<BiosSet>();
+                var roms = new List<Rom>();
+                var disks = new List<Disk>();
+                var medias = new List<Media>();
+                var samples = new List<Sample>();
+                var archives = new List<Archive>();
+                var chips = new List<Chip>();
+                var dipSwitches = new List<DipSwitch>();
 
                 var additional = new List<string>();
                 var headerAdditional = new List<string>();
@@ -81,11 +90,29 @@ namespace SabreTools.Serialization
                                 case "machine":
                                 case "resource":
                                 case "set":
-                                    game.Item = items.ToArray();
+                                    game.Release = releases.ToArray();
+                                    game.BiosSet = biosSets.ToArray();
+                                    game.Rom = roms.ToArray();
+                                    game.Disk = disks.ToArray();
+                                    game.Media = medias.ToArray();
+                                    game.Sample = samples.ToArray();
+                                    game.Archive = archives.ToArray();
+                                    game.Chip = chips.ToArray();
+                                    game.DipSwitch = dipSwitches.ToArray();
                                     game.ADDITIONAL_ELEMENTS = gameAdditional.ToArray();
+
                                     games.Add(game);
                                     game = null;
-                                    items.Clear();
+
+                                    releases.Clear();
+                                    biosSets.Clear();
+                                    roms.Clear();
+                                    disks.Clear();
+                                    medias.Clear();
+                                    samples.Clear();
+                                    archives.Clear();
+                                    chips.Clear();
+                                    dipSwitches.Clear();
                                     gameAdditional.Clear();
                                     break;
                                 default:
@@ -123,7 +150,8 @@ namespace SabreTools.Serialization
                     }
 
                     // If we're in the doscenter block
-                    else if (reader.TopLevel == "clrmamepro" && reader.RowType == CmpRowType.Standalone)
+                    else if (reader.TopLevel == "clrmamepro"
+                        && reader.RowType == CmpRowType.Standalone)
                     {
                         // Create the block if we haven't already
                         dat.ClrMamePro ??= new Models.ClrMamePro.ClrMamePro();
@@ -176,7 +204,7 @@ namespace SabreTools.Serialization
                                 dat.ClrMamePro.ForcePacking = reader.Standalone?.Value;
                                 break;
                             default:
-                                headerAdditional.Add(item: reader.CurrentLine);
+                                headerAdditional.Add(reader.CurrentLine);
                                 break;
                         }
                     }
@@ -224,14 +252,24 @@ namespace SabreTools.Serialization
                             case "sampleof":
                                 game.SampleOf = reader.Standalone?.Value;
                                 break;
+                            case "sample":
+                                var sample = new Sample();
+                                sample.Name = reader.Standalone?.Value;
+                                sample.ADDITIONAL_ELEMENTS = Array.Empty<string>();
+                                samples.Add(sample);
+                                break;
                             default:
-                                gameAdditional.Add(item: reader.CurrentLine);
+                                gameAdditional.Add(reader.CurrentLine);
                                 break;
                         }
                     }
 
                     // If we're in an item block
-                    else if (reader.TopLevel == "game" && reader.RowType == CmpRowType.Internal)
+                    else if ((reader.TopLevel == "game"
+                            || reader.TopLevel == "machine"
+                            || reader.TopLevel == "resource"
+                            || reader.TopLevel == "set")
+                        && reader.RowType == CmpRowType.Internal)
                     {
                         // Create the block
                         switch (reader.InternalName)
@@ -258,14 +296,14 @@ namespace SabreTools.Serialization
                                             release.Default = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the release to the list
                                 release.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(release);
+                                releases.Add(release);
                                 itemAdditional.Clear();
                                 break;
 
@@ -285,14 +323,14 @@ namespace SabreTools.Serialization
                                             biosset.Default = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the biosset to the list
                                 biosset.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(biosset);
+                                biosSets.Add(biosset);
                                 itemAdditional.Clear();
                                 break;
 
@@ -341,8 +379,14 @@ namespace SabreTools.Serialization
                                         case "status":
                                             rom.Status = kvp.Value;
                                             break;
+                                        case "region":
+                                            rom.Region = kvp.Value;
+                                            break;
                                         case "flags":
                                             rom.Flags = kvp.Value;
+                                            break;
+                                        case "offs":
+                                            rom.Offs = kvp.Value;
                                             break;
                                         case "serial":
                                             rom.Serial = kvp.Value;
@@ -360,14 +404,14 @@ namespace SabreTools.Serialization
                                             rom.MIA = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the rom to the list
                                 rom.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(rom);
+                                roms.Add(rom);
                                 itemAdditional.Clear();
                                 break;
                                 
@@ -396,14 +440,14 @@ namespace SabreTools.Serialization
                                             disk.Flags = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the disk to the list
                                 disk.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(disk);
+                                disks.Add(disk);
                                 itemAdditional.Clear();
                                 break;
                                 
@@ -429,14 +473,14 @@ namespace SabreTools.Serialization
                                             media.SpamSum = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the media to the list
                                 media.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(media);
+                                medias.Add(media);
                                 itemAdditional.Clear();
                                 break;
                                 
@@ -450,14 +494,14 @@ namespace SabreTools.Serialization
                                             sample.Name = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the sample to the list
                                 sample.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(sample);
+                                samples.Add(sample);
                                 itemAdditional.Clear();
                                 break;
                                 
@@ -471,14 +515,202 @@ namespace SabreTools.Serialization
                                             archive.Name = kvp.Value;
                                             break;
                                         default:
-                                            itemAdditional.Add(item: reader.CurrentLine);
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
                                             break;
                                     }
                                 }
 
                                 // Add the archive to the list
                                 archive.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                items.Add(archive);
+                                archives.Add(archive);
+                                itemAdditional.Clear();
+                                break;
+
+                            case "chip":
+                                var chip = new Chip();
+                                foreach (var kvp in reader.Internal)
+                                {
+                                    switch (kvp.Key?.ToLowerInvariant())
+                                    {
+                                        case "type":
+                                            chip.Type = kvp.Value;
+                                            break;
+                                        case "name":
+                                            chip.Name = kvp.Value;
+                                            break;
+                                        case "flags":
+                                            chip.Flags = kvp.Value;
+                                            break;
+                                        case "clock":
+                                            chip.Clock = kvp.Value;
+                                            break;
+                                        default:
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                                            break;
+                                    }
+                                }
+
+                                // Add the chip to the list
+                                chip.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+                                chips.Add(chip);
+                                itemAdditional.Clear();
+                                break;
+
+                            case "video":
+                                var video = new Video();
+                                foreach (var kvp in reader.Internal)
+                                {
+                                    switch (kvp.Key?.ToLowerInvariant())
+                                    {
+                                        case "screen":
+                                            video.Screen = kvp.Value;
+                                            break;
+                                        case "orientation":
+                                            video.Orientation = kvp.Value;
+                                            break;
+                                        case "x":
+                                            video.X = kvp.Value;
+                                            break;
+                                        case "y":
+                                            video.Y = kvp.Value;
+                                            break;
+                                        case "aspectx":
+                                            video.AspectX = kvp.Value;
+                                            break;
+                                        case "aspecty":
+                                            video.AspectY = kvp.Value;
+                                            break;
+                                        case "freq":
+                                            video.Freq = kvp.Value;
+                                            break;
+                                        default:
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                                            break;
+                                    }
+                                }
+
+                                // Add the video to the game
+                                video.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+                                game.Video = video;
+                                itemAdditional.Clear();
+                                break;
+
+                            case "sound":
+                                var sound = new Sound();
+                                foreach (var kvp in reader.Internal)
+                                {
+                                    switch (kvp.Key?.ToLowerInvariant())
+                                    {
+                                        case "channels":
+                                            sound.Channels = kvp.Value;
+                                            break;
+                                        default:
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                                            break;
+                                    }
+                                }
+
+                                // Add the sound to the game
+                                sound.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+                                game.Sound = sound;
+                                itemAdditional.Clear();
+                                break;
+
+                            case "input":
+                                var input = new Input();
+                                foreach (var kvp in reader.Internal)
+                                {
+                                    switch (kvp.Key?.ToLowerInvariant())
+                                    {
+                                        case "players":
+                                            input.Players = kvp.Value;
+                                            break;
+                                        case "control":
+                                            input.Control = kvp.Value;
+                                            break;
+                                        case "buttons":
+                                            input.Buttons = kvp.Value;
+                                            break;
+                                        case "coins":
+                                            input.Coins = kvp.Value;
+                                            break;
+                                        case "tilt":
+                                            input.Tilt = kvp.Value;
+                                            break;
+                                        case "service":
+                                            input.Service = kvp.Value;
+                                            break;
+                                        default:
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                                            break;
+                                    }
+                                }
+
+                                // Add the input to the game
+                                input.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+                                game.Input = input;
+                                itemAdditional.Clear();
+                                break;
+
+                            case "dipswitch":
+                                var dipswitch = new DipSwitch();
+                                var entries = new List<string>();
+                                foreach (var kvp in reader.Internal)
+                                {
+                                    switch (kvp.Key?.ToLowerInvariant())
+                                    {
+                                        case "name":
+                                            dipswitch.Name = kvp.Value;
+                                            break;
+                                        case "entry":
+                                            entries.Add(kvp.Value);
+                                            break;
+                                        case "default":
+                                            dipswitch.Default = kvp.Value;
+                                            break;
+                                        default:
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                                            break;
+                                    }
+                                }
+
+                                // Add the dipswitch to the list
+                                dipswitch.Entry = entries.ToArray();
+                                dipswitch.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+                                dipSwitches.Add(dipswitch);
+                                itemAdditional.Clear();
+                                break;
+
+                            case "driver":
+                                var driver = new Driver();
+                                foreach (var kvp in reader.Internal)
+                                {
+                                    switch (kvp.Key?.ToLowerInvariant())
+                                    {
+                                        case "status":
+                                            driver.Status = kvp.Value;
+                                            break;
+                                        case "color":
+                                            driver.Color = kvp.Value;
+                                            break;
+                                        case "sound":
+                                            driver.Sound = kvp.Value;
+                                            break;
+                                        case "palettesize":
+                                            driver.PaletteSize = kvp.Value;
+                                            break;
+                                        case "blit":
+                                            driver.Blit = kvp.Value;
+                                            break;
+                                        default:
+                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                                            break;
+                                    }
+                                }
+
+                                // Add the driver to the game
+                                driver.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+                                game.Driver = driver;
                                 itemAdditional.Clear();
                                 break;
                                 
@@ -490,7 +722,7 @@ namespace SabreTools.Serialization
 
                     else
                     {
-                        additional.Add(item: reader.CurrentLine);
+                        additional.Add(reader.CurrentLine);
                     }
                 }
 
