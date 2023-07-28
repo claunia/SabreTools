@@ -7,16 +7,16 @@ namespace SabreTools.Models.ClrMamePro
         public string Status { get; set; }
 
         /// <remarks>color, (good|imperfect|preliminary)</remarks>
-        public string Color { get; set; }
+        public string? Color { get; set; }
 
         /// <remarks>sound, (good|imperfect|preliminary)</remarks>
-        public string Sound { get; set; }
+        public string? Sound { get; set; }
 
         /// <remarks>palettesize, Numeric?</remarks>
-        public string PaletteSize { get; set; }
+        public string? PaletteSize { get; set; }
 
         /// <remarks>blit, (plain|dirty)</remarks>
-        public string Blit { get; set; }
+        public string? Blit { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

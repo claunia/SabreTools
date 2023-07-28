@@ -464,10 +464,10 @@ namespace SabreTools.DatFiles.Formats
 
             switch (video.Orientation)
             {
-                case "vertical":
+                case "horizontal":
                     item.Rotate = 0;
                     break;
-                case "horizontal":
+                case "vertical":
                     item.Rotate = 90;
                     break;
             }
@@ -528,12 +528,12 @@ namespace SabreTools.DatFiles.Formats
                 Players = Utilities.CleanLong(input.Players),
                 //Control = input.Control, // TODO: Add to internal model or find mapping
                 Controls = new List<Control>
+                {
+                    new Control
                     {
-                        new Control
-                        {
-                            Buttons = Utilities.CleanLong(input.Buttons),
-                        },
+                        Buttons = Utilities.CleanLong(input.Buttons),
                     },
+                },
                 Coins = Utilities.CleanLong(input.Coins),
                 Tilt = input.Tilt?.AsYesNo(),
                 Service = input.Service?.AsYesNo(),

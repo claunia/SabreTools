@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
+using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.IO.Writers;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -22,25 +20,118 @@ namespace SabreTools.DatFiles.Formats
             {
                 ItemType.Archive,
                 ItemType.BiosSet,
-                //ItemType.Chip,
-                //ItemType.DipSwitch,
+                ItemType.Chip,
+                ItemType.DipSwitch,
                 ItemType.Disk,
-                //ItemType.Display,
-                //ItemType.Driver,
-                //ItemType.Input,
+                ItemType.Display,
+                ItemType.Driver,
+                ItemType.Input,
                 ItemType.Media,
                 ItemType.Release,
                 ItemType.Rom,
                 ItemType.Sample,
-                //ItemType.Sound,
+                ItemType.Sound,
             };
         }
 
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
+            var missingFields = new List<DatItemField>();
+            switch (datItem)
+            {
+                case Release release:
+                    if (string.IsNullOrWhiteSpace(release.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(release.Region))
+                        missingFields.Add(DatItemField.Region);
+                    break;
+
+                case BiosSet biosset:
+                    if (string.IsNullOrWhiteSpace(biosset.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(biosset.Description))
+                        missingFields.Add(DatItemField.Description);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrWhiteSpace(rom.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (rom.Size == null || rom.Size < 0)
+                        missingFields.Add(DatItemField.Size);
+                    if (string.IsNullOrWhiteSpace(rom.CRC)
+                        && string.IsNullOrWhiteSpace(rom.MD5)
+                        && string.IsNullOrWhiteSpace(rom.SHA1)
+                        && string.IsNullOrWhiteSpace(rom.SHA256)
+                        && string.IsNullOrWhiteSpace(rom.SHA384)
+                        && string.IsNullOrWhiteSpace(rom.SHA512)
+                        && string.IsNullOrWhiteSpace(rom.SpamSum))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case Disk disk:
+                    if (string.IsNullOrWhiteSpace(disk.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(disk.MD5)
+                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case Sample sample:
+                    if (string.IsNullOrWhiteSpace(sample.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Archive archive:
+                    if (string.IsNullOrWhiteSpace(archive.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Chip chip:
+                    if (!chip.ChipTypeSpecified)
+                        missingFields.Add(DatItemField.ChipType);
+                    if (string.IsNullOrWhiteSpace(chip.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Display display:
+                    if (!display.DisplayTypeSpecified)
+                        missingFields.Add(DatItemField.DisplayType);
+                    if (!display.RotateSpecified)
+                        missingFields.Add(DatItemField.Rotate);
+                    break;
+
+                case Sound sound:
+                    if (!sound.ChannelsSpecified)
+                        missingFields.Add(DatItemField.Channels);
+                    break;
+
+                case Input input:
+                    if (!input.PlayersSpecified)
+                        missingFields.Add(DatItemField.Players);
+                    if (!input.ControlsSpecified)
+                        missingFields.Add(DatItemField.Control_Buttons);
+                    break;
+
+                case DipSwitch dipswitch:
+                    if (string.IsNullOrWhiteSpace(dipswitch.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Driver driver:
+                    if (!driver.StatusSpecified)
+                        missingFields.Add(DatItemField.SupportStatus);
+                    if (!driver.EmulationSpecified)
+                        missingFields.Add(DatItemField.EmulationStatus);
+                    break;
+            }
+
             // TODO: Check required fields
-            return null;
+            return missingFields;
         }
 
         /// <inheritdoc/>
@@ -49,68 +140,13 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 logger.User($"Writing to '{outfile}'...");
-                FileStream fs = System.IO.File.Create(outfile);
 
-                // If we get back null for some reason, just log and return
-                if (fs == null)
+                var metadataFile = CreateMetadataFile();
+                if (!Serialization.ClrMamePro.SerializeToFile(metadataFile, outfile, Quotes))
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
                 }
-
-                ClrMameProWriter cmpw = new(fs, new UTF8Encoding(false))
-                {
-                    Quotes = Quotes
-                };
-
-                // Write out the header
-                WriteHeader(cmpw);
-
-                // Write out each of the machines and roms
-                string lastgame = null;
-
-                // Use a sorted list of games to output
-                foreach (string key in Items.SortedKeys)
-                {
-                    ConcurrentList<DatItem> datItems = Items.FilteredItems(key);
-
-                    // If this machine doesn't contain any writable items, skip
-                    if (!ContainsWritable(datItems))
-                        continue;
-
-                    // Resolve the names in the block
-                    datItems = DatItem.ResolveNames(datItems);
-
-                    for (int index = 0; index < datItems.Count; index++)
-                    {
-                        DatItem datItem = datItems[index];
-
-                        // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
-                            WriteEndGame(cmpw, datItem);
-
-                        // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
-                            WriteStartGame(cmpw, datItem);
-
-                        // Check for a "null" item
-                        datItem = ProcessNullifiedItem(datItem);
-
-                        // Write out the item if we're not ignoring
-                        if (!ShouldIgnore(datItem, ignoreblanks))
-                            WriteDatItem(cmpw, datItem);
-
-                        // Set the new data to compare against
-                        lastgame = datItem.Machine.Name;
-                    }
-                }
-
-                // Write the file footer out
-                WriteFooter(cmpw);
-
-                logger.User($"'{outfile}' written!{Environment.NewLine}");
-                cmpw.Dispose();
-                fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -122,176 +158,413 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Write out DAT header using the supplied StreamWriter
-        /// </summary>
-        /// <param name="cmpw">ClrMameProWriter to output to</param>
-        private void WriteHeader(ClrMameProWriter cmpw)
-        {
-            cmpw.WriteStartElement("clrmamepro");
-
-            cmpw.WriteRequiredStandalone("name", Header.Name);
-            cmpw.WriteRequiredStandalone("description", Header.Description);
-            cmpw.WriteOptionalStandalone("category", Header.Category);
-            cmpw.WriteRequiredStandalone("version", Header.Version);
-            cmpw.WriteOptionalStandalone("date", Header.Date);
-            cmpw.WriteRequiredStandalone("author", Header.Author);
-            cmpw.WriteOptionalStandalone("email", Header.Email);
-            cmpw.WriteOptionalStandalone("homepage", Header.Homepage);
-            cmpw.WriteOptionalStandalone("url", Header.Url);
-            cmpw.WriteOptionalStandalone("comment", Header.Comment);
-            if (Header.ForcePacking != PackingFlag.None)
-                cmpw.WriteOptionalStandalone("forcezipping", Header.ForcePacking.FromPackingFlag(true), false);
-            if (Header.ForceMerging != MergingFlag.None)
-                cmpw.WriteOptionalStandalone("forcemerging", Header.ForceMerging.FromMergingFlag(false), false);
-
-            // End clrmamepro
-            cmpw.WriteEndElement();
-
-            cmpw.Flush();
-        }
-
+        /// Create a MetadataFile from the current internal information
         /// <summary>
-        /// Write out Game start using the supplied StreamWriter
-        /// </summary>
-        /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private static void WriteStartGame(ClrMameProWriter cmpw, DatItem datItem)
+        private Models.ClrMamePro.MetadataFile CreateMetadataFile()
         {
-            // No game should start with a path separator
-            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
-
-            // Build the state
-            cmpw.WriteStartElement(datItem.Machine.MachineType == MachineType.Bios ? "resource" : "game");
-
-            cmpw.WriteRequiredStandalone("name", datItem.Machine.Name);
-            cmpw.WriteOptionalStandalone("romof", datItem.Machine.RomOf);
-            cmpw.WriteOptionalStandalone("cloneof", datItem.Machine.CloneOf);
-            cmpw.WriteOptionalStandalone("description", datItem.Machine.Description ?? datItem.Machine.Name);
-            cmpw.WriteOptionalStandalone("year", datItem.Machine.Year);
-            cmpw.WriteOptionalStandalone("manufacturer", datItem.Machine.Manufacturer);
-            cmpw.WriteOptionalStandalone("category", datItem.Machine.Category);
-
-            cmpw.Flush();
-        }
-
-        /// <summary>
-        /// Write out Game end using the supplied StreamWriter
-        /// </summary>
-        /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private static void WriteEndGame(ClrMameProWriter cmpw, DatItem datItem)
-        {
-            // Build the state
-            cmpw.WriteOptionalStandalone("sampleof", datItem.Machine.SampleOf);
-
-            // End game
-            cmpw.WriteEndElement();
-
-            cmpw.Flush();
-        }
-
-        /// <summary>
-        /// Write out DatItem using the supplied StreamWriter
-        /// </summary>
-        /// <param name="datFile">DatFile to write out from</param>
-        /// <param name="cmpw">ClrMameProWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteDatItem(ClrMameProWriter cmpw, DatItem datItem)
-        {
-            // Pre-process the item name
-            ProcessItemName(datItem, true);
-
-            // Build the state
-            switch (datItem.ItemType)
+            var metadataFile = new Models.ClrMamePro.MetadataFile
             {
-                case ItemType.Archive:
-                    var archive = datItem as Archive;
-                    cmpw.WriteStartElement("archive");
-                    cmpw.WriteRequiredAttributeString("name", archive.Name);
-                    cmpw.WriteEndElement();
-                    break;
+                ClrMamePro = CreateClrMamePro(),
+                Game = CreateGames()
+            };
+            return metadataFile;
+        }
 
-                case ItemType.BiosSet:
-                    var biosSet = datItem as BiosSet;
-                    cmpw.WriteStartElement("biosset");
-                    cmpw.WriteRequiredAttributeString("name", biosSet.Name);
-                    cmpw.WriteOptionalAttributeString("description", biosSet.Description);
-                    cmpw.WriteOptionalAttributeString("default", biosSet.Default?.ToString().ToLowerInvariant());
-                    cmpw.WriteEndElement();
-                    break;
+        /// <summary>
+        /// Create a ClrMamePro from the current internal information
+        /// <summary>
+        private Models.ClrMamePro.ClrMamePro? CreateClrMamePro()
+        {
+            // If we don't have a header, we can't do anything
+            if (this.Header == null)
+                return null;
 
-                case ItemType.Disk:
-                    var disk = datItem as Disk;
-                    cmpw.WriteStartElement("disk");
-                    cmpw.WriteRequiredAttributeString("name", disk.Name);
-                    cmpw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant(), quoteOverride: false);
-                    if (disk.ItemStatus != ItemStatus.None)
-                        cmpw.WriteOptionalAttributeString("flags", disk.ItemStatus.FromItemStatus(false));
-                    cmpw.WriteEndElement();
-                    break;
+            var clrMamePro = new Models.ClrMamePro.ClrMamePro
+            {
+                Name = Header.Name,
+                Description = Header.Description,
+                RootDir = Header.RootDir,
+                Category = Header.Category,
+                Version = Header.Version,
+                Date = Header.Date,
+                Author = Header.Author,
+                Homepage = Header.Homepage,
+                Url = Header.Url,
+                Comment = Header.Comment,
+                Header = Header.HeaderSkipper,
+                Type = Header.Type,
+            };
 
-                case ItemType.Media:
-                    var media = datItem as Media;
-                    cmpw.WriteStartElement("media");
-                    cmpw.WriteRequiredAttributeString("name", media.Name);
-                    cmpw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("spamsum", media.SpamSum?.ToLowerInvariant());
-                    cmpw.WriteEndElement();
-                    break;
+            if (Header.ForceMergingSpecified)
+                clrMamePro.ForceMerging = Header.ForceMerging.FromMergingFlag(romCenter: false);
+            if (Header.ForcePackingSpecified)
+                clrMamePro.ForcePacking = Header.ForcePacking.FromPackingFlag(yesno: false);
 
-                case ItemType.Release:
-                    var release = datItem as Release;
-                    cmpw.WriteStartElement("release");
-                    cmpw.WriteRequiredAttributeString("name", release.Name);
-                    cmpw.WriteOptionalAttributeString("region", release.Region);
-                    cmpw.WriteOptionalAttributeString("language", release.Language);
-                    cmpw.WriteOptionalAttributeString("date", release.Date);
-                    cmpw.WriteOptionalAttributeString("default", release.Default?.ToString().ToLowerInvariant());
-                    cmpw.WriteEndElement();
-                    break;
+            return clrMamePro;
+        }
 
-                case ItemType.Rom:
-                    var rom = datItem as Rom;
-                    cmpw.WriteStartElement("rom");
-                    cmpw.WriteRequiredAttributeString("name", rom.Name);
-                    cmpw.WriteOptionalAttributeString("size", rom.Size?.ToString(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant(), quoteOverride: false);
-                    cmpw.WriteOptionalAttributeString("date", rom.Date);
-                    if (rom.ItemStatus != ItemStatus.None)
-                        cmpw.WriteOptionalAttributeString("flags", rom.ItemStatus.FromItemStatus(false));
-                    cmpw.WriteEndElement();
-                    break;
+        /// <summary>
+        /// Create an array of GameBase from the current internal information
+        /// <summary>
+        private Models.ClrMamePro.GameBase[]? CreateGames()
+        {
+            // If we don't have items, we can't do anything
+            if (this.Items == null || !this.Items.Any())
+                return null;
 
-                case ItemType.Sample:
-                    var sample = datItem as Sample;
-                    cmpw.WriteStartElement("sample");
-                    cmpw.WriteRequiredAttributeString("name", sample.Name);
-                    cmpw.WriteEndElement();
+            // Create a list of hold the games
+            var games = new List<Models.ClrMamePro.GameBase>();
+
+            // Loop through the sorted items and create games for them
+            foreach (string key in Items.SortedKeys)
+            {
+                var items = Items.FilteredItems(key);
+                if (items == null || !items.Any())
+                    continue;
+
+                // Get the first item for game information
+                var machine = items[0].Machine;
+
+                // We normalize to all "game"
+                var game = new Models.ClrMamePro.Game
+                {
+                    Name = machine.Name,
+                    Description = machine.Description,
+                    Year = machine.Year,
+                    Manufacturer = machine.Manufacturer,
+                    Category = machine.Category,
+                    CloneOf = machine.CloneOf,
+                    RomOf = machine.RomOf,
+                    SampleOf = machine.SampleOf,
+                };
+
+                // Create holders for all item types
+                var releases = new List<Models.ClrMamePro.Release>();
+                var biossets = new List<Models.ClrMamePro.BiosSet>();
+                var roms = new List<Models.ClrMamePro.Rom>();
+                var disks = new List<Models.ClrMamePro.Disk>();
+                var medias = new List<Models.ClrMamePro.Media>();
+                var samples = new List<Models.ClrMamePro.Sample>();
+                var archives = new List<Models.ClrMamePro.Archive>();
+                var chips = new List<Models.ClrMamePro.Chip>();
+                var dipswitches = new List<Models.ClrMamePro.DipSwitch>();
+
+                // Loop through and convert the items to respective lists
+                foreach (var item in items)
+                {
+                    switch (item)
+                    {
+                        case Release release:
+                            releases.Add(CreateRelease(release));
+                            break;
+                        case BiosSet biosset:
+                            biossets.Add(CreateBiosSet(biosset));
+                            break;
+                        case Rom rom:
+                            roms.Add(CreateRom(rom));
+                            break;
+                        case Disk disk:
+                            disks.Add(CreateDisk(disk));
+                            break;
+                        case Media media:
+                            medias.Add(CreateMedia(media));
+                            break;
+                        case Sample sample:
+                            samples.Add(CreateSample(sample));
+                            break;
+                        case Archive archive:
+                            archives.Add(CreateArchive(archive));
+                            break;
+                        case Chip chip:
+                            chips.Add(CreateChip(chip));
+                            break;
+                        case Display display:
+                            game.Video = CreateVideo(display);
+                            break;
+                        case Sound sound:
+                            game.Sound = CreateSound(sound);
+                            break;
+                        case Input input:
+                            game.Input = CreateInput(input);
+                            break;
+                        case DipSwitch dipswitch:
+                            dipswitches.Add(CreateDipSwitch(dipswitch));
+                            break;
+                        case Driver driver:
+                            game.Driver = CreateDriver(driver);
+                            break;
+                    }
+                }
+
+                // Assign the values to the game
+                game.Release = releases.ToArray();
+                game.BiosSet = biossets.ToArray();
+                game.Rom = roms.ToArray();
+                game.Disk = disks.ToArray();
+                game.Media = medias.ToArray();
+                game.Sample = samples.ToArray();
+                game.Archive = archives.ToArray();
+
+                // Add the game to the list
+                games.Add(game);
+            }
+
+            // TODO: Populate the games
+
+            return games.ToArray();
+        }
+
+        /// <summary>
+        /// Create a Release from the current Release DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Release CreateRelease(Release item)
+        {
+            var release = new Models.ClrMamePro.Release
+            {
+                Name = item.Name,
+                Region = item.Region,
+                Language = item.Language,
+                Date = item.Date,
+            };
+
+            if (item.DefaultSpecified)
+                release.Default = item.Default.FromYesNo();
+
+            return release;
+        }
+
+        /// <summary>
+        /// Create a BiosSet from the current BiosSet DatItem
+        /// <summary>
+        private static Models.ClrMamePro.BiosSet CreateBiosSet(BiosSet item)
+        {
+            var biosset = new Models.ClrMamePro.BiosSet
+            {
+                Name = item.Name,
+                Description = item.Description,
+            };
+
+            if (item.DefaultSpecified)
+                biosset.Default = item.Default.FromYesNo();
+
+            return biosset;
+        }
+
+        /// <summary>
+        /// Create a Rom from the current Rom DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Rom CreateRom(Rom item)
+        {
+            var rom = new Models.ClrMamePro.Rom
+            {
+                Name = item.Name,
+                Size = item.Size?.ToString(),
+                CRC = item.CRC,
+                MD5 = item.MD5,
+                SHA1 = item.SHA1,
+                SHA256 = item.SHA256,
+                SHA384 = item.SHA384,
+                SHA512 = item.SHA512,
+                SpamSum = item.SpamSum,
+                //xxHash364 = item.xxHash364, // TODO: Add to internal model
+                //xxHash3128 = item.xxHash3128, // TODO: Add to internal model
+                Merge = item.MergeTag,
+                Region = item.Region,
+                //Flags = item.Flags, // TODO: Add to internal model
+                Offs = item.Offset,
+                //Serial = item.Serial, // TODO: Add to internal model
+                //Header = item.Header, // TODO: Add to internal model
+                Date = item.Date,
+            };
+
+            if (item.ItemStatusSpecified)
+                rom.Status = item.ItemStatus.FromItemStatus(yesno: false);
+            if (item.InvertedSpecified)
+                rom.Inverted = item.Inverted.FromYesNo();
+            if (item.MIASpecified)
+                rom.MIA = item.MIA.FromYesNo();
+
+            return rom;
+        }
+
+        /// <summary>
+        /// Create a Disk from the current Disk DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Disk CreateDisk(Disk item)
+        {
+            var disk = new Models.ClrMamePro.Disk
+            {
+                Name = item.Name,
+                MD5 = item.MD5,
+                SHA1 = item.SHA1,
+                Merge = item.MergeTag,
+                //Flags = item.Flags, // TODO: Add to internal model
+            };
+
+            if (item.ItemStatusSpecified)
+                disk.Status = item.ItemStatus.FromItemStatus(yesno: false);
+
+            return disk;
+        }
+
+        /// <summary>
+        /// Create a Media from the current Media DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Media CreateMedia(Media item)
+        {
+            var media = new Models.ClrMamePro.Media
+            {
+                Name = item.Name,
+                MD5 = item.MD5,
+                SHA1 = item.SHA1,
+                SHA256 = item.SHA256,
+                SpamSum = item.SpamSum,
+            };
+            return media;
+        }
+
+        /// <summary>
+        /// Create a Sample from the current Sample DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Sample CreateSample(Sample item)
+        {
+            var sample = new Models.ClrMamePro.Sample
+            {
+                Name = item.Name,
+            };
+            return sample;
+        }
+
+        /// <summary>
+        /// Create a Archive from the current Archive DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Archive CreateArchive(Archive item)
+        {
+            var archive = new Models.ClrMamePro.Archive
+            {
+                Name = item.Name,
+            };
+            return archive;
+        }
+
+        /// <summary>
+        /// Create a Chip from the current Chip DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Chip CreateChip(Chip item)
+        {
+            var chip = new Models.ClrMamePro.Chip
+            {
+                Type = item.ChipType.FromChipType(),
+                Name = item.Name,
+                //Flags = item.Flags, // TODO: Add to internal model
+                Clock = item.Clock?.ToString(),
+            };
+            return chip;
+        }
+
+        /// <summary>
+        /// Create a Video from the current Display DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Video CreateVideo(Display item)
+        {
+            var video = new Models.ClrMamePro.Video
+            {
+                Screen = item.DisplayType.FromDisplayType(),
+                X = item.Width?.ToString(),
+                Y = item.Height?.ToString(),
+                //AspectX = item.AspectX, // TODO: Add to internal model or find mapping
+                //AspectY = item.AspectY, // TODO: Add to internal model or find mapping
+                Freq = item.Refresh?.ToString(),
+            };
+
+            switch (item.Rotate)
+            {
+                case 0:
+                case 180:
+                    video.Orientation = "horizontal";
+                    break;
+                case 90:
+                case 270:
+                    video.Orientation = "vertical";
                     break;
             }
 
-            cmpw.Flush();
+            return video;
         }
 
         /// <summary>
-        /// Write out DAT footer using the supplied StreamWriter
-        /// </summary>
-        /// <param name="cmpw">ClrMameProWriter to output to</param>
-        private static void WriteFooter(ClrMameProWriter cmpw)
+        /// Create a Sound from the current Sound DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Sound CreateSound(Sound item)
         {
-            // End game
-            cmpw.WriteEndElement();
+            var sound = new Models.ClrMamePro.Sound
+            {
+                Channels = item.Channels?.ToString(),
+            };
+            return sound;
+        }
 
-            cmpw.Flush();
+        /// <summary>
+        /// Create a Input from the current Input DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Input CreateInput(Input item)
+        {
+            var input = new Models.ClrMamePro.Input
+            {
+                Players = item.Players?.ToString(),
+                //Control = item.Control, // TODO: Add to internal model or find mapping
+                Coins = item.Coins?.ToString(),
+                Tilt = item.Tilt.FromYesNo(),
+                Service = item.Service.FromYesNo(),
+            };
+
+            if (item.ControlsSpecified)
+                input.Buttons = item.Controls[0].Buttons?.ToString();
+
+            return input;
+        }
+
+        /// <summary>
+        /// Create a DipSwitch from the current DipSwitch DatItem
+        /// <summary>
+        private static Models.ClrMamePro.DipSwitch CreateDipSwitch(DipSwitch item)
+        {
+            var dipswitch = new Models.ClrMamePro.DipSwitch
+            {
+                Name = item.Name,
+            };
+
+            if (item.ValuesSpecified)
+            {
+                var entries = new List<string>();
+                foreach (var setting in item.Values)
+                {
+                    entries.Add(setting.Value);
+                    if (setting.Default == true)
+                        dipswitch.Default = setting.Value;
+                }
+
+                dipswitch.Entry = entries.ToArray();
+            }
+
+            return dipswitch;
+        }
+
+        /// <summary>
+        /// Create a Driver from the current Driver DatItem
+        /// <summary>
+        private static Models.ClrMamePro.Driver CreateDriver(Driver item)
+        {
+            var driver = new Models.ClrMamePro.Driver
+            {
+                Status = item.Status.FromSupportStatus(),
+                //Color = item.Color, // TODO: Add to internal model or find mapping
+                //Sound = item.Sound, // TODO: Add to internal model or find mapping
+                //PaletteSize = item.PaletteSize, // TODO: Add to internal model or find mapping
+                //Blit = item.Blit, // TODO: Add to internal model or find mapping
+
+            };
+            return driver;
         }
     }
 }
