@@ -70,7 +70,6 @@ namespace SabreTools.Serialization
                 var additional = new List<string>();
                 var headerAdditional = new List<string>();
                 var gameAdditional = new List<string>();
-                var itemAdditional = new List<string>();
                 while (!reader.EndOfStream)
                 {
                     // If we have no next line
@@ -87,14 +86,14 @@ namespace SabreTools.Serialization
                             switch (lastTopLevel)
                             {
                                 case "doscenter":
-                                    dat.ClrMamePro.ADDITIONAL_ELEMENTS = headerAdditional.ToArray();
+                                    dat.ClrMamePro!.ADDITIONAL_ELEMENTS = headerAdditional.ToArray();
                                     headerAdditional.Clear();
                                     break;
                                 case "game":
                                 case "machine":
                                 case "resource":
                                 case "set":
-                                    game.Release = releases.ToArray();
+                                    game!.Release = releases.ToArray();
                                     game.BiosSet = biosSets.ToArray();
                                     game.Rom = roms.ToArray();
                                     game.Disk = disks.ToArray();
@@ -227,7 +226,7 @@ namespace SabreTools.Serialization
                             "machine" => new Machine(),
                             "resource" => new Resource(),
                             "set" => new Set(),
-                            _ => null,
+                            _ => throw new FormatException($"Unknown top-level block: {reader.TopLevel}"),
                         };
 
                         switch (reader.Standalone?.Key?.ToLowerInvariant())
@@ -257,9 +256,11 @@ namespace SabreTools.Serialization
                                 game.SampleOf = reader.Standalone?.Value;
                                 break;
                             case "sample":
-                                var sample = new Sample();
-                                sample.Name = reader.Standalone?.Value;
-                                sample.ADDITIONAL_ELEMENTS = Array.Empty<string>();
+                                var sample = new Sample
+                                {
+                                    Name = reader.Standalone?.Value ?? string.Empty,
+                                    ADDITIONAL_ELEMENTS = Array.Empty<string>()
+                                };
                                 samples.Add(sample);
                                 break;
                             default:
@@ -273,451 +274,51 @@ namespace SabreTools.Serialization
                             || reader.TopLevel == "machine"
                             || reader.TopLevel == "resource"
                             || reader.TopLevel == "set")
+                        && game != null
                         && reader.RowType == CmpRowType.Internal)
                     {
                         // Create the block
                         switch (reader.InternalName)
                         {
                             case "release":
-                                var release = new Release();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            release.Name = kvp.Value;
-                                            break;
-                                        case "region":
-                                            release.Region = kvp.Value;
-                                            break;
-                                        case "language":
-                                            release.Language = kvp.Value;
-                                            break;
-                                        case "date":
-                                            release.Date = kvp.Value;
-                                            break;
-                                        case "default":
-                                            release.Default = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the release to the list
-                                release.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                releases.Add(release);
-                                itemAdditional.Clear();
+                                releases.Add(CreateRelease(reader));
                                 break;
-
                             case "biosset":
-                                var biosset = new BiosSet();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            biosset.Name = kvp.Value;
-                                            break;
-                                        case "description":
-                                            biosset.Description = kvp.Value;
-                                            break;
-                                        case "default":
-                                            biosset.Default = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the biosset to the list
-                                biosset.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                biosSets.Add(biosset);
-                                itemAdditional.Clear();
+                                biosSets.Add(CreateBiosSet(reader));
                                 break;
-
                             case "rom":
-                                var rom = new Rom();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            rom.Name = kvp.Value;
-                                            break;
-                                        case "size":
-                                            rom.Size = kvp.Value;
-                                            break;
-                                        case "crc":
-                                            rom.CRC = kvp.Value;
-                                            break;
-                                        case "md5":
-                                            rom.MD5 = kvp.Value;
-                                            break;
-                                        case "sha1":
-                                            rom.SHA1 = kvp.Value;
-                                            break;
-                                        case "sha256":
-                                            rom.SHA256 = kvp.Value;
-                                            break;
-                                        case "sha384":
-                                            rom.SHA384 = kvp.Value;
-                                            break;
-                                        case "sha512":
-                                            rom.SHA512 = kvp.Value;
-                                            break;
-                                        case "spamsum":
-                                            rom.SpamSum = kvp.Value;
-                                            break;
-                                        case "xxh3_64":
-                                            rom.xxHash364 = kvp.Value;
-                                            break;
-                                        case "xxh3_128":
-                                            rom.xxHash3128 = kvp.Value;
-                                            break;
-                                        case "merge":
-                                            rom.Merge = kvp.Value;
-                                            break;
-                                        case "status":
-                                            rom.Status = kvp.Value;
-                                            break;
-                                        case "region":
-                                            rom.Region = kvp.Value;
-                                            break;
-                                        case "flags":
-                                            rom.Flags = kvp.Value;
-                                            break;
-                                        case "offs":
-                                            rom.Offs = kvp.Value;
-                                            break;
-                                        case "serial":
-                                            rom.Serial = kvp.Value;
-                                            break;
-                                        case "header":
-                                            rom.Header = kvp.Value;
-                                            break;
-                                        case "date":
-                                            rom.Date = kvp.Value;
-                                            break;
-                                        case "inverted":
-                                            rom.Inverted = kvp.Value;
-                                            break;
-                                        case "mia":
-                                            rom.MIA = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the rom to the list
-                                rom.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                roms.Add(rom);
-                                itemAdditional.Clear();
+                                roms.Add(CreateRom(reader));
                                 break;
-                                
                             case "disk":
-                                var disk = new Disk();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            disk.Name = kvp.Value;
-                                            break;
-                                        case "md5":
-                                            disk.MD5 = kvp.Value;
-                                            break;
-                                        case "sha1":
-                                            disk.SHA1 = kvp.Value;
-                                            break;
-                                        case "merge":
-                                            disk.Merge = kvp.Value;
-                                            break;
-                                        case "status":
-                                            disk.Status = kvp.Value;
-                                            break;
-                                        case "flags":
-                                            disk.Flags = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the disk to the list
-                                disk.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                disks.Add(disk);
-                                itemAdditional.Clear();
+                                disks.Add(CreateDisk(reader));
                                 break;
-                                
                             case "media":
-                                var media = new Media();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            media.Name = kvp.Value;
-                                            break;
-                                        case "md5":
-                                            media.MD5 = kvp.Value;
-                                            break;
-                                        case "sha1":
-                                            media.SHA1 = kvp.Value;
-                                            break;
-                                        case "sha256":
-                                            media.SHA256 = kvp.Value;
-                                            break;
-                                        case "spamsum":
-                                            media.SpamSum = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the media to the list
-                                media.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                medias.Add(media);
-                                itemAdditional.Clear();
+                                medias.Add(CreateMedia(reader));
                                 break;
-                                
                             case "sample":
-                                var sample = new Sample();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            sample.Name = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the sample to the list
-                                sample.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                samples.Add(sample);
-                                itemAdditional.Clear();
+                                samples.Add(CreateSample(reader));
                                 break;
-                                
                             case "archive":
-                                var archive = new Archive();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            archive.Name = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the archive to the list
-                                archive.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                archives.Add(archive);
-                                itemAdditional.Clear();
+                                archives.Add(CreateArchive(reader));
                                 break;
-
                             case "chip":
-                                var chip = new Chip();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "type":
-                                            chip.Type = kvp.Value;
-                                            break;
-                                        case "name":
-                                            chip.Name = kvp.Value;
-                                            break;
-                                        case "flags":
-                                            chip.Flags = kvp.Value;
-                                            break;
-                                        case "clock":
-                                            chip.Clock = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the chip to the list
-                                chip.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                chips.Add(chip);
-                                itemAdditional.Clear();
+                                chips.Add(CreateChip(reader));
                                 break;
-
                             case "video":
-                                var video = new Video();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "screen":
-                                            video.Screen = kvp.Value;
-                                            break;
-                                        case "orientation":
-                                            video.Orientation = kvp.Value;
-                                            break;
-                                        case "x":
-                                            video.X = kvp.Value;
-                                            break;
-                                        case "y":
-                                            video.Y = kvp.Value;
-                                            break;
-                                        case "aspectx":
-                                            video.AspectX = kvp.Value;
-                                            break;
-                                        case "aspecty":
-                                            video.AspectY = kvp.Value;
-                                            break;
-                                        case "freq":
-                                            video.Freq = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the video to the game
-                                video.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                game.Video = video;
-                                itemAdditional.Clear();
+                                game.Video = CreateVideo(reader);
                                 break;
-
                             case "sound":
-                                var sound = new Sound();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "channels":
-                                            sound.Channels = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the sound to the game
-                                sound.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                game.Sound = sound;
-                                itemAdditional.Clear();
+                                game.Sound = CreateSound(reader);
                                 break;
-
                             case "input":
-                                var input = new Input();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "players":
-                                            input.Players = kvp.Value;
-                                            break;
-                                        case "control":
-                                            input.Control = kvp.Value;
-                                            break;
-                                        case "buttons":
-                                            input.Buttons = kvp.Value;
-                                            break;
-                                        case "coins":
-                                            input.Coins = kvp.Value;
-                                            break;
-                                        case "tilt":
-                                            input.Tilt = kvp.Value;
-                                            break;
-                                        case "service":
-                                            input.Service = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the input to the game
-                                input.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                game.Input = input;
-                                itemAdditional.Clear();
+                                game.Input = CreateInput(reader);
                                 break;
-
                             case "dipswitch":
-                                var dipswitch = new DipSwitch();
-                                var entries = new List<string>();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "name":
-                                            dipswitch.Name = kvp.Value;
-                                            break;
-                                        case "entry":
-                                            entries.Add(kvp.Value);
-                                            break;
-                                        case "default":
-                                            dipswitch.Default = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the dipswitch to the list
-                                dipswitch.Entry = entries.ToArray();
-                                dipswitch.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                dipSwitches.Add(dipswitch);
-                                itemAdditional.Clear();
+                                dipSwitches.Add(CreateDipSwitch(reader));
                                 break;
-
                             case "driver":
-                                var driver = new Driver();
-                                foreach (var kvp in reader.Internal)
-                                {
-                                    switch (kvp.Key?.ToLowerInvariant())
-                                    {
-                                        case "status":
-                                            driver.Status = kvp.Value;
-                                            break;
-                                        case "color":
-                                            driver.Color = kvp.Value;
-                                            break;
-                                        case "sound":
-                                            driver.Sound = kvp.Value;
-                                            break;
-                                        case "palettesize":
-                                            driver.PaletteSize = kvp.Value;
-                                            break;
-                                        case "blit":
-                                            driver.Blit = kvp.Value;
-                                            break;
-                                        default:
-                                            itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
-                                            break;
-                                    }
-                                }
-
-                                // Add the driver to the game
-                                driver.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
-                                game.Driver = driver;
-                                itemAdditional.Clear();
+                                game.Driver = CreateDriver(reader);
                                 break;
-                                
                             default:
                                 gameAdditional.Add(reader.CurrentLine);
                                 continue;
@@ -741,7 +342,512 @@ namespace SabreTools.Serialization
                 return default;
             }
         }
-    
+
+        /// <summary>
+        /// Create a Release object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Release object created from the reader context</returns>
+        private static Release CreateRelease(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var release = new Release();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        release.Name = kvp.Value;
+                        break;
+                    case "region":
+                        release.Region = kvp.Value;
+                        break;
+                    case "language":
+                        release.Language = kvp.Value;
+                        break;
+                    case "date":
+                        release.Date = kvp.Value;
+                        break;
+                    case "default":
+                        release.Default = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            release.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return release;
+        }
+
+        /// <summary>
+        /// Create a BiosSet object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>BiosSet object created from the reader context</returns>
+        private static BiosSet CreateBiosSet(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var biosset = new BiosSet();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        biosset.Name = kvp.Value;
+                        break;
+                    case "description":
+                        biosset.Description = kvp.Value;
+                        break;
+                    case "default":
+                        biosset.Default = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            biosset.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return biosset;
+        }
+
+        /// <summary>
+        /// Create a Rom object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Rom object created from the reader context</returns>
+        private static Rom CreateRom(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var rom = new Rom();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        rom.Name = kvp.Value;
+                        break;
+                    case "size":
+                        rom.Size = kvp.Value;
+                        break;
+                    case "crc":
+                        rom.CRC = kvp.Value;
+                        break;
+                    case "md5":
+                        rom.MD5 = kvp.Value;
+                        break;
+                    case "sha1":
+                        rom.SHA1 = kvp.Value;
+                        break;
+                    case "sha256":
+                        rom.SHA256 = kvp.Value;
+                        break;
+                    case "sha384":
+                        rom.SHA384 = kvp.Value;
+                        break;
+                    case "sha512":
+                        rom.SHA512 = kvp.Value;
+                        break;
+                    case "spamsum":
+                        rom.SpamSum = kvp.Value;
+                        break;
+                    case "xxh3_64":
+                        rom.xxHash364 = kvp.Value;
+                        break;
+                    case "xxh3_128":
+                        rom.xxHash3128 = kvp.Value;
+                        break;
+                    case "merge":
+                        rom.Merge = kvp.Value;
+                        break;
+                    case "status":
+                        rom.Status = kvp.Value;
+                        break;
+                    case "region":
+                        rom.Region = kvp.Value;
+                        break;
+                    case "flags":
+                        rom.Flags = kvp.Value;
+                        break;
+                    case "offs":
+                        rom.Offs = kvp.Value;
+                        break;
+                    case "serial":
+                        rom.Serial = kvp.Value;
+                        break;
+                    case "header":
+                        rom.Header = kvp.Value;
+                        break;
+                    case "date":
+                        rom.Date = kvp.Value;
+                        break;
+                    case "inverted":
+                        rom.Inverted = kvp.Value;
+                        break;
+                    case "mia":
+                        rom.MIA = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            rom.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return rom;
+        }
+
+        /// <summary>
+        /// Create a Disk object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Disk object created from the reader context</returns>
+        private static Disk CreateDisk(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var disk = new Disk();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        disk.Name = kvp.Value;
+                        break;
+                    case "md5":
+                        disk.MD5 = kvp.Value;
+                        break;
+                    case "sha1":
+                        disk.SHA1 = kvp.Value;
+                        break;
+                    case "merge":
+                        disk.Merge = kvp.Value;
+                        break;
+                    case "status":
+                        disk.Status = kvp.Value;
+                        break;
+                    case "flags":
+                        disk.Flags = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            disk.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return disk;
+        }
+
+        /// <summary>
+        /// Create a Media object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Media object created from the reader context</returns>
+        private static Media CreateMedia(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var media = new Media();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        media.Name = kvp.Value;
+                        break;
+                    case "md5":
+                        media.MD5 = kvp.Value;
+                        break;
+                    case "sha1":
+                        media.SHA1 = kvp.Value;
+                        break;
+                    case "sha256":
+                        media.SHA256 = kvp.Value;
+                        break;
+                    case "spamsum":
+                        media.SpamSum = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            media.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return media;
+        }
+
+        /// <summary>
+        /// Create a Sample object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Sample object created from the reader context</returns>
+        private static Sample CreateSample(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var sample = new Sample();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        sample.Name = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            sample.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return sample;
+        }
+
+        /// <summary>
+        /// Create a Archive object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Archive object created from the reader context</returns>
+        private static Archive CreateArchive(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var archive = new Archive();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        archive.Name = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            archive.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return archive;
+        }
+
+        /// <summary>
+        /// Create a Chip object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Chip object created from the reader context</returns>
+        private static Chip CreateChip(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var chip = new Chip();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "type":
+                        chip.Type = kvp.Value;
+                        break;
+                    case "name":
+                        chip.Name = kvp.Value;
+                        break;
+                    case "flags":
+                        chip.Flags = kvp.Value;
+                        break;
+                    case "clock":
+                        chip.Clock = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            chip.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return chip;
+        }
+
+        /// <summary>
+        /// Create a Video object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Video object created from the reader context</returns>
+        private static Video CreateVideo(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var video = new Video();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "screen":
+                        video.Screen = kvp.Value;
+                        break;
+                    case "orientation":
+                        video.Orientation = kvp.Value;
+                        break;
+                    case "x":
+                        video.X = kvp.Value;
+                        break;
+                    case "y":
+                        video.Y = kvp.Value;
+                        break;
+                    case "aspectx":
+                        video.AspectX = kvp.Value;
+                        break;
+                    case "aspecty":
+                        video.AspectY = kvp.Value;
+                        break;
+                    case "freq":
+                        video.Freq = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            video.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return video;
+        }
+
+        /// <summary>
+        /// Create a Sound object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Sound object created from the reader context</returns>
+        private static Sound CreateSound(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var sound = new Sound();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "channels":
+                        sound.Channels = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            sound.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return sound;
+        }
+
+        /// <summary>
+        /// Create a Input object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Input object created from the reader context</returns>
+        private static Input CreateInput(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var input = new Input();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "players":
+                        input.Players = kvp.Value;
+                        break;
+                    case "control":
+                        input.Control = kvp.Value;
+                        break;
+                    case "buttons":
+                        input.Buttons = kvp.Value;
+                        break;
+                    case "coins":
+                        input.Coins = kvp.Value;
+                        break;
+                    case "tilt":
+                        input.Tilt = kvp.Value;
+                        break;
+                    case "service":
+                        input.Service = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            input.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return input;
+        }
+
+        /// <summary>
+        /// Create a DipSwitch object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>DipSwitch object created from the reader context</returns>
+        private static DipSwitch CreateDipSwitch(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var dipswitch = new DipSwitch();
+            var entries = new List<string>();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        dipswitch.Name = kvp.Value;
+                        break;
+                    case "entry":
+                        entries.Add(kvp.Value);
+                        break;
+                    case "default":
+                        dipswitch.Default = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            dipswitch.Entry = entries.ToArray();
+            dipswitch.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return dipswitch;
+        }
+
+        /// <summary>
+        /// Create a Driver object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>Driver object created from the reader context</returns>
+        private static Driver CreateDriver(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var driver = new Driver();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "status":
+                        driver.Status = kvp.Value;
+                        break;
+                    case "color":
+                        driver.Color = kvp.Value;
+                        break;
+                    case "sound":
+                        driver.Sound = kvp.Value;
+                        break;
+                    case "palettesize":
+                        driver.PaletteSize = kvp.Value;
+                        break;
+                    case "blit":
+                        driver.Blit = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add($"{kvp.Key}: {kvp.Value}");
+                        break;
+                }
+            }
+
+            driver.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return driver;
+        }
+
         #endregion
 
         #region Serialization
