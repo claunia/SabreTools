@@ -32,8 +32,6 @@ namespace SabreTools.DatFiles.Formats
                 string message = $"'{filename}' - An error occurred during parsing";
                 logger.Error(ex, message);
             }
-
-            return;
         }
 
         #region Converters
