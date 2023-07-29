@@ -40,7 +40,7 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.CRC))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.CRC))
                                 missingFields.Add(DatItemField.CRC);
                             break;
                         default:
@@ -52,15 +52,15 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Disk:
-                            if (!string.IsNullOrEmpty((datItem as Disk)?.MD5))
+                            if (string.IsNullOrEmpty((datItem as Disk)?.MD5))
                                 missingFields.Add(DatItemField.MD5);
                             break;
                         case ItemType.Media:
-                            if (!string.IsNullOrEmpty((datItem as Media)?.MD5))
+                            if (string.IsNullOrEmpty((datItem as Media)?.MD5))
                                 missingFields.Add(DatItemField.MD5);
                             break;
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.MD5))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.MD5))
                                 missingFields.Add(DatItemField.MD5);
                             break;
                         default:
@@ -72,15 +72,15 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Disk:
-                            if (!string.IsNullOrEmpty((datItem as Disk)?.SHA1))
+                            if (string.IsNullOrEmpty((datItem as Disk)?.SHA1))
                                 missingFields.Add(DatItemField.SHA1);
                             break;
                         case ItemType.Media:
-                            if (!string.IsNullOrEmpty((datItem as Media)?.SHA1))
+                            if (string.IsNullOrEmpty((datItem as Media)?.SHA1))
                                 missingFields.Add(DatItemField.SHA1);
                             break;
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA1))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.SHA1))
                                 missingFields.Add(DatItemField.SHA1);
                             break;
                         default:
@@ -92,11 +92,11 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Media:
-                            if (!string.IsNullOrEmpty((datItem as Media)?.SHA256))
+                            if (string.IsNullOrEmpty((datItem as Media)?.SHA256))
                                 missingFields.Add(DatItemField.SHA256);
                             break;
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA256))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.SHA256))
                                 missingFields.Add(DatItemField.SHA256);
                             break;
                         default:
@@ -108,7 +108,7 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA384))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.SHA384))
                                 missingFields.Add(DatItemField.SHA384);
                             break;
                         default:
@@ -120,7 +120,7 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.SHA512))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.SHA512))
                                 missingFields.Add(DatItemField.SHA512);
                             break;
                         default:
@@ -132,11 +132,11 @@ namespace SabreTools.DatFiles.Formats
                     switch (datItem.ItemType)
                     {
                         case ItemType.Media:
-                            if (!string.IsNullOrEmpty((datItem as Media)?.SpamSum))
+                            if (string.IsNullOrEmpty((datItem as Media)?.SpamSum))
                                 missingFields.Add(DatItemField.SpamSum);
                             break;
                         case ItemType.Rom:
-                            if (!string.IsNullOrEmpty((datItem as Rom)?.SpamSum))
+                            if (string.IsNullOrEmpty((datItem as Rom)?.SpamSum))
                                 missingFields.Add(DatItemField.SpamSum);
                             break;
                         default:
@@ -156,7 +156,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 logger.User($"Writing to '{outfile}'...");
 
-                var hashfile = CreateHashFile();
+                var hashfile = CreateHashFile(ignoreblanks);
                 if (!Serialization.Hashfile.SerializeToFile(hashfile, outfile, _hash))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
@@ -175,32 +175,33 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a Hashfile from the current internal information
         /// <summary>
-        private Models.Hashfile.Hashfile CreateHashFile()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.Hashfile CreateHashFile(bool ignoreblanks)
         {
             var hashfile = new Models.Hashfile.Hashfile();
 
             switch (_hash)
             {
                 case Hash.CRC:
-                    hashfile.SFV = CreateSFV();
+                    hashfile.SFV = CreateSFV(ignoreblanks);
                     break;
                 case Hash.MD5:
-                    hashfile.MD5 = CreateMD5();
+                    hashfile.MD5 = CreateMD5(ignoreblanks);
                     break;
                 case Hash.SHA1:
-                    hashfile.SHA1 = CreateSHA1();
+                    hashfile.SHA1 = CreateSHA1(ignoreblanks);
                     break;
                 case Hash.SHA256:
-                    hashfile.SHA256 = CreateSHA256();
+                    hashfile.SHA256 = CreateSHA256(ignoreblanks);
                     break;
                 case Hash.SHA384:
-                    hashfile.SHA384 = CreateSHA384();
+                    hashfile.SHA384 = CreateSHA384(ignoreblanks);
                     break;
                 case Hash.SHA512:
-                    hashfile.SHA512 = CreateSHA512();
+                    hashfile.SHA512 = CreateSHA512(ignoreblanks);
                     break;
                 case Hash.SpamSum:
-                    hashfile.SpamSum = CreateSpamSum();
+                    hashfile.SpamSum = CreateSpamSum(ignoreblanks);
                     break;
             }
 
@@ -210,7 +211,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of SFV
         /// <summary>
-        private Models.Hashfile.SFV[]? CreateSFV()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.SFV[]? CreateSFV(bool ignoreblanks)
         {
             // Create a list of hold the SFVs
             var sfvs = new List<Models.Hashfile.SFV>();
@@ -224,6 +226,10 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
                     if (Header.GameName)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
@@ -247,7 +253,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of MD5
         /// <summary>
-        private Models.Hashfile.MD5[]? CreateMD5()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.MD5[]? CreateMD5(bool ignoreblanks)
         {
             // Create a list of hold the MD5s
             var md5s = new List<Models.Hashfile.MD5>();
@@ -261,6 +268,10 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
                     if (Header.GameName)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
@@ -300,7 +311,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of SHA1
         /// <summary>
-        private Models.Hashfile.SHA1[]? CreateSHA1()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.SHA1[]? CreateSHA1(bool ignoreblanks)
         {
             // Create a list of hold the SHA1s
             var sha1s = new List<Models.Hashfile.SHA1>();
@@ -314,6 +326,10 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
                     if (Header.GameName)
                         name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
@@ -353,7 +369,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of SHA256
         /// <summary>
-        private Models.Hashfile.SHA256[]? CreateSHA256()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.SHA256[]? CreateSHA256(bool ignoreblanks)
         {
             // Create a list of hold the SHA256s
             var sha256s = new List<Models.Hashfile.SHA256>();
@@ -367,7 +384,14 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
+                    if (Header.GameName)
+                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+
                     switch (item)
                     {
                         case Media media:
@@ -395,7 +419,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of SHA384
         /// <summary>
-        private Models.Hashfile.SHA384[]? CreateSHA384()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.SHA384[]? CreateSHA384(bool ignoreblanks)
         {
             // Create a list of hold the SHA384s
             var sha384s = new List<Models.Hashfile.SHA384>();
@@ -409,7 +434,14 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
+                    if (Header.GameName)
+                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+
                     switch (item)
                     {
                         case Rom rom:
@@ -429,7 +461,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of SHA512
         /// <summary>
-        private Models.Hashfile.SHA512[]? CreateSHA512()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.SHA512[]? CreateSHA512(bool ignoreblanks)
         {
             // Create a list of hold the SHA512s
             var sha512s = new List<Models.Hashfile.SHA512>();
@@ -443,7 +476,14 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
+                    if (Header.GameName)
+                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+
                     switch (item)
                     {
                         case Rom rom:
@@ -463,7 +503,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of SpamSum
         /// <summary>
-        private Models.Hashfile.SpamSum[]? CreateSpamSum()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Hashfile.SpamSum[]? CreateSpamSum(bool ignoreblanks)
         {
             // Create a list of hold the SpamSums
             var spamsums = new List<Models.Hashfile.SpamSum>();
@@ -477,7 +518,14 @@ namespace SabreTools.DatFiles.Formats
 
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     string name = string.Empty;
+                    if (Header.GameName)
+                        name = $"{item.Machine.Name}{Path.DirectorySeparatorChar}";
+
                     switch (item)
                     {
                         case Media media:
