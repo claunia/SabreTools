@@ -157,6 +157,8 @@ namespace SabreTools.DatFiles.Formats
             return true;
         }
 
+        #region Converters
+
         /// <summary>
         /// Create a MetadataFile from the current internal information
         /// <summary>
@@ -572,5 +574,7 @@ namespace SabreTools.DatFiles.Formats
             };
             return driver;
         }
+
+        #endregion
     }
 }

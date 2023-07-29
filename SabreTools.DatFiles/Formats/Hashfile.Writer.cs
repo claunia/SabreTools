@@ -172,6 +172,8 @@ namespace SabreTools.DatFiles.Formats
             return true;
         }
 
+        #region Converters
+
         /// <summary>
         /// Create a Hashfile from the current internal information
         /// <summary>
@@ -549,5 +551,7 @@ namespace SabreTools.DatFiles.Formats
 
             return spamsums.ToArray();
         }
+
+        #endregion
     }
 }
