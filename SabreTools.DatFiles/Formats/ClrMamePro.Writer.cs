@@ -141,7 +141,7 @@ namespace SabreTools.DatFiles.Formats
             {
                 logger.User($"Writing to '{outfile}'...");
 
-                var metadataFile = CreateMetadataFile();
+                var metadataFile = CreateMetadataFile(ignoreblanks);
                 if (!Serialization.ClrMamePro.SerializeToFile(metadataFile, outfile, Quotes))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
@@ -160,12 +160,13 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a MetadataFile from the current internal information
         /// <summary>
-        private Models.ClrMamePro.MetadataFile CreateMetadataFile()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.ClrMamePro.MetadataFile CreateMetadataFile(bool ignoreblanks)
         {
             var metadataFile = new Models.ClrMamePro.MetadataFile
             {
                 ClrMamePro = CreateClrMamePro(),
-                Game = CreateGames()
+                Game = CreateGames(ignoreblanks)
             };
             return metadataFile;
         }
@@ -206,7 +207,8 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create an array of GameBase from the current internal information
         /// <summary>
-        private Models.ClrMamePro.GameBase[]? CreateGames()
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.ClrMamePro.GameBase[]? CreateGames(bool ignoreblanks)
         {
             // If we don't have items, we can't do anything
             if (this.Items == null || !this.Items.Any())
@@ -252,6 +254,10 @@ namespace SabreTools.DatFiles.Formats
                 // Loop through and convert the items to respective lists
                 foreach (var item in items)
                 {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
                     switch (item)
                     {
                         case Release release:
