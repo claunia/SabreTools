@@ -76,7 +76,7 @@ namespace SabreTools.Serialization
         /// Write header information to the current writer
         /// </summary>
         /// <param name="header">ClrMamePro representing the header information</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteHeader(Models.ClrMamePro.ClrMamePro? header, ClrMameProWriter writer)
         {
             // If the header information is missing, we can't do anything
@@ -109,7 +109,7 @@ namespace SabreTools.Serialization
         /// Write games information to the current writer
         /// </summary>
         /// <param name="games">Array of GameBase objects representing the games information</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteGames(GameBase[]? games, ClrMameProWriter writer)
         {
             // If the games information is missing, we can't do anything
@@ -128,7 +128,7 @@ namespace SabreTools.Serialization
         /// Write game information to the current writer
         /// </summary>
         /// <param name="game">GameBase object representing the game information</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteGame(GameBase game, ClrMameProWriter writer)
         {
             // If the game information is missing, we can't do anything
@@ -183,7 +183,7 @@ namespace SabreTools.Serialization
         /// Write releases information to the current writer
         /// </summary>
         /// <param name="releases">Array of Release objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteReleases(Release[]? releases, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -206,7 +206,7 @@ namespace SabreTools.Serialization
         /// Write biossets information to the current writer
         /// </summary>
         /// <param name="biossets">Array of BiosSet objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteBiosSets(BiosSet[]? biossets, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -227,7 +227,7 @@ namespace SabreTools.Serialization
         /// Write roms information to the current writer
         /// </summary>
         /// <param name="roms">Array of Rom objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteRoms(Rom[]? roms, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -266,7 +266,7 @@ namespace SabreTools.Serialization
         /// Write disks information to the current writer
         /// </summary>
         /// <param name="disks">Array of Disk objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteDisks(Disk[]? disks, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -290,7 +290,7 @@ namespace SabreTools.Serialization
         /// Write medias information to the current writer
         /// </summary>
         /// <param name="medias">Array of Media objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteMedia(Media[]? medias, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -313,7 +313,7 @@ namespace SabreTools.Serialization
         /// Write samples information to the current writer
         /// </summary>
         /// <param name="samples">Array of Sample objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteSamples(Sample[]? samples, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -332,7 +332,7 @@ namespace SabreTools.Serialization
         /// Write archives information to the current writer
         /// </summary>
         /// <param name="archives">Array of Archive objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteArchives(Archive[]? archives, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -351,7 +351,7 @@ namespace SabreTools.Serialization
         /// Write chips information to the current writer
         /// </summary>
         /// <param name="chips">Array of Chip objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteChips(Chip[]? chips, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -373,7 +373,7 @@ namespace SabreTools.Serialization
         /// Write video information to the current writer
         /// </summary>
         /// <param name="video">Video object to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteVideo(Video? video, ClrMameProWriter writer)
         {
             // If the item is missing, we can't do anything
@@ -395,7 +395,7 @@ namespace SabreTools.Serialization
         /// Write sound information to the current writer
         /// </summary>
         /// <param name="sound">Sound object to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteSound(Sound? sound, ClrMameProWriter writer)
         {
             // If the item is missing, we can't do anything
@@ -411,7 +411,7 @@ namespace SabreTools.Serialization
         /// Write input information to the current writer
         /// </summary>
         /// <param name="input">Input object to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteInput(Input? input, ClrMameProWriter writer)
         {
             // If the item is missing, we can't do anything
@@ -432,7 +432,7 @@ namespace SabreTools.Serialization
         /// Write dipswitches information to the current writer
         /// </summary>
         /// <param name="dipswitches">Array of DipSwitch objects to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteDipSwitches(DipSwitch[]? dipswitches, ClrMameProWriter writer)
         {
             // If the array is missing, we can't do anything
@@ -456,7 +456,7 @@ namespace SabreTools.Serialization
         /// Write driver information to the current writer
         /// </summary>
         /// <param name="driver">Driver object to write</param>
-        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <param name="writer">ClrMameProWriter representing the output</param>
         private static void WriteDriver(Driver? driver, ClrMameProWriter writer)
         {
             // If the item is missing, we can't do anything

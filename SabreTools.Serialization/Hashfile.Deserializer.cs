@@ -7,9 +7,9 @@ using SabreTools.Core;
 namespace SabreTools.Serialization
 {
     /// <summary>
-    /// Serializer for hashfile variants
+    /// Deserializer for hashfile variants
     /// </summary>
-    public class Hashfile
+    public partial class Hashfile
     {
         /// <summary>
         /// Deserializes a hashfile variant to the defined type
