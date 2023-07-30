@@ -20,22 +20,14 @@ namespace SabreTools.Serialization
         /// <returns>True on successful serialization, false otherwise</returns>
         public static bool SerializeToFile(MetadataFile? metadataFile, string path, bool quotes)
         {
-            try
-            {
-                using var stream = SerializeToStream(metadataFile, quotes);
-                if (stream == null)
-                    return false;
-
-                using var fs = File.OpenWrite(path);
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(fs);
-                return true;
-            }
-            catch
-            {
-                // TODO: Handle logging the exception
+            using var stream = SerializeToStream(metadataFile, quotes);
+            if (stream == null)
                 return false;
-            }
+
+            using var fs = File.OpenWrite(path);
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(fs);
+            return true;
         }
 
         /// <summary>
@@ -46,30 +38,22 @@ namespace SabreTools.Serialization
         /// <returns>Stream containing serialized data on success, null otherwise</returns>
         public static Stream? SerializeToStream(MetadataFile? metadataFile, bool quotes)
         {
-            try
-            {
-                // If the metadata file is null
-                if (metadataFile == null)
-                    return null;
-
-                // Setup the writer and output
-                var stream = new MemoryStream();
-                var writer = new ClrMameProWriter(stream, Encoding.UTF8) { Quotes = quotes };
-
-                // Write the header, if it exists
-                WriteHeader(metadataFile.ClrMamePro, writer);
-
-                // Write out the games, if they exist
-                WriteGames(metadataFile.Game, writer);
-
-                // Return the stream
-                return stream;
-            }
-            catch
-            {
-                // TODO: Handle logging the exception
+            // If the metadata file is null
+            if (metadataFile == null)
                 return null;
-            }
+
+            // Setup the writer and output
+            var stream = new MemoryStream();
+            var writer = new ClrMameProWriter(stream, Encoding.UTF8) { Quotes = quotes };
+
+            // Write the header, if it exists
+            WriteHeader(metadataFile.ClrMamePro, writer);
+
+            // Write out the games, if they exist
+            WriteGames(metadataFile.Game, writer);
+
+            // Return the stream
+            return stream;
         }
 
         /// <summary>

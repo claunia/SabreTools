@@ -19,22 +19,14 @@ namespace SabreTools.Serialization
         /// <returns>True on successful serialization, false otherwise</returns>
         public static bool SerializeToFile(MetadataFile? metadataFile, string path)
         {
-            try
-            {
-                using var stream = SerializeToStream(metadataFile);
-                if (stream == null)
-                    return false;
-
-                using var fs = File.OpenWrite(path);
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(fs);
-                return true;
-            }
-            catch
-            {
-                // TODO: Handle logging the exception
+            using var stream = SerializeToStream(metadataFile);
+            if (stream == null)
                 return false;
-            }
+
+            using var fs = File.OpenWrite(path);
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(fs);
+            return true;
         }
 
         /// <summary>
@@ -44,31 +36,28 @@ namespace SabreTools.Serialization
         /// <returns>Stream containing serialized data on success, null otherwise</returns>
         public static Stream? SerializeToStream(MetadataFile? metadataFile)
         {
-            try
-            {
-                // If the metadata file is null
-                if (metadataFile == null)
-                    return null;
-
-                // Setup the writer and output
-                var stream = new MemoryStream();
-                var writer = new SeparatedValueWriter(stream, Encoding.UTF8) { Separator = ';', Quotes = false };
-
-                // TODO: Include flag to write out long or short header
-                // Write the short header
-                writer.WriteString(HeaderWithoutRomname); // TODO: Convert to array of values
-
-                // Write out the rows, if they exist
-                WriteRows(metadataFile.Row, writer);
-
-                // Return the stream
-                return stream;
-            }
-            catch
-            {
-                // TODO: Handle logging the exception
+            // If the metadata file is null
+            if (metadataFile == null)
                 return null;
-            }
+
+            // Setup the writer and output
+            var stream = new MemoryStream();
+            var writer = new SeparatedValueWriter(stream, Encoding.UTF8)
+            {
+                Separator = ';',
+                Quotes = false,
+                VerifyFieldCount = false,
+            };
+
+            // TODO: Include flag to write out long or short header
+            // Write the short header
+            writer.WriteString(HeaderWithoutRomname); // TODO: Convert to array of values
+
+            // Write out the rows, if they exist
+            WriteRows(metadataFile.Row, writer);
+
+            // Return the stream
+            return stream;
         }
 
         /// <summary>
@@ -85,7 +74,7 @@ namespace SabreTools.Serialization
             // Loop through and write out the rows
             foreach (var row in rows)
             {
-                var rowArray = new string[]
+                var rowArray = new string?[]
                 {
                     row.Name,
                     row.Title,

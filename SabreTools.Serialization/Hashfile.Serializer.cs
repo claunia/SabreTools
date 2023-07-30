@@ -22,22 +22,14 @@ namespace SabreTools.Serialization
         /// <returns>True on successful serialization, false otherwise</returns>
         public static bool SerializeToFile(Models.Hashfile.Hashfile? hashfile, string path, Hash hash)
         {
-            try
-            {
-                using var stream = SerializeToStream(hashfile, hash);
-                if (stream == null)
-                    return false;
-
-                using var fs = File.OpenWrite(path);
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(fs);
-                return true;
-            }
-            catch
-            {
-                // TODO: Handle logging the exception
+            using var stream = SerializeToStream(hashfile, hash);
+            if (stream == null)
                 return false;
-            }
+
+            using var fs = File.OpenWrite(path);
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.CopyTo(fs);
+            return true;
         }
 
         /// <summary>
@@ -48,52 +40,49 @@ namespace SabreTools.Serialization
         /// <returns>Stream containing serialized data on success, null otherwise</returns>
         public static Stream? SerializeToStream(Models.Hashfile.Hashfile? hashfile, Hash hash)
         {
-            try
-            {
-                // If the metadata file is null
-                if (hashfile == null)
-                    return null;
-
-                // Setup the writer and output
-                var stream = new MemoryStream();
-                var writer = new SeparatedValueWriter(stream, Encoding.UTF8) { Separator = ' ', Quotes = false };
-
-                // Write out the items, if they exist
-                switch (hash)
-                {
-                    case Hash.CRC:
-                        WriteSFV(hashfile.SFV, writer);
-                        break;
-                    case Hash.MD5:
-                        WriteMD5(hashfile.MD5, writer);
-                        break;
-                    case Hash.SHA1:
-                        WriteSHA1(hashfile.SHA1, writer);
-                        break;
-                    case Hash.SHA256:
-                        WriteSHA256(hashfile.SHA256, writer);
-                        break;
-                    case Hash.SHA384:
-                        WriteSHA384(hashfile.SHA384, writer);
-                        break;
-                    case Hash.SHA512:
-                        WriteSHA512(hashfile.SHA512, writer);
-                        break;
-                    case Hash.SpamSum:
-                        WriteSpamSum(hashfile.SpamSum, writer);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(hash));
-                }
-
-                // Return the stream
-                return stream;
-            }
-            catch
-            {
-                // TODO: Handle logging the exception
+            // If the metadata file is null
+            if (hashfile == null)
                 return null;
+
+            // Setup the writer and output
+            var stream = new MemoryStream();
+            var writer = new SeparatedValueWriter(stream, Encoding.UTF8)
+            {
+                Separator = ' ',
+                Quotes = false,
+                VerifyFieldCount = false,
+            };
+
+            // Write out the items, if they exist
+            switch (hash)
+            {
+                case Hash.CRC:
+                    WriteSFV(hashfile.SFV, writer);
+                    break;
+                case Hash.MD5:
+                    WriteMD5(hashfile.MD5, writer);
+                    break;
+                case Hash.SHA1:
+                    WriteSHA1(hashfile.SHA1, writer);
+                    break;
+                case Hash.SHA256:
+                    WriteSHA256(hashfile.SHA256, writer);
+                    break;
+                case Hash.SHA384:
+                    WriteSHA384(hashfile.SHA384, writer);
+                    break;
+                case Hash.SHA512:
+                    WriteSHA512(hashfile.SHA512, writer);
+                    break;
+                case Hash.SpamSum:
+                    WriteSpamSum(hashfile.SpamSum, writer);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(hash));
             }
+
+            // Return the stream
+            return stream;
         }
 
         /// <summary>
