@@ -8,9 +8,9 @@ using SabreTools.Models.RomCenter;
 namespace SabreTools.Serialization
 {
     /// <summary>
-    /// Serializer for RomCenter INI files
+    /// Deserializer for RomCenter INI files
     /// </summary>
-    public class RomCenter
+    public partial class RomCenter
     {
         /// <summary>
         /// Deserializes a RomCenter INI file to the defined type
