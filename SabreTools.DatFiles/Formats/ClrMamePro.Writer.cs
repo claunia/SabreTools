@@ -317,8 +317,6 @@ namespace SabreTools.DatFiles.Formats
                 games.Add(game);
             }
 
-            // TODO: Populate the games
-
             return games.ToArray();
         }
 

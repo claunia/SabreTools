@@ -8,9 +8,9 @@ using SabreTools.Models.EverdriveSMDB;
 namespace SabreTools.Serialization
 {
     /// <summary>
-    /// Separated value serializer for Everdrive SMDBs
+    /// Separated value deserializer for Everdrive SMDBs
     /// </summary>
-    public class EverdriveSMDB
+    public partial class EverdriveSMDB
     {
         /// <summary>
         /// Deserializes an Everdrive SMDB to the defined type

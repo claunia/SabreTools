@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
+using SabreTools.IO.Writers;
 
 namespace SabreTools.DatFiles.Formats
 {
     /// <summary>
-    /// Represents parsing and writing of an AttractMode DAT
+    /// Represents parsing and writing of an Everdrive SMDB file
     /// </summary>
-    internal partial class AttractMode : DatFile
+    internal partial class EverdriveSMDB : DatFile
     {
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
@@ -27,6 +29,20 @@ namespace SabreTools.DatFiles.Formats
             if (string.IsNullOrWhiteSpace(datItem.GetName()))
                 missingFields.Add(DatItemField.Name);
 
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (string.IsNullOrWhiteSpace(rom.SHA256))
+                        missingFields.Add(DatItemField.SHA256);
+                    if (string.IsNullOrWhiteSpace(rom.SHA1))
+                        missingFields.Add(DatItemField.SHA1);
+                    if (string.IsNullOrWhiteSpace(rom.MD5))
+                        missingFields.Add(DatItemField.MD5);
+                    if (string.IsNullOrWhiteSpace(rom.CRC))
+                        missingFields.Add(DatItemField.CRC);
+                    break;
+            }
+
             return missingFields;
         }
 
@@ -38,7 +54,7 @@ namespace SabreTools.DatFiles.Formats
                 logger.User($"Writing to '{outfile}'...");
 
                 var metadataFile = CreateMetadataFile(ignoreblanks);
-                if (!Serialization.AttractMode.SerializeToFile(metadataFile, outfile))
+                if (!Serialization.EverdriveSMDB.SerializeToFile(metadataFile, outfile))
                 {
                     logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
@@ -59,9 +75,9 @@ namespace SabreTools.DatFiles.Formats
         /// Create a MetadataFile from the current internal information
         /// <summary>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
-        private Models.AttractMode.MetadataFile CreateMetadataFile(bool ignoreblanks)
+        private Models.EverdriveSMDB.MetadataFile CreateMetadataFile(bool ignoreblanks)
         {
-            var metadataFile = new Models.AttractMode.MetadataFile
+            var metadataFile = new Models.EverdriveSMDB.MetadataFile
             {
                 Row = CreateRows(ignoreblanks)
             };
@@ -72,14 +88,14 @@ namespace SabreTools.DatFiles.Formats
         /// Create an array of Row from the current internal information
         /// <summary>
         /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
-        private Models.AttractMode.Row[]? CreateRows(bool ignoreblanks)
+        private Models.EverdriveSMDB.Row[]? CreateRows(bool ignoreblanks)
         {
             // If we don't have items, we can't do anything
             if (this.Items == null || !this.Items.Any())
                 return null;
 
             // Create a list of hold the rows
-            var rows = new List<Models.AttractMode.Row>();
+            var rows = new List<Models.EverdriveSMDB.Row>();
 
             // Loop through the sorted items and create games for them
             foreach (string key in Items.SortedKeys)
@@ -110,28 +126,16 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Create a Row from the current Rom DatItem
         /// <summary>
-        private Models.AttractMode.Row CreateRow(Rom rom)
+        private static Models.EverdriveSMDB.Row CreateRow(Rom rom)
         {
-            var row = new Models.AttractMode.Row
+            var row = new Models.EverdriveSMDB.Row
             {
-                Name = rom.Machine.Name,
-                Title = rom.Machine.Description,
-                Emulator = Header.FileName,
-                CloneOf = rom.Machine.CloneOf,
-                Year = rom.Machine.Year,
-                Manufacturer = rom.Machine.Manufacturer,
-                Category = rom.Machine.Category,
-                Players = rom.Machine.Players,
-                Rotation = rom.Machine.Rotation,
-                Control = rom.Machine.Control,
-                Status = rom.Machine.Status,
-                DisplayCount = rom.Machine.DisplayCount,
-                DisplayType = rom.Machine.DisplayType,
-                AltRomname = rom.AltName,
-                AltTitle = rom.AltTitle,
-                Extra = rom.Machine.Comment,
-                Buttons = rom.Machine.Buttons,
-                // TODO: Add extended fields
+                SHA256 = rom.SHA256,
+                Name = $"{rom.Machine.Name}/{rom.Name}",
+                SHA1 = rom.SHA1,
+                MD5 = rom.MD5,
+                CRC32 = rom.CRC,
+                Size = rom.Size?.ToString(),
             };
             return row;
         }
