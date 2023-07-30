@@ -4,16 +4,16 @@ namespace SabreTools.Models.DosCenter
     public class File
     {
         /// <remarks>name, attribute</remarks>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <remarks>size, attribute, numeric</remarks>
-        public string? Size { get; set; }
+        public string Size { get; set; }
 
         /// <remarks>crc, attribute</remarks>
-        public string? CRC { get; set; }
+        public string CRC { get; set; }
 
         /// <remarks>date, attribute</remarks>
-        public string? Date { get; set; }
+        public string Date { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

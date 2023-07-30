@@ -7,16 +7,16 @@ using SabreTools.Models.DosCenter;
 namespace SabreTools.Serialization
 {
     /// <summary>
-    /// Serializer for DosCenter metadata files
+    /// Deserializer for DosCenter metadata files
     /// </summary>
-    public class DosCenter
+    public partial class DosCenter
     {
         /// <summary>
         /// Deserializes a DosCenter metadata file to the defined type
         /// </summary>
         /// <param name="path">Path to the file to deserialize</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static DatFile? Deserialize(string path)
+        public static MetadataFile? Deserialize(string path)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="stream">Stream to deserialize</param>
         /// <returns>Deserialized data on success, null on failure</returns>
-        public static DatFile? Deserialize(Stream? stream)
+        public static MetadataFile? Deserialize(Stream? stream)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace SabreTools.Serialization
 
                 // Setup the reader and output
                 var reader = new ClrMameProReader(stream, Encoding.UTF8) { DosCenter = true };
-                var dat = new DatFile();
+                var dat = new MetadataFile();
 
                 // Loop through and parse out the values
                 string lastTopLevel = reader.TopLevel;
@@ -166,9 +166,6 @@ namespace SabreTools.Serialization
                     // If we're in a file block
                     else if (reader.TopLevel == "game" && reader.RowType == CmpRowType.Internal)
                     {
-                        // Create the block
-                        var file = new Models.DosCenter.File();
-                        
                         // If we have an unknown type, log it
                         if (reader.InternalName != "file")
                         {
@@ -176,32 +173,9 @@ namespace SabreTools.Serialization
                             continue;
                         }
 
-                        foreach (var kvp in reader.Internal)
-                        {
-                            switch (kvp.Key?.ToLowerInvariant())
-                            {
-                                case "name":
-                                    file.Name = kvp.Value;
-                                    break;
-                                case "size":
-                                    file.Size = kvp.Value;
-                                    break;
-                                case "crc":
-                                    file.CRC = kvp.Value;
-                                    break;
-                                case "date":
-                                    file.Date = kvp.Value;
-                                    break;
-                                default:
-                                    fileAdditional.Add(item: reader.CurrentLine);
-                                    break;
-                            }
-                        }
-
-                        // Add the file to the list
-                        file.ADDITIONAL_ELEMENTS = fileAdditional.ToArray();
+                        // Create the file and add to the list
+                        var file = CreateFile(reader);
                         files.Add(file);
-                        fileAdditional.Clear();
                     }
 
                     else
@@ -220,6 +194,41 @@ namespace SabreTools.Serialization
                 // TODO: Handle logging the exception
                 return default;
             }
+        }
+
+        /// <summary>
+        /// Create a File object from the current reader context
+        /// </summary>
+        /// <param name="reader">ClrMameProReader representing the metadata file</param>
+        /// <returns>File object created from the reader context</returns>
+        private static Models.DosCenter.File CreateFile(ClrMameProReader reader)
+        {
+            var itemAdditional = new List<string>();
+            var file = new Models.DosCenter.File();
+            foreach (var kvp in reader.Internal)
+            {
+                switch (kvp.Key?.ToLowerInvariant())
+                {
+                    case "name":
+                        file.Name = kvp.Value;
+                        break;
+                    case "size":
+                        file.Size = kvp.Value;
+                        break;
+                    case "crc":
+                        file.CRC = kvp.Value;
+                        break;
+                    case "date":
+                        file.Date = kvp.Value;
+                        break;
+                    default:
+                        itemAdditional.Add(item: reader.CurrentLine);
+                        break;
+                }
+            }
+
+            file.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
+            return file;
         }
     }
 }
