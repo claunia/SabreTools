@@ -83,7 +83,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Convert rows information
+        /// Convert row information
         /// </summary>
         /// <param name="row">Deserialized model to convert</param>
         /// <param name="filename">Name of the file to be parsed</param>

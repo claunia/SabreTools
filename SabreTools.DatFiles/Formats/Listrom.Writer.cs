@@ -1,0 +1,231 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using SabreTools.Core;
+using SabreTools.DatItems;
+using SabreTools.DatItems.Formats;
+
+namespace SabreTools.DatFiles.Formats
+{
+    /// <summary>
+    /// Represents writing a MAME Listrom file
+    /// </summary>
+    internal partial class Listrom : DatFile
+    {
+        /// <inheritdoc/>
+        protected override ItemType[] GetSupportedTypes()
+        {
+            return new ItemType[]
+            {
+                ItemType.Disk,
+                ItemType.Rom
+            };
+        }
+
+        /// <inheritdoc/>
+        protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
+        {
+            List<DatItemField> missingFields = new();
+
+            // Check item name
+            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+                missingFields.Add(DatItemField.Name);
+
+            switch (datItem)
+            {
+                case Disk disk:
+                    if (string.IsNullOrWhiteSpace(disk.MD5)
+                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case Rom rom:
+                    if (rom.Size == null || rom.Size < 0)
+                        missingFields.Add(DatItemField.Size);
+                    if (string.IsNullOrWhiteSpace(rom.CRC))
+                        missingFields.Add(DatItemField.CRC);
+                    if (string.IsNullOrWhiteSpace(rom.SHA1))
+                        missingFields.Add(DatItemField.SHA1);
+                    break;
+            }
+
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public override bool WriteToFile(string outfile, bool ignoreblanks = false, bool throwOnError = false)
+        {
+            try
+            {
+                logger.User($"Writing to '{outfile}'...");
+
+                var metadataFile = CreateMetadataFile(ignoreblanks);
+                if (!Serialization.Listrom.SerializeToFile(metadataFile, outfile))
+                {
+                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
+                    return false;
+                }
+            }
+            catch (Exception ex) when (!throwOnError)
+            {
+                logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        #region Converters
+
+        /// <summary>
+        /// Create a MetadataFile from the current internal information
+        /// <summary>
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Listrom.MetadataFile CreateMetadataFile(bool ignoreblanks)
+        {
+            var metadataFile = new Models.Listrom.MetadataFile
+            {
+                Set = CreateSets(ignoreblanks)
+            };
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Create an array of Set from the current internal information
+        /// <summary>
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Listrom.Set[]? CreateSets(bool ignoreblanks)
+        {
+            // If we don't have items, we can't do anything
+            if (this.Items == null || !this.Items.Any())
+                return null;
+
+            // Create lists to hold the data
+            var sets = new List<Models.Listrom.Set>();
+            var rows = new List<Models.Listrom.Row>();
+
+            // Loop through the sorted items and create games for them
+            foreach (string key in Items.SortedKeys)
+            {
+                var items = Items.FilteredItems(key);
+                if (items == null || !items.Any())
+                    continue;
+
+                var set = new Models.Listrom.Set
+                {
+                    Driver = !items[0].Machine.MachineType.HasFlag(MachineType.Device) ? items[0].Machine.Name : null,
+                    Device = items[0].Machine.MachineType.HasFlag(MachineType.Device) ? items[0].Machine.Name : null,
+                };
+
+                // Loop through and convert the items to respective lists
+                foreach (var item in items)
+                {
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
+                    switch (item)
+                    {
+                        case Disk disk:
+                            rows.Add(CreateRow(disk));
+                            break;
+                        case Rom rom:
+                            rows.Add(CreateRow(rom));
+                            break;
+                    }
+                }
+
+                set.Row = rows.ToArray();
+                sets.Add(set);
+                rows.Clear();
+            }
+
+            return sets.ToArray();
+        }
+
+        /// <summary>
+        /// Create a Row from the current Disk DatItem
+        /// <summary>
+        private static Models.Listrom.Row? CreateRow(Disk disk)
+        {
+            if (disk.ItemStatus == ItemStatus.Nodump)
+            {
+                return new Models.Listrom.Row
+                {
+                    Name = disk.Name,
+                    NoGoodDumpKnown = true,
+                };
+            }
+            else if (disk.ItemStatus == ItemStatus.BadDump)
+            {
+                var row = new Models.Listrom.Row
+                {
+                    Name = disk.Name,
+                    Bad = true,
+                };
+
+                if (!string.IsNullOrWhiteSpace(disk.MD5))
+                    row.MD5 = disk.MD5;
+                else
+                    row.SHA1 = disk.SHA1;
+
+                return row;
+            }
+            else
+            {
+                var row = new Models.Listrom.Row
+                {
+                    Name = disk.Name,
+                };
+
+                if (!string.IsNullOrWhiteSpace(disk.MD5))
+                    row.MD5 = disk.MD5;
+                else
+                    row.SHA1 = disk.SHA1;
+
+                return row;
+            }
+        }
+
+        /// <summary>
+        /// Create a Row from the current Rom DatItem
+        /// <summary>
+        private static Models.Listrom.Row? CreateRow(Rom rom)
+        {
+            if (rom.ItemStatus == ItemStatus.Nodump)
+            {
+                return new Models.Listrom.Row
+                {
+                    Name = rom.Name,
+                    Size = rom.Size?.ToString(),
+                    NoGoodDumpKnown = true,
+                };
+            }
+            else if (rom.ItemStatus == ItemStatus.BadDump)
+            {
+                return new Models.Listrom.Row
+                {
+                    Name = rom.Name,
+                    Size = rom.Size?.ToString(),
+                    Bad = true,
+                    CRC = rom.CRC,
+                    SHA1 = rom.SHA1,
+                };
+            }
+            else
+            {
+                return new Models.Listrom.Row
+                {
+                    Name = rom.Name,
+                    Size = rom.Size?.ToString(),
+                    CRC = rom.CRC,
+                    SHA1 = rom.SHA1,
+                };
+            }
+        }
+
+        #endregion
+    }
+}

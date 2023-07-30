@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using SabreTools.Core;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.IO.Writers;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -17,7 +15,10 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override ItemType[] GetSupportedTypes()
         {
-            return new ItemType[] { ItemType.Rom };
+            return new ItemType[]
+            {
+                ItemType.Rom
+            };
         }
 
         /// <inheritdoc/>

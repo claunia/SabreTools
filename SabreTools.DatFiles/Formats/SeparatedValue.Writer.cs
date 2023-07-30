@@ -36,8 +36,6 @@ namespace SabreTools.DatFiles.Formats
             switch (datItem)
             {
                 case Disk disk:
-                    if (string.IsNullOrWhiteSpace(disk.Name))
-                        missingFields.Add(DatItemField.Name);
                     if (string.IsNullOrWhiteSpace(disk.MD5)
                         && string.IsNullOrWhiteSpace(disk.SHA1))
                     {
@@ -46,8 +44,6 @@ namespace SabreTools.DatFiles.Formats
                     break;
 
                 case Rom rom:
-                    if (string.IsNullOrWhiteSpace(rom.Name))
-                        missingFields.Add(DatItemField.Name);
                     if (rom.Size == null || rom.Size < 0)
                         missingFields.Add(DatItemField.Size);
                     if (string.IsNullOrWhiteSpace(rom.CRC)

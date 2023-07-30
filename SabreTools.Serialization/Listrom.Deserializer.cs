@@ -7,9 +7,9 @@ using SabreTools.Models.Listrom;
 namespace SabreTools.Serialization
 {
     /// <summary>
-    /// Serializer for MAME listrom files
+    /// Deserializer for MAME listrom files
     /// </summary>
-    public class Listrom
+    public partial class Listrom
     {
         /// <summary>
         /// Deserializes a MAME listrom file to the defined type
@@ -110,10 +110,13 @@ namespace SabreTools.Serialization
                 var row = new Row();
                 switch (lineParts.Length)
                 {
-                    // Normal CHD (Name, SHA1)
+                    // Normal CHD (Name, MD5/SHA1)
                     case 1:
                         row.Name = name;
-                        row.SHA1 = lineParts[0]["SHA1".Length..].Trim('(', ')');
+                        if (line.Contains("MD5("))
+                            row.MD5 = lineParts[0]["MD5".Length..].Trim('(', ')');
+                        else
+                            row.SHA1 = lineParts[0]["SHA1".Length..].Trim('(', ')');
                         break;
 
                     // Normal ROM (Name, Size, CRC, SHA1)
@@ -128,7 +131,10 @@ namespace SabreTools.Serialization
                     case 3 when line.Contains("BAD_DUMP"):
                         row.Name = name;
                         row.Bad = true;
-                        row.SHA1 = lineParts[1]["SHA1".Length..].Trim('(', ')');
+                        if (line.Contains("MD5("))
+                            row.MD5 = lineParts[1]["MD5".Length..].Trim('(', ')');
+                        else
+                            row.SHA1 = lineParts[1]["SHA1".Length..].Trim('(', ')');
                         break;
 
                     // Nodump CHD (Name, NO GOOD DUMP KNOWN)
@@ -137,13 +143,16 @@ namespace SabreTools.Serialization
                         row.NoGoodDumpKnown = true;
                         break;
 
-                    // Bad ROM (Name, Size, BAD, CRC, SHA1, BAD_DUMP)
+                    // Bad ROM (Name, Size, BAD, CRC, MD5/SHA1, BAD_DUMP)
                     case 5 when line.Contains("BAD_DUMP"):
                         row.Name = name;
                         row.Size = lineParts[0];
                         row.Bad = true;
                         row.CRC = lineParts[2]["CRC".Length..].Trim('(', ')');
-                        row.SHA1 = lineParts[3]["SHA1".Length..].Trim('(', ')');
+                        if (line.Contains("MD5("))
+                            row.SHA1 = lineParts[3]["MD5".Length..].Trim('(', ')');
+                        else
+                            row.SHA1 = lineParts[3]["SHA1".Length..].Trim('(', ')');
                         break;
 
                     // Nodump ROM (Name, Size, NO GOOD DUMP KNOWN)
