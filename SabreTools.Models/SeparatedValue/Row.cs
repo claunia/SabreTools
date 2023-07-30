@@ -53,8 +53,8 @@ namespace SabreTools.Models.SeparatedValue
         /// <remarks>SpamSum, Optional</remarks>
         public string SpamSum { get; set; }
 
-        /// <remarks>Nodump</remarks>
-        public string Nodump { get; set; }
+        /// <remarks>Status, Nodump</remarks>
+        public string Status { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 
