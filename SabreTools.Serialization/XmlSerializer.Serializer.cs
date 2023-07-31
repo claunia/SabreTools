@@ -45,6 +45,7 @@ namespace SabreTools.Serialization
                 CheckCharacters = false,
                 Encoding = Encoding.UTF8,
                 Indent = true,
+                IndentChars = "\t",
                 NewLineChars = "\n",
             };
             var stream = new MemoryStream();

@@ -140,8 +140,14 @@ namespace SabreTools.DatFiles.Formats
                 var files = new List<Models.DosCenter.File>();
 
                 // Loop through and convert the items to respective lists
-                foreach (var item in items)
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;

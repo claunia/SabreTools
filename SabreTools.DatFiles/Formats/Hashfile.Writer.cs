@@ -226,8 +226,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
@@ -268,8 +275,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
@@ -326,8 +340,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
@@ -384,8 +405,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
@@ -434,8 +462,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
@@ -476,8 +511,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
@@ -518,8 +560,15 @@ namespace SabreTools.DatFiles.Formats
                 if (items == null || !items.Any())
                     continue;
 
-                foreach (var item in items)
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
                     // Skip if we're ignoring the item
                     if (ShouldIgnore(item, ignoreblanks))
                         continue;
