@@ -25,7 +25,6 @@ namespace SabreTools.Serialization
                 return false;
 
             using var fs = File.OpenWrite(path);
-            stream.Seek(0, SeekOrigin.Begin);
             stream.CopyTo(fs);
             return true;
         }
@@ -54,6 +53,7 @@ namespace SabreTools.Serialization
             WriteRows(metadataFile.Row, writer);
 
             // Return the stream
+            stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }
 

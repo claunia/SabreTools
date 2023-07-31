@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -42,6 +43,9 @@ namespace SabreTools.Serialization
             var settings = new XmlWriterSettings
             {
                 CheckCharacters = false,
+                Encoding = Encoding.UTF8,
+                Indent = true,
+                NewLineChars = "\n",
             };
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
@@ -49,6 +53,7 @@ namespace SabreTools.Serialization
 
             // Perform the deserialization and return
             serializer.Serialize(xmlWriter, obj);
+            stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }
     }

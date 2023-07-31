@@ -23,7 +23,6 @@ namespace SabreTools.Serialization
                 return false;
 
             using var fs = System.IO.File.OpenWrite(path);
-            stream.Seek(0, SeekOrigin.Begin);
             stream.CopyTo(fs);
             return true;
         }
@@ -53,6 +52,7 @@ namespace SabreTools.Serialization
             WriteGames(metadataFile.Game, writer);
 
             // Return the stream
+            stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }
 
