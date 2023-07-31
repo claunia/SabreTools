@@ -67,6 +67,7 @@ namespace SabreTools.DatFiles.Formats
                 return false;
             }
 
+            logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
 

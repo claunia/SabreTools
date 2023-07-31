@@ -82,6 +82,7 @@ namespace SabreTools.DatFiles.Formats
                 return false;
             }
 
+            logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
 
@@ -137,6 +138,9 @@ namespace SabreTools.DatFiles.Formats
                     {
                         case Disk disk:
                             rows.Add(CreateRow(disk));
+                            break;
+                        case Media media:
+                            rows.Add(CreateRow(media));
                             break;
                         case Rom rom:
                             rows.Add(CreateRow(rom));
