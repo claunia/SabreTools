@@ -541,7 +541,61 @@ namespace SabreTools.Test.Parser
                 Assert.Null(game.ADDITIONAL_ATTRIBUTES);
                 Assert.Null(game.ADDITIONAL_ELEMENTS);
 
-                foreach (var item in game.Item ?? Array.Empty<Models.Logiqx.ItemBase>())
+                foreach (var item in game.Release ?? Array.Empty<Models.Logiqx.Release>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.BiosSet ?? Array.Empty<Models.Logiqx.BiosSet>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Rom ?? Array.Empty<Models.Logiqx.Rom>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Disk ?? Array.Empty<Models.Logiqx.Disk>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Media ?? Array.Empty<Models.Logiqx.Media>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.DeviceRef ?? Array.Empty<Models.Logiqx.DeviceRef>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Sample ?? Array.Empty<Models.Logiqx.Sample>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Archive ?? Array.Empty<Models.Logiqx.Archive>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Driver ?? Array.Empty<Models.Logiqx.Driver>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.SoftwareList ?? Array.Empty<Models.Logiqx.SoftwareList>())
                 {
                     Assert.Null(item.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(item.ADDITIONAL_ELEMENTS);
@@ -562,11 +616,65 @@ namespace SabreTools.Test.Parser
                     Assert.Null(game.ADDITIONAL_ATTRIBUTES);
                     Assert.Null(game.ADDITIONAL_ELEMENTS);
 
-                    foreach (var item in game.Item ?? Array.Empty<Models.Logiqx.ItemBase>())
-                    {
-                        Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                        Assert.Null(item.ADDITIONAL_ELEMENTS);
-                    }
+                    foreach (var item in game.Release ?? Array.Empty<Models.Logiqx.Release>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.BiosSet ?? Array.Empty<Models.Logiqx.BiosSet>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Rom ?? Array.Empty<Models.Logiqx.Rom>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Disk ?? Array.Empty<Models.Logiqx.Disk>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Media ?? Array.Empty<Models.Logiqx.Media>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.DeviceRef ?? Array.Empty<Models.Logiqx.DeviceRef>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Sample ?? Array.Empty<Models.Logiqx.Sample>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Archive ?? Array.Empty<Models.Logiqx.Archive>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.Driver ?? Array.Empty<Models.Logiqx.Driver>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
+
+                foreach (var item in game.SoftwareList ?? Array.Empty<Models.Logiqx.SoftwareList>())
+                {
+                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                }
 
                     if (game.Trurip != null)
                     {

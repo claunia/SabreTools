@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Schema;
+using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -18,526 +15,267 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
-            // Prepare all internal variables
-            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            List<string> dirs = new();
-
-            // If we got a null reader, just return
-            if (xtr == null)
-                return;
-
-            // Otherwise, read the file to the end
             try
             {
-                xtr.MoveToContent();
-                while (!xtr.EOF)
-                {
-                    // We only want elements
-                    if (xtr.NodeType != XmlNodeType.Element)
-                    {
-                        // If we're ending a dir, remove the last item from the dirs list, if possible
-                        if (xtr.Name == "dir" && dirs.Count > 0)
-                            dirs.RemoveAt(dirs.Count - 1);
+                // Deserialize the input file
+                var metadataFile = Serialization.Logiqx.Deserialize(filename);
 
-                        xtr.Read();
-                        continue;
-                    }
+                // Convert the header to the internal format
+                ConvertHeader(metadataFile, keep);
 
-                    switch (xtr.Name)
-                    {
-                        // The datafile tag can have some attributes
-                        case "datafile":
-                            Header.Build ??= xtr.GetAttribute("build");
-                            Header.Debug ??= xtr.GetAttribute("debug").AsYesNo();
-                            xtr.Read();
-                            break;
+                // Convert the game data to the internal format
+                ConvertGames(metadataFile?.Game, filename, indexId, statsOnly);
 
-                        // We want to process the entire subtree of the header
-                        case "header":
-                            ReadHeader(xtr.ReadSubtree(), keep);
-
-                            // Skip the header node now that we've processed it
-                            xtr.Skip();
-                            break;
-
-                        // Unique to RomVault-created DATs
-                        case "dir":
-                            Header.Type = "SuperDAT";
-                            dirs.Add(xtr.GetAttribute("name") ?? string.Empty);
-                            xtr.Read();
-                            break;
-
-                        // We want to process the entire subtree of the game
-                        case "machine": // New-style Logiqx
-                        case "game": // Old-style Logiqx
-                            ReadMachine(xtr.ReadSubtree(), dirs, statsOnly, filename, indexId, keep);
-
-                            // Skip the machine now that we've processed it
-                            xtr.Skip();
-                            break;
-
-                        default:
-                            xtr.Read();
-                            break;
-                    }
-                }
+                // Convert the dir data to the internal format
+                ConvertDirs(metadataFile?.Dir, filename, indexId, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Warning(ex, $"Exception found while parsing '{filename}'");
-
-                // For XML errors, just skip the affected node
-                xtr?.Read();
+                string message = $"'{filename}' - An error occurred during parsing";
+                logger.Error(ex, message);
             }
-
-            xtr.Dispose();
         }
 
-        /// <summary>
-        /// Read header information
-        /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private void ReadHeader(XmlReader reader, bool keep)
-        {
-            bool superdat = false;
+        #region Converters
 
-            // If there's no subtree to the header, skip it
-            if (reader == null)
+        /// <summary>
+        /// Convert header information
+        /// </summary>
+        /// <param name="datafile">Deserialized model to convert</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        private void ConvertHeader(Models.Logiqx.Datafile? datafile, bool keep)
+        {
+            // If the datafile is missing, we can't do anything
+            if (datafile == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
+            Header.Build ??= datafile.Build;
+            Header.Debug ??= datafile.Debug.AsYesNo();
+            // SchemaLocation is specifically skipped
 
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element || reader.Name == "header")
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all header items (ONLY OVERWRITE IF THERE'S NO DATA)
-                string content;
-                switch (reader.Name)
-                {
-                    case "id":
-                        content = reader.ReadElementContentAsString();
-                        Header.NoIntroID ??= content;
-                        break;
-
-                    case "name":
-                        content = reader.ReadElementContentAsString();
-                        Header.Name ??= content;
-                        superdat |= content.Contains(" - SuperDAT");
-                        if (keep && superdat)
-                        {
-                            Header.Type ??= "SuperDAT";
-                        }
-                        break;
-
-                    case "description":
-                        content = reader.ReadElementContentAsString();
-                        Header.Description ??= content;
-                        break;
-
-                    case "rootdir": // This is exclusive to TruRip XML
-                        content = reader.ReadElementContentAsString();
-                        Header.RootDir ??= content;
-                        break;
-
-                    case "category":
-                        content = reader.ReadElementContentAsString();
-                        Header.Category = (Header.Category == null ? content : $"{Header.Category};{content}");
-                        break;
-
-                    case "version":
-                        content = reader.ReadElementContentAsString();
-                        Header.Version ??= content;
-                        break;
-
-                    case "date":
-                        content = reader.ReadElementContentAsString();
-                        Header.Date ??= content.Replace(".", "/");
-                        break;
-
-                    case "author":
-                        content = reader.ReadElementContentAsString();
-                        Header.Author ??= content;
-                        break;
-
-                    case "email":
-                        content = reader.ReadElementContentAsString();
-                        Header.Email ??= content;
-                        break;
-
-                    case "homepage":
-                        content = reader.ReadElementContentAsString();
-                        Header.Homepage ??= content;
-                        break;
-
-                    case "url":
-                        content = reader.ReadElementContentAsString();
-                        Header.Url ??= content;
-                        break;
-
-                    case "comment":
-                        content = reader.ReadElementContentAsString();
-                        Header.Comment = (Header.Comment ?? content);
-                        break;
-
-                    case "type": // This is exclusive to TruRip XML
-                        content = reader.ReadElementContentAsString();
-                        Header.Type ??= content;
-                        superdat |= content.Contains("SuperDAT");
-                        break;
-
-                    case "clrmamepro":
-                        if (Header.HeaderSkipper == null)
-                            Header.HeaderSkipper = reader.GetAttribute("header");
-
-                        if (Header.ForceMerging == MergingFlag.None)
-                            Header.ForceMerging = reader.GetAttribute("forcemerging").AsMergingFlag();
-
-                        if (Header.ForceNodump == NodumpFlag.None)
-                            Header.ForceNodump = reader.GetAttribute("forcenodump").AsNodumpFlag();
-
-                        if (Header.ForcePacking == PackingFlag.None)
-                            Header.ForcePacking = reader.GetAttribute("forcepacking").AsPackingFlag();
-
-                        reader.Read();
-                        break;
-
-                    case "romcenter":
-                        if (Header.System == null)
-                            Header.System = reader.GetAttribute("plugin");
-
-                        if (Header.RomMode == MergingFlag.None)
-                            Header.RomMode = reader.GetAttribute("rommode").AsMergingFlag();
-
-                        if (Header.BiosMode == MergingFlag.None)
-                            Header.BiosMode = reader.GetAttribute("biosmode").AsMergingFlag();
-
-                        if (Header.SampleMode == MergingFlag.None)
-                            Header.SampleMode = reader.GetAttribute("samplemode").AsMergingFlag();
-
-                        if (Header.LockRomMode == null)
-                            Header.LockRomMode = reader.GetAttribute("lockrommode").AsYesNo();
-
-                        if (Header.LockBiosMode == null)
-                            Header.LockBiosMode = reader.GetAttribute("lockbiosmode").AsYesNo();
-
-                        if (Header.LockSampleMode == null)
-                            Header.LockSampleMode = reader.GetAttribute("locksamplemode").AsYesNo();
-
-                        reader.Read();
-                        break;
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
+            ConvertHeader(datafile.Header, keep);
         }
 
         /// <summary>
-        /// Read game/machine information
+        /// Convert header information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the machine</param>
-        /// <param name="dirs">List of dirs to prepend to the game name</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="header">Deserialized model to convert</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        private void ConvertHeader(Models.Logiqx.Header? header, bool keep)
+        {
+            // If the header is missing, we can't do anything
+            if (header == null)
+                return;
+
+            Header.NoIntroID ??= header.Id;
+            Header.Name ??= header.Name;
+            Header.Description ??= header.Description;
+            Header.RootDir ??= header.RootDir;
+            Header.Category ??= header.Category;
+            Header.Version ??= header.Version;
+            Header.Date ??= header.Date;
+            Header.Author ??= header.Author;
+            Header.Email ??= header.Email;
+            Header.Homepage ??= header.Homepage;
+            Header.Url ??= header.Url;
+            Header.Comment ??= header.Comment;
+            Header.Type ??= header.Type;
+
+            ConvertSubheader(header.ClrMamePro);
+            ConvertSubheader(header.RomCenter);
+
+            // Handle implied SuperDAT
+            if (header.Name.Contains(" - SuperDAT") && keep)
+                Header.Type ??= "SuperDAT";
+        }
+
+        /// <summary>
+        /// Convert subheader information
+        /// </summary>
+        /// <param name="clrMamePro">Deserialized model to convert</param>
+        private void ConvertSubheader(Models.Logiqx.ClrMamePro? clrMamePro)
+        {
+            // If the subheader is missing, we can't do anything
+            if (clrMamePro == null)
+                return;
+
+            Header.HeaderSkipper ??= clrMamePro.Header;
+
+            if (Header.ForceMerging == MergingFlag.None)
+                Header.ForceMerging = clrMamePro.ForceMerging.AsMergingFlag();
+            if (Header.ForceNodump == NodumpFlag.None)
+                Header.ForceNodump = clrMamePro.ForceNodump.AsNodumpFlag();
+            if (Header.ForcePacking == PackingFlag.None)
+                Header.ForcePacking = clrMamePro.ForcePacking.AsPackingFlag();
+        }
+
+        /// <summary>
+        /// Convert subheader information
+        /// </summary>
+        /// <param name="romCenter">Deserialized model to convert</param>
+        private void ConvertSubheader(Models.Logiqx.RomCenter? romCenter)
+        {
+            // If the subheader is missing, we can't do anything
+            if (romCenter == null)
+                return;
+
+            Header.System ??= romCenter.Plugin;
+
+            if (Header.RomMode == MergingFlag.None)
+                Header.RomMode = romCenter.RomMode.AsMergingFlag();
+            if (Header.BiosMode == MergingFlag.None)
+                Header.BiosMode = romCenter.BiosMode.AsMergingFlag();
+            if (Header.SampleMode == MergingFlag.None)
+                Header.SampleMode = romCenter.SampleMode.AsMergingFlag();
+
+            Header.LockRomMode ??= romCenter.LockRomMode.AsYesNo();
+            Header.LockBiosMode ??= romCenter.LockBiosMode.AsYesNo();
+            Header.LockSampleMode ??= romCenter.LockSampleMode.AsYesNo();
+        }
+
+        /// <summary>
+        /// Convert dirs information
+        /// </summary>
+        /// <param name="dirs">Array of deserialized models to convert</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private void ReadMachine(
-            XmlReader reader,
-            List<string> dirs,
-            bool statsOnly,
-
-            // Standard Dat parsing
-            string filename,
-            int indexId,
-
-            // Miscellaneous
-            bool keep)
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertDirs(Models.Logiqx.Dir[]? dirs, string filename, int indexId, bool statsOnly)
         {
-            // If we have an empty machine, skip it
-            if (reader == null)
+            // If the dir array is missing, we can't do anything
+            if (dirs == null || !dirs.Any())
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            bool containsItems = false;
-
-            // Create a new machine
-            MachineType machineType = 0x0;
-            if (reader.GetAttribute("isbios").AsYesNo() == true)
-                machineType |= MachineType.Bios;
-
-            string dirsString = (dirs != null && dirs.Count > 0 ? string.Join("/", dirs) + "/" : string.Empty);
-            Machine machine = new()
+            // Loop through the dirs and add
+            foreach (var dir in dirs)
             {
-                Name = dirsString + reader.GetAttribute("name"),
-                Description = dirsString + reader.GetAttribute("name"),
-                SourceFile = reader.GetAttribute("sourcefile"),
-                Board = reader.GetAttribute("board"),
-                RebuildTo = reader.GetAttribute("rebuildto"),
-                NoIntroId = reader.GetAttribute("id"),
-                NoIntroCloneOfId = reader.GetAttribute("cloneofid"),
-                Runnable = reader.GetAttribute("runnable").AsRunnable(), // Used by older DATs
+                ConvertDir(dir, filename, indexId, statsOnly);
+            }
+        }
 
-                CloneOf = reader.GetAttribute("cloneof"),
-                RomOf = reader.GetAttribute("romof"),
-                SampleOf = reader.GetAttribute("sampleof"),
+        /// <summary>
+        /// Convert dir information
+        /// </summary>
+        /// <param name="dir">Deserialized model to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertDir(Models.Logiqx.Dir dir, string filename, int indexId, bool statsOnly)
+        {
+            // If the game array is missing, we can't do anything
+            if (dir.Game == null || !dir.Game.Any())
+                return;
 
-                MachineType = (machineType == 0x0 ? MachineType.None : machineType),
+            // Loop through the games and add
+            foreach (var game in dir.Game)
+            {
+                ConvertGame(game, filename, indexId, statsOnly, dir.Name);
+            }
+        }
+
+        /// <summary>
+        /// Convert games information
+        /// </summary>
+        /// <param name="games">Array of deserialized models to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertGames(Models.Logiqx.GameBase[]? games, string filename, int indexId, bool statsOnly)
+        {
+            // If the game array is missing, we can't do anything
+            if (games == null || !games.Any())
+                return;
+
+            // Loop through the games and add
+            foreach (var game in games)
+            {
+                ConvertGame(game, filename, indexId, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert game information
+        /// </summary>
+        /// <param name="game">Deserialized model to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertGame(Models.Logiqx.GameBase game, string filename, int indexId, bool statsOnly, string dirname = null)
+        {
+            // If the game is missing, we can't do anything
+            if (game == null)
+                return;
+
+            // Create the machine for copying information
+            var machine = new Machine
+            {
+                Name = game.Name,
+                SourceFile = game.SourceFile,
+                CloneOf = game.CloneOf,
+                RomOf = game.RomOf,
+                SampleOf = game.SampleOf,
+                Board = game.Board,
+                RebuildTo = game.RebuildTo,
+                NoIntroId = game.Id,
+                NoIntroCloneOfId = game.CloneOfId,
+                Runnable = game.Runnable.AsRunnable(),
+
+                Comment = string.Join(';', game.Comment),
+                Description = game.Description,
+                Year = game.Year,
+                Manufacturer = game.Manufacturer,
+                Publisher = game.Publisher,
+                Category = string.Join(';', game.Category),
             };
 
-            if (Header.Type == "SuperDAT" && !keep)
+            if (!string.IsNullOrWhiteSpace(dirname))
+                machine.Name = $"{dirname}/{machine.Name}";
+
+            if (game.IsBios.AsYesNo() == true)
+                machine.MachineType |= MachineType.Bios;
+            if (game.IsDevice.AsYesNo() == true)
+                machine.MachineType |= MachineType.Device;
+            if (game.IsMechanical.AsYesNo() == true)
+                machine.MachineType |= MachineType.Mechanical;
+
+            if (game.Trurip != null)
             {
-                string tempout = Regex.Match(machine.Name, @".*?\\(.*)").Groups[1].Value;
-                if (!string.IsNullOrWhiteSpace(tempout))
-                    machine.Name = tempout;
+                var trurip = game.Trurip;
+
+                machine.TitleID = trurip.TitleID;
+                machine.Publisher = trurip.Publisher;
+                machine.Developer = trurip.Developer;
+                machine.Year = trurip.Year;
+                machine.Genre = trurip.Genre;
+                machine.Subgenre = trurip.Subgenre;
+                machine.Ratings = trurip.Ratings;
+                machine.Score = trurip.Score;
+                machine.Players = trurip.Players;
+                machine.Enabled = trurip.Enabled;
+                machine.Crc = trurip.CRC.AsYesNo();
+                machine.SourceFile = trurip.Source;
+                machine.CloneOf = trurip.CloneOf;
+                machine.RelatedTo = trurip.RelatedTo;
             }
 
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
+            // Check if there are any items
+            bool containsItems = false;
 
-                // Get the roms from the machine
-                switch (reader.Name)
-                {
-                    case "comment": // There can be multiple comments by spec
-                        machine.Comment += reader.ReadElementContentAsString();
-                        break;
+            // Loop through each type of item
+            ConvertReleases(game.Release, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertBiosSets(game.BiosSet, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertRoms(game.Rom, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertDisks(game.Disk, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertMedia(game.Media, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertDeviceRefs(game.DeviceRef, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertArchives(game.Archive, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertDrivers(game.Driver, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertSoftwareLists(game.SoftwareList, machine, filename, indexId, statsOnly, ref containsItems);
 
-                    case "description":
-                        machine.Description = reader.ReadElementContentAsString();
-                        break;
-
-                    case "year":
-                        machine.Year = reader.ReadElementContentAsString();
-                        break;
-
-                    case "manufacturer":
-                        machine.Manufacturer = reader.ReadElementContentAsString();
-                        break;
-
-                    case "publisher": // Not technically supported but used by some legacy DATs
-                        machine.Publisher = reader.ReadElementContentAsString();
-                        break;
-
-                    case "category": // Not technically supported but used by some legacy DATs
-                        machine.Category = reader.ReadElementContentAsString();
-                        break;
-
-                    case "trurip": // This is special metadata unique to EmuArc
-                        ReadTruRip(reader.ReadSubtree(), machine);
-
-                        // Skip the trurip node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "archive":
-                        containsItems = true;
-
-                        DatItem archive = new Archive
-                        {
-                            Name = reader.GetAttribute("name"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        archive.CopyMachineInformation(machine);
-
-                        // Now process and add the archive
-                        ParseAddHelper(archive, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "biosset":
-                        containsItems = true;
-
-                        DatItem biosSet = new BiosSet
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Description = reader.GetAttribute("description"),
-                            Default = reader.GetAttribute("default").AsYesNo(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        biosSet.CopyMachineInformation(machine);
-
-                        // Now process and add the biosSet
-                        ParseAddHelper(biosSet, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "disk":
-                        containsItems = true;
-
-                        DatItem disk = new Disk
-                        {
-                            Name = reader.GetAttribute("name"),
-                            MD5 = reader.GetAttribute("md5"),
-                            SHA1 = reader.GetAttribute("sha1"),
-                            MergeTag = reader.GetAttribute("merge"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        disk.CopyMachineInformation(machine);
-
-                        // Now process and add the disk
-                        ParseAddHelper(disk, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "media":
-                        containsItems = true;
-
-                        DatItem media = new Media
-                        {
-                            Name = reader.GetAttribute("name"),
-                            MD5 = reader.GetAttribute("md5"),
-                            SHA1 = reader.GetAttribute("sha1"),
-                            SHA256 = reader.GetAttribute("sha256"),
-                            SpamSum = reader.GetAttribute("spamsum"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        media.CopyMachineInformation(machine);
-
-                        // Now process and add the media
-                        ParseAddHelper(media, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "release":
-                        containsItems = true;
-
-                        DatItem release = new Release
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Region = reader.GetAttribute("region"),
-                            Language = reader.GetAttribute("language"),
-                            Date = reader.GetAttribute("date"),
-                            Default = reader.GetAttribute("default").AsYesNo(),
-                        };
-
-                        release.CopyMachineInformation(machine);
-
-                        // Now process and add the release
-                        ParseAddHelper(release, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "rom":
-                        containsItems = true;
-
-                        DatItem rom = new Rom
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
-                            CRC = reader.GetAttribute("crc"),
-                            MD5 = reader.GetAttribute("md5"),
-                            SHA1 = reader.GetAttribute("sha1"),
-                            SHA256 = reader.GetAttribute("sha256"),
-                            SHA384 = reader.GetAttribute("sha384"),
-                            SHA512 = reader.GetAttribute("sha512"),
-                            SpamSum = reader.GetAttribute("spamsum"),
-                            MergeTag = reader.GetAttribute("merge"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            Date = CleanDate(reader.GetAttribute("date")),
-                            Inverted = reader.GetAttribute("inverted").AsYesNo(),
-                            MIA = reader.GetAttribute("mia").AsYesNo(),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        rom.CopyMachineInformation(machine);
-
-                        // Now process and add the rom
-                        ParseAddHelper(rom, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "sample":
-                        containsItems = true;
-
-                        DatItem sample = new Sample
-                        {
-                            Name = reader.GetAttribute("name"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        };
-
-                        sample.CopyMachineInformation(machine);
-
-                        // Now process and add the sample
-                        ParseAddHelper(sample, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-
-            // If no items were found for this machine, add a Blank placeholder
+            // If we had no items, create a Blank placeholder
             if (!containsItems)
             {
-                Blank blank = new()
+                var blank = new Blank
                 {
                     Source = new Source
                     {
@@ -547,99 +285,391 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 blank.CopyMachineInformation(machine);
-
-                // Now process and add the rom
                 ParseAddHelper(blank, statsOnly);
             }
         }
 
         /// <summary>
-        /// Read EmuArc information
+        /// Convert Release information
         /// </summary>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        /// <param name="machine">Machine information to pass to contained items</param>
-        private void ReadTruRip(XmlReader reader, Machine machine)
+        /// <param name="releases">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertReleases(Models.Logiqx.Release[]? releases, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
         {
-            // If we have an empty trurip, skip it
-            if (reader == null)
+            // If the release array is missing, we can't do anything
+            if (releases == null || !releases.Any())
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            while (!reader.EOF)
+            containsItems = true;
+            foreach (var release in releases)
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
+                var item = new Release
                 {
-                    reader.Read();
-                    continue;
-                }
+                    Name = release.Name,
+                    Region = release.Region,
+                    Language = release.Language,
+                    Date = release.Date,
+                    Default = release.Default?.AsYesNo(),
 
-                // Get the information from the trurip
-                switch (reader.Name)
-                {
-                    case "titleid":
-                        machine.TitleID = reader.ReadElementContentAsString();
-                        break;
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
 
-                    case "publisher":
-                        machine.Publisher = reader.ReadElementContentAsString();
-                        break;
-
-                    case "developer":
-                        machine.Developer = reader.ReadElementContentAsString();
-                        break;
-
-                    case "year":
-                        machine.Year = reader.ReadElementContentAsString();
-                        break;
-
-                    case "genre":
-                        machine.Genre = reader.ReadElementContentAsString();
-                        break;
-
-                    case "subgenre":
-                        machine.Subgenre = reader.ReadElementContentAsString();
-                        break;
-
-                    case "ratings":
-                        machine.Ratings = reader.ReadElementContentAsString();
-                        break;
-
-                    case "score":
-                        machine.Score = reader.ReadElementContentAsString();
-                        break;
-
-                    case "players":
-                        machine.Players = reader.ReadElementContentAsString();
-                        break;
-
-                    case "enabled":
-                        machine.Enabled = reader.ReadElementContentAsString();
-                        break;
-
-                    case "crc":
-                        machine.Crc = reader.ReadElementContentAsString().AsYesNo();
-                        break;
-
-                    case "source":
-                        machine.SourceFile = reader.ReadElementContentAsString();
-                        break;
-
-                    case "cloneof":
-                        machine.CloneOf = reader.ReadElementContentAsString();
-                        break;
-
-                    case "relatedto":
-                        machine.RelatedTo = reader.ReadElementContentAsString();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
             }
         }
+
+        /// <summary>
+        /// Convert BiosSet information
+        /// </summary>
+        /// <param name="biossets">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertBiosSets(Models.Logiqx.BiosSet[]? biossets, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the biosset array is missing, we can't do anything
+            if (biossets == null || !biossets.Any())
+                return;
+
+            containsItems = true;
+            foreach (var biosset in biossets)
+            {
+                var item = new BiosSet
+                {
+                    Name = biosset.Name,
+                    Description = biosset.Description,
+                    Default = biosset.Default?.AsYesNo(),
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Rom information
+        /// </summary>
+        /// <param name="roms">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertRoms(Models.Logiqx.Rom[]? roms, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the rom array is missing, we can't do anything
+            if (roms == null || !roms.Any())
+                return;
+
+            containsItems = true;
+            foreach (var rom in roms)
+            {
+                var item = new Rom
+                {
+                    Name = rom.Name,
+                    Size = Utilities.CleanLong(rom.Size),
+                    CRC = rom.CRC,
+                    MD5 = rom.MD5,
+                    SHA1 = rom.SHA1,
+                    SHA256 = rom.SHA256,
+                    SHA384 = rom.SHA384,
+                    SHA512 = rom.SHA512,
+                    SpamSum = rom.SpamSum,
+                    //xxHash364 = rom.xxHash364, // TODO: Add to internal model
+                    //xxHash3128 = rom.xxHash3128, // TODO: Add to internal model
+                    MergeTag = rom.Merge,
+                    ItemStatus = rom.Status?.AsItemStatus() ?? ItemStatus.NULL,
+                    //Serial = rom.Serial, // TODO: Add to internal model
+                    //Header = rom.Header, // TODO: Add to internal model
+                    Date = rom.Date,
+                    Inverted = rom.Inverted?.AsYesNo(),
+                    MIA = rom.MIA?.AsYesNo(),
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Disk information
+        /// </summary>
+        /// <param name="disks">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDisks(Models.Logiqx.Disk[]? disks, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the disk array is missing, we can't do anything
+            if (disks == null || !disks.Any())
+                return;
+
+            containsItems = true;
+            foreach (var disk in disks)
+            {
+                var item = new Disk
+                {
+                    Name = disk.Name,
+                    MD5 = disk.MD5,
+                    SHA1 = disk.SHA1,
+                    MergeTag = disk.Merge,
+                    ItemStatus = disk.Status?.AsItemStatus() ?? ItemStatus.NULL,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Media information
+        /// </summary>
+        /// <param name="media">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertMedia(Models.Logiqx.Media[]? media, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the media array is missing, we can't do anything
+            if (media == null || !media.Any())
+                return;
+
+            containsItems = true;
+            foreach (var medium in media)
+            {
+                var item = new Media
+                {
+                    Name = medium.Name,
+                    MD5 = medium.MD5,
+                    SHA1 = medium.SHA1,
+                    SHA256 = medium.SHA256,
+                    SpamSum = medium.SpamSum,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DeviceRef information
+        /// </summary>
+        /// <param name="devicerefs">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDeviceRefs(Models.Logiqx.DeviceRef[]? devicerefs, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the devicerefs array is missing, we can't do anything
+            if (devicerefs == null || !devicerefs.Any())
+                return;
+
+            containsItems = true;
+            foreach (var deviceref in devicerefs)
+            {
+                var item = new DeviceReference
+                {
+                    Name = deviceref.Name,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DeviceRef information
+        /// </summary>
+        /// <param name="samples">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertSamples(Models.Logiqx.Sample[]? samples, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the samples array is missing, we can't do anything
+            if (samples == null || !samples.Any())
+                return;
+
+            containsItems = true;
+            foreach (var sample in samples)
+            {
+                var item = new Sample
+                {
+                    Name = sample.Name,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Archive information
+        /// </summary>
+        /// <param name="archives">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertArchives(Models.Logiqx.Archive[]? archives, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the archive array is missing, we can't do anything
+            if (archives == null || !archives.Any())
+                return;
+
+            containsItems = true;
+            foreach (var archive in archives)
+            {
+                var item = new Archive
+                {
+                    Name = archive.Name,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert Driver information
+        /// </summary>
+        /// <param name="drivers">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDrivers(Models.Logiqx.Driver[]? drivers, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the drivers array is missing, we can't do anything
+            if (drivers == null || !drivers.Any())
+                return;
+
+            containsItems = true;
+            foreach (var driver in drivers)
+            {
+                var item = new Driver
+                {
+                    Status = driver.Status?.AsSupportStatus() ?? SupportStatus.NULL,
+                    Emulation = driver.Emulation?.AsSupportStatus() ?? SupportStatus.NULL,
+                    Cocktail = driver.Cocktail?.AsSupportStatus() ?? SupportStatus.NULL,
+                    SaveState = driver.SaveState?.AsSupported() ?? Supported.NULL,
+                    RequiresArtwork = driver.RequiresArtwork?.AsYesNo(),
+                    Unofficial = driver.Unofficial?.AsYesNo(),
+                    NoSoundHardware = driver.NoSoundHardware?.AsYesNo(),
+                    Incomplete = driver.Incomplete?.AsYesNo(),
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+       /// <summary>
+        /// Convert SoftwareList information
+        /// </summary>
+        /// <param name="softwarelists">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertSoftwareLists(Models.Logiqx.SoftwareList[]? softwarelists, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the softwarelists array is missing, we can't do anything
+            if (softwarelists == null || !softwarelists.Any())
+                return;
+
+            containsItems = true;
+            foreach (var softwarelist in softwarelists)
+            {
+                var item = new DatItems.Formats.SoftwareList
+                {
+                    Tag = softwarelist.Tag,
+                    Name = softwarelist.Name,
+                    Status = softwarelist.Status?.AsSoftwareListStatus() ?? SoftwareListStatus.None,
+                    Filter = softwarelist.Filter,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        #endregion
     }
 }

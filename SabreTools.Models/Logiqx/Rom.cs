@@ -4,13 +4,13 @@ using System.Xml.Serialization;
 namespace SabreTools.Models.Logiqx
 {
     [XmlRoot("rom")]
-    public class Rom : ItemBase
+    public class Rom
     {
         [XmlAttribute("name")]
         public string Name { get; set; }
 
         [XmlAttribute("size")]
-        public long Size { get; set; }
+        public string Size { get; set; }
 
         [XmlAttribute("crc")]
         public string? CRC { get; set; }
@@ -84,6 +84,18 @@ namespace SabreTools.Models.Logiqx
         /// <remarks>Boolean; Appears after Inverted</remarks>
         [XmlAttribute("mia")]
         public string? MIA { get; set; }
+
+        #endregion
+        
+        #region DO NOT USE IN PRODUCTION
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyAttribute]
+        public XmlAttribute[]? ADDITIONAL_ATTRIBUTES { get; set; }
+
+        /// <remarks>Should be empty</remarks>
+        [XmlAnyElement]
+        public object[]? ADDITIONAL_ELEMENTS { get; set; }
 
         #endregion
     }

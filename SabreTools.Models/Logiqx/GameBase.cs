@@ -56,17 +56,35 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("category")]
         public string[]? Category { get; set; }
 
-        [XmlElement("release", typeof(Release))]
-        [XmlElement("biosset", typeof(BiosSet))]
-        [XmlElement("rom", typeof(Rom))]
-        [XmlElement("disk", typeof(Disk))]
-        [XmlElement("media", typeof(Media))] // Aaru extension
-        [XmlElement("device_ref", typeof(DeviceRef))] // MAME extension
-        [XmlElement("sample", typeof(Sample))]
-        [XmlElement("archive", typeof(Archive))]
-        [XmlElement("driver", typeof(Driver))] // MAME extension
-        [XmlElement("softwarelist", typeof(SoftwareList))] // MAME extension
-        public ItemBase[]? Item { get; set; }
+        [XmlElement(elementName: "release")]
+        public Release[]? Release { get; set; }
+
+        [XmlElement("biosset")]
+        public BiosSet[]? BiosSet { get; set; }
+
+        [XmlElement("rom")]
+        public Rom[]? Rom { get; set; }
+
+        [XmlElement("disk")]
+        public Disk[]? Disk { get; set; }
+
+        [XmlElement("media")] // Aaru extension
+        public Media[]? Media { get; set; }
+
+        [XmlElement("device_ref")] // MAME extension
+        public DeviceRef[]? DeviceRef { get; set; }
+
+        [XmlElement("sample")]
+        public Sample[]? Sample { get; set; }
+
+        [XmlElement("archive")]
+        public Archive[]? Archive { get; set; }
+
+        [XmlElement("driver")] // MAME extension
+        public Driver[]? Driver { get; set; }
+
+        [XmlElement("softwarelist")] // MAME extension
+        public SoftwareList[]? SoftwareList { get; set; }
 
         #region MAME Extensions
 
