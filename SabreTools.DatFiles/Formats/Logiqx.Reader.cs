@@ -220,12 +220,10 @@ namespace SabreTools.DatFiles.Formats
                 NoIntroCloneOfId = game.CloneOfId,
                 Runnable = game.Runnable.AsRunnable(),
 
-                Comment = string.Join(';', game.Comment),
                 Description = game.Description,
                 Year = game.Year,
                 Manufacturer = game.Manufacturer,
                 Publisher = game.Publisher,
-                Category = string.Join(';', game.Category),
             };
 
             if (!string.IsNullOrWhiteSpace(dirname))
@@ -237,6 +235,11 @@ namespace SabreTools.DatFiles.Formats
                 machine.MachineType |= MachineType.Device;
             if (game.IsMechanical.AsYesNo() == true)
                 machine.MachineType |= MachineType.Mechanical;
+
+            if (game.Comment != null && game.Comment.Any())
+                machine.Comment = string.Join(';', game.Comment);
+            if (game.Category != null && game.Category.Any())
+                machine.Category = string.Join(';', game.Category);
 
             if (game.Trurip != null)
             {
@@ -633,7 +636,7 @@ namespace SabreTools.DatFiles.Formats
             }
         }
 
-       /// <summary>
+        /// <summary>
         /// Convert SoftwareList information
         /// </summary>
         /// <param name="softwarelists">Array of deserialized models to convert</param>

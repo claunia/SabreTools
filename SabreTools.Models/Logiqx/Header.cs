@@ -6,11 +6,19 @@ namespace SabreTools.Models.Logiqx
     [XmlRoot("header")]
     public class Header
     {
+        /// <remarks>No-Intro extension</remarks>
+        [XmlElement("id")]
+        public string? Id { get; set; }
+
         [XmlElement("name")]
         public string Name { get; set; }
 
         [XmlElement("description")]
         public string Description { get; set; }
+
+        /// <remarks>Trurip extension</remarks>
+        [XmlElement("rootdir")]
+        public string? RootDir { get; set; }
 
         [XmlElement("category")]
         public string? Category { get; set; }
@@ -36,31 +44,15 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("comment")]
         public string? Comment { get; set; }
 
+        /// <remarks>Trurip extension</remarks>
+        [XmlElement("type")]
+        public string? Type { get; set; }
+
         [XmlElement("clrmamepro")]
         public ClrMamePro? ClrMamePro { get; set; }
 
         [XmlElement("romcenter")]
         public RomCenter? RomCenter { get; set; }
-
-        #region No-Intro Extensions
-
-        /// <remarks>Appears at very top</remarks>
-        [XmlElement("id")]
-        public string? Id { get; set; }
-
-        #endregion
-
-        #region Trurip Extensions
-
-        /// <remarks>Appears after Description</remarks>
-        [XmlElement("rootdir")]
-        public string? RootDir { get; set; }
-
-        /// <remarks>Appears after Comment</remarks>
-        [XmlElement("type")]
-        public string? Type { get; set; }
-
-        #endregion
 
         #region DO NOT USE IN PRODUCTION
 

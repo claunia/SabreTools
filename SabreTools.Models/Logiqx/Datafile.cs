@@ -13,6 +13,10 @@ namespace SabreTools.Models.Logiqx
         [XmlAttribute("debug")]
         public string? Debug { get; set; }
 
+        /// <remarks>No-Intro extension</remarks>
+        [XmlAttribute(Namespace = "http://www.w3.org/2001/XMLSchema-instance", AttributeName = "schemaLocation")]
+        public string? SchemaLocation { get; set; }
+
         [XmlElement("header")]
         public Header? Header { get; set; }
 
@@ -20,20 +24,9 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("machine", typeof(Machine))]
         public GameBase[]? Game { get; set; }
 
-        #region No-Intro Extensions
-
-        /// <remarks>Appears after Debug</remarks>
-        [XmlAttribute(Namespace = "http://www.w3.org/2001/XMLSchema-instance", AttributeName = "schemaLocation")]
-        public string? SchemaLocation { get; set; }
-
-        #endregion
-
-        #region RomVault Extensions
-
+        /// <remarks>RomVault extension</remarks>
         [XmlElement("dir")]
         public Dir[]? Dir { get; set; }
-
-        #endregion
 
         #region DO NOT USE IN PRODUCTION
 

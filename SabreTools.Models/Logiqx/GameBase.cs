@@ -18,6 +18,14 @@ namespace SabreTools.Models.Logiqx
         [XmlAttribute("isbios")]
         public string? IsBios { get; set; }
 
+        /// <remarks>(yes|no) "no", MAME extension</remarks>
+        [XmlAttribute("isdevice")]
+        public string? IsDevice { get; set; }
+
+        /// <remarks>(yes|no) "no", MAME extension</remarks>
+        [XmlAttribute("ismechanical")]
+        public string? IsMechanical { get; set; }
+
         [XmlAttribute("cloneof")]
         public string? CloneOf { get; set; }
 
@@ -32,6 +40,14 @@ namespace SabreTools.Models.Logiqx
 
         [XmlAttribute("rebuildto")]
         public string? RebuildTo { get; set; }
+
+        /// <remarks>No-Intro extension</remarks>
+        [XmlAttribute("id")]
+        public string? Id { get; set; }
+
+        /// <remarks>No-Intro extension</remarks>
+        [XmlAttribute("cloneofid")]
+        public string? CloneOfId { get; set; }
 
         /// <remarks>(no|partial|yes) "no"</remarks>
         [XmlAttribute("runnable")]
@@ -56,6 +72,10 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("category")]
         public string[]? Category { get; set; }
 
+        /// <remarks>Trurip extension</remarks>
+        [XmlElement("trurip")]
+        public Trurip? Trurip { get; set; }
+
         [XmlElement(elementName: "release")]
         public Release[]? Release { get; set; }
 
@@ -68,10 +88,12 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("disk")]
         public Disk[]? Disk { get; set; }
 
-        [XmlElement("media")] // Aaru extension
+        /// <remarks>Aaru extension</remarks>
+        [XmlElement("media")]
         public Media[]? Media { get; set; }
 
-        [XmlElement("device_ref")] // MAME extension
+        /// <remarks>MAME extension</remarks>
+        [XmlElement("device_ref")]
         public DeviceRef[]? DeviceRef { get; set; }
 
         [XmlElement("sample")]
@@ -80,43 +102,13 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("archive")]
         public Archive[]? Archive { get; set; }
 
-        [XmlElement("driver")] // MAME extension
+        /// <remarks>MAME extension</remarks>
+        [XmlElement("driver")]
         public Driver[]? Driver { get; set; }
 
-        [XmlElement("softwarelist")] // MAME extension
+        /// <remarks>MAME extension</remarks>
+        [XmlElement("softwarelist")]
         public SoftwareList[]? SoftwareList { get; set; }
-
-        #region MAME Extensions
-
-        /// <remarks>(yes|no) "no", Appears after IsBios</remarks>
-        [XmlAttribute("isdevice")]
-        public string? IsDevice { get; set; }
-
-        /// <remarks>(yes|no) "no", Appears after IsDevice</remarks>
-        [XmlAttribute("ismechanical")]
-        public string? IsMechanical { get; set; }
-
-        #endregion
-
-        #region No-Intro Extensions
-
-        /// <remarks>Appears after RebuildTo</remarks>
-        [XmlAttribute("id")]
-        public string? Id { get; set; }
-
-        /// <remarks>Appears after Id</remarks>
-        [XmlAttribute("cloneofid")]
-        public string? CloneOfId { get; set; }
-
-        #endregion
-
-        #region Trurip Extensions
-
-        /// <remarks>Appears after Category</remarks>
-        [XmlElement("trurip")]
-        public Trurip? Trurip { get; set; }
-
-        #endregion
 
         #region DO NOT USE IN PRODUCTION
 

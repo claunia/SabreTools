@@ -22,13 +22,9 @@ namespace SabreTools.Models.Logiqx
         [XmlAttribute("status")]
         public string? Status { get; set; }
 
-        #region MAME Extensions
-
-        /// <remarks>Appears after Status</remarks>
+        /// <remarks>MAME extension</remarks>
         [XmlAttribute("region")]
         public string? Region { get; set; }
-
-        #endregion
         
         #region DO NOT USE IN PRODUCTION
 

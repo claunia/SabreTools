@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Xml;
+using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
-using SabreTools.IO;
 
 namespace SabreTools.DatFiles.Formats
 {
@@ -34,7 +31,7 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-           var missingFields = new List<DatItemField>();
+            var missingFields = new List<DatItemField>();
             switch (datItem)
             {
                 case Release release:
@@ -135,70 +132,21 @@ namespace SabreTools.DatFiles.Formats
             try
             {
                 logger.User($"Writing to '{outfile}'...");
-                FileStream fs = System.IO.File.Create(outfile);
 
-                // If we get back null for some reason, just log and return
-                if (fs == null)
+                var datafile = CreateDatafile(ignoreblanks);
+
+                // Only write the doctype if we don't have No-Intro data
+                bool success;
+                if (string.IsNullOrWhiteSpace(Header.NoIntroID))
+                    success = Serialization.Logiqx.SerializeToFileWithDocType(datafile, outfile);
+                else
+                    success = Serialization.Logiqx.SerializeToFile(datafile, outfile);
+
+                if (!success)
                 {
-                    logger.Warning($"File '{outfile}' could not be created for writing! Please check to see if the file is writable");
+                    logger.Warning($"File '{outfile}' could not be written! See the log for more details.");
                     return false;
                 }
-
-                XmlTextWriter xtw = new(fs, new UTF8Encoding(false))
-                {
-                    Formatting = Formatting.Indented,
-                    IndentChar = '\t',
-                    Indentation = 1
-                };
-
-                // Write out the header
-                WriteHeader(xtw);
-
-                // Write out each of the machines and roms
-                string lastgame = null;
-
-                // Use a sorted list of games to output
-                foreach (string key in Items.SortedKeys)
-                {
-                    ConcurrentList<DatItem> datItems = Items.FilteredItems(key);
-
-                    // If this machine doesn't contain any writable items, skip
-                    if (!ContainsWritable(datItems))
-                        continue;
-
-                    // Resolve the names in the block
-                    datItems = DatItem.ResolveNames(datItems);
-
-                    for (int index = 0; index < datItems.Count; index++)
-                    {
-                        DatItem datItem = datItems[index];
-
-                        // If we have a different game and we're not at the start of the list, output the end of last item
-                        if (lastgame != null && lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
-                            WriteEndGame(xtw);
-
-                        // If we have a new game, output the beginning of the new item
-                        if (lastgame == null || lastgame.ToLowerInvariant() != datItem.Machine.Name.ToLowerInvariant())
-                            WriteStartGame(xtw, datItem);
-
-                        // Check for a "null" item
-                        datItem = ProcessNullifiedItem(datItem);
-
-                        // Write out the item if we're not ignoring
-                        if (!ShouldIgnore(datItem, ignoreblanks))
-                            WriteDatItem(xtw, datItem);
-
-                        // Set the new data to compare against
-                        lastgame = datItem.Machine.Name;
-                    }
-                }
-
-                // Write the file footer out
-                WriteFooter(xtw);
-
-                logger.User($"'{outfile}' written!{Environment.NewLine}");
-                xtw.Dispose();
-                fs.Dispose();
             }
             catch (Exception ex) when (!throwOnError)
             {
@@ -206,290 +154,507 @@ namespace SabreTools.DatFiles.Formats
                 return false;
             }
 
+            logger.User($"'{outfile}' written!{Environment.NewLine}");
             return true;
         }
 
-        /// <summary>
-        /// Write out DAT header using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
-        private void WriteHeader(XmlTextWriter xtw)
-        {
-            xtw.WriteStartDocument();
-            if (Header.NoIntroID == null)
-                xtw.WriteDocType("datafile", "-//Logiqx//DTD ROM Management Datafile//EN", "http://www.logiqx.com/Dats/datafile.dtd", null);
+        #region Converters
 
-            xtw.WriteStartElement("datafile");
-            xtw.WriteOptionalAttributeString("build", Header.Build);
-            xtw.WriteOptionalAttributeString("debug", Header.Debug.FromYesNo());
-            if (Header.NoIntroID != null)
+        /// <summary>
+        /// Create a Datafile from the current internal information
+        /// <summary>
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Logiqx.Datafile CreateDatafile(bool ignoreblanks)
+        {
+            var datafile = new Models.Logiqx.Datafile
             {
-                xtw.WriteRequiredAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                xtw.WriteRequiredAttributeString("xsi:schemaLocation", "https://datomatic.no-intro.org/stuff https://datomatic.no-intro.org/stuff/schema_nointro_datfile_v3.xsd");
+                Build = Header.Build,
+                Debug = Header.Debug.FromYesNo(),
+
+                Header = CreateHeader(),
+                Game = CreateGames(ignoreblanks)
+            };
+
+            if (!string.IsNullOrEmpty(Header.NoIntroID))
+                datafile.SchemaLocation = "https://datomatic.no-intro.org/stuff https://datomatic.no-intro.org/stuff/schema_nointro_datfile_v3.xsd";
+
+            return datafile;
+        }
+
+        /// <summary>
+        /// Create a Header from the current internal information
+        /// <summary>
+        private Models.Logiqx.Header? CreateHeader()
+        {
+            // If we don't have a header, we can't do anything
+            if (this.Header == null)
+                return null;
+
+            var header = new Models.Logiqx.Header
+            {
+                Id = Header.NoIntroID,
+                Name = Header.Name,
+                Description = Header.Description,
+                RootDir = Header.RootDir,
+                Category = Header.Category,
+                Version = Header.Version,
+                Date = Header.Date,
+                Author = Header.Author,
+                Email = Header.Email,
+                Homepage = Header.Homepage,
+                Url = Header.Url,
+                Comment = Header.Comment,
+                Type = Header.Type,
+
+                ClrMamePro = CreateClrMamePro(),
+                RomCenter = CreateRomCenter(),
+            };
+
+            return header;
+        }
+
+        /// <summary>
+        /// Create a ClrMamePro from the current internal information
+        /// <summary>
+        private Models.Logiqx.ClrMamePro? CreateClrMamePro()
+        {
+            // If we don't have subheader values, we can't do anything
+            if (!Header.ForceMergingSpecified
+                && !Header.ForceNodumpSpecified
+                && !Header.ForcePackingSpecified
+                && string.IsNullOrWhiteSpace(Header.HeaderSkipper))
+            {
+                return null;
             }
 
-            xtw.WriteStartElement("header");
-
-            xtw.WriteOptionalElementString("id", Header.NoIntroID);
-            xtw.WriteRequiredElementString("name", Header.Name);
-            xtw.WriteRequiredElementString("description", Header.Description);
-            xtw.WriteOptionalElementString("rootdir", Header.RootDir);
-            if (!string.IsNullOrWhiteSpace(Header.Category))
+            var subheader = new Models.Logiqx.ClrMamePro
             {
-                var categories = Header.Category.Split(';');
-                foreach (string category in categories)
+                Header = Header.HeaderSkipper,
+            };
+
+            if (Header.ForceMergingSpecified)
+                subheader.ForceMerging = Header.ForceMerging.FromMergingFlag(romCenter: false);
+            if (Header.ForceNodumpSpecified)
+                subheader.ForceNodump = Header.ForceNodump.FromNodumpFlag();
+            if (Header.ForcePackingSpecified)
+                subheader.ForcePacking = Header.ForcePacking.FromPackingFlag(yesno: false);
+
+            return subheader;
+        }
+
+        /// <summary>
+        /// Create a RomCenter from the current internal information
+        /// <summary>
+        private Models.Logiqx.RomCenter? CreateRomCenter()
+        {
+            // If we don't have subheader values, we can't do anything
+            if (string.IsNullOrWhiteSpace(Header.System)
+                && !Header.RomModeSpecified
+                && !Header.BiosModeSpecified
+                && !Header.SampleModeSpecified
+                && !Header.LockRomModeSpecified
+                && !Header.LockBiosModeSpecified
+                && !Header.LockSampleModeSpecified)
+            {
+                return null;
+            }
+
+            var subheader = new Models.Logiqx.RomCenter
+            {
+                Plugin = Header.System,
+            };
+
+            if (Header.RomModeSpecified)
+                subheader.RomMode = Header.RomMode.FromMergingFlag(romCenter: true);
+            if (Header.BiosModeSpecified)
+                subheader.BiosMode = Header.BiosMode.FromMergingFlag(romCenter: true);
+            if (Header.SampleModeSpecified)
+                subheader.SampleMode = Header.SampleMode.FromMergingFlag(romCenter: true);
+
+            if (Header.LockRomModeSpecified)
+                subheader.LockRomMode = Header.LockRomMode.FromYesNo();
+            if (Header.LockBiosModeSpecified)
+                subheader.LockBiosMode = Header.LockBiosMode.FromYesNo();
+            if (Header.LockSampleModeSpecified)
+                subheader.LockSampleMode = Header.LockSampleMode.FromYesNo();
+
+            return subheader;
+        }
+
+        /// <summary>
+        /// Create an array of GameBase from the current internal information
+        /// <summary>
+        /// <param name="ignoreblanks">True if blank roms should be skipped on output, false otherwise</param>
+        private Models.Logiqx.GameBase[]? CreateGames(bool ignoreblanks)
+        {
+            // If we don't have items, we can't do anything
+            if (this.Items == null || !this.Items.Any())
+                return null;
+
+            // Create a list of hold the games
+            var games = new List<Models.Logiqx.GameBase>();
+
+            // Loop through the sorted items and create games for them
+            foreach (string key in Items.SortedKeys)
+            {
+                var items = Items.FilteredItems(key);
+                if (items == null || !items.Any())
+                    continue;
+
+                // Get the first item for game information
+                var machine = items[0].Machine;
+                var game = CreateGame(machine);
+
+                // Create holders for all item types
+                var releases = new List<Models.Logiqx.Release>();
+                var biossets = new List<Models.Logiqx.BiosSet>();
+                var roms = new List<Models.Logiqx.Rom>();
+                var disks = new List<Models.Logiqx.Disk>();
+                var medias = new List<Models.Logiqx.Media>();
+                var samples = new List<Models.Logiqx.Sample>();
+                var archives = new List<Models.Logiqx.Archive>();
+                var devicerefs = new List<Models.Logiqx.DeviceRef>();
+                var drivers = new List<Models.Logiqx.Driver>();
+                var softwarelists = new List<Models.Logiqx.SoftwareList>();
+
+                // Loop through and convert the items to respective lists
+                for (int index = 0; index < items.Count; index++)
                 {
-                    xtw.WriteOptionalElementString("category", category);
+                    // Get the item
+                    var item = items[index];
+
+                    // Check for a "null" item
+                    item = ProcessNullifiedItem(item);
+
+                    // Skip if we're ignoring the item
+                    if (ShouldIgnore(item, ignoreblanks))
+                        continue;
+
+                    switch (item)
+                    {
+                        case Release release:
+                            releases.Add(CreateRelease(release));
+                            break;
+                        case BiosSet biosset:
+                            biossets.Add(CreateBiosSet(biosset));
+                            break;
+                        case Rom rom:
+                            roms.Add(CreateRom(rom));
+                            break;
+                        case Disk disk:
+                            disks.Add(CreateDisk(disk));
+                            break;
+                        case Media media:
+                            medias.Add(CreateMedia(media));
+                            break;
+                        case Sample sample:
+                            samples.Add(CreateSample(sample));
+                            break;
+                        case Archive archive:
+                            archives.Add(CreateArchive(archive));
+                            break;
+                        case DeviceReference deviceref:
+                            devicerefs.Add(CreateDeviceRef(deviceref));
+                            break;
+                        case Driver driver:
+                            drivers.Add(CreateDriver(driver));
+                            break;
+                        case DatItems.Formats.SoftwareList softwarelist:
+                            softwarelists.Add(CreateSoftwareList(softwarelist));
+                            break;
+                    }
                 }
-            }
-            xtw.WriteRequiredElementString("version", Header.Version);
-            xtw.WriteOptionalElementString("date", Header.Date);
-            xtw.WriteRequiredElementString("author", Header.Author);
-            xtw.WriteOptionalElementString("email", Header.Email);
-            xtw.WriteOptionalElementString("homepage", Header.Homepage);
-            xtw.WriteOptionalElementString("url", Header.Url);
-            xtw.WriteOptionalElementString("comment", Header.Comment);
-            xtw.WriteOptionalElementString("type", Header.Type);
 
-            if (Header.ForcePacking != PackingFlag.None
-                || Header.ForceMerging != MergingFlag.None
-                || Header.ForceNodump != NodumpFlag.None
-                || !string.IsNullOrWhiteSpace(Header.HeaderSkipper))
-            {
-                xtw.WriteStartElement("clrmamepro");
+                // Assign the values to the game
+                game.Release = releases.ToArray();
+                game.BiosSet = biossets.ToArray();
+                game.Rom = roms.ToArray();
+                game.Disk = disks.ToArray();
+                game.Media = medias.ToArray();
+                game.Sample = samples.ToArray();
+                game.Archive = archives.ToArray();
+                game.DeviceRef = devicerefs.ToArray();
+                game.Driver = drivers.ToArray();
+                game.SoftwareList = softwarelists.ToArray();
 
-                if (Header.ForcePacking != PackingFlag.None)
-                    xtw.WriteOptionalAttributeString("forcepacking", Header.ForcePacking.FromPackingFlag(false));
-                if (Header.ForceMerging != MergingFlag.None)
-                    xtw.WriteOptionalAttributeString("forcemerging", Header.ForceMerging.FromMergingFlag(false));
-                if (Header.ForceNodump != NodumpFlag.None)
-                    xtw.WriteOptionalAttributeString("forcenodump", Header.ForceNodump.FromNodumpFlag());
-                xtw.WriteOptionalAttributeString("header", Header.HeaderSkipper);
-
-                // End clrmamepro
-                xtw.WriteEndElement();
+                // Add the game to the list
+                games.Add(game);
             }
 
-            if (Header.System != null
-                || Header.RomMode != MergingFlag.None || Header.LockRomMode != null
-                || Header.BiosMode != MergingFlag.None || Header.LockBiosMode != null
-                || Header.SampleMode != MergingFlag.None || Header.LockSampleMode != null)
-            {
-                xtw.WriteStartElement("romcenter");
-
-                xtw.WriteOptionalAttributeString("plugin", Header.System);
-                if (Header.RomMode != MergingFlag.None)
-                    xtw.WriteOptionalAttributeString("rommode", Header.RomMode.FromMergingFlag(true));
-                if (Header.BiosMode != MergingFlag.None)
-                    xtw.WriteOptionalAttributeString("biosmode", Header.BiosMode.FromMergingFlag(true));
-                if (Header.SampleMode != MergingFlag.None)
-                    xtw.WriteOptionalAttributeString("samplemode", Header.SampleMode.FromMergingFlag(true));
-                xtw.WriteOptionalAttributeString("lockrommode", Header.LockRomMode.FromYesNo());
-                xtw.WriteOptionalAttributeString("lockbiosmode", Header.LockBiosMode.FromYesNo());
-                xtw.WriteOptionalAttributeString("locksamplemode", Header.LockSampleMode.FromYesNo());
-
-                // End romcenter
-                xtw.WriteEndElement();
-            }
-
-            // End header
-            xtw.WriteEndElement();
-
-            xtw.Flush();
+            return games.ToArray();
         }
 
         /// <summary>
-        /// Write out Game start using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteStartGame(XmlTextWriter xtw, DatItem datItem)
+        /// Create a Trurip from the current internal information
+        /// <summary>
+        private Models.Logiqx.GameBase? CreateGame(Machine machine)
         {
-            // No game should start with a path separator
-            datItem.Machine.Name = datItem.Machine.Name.TrimStart(Path.DirectorySeparatorChar);
+            Models.Logiqx.GameBase game = _deprecated ? new Models.Logiqx.Game() : new Models.Logiqx.Machine();
 
-            // Build the state
-            xtw.WriteStartElement(_deprecated ? "game" : "machine");
-            xtw.WriteRequiredAttributeString("name", datItem.Machine.Name);
-
-            if (datItem.Machine.MachineType.HasFlag(MachineType.Bios))
-                xtw.WriteAttributeString("isbios", "yes");
-            if (datItem.Machine.MachineType.HasFlag(MachineType.Device))
-                xtw.WriteAttributeString("isdevice", "yes");
-            if (datItem.Machine.MachineType.HasFlag(MachineType.Mechanical))
-                xtw.WriteAttributeString("ismechanical", "yes");
-
-            xtw.WriteOptionalAttributeString("runnable", datItem.Machine.Runnable.FromRunnable());
-            xtw.WriteOptionalAttributeString("id", datItem.Machine.NoIntroId);
-            xtw.WriteOptionalAttributeString("cloneofid", datItem.Machine.NoIntroCloneOfId);
-
-            if (!string.Equals(datItem.Machine.Name, datItem.Machine.CloneOf, StringComparison.OrdinalIgnoreCase))
-                xtw.WriteOptionalAttributeString("cloneof", datItem.Machine.CloneOf);
-            if (!string.Equals(datItem.Machine.Name, datItem.Machine.RomOf, StringComparison.OrdinalIgnoreCase))
-                xtw.WriteOptionalAttributeString("romof", datItem.Machine.RomOf);
-            if (!string.Equals(datItem.Machine.Name, datItem.Machine.SampleOf, StringComparison.OrdinalIgnoreCase))
-                xtw.WriteOptionalAttributeString("sampleof", datItem.Machine.SampleOf);
-
-            xtw.WriteOptionalElementString("comment", datItem.Machine.Comment);
-            xtw.WriteOptionalElementString("description", datItem.Machine.Description);
-            xtw.WriteOptionalElementString("year", datItem.Machine.Year);
-            xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
-            xtw.WriteOptionalElementString("manufacturer", datItem.Machine.Manufacturer);
-            xtw.WriteOptionalElementString("category", datItem.Machine.Category);
-
-            if (datItem.Machine.TitleID != null
-                || datItem.Machine.Developer != null
-                || datItem.Machine.Genre != null
-                || datItem.Machine.Subgenre != null
-                || datItem.Machine.Ratings != null
-                || datItem.Machine.Score != null
-                || datItem.Machine.Enabled != null
-                || datItem.Machine.Crc != null
-                || datItem.Machine.RelatedTo != null)
+            game.Name = machine.Name;
+            game.SourceFile = machine.SourceFile;
+            if (machine.MachineType.HasFlag(MachineType.Bios))
+                game.IsBios = "yes";
+            if (machine.MachineType.HasFlag(MachineType.Device))
+                game.IsDevice = "yes";
+            if (machine.MachineType.HasFlag(MachineType.Mechanical))
+                game.IsMechanical = "yes";
+            game.CloneOf = machine.CloneOf;
+            game.RomOf = machine.RomOf;
+            game.SampleOf = machine.SampleOf;
+            game.Board = machine.Board;
+            game.RebuildTo = machine.RebuildTo;
+            game.Id = machine.NoIntroId;
+            game.CloneOfId = machine.NoIntroCloneOfId;
+            game.Runnable = machine.Runnable.FromRunnable();
+            if (machine.Comment != null)
             {
-                xtw.WriteStartElement("trurip");
+                if (machine.Comment.Contains(';'))
+                    game.Comment = machine.Comment.Split(';');
+                else
+                    game.Comment = new[] { machine.Comment };
+            }
+            game.Description = machine.Description;
+            game.Year = machine.Year;
+            game.Manufacturer = machine.Manufacturer;
+            game.Publisher = machine.Publisher;
+            if (machine.Category != null)
+            {
+                if (machine.Category.Contains(';'))
+                    game.Category = machine.Category.Split(';');
+                else
+                    game.Category = new[] { machine.Category };
+            }
+            game.Trurip = CreateTrurip(machine);
 
-                xtw.WriteOptionalElementString("titleid", datItem.Machine.TitleID);
-                xtw.WriteOptionalElementString("publisher", datItem.Machine.Publisher);
-                xtw.WriteOptionalElementString("developer", datItem.Machine.Developer);
-                xtw.WriteOptionalElementString("year", datItem.Machine.Year);
-                xtw.WriteOptionalElementString("genre", datItem.Machine.Genre);
-                xtw.WriteOptionalElementString("subgenre", datItem.Machine.Subgenre);
-                xtw.WriteOptionalElementString("ratings", datItem.Machine.Ratings);
-                xtw.WriteOptionalElementString("score", datItem.Machine.Score);
-                xtw.WriteOptionalElementString("players", datItem.Machine.Players);
-                xtw.WriteOptionalElementString("enabled", datItem.Machine.Enabled);
-                xtw.WriteOptionalElementString("titleid", datItem.Machine.TitleID);
-                xtw.WriteOptionalElementString("crc", datItem.Machine.Crc.FromYesNo());
-                xtw.WriteOptionalElementString("source", datItem.Machine.SourceFile);
-                xtw.WriteOptionalElementString("cloneof", datItem.Machine.CloneOf);
-                xtw.WriteOptionalElementString("relatedto", datItem.Machine.RelatedTo);
+            return game;
+        }
 
-                // End trurip
-                xtw.WriteEndElement();
+        /// <summary>
+        /// Create a Trurip from the current internal information
+        /// <summary>
+        private static Models.Logiqx.Trurip? CreateTrurip(Machine machine)
+        {
+            // If we don't have subheader values, we can't do anything
+            if (string.IsNullOrWhiteSpace(machine.TitleID)
+                && string.IsNullOrWhiteSpace(machine.Developer)
+                && string.IsNullOrWhiteSpace(machine.Genre)
+                && string.IsNullOrWhiteSpace(machine.Subgenre)
+                && string.IsNullOrWhiteSpace(machine.Ratings)
+                && string.IsNullOrWhiteSpace(machine.Score)
+                && string.IsNullOrWhiteSpace(machine.Enabled)
+                && !machine.CrcSpecified
+                && string.IsNullOrWhiteSpace(machine.RelatedTo))
+            {
+                return null;
             }
 
-            xtw.Flush();
-        }
-
-        /// <summary>
-        /// Write out Game end using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
-        private void WriteEndGame(XmlTextWriter xtw)
-        {
-            // End machine
-            xtw.WriteEndElement();
-
-            xtw.Flush();
-        }
-
-        /// <summary>
-        /// Write out DatItem using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
-        /// <param name="datItem">DatItem object to be output</param>
-        private void WriteDatItem(XmlTextWriter xtw, DatItem datItem)
-        {
-            // Pre-process the item name
-            ProcessItemName(datItem, true);
-
-            // Build the state
-            switch (datItem.ItemType)
+            var trurip = new Models.Logiqx.Trurip
             {
-                case ItemType.Archive:
-                    var archive = datItem as Archive;
-                    xtw.WriteStartElement("archive");
-                    xtw.WriteRequiredAttributeString("name", archive.Name);
-                    xtw.WriteEndElement();
-                    break;
+                TitleID = machine.TitleID,
+                Publisher = machine.Publisher,
+                Developer = machine.Developer,
+                Year = machine.Year,
+                Genre = machine.Genre,
+                Subgenre = machine.Subgenre,
+                Ratings = machine.Ratings,
+                Score = machine.Score,
+                Players = machine.Players,
+                Enabled = machine.Enabled,
+                CRC = machine.Crc.FromYesNo(),
+                Source = machine.SourceFile,
+                CloneOf = machine.CloneOf,
+                RelatedTo = machine.RelatedTo,
+            };
 
-                case ItemType.BiosSet:
-                    var biosSet = datItem as BiosSet;
-                    xtw.WriteStartElement("biosset");
-                    xtw.WriteRequiredAttributeString("name", biosSet.Name);
-                    xtw.WriteOptionalAttributeString("description", biosSet.Description);
-                    xtw.WriteOptionalAttributeString("default", biosSet.Default.FromYesNo());
-                    xtw.WriteEndElement();
-                    break;
-
-                case ItemType.Disk:
-                    var disk = datItem as Disk;
-                    xtw.WriteStartElement("disk");
-                    xtw.WriteRequiredAttributeString("name", disk.Name);
-                    xtw.WriteOptionalAttributeString("md5", disk.MD5?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha1", disk.SHA1?.ToLowerInvariant());
-                    if (disk.ItemStatus != ItemStatus.None)
-                        xtw.WriteOptionalAttributeString("status", disk.ItemStatus.FromItemStatus(false));
-                    xtw.WriteEndElement();
-                    break;
-
-                case ItemType.Media:
-                    var media = datItem as Media;
-                    xtw.WriteStartElement("media");
-                    xtw.WriteRequiredAttributeString("name", media.Name);
-                    xtw.WriteOptionalAttributeString("md5", media.MD5?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha1", media.SHA1?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha256", media.SHA256?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("spamsum", media.SpamSum?.ToLowerInvariant());
-                    xtw.WriteEndElement();
-                    break;
-
-                case ItemType.Release:
-                    var release = datItem as Release;
-                    xtw.WriteStartElement("release");
-                    xtw.WriteRequiredAttributeString("name", release.Name);
-                    xtw.WriteOptionalAttributeString("region", release.Region);
-                    xtw.WriteOptionalAttributeString("language", release.Language);
-                    xtw.WriteOptionalAttributeString("date", release.Date);
-                    xtw.WriteOptionalAttributeString("default", release.Default.FromYesNo());
-                    xtw.WriteEndElement();
-                    break;
-
-                case ItemType.Rom:
-                    var rom = datItem as Rom;
-                    xtw.WriteStartElement("rom");
-                    xtw.WriteRequiredAttributeString("name", rom.Name);
-                    xtw.WriteAttributeString("size", rom.Size?.ToString());
-                    xtw.WriteOptionalAttributeString("crc", rom.CRC?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("md5", rom.MD5?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha1", rom.SHA1?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha256", rom.SHA256?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha384", rom.SHA384?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("sha512", rom.SHA512?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("spamsum", rom.SpamSum?.ToLowerInvariant());
-                    xtw.WriteOptionalAttributeString("date", rom.Date);
-                    if (rom.ItemStatus != ItemStatus.None)
-                        xtw.WriteOptionalAttributeString("status", rom.ItemStatus.FromItemStatus(false));
-                    xtw.WriteOptionalAttributeString("inverted", rom.Inverted.FromYesNo());
-                    xtw.WriteOptionalAttributeString("mia", rom.MIA.FromYesNo());
-                    xtw.WriteEndElement();
-                    break;
-
-                case ItemType.Sample:
-                    var sample = datItem as Sample;
-                    xtw.WriteStartElement("sample");
-                    xtw.WriteRequiredAttributeString("name", sample.Name);
-                    xtw.WriteEndElement();
-                    break;
-            }
-
-            xtw.Flush();
+            return trurip;
         }
 
         /// <summary>
-        /// Write out DAT footer using the supplied StreamWriter
-        /// </summary>
-        /// <param name="xtw">XmlTextWriter to output to</param>
-        private void WriteFooter(XmlTextWriter xtw)
+        /// Create a Release from the current Release DatItem
+        /// <summary>
+        private static Models.Logiqx.Release CreateRelease(Release item)
         {
-            // End machine
-            xtw.WriteEndElement();
+            var release = new Models.Logiqx.Release
+            {
+                Name = item.Name,
+                Region = item.Region,
+                Language = item.Language,
+                Date = item.Date,
+            };
 
-            // End datafile
-            xtw.WriteEndElement();
+            if (item.DefaultSpecified)
+                release.Default = item.Default.FromYesNo();
 
-            xtw.Flush();
+            return release;
         }
+
+        /// <summary>
+        /// Create a BiosSet from the current BiosSet DatItem
+        /// <summary>
+        private static Models.Logiqx.BiosSet CreateBiosSet(BiosSet item)
+        {
+            var biosset = new Models.Logiqx.BiosSet
+            {
+                Name = item.Name,
+                Description = item.Description,
+            };
+
+            if (item.DefaultSpecified)
+                biosset.Default = item.Default.FromYesNo();
+
+            return biosset;
+        }
+
+        /// <summary>
+        /// Create a Rom from the current Rom DatItem
+        /// <summary>
+        private static Models.Logiqx.Rom CreateRom(Rom item)
+        {
+            var rom = new Models.Logiqx.Rom
+            {
+                Name = item.Name,
+                Size = item.Size?.ToString(),
+                CRC = item.CRC,
+                MD5 = item.MD5,
+                SHA1 = item.SHA1,
+                SHA256 = item.SHA256,
+                SHA384 = item.SHA384,
+                SHA512 = item.SHA512,
+                SpamSum = item.SpamSum,
+                //xxHash364 = item.xxHash364, // TODO: Add to internal model
+                //xxHash3128 = item.xxHash3128, // TODO: Add to internal model
+                Merge = item.MergeTag,
+                //Serial = item.Serial, // TODO: Add to internal model
+                //Header = item.Header, // TODO: Add to internal model
+                Date = item.Date,
+            };
+
+            if (item.ItemStatusSpecified)
+                rom.Status = item.ItemStatus.FromItemStatus(yesno: false);
+            if (item.InvertedSpecified)
+                rom.Inverted = item.Inverted.FromYesNo();
+            if (item.MIASpecified)
+                rom.MIA = item.MIA.FromYesNo();
+
+            return rom;
+        }
+
+        /// <summary>
+        /// Create a Disk from the current Disk DatItem
+        /// <summary>
+        private static Models.Logiqx.Disk CreateDisk(Disk item)
+        {
+            var disk = new Models.Logiqx.Disk
+            {
+                Name = item.Name,
+                MD5 = item.MD5,
+                SHA1 = item.SHA1,
+                Merge = item.MergeTag,
+                Region = item.Region,
+            };
+
+            if (item.ItemStatusSpecified)
+                disk.Status = item.ItemStatus.FromItemStatus(yesno: false);
+
+            return disk;
+        }
+
+        /// <summary>
+        /// Create a Media from the current Media DatItem
+        /// <summary>
+        private static Models.Logiqx.Media CreateMedia(Media item)
+        {
+            var media = new Models.Logiqx.Media
+            {
+                Name = item.Name,
+                MD5 = item.MD5,
+                SHA1 = item.SHA1,
+                SHA256 = item.SHA256,
+                SpamSum = item.SpamSum,
+            };
+            return media;
+        }
+
+        /// <summary>
+        /// Create a Sample from the current Sample DatItem
+        /// <summary>
+        private static Models.Logiqx.Sample CreateSample(Sample item)
+        {
+            var sample = new Models.Logiqx.Sample
+            {
+                Name = item.Name,
+            };
+            return sample;
+        }
+
+        /// <summary>
+        /// Create a Archive from the current Archive DatItem
+        /// <summary>
+        private static Models.Logiqx.Archive CreateArchive(Archive item)
+        {
+            var archive = new Models.Logiqx.Archive
+            {
+                Name = item.Name,
+            };
+            return archive;
+        }
+
+        /// <summary>
+        /// Create a DeviceRef from the current Chip DatItem
+        /// <summary>
+        private static Models.Logiqx.DeviceRef CreateDeviceRef(DeviceReference item)
+        {
+            var deviceref = new Models.Logiqx.DeviceRef
+            {
+                Name = item.Name,
+            };
+            return deviceref;
+        }
+
+        /// <summary>
+        /// Create a Driver from the current Driver DatItem
+        /// <summary>
+        private static Models.Logiqx.Driver CreateDriver(Driver item)
+        {
+            var driver = new Models.Logiqx.Driver
+            {
+                Status = item.Status.FromSupportStatus(),
+                Emulation = item.Emulation.FromSupportStatus(),
+                Cocktail = item.Cocktail.FromSupportStatus(),
+                SaveState = item.SaveState.FromSupported(true),
+            };
+
+            if (item.RequiresArtworkSpecified)
+                driver.RequiresArtwork = item.RequiresArtwork.FromYesNo();
+            if (item.UnofficialSpecified)
+                driver.Unofficial = item.Unofficial.FromYesNo();
+            if (item.NoSoundHardwareSpecified)
+                driver.NoSoundHardware = item.NoSoundHardware.FromYesNo();
+            if (item.IncompleteSpecified)
+                driver.Incomplete = item.Incomplete.FromYesNo();
+
+            return driver;
+        }
+
+        /// <summary>
+        /// Create a SoftwareList from the current SoftwareList DatItem
+        /// <summary>
+        private static Models.Logiqx.SoftwareList CreateSoftwareList(DatItems.Formats.SoftwareList item)
+        {
+            var softwarelist = new Models.Logiqx.SoftwareList
+            {
+                Tag = item.Tag,
+                Name = item.Name,
+                Filter = item.Filter,
+            };
+
+            if (item.StatusSpecified)
+                softwarelist.Status = item.Status.FromSoftwareListStatus();
+
+            return softwarelist;
+        }
+
+        #endregion
     }
 }
