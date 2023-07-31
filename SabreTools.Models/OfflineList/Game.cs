@@ -18,8 +18,9 @@ namespace SabreTools.Models.OfflineList
         [XmlElement("saveType")]
         public string? SaveType { get; set; }
 
+        /// <remarks>Numeric</remarks>
         [XmlElement("romSize")]
-        public long? RomSize { get; set; }
+        public string? RomSize { get; set; }
 
         [XmlElement("publisher")]
         public string? Publisher { get; set; }

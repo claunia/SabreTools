@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Schema;
+using System.Linq;
 using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
@@ -17,619 +16,362 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
-            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            // If we got a null reader, just return
-            if (xtr == null)
-                return;
-
-            // Otherwise, read the file to the end
             try
             {
-                xtr.MoveToContent();
-                while (!xtr.EOF)
-                {
-                    // We only want elements
-                    if (xtr.NodeType != XmlNodeType.Element)
-                    {
-                        xtr.Read();
-                        continue;
-                    }
+                // Deserialize the input file
+                var dat = Serialization.OfflineList.Deserialize(filename);
 
-                    switch (xtr.Name)
-                    {
-                        case "configuration":
-                            ReadConfiguration(xtr.ReadSubtree(), keep);
+                // Convert the header to the internal format
+                ConvertHeader(dat);
 
-                            // Skip the configuration node now that we've processed it
-                            xtr.Skip();
-                            break;
+                // Convert the configuration to the internal format
+                ConvertConfiguration(dat.Configuration, keep);
 
-                        case "games":
-                            ReadGames(xtr.ReadSubtree(), statsOnly, filename, indexId);
+                // Convert the games to the internal format
+                ConvertGames(dat?.Games, filename, indexId, statsOnly);
 
-                            // Skip the games node now that we've processed it
-                            xtr.Skip();
-                            break;
-
-                        default:
-                            xtr.Read();
-                            break;
-                    }
-                }
+                // Convert the GUI to the internal format
+                ConvertGUI(dat?.GUI);
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Warning(ex, $"Exception found while parsing '{filename}'");
-
-                // For XML errors, just skip the affected node
-                xtr?.Read();
+                string message = $"'{filename}' - An error occurred during parsing";
+                logger.Error(ex, message);
             }
-
-            xtr.Dispose();
         }
 
-        /// <summary>
-        /// Read configuration information
-        /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
-        private void ReadConfiguration(XmlReader reader, bool keep)
-        {
-            bool superdat = false;
+        #region Converters
 
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+        /// <summary>
+        /// Convert header information
+        /// </summary>
+        /// <param name="dat">Deserialized model to convert</param>
+        private void ConvertHeader(Models.OfflineList.Dat? dat)
+        {
+            // If the datafile is missing, we can't do anything
+            if (dat == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all configuration items (ONLY OVERWRITE IF THERE'S NO DATA)
-                string content;
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "datname":
-                        content = reader.ReadElementContentAsString();
-                        Header.Name ??= content;
-                        superdat |= content.Contains(" - SuperDAT");
-                        if (keep && superdat)
-                        {
-                            Header.Type ??= "SuperDAT";
-                        }
-                        break;
-
-                    case "datversion":
-                        content = reader.ReadElementContentAsString();
-                        Header.Version ??= content;
-                        break;
-
-                    case "system":
-                        content = reader.ReadElementContentAsString();
-                        Header.System ??= content;
-                        break;
-
-                    // TODO: Int32?
-                    case "screenshotswidth":
-                        content = reader.ReadElementContentAsString();
-                        Header.ScreenshotsWidth ??= content;
-                        break;
-
-                    // TODO: Int32?
-                    case "screenshotsheight":
-                        content = reader.ReadElementContentAsString();
-                        Header.ScreenshotsHeight ??= content;
-                        break;
-
-                    case "infos":
-                        ReadInfos(reader.ReadSubtree());
-
-                        // Skip the infos node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "canopen":
-                        ReadCanOpen(reader.ReadSubtree());
-
-                        // Skip the canopen node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    // TODO: Use all header values
-                    case "newdat":
-                        ReadNewDat(reader.ReadSubtree());
-
-                        // Skip the newdat node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    // TODO: Use header values
-                    case "search":
-                        ReadSearch(reader.ReadSubtree());
-
-                        // Skip the search node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "romtitle":
-                        content = reader.ReadElementContentAsString();
-                        Header.RomTitle ??= content;
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
+            //Header.NoNamespaceSchemaLocation = dat.NoNamespaceSchemaLocation; // TODO: Add to internal model
         }
 
         /// <summary>
-        /// Read infos information
+        /// Convert configuration information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        private void ReadInfos(XmlReader reader)
+        /// <param name="config">Deserialized model to convert</param>
+        private void ConvertConfiguration(Models.OfflineList.Configuration? config, bool keep)
         {
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the config is missing, we can't do anything
+            if (config == null)
                 return;
 
-            // Setup the infos object
-            Header.Infos = new List<OfflineListInfo>();
+            Header.Name ??= config.DatName;
+            //Header.ImFolder ??= config.ImFolder; // TODO: Add to internal model
+            Header.Version = config.DatVersion;
+            Header.System = config.System;
+            Header.ScreenshotsWidth = config.ScreenshotsWidth;
+            Header.ScreenshotsHeight = config.ScreenshotsHeight;
+            ConvertInfos(config.Infos);
+            ConvertCanOpen(config.CanOpen);
+            ConvertNewDat(config.NewDat);
+            ConvertSearch(config.Search);
+            Header.RomTitle = config.RomTitle;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Add all infos to the info list
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    default:
-                        var info = new OfflineListInfo
-                        {
-                            Name = reader.Name.ToLowerInvariant(),
-                            Visible = reader.GetAttribute("visible").AsYesNo(),
-                            InNamingOption = reader.GetAttribute("inNamingOption").AsYesNo(),
-                            Default = reader.GetAttribute("default").AsYesNo()
-                        };
-
-                        Header.Infos.Add(info);
-
-                        reader.Read();
-                        break;
-                }
-            }
+            // Handle implied SuperDAT
+            if (config.DatName.Contains(" - SuperDAT") && keep)
+                Header.Type ??= "SuperDAT";
         }
 
         /// <summary>
-        /// Read canopen information
+        /// Convert infos information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        private void ReadCanOpen(XmlReader reader)
+        /// <param name="infos">Deserialized model to convert</param>
+        private void ConvertInfos(Models.OfflineList.Infos? infos)
         {
-            // Prepare all internal variables
-            Header.CanOpen = new List<string>();
-
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the infos is missing, we can't do anything
+            if (infos == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
+            var offlineListInfos = new List<OfflineListInfo>();
 
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
+            if (infos.Title != null)
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
+                offlineListInfos.Add(new OfflineListInfo
                 {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all canopen items
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "extension":
-                        Header.CanOpen.Add(reader.ReadElementContentAsString());
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
+                    Name = "title",
+                    Visible = infos.Title.Visible.AsYesNo(),
+                    InNamingOption = infos.Title.InNamingOption.AsYesNo(),
+                    Default = infos.Title.Default.AsYesNo(),
+                });
             }
+            if (infos.Location != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "location",
+                    Visible = infos.Location.Visible.AsYesNo(),
+                    InNamingOption = infos.Location.InNamingOption.AsYesNo(),
+                    Default = infos.Location.Default.AsYesNo(),
+                });
+            }
+            if (infos.Publisher != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "publisher",
+                    Visible = infos.Publisher.Visible.AsYesNo(),
+                    InNamingOption = infos.Publisher.InNamingOption.AsYesNo(),
+                    Default = infos.Publisher.Default.AsYesNo(),
+                });
+            }
+            if (infos.SourceRom != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "sourceRom",
+                    Visible = infos.SourceRom.Visible.AsYesNo(),
+                    InNamingOption = infos.SourceRom.InNamingOption.AsYesNo(),
+                    Default = infos.SourceRom.Default.AsYesNo(),
+                });
+            }
+            if (infos.SaveType != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "saveType",
+                    Visible = infos.SaveType.Visible.AsYesNo(),
+                    InNamingOption = infos.SaveType.InNamingOption.AsYesNo(),
+                    Default = infos.SaveType.Default.AsYesNo(),
+                });
+            }
+            if (infos.RomSize != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "romSize",
+                    Visible = infos.RomSize.Visible.AsYesNo(),
+                    InNamingOption = infos.RomSize.InNamingOption.AsYesNo(),
+                    Default = infos.RomSize.Default.AsYesNo(),
+                });
+            }
+            if (infos.ReleaseNumber != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "releaseNumber",
+                    Visible = infos.ReleaseNumber.Visible.AsYesNo(),
+                    InNamingOption = infos.ReleaseNumber.InNamingOption.AsYesNo(),
+                    Default = infos.ReleaseNumber.Default.AsYesNo(),
+                });
+            }
+            if (infos.LanguageNumber != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "languageNumber",
+                    Visible = infos.LanguageNumber.Visible.AsYesNo(),
+                    InNamingOption = infos.LanguageNumber.InNamingOption.AsYesNo(),
+                    Default = infos.LanguageNumber.Default.AsYesNo(),
+                });
+            }
+            if (infos.Comment != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "comment",
+                    Visible = infos.Comment.Visible.AsYesNo(),
+                    InNamingOption = infos.Comment.InNamingOption.AsYesNo(),
+                    Default = infos.Comment.Default.AsYesNo(),
+                });
+            }
+            if (infos.RomCRC != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "romCRC",
+                    Visible = infos.RomCRC.Visible.AsYesNo(),
+                    InNamingOption = infos.RomCRC.InNamingOption.AsYesNo(),
+                    Default = infos.RomCRC.Default.AsYesNo(),
+                });
+            }
+            if (infos.Im1CRC != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "im1CRC",
+                    Visible = infos.Im1CRC.Visible.AsYesNo(),
+                    InNamingOption = infos.Im1CRC.InNamingOption.AsYesNo(),
+                    Default = infos.Im1CRC.Default.AsYesNo(),
+                });
+            }
+            if (infos.Im2CRC != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "im2CRC",
+                    Visible = infos.Im2CRC.Visible.AsYesNo(),
+                    InNamingOption = infos.Im2CRC.InNamingOption.AsYesNo(),
+                    Default = infos.Im2CRC.Default.AsYesNo(),
+                });
+            }
+            if (infos.Languages != null)
+            {
+                offlineListInfos.Add(new OfflineListInfo
+                {
+                    Name = "languages",
+                    Visible = infos.Languages.Visible.AsYesNo(),
+                    InNamingOption = infos.Languages.InNamingOption.AsYesNo(),
+                    Default = infos.Languages.Default.AsYesNo(),
+                });
+            }
+
+            Header.Infos = offlineListInfos;
         }
 
         /// <summary>
-        /// Read newdat information
+        /// Convert canopen information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        private void ReadNewDat(XmlReader reader)
+        /// <param name="canOpen">Deserialized model to convert</param>
+        private void ConvertCanOpen(Models.OfflineList.CanOpen? canOpen)
         {
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the canOpen is missing, we can't do anything
+            if (canOpen == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all newdat items
-                string content;
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "datversionurl":
-                        // TODO: Read this into an appropriate field
-                        content = reader.ReadElementContentAsString();
-                        Header.Url ??= content;
-                        break;
-
-                    case "daturl":
-                        // TODO: Read this into an appropriate structure
-                        reader.GetAttribute("fileName");
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "imurl":
-                        // TODO: Read this into an appropriate field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
+            Header.CanOpen = new List<string>(canOpen.Extension);
         }
 
         /// <summary>
-        /// Read search information
+        /// Convert newdat information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        private void ReadSearch(XmlReader reader)
+        /// <param name="newDat">Deserialized model to convert</param>
+        private void ConvertNewDat(Models.OfflineList.NewDat? newDat)
         {
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the canOpen is missing, we can't do anything
+            if (newDat == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all search items
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "to":
-                        // TODO: Read this into an appropriate structure
-                        reader.GetAttribute("value");
-                        reader.GetAttribute("default"); // (true|false)
-                        reader.GetAttribute("auto"); // (true|false)
-
-                        ReadTo(reader.ReadSubtree());
-
-                        // Skip the to node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
+            Header.Url = newDat.DatVersionUrl;
+            //Header.DatUrl = newDat.DatUrl; // TODO: Add to internal model
+            //Header.ImUrl = newDat.ImUrl; // TODO: Add to internal model
         }
 
         /// <summary>
-        /// Read to information
+        /// Convert search information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        private void ReadTo(XmlReader reader)
+        /// <param name="search">Deserialized model to convert</param>
+        private void ConvertSearch(Models.OfflineList.Search? search)
         {
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the search or to array is missing, we can't do anything
+            if (search?.To == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all search items
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "find":
-                        // TODO: Read this into an appropriate structure
-                        reader.GetAttribute("operation");
-                        reader.GetAttribute("value"); // Int32?
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
+            // TODO: Add to internal model
         }
 
         /// <summary>
-        /// Read games information
+        /// Convert games information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
+        /// <param name="search">Deserialized model to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadGames(XmlReader reader, bool statsOnly, string filename, int indexId)
+        private void ConvertGames(Models.OfflineList.Games? games, string filename, int indexId, bool statsOnly)
         {
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the games array is missing, we can't do anything
+            if (games?.Game == null || !games.Game.Any())
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
+            foreach (var game in games.Game)
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all games items (ONLY OVERWRITE IF THERE'S NO DATA)
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "game":
-                        ReadGame(reader.ReadSubtree(), statsOnly, filename, indexId);
-
-                        // Skip the game node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
+                ConvertGame(game, filename, indexId, statsOnly);
             }
         }
 
         /// <summary>
-        /// Read game information
+        /// Convert game information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
+        /// <param name="search">Deserialized model to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
-        /// <param name="filename">Name of the file to be parsed</param>
-        /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadGame(XmlReader reader, bool statsOnly, string filename, int indexId)
+        private void ConvertGame(Models.OfflineList.Game? game, string filename, int indexId, bool statsOnly)
         {
-            // Prepare all internal variables
-            string releaseNumber = string.Empty, duplicateid;
-            long? size = null;
-            List<Rom> datItems = new();
-            Machine machine = new();
-
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
+            // If the game is missing, we can't do anything
+            if (game == null)
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
+            var machine = new Machine
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
+                //ImageNumber = game.ImageNumber, // TODO: Add to internal model
+                //ReleaseNumber = game.ReleaseNumber, // TODO: Add to internal model
+                Name = game.Title,
+                //SaveType = game.SaveType, // TODO: Add to internal model
+                Publisher = game.Publisher,
+                //Location = game.Location, // TODO: Add to internal model
+                //SourceRom = game.SourceRom, // TODO: Add to internal model
+                //Language = game.Language, // TODO: Add to internal model
+                //Im1CRC = game.Im1CRC, // TODO: Add to internal model
+                //Im2CRC = game.Im2CRC, // TODO: Add to internal model
+                Comment = game.Comment,
+            };
 
-                // Get all games items
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "imagenumber":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
+            long? size = Utilities.CleanLong(game.RomSize);
+            if (game.DuplicateID != "0")
+                machine.CloneOf = game.DuplicateID;
 
-                    case "releasenumber":
-                        // TODO: Read this into a field
-                        releaseNumber = reader.ReadElementContentAsString();
-                        break;
+            // Check if there are any items
+            bool containsItems = false;
 
-                    case "title":
-                        machine.Name = reader.ReadElementContentAsString();
-                        break;
+            // Loop through each file
+            ConvertFiles(game.Files, machine, size, game.ReleaseNumber, filename, indexId, statsOnly, ref containsItems);
 
-                    case "savetype":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "romsize":
-                        size = Utilities.CleanLong(reader.ReadElementContentAsString());
-                        break;
-
-                    case "publisher":
-                        machine.Publisher = reader.ReadElementContentAsString();
-                        break;
-
-                    case "location":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "sourcerom":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "language":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "files":
-                        datItems = ReadFiles(reader.ReadSubtree(), releaseNumber, machine.Name, filename, indexId);
-                        
-                        // Skip the files node now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "im1crc":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "im2crc":
-                        // TODO: Read this into a field
-                        reader.ReadElementContentAsString();
-                        break;
-
-                    case "comment":
-                        machine.Comment = reader.ReadElementContentAsString();
-                        break;
-
-                    case "duplicateid":
-                        duplicateid = reader.ReadElementContentAsString();
-                        if (duplicateid != "0")
-                            machine.CloneOf = duplicateid;
-
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-
-            // Add information accordingly for each rom
-            for (int i = 0; i < datItems.Count; i++)
+            // If we had no items, create a Blank placeholder
+            if (!containsItems)
             {
-                datItems[i].Size = size;
-                datItems[i].CopyMachineInformation(machine);
+                var blank = new Blank
+                {
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
 
-                // Now process and add the rom
-                ParseAddHelper(datItems[i], statsOnly);
+                blank.CopyMachineInformation(machine);
+                ParseAddHelper(blank, statsOnly);
             }
         }
 
         /// <summary>
-        /// Read files information
+        /// Convert Files information
         /// </summary>
-        /// <param name="reader">XmlReader to use to parse the header</param>
-        /// <param name="releaseNumber">Release number from the parent game</param>
-        /// <param name="machineName">Name of the parent game to use</param>
+        /// <param name="files">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="size">Item size to use</param>
+        /// <param name="releaseNumber">Release number to use</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private List<Rom> ReadFiles(
-            XmlReader reader,
-            string releaseNumber,
-            string machineName,
-
-            // Standard Dat parsing
-            string filename,
-            int indexId)
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertFiles(Models.OfflineList.Files? files, Machine machine, long? size, string releaseNumber, string filename, int indexId, bool statsOnly, ref bool containsItems)
         {
-            // Prepare all internal variables
-            var extensionToCrc = new List<KeyValuePair<string, string>>();
-            var roms = new List<Rom>();
+            // If the files array is missing, we can't do anything
+            if (files?.RomCRC == null || !files.RomCRC.Any())
+                return;
 
-            // If there's no subtree to the configuration, skip it
-            if (reader == null)
-                return roms;
-
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            // Otherwise, read what we can from the header
-            while (!reader.EOF)
+            containsItems = true;
+            foreach (var crc in files.RomCRC)
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
+                string name = string.Empty;
+                if (!string.IsNullOrWhiteSpace(releaseNumber) && releaseNumber != "0")
+                    name += $"{releaseNumber} - ";
+                name += $"{machine.Name}{crc.Extension}";
+
+                var item = new Rom
                 {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get all romCRC items
-                switch (reader.Name.ToLowerInvariant())
-                {
-                    case "romcrc":
-                        extensionToCrc.Add(
-                            new KeyValuePair<string, string>(
-                                reader.GetAttribute("extension") ?? string.Empty,
-                                reader.ReadElementContentAsString().ToLowerInvariant()));
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-
-            // Now process the roms with the proper information
-            foreach (KeyValuePair<string, string> pair in extensionToCrc)
-            {
-                roms.Add(new Rom()
-                {
-                    Name = (releaseNumber != "0" ? releaseNumber + " - " : string.Empty) + machineName + pair.Key,
-                    CRC = pair.Value,
-
+                    Name = name,
+                    CRC = crc.Content,
                     ItemStatus = ItemStatus.None,
 
                     Source = new Source
@@ -637,10 +379,27 @@ namespace SabreTools.DatFiles.Formats
                         Index = indexId,
                         Name = filename,
                     },
-                });
-            }
+                };
 
-            return roms;
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
         }
+
+        /// <summary>
+        /// Convert GUI information
+        /// </summary>
+        /// <param name="gui">Deserialized model to convert</param>
+        private void ConvertGUI(Models.OfflineList.GUI? gui)
+        {
+            // If the gui or Images are missing, we can't do anything
+            if (gui?.Images?.Image == null || !gui.Images.Image.Any())
+                return;
+
+            // TODO: Add to internal model
+        }
+
+        #endregion
+
     }
 }

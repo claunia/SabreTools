@@ -38,16 +38,16 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Convert header information
         /// </summary>
-        /// <param name="datafile">Deserialized model to convert</param>
-        private void ConvertHeader(Models.OpenMSX.SoftwareDb? datafile)
+        /// <param name="softwaredb">Deserialized model to convert</param>
+        private void ConvertHeader(Models.OpenMSX.SoftwareDb? softwaredb)
         {
             // If the datafile is missing, we can't do anything
-            if (datafile == null)
+            if (softwaredb == null)
                 return;
 
             Header.Name ??= "openMSX Software List";
             Header.Description ??= Header.Name;
-            Header.Date ??= datafile.Timestamp;
+            Header.Date ??= softwaredb.Timestamp;
         }
 
         /// <summary>

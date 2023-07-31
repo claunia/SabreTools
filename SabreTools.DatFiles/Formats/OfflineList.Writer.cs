@@ -27,8 +27,24 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            // TODO: Check required fields
-            return null;
+            var missingFields = new List<DatItemField>();
+
+            if (string.IsNullOrWhiteSpace(datItem.GetName()))
+                missingFields.Add(DatItemField.Name);
+
+            switch (datItem)
+            {
+                case Rom rom:
+                    if (rom.Size == null || rom.Size < 0)
+                        missingFields.Add(DatItemField.Size);
+                    if (string.IsNullOrWhiteSpace(rom.CRC))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+            }
+
+            return missingFields;
         }
 
         /// <inheritdoc/>
