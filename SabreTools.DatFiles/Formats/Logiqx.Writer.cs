@@ -34,8 +34,99 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            // TODO: Check required fields
-            return null;
+           var missingFields = new List<DatItemField>();
+            switch (datItem)
+            {
+                case Release release:
+                    if (string.IsNullOrWhiteSpace(release.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(release.Region))
+                        missingFields.Add(DatItemField.Region);
+                    break;
+
+                case BiosSet biosset:
+                    if (string.IsNullOrWhiteSpace(biosset.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(biosset.Description))
+                        missingFields.Add(DatItemField.Description);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrWhiteSpace(rom.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (rom.Size == null || rom.Size < 0)
+                        missingFields.Add(DatItemField.Size);
+                    if (string.IsNullOrWhiteSpace(rom.CRC)
+                        && string.IsNullOrWhiteSpace(rom.MD5)
+                        && string.IsNullOrWhiteSpace(rom.SHA1)
+                        && string.IsNullOrWhiteSpace(rom.SHA256)
+                        && string.IsNullOrWhiteSpace(rom.SHA384)
+                        && string.IsNullOrWhiteSpace(rom.SHA512)
+                        && string.IsNullOrWhiteSpace(rom.SpamSum))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case Disk disk:
+                    if (string.IsNullOrWhiteSpace(disk.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(disk.MD5)
+                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case Media media:
+                    if (string.IsNullOrWhiteSpace(media.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(media.MD5)
+                        && string.IsNullOrWhiteSpace(media.SHA1)
+                        && string.IsNullOrWhiteSpace(media.SHA256)
+                        && string.IsNullOrWhiteSpace(media.SpamSum))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case DeviceReference deviceref:
+                    if (string.IsNullOrWhiteSpace(deviceref.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Sample sample:
+                    if (string.IsNullOrWhiteSpace(sample.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Archive archive:
+                    if (string.IsNullOrWhiteSpace(archive.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Driver driver:
+                    if (!driver.StatusSpecified)
+                        missingFields.Add(DatItemField.SupportStatus);
+                    if (!driver.EmulationSpecified)
+                        missingFields.Add(DatItemField.EmulationStatus);
+                    if (!driver.CocktailSpecified)
+                        missingFields.Add(DatItemField.CocktailStatus);
+                    if (!driver.SaveStateSpecified)
+                        missingFields.Add(DatItemField.SaveStateStatus);
+                    break;
+
+                case DatItems.Formats.SoftwareList softwarelist:
+                    if (string.IsNullOrWhiteSpace(softwarelist.Tag))
+                        missingFields.Add(DatItemField.Tag);
+                    if (string.IsNullOrWhiteSpace(softwarelist.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (!softwarelist.StatusSpecified)
+                        missingFields.Add(DatItemField.SoftwareListStatus);
+                    break;
+            }
+
+            return missingFields;
         }
 
         /// <inheritdoc/>
