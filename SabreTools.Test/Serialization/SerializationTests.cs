@@ -30,7 +30,7 @@ namespace SabreTools.Test.Parser
         {
             var original = new Models.OpenMSX.Original
             {
-                Value = false,
+                Value = "false",
                 Content = "Original Name",
             };
 

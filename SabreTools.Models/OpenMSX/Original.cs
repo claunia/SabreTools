@@ -6,8 +6,9 @@ namespace SabreTools.Models.OpenMSX
     [XmlRoot("original")]
     public class Original
     {
+        /// <remarks>Boolean?</remarks>
         [XmlAttribute("value")]
-        public bool Value { get; set; }
+        public string? Value { get; set; }
 
         [XmlText]
         public string? Content { get; set; }

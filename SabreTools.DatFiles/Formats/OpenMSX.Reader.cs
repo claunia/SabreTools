@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using SabreTools.Core;
+using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
 
@@ -159,7 +160,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     item.Original = new Original
                     {
-                        Value = dump.Original.Value,
+                        Value = dump.Original.Value.AsYesNo(),
                         Content = dump.Original.Content,
                     };
                 }

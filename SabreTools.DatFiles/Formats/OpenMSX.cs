@@ -19,6 +19,23 @@
 <!ELEMENT dump (#PCDATA)>
 ";
 
+        private const string OpenMSXCredits = @"<!-- Credits -->
+<![CDATA[
+The softwaredb.xml file contains information about rom mapper types
+
+- Copyright 2003 Nicolas Beyaert (Initial Database)
+- Copyright 2004-2013 BlueMSX Team
+- Copyright 2005-2023 openMSX Team
+- Generation MSXIDs by www.generation-msx.nl
+
+- Thanks go out to:
+- - Generation MSX/Sylvester for the incredible source of information
+  - p_gimeno and diedel for their help adding and valdiating ROM additions
+  - GDX for additional ROM info and validations and corrections
+
+
+]]>";
+
         /// <summary>
         /// Constructor designed for casting a base DatFile
         /// </summary>
