@@ -15,8 +15,13 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="obj">Data to serialize</param>
         /// <param name="path">Path to the file to serialize to</param>
+        /// <param name="obj">Data to serialize</param>
+        /// <param name="name">Optional DOCTYPE name</param>
+        /// <param name="pubid">Optional DOCTYPE pubid</param>
+        /// <param name="sysid">Optional DOCTYPE sysid</param>
+        /// <param name="subset">Optional DOCTYPE name</param>
         /// <returns>True on successful serialization, false otherwise</returns>
-        public static bool SerializeToFile(T? obj, string path)
+        public static bool SerializeToFile(T? obj, string path, string? name = null, string? pubid = null, string? sysid = null, string? subset = null)
         {
             using var stream = SerializeToStream(obj);
             if (stream == null)
@@ -31,8 +36,12 @@ namespace SabreTools.Serialization
         /// Serializes the defined type to a stream
         /// </summary>
         /// <param name="obj">Data to serialize</param>
+        /// <param name="name">Optional DOCTYPE name</param>
+        /// <param name="pubid">Optional DOCTYPE pubid</param>
+        /// <param name="sysid">Optional DOCTYPE sysid</param>
+        /// <param name="subset">Optional DOCTYPE name</param>
         /// <returns>Stream containing serialized data on success, null otherwise</returns>
-        public static Stream? SerializeToStream(T? obj)
+        public static Stream? SerializeToStream(T? obj, string? name = null, string? pubid = null, string? sysid = null, string? subset = null)
         {
             // If the object is null
             if (obj == null)
@@ -51,6 +60,10 @@ namespace SabreTools.Serialization
             var stream = new MemoryStream();
             var streamWriter = new StreamWriter(stream);
             var xmlWriter = XmlWriter.Create(streamWriter, settings);
+
+            // Write the doctype if provided
+            if (!string.IsNullOrWhiteSpace(name))
+                xmlWriter.WriteDocType(name, pubid, sysid, subset);
 
             // Perform the deserialization and return
             serializer.Serialize(xmlWriter, obj);
