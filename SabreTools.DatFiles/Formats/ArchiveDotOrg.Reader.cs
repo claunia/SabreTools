@@ -171,8 +171,6 @@ namespace SabreTools.DatFiles.Formats
 
                 ItemStatus = ItemStatus.None,
 
-                Machine = machine,
-
                 Source = new Source
                 {
                     Index = indexId,
@@ -181,6 +179,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             // Now process and add the rom
+            rom.CopyMachineInformation(machine);
             ParseAddHelper(rom, statsOnly);
         }
 

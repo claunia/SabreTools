@@ -145,13 +145,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             CRC = sfv.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 
@@ -190,13 +192,15 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = itemName,
                             MD5 = md5.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        disk.CopyMachineInformation(machine);
                         ParseAddHelper(disk, statsOnly);
                         break;
 
@@ -205,13 +209,15 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = itemName,
                             MD5 = md5.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
                         break;
 
@@ -221,13 +227,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             MD5 = md5.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 
@@ -266,13 +274,15 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = itemName,
                             SHA1 = sha1.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        disk.CopyMachineInformation(machine);
                         ParseAddHelper(disk, statsOnly);
                         break;
 
@@ -281,13 +291,15 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = itemName,
                             SHA1 = sha1.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
                         break;
 
@@ -297,13 +309,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             SHA1 = sha1.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 
@@ -342,13 +356,15 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = itemName,
                             SHA256 = sha256.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
                         break;
 
@@ -359,13 +375,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             SHA256 = sha256.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 
@@ -407,13 +425,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             SHA384 = sha384.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 
@@ -455,13 +475,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             SHA512 = sha512.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 
@@ -500,13 +522,15 @@ namespace SabreTools.DatFiles.Formats
                         {
                             Name = itemName,
                             SpamSum = spamsum.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        media.CopyMachineInformation(machine);
                         ParseAddHelper(media, statsOnly);
                         break;
 
@@ -517,13 +541,15 @@ namespace SabreTools.DatFiles.Formats
                             Name = itemName,
                             Size = null,
                             SpamSum = spamsum.Hash,
-                            Machine = machine,
+
                             Source = new Source
                             {
                                 Index = indexId,
                                 Name = filename,
                             },
                         };
+
+                        rom.CopyMachineInformation(machine);
                         ParseAddHelper(rom, statsOnly);
                         break;
 

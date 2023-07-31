@@ -109,8 +109,6 @@ namespace SabreTools.DatFiles.Formats
                 SHA256 = row.SHA256,
                 ItemStatus = ItemStatus.None,
 
-                Machine = machine,
-
                 Source = new Source
                 {
                     Index = indexId,
@@ -119,6 +117,7 @@ namespace SabreTools.DatFiles.Formats
             };
 
             // Now process and add the rom
+            rom.CopyMachineInformation(machine);
             ParseAddHelper(rom, statsOnly);
         }
 

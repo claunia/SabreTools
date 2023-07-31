@@ -89,8 +89,6 @@ namespace SabreTools.DatFiles.Formats
                         SHA1 = row.SHA1,
                         ItemStatus = row.Status.AsItemStatus(),
 
-                        Machine = machine,
-
                         Source = new Source
                         {
                             Index = indexId,
@@ -107,8 +105,6 @@ namespace SabreTools.DatFiles.Formats
                         SHA1 = row.SHA1,
                         SHA256 = row.SHA256,
                         SpamSum = row.SpamSum,
-
-                        Machine = machine,
 
                         Source = new Source
                         {
@@ -131,8 +127,6 @@ namespace SabreTools.DatFiles.Formats
                         SpamSum = row.SpamSum,
                         ItemStatus = row.Status.AsItemStatus(),
 
-                        Machine = machine,
-
                         Source = new Source
                         {
                             Index = indexId,
@@ -143,6 +137,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             // Now process and add the item
+            item.CopyMachineInformation(machine);
             ParseAddHelper(item, statsOnly);
         }
 

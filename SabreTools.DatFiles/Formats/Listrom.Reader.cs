@@ -123,8 +123,6 @@ namespace SabreTools.DatFiles.Formats
                     Name = row.Name,
                     ItemStatus = ItemStatus.None,
 
-                    Machine = machine,
-
                     Source = new Source
                     {
                         Index = indexId,
@@ -151,8 +149,6 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = row.SHA1,
                     ItemStatus = ItemStatus.None,
 
-                    Machine = machine,
-
                     Source = new Source
                     {
                         Index = indexId,
@@ -172,8 +168,6 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Name = row.Name,
                     ItemStatus = ItemStatus.BadDump,
-
-                    Machine = machine,
 
                     Source = new Source
                     {
@@ -199,8 +193,6 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = null,
                     ItemStatus = ItemStatus.Nodump,
 
-                    Machine = machine,
-
                     Source = new Source
                     {
                         Index = indexId,
@@ -222,8 +214,6 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = row.SHA1,
                     ItemStatus = ItemStatus.BadDump,
 
-                    Machine = machine,
-
                     Source = new Source
                     {
                         Index = indexId,
@@ -244,8 +234,6 @@ namespace SabreTools.DatFiles.Formats
                     SHA1 = null,
                     ItemStatus = ItemStatus.Nodump,
 
-                    Machine = machine,
-
                     Source = new Source
                     {
                         Index = indexId,
@@ -255,6 +243,7 @@ namespace SabreTools.DatFiles.Formats
             }
 
             // Now process and add the item
+            item.CopyMachineInformation(machine);
             ParseAddHelper(item, statsOnly);
         }
 
