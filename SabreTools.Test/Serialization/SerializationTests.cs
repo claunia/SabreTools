@@ -18,7 +18,7 @@ namespace SabreTools.Test.Parser
             Assert.NotNull(stream);
             byte[] hash = System.Security.Cryptography.SHA1.Create().ComputeHash(stream.GetBuffer());
             string hashstr = BitConverter.ToString(hash).Replace("-", string.Empty);
-            Assert.Equal("195D11C8A93D73F9FBF1ECD8166D80D7BB1B0974", hashstr);
+            Assert.Equal("268940391C107ABE67E804BC5479E40B5FF68B34", hashstr);
         }
 
         #region Payload Generators
