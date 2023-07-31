@@ -130,7 +130,6 @@ namespace SabreTools.DatFiles.Formats
                     break;
             }
 
-            // TODO: Check required fields
             return missingFields;
         }
 

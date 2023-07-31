@@ -16,14 +16,24 @@ namespace SabreTools.Serialization
         /// <param name="obj">Data to serialize</param>
         /// <param name="path">Path to the file to serialize to</param>
         /// <param name="obj">Data to serialize</param>
+        /// <returns>True on successful serialization, false otherwise</returns>
+        public static bool SerializeToFile(T? obj, string path)
+            => SerializeToFile(obj, path, null, null, null, null);
+
+        /// <summary>
+        /// Serializes the defined type to an XML file
+        /// </summary>
+        /// <param name="obj">Data to serialize</param>
+        /// <param name="path">Path to the file to serialize to</param>
+        /// <param name="obj">Data to serialize</param>
         /// <param name="name">Optional DOCTYPE name</param>
         /// <param name="pubid">Optional DOCTYPE pubid</param>
         /// <param name="sysid">Optional DOCTYPE sysid</param>
         /// <param name="subset">Optional DOCTYPE name</param>
         /// <returns>True on successful serialization, false otherwise</returns>
-        public static bool SerializeToFile(T? obj, string path, string? name = null, string? pubid = null, string? sysid = null, string? subset = null)
+        protected static bool SerializeToFile(T? obj, string path, string? name = null, string? pubid = null, string? sysid = null, string? subset = null)
         {
-            using var stream = SerializeToStream(obj);
+            using var stream = SerializeToStream(obj, name, pubid, sysid, subset);
             if (stream == null)
                 return false;
 
@@ -36,12 +46,20 @@ namespace SabreTools.Serialization
         /// Serializes the defined type to a stream
         /// </summary>
         /// <param name="obj">Data to serialize</param>
+        /// <returns>Stream containing serialized data on success, null otherwise</returns>
+        public static Stream? SerializeToStream(T? obj)
+            => SerializeToStream(obj, null, null, null, null);
+    
+        /// <summary>
+        /// Serializes the defined type to a stream
+        /// </summary>
+        /// <param name="obj">Data to serialize</param>
         /// <param name="name">Optional DOCTYPE name</param>
         /// <param name="pubid">Optional DOCTYPE pubid</param>
         /// <param name="sysid">Optional DOCTYPE sysid</param>
         /// <param name="subset">Optional DOCTYPE name</param>
         /// <returns>Stream containing serialized data on success, null otherwise</returns>
-        public static Stream? SerializeToStream(T? obj, string? name = null, string? pubid = null, string? sysid = null, string? subset = null)
+        protected static Stream? SerializeToStream(T? obj, string? name = null, string? pubid = null, string? sysid = null, string? subset = null)
         {
             // If the object is null
             if (obj == null)
@@ -70,5 +88,6 @@ namespace SabreTools.Serialization
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }
+    
     }
 }
