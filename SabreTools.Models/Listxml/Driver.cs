@@ -12,15 +12,15 @@ namespace SabreTools.Models.Listxml
 
         /// <remarks>(good|imperfect|preliminary), Only present in older versions</remarks>
         [XmlAttribute("color")]
-        public string Color { get; set; }
+        public string? Color { get; set; }
 
         /// <remarks>(good|imperfect|preliminary), Only present in older versions</remarks>
         [XmlAttribute("sound")]
-        public string Sound { get; set; }
+        public string? Sound { get; set; }
 
         /// <remarks>Only present in older versions</remarks>
         [XmlAttribute("palettesize")]
-        public string PaletteSize { get; set; }
+        public string? PaletteSize { get; set; }
 
         /// <remarks>(good|imperfect|preliminary)</remarks>
         [XmlAttribute("emulation")]

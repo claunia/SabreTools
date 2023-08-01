@@ -24,7 +24,7 @@ namespace SabreTools.Models.Listxml
 
         /// <remarks>Only present in older versions, Numeric?</remarks>
         [XmlAttribute("buttons")]
-        public string Buttons { get; set; }
+        public string? Buttons { get; set; }
 
         /// <remarks>Numeric?</remarks>
         [XmlAttribute("coins")]

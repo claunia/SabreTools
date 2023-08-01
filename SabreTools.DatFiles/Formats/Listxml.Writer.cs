@@ -47,8 +47,138 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         protected override List<DatItemField> GetMissingRequiredFields(DatItem datItem)
         {
-            // TODO: Check required fields
-            return null;
+            var missingFields = new List<DatItemField>();
+            switch (datItem)
+            {
+                case BiosSet biosset:
+                    if (string.IsNullOrWhiteSpace(biosset.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(biosset.Description))
+                        missingFields.Add(DatItemField.Description);
+                    break;
+
+                case Rom rom:
+                    if (string.IsNullOrWhiteSpace(rom.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (rom.Size == null || rom.Size < 0)
+                        missingFields.Add(DatItemField.Size);
+                    if (string.IsNullOrWhiteSpace(rom.CRC)
+                        && string.IsNullOrWhiteSpace(rom.SHA1))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case Disk disk:
+                    if (string.IsNullOrWhiteSpace(disk.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(disk.MD5)
+                        && string.IsNullOrWhiteSpace(disk.SHA1))
+                    {
+                        missingFields.Add(DatItemField.SHA1);
+                    }
+                    break;
+
+                case DeviceReference deviceref:
+                    if (string.IsNullOrWhiteSpace(deviceref.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Sample sample:
+                    if (string.IsNullOrWhiteSpace(sample.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Chip chip:
+                    if (string.IsNullOrWhiteSpace(chip.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (!chip.ChipTypeSpecified)
+                        missingFields.Add(DatItemField.ChipType);
+                    break;
+
+                case Display display:
+                    if (!display.DisplayTypeSpecified)
+                        missingFields.Add(DatItemField.DisplayType);
+                    if (display.Refresh == null)
+                        missingFields.Add(DatItemField.Refresh);
+                    break;
+
+                case Sound sound:
+                    if (sound.Channels == null)
+                        missingFields.Add(DatItemField.Channels);
+                    break;
+
+                case Input input:
+                    if (input.Players == null)
+                        missingFields.Add(DatItemField.Players);
+                    break;
+
+                case DipSwitch dipswitch:
+                    if (string.IsNullOrWhiteSpace(dipswitch.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(dipswitch.Tag))
+                        missingFields.Add(DatItemField.Tag);
+                    break;
+
+                case Configuration configuration:
+                    if (string.IsNullOrWhiteSpace(configuration.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (string.IsNullOrWhiteSpace(configuration.Tag))
+                        missingFields.Add(DatItemField.Tag);
+                    break;
+
+                case Port port:
+                    if (string.IsNullOrWhiteSpace(port.Tag))
+                        missingFields.Add(DatItemField.Tag);
+                    break;
+
+                case Adjuster adjuster:
+                    if (string.IsNullOrWhiteSpace(adjuster.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case Driver driver:
+                    if (!driver.StatusSpecified)
+                        missingFields.Add(DatItemField.SupportStatus);
+                    if (!driver.EmulationSpecified)
+                        missingFields.Add(DatItemField.EmulationStatus);
+                    if (!driver.CocktailSpecified)
+                        missingFields.Add(DatItemField.CocktailStatus);
+                    if (!driver.SaveStateSpecified)
+                        missingFields.Add(DatItemField.SaveStateStatus);
+                    break;
+
+                case Feature feature:
+                    if (!feature.TypeSpecified)
+                        missingFields.Add(DatItemField.FeatureType);
+                    break;
+
+                case Device device:
+                    if (!device.DeviceTypeSpecified)
+                        missingFields.Add(DatItemField.DeviceType);
+                    break;
+
+                case Slot slot:
+                    if (string.IsNullOrWhiteSpace(slot.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+
+                case DatItems.Formats.SoftwareList softwarelist:
+                    if (string.IsNullOrWhiteSpace(softwarelist.Tag))
+                        missingFields.Add(DatItemField.Tag);
+                    if (string.IsNullOrWhiteSpace(softwarelist.Name))
+                        missingFields.Add(DatItemField.Name);
+                    if (!softwarelist.StatusSpecified)
+                        missingFields.Add(DatItemField.SoftwareListStatus);
+                    break;
+
+                case RamOption ramoption:
+                    if (string.IsNullOrWhiteSpace(ramoption.Name))
+                        missingFields.Add(DatItemField.Name);
+                    break;
+            }
+
+            return missingFields;
         }
 
         /// <inheritdoc/>

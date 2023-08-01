@@ -11,7 +11,7 @@ namespace SabreTools.Models.Listxml
 
         /// <remarks>(yes|no) "no"</remarks>
         [XmlAttribute("default")]
-        public string Default { get; set; }
+        public string? Default { get; set; }
 
         [XmlElement("condition")]
         public Condition? Condition { get; set; }
