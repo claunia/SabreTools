@@ -243,49 +243,7 @@ namespace SabreTools.DatFiles.Formats
                 }
 
                 // Process the parts to ensure we don't have duplicates
-                if (parts.Count > 0)
-                {
-                    var grouped = parts.GroupBy(p => p.Name);
-                    
-                    var tempParts = new List<Models.SoftwareList.Part>();
-                    foreach (var grouping in grouped)
-                    {
-                        var tempPart = new Models.SoftwareList.Part();
-
-                        var tempFeatures = new List<Models.SoftwareList.Feature>();
-                        var tempDataAreas = new List<Models.SoftwareList.DataArea>();
-                        var tempDiskAreas = new List<Models.SoftwareList.DiskArea>();
-                        var tempDipSwitches = new List<Models.SoftwareList.DipSwitch>();
-                        
-                        foreach (var part in grouping)
-                        {
-                            tempPart.Name ??= part.Name;
-                            tempPart.Interface ??= part.Interface;
-
-                            if (part.Feature != null)
-                                tempFeatures.AddRange(part.Feature);
-                            if (part.DataArea != null)
-                                tempDataAreas.AddRange(part.DataArea);
-                            if (part.DiskArea != null)
-                                tempDiskAreas.AddRange(part.DiskArea);
-                            if (part.DipSwitch != null)
-                                tempDipSwitches.AddRange(part.DipSwitch);
-                        }
-
-                        if (tempFeatures.Count > 0)
-                            tempPart.Feature = tempFeatures.ToArray();
-                        if (tempDataAreas.Count > 0)
-                            tempPart.DataArea = tempDataAreas.ToArray();
-                        if (tempDiskAreas.Count > 0)
-                            tempPart.DiskArea = tempDiskAreas.ToArray();
-                        if (tempDipSwitches.Count > 0)
-                            tempPart.DipSwitch = tempDipSwitches.ToArray();
-
-                        tempParts.Add(tempPart);
-                    }
-
-                    parts = tempParts;
-                }
+                parts = SantitizeParts(parts);
 
                 // Assign the values to the game
                 sw.Info = infos.ToArray();
@@ -501,6 +459,130 @@ namespace SabreTools.DatFiles.Formats
 
             var dipSwitch = new Models.SoftwareList.DipSwitch { DipValue = dipValues.ToArray() };
             return new Models.SoftwareList.DipSwitch[] { dipSwitch };
+        }
+
+        /// <summary>
+        /// Sanitize Parts list to ensure no duplicates exist
+        /// <summary>
+        private static List<Models.SoftwareList.Part> SantitizeParts(List<Models.SoftwareList.Part> parts)
+        {
+            // If we have no parts, we can't do anything
+            if (parts == null || !parts.Any())
+                return parts;
+
+            var grouped = parts.GroupBy(p => p.Name);
+
+            var tempParts = new List<Models.SoftwareList.Part>();
+            foreach (var grouping in grouped)
+            {
+                var tempPart = new Models.SoftwareList.Part();
+
+                var tempFeatures = new List<Models.SoftwareList.Feature>();
+                var tempDataAreas = new List<Models.SoftwareList.DataArea>();
+                var tempDiskAreas = new List<Models.SoftwareList.DiskArea>();
+                var tempDipSwitches = new List<Models.SoftwareList.DipSwitch>();
+
+                foreach (var part in grouping)
+                {
+                    tempPart.Name ??= part.Name;
+                    tempPart.Interface ??= part.Interface;
+
+                    if (part.Feature != null)
+                        tempFeatures.AddRange(part.Feature);
+                    if (part.DataArea != null)
+                        tempDataAreas.AddRange(part.DataArea);
+                    if (part.DiskArea != null)
+                        tempDiskAreas.AddRange(part.DiskArea);
+                    if (part.DipSwitch != null)
+                        tempDipSwitches.AddRange(part.DipSwitch);
+                }
+
+                tempDataAreas = SantitizeDataAreas(tempDataAreas);
+                tempDiskAreas = SantitizeDiskAreas(tempDiskAreas);
+
+                if (tempFeatures.Count > 0)
+                    tempPart.Feature = tempFeatures.ToArray();
+                if (tempDataAreas.Count > 0)
+                    tempPart.DataArea = tempDataAreas.ToArray();
+                if (tempDiskAreas.Count > 0)
+                    tempPart.DiskArea = tempDiskAreas.ToArray();
+                if (tempDipSwitches.Count > 0)
+                    tempPart.DipSwitch = tempDipSwitches.ToArray();
+
+                tempParts.Add(tempPart);
+            }
+
+            return tempParts;
+        }
+
+        /// <summary>
+        /// Sanitize DataAreas list to ensure no duplicates exist
+        /// <summary>
+        private static List<Models.SoftwareList.DataArea> SantitizeDataAreas(List<Models.SoftwareList.DataArea> dataAreas)
+        {
+            // If we have no DataAreas, we can't do anything
+            if (dataAreas == null || !dataAreas.Any())
+                return dataAreas;
+
+            var grouped = dataAreas.GroupBy(p => p.Name);
+
+            var tempDataAreas = new List<Models.SoftwareList.DataArea>();
+            foreach (var grouping in grouped)
+            {
+                var tempDataArea = new Models.SoftwareList.DataArea();
+                var tempRoms = new List<Models.SoftwareList.Rom>();
+
+                foreach (var dataArea in grouping)
+                {
+                    tempDataArea.Name ??= dataArea.Name;
+                    tempDataArea.Size ??= dataArea.Size;
+                    tempDataArea.Width ??= dataArea.Width;
+                    tempDataArea.Endianness ??= dataArea.Endianness;
+
+                    if (dataArea.Rom != null)
+                        tempRoms.AddRange(dataArea.Rom);
+                }
+
+                if (tempRoms.Count > 0)
+                    tempDataArea.Rom = tempRoms.ToArray();
+
+                tempDataAreas.Add(tempDataArea);
+            }
+
+            return tempDataAreas;
+        }
+
+        /// <summary>
+        /// Sanitize DiskArea list to ensure no duplicates exist
+        /// <summary>
+        private static List<Models.SoftwareList.DiskArea> SantitizeDiskAreas(List<Models.SoftwareList.DiskArea> diskAreas)
+        {
+            // If we have no DiskAreas, we can't do anything
+            if (diskAreas == null || !diskAreas.Any())
+                return diskAreas;
+
+            var grouped = diskAreas.GroupBy(p => p.Name);
+
+            var tempDiskAreas = new List<Models.SoftwareList.DiskArea>();
+            foreach (var grouping in grouped)
+            {
+                var tempDiskArea = new Models.SoftwareList.DiskArea();
+                var tempDisks = new List<Models.SoftwareList.Disk>();
+
+                foreach (var dataArea in grouping)
+                {
+                    tempDiskArea.Name ??= dataArea.Name;
+                    if (dataArea.Disk != null)
+                        tempDisks.AddRange(dataArea.Disk);
+                }
+
+                if (tempDisks.Count > 0)
+                    tempDiskArea.Disk = tempDisks.ToArray();
+
+                tempDiskAreas.Add(tempDiskArea);
+            }
+
+            return tempDiskAreas;
         }
 
         #endregion
