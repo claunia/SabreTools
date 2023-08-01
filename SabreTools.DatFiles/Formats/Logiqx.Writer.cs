@@ -385,7 +385,7 @@ namespace SabreTools.DatFiles.Formats
         }
 
         /// <summary>
-        /// Create a Trurip from the current internal information
+        /// Create a GameBase from the current internal information
         /// <summary>
         private Models.Logiqx.GameBase? CreateGame(Machine machine)
         {
