@@ -1,5 +1,6 @@
 using System.IO;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace SabreTools.Serialization
@@ -37,6 +38,8 @@ namespace SabreTools.Serialization
             {
                 CheckCharacters = false,
                 DtdProcessing = DtdProcessing.Ignore,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
             };
             var streamReader = new StreamReader(stream);
             var xmlReader = XmlReader.Create(streamReader, settings);

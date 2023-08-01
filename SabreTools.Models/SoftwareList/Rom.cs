@@ -12,6 +12,9 @@ namespace SabreTools.Models.SoftwareList
         [XmlAttribute("size")]
         public string Size { get; set; }
 
+        [XmlAttribute("length")]
+        public string Length { get; set; }
+
         [XmlAttribute("crc")]
         public string? CRC { get; set; }
 

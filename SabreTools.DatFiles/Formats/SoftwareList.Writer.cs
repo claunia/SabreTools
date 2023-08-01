@@ -66,6 +66,7 @@ namespace SabreTools.DatFiles.Formats
                     }
 
                     break;
+
                 case ItemType.Disk:
                     Disk disk = datItem as Disk;
                     if (!disk.PartSpecified)
@@ -92,11 +93,13 @@ namespace SabreTools.DatFiles.Formats
                     if (string.IsNullOrWhiteSpace(disk.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
+
                 case ItemType.Info:
                     Info info = datItem as Info;
                     if (string.IsNullOrWhiteSpace(info.Name))
                         missingFields.Add(DatItemField.Name);
                     break;
+
                 case ItemType.Rom:
                     Rom rom = datItem as Rom;
                     if (!rom.PartSpecified)
@@ -124,6 +127,7 @@ namespace SabreTools.DatFiles.Formats
                             missingFields.Add(DatItemField.AreaSize);
                     }
                     break;
+
                 case ItemType.SharedFeature:
                     SharedFeature sharedFeature = datItem as SharedFeature;
                     if (string.IsNullOrWhiteSpace(sharedFeature.Name))

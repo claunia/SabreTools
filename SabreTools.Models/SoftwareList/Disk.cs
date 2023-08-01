@@ -9,6 +9,9 @@ namespace SabreTools.Models.SoftwareList
         [XmlAttribute("name")]
         public string Name { get; set; }
 
+        [XmlAttribute("md5")]
+        public string? MD5 { get; set; }
+
         [XmlAttribute("sha1")]
         public string? SHA1 { get; set; }
 

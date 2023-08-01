@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using System.Xml.Schema;
-using SabreTools.Core;
 using SabreTools.Core.Tools;
 using SabreTools.DatItems;
 using SabreTools.DatItems.Formats;
@@ -18,174 +15,139 @@ namespace SabreTools.DatFiles.Formats
         /// <inheritdoc/>
         public override void ParseFile(string filename, int indexId, bool keep, bool statsOnly = false, bool throwOnError = false)
         {
-            // Prepare all internal variables
-            XmlReader xtr = XmlReader.Create(filename, new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            // If we got a null reader, just return
-            if (xtr == null)
-                return;
-
-            // Otherwise, read the file to the end
             try
             {
-                xtr.MoveToContent();
-                while (!xtr.EOF)
-                {
-                    // We only want elements
-                    if (xtr.NodeType != XmlNodeType.Element)
-                    {
-                        xtr.Read();
-                        continue;
-                    }
+                // Deserialize the input file
+                var softwarelist = Serialization.SoftawreList.Deserialize(filename);
 
-                    switch (xtr.Name)
-                    {
-                        case "softwarelist":
-                            Header.Name ??= xtr.GetAttribute("name") ?? string.Empty;
-                            Header.Description ??= xtr.GetAttribute("description") ?? string.Empty;
+                // Convert the header to the internal format
+                ConvertHeader(softwarelist, keep);
 
-                            xtr.Read();
-                            break;
-
-                        // We want to process the entire subtree of the machine
-                        case "software":
-                            ReadSoftware(xtr.ReadSubtree(), statsOnly, filename, indexId);
-
-                            // Skip the software now that we've processed it
-                            xtr.Skip();
-                            break;
-
-                        default:
-                            xtr.Read();
-                            break;
-                    }
-                }
+                // Convert the software data to the internal format
+                ConvertSoftware(softwarelist?.Software, filename, indexId, statsOnly);
             }
             catch (Exception ex) when (!throwOnError)
             {
-                logger.Warning(ex, $"Exception found while parsing '{filename}'");
-
-                // For XML errors, just skip the affected node
-                xtr?.Read();
+                string message = $"'{filename}' - An error occurred during parsing";
+                logger.Error(ex, message);
             }
+        }
 
-            xtr.Dispose();
+        #region Converters
+
+        /// <summary>
+        /// Convert header information
+        /// </summary>
+        /// <param name="softwarelist">Deserialized model to convert</param>
+        /// <param name="keep">True if full pathnames are to be kept, false otherwise (default)</param>
+        private void ConvertHeader(Models.SoftwareList.SoftwareList? softwarelist, bool keep)
+        {
+            // If the datafile is missing, we can't do anything
+            if (softwarelist == null)
+                return;
+
+            Header.Name ??= softwarelist.Name;
+            Header.Description ??= softwarelist.Description;
+            Header.Comment ??= softwarelist.Notes;
+
+            // Handle implied SuperDAT
+            if (Header.Name.Contains(" - SuperDAT") && keep)
+                Header.Type ??= "SuperDAT";
         }
 
         /// <summary>
-        /// Read software information
+        /// Convert software information
         /// </summary>
-        /// <param name="reader">XmlReader representing a software block</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="software">Array of deserialized models to convert</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private void ReadSoftware(XmlReader reader, bool statsOnly, string filename, int indexId)
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertSoftware(Models.SoftwareList.Software[]? software, string filename, int indexId, bool statsOnly)
         {
-            // If we have an empty software, skip it
-            if (reader == null)
+            // If the game array is missing, we can't do anything
+            if (software == null || !software.Any())
                 return;
 
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            bool containsItems = false;
-
-            // Create a new machine
-            Machine machine = new()
+            // Loop through the software and add
+            foreach (var sw in software)
             {
-                Name = reader.GetAttribute("name"),
-                CloneOf = reader.GetAttribute("cloneof"),
-                Supported = reader.GetAttribute("supported").AsSupported(),
+                ConvertSoftware(sw, filename, indexId, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert software information
+        /// </summary>
+        /// <param name="software">Deserialized model to convert</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private void ConvertSoftware(Models.SoftwareList.Software software, string filename, int indexId, bool statsOnly)
+        {
+            // If the game is missing, we can't do anything
+            if (software == null)
+                return;
+
+            // Create the machine for copying information
+            var machine = new Machine
+            {
+                Name = software.Name,
+                CloneOf = software.CloneOf,
+                Supported = software.Supported.AsSupported(),
+                Description = software.Description,
+                Year = software.Year,
+                Publisher = software.Publisher,
+                Comment = software.Notes,
             };
 
-            while (!reader.EOF)
+            // Add all Info objects
+            foreach (var info in software.Info ?? Array.Empty<Models.SoftwareList.Info>())
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
+                var infoItem = new Info
                 {
-                    reader.Read();
-                    continue;
-                }
+                    Name = info.Name,
+                    Value = info.Value,
 
-                // Get the elements from the software
-                switch (reader.Name)
-                {
-                    case "description":
-                        machine.Description = reader.ReadElementContentAsString();
-                        break;
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
 
-                    case "year":
-                        machine.Year = reader.ReadElementContentAsString();
-                        break;
-
-                    case "publisher":
-                        machine.Publisher = reader.ReadElementContentAsString();
-                        break;
-
-                    case "info":
-                        ParseAddHelper(new Info
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Value = reader.GetAttribute("value"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        }, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "sharedfeat":
-                        ParseAddHelper(new SharedFeature
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Value = reader.GetAttribute("value"),
-
-                            Source = new Source
-                            {
-                                Index = indexId,
-                                Name = filename,
-                            },
-                        }, statsOnly);
-
-                        reader.Read();
-                        break;
-
-                    case "part": // Contains all rom and disk information
-                        var part = new Part()
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Interface = reader.GetAttribute("interface"),
-                        };
-
-                        // Now read the internal tags
-                        containsItems = ReadPart(reader.ReadSubtree(), machine, part, statsOnly, filename, indexId);
-
-                        // Skip the part now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
+                infoItem.CopyMachineInformation(machine);
+                ParseAddHelper(infoItem, statsOnly);
             }
 
-            // If no items were found for this machine, add a Blank placeholder
+            // Add all SharedFeat objects
+            foreach (var sharedfeat in software.SharedFeat ?? Array.Empty<Models.SoftwareList.SharedFeat>())
+            {
+                var sharedfeatItem = new SharedFeature
+                {
+                    Name = sharedfeat.Name,
+                    Value = sharedfeat.Value,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                sharedfeatItem.CopyMachineInformation(machine);
+                ParseAddHelper(sharedfeatItem, statsOnly);
+            }
+
+            // Check if there are any items
+            bool containsItems = false;
+
+            // Loop through each type of item
+            ConvertPart(software.Part, machine, filename, indexId, statsOnly, ref containsItems);
+
+            // If we had no items, create a Blank placeholder
             if (!containsItems)
             {
-                Blank blank = new()
+                var blank = new Blank
                 {
                     Source = new Source
                     {
@@ -195,302 +157,319 @@ namespace SabreTools.DatFiles.Formats
                 };
 
                 blank.CopyMachineInformation(machine);
-
-                // Now process and add the rom
                 ParseAddHelper(blank, statsOnly);
             }
         }
 
         /// <summary>
-        /// Read part information
+        /// Convert Part information
         /// </summary>
-        /// <param name="reader">XmlReader representing a part block</param>
-        /// <param name="machine">Machine information to pass to contained items</param>
-        /// <param name="part">Part information to pass to contained items</param>
-        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="parts">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
-        private bool ReadPart(XmlReader reader, Machine machine, Part part, bool statsOnly, string filename, int indexId)
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertPart(Models.SoftwareList.Part[]? parts, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
         {
-            // If we have an empty port, skip it
-            if (reader == null)
-                return false;
-
-            // Get lists ready
-            part.Features = new List<PartFeature>();
-            List<DatItem> items = new();
-
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get the elements from the software
-                switch (reader.Name)
-                {
-                    case "feature":
-                        var feature = new PartFeature()
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Value = reader.GetAttribute("value"),
-                        };
-
-                        part.Features.Add(feature);
-
-                        reader.Read();
-                        break;
-
-                    case "dataarea":
-                        var dataArea = new DataArea
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
-                            Width = Utilities.CleanLong(reader.GetAttribute("width")),
-                            Endianness = reader.GetAttribute("endianness").AsEndianness(),
-                        };
-
-                        List<DatItem> roms = ReadDataArea(reader.ReadSubtree(), dataArea);
-
-                        // If we got valid roms, add them to the list
-                        if (roms != null)
-                            items.AddRange(roms);
-
-                        // Skip the dataarea now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "diskarea":
-                        var diskArea = new DiskArea
-                        {
-                            Name = reader.GetAttribute("name"),
-                        };
-
-                        List<DatItem> disks = ReadDiskArea(reader.ReadSubtree(), diskArea);
-
-                        // If we got valid disks, add them to the list
-                        if (disks != null)
-                            items.AddRange(disks);
-
-                        // Skip the diskarea now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    case "dipswitch":
-                        var dipSwitch = new DipSwitch
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Tag = reader.GetAttribute("tag"),
-                            Mask = reader.GetAttribute("mask"),
-                        };
-
-                        // Now read the internal tags
-                        ReadDipSwitch(reader.ReadSubtree(), dipSwitch);
-
-                        items.Add(dipSwitch);
-
-                        // Skip the dipswitch now that we've processed it
-                        reader.Skip();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-
-            // Loop over all of the items, if they exist
-            string key = string.Empty;
-            foreach (DatItem item in items)
-            {
-                // Add all missing information
-                switch (item.ItemType)
-                {
-                    case ItemType.DipSwitch:
-                        (item as DipSwitch).Part = part;
-                        break;
-                    case ItemType.Disk:
-                        (item as Disk).Part = part;
-                        break;
-                    case ItemType.Rom:
-                        (item as Rom).Part = part;
-
-                        // If the rom is continue or ignore, add the size to the previous rom
-                        // TODO: Can this be done on write? We technically lose information this way.
-                        // Order is not guaranteed, and since these don't tend to have any way
-                        // of determining what the "previous" item was after this, that info would
-                        // have to be stored *with* the item somehow
-                        if ((item as Rom).LoadFlag == LoadFlag.Continue || (item as Rom).LoadFlag == LoadFlag.Ignore)
-                        {
-                            int index = Items[key].Count - 1;
-                            DatItem lastrom = Items[key][index];
-                            if (lastrom.ItemType == ItemType.Rom)
-                            {
-                                (lastrom as Rom).Size += (item as Rom).Size;
-                                Items[key].RemoveAt(index);
-                                Items[key].Add(lastrom);
-                            }
-
-                            continue;
-                        }
-
-                        break;
-                }
-
-                item.Source = new Source(indexId, filename);
-                item.CopyMachineInformation(machine);
-
-                // Finally add each item
-                key = ParseAddHelper(item, statsOnly);
-            }
-
-            return items.Any();
-        }
-
-        /// <summary>
-        /// Read dataarea information
-        /// </summary>
-        /// <param name="reader">XmlReader representing a dataarea block</param>
-        /// <param name="dataArea">DataArea representing the enclosing area</param>
-        private List<DatItem> ReadDataArea(XmlReader reader, DataArea dataArea)
-        {
-            List<DatItem> items = new();
-
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get the elements from the software
-                switch (reader.Name)
-                {
-                    case "rom":
-                        var rom = new Rom
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Size = Utilities.CleanLong(reader.GetAttribute("size")),
-                            CRC = reader.GetAttribute("crc"),
-                            SHA1 = reader.GetAttribute("sha1"),
-                            Offset = reader.GetAttribute("offset"),
-                            Value = reader.GetAttribute("value"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            LoadFlag = reader.GetAttribute("loadflag").AsLoadFlag(),
-
-                            DataArea = dataArea,
-                        };
-
-                        items.Add(rom);
-                        reader.Read();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-
-            return items;
-        }
-
-        /// <summary>
-        /// Read diskarea information
-        /// </summary>
-        /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="diskArea">DiskArea representing the enclosing area</param>
-        private List<DatItem> ReadDiskArea(XmlReader reader, DiskArea diskArea)
-        {
-            List<DatItem> items = new();
-
-            while (!reader.EOF)
-            {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
-                {
-                    reader.Read();
-                    continue;
-                }
-
-                // Get the elements from the software
-                switch (reader.Name)
-                {
-                    case "disk":
-                        DatItem disk = new Disk
-                        {
-                            Name = reader.GetAttribute("name"),
-                            SHA1 = reader.GetAttribute("sha1"),
-                            ItemStatus = reader.GetAttribute("status").AsItemStatus(),
-                            Writable = reader.GetAttribute("writable").AsYesNo(),
-
-                            DiskArea = diskArea,
-                        };
-
-                        items.Add(disk);
-                        reader.Read();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
-            }
-
-            return items;
-        }
-
-        /// <summary>
-        /// Read DipSwitch DipValues information
-        /// </summary>
-        /// <param name="reader">XmlReader representing a diskarea block</param>
-        /// <param name="dipSwitch">DipSwitch to populate</param>
-        private void ReadDipSwitch(XmlReader reader, DipSwitch dipSwitch)
-        {
-            // If we have an empty dipswitch, skip it
-            if (reader == null)
+            // If the parts array is missing, we can't do anything
+            if (parts == null || !parts.Any())
                 return;
 
-            // Get list ready
-            dipSwitch.Values = new List<Setting>();
-
-            // Otherwise, add what is possible
-            reader.MoveToContent();
-
-            while (!reader.EOF)
+            foreach (var part in parts)
             {
-                // We only want elements
-                if (reader.NodeType != XmlNodeType.Element)
+                var item = new Part
                 {
-                    reader.Read();
-                    continue;
-                }
+                    Name = part.Name,
+                    Interface = part.Interface,
+                    Features = CreateFeatures(part.Feature, machine, filename, indexId, statsOnly),
 
-                // Get the information from the dipswitch
-                switch (reader.Name)
-                {
-                    case "dipvalue":
-                        var dipValue = new Setting
-                        {
-                            Name = reader.GetAttribute("name"),
-                            Value = reader.GetAttribute("value"),
-                            Default = reader.GetAttribute("default").AsYesNo(),
-                        };
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
 
-                        dipSwitch.Values.Add(dipValue);
+                item.CopyMachineInformation(machine);
 
-                        reader.Read();
-                        break;
-
-                    default:
-                        reader.Read();
-                        break;
-                }
+                ConvertDataArea(part.DataArea, item, machine, filename, indexId, statsOnly, ref containsItems);
+                ConvertDiskArea(part.DiskArea, item, machine, filename, indexId, statsOnly, ref containsItems);
+                ConvertDipSwitch(part.DipSwitch, item, machine, filename, indexId, statsOnly, ref containsItems);
             }
         }
+
+        /// <summary>
+        /// Convert Feature information
+        /// </summary>
+        /// <param name="features">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        private static List<PartFeature>? CreateFeatures(Models.SoftwareList.Feature[]? features, Machine machine, string filename, int indexId, bool statsOnly)
+        {
+            // If the feature array is missing, we can't do anything
+            if (features == null || !features.Any())
+                return null;
+
+            var partFeatures = new List<PartFeature>();
+            foreach (var feature in features)
+            {
+                var item = new PartFeature
+                {
+                    Name = feature.Name,
+                    Value = feature.Value,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                partFeatures.Add(item);
+            }
+
+            return partFeatures;
+        }
+
+        /// <summary>
+        /// Convert DataArea information
+        /// </summary>
+        /// <param name="dataareas">Array of deserialized models to convert</param>
+        /// <param name="part">Parent Part to use</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDataArea(Models.SoftwareList.DataArea[]? dataareas, Part part, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the dataarea array is missing, we can't do anything
+            if (dataareas == null || !dataareas.Any())
+                return;
+
+            foreach (var dataarea in dataareas)
+            {
+                var item = new DataArea
+                {
+                    Name = dataarea.Name,
+                    Size = Utilities.CleanLong(dataarea.Size),
+                    Width = Utilities.CleanLong(dataarea.Width),
+                    Endianness = dataarea.Endianness.AsEndianness(),
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ConvertRoms(dataarea.Rom, part, item, machine, filename, indexId, statsOnly, ref containsItems);
+            }
+        }
+
+        /// <summary>
+        /// Convert Rom information
+        /// </summary>
+        /// <param name="roms">Array of deserialized models to convert</param>
+        /// <param name="part">Parent Part to use</param>
+        /// <param name="dataarea">Parent DataArea to use</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertRoms(Models.SoftwareList.Rom[]? roms, Part part, DataArea dataarea, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the rom array is missing, we can't do anything
+            if (roms == null || !roms.Any())
+                return;
+
+            containsItems = true;
+            foreach (var rom in roms)
+            {
+                var item = new Rom
+                {
+                    Name = rom.Name,
+                    Size = Utilities.CleanLong(rom.Size ?? rom.Length),
+                    CRC = rom.CRC,
+                    SHA1 = rom.SHA1,
+                    Offset = rom.Offset,
+                    Value = rom.Value,
+                    ItemStatus = rom.Status.AsItemStatus(),
+                    LoadFlag = rom.LoadFlag.AsLoadFlag(),
+
+                    Part = part,
+                    DataArea = dataarea,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DiskArea information
+        /// </summary>
+        /// <param name="diskareas">Array of deserialized models to convert</param>
+        /// <param name="part">Parent Part to use</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDiskArea(Models.SoftwareList.DiskArea[]? diskareas, Part part, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the diskarea array is missing, we can't do anything
+            if (diskareas == null || !diskareas.Any())
+                return;
+
+            foreach (var diskarea in diskareas)
+            {
+                var item = new DiskArea
+                {
+                    Name = diskarea.Name,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ConvertDisks(diskarea.Disk, part, item, machine, filename, indexId, statsOnly, ref containsItems);
+            }
+        }
+
+        /// <summary>
+        /// Convert Disk information
+        /// </summary>
+        /// <param name="disks">Array of deserialized models to convert</param>
+        /// <param name="part">Parent Part to use</param>
+        /// <param name="diskarea">Parent DiskArea to use</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDisks(Models.SoftwareList.Disk[]? disks, Part part, DiskArea diskarea, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the rom array is missing, we can't do anything
+            if (disks == null || !disks.Any())
+                return;
+
+            containsItems = true;
+            foreach (var rom in disks)
+            {
+                var item = new Disk
+                {
+                    Name = rom.Name,
+                    MD5 = rom.MD5,
+                    SHA1 = rom.SHA1,
+                    ItemStatus = rom.Status.AsItemStatus(),
+                    Writable = rom.Writeable.AsYesNo(),
+
+                    Part = part,
+                    DiskArea = diskarea,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DipSwitch information
+        /// </summary>
+        /// <param name="dipswitches">Array of deserialized models to convert</param>
+        /// <param name="part">Parent Part to use</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
+        /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
+        private void ConvertDipSwitch(Models.SoftwareList.DipSwitch[]? dipswitches, Part part, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        {
+            // If the dipswitch array is missing, we can't do anything
+            if (dipswitches == null || !dipswitches.Any())
+                return;
+
+            foreach (var dipswitch in dipswitches)
+            {
+                var item = new DipSwitch
+                {
+                    Name = dipswitch.Name,
+                    Tag = dipswitch.Tag,
+                    Mask = dipswitch.Mask,
+                    Values = CreateSettings(dipswitch.DipValue, machine, filename, indexId),
+                    
+                    Part = part,
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
+            }
+        }
+
+        /// <summary>
+        /// Convert DipValue information
+        /// </summary>
+        /// <param name="dipvalues">Array of deserialized models to convert</param>
+        /// <param name="machine">Prefilled machine to use</param>
+        /// <param name="filename">Name of the file to be parsed</param>
+        /// <param name="indexId">Index ID for the DAT</param>
+        private static List<Setting>? CreateSettings(Models.SoftwareList.DipValue[]? dipvalues, Machine machine, string filename, int indexId)
+        {
+            // If the feature array is missing, we can't do anything
+            if (dipvalues == null || !dipvalues.Any())
+                return null;
+
+            var settings = new List<Setting>();
+            foreach (var dipvalue in dipvalues)
+            {
+                var item = new Setting
+                {
+                    Name = dipvalue.Name,
+                    Value = dipvalue.Value,
+                    Default = dipvalue.Default.AsYesNo(),
+
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                item.CopyMachineInformation(machine);
+                settings.Add(item);
+            }
+
+            return settings;
+        }
+
+        #endregion
     }
 }
