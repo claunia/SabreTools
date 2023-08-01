@@ -873,7 +873,7 @@ namespace SabreTools.DatFiles.Formats
                 Emulation = driver.Emulation.AsSupportStatus(),
                 Cocktail = driver.Cocktail.AsSupportStatus(),
                 SaveState = driver.SaveState.AsSupported(),
-                RequiresArtwork = driver.SaveState.AsYesNo(),
+                RequiresArtwork = driver.RequiresArtwork.AsYesNo(),
                 Unofficial = driver.Unofficial.AsYesNo(),
                 NoSoundHardware = driver.NoSoundHardware.AsYesNo(),
                 Incomplete = driver.Incomplete.AsYesNo(),
@@ -1015,7 +1015,7 @@ namespace SabreTools.DatFiles.Formats
                     },
                 };
 
-                var extensions = new List<SlotOption>();
+                var slotoptions = new List<SlotOption>();
                 foreach (var slotoption in slot.SlotOption ?? Array.Empty<Models.Listxml.SlotOption>())
                 {
                     var slotoptionItem = new SlotOption
@@ -1024,11 +1024,11 @@ namespace SabreTools.DatFiles.Formats
                         DeviceName = slotoption.DevName,
                         Default = slotoption.Default.AsYesNo(),
                     };
-                    extensions.Add(slotoptionItem);
+                    slotoptions.Add(slotoptionItem);
                 }
 
-                if (extensions.Any())
-                    item.SlotOptions = extensions;
+                if (slotoptions.Any())
+                    item.SlotOptions = slotoptions;
 
                 item.CopyMachineInformation(machine);
                 ParseAddHelper(item, statsOnly);
