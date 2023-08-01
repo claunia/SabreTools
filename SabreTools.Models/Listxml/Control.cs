@@ -9,31 +9,31 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("type")]
         public string Type { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("player")]
         public string? Player { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("buttons")]
         public string? Buttons { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("reqbuttons")]
         public string? ReqButtons { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("minimum")]
         public string? Minimum { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("maximum")]
         public string? Maximum { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("sensitivity")]
         public string? Sensitivity { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("keydelta")]
         public string? KeyDelta { get; set; }
 

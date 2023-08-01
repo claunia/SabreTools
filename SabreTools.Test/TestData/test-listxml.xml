@@ -12,7 +12,6 @@
 		</adjuster>
 		<biosset name="biosset" description="description" default="yes" />
 		<chip name="cpu" tag="cpu" type="cpu" clock="100000" />
-		<condition tag="tag" mask="mask" relation="eq" value="value" />
 		<configuration name="configuration" tag="tag" mask="mask">
 			<condition tag="tag" mask="mask" relation="eq" value="value" />
 			<conflocation name="conflocation" number="1" inverted="no" />

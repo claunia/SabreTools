@@ -21,43 +21,43 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("flipx")]
         public string? FlipX { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("width")]
         public string? Width { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("height")]
         public string? Height { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("refresh")]
         public string Refresh { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("pixclock")]
         public string? PixClock { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("htotal")]
         public string? HTotal { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("hbend")]
         public string? HBEnd { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("hbstart")]
         public string? HBStart { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("vtotal")]
         public string? VTotal { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("vbend")]
         public string? VBEnd { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("vbstart")]
         public string? VBStart { get; set; }
 

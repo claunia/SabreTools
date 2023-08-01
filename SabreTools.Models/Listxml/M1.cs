@@ -3,18 +3,15 @@ using System.Xml.Serialization;
 
 namespace SabreTools.Models.Listxml
 {
-    [XmlRoot("adjuster")]
-    public class Adjuster
+    [XmlRoot("m1")]
+    public class M1
     {
-        [XmlAttribute("name")]
-        public string Name { get; set; }
+        [XmlAttribute("version")]
+        public string? Version { get; set; }
 
-        /// <remarks>(yes|no) "no"</remarks>
-        [XmlAttribute("default")]
-        public string Default { get; set; }
-
-        [XmlElement("condition")]
-        public Condition? Condition { get; set; }
+        [XmlElement("machine", typeof(Machine))]
+        [XmlElement("game", typeof(Game))]
+        public GameBase[] Game { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

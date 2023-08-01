@@ -11,6 +11,22 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("name")]
         public string Name { get; set; }
 
+        /// <remarks>Machine only</remarks>
+        [XmlAttribute("sourcefile")]
+        public string? SourceFile { get; set; }
+
+        /// <remarks>(yes|no) "no", Machine only</remarks>
+        [XmlAttribute("isbios")]
+        public string? IsBios { get; set; }
+
+        /// <remarks>(yes|no) "no", Machine only</remarks>
+        [XmlAttribute("isdevice")]
+        public string? IsDevice { get; set; }
+
+        /// <remarks>(yes|no) "no", Machine only</remarks>
+        [XmlAttribute("ismechanical")]
+        public string? IsMechanical { get; set; }
+
         /// <remarks>(yes|no) "no"</remarks>
         [XmlAttribute("runnable")]
         public string? Runnable { get; set; }
@@ -32,6 +48,10 @@ namespace SabreTools.Models.Listxml
 
         [XmlElement("manufacturer")]
         public string? Manufacturer { get; set; }
+
+        /// <remarks>Game only</remarks>
+        [XmlElement("history")]
+        public string? History { get; set; }
 
         [XmlElement("biosset")]
         public BiosSet[]? BiosSet { get; set; }

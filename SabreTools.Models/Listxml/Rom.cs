@@ -12,8 +12,9 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("bios")]
         public string? Bios { get; set; }
 
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("size")]
-        public long Size { get; set; }
+        public string Size { get; set; }
 
         [XmlAttribute("crc")]
         public string? CRC { get; set; }

@@ -15,6 +15,7 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("fixed_image")]
         public string? FixedImage { get; set; }
 
+        /// <remarks>Numeric boolean</remarks>
         [XmlAttribute("mandatory")]
         public string? Mandatory { get; set; }
 

@@ -271,6 +271,7 @@ namespace SabreTools.DatFiles.Formats
             ConvertDisks(game.Disk, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertMedia(game.Media, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertDeviceRefs(game.DeviceRef, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertSamples(game.Sample, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertArchives(game.Archive, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertDrivers(game.Driver, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertSoftwareLists(game.SoftwareList, machine, filename, indexId, statsOnly, ref containsItems);
