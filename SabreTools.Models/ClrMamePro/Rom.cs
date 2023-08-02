@@ -62,7 +62,7 @@ namespace SabreTools.Models.ClrMamePro
         public string? Region { get; set; }
 
         /// <remarks>offs; Appears after Flags</remarks>
-        public string? Offs { get; set; } // TODO: Is this "Offset" elsewhere?
+        public string? Offs { get; set; }
 
         #endregion
 

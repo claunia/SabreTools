@@ -3,22 +3,22 @@ namespace SabreTools.Models.ClrMamePro
     /// <remarks>input</remarks>
     public class Input
     {
-        /// <remarks>players, Numeric?</remarks>
+        /// <remarks>players, Numeric?/remarks>
         public string Players { get; set; }
 
         /// <remarks>control</remarks>
         public string? Control { get; set; }
 
-        /// <remarks>buttons, Numeric?</remarks>
+        /// <remarks>buttons, Numeric</remarks>
         public string Buttons { get; set; }
 
-        /// <remarks>coins, Numeric?</remarks>
+        /// <remarks>coins, Numeric</remarks>
         public string? Coins { get; set; }
 
-        /// <remarks>tilt, Boolean?</remarks>
+        /// <remarks>tilt, (yes|no) "no"</remarks>
         public string? Tilt { get; set; }
 
-        /// <remarks>service, Boolean?</remarks>
+        /// <remarks>service, (yes|no) "no"</remarks>
         public string? Service { get; set; }
 
         #region DO NOT USE IN PRODUCTION

@@ -14,6 +14,7 @@ namespace SabreTools.Models.OpenMSX
         [XmlElement("type")]
         public string? Type { get; set; }
 
+        /// <remarks>SHA-1 hash</remarks>
         [XmlElement("hash")]
         public string? Hash { get; set; }
 

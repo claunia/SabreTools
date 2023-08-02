@@ -494,6 +494,9 @@ namespace SabreTools.Core
         [Mapping("location")]
         Location,
 
+        [Mapping("original")]
+        Original,
+
         [Mapping("part")]
         Part,
 

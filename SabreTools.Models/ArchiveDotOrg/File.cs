@@ -123,11 +123,11 @@ namespace SabreTools.Models.ArchiveDotOrg
         [XmlElement("ocr_detected_script_conf")]
         public string? TesseractOCRDetectedScriptConf { get; set; }
 
-        [XmlElement("ocr_parameters")]
-        public string? TesseractOCRParameters { get; set; }
-
         [XmlElement("ocr_module_version")]
         public string? TesseractOCRModuleVersion { get; set; }
+
+        [XmlElement("ocr_parameters")]
+        public string? TesseractOCRParameters { get; set; }
 
         [XmlElement("pdf_module_version")]
         public string? PDFModuleVersion { get; set; }

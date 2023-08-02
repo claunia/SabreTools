@@ -9,7 +9,7 @@ namespace SabreTools.Models.ClrMamePro
         /// <remarks>entry</remarks>
         public string[]? Entry { get; set; }
 
-        /// <remarks>default</remarks>
+        /// <remarks>default, (yes|no) "no"</remarks>
         public string? Default { get; set; }
 
         #region DO NOT USE IN PRODUCTION

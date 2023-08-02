@@ -6,7 +6,7 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("sound")]
     public class Sound
     {
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("channels")]
         public string Channels { get; set; }
 

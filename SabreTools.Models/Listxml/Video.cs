@@ -14,23 +14,23 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("orientation")]
         public string Orientation { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("width")]
         public string? Width { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("height")]
         public string? Height { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("aspectx")]
         public string? AspectX { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("aspecty")]
         public string? AspectY { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("refresh")]
         public string? Refresh { get; set; }
 

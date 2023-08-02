@@ -28,7 +28,7 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("region")]
         public string? Region { get; set; }
 
-        /// <remarks>Numeric?</remarks>
+        /// <remarks>Numeric</remarks>
         [XmlAttribute("offset")]
         public string? Offset { get; set; }
 
