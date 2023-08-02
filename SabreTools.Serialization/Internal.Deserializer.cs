@@ -81,5 +81,23 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+
+        #region AttractMode
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
+        /// </summary>
+        public static Models.AttractMode.Row ConvertToAttractMode(Models.Internal.Rom item)
+        {
+            var file = new Models.AttractMode.Row
+            {
+                Title = item.ReadString(Models.Internal.Rom.NameKey),
+                AltRomname = item.ReadString(Models.Internal.Rom.AltRomnameKey),
+                AltTitle = item.ReadString(Models.Internal.Rom.AltTitleKey),
+            };
+            return file;
+        }
+
+        #endregion
     }
 }
