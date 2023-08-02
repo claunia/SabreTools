@@ -27,7 +27,7 @@ namespace SabreTools.Models.Internal
         public const string ASRDetectedLangConfKey = "asr_detected_lang_conf";
 
         /// <remarks>string; ArchiveDotOrg.File</remarks>
-        public const string ASRTranscribedLang = "asr_transcribed_lang";
+        public const string ASRTranscribedLangKey = "asr_transcribed_lang";
 
         /// <remarks>string</remarks>
         public const string BiosKey = "bios";
