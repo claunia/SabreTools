@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -491,6 +494,576 @@ namespace SabreTools.Serialization
 
                 return rom;
             }
+        }
+
+        #endregion
+
+        #region Listxml
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Adjuster"/> to <cref="Models.Internal.Adjuster"/>
+        /// </summary>
+        public static Models.Internal.Adjuster ConvertFromListxml(Models.Listxml.Adjuster item)
+        {
+            var adjuster = new Models.Internal.Adjuster
+            {
+                [Models.Internal.Adjuster.NameKey] = item.Name,
+                [Models.Internal.Adjuster.DefaultKey] = item.Default,
+            };
+
+            if (item.Condition != null)
+                adjuster[Models.Internal.Adjuster.ConditionKey] = ConvertFromListxml(item.Condition);
+
+            return adjuster;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Analog"/> to <cref="Models.Internal.Analog"/>
+        /// </summary>
+        public static Models.Internal.Analog ConvertFromListxml(Models.Listxml.Analog item)
+        {
+            var analog = new Models.Internal.Analog
+            {
+                [Models.Internal.Analog.MaskKey] = item.Mask,
+            };
+            return analog;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.BiosSet"/> to <cref="Models.Internal.BiosSet"/>
+        /// </summary>
+        public static Models.Internal.BiosSet ConvertFromListxml(Models.Listxml.BiosSet item)
+        {
+            var biosset = new Models.Internal.BiosSet
+            {
+                [Models.Internal.BiosSet.NameKey] = item.Name,
+                [Models.Internal.BiosSet.DescriptionKey] = item.Description,
+                [Models.Internal.BiosSet.DefaultKey] = item.Default,
+            };
+            return biosset;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Chip"/> to <cref="Models.Internal.Chip"/>
+        /// </summary>
+        public static Models.Internal.Chip ConvertFromListxml(Models.Listxml.Chip item)
+        {
+            var chip = new Models.Internal.Chip
+            {
+                [Models.Internal.Chip.NameKey] = item.Name,
+                [Models.Internal.Chip.TagKey] = item.Tag,
+                [Models.Internal.Chip.TypeKey] = item.Type,
+                [Models.Internal.Chip.SoundOnlyKey] = item.SoundOnly,
+                [Models.Internal.Chip.ClockKey] = item.Clock,
+            };
+            return chip;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Condition"/> to <cref="Models.Internal.Condition"/>
+        /// </summary>
+        public static Models.Internal.Condition ConvertFromListxml(Models.Listxml.Condition item)
+        {
+            var condition = new Models.Internal.Condition
+            {
+                [Models.Internal.Condition.TagKey] = item.Tag,
+                [Models.Internal.Condition.MaskKey] = item.Mask,
+                [Models.Internal.Condition.RelationKey] = item.Relation,
+                [Models.Internal.Condition.ValueKey] = item.Value,
+            };
+            return condition;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Configuration"/> to <cref="Models.Internal.Configuration"/>
+        /// </summary>
+        public static Models.Internal.Configuration ConvertFromListxml(Models.Listxml.Configuration item)
+        {
+            var configuration = new Models.Internal.Configuration
+            {
+                [Models.Internal.Configuration.NameKey] = item.Name,
+                [Models.Internal.Configuration.TagKey] = item.Tag,
+                [Models.Internal.Configuration.MaskKey] = item.Mask,
+            };
+
+            if (item.Condition != null)
+                configuration[Models.Internal.Configuration.ConditionKey] = ConvertFromListxml(item.Condition);
+
+            if (item.ConfLocation != null && item.ConfLocation.Any())
+            {
+                var confLocations = new List<Models.Internal.ConfLocation>();
+                foreach (var confLocation in item.ConfLocation)
+                {
+                    confLocations.Add(ConvertFromListxml(confLocation));
+                }
+                configuration[Models.Internal.Configuration.ConfLocationKey] = confLocations.ToArray();
+            }
+
+            if (item.ConfSetting != null && item.ConfSetting.Any())
+            {
+                var confSettings = new List<Models.Internal.ConfSetting>();
+                foreach (var confSetting in item.ConfSetting)
+                {
+                    confSettings.Add(ConvertFromListxml(confSetting));
+                }
+                configuration[Models.Internal.Configuration.ConfSettingKey] = confSettings.ToArray();
+            }
+
+            return configuration;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.ConfLocation"/> to <cref="Models.Internal.ConfLocation"/>
+        /// </summary>
+        public static Models.Internal.ConfLocation ConvertFromListxml(Models.Listxml.ConfLocation item)
+        {
+            var confLocation = new Models.Internal.ConfLocation
+            {
+                [Models.Internal.ConfLocation.NameKey] = item.Name,
+                [Models.Internal.ConfLocation.NumberKey] = item.Number,
+                [Models.Internal.ConfLocation.InvertedKey] = item.Inverted,
+            };
+            return confLocation;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.ConfSetting"/> to <cref="Models.Internal.ConfSetting"/>
+        /// </summary>
+        public static Models.Internal.ConfSetting ConvertFromListxml(Models.Listxml.ConfSetting item)
+        {
+            var confSetting = new Models.Internal.ConfSetting
+            {
+                [Models.Internal.ConfSetting.NameKey] = item.Name,
+                [Models.Internal.ConfSetting.ValueKey] = item.Value,
+                [Models.Internal.ConfSetting.DefaultKey] = item.Default,
+            };
+
+            if (item.Condition != null)
+                confSetting[Models.Internal.ConfSetting.ConditionKey] = ConvertFromListxml(item.Condition);
+
+            return confSetting;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Control"/> to <cref="Models.Internal.Control"/>
+        /// </summary>
+        public static Models.Internal.Control ConvertFromListxml(Models.Listxml.Control item)
+        {
+            var control = new Models.Internal.Control
+            {
+                [Models.Internal.Control.TypeKey] = item.Type,
+                [Models.Internal.Control.PlayerKey] = item.Player,
+                [Models.Internal.Control.ButtonsKey] = item.Buttons,
+                [Models.Internal.Control.ReqButtonsKey] = item.ReqButtons,
+                [Models.Internal.Control.MinimumKey] = item.Minimum,
+                [Models.Internal.Control.MaximumKey] = item.Maximum,
+                [Models.Internal.Control.SensitivityKey] = item.Sensitivity,
+                [Models.Internal.Control.KeyDeltaKey] = item.KeyDelta,
+                [Models.Internal.Control.ReverseKey] = item.Reverse,
+                [Models.Internal.Control.WaysKey] = item.Ways,
+                [Models.Internal.Control.Ways2Key] = item.Ways2,
+                [Models.Internal.Control.Ways3Key] = item.Ways3,
+            };
+            return control;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Device"/> to <cref="Models.Internal.Device"/>
+        /// </summary>
+        public static Models.Internal.Device ConvertFromListxml(Models.Listxml.Device item)
+        {
+            var device = new Models.Internal.Device
+            {
+                [Models.Internal.Device.TypeKey] = item.Type,
+                [Models.Internal.Device.TagKey] = item.Tag,
+                [Models.Internal.Device.FixedImageKey] = item.FixedImage,
+                [Models.Internal.Device.MandatoryKey] = item.Mandatory,
+                [Models.Internal.Device.InterfaceKey] = item.Interface,
+            };
+
+            if (item.Instance != null)
+                device[Models.Internal.Device.InstanceKey] = ConvertFromListxml(item.Instance);
+
+            if (item.Extension != null && item.Extension.Any())
+            {
+                var extensions = new List<Models.Internal.Extension>();
+                foreach (var extension in item.Extension)
+                {
+                    extensions.Add(ConvertFromListxml(extension));
+                }
+                device[Models.Internal.Device.ExtensionKey] = extensions.ToArray();
+            }
+
+            return device;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.DeviceRef"/> to <cref="Models.Internal.DeviceRef"/>
+        /// </summary>
+        public static Models.Internal.DeviceRef ConvertFromListxml(Models.Listxml.DeviceRef item)
+        {
+            var deviceRef = new Models.Internal.DeviceRef
+            {
+                [Models.Internal.DeviceRef.NameKey] = item.Name,
+            };
+            return deviceRef;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.DipLocation"/> to <cref="Models.Internal.DipLocation"/>
+        /// </summary>
+        public static Models.Internal.DipLocation ConvertFromListxml(Models.Listxml.DipLocation item)
+        {
+            var dipLocation = new Models.Internal.DipLocation
+            {
+                [Models.Internal.DipLocation.NameKey] = item.Name,
+                [Models.Internal.DipLocation.NumberKey] = item.Number,
+                [Models.Internal.DipLocation.InvertedKey] = item.Inverted,
+            };
+            return dipLocation;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.DipSwitch"/> to <cref="Models.Internal.DipSwitch"/>
+        /// </summary>
+        public static Models.Internal.DipSwitch ConvertFromListxml(Models.Listxml.DipSwitch item)
+        {
+            var dipSwitch = new Models.Internal.DipSwitch
+            {
+                [Models.Internal.DipSwitch.NameKey] = item.Name,
+                [Models.Internal.DipSwitch.TagKey] = item.Tag,
+                [Models.Internal.DipSwitch.MaskKey] = item.Mask,
+            };
+
+            if (item.Condition != null)
+                dipSwitch[Models.Internal.DipSwitch.ConditionKey] = ConvertFromListxml(item.Condition);
+
+            if (item.DipLocation != null && item.DipLocation.Any())
+            {
+                var dipLocations = new List<Models.Internal.DipLocation>();
+                foreach (var dipLocation in item.DipLocation)
+                {
+                    dipLocations.Add(ConvertFromListxml(dipLocation));
+                }
+                dipSwitch[Models.Internal.DipSwitch.DipLocationKey] = dipLocations.ToArray();
+            }
+
+            if (item.DipValue != null && item.DipValue.Any())
+            {
+                var dipValues = new List<Models.Internal.DipValue>();
+                foreach (var dipValue in item.DipValue)
+                {
+                    dipValues.Add(ConvertFromListxml(dipValue));
+                }
+                dipSwitch[Models.Internal.DipSwitch.DipValueKey] = dipValues.ToArray();
+            }
+
+            return dipSwitch;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.DipValue"/> to <cref="Models.Internal.DipValue"/>
+        /// </summary>
+        public static Models.Internal.DipValue ConvertFromListxml(Models.Listxml.DipValue item)
+        {
+            var dipValue = new Models.Internal.DipValue
+            {
+                [Models.Internal.DipValue.NameKey] = item.Name,
+                [Models.Internal.DipValue.ValueKey] = item.Value,
+                [Models.Internal.DipValue.DefaultKey] = item.Default,
+            };
+
+            if (item.Condition != null)
+                dipValue[Models.Internal.DipValue.ConditionKey] = ConvertFromListxml(item.Condition);
+
+            return dipValue;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Disk"/> to <cref="Models.Internal.Disk"/>
+        /// </summary>
+        public static Models.Internal.Disk ConvertFromListxml(Models.Listxml.Disk item)
+        {
+            var disk = new Models.Internal.Disk
+            {
+                [Models.Internal.Disk.NameKey] = item.Name,
+                [Models.Internal.Disk.MD5Key] = item.MD5,
+                [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                [Models.Internal.Disk.MergeKey] = item.Merge,
+                [Models.Internal.Disk.RegionKey] = item.Region,
+                [Models.Internal.Disk.IndexKey] = item.Index,
+                [Models.Internal.Disk.WritableKey] = item.Writable,
+                [Models.Internal.Disk.StatusKey] = item.Status,
+                [Models.Internal.Disk.OptionalKey] = item.Optional,
+            };
+            return disk;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Display"/> to <cref="Models.Internal.Display"/>
+        /// </summary>
+        public static Models.Internal.Display ConvertFromListxml(Models.Listxml.Display item)
+        {
+            var display = new Models.Internal.Display
+            {
+                [Models.Internal.Display.TagKey] = item.Tag,
+                [Models.Internal.Display.TypeKey] = item.Type,
+                [Models.Internal.Display.RotateKey] = item.Rotate,
+                [Models.Internal.Display.FlipXKey] = item.FlipX,
+                [Models.Internal.Display.WidthKey] = item.Width,
+                [Models.Internal.Display.HeightKey] = item.Height,
+                [Models.Internal.Display.RefreshKey] = item.Refresh,
+                [Models.Internal.Display.PixClockKey] = item.PixClock,
+                [Models.Internal.Display.HTotalKey] = item.HTotal,
+                [Models.Internal.Display.HBEndKey] = item.HBEnd,
+                [Models.Internal.Display.HBStartKey] = item.HBStart,
+                [Models.Internal.Display.VTotalKey] = item.VTotal,
+                [Models.Internal.Display.VBEndKey] = item.VBEnd,
+                [Models.Internal.Display.VBStartKey] = item.VBStart,
+            };
+            return display;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Driver"/> to <cref="Models.Internal.Driver"/>
+        /// </summary>
+        public static Models.Internal.Driver ConvertFromListxml(Models.Listxml.Driver item)
+        {
+            var driver = new Models.Internal.Driver
+            {
+                [Models.Internal.Driver.StatusKey] = item.Status,
+                [Models.Internal.Driver.ColorKey] = item.Color,
+                [Models.Internal.Driver.SoundKey] = item.Sound,
+                [Models.Internal.Driver.PaletteSizeKey] = item.PaletteSize,
+                [Models.Internal.Driver.EmulationKey] = item.Emulation,
+                [Models.Internal.Driver.CocktailKey] = item.Cocktail,
+                [Models.Internal.Driver.SaveStateKey] = item.SaveState,
+                [Models.Internal.Driver.RequiresArtworkKey] = item.RequiresArtwork,
+                [Models.Internal.Driver.UnofficialKey] = item.Unofficial,
+                [Models.Internal.Driver.NoSoundHardwareKey] = item.NoSoundHardware,
+                [Models.Internal.Driver.IncompleteKey] = item.Incomplete,
+            };
+            return driver;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Extension"/> to <cref="Models.Internal.Extension"/>
+        /// </summary>
+        public static Models.Internal.Extension ConvertFromListxml(Models.Listxml.Extension item)
+        {
+            var extension = new Models.Internal.Extension
+            {
+                [Models.Internal.Extension.NameKey] = item.Name,
+            };
+            return extension;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Feature"/> to <cref="Models.Internal.Feature"/>
+        /// </summary>
+        public static Models.Internal.Feature ConvertFromListxml(Models.Listxml.Feature item)
+        {
+            var feature = new Models.Internal.Feature
+            {
+                [Models.Internal.Feature.TypeKey] = item.Type,
+                [Models.Internal.Feature.StatusKey] = item.Status,
+                [Models.Internal.Feature.OverallKey] = item.Overall,
+            };
+            return feature;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Input"/> to <cref="Models.Internal.Input"/>
+        /// </summary>
+        public static Models.Internal.Input ConvertFromListxml(Models.Listxml.Input item)
+        {
+            var input = new Models.Internal.Input
+            {
+                [Models.Internal.Input.ServiceKey] = item.Service,
+                [Models.Internal.Input.TiltKey] = item.Tilt,
+                [Models.Internal.Input.PlayersKey] = item.Players,
+                [Models.Internal.Input.ControlKey] = item.ControlAttr,
+                [Models.Internal.Input.ButtonsKey] = item.Buttons,
+                [Models.Internal.Input.CoinsKey] = item.Coins,
+            };
+
+            if (item.Control != null && item.Control.Any())
+            {
+                var controls = new List<Models.Internal.Control>();
+                foreach (var control in item.Control)
+                {
+                    controls.Add(ConvertFromListxml(control));
+                }
+                input[Models.Internal.Input.ControlKey] = controls.ToArray();
+            }
+
+            return input;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Instance"/> to <cref="Models.Internal.Instance"/>
+        /// </summary>
+        public static Models.Internal.Instance ConvertFromListxml(Models.Listxml.Instance item)
+        {
+            var instance = new Models.Internal.Instance
+            {
+                [Models.Internal.Instance.NameKey] = item.Name,
+                [Models.Internal.Instance.BriefNameKey] = item.BriefName,
+            };
+            return instance;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Port"/> to <cref="Models.Internal.Port"/>
+        /// </summary>
+        public static Models.Internal.Port ConvertFromListxml(Models.Listxml.Port item)
+        {
+            var port = new Models.Internal.Port
+            {
+                [Models.Internal.Port.TagKey] = item.Tag,
+            };
+
+            if (item.Analog != null && item.Analog.Any())
+            {
+                var analogs = new List<Models.Internal.Analog>();
+                foreach (var analog in item.Analog)
+                {
+                    analogs.Add(ConvertFromListxml(analog));
+                }
+                port[Models.Internal.Port.AnalogKey] = analogs.ToArray();
+            }
+
+            return port;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.RamOption"/> to <cref="Models.Internal.RamOption"/>
+        /// </summary>
+        public static Models.Internal.RamOption ConvertFromListxml(Models.Listxml.RamOption item)
+        {
+            var ramOption = new Models.Internal.RamOption
+            {
+                [Models.Internal.RamOption.NameKey] = item.Name,
+                [Models.Internal.RamOption.DefaultKey] = item.Default,
+            };
+            return ramOption;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromListxml(Models.Listxml.Rom item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.Name,
+                [Models.Internal.Rom.BiosKey] = item.Bios,
+                [Models.Internal.Rom.SizeKey] = item.Size,
+                [Models.Internal.Rom.CRCKey] = item.CRC,
+                [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                [Models.Internal.Rom.MergeKey] = item.Merge,
+                [Models.Internal.Rom.RegionKey] = item.Region,
+                [Models.Internal.Rom.OffsetKey] = item.Offset,
+                [Models.Internal.Rom.StatusKey] = item.Status,
+                [Models.Internal.Rom.OptionalKey] = item.Optional,
+                [Models.Internal.Rom.DisposeKey] = item.Dispose,
+                [Models.Internal.Rom.SoundOnlyKey] = item.SoundOnly,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Sample"/> to <cref="Models.Internal.Sample"/>
+        /// </summary>
+        public static Models.Internal.Sample ConvertFromListxml(Models.Listxml.Sample item)
+        {
+            var sample = new Models.Internal.Sample
+            {
+                [Models.Internal.Sample.NameKey] = item.Name,
+            };
+            return sample;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Slot"/> to <cref="Models.Internal.Slot"/>
+        /// </summary>
+        public static Models.Internal.Slot ConvertFromListxml(Models.Listxml.Slot item)
+        {
+            var slot = new Models.Internal.Slot
+            {
+                [Models.Internal.Slot.NameKey] = item.Name,
+            };
+
+            if (item.SlotOption != null && item.SlotOption.Any())
+            {
+                var slotOptions = new List<Models.Internal.SlotOption>();
+                foreach (var slotOption in item.SlotOption)
+                {
+                    slotOptions.Add(ConvertFromListxml(slotOption));
+                }
+                slot[Models.Internal.Slot.SlotOptionKey] = slotOptions.ToArray();
+            }
+
+            return slot;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.SlotOption"/> to <cref="Models.Internal.SlotOption"/>
+        /// </summary>
+        public static Models.Internal.SlotOption ConvertFromListxml(Models.Listxml.SlotOption item)
+        {
+            var slotOption = new Models.Internal.SlotOption
+            {
+                [Models.Internal.SlotOption.NameKey] = item.Name,
+                [Models.Internal.SlotOption.DevNameKey] = item.DevName,
+                [Models.Internal.SlotOption.DefaultKey] = item.Default,
+            };
+            return slotOption;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.SoftwareList"/> to <cref="Models.Internal.SoftwareList"/>
+        /// </summary>
+        public static Models.Internal.SoftwareList ConvertFromListxml(Models.Listxml.SoftwareList item)
+        {
+            var softwareList = new Models.Internal.SoftwareList
+            {
+                [Models.Internal.SoftwareList.TagKey] = item.Tag,
+                [Models.Internal.SoftwareList.NameKey] = item.Name,
+                [Models.Internal.SoftwareList.StatusKey] = item.Status,
+                [Models.Internal.SoftwareList.FilterKey] = item.Filter,
+            };
+            return softwareList;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Sound"/> to <cref="Models.Internal.Sound"/>
+        /// </summary>
+        public static Models.Internal.Sound ConvertFromListxml(Models.Listxml.Sound item)
+        {
+            var sound = new Models.Internal.Sound
+            {
+                [Models.Internal.Sound.ChannelsKey] = item.Channels,
+            };
+            return sound;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Video"/> to <cref="Models.Internal.Video"/>
+        /// </summary>
+        public static Models.Internal.Video ConvertFromListxml(Models.Listxml.Video item)
+        {
+            var video = new Models.Internal.Video
+            {
+                [Models.Internal.Video.ScreenKey] = item.Screen,
+                [Models.Internal.Video.OrientationKey] = item.Orientation,
+                [Models.Internal.Video.WidthKey] = item.Width,
+                [Models.Internal.Video.HeightKey] = item.Height,
+                [Models.Internal.Video.AspectXKey] = item.AspectX,
+                [Models.Internal.Video.AspectYKey] = item.AspectY,
+                [Models.Internal.Video.RefreshKey] = item.Refresh,
+            };
+            return video;
         }
 
         #endregion

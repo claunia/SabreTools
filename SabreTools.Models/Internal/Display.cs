@@ -15,7 +15,7 @@ namespace SabreTools.Models.Internal
         public const string HBEndKey = "hbend";
 
         /// <remarks>long</remarks>
-        public const string HBStart = "hbstart";
+        public const string HBStartKey = "hbstart";
 
         /// <remarks>long</remarks>
         public const string HeightKey = "height";

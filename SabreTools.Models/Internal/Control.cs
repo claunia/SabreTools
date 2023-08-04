@@ -30,7 +30,7 @@ namespace SabreTools.Models.Internal
         public const string ReverseKey = "reverse";
 
         /// <remarks>long</remarks>
-        public const string Sensitivity = "sensitivity";
+        public const string SensitivityKey = "sensitivity";
 
         /// <remarks>(joy|stick|paddle|pedal|lightgun|positional|dial|trackball|mouse|only_buttons|keypad|keyboard|mahjong|hanafuda|gambling)</remarks>
         public const string ControlTypeKey = "type";

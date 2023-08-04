@@ -6,6 +6,7 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("control")]
     public class Control
     {
+        /// <remarks>(joy|stick|paddle|pedal|lightgun|positional|dial|trackball|mouse|only_buttons|keypad|keyboard|mahjong|hanafuda|gambling)</remarks>
         [XmlAttribute("type")]
         public string Type { get; set; }
 
