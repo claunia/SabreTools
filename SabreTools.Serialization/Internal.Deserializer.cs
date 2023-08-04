@@ -314,5 +314,24 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+
+        #region DosCenter
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.DosCenter.File"/>
+        /// </summary>
+        public static Models.DosCenter.File ConvertToDosCenter(Models.Internal.Rom item)
+        {
+            var rom = new Models.DosCenter.File
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                Date = item.ReadString(Models.Internal.Rom.DateKey),
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }

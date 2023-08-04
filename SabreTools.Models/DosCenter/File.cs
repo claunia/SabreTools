@@ -13,7 +13,7 @@ namespace SabreTools.Models.DosCenter
         public string CRC { get; set; }
 
         /// <remarks>date, attribute</remarks>
-        public string Date { get; set; }
+        public string? Date { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

@@ -65,7 +65,7 @@ namespace SabreTools.Serialization
                 [Models.Internal.Rom.WordConfidenceInterval71To80Key] = item.WordConfidenceInterval71To80,
                 [Models.Internal.Rom.WordConfidenceInterval81To90Key] = item.WordConfidenceInterval81To90,
                 [Models.Internal.Rom.WordConfidenceInterval91To100Key] = item.WordConfidenceInterval91To100,
-                
+
                 [Models.Internal.Rom.AlbumKey] = item.Album,
                 [Models.Internal.Rom.ArtistKey] = item.Artist,
                 [Models.Internal.Rom.BitrateKey] = item.Bitrate,
@@ -312,6 +312,25 @@ namespace SabreTools.Serialization
                 [Models.Internal.Video.RefreshKey] = item.Freq,
             };
             return video;
+        }
+
+        #endregion
+
+        #region DosCenter
+
+        /// <summary>
+        /// Convert from <cref="Models.DosCenter.File"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromDosCenter(Models.DosCenter.File item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.Name,
+                [Models.Internal.Rom.SizeKey] = item.Size,
+                [Models.Internal.Rom.CRCKey] = item.CRC,
+                [Models.Internal.Rom.DateKey] = item.Date,
+            };
+            return rom;
         }
 
         #endregion
