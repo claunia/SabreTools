@@ -1066,5 +1066,171 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+        
+        #region Logiqx
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
+        /// </summary>
+        public static Models.Logiqx.Archive ConvertToLogiqx(Models.Internal.Archive item)
+        {
+            var archive = new Models.Logiqx.Archive
+            {
+                Name = item.ReadString(Models.Internal.Archive.NameKey),
+            };
+            return archive;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Logiqx.BiosSet"/>
+        /// </summary>
+        public static Models.Logiqx.BiosSet ConvertToLogiqx(Models.Internal.BiosSet item)
+        {
+            var biosset = new Models.Logiqx.BiosSet
+            {
+                Name = item.ReadString(Models.Internal.BiosSet.NameKey),
+                Description = item.ReadString(Models.Internal.BiosSet.DescriptionKey),
+                Default = item.ReadString(Models.Internal.BiosSet.DefaultKey),
+            };
+            return biosset;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Logiqx.DeviceRef"/>
+        /// </summary>
+        public static Models.Logiqx.DeviceRef ConvertToLogiqx(Models.Internal.DeviceRef item)
+        {
+            var deviceRef = new Models.Logiqx.DeviceRef
+            {
+                Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
+            };
+            return deviceRef;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Logiqx.Disk"/>
+        /// </summary>
+        public static Models.Logiqx.Disk ConvertToLogiqx(Models.Internal.Disk item)
+        {
+            var disk = new Models.Logiqx.Disk
+            {
+                Name = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Merge = item.ReadString(Models.Internal.Disk.MergeKey),
+                Status = item.ReadString(Models.Internal.Disk.StatusKey),
+                Region = item.ReadString(Models.Internal.Disk.RegionKey),
+            };
+            return disk;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Logiqx.Driver"/>
+        /// </summary>
+        public static Models.Logiqx.Driver ConvertToLogiqx(Models.Internal.Driver item)
+        {
+            var driver = new Models.Logiqx.Driver
+            {
+                Status = item.ReadString(Models.Internal.Driver.StatusKey),
+                Emulation = item.ReadString(Models.Internal.Driver.EmulationKey),
+                Cocktail = item.ReadString(Models.Internal.Driver.CocktailKey),
+                SaveState = item.ReadString(Models.Internal.Driver.SaveStateKey),
+                RequiresArtwork = item.ReadString(Models.Internal.Driver.RequiresArtworkKey),
+                Unofficial = item.ReadString(Models.Internal.Driver.UnofficialKey),
+                NoSoundHardware = item.ReadString(Models.Internal.Driver.NoSoundHardwareKey),
+                Incomplete = item.ReadString(Models.Internal.Driver.IncompleteKey),
+            };
+            return driver;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.Logiqx.Media"/>
+        /// </summary>
+        public static Models.Logiqx.Media ConvertToLogiqx(Models.Internal.Media item)
+        {
+            var media = new Models.Logiqx.Media
+            {
+                Name = item.ReadString(Models.Internal.Media.NameKey),
+                MD5 = item.ReadString(Models.Internal.Media.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Media.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Media.SHA256Key),
+                SpamSum = item.ReadString(Models.Internal.Media.SpamSumKey),
+            };
+            return media;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.Logiqx.Release"/>
+        /// </summary>
+        public static Models.Logiqx.Release ConvertToLogiqx(Models.Internal.Release item)
+        {
+            var release = new Models.Logiqx.Release
+            {
+                Name = item.ReadString(Models.Internal.Release.NameKey),
+                Region = item.ReadString(Models.Internal.Release.RegionKey),
+                Language = item.ReadString(Models.Internal.Release.LanguageKey),
+                Date = item.ReadString(Models.Internal.Release.DateKey),
+                Default = item.ReadString(Models.Internal.Release.DefaultKey),
+            };
+            return release;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Logiqx.Rom"/>
+        /// </summary>
+        public static Models.Logiqx.Rom ConvertToLogiqx(Models.Internal.Rom item)
+        {
+            var rom = new Models.Logiqx.Rom
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
+                SHA384 = item.ReadString(Models.Internal.Rom.SHA384Key),
+                SHA512 = item.ReadString(Models.Internal.Rom.SHA512Key),
+                SpamSum = item.ReadString(Models.Internal.Rom.SpamSumKey),
+                xxHash364 = item.ReadString(Models.Internal.Rom.xxHash364Key),
+                xxHash3128 = item.ReadString(Models.Internal.Rom.xxHash3128Key),
+                Merge = item.ReadString(Models.Internal.Rom.MergeKey),
+                Status = item.ReadString(Models.Internal.Rom.StatusKey),
+                Serial = item.ReadString(Models.Internal.Rom.SerialKey),
+                Header = item.ReadString(Models.Internal.Rom.HeaderKey),
+                Date = item.ReadString(Models.Internal.Rom.DateKey),
+                Inverted = item.ReadString(Models.Internal.Rom.InvertedKey),
+                MIA = item.ReadString(Models.Internal.Rom.MIAKey),
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Logiqx.Sample"/>
+        /// </summary>
+        public static Models.Logiqx.Sample ConvertToLogiqx(Models.Internal.Sample item)
+        {
+            var sample = new Models.Logiqx.Sample
+            {
+                Name = item.ReadString(Models.Internal.Sample.NameKey),
+            };
+            return sample;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Logiqx.SoftwareList"/>
+        /// </summary>
+        public static Models.Logiqx.SoftwareList ConvertToLogiqx(Models.Internal.SoftwareList item)
+        {
+            var softwareList = new Models.Logiqx.SoftwareList
+            {
+                Tag = item.ReadString(Models.Internal.SoftwareList.TagKey),
+                Name = item.ReadString(Models.Internal.SoftwareList.NameKey),
+                Status = item.ReadString(Models.Internal.SoftwareList.StatusKey),
+                Filter = item.ReadString(Models.Internal.SoftwareList.FilterKey),
+            };
+            return softwareList;
+        }
+
+        #endregion
     }
 }
