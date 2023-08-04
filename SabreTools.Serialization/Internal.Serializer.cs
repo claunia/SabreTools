@@ -334,7 +334,7 @@ namespace SabreTools.Serialization
         }
 
         #endregion
-    
+
         #region EverdriveSMDB
 
         /// <summary>
@@ -355,7 +355,7 @@ namespace SabreTools.Serialization
         }
 
         #endregion
-        
+
         #region Hashfile
 
         /// <summary>
@@ -447,6 +447,50 @@ namespace SabreTools.Serialization
                 [Models.Internal.Rom.NameKey] = item.File,
             };
             return rom;
+        }
+
+        #endregion
+
+        #region Listrom
+
+        /// <summary>
+        /// Convert from <cref="Models.Listrom.Row"/> to <cref="Models.Internal.Disk"/> or <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.DatItem ConvertFromListrom(Models.Listrom.Row item)
+        {
+            if (item.Size == null)
+            {
+                var disk = new Models.Internal.Disk
+                {
+                    [Models.Internal.Disk.NameKey] = item.Name,
+                    [Models.Internal.Disk.MD5Key] = item.MD5,
+                    [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                };
+
+                if (item.NoGoodDumpKnown)
+                    disk[Models.Internal.Disk.StatusKey] = "nodump";
+                else if (item.Bad)
+                    disk[Models.Internal.Disk.StatusKey] = "baddump";
+
+                return disk;
+            }
+            else
+            {
+                var rom = new Models.Internal.Rom
+                {
+                    [Models.Internal.Rom.NameKey] = item.Name,
+                    [Models.Internal.Rom.SizeKey] = item.Size,
+                    [Models.Internal.Rom.CRCKey] = item.CRC,
+                    [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                };
+
+                if (item.NoGoodDumpKnown)
+                    rom[Models.Internal.Rom.StatusKey] = "nodump";
+                else if (item.Bad)
+                    rom[Models.Internal.Rom.StatusKey] = "baddump";
+
+                return rom;
+            }
         }
 
         #endregion

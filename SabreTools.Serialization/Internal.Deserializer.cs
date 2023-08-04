@@ -449,5 +449,50 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+        
+        #region Listrom
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
+        /// </summary>
+        public static Models.Listrom.Row ConvertToListrom(Models.Internal.Disk item)
+        {
+            var row = new Models.Listrom.Row
+            {
+                Name = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+            };
+
+            if (item[Models.Internal.Disk.StatusKey] as string == "nodump")
+                row.NoGoodDumpKnown = true;
+            else if (item[Models.Internal.Disk.StatusKey] as string == "baddump")
+                row.Bad = true;
+
+            return row;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
+        /// </summary>
+        public static Models.Listrom.Row ConvertToListrom(Models.Internal.Rom item)
+        {
+            var row = new Models.Listrom.Row
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+            };
+
+            if (item[Models.Internal.Rom.StatusKey] as string == "nodump")
+                row.NoGoodDumpKnown = true;
+            else if (item[Models.Internal.Rom.StatusKey] as string == "baddump")
+                row.Bad = true;
+
+            return row;
+        }
+
+        #endregion
     }
 }
