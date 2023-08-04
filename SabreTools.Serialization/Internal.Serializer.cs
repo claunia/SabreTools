@@ -355,5 +355,100 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+        
+        #region Hashfile
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.MD5"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromMD5(Models.Hashfile.MD5 item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.MD5Key] = item.Hash,
+                [Models.Internal.Rom.NameKey] = item.File,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.SFV"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromSFV(Models.Hashfile.SFV item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.File,
+                [Models.Internal.Rom.CRCKey] = item.Hash,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.SHA1"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromSHA1(Models.Hashfile.SHA1 item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.SHA1Key] = item.Hash,
+                [Models.Internal.Rom.NameKey] = item.File,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.SHA256"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromSHA256(Models.Hashfile.SHA256 item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.SHA256Key] = item.Hash,
+                [Models.Internal.Rom.NameKey] = item.File,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.SHA384"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromSHA384(Models.Hashfile.SHA384 item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.SHA384Key] = item.Hash,
+                [Models.Internal.Rom.NameKey] = item.File,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.SHA512"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromSHA512(Models.Hashfile.SHA512 item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.SHA512Key] = item.Hash,
+                [Models.Internal.Rom.NameKey] = item.File,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Hashfile.SpamSum"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromSpamSum(Models.Hashfile.SpamSum item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.SpamSumKey] = item.Hash,
+                [Models.Internal.Rom.NameKey] = item.File,
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }

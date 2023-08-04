@@ -322,14 +322,14 @@ namespace SabreTools.Serialization
         /// </summary>
         public static Models.DosCenter.File ConvertToDosCenter(Models.Internal.Rom item)
         {
-            var rom = new Models.DosCenter.File
+            var file = new Models.DosCenter.File
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
                 Size = item.ReadString(Models.Internal.Rom.SizeKey),
                 CRC = item.ReadString(Models.Internal.Rom.CRCKey),
                 Date = item.ReadString(Models.Internal.Rom.DateKey),
             };
-            return rom;
+            return file;
         }
 
         #endregion
@@ -341,7 +341,7 @@ namespace SabreTools.Serialization
         /// </summary>
         public static Models.EverdriveSMDB.Row ConvertToEverdriveSMDB(Models.Internal.Rom item)
         {
-            var rom = new Models.EverdriveSMDB.Row
+            var row = new Models.EverdriveSMDB.Row
             {
                 SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -350,7 +350,102 @@ namespace SabreTools.Serialization
                 CRC32 = item.ReadString(Models.Internal.Rom.CRCKey),
                 Size = item.ReadString(Models.Internal.Rom.SizeKey),
             };
-            return rom;
+            return row;
+        }
+
+        #endregion
+        
+        #region Hashfile
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.MD5"/>
+        /// </summary>
+        public static Models.Hashfile.MD5 ConvertToMD5(Models.Internal.Rom item)
+        {
+            var md5 = new Models.Hashfile.MD5
+            {
+                Hash = item.ReadString(Models.Internal.Rom.MD5Key),
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+            };
+            return md5;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SFV"/>
+        /// </summary>
+        public static Models.Hashfile.SFV ConvertToSFV(Models.Internal.Rom item)
+        {
+            var sfv = new Models.Hashfile.SFV
+            {
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+                Hash = item.ReadString(Models.Internal.Rom.CRCKey),
+            };
+            return sfv;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA1"/>
+        /// </summary>
+        public static Models.Hashfile.SHA1 ConvertToSHA1(Models.Internal.Rom item)
+        {
+            var sha1 = new Models.Hashfile.SHA1
+            {
+                Hash = item.ReadString(Models.Internal.Rom.SHA1Key),
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+            };
+            return sha1;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA256"/>
+        /// </summary>
+        public static Models.Hashfile.SHA256 ConvertToSHA256(Models.Internal.Rom item)
+        {
+            var sha256 = new Models.Hashfile.SHA256
+            {
+                Hash = item.ReadString(Models.Internal.Rom.SHA256Key),
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+            };
+            return sha256;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA384"/>
+        /// </summary>
+        public static Models.Hashfile.SHA384 ConvertToSHA384(Models.Internal.Rom item)
+        {
+            var sha384 = new Models.Hashfile.SHA384
+            {
+                Hash = item.ReadString(Models.Internal.Rom.SHA384Key),
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+            };
+            return sha384;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA512"/>
+        /// </summary>
+        public static Models.Hashfile.SHA512 ConvertToSHA512(Models.Internal.Rom item)
+        {
+            var sha512 = new Models.Hashfile.SHA512
+            {
+                Hash = item.ReadString(Models.Internal.Rom.SHA512Key),
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+            };
+            return sha512;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SpamSum"/>
+        /// </summary>
+        public static Models.Hashfile.SpamSum ConvertToSpamSum(Models.Internal.Rom item)
+        {
+            var spamsum = new Models.Hashfile.SpamSum
+            {
+                Hash = item.ReadString(Models.Internal.Rom.SpamSumKey),
+                File = item.ReadString(Models.Internal.Rom.NameKey),
+            };
+            return spamsum;
         }
 
         #endregion
