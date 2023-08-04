@@ -100,5 +100,220 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+
+        #region ClrMamePro
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Archive"/> to <cref="Models.Internal.Archive"/>
+        /// </summary>
+        public static Models.Internal.Archive ConvertFromClrMamePro(Models.ClrMamePro.Archive item)
+        {
+            var archive = new Models.Internal.Archive
+            {
+                [Models.Internal.Archive.NameKey] = item.Name,
+            };
+            return archive;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.BiosSet"/> to <cref="Models.Internal.BiosSet"/>
+        /// </summary>
+        public static Models.Internal.BiosSet ConvertFromClrMamePro(Models.ClrMamePro.BiosSet item)
+        {
+            var biosset = new Models.Internal.BiosSet
+            {
+                [Models.Internal.BiosSet.NameKey] = item.Name,
+                [Models.Internal.BiosSet.DescriptionKey] = item.Description,
+                [Models.Internal.BiosSet.DefaultKey] = item.Default,
+            };
+            return biosset;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Chip"/> to <cref="Models.Internal.Chip"/>
+        /// </summary>
+        public static Models.Internal.Chip ConvertFromClrMamePro(Models.ClrMamePro.Chip item)
+        {
+            var chip = new Models.Internal.Chip
+            {
+                [Models.Internal.Chip.ChipTypeKey] = item.Type,
+                [Models.Internal.Chip.NameKey] = item.Name,
+                [Models.Internal.Chip.FlagsKey] = item.Flags,
+                [Models.Internal.Chip.ClockKey] = item.Clock,
+            };
+            return chip;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.DipSwitch"/> to <cref="Models.Internal.DipSwitch"/>
+        /// </summary>
+        public static Models.Internal.DipSwitch ConvertFromClrMamePro(Models.ClrMamePro.DipSwitch item)
+        {
+            var dipswitch = new Models.Internal.DipSwitch
+            {
+                [Models.Internal.DipSwitch.NameKey] = item.Name,
+                [Models.Internal.DipSwitch.EntryKey] = item.Entry,
+                [Models.Internal.DipSwitch.DefaultKey] = item.Default,
+            };
+            return dipswitch;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Disk"/> to <cref="Models.Internal.Disk"/>
+        /// </summary>
+        public static Models.Internal.Disk ConvertFromClrMamePro(Models.ClrMamePro.Disk item)
+        {
+            var disk = new Models.Internal.Disk
+            {
+                [Models.Internal.Disk.NameKey] = item.Name,
+                [Models.Internal.Disk.MD5Key] = item.MD5,
+                [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                [Models.Internal.Disk.MergeKey] = item.Merge,
+                [Models.Internal.Disk.StatusKey] = item.Status,
+                [Models.Internal.Disk.FlagsKey] = item.Flags,
+            };
+            return disk;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Driver"/> to <cref="Models.Internal.Driver"/>
+        /// </summary>
+        public static Models.Internal.Driver ConvertFromClrMamePro(Models.ClrMamePro.Driver item)
+        {
+            var driver = new Models.Internal.Driver
+            {
+                [Models.Internal.Driver.StatusKey] = item.Status,
+                [Models.Internal.Driver.ColorKey] = item.Color,
+                [Models.Internal.Driver.SoundKey] = item.Sound,
+                [Models.Internal.Driver.PaletteSizeKey] = item.PaletteSize,
+                [Models.Internal.Driver.BlitKey] = item.Blit,
+            };
+            return driver;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Input"/> to <cref="Models.Internal.Input"/>
+        /// </summary>
+        public static Models.Internal.Input ConvertFromClrMamePro(Models.ClrMamePro.Input item)
+        {
+            var input = new Models.Internal.Input
+            {
+                [Models.Internal.Input.PlayersKey] = item.Players,
+                [Models.Internal.Input.ControlKey] = item.Control,
+                [Models.Internal.Input.ButtonsKey] = item.Buttons,
+                [Models.Internal.Input.CoinsKey] = item.Coins,
+                [Models.Internal.Input.TiltKey] = item.Tilt,
+                [Models.Internal.Input.ServiceKey] = item.Service,
+            };
+            return input;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Media"/> to <cref="Models.Internal.Media"/>
+        /// </summary>
+        public static Models.Internal.Media ConvertFromClrMamePro(Models.ClrMamePro.Media item)
+        {
+            var media = new Models.Internal.Media
+            {
+                [Models.Internal.Media.NameKey] = item.Name,
+                [Models.Internal.Media.MD5Key] = item.MD5,
+                [Models.Internal.Media.SHA1Key] = item.SHA1,
+                [Models.Internal.Media.SHA256Key] = item.SHA256,
+                [Models.Internal.Media.SpamSumKey] = item.SpamSum,
+            };
+            return media;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Release"/> to <cref="Models.Internal.Release"/>
+        /// </summary>
+        public static Models.Internal.Release ConvertFromClrMamePro(Models.ClrMamePro.Release item)
+        {
+            var release = new Models.Internal.Release
+            {
+                [Models.Internal.Release.NameKey] = item.Name,
+                [Models.Internal.Release.RegionKey] = item.Region,
+                [Models.Internal.Release.LanguageKey] = item.Language,
+                [Models.Internal.Release.DateKey] = item.Date,
+                [Models.Internal.Release.DefaultKey] = item.Default,
+            };
+            return release;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromClrMamePro(Models.ClrMamePro.Rom item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.Name,
+                [Models.Internal.Rom.SizeKey] = item.Size,
+                [Models.Internal.Rom.CRCKey] = item.CRC,
+                [Models.Internal.Rom.MD5Key] = item.MD5,
+                [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                [Models.Internal.Rom.SHA256Key] = item.SHA256,
+                [Models.Internal.Rom.SHA384Key] = item.SHA384,
+                [Models.Internal.Rom.SHA512Key] = item.SHA512,
+                [Models.Internal.Rom.SpamSumKey] = item.SpamSum,
+                [Models.Internal.Rom.xxHash364Key] = item.xxHash364,
+                [Models.Internal.Rom.xxHash3128Key] = item.xxHash3128,
+                [Models.Internal.Rom.MergeKey] = item.Merge,
+                [Models.Internal.Rom.StatusKey] = item.Status,
+                [Models.Internal.Rom.RegionKey] = item.Region,
+                [Models.Internal.Rom.FlagsKey] = item.Flags,
+                [Models.Internal.Rom.OffsetKey] = item.Offs,
+                [Models.Internal.Rom.SerialKey] = item.Serial,
+                [Models.Internal.Rom.HeaderKey] = item.Header,
+                [Models.Internal.Rom.DateKey] = item.Date,
+                [Models.Internal.Rom.InvertedKey] = item.Inverted,
+                [Models.Internal.Rom.MIAKey] = item.MIA,
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Sample"/> to <cref="Models.Internal.Sample"/>
+        /// </summary>
+        public static Models.Internal.Sample ConvertFromClrMamePro(Models.ClrMamePro.Sample item)
+        {
+            var sample = new Models.Internal.Sample
+            {
+                [Models.Internal.Sample.NameKey] = item.Name,
+            };
+            return sample;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Sound"/> to <cref="Models.Internal.Sound"/>
+        /// </summary>
+        public static Models.Internal.Sound ConvertFromClrMamePro(Models.ClrMamePro.Sound item)
+        {
+            var sound = new Models.Internal.Sound
+            {
+                [Models.Internal.Sound.ChannelsKey] = item.Channels,
+            };
+            return sound;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.Video"/> to <cref="Models.Internal.Video"/>
+        /// </summary>
+        public static Models.Internal.Video ConvertFromClrMamePro(Models.ClrMamePro.Video item)
+        {
+            var video = new Models.Internal.Video
+            {
+                [Models.Internal.Video.ScreenKey] = item.Screen,
+                [Models.Internal.Video.OrientationKey] = item.Orientation,
+                [Models.Internal.Video.WidthKey] = item.X,
+                [Models.Internal.Video.HeightKey] = item.Y,
+                [Models.Internal.Video.AspectXKey] = item.AspectX,
+                [Models.Internal.Video.AspectYKey] = item.AspectY,
+                [Models.Internal.Video.RefreshKey] = item.Freq,
+            };
+            return video;
+        }
+
+        #endregion
     }
 }
