@@ -333,5 +333,26 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+        
+        #region EverdriveSMDB
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
+        /// </summary>
+        public static Models.EverdriveSMDB.Row ConvertToEverdriveSMDB(Models.Internal.Rom item)
+        {
+            var rom = new Models.EverdriveSMDB.Row
+            {
+                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
+                CRC32 = item.ReadString(Models.Internal.Rom.CRCKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }
