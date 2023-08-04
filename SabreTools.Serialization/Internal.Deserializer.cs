@@ -1066,7 +1066,7 @@ namespace SabreTools.Serialization
         }
 
         #endregion
-        
+
         #region Logiqx
 
         /// <summary>
@@ -1229,6 +1229,23 @@ namespace SabreTools.Serialization
                 Filter = item.ReadString(Models.Internal.SoftwareList.FilterKey),
             };
             return softwareList;
+        }
+
+        #endregion
+
+        #region OfflineList
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
+        /// </summary>
+        public static Models.OfflineList.FileRomCRC ConvertToOfflineList(Models.Internal.Rom item)
+        {
+            var fileRomCRC = new Models.OfflineList.FileRomCRC
+            {
+                Extension = item.ReadString(Models.Internal.Rom.ExtensionKey),
+                Content = item.ReadString(Models.Internal.Rom.CRCKey),
+            };
+            return fileRomCRC;
         }
 
         #endregion

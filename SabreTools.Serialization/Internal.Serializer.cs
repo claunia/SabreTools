@@ -1067,7 +1067,7 @@ namespace SabreTools.Serialization
         }
 
         #endregion
-        
+
         #region Logiqx
 
         /// <summary>
@@ -1230,6 +1230,23 @@ namespace SabreTools.Serialization
                 [Models.Internal.SoftwareList.FilterKey] = item.Filter,
             };
             return softwareList;
+        }
+
+        #endregion
+
+        #region OfflineList
+
+        /// <summary>
+        /// Convert from <cref="Models.OfflineList.FileRomCRC"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        public static Models.Internal.Rom ConvertFromOfflineList(Models.OfflineList.FileRomCRC item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.ExtensionKey] = item.Extension,
+                [Models.Internal.Rom.CRCKey] = item.Content,
+            };
+            return rom;
         }
 
         #endregion
