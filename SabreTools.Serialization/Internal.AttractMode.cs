@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +8,37 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromAttractMode(Models.AttractMode.Row item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Internal.Machine.EmulatorKey] = item.Emulator,
+                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Internal.Machine.CategoryKey] = item.Category,
+                [Models.Internal.Machine.PlayersKey] = item.Players,
+                [Models.Internal.Machine.RotationKey] = item.Rotation,
+                [Models.Internal.Machine.ControlKey] = item.Control,
+                [Models.Internal.Machine.StatusKey] = item.Status,
+                [Models.Internal.Machine.DisplayCountKey] = item.DisplayCount,
+                [Models.Internal.Machine.DisplayTypeKey] = item.DisplayType,
+                [Models.Internal.Machine.ExtraKey] = item.Extra,
+                [Models.Internal.Machine.ButtonsKey] = item.Buttons,
+                [Models.Internal.Machine.FavoriteKey] = item.Favorite,
+                [Models.Internal.Machine.TagsKey] = item.Tags,
+                [Models.Internal.Machine.PlayedCountKey] = item.PlayedCount,
+                [Models.Internal.Machine.PlayedTimeKey] = item.PlayedTime,
+                [Models.Internal.Machine.PlayedTimeKey] = item.PlayedTime,
+                [Models.Internal.Machine.RomKey] = ConvertFromAttractMode(item),
+            };
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Models.Internal.Rom"/>
@@ -25,6 +58,43 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
+        /// </summary>
+        public static Models.AttractMode.Row[]? ConvertMachineToAttractMode(Models.Internal.Machine item)
+        {
+            if (!item.ContainsKey(Models.Internal.Machine.RomKey) || item[Models.Internal.Machine.RomKey] is not Models.Internal.Rom[] roms)
+                return null;
+
+            var rowItems = new List<Models.AttractMode.Row>();
+            foreach (var rom in roms)
+            {
+                var rowItem = ConvertToAttractMode(rom);
+
+                rowItem.Name = item.ReadString(Models.Internal.Machine.NameKey);
+                rowItem.Emulator = item.ReadString(Models.Internal.Machine.EmulatorKey);
+                rowItem.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
+                rowItem.Year = item.ReadString(Models.Internal.Machine.YearKey);
+                rowItem.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
+                rowItem.Category = item.ReadString(Models.Internal.Machine.CategoryKey);
+                rowItem.Players = item.ReadString(Models.Internal.Machine.PlayersKey);
+                rowItem.Rotation = item.ReadString(Models.Internal.Machine.RotationKey);
+                rowItem.Control = item.ReadString(Models.Internal.Machine.ControlKey);
+                rowItem.Status = item.ReadString(Models.Internal.Machine.StatusKey);
+                rowItem.DisplayCount = item.ReadString(Models.Internal.Machine.DisplayCountKey);
+                rowItem.DisplayType = item.ReadString(Models.Internal.Machine.DisplayTypeKey);
+                rowItem.Extra = item.ReadString(Models.Internal.Machine.ExtraKey);
+                rowItem.Buttons = item.ReadString(Models.Internal.Machine.ButtonsKey);
+                rowItem.Favorite = item.ReadString(Models.Internal.Machine.FavoriteKey);
+                rowItem.Tags = item.ReadString(Models.Internal.Machine.TagsKey);
+                rowItem.PlayedCount = item.ReadString(Models.Internal.Machine.PlayedCountKey);
+                rowItem.PlayedTime = item.ReadString(Models.Internal.Machine.PlayedTimeKey);
+
+                rowItems.Add(rowItem);
+            }
+            return rowItems.ToArray();
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>

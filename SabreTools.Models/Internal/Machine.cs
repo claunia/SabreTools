@@ -82,6 +82,9 @@ namespace SabreTools.Models.Internal
         public const string DuplicateIDKey = "duplicateID";
 
         /// <remarks>string</remarks>
+        public const string EmulatorKey = "emulator";
+
+        /// <remarks>string</remarks>
         public const string ExtraKey = "extra";
 
         /// <remarks>string</remarks>
@@ -131,6 +134,9 @@ namespace SabreTools.Models.Internal
 
         /// <remarks>Media[]</remarks>
         public const string MediaKey = "media";
+
+        /// <remarks>string</remarks>
+        public const string NameKey = "name";
 
         /// <remarks>string</remarks>
         public const string NotesKey = "notes";
