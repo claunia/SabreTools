@@ -11,6 +11,55 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.SoftwareList.Software"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromSoftwareList(Models.SoftwareList.Software item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Internal.Machine.SupportedKey] = item.Supported,
+                [Models.Internal.Machine.DescriptionKey] = item.Description,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.PublisherKey] = item.Publisher,
+                [Models.Internal.Machine.NotesKey] = item.Notes,
+            };
+
+            if (item.Info != null && item.Info.Any())
+            {
+                var infos = new List<Models.Internal.Info>();
+                foreach (var info in item.Info)
+                {
+                    infos.Add(ConvertFromSoftwareList(info));
+                }
+                machine[Models.Internal.Machine.InfoKey] = infos.ToArray();
+            }
+
+            if (item.SharedFeat != null && item.SharedFeat.Any())
+            {
+                var sharedFeats = new List<Models.Internal.SharedFeat>();
+                foreach (var sharedFeat in item.SharedFeat)
+                {
+                    sharedFeats.Add(ConvertFromSoftwareList(sharedFeat));
+                }
+                machine[Models.Internal.Machine.SharedFeatKey] = sharedFeats.ToArray();
+            }
+
+            if (item.Part != null && item.Part.Any())
+            {
+                var parts = new List<Models.Internal.Part>();
+                foreach (var part in item.Part)
+                {
+                    parts.Add(ConvertFromSoftwareList(part));
+                }
+                machine[Models.Internal.Machine.PartKey] = parts.ToArray();
+            }
+
+            return machine;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.SoftwareList.DataArea"/> to <cref="Models.Internal.DataArea"/>
         /// </summary>
         public static Models.Internal.DataArea ConvertFromSoftwareList(Models.SoftwareList.DataArea item)
@@ -230,6 +279,55 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.SoftwareList.Software"/>
+        /// </summary>
+        public static Models.SoftwareList.Software ConvertMachineToSoftwareList(Models.Internal.Machine item)
+        {
+            var software = new Models.SoftwareList.Software
+            {
+                Name = item.ReadString(Models.Internal.Machine.NameKey),
+                CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey),
+                Supported = item.ReadString(Models.Internal.Machine.SupportedKey),
+                Description = item.ReadString(Models.Internal.Machine.DescriptionKey),
+                Year = item.ReadString(Models.Internal.Machine.YearKey),
+                Publisher = item.ReadString(Models.Internal.Machine.PublisherKey),
+                Notes = item.ReadString(Models.Internal.Machine.NotesKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Machine.InfoKey) && item[Models.Internal.Machine.InfoKey] is Models.Internal.Info[] infos)
+            {
+                var infoItems = new List<Models.SoftwareList.Info>();
+                foreach (var info in infos)
+                {
+                    infoItems.Add(ConvertToSoftwareList(info));
+                }
+                software.Info = infoItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SharedFeatKey) && item[Models.Internal.Machine.SharedFeatKey] is Models.Internal.SharedFeat[] sharedFeats)
+            {
+                var sharedFeatItems = new List<Models.SoftwareList.SharedFeat>();
+                foreach (var sharedFeat in sharedFeats)
+                {
+                    sharedFeatItems.Add(ConvertToSoftwareList(sharedFeat));
+                }
+                software.SharedFeat = sharedFeatItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.PartKey) && item[Models.Internal.Machine.PartKey] is Models.Internal.Part[] parts)
+            {
+                var partItems = new List<Models.SoftwareList.Part>();
+                foreach (var part in parts)
+                {
+                    partItems.Add(ConvertToSoftwareList(part));
+                }
+                software.Part = partItems.ToArray();
+            }
+
+            return software;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.DataArea"/> to <cref="Models.SoftwareList.DataArea"/>
