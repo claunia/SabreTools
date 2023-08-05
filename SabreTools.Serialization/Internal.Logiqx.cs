@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +9,138 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromLogiqx(Models.Logiqx.GameBase item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Internal.Machine.SourceFileKey] = item.SourceFile,
+                [Models.Internal.Machine.IsBiosKey] = item.IsBios,
+                [Models.Internal.Machine.IsDeviceKey] = item.IsDevice,
+                [Models.Internal.Machine.IsMechanicalKey] = item.IsMechanical,
+                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Internal.Machine.RomOfKey] = item.RomOf,
+                [Models.Internal.Machine.SampleOfKey] = item.SampleOf,
+                [Models.Internal.Machine.BoardKey] = item.Board,
+                [Models.Internal.Machine.RebuildToKey] = item.RebuildTo,
+                [Models.Internal.Machine.IdKey] = item.Id,
+                [Models.Internal.Machine.CloneOfIdKey] = item.CloneOfId,
+                [Models.Internal.Machine.RunnableKey] = item.Runnable,
+                [Models.Internal.Machine.CommentKey] = item.Comment,
+                [Models.Internal.Machine.DescriptionKey] = item.Description,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Internal.Machine.PublisherKey] = item.Publisher,
+                [Models.Internal.Machine.CategoryKey] = item.Category,
+                [Models.Internal.Machine.TruripKey] = item.Trurip,
+            };
+
+            if (item.Release != null && item.Release.Any())
+            {
+                var releases = new List<Models.Internal.Release>();
+                foreach (var release in item.Release)
+                {
+                    releases.Add(ConvertFromLogiqx(release));
+                }
+                machine[Models.Internal.Machine.ReleaseKey] = releases.ToArray();
+            }
+
+            if (item.BiosSet != null && item.BiosSet.Any())
+            {
+                var biosSets = new List<Models.Internal.BiosSet>();
+                foreach (var biosSet in item.BiosSet)
+                {
+                    biosSets.Add(ConvertFromLogiqx(biosSet));
+                }
+                machine[Models.Internal.Machine.BiosSetKey] = biosSets.ToArray();
+            }
+
+            if (item.Rom != null && item.Rom.Any())
+            {
+                var roms = new List<Models.Internal.Rom>();
+                foreach (var rom in item.Rom)
+                {
+                    roms.Add(ConvertFromLogiqx(rom));
+                }
+                machine[Models.Internal.Machine.RomKey] = roms.ToArray();
+            }
+
+            if (item.Disk != null && item.Disk.Any())
+            {
+                var disks = new List<Models.Internal.Disk>();
+                foreach (var disk in item.Disk)
+                {
+                    disks.Add(ConvertFromLogiqx(disk));
+                }
+                machine[Models.Internal.Machine.DiskKey] = disks.ToArray();
+            }
+
+            if (item.Media != null && item.Media.Any())
+            {
+                var medias = new List<Models.Internal.Media>();
+                foreach (var media in item.Media)
+                {
+                    medias.Add(ConvertFromLogiqx(media));
+                }
+                machine[Models.Internal.Machine.MediaKey] = medias.ToArray();
+            }
+
+            if (item.DeviceRef != null && item.DeviceRef.Any())
+            {
+                var deviceRefs = new List<Models.Internal.DeviceRef>();
+                foreach (var deviceRef in item.DeviceRef)
+                {
+                    deviceRefs.Add(ConvertFromLogiqx(deviceRef));
+                }
+                machine[Models.Internal.Machine.DeviceRefKey] = deviceRefs.ToArray();
+            }
+
+            if (item.Sample != null && item.Sample.Any())
+            {
+                var samples = new List<Models.Internal.Sample>();
+                foreach (var sample in item.Sample)
+                {
+                    samples.Add(ConvertFromLogiqx(sample));
+                }
+                machine[Models.Internal.Machine.SampleKey] = samples.ToArray();
+            }
+
+            if (item.Archive != null && item.Archive.Any())
+            {
+                var archives = new List<Models.Internal.Archive>();
+                foreach (var archive in item.Archive)
+                {
+                    archives.Add(ConvertFromLogiqx(archive));
+                }
+                machine[Models.Internal.Machine.ArchiveKey] = archives.ToArray();
+            }
+
+            if (item.Driver != null && item.Driver.Any())
+            {
+                var drivers = new List<Models.Internal.Driver>();
+                foreach (var driver in item.Driver)
+                {
+                    drivers.Add(ConvertFromLogiqx(driver));
+                }
+                machine[Models.Internal.Machine.DriverKey] = drivers.ToArray();
+            }
+
+            if (item.SoftwareList != null && item.SoftwareList.Any())
+            {
+                var softwareLists = new List<Models.Internal.SoftwareList>();
+                foreach (var softwareList in item.SoftwareList)
+                {
+                    softwareLists.Add(ConvertFromLogiqx(softwareList));
+                }
+                machine[Models.Internal.Machine.SoftwareListKey] = softwareLists.ToArray();
+            }
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Archive"/> to <cref="Models.Internal.Archive"/>
@@ -171,7 +306,140 @@ namespace SabreTools.Serialization
 
         #endregion
 
-        #region Logiqx
+        #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
+        /// </summary>
+        public static Models.Logiqx.GameBase ConvertMachineToLogiqx(Models.Internal.Machine item, bool game = false)
+        {
+            Models.Logiqx.GameBase gameBase = game ? new Models.Logiqx.Game() : new Models.Logiqx.Machine();
+
+            gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
+            gameBase.SourceFile = item.ReadString(Models.Internal.Machine.SourceFileKey);
+            gameBase.IsBios = item.ReadString(Models.Internal.Machine.IsBiosKey);
+            gameBase.IsDevice = item.ReadString(Models.Internal.Machine.IsDeviceKey);
+            gameBase.IsMechanical = item.ReadString(Models.Internal.Machine.IsMechanicalKey);
+            gameBase.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
+            gameBase.RomOf = item.ReadString(Models.Internal.Machine.RomOfKey);
+            gameBase.SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey);
+            gameBase.Board = item.ReadString(Models.Internal.Machine.BoardKey);
+            gameBase.RebuildTo = item.ReadString(Models.Internal.Machine.RebuildToKey);
+            gameBase.Id = item.ReadString(Models.Internal.Machine.IdKey);
+            gameBase.CloneOfId = item.ReadString(Models.Internal.Machine.CloneOfIdKey);
+            gameBase.Runnable = item.ReadString(Models.Internal.Machine.RunnableKey);
+            gameBase.Comment = item.ReadStringArray(Models.Internal.Machine.CommentKey);
+            gameBase.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
+            gameBase.Year = item.ReadString(Models.Internal.Machine.YearKey);
+            gameBase.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
+            gameBase.Publisher = item.ReadString(Models.Internal.Machine.PublisherKey);
+            gameBase.Category = item.ReadStringArray(Models.Internal.Machine.CategoryKey);
+
+            if (item.ContainsKey(Models.Internal.Machine.TruripKey) && item[Models.Internal.Machine.TruripKey] is Models.Logiqx.Trurip trurip)
+                gameBase.Trurip = trurip;
+
+            if (item.ContainsKey(Models.Internal.Machine.ReleaseKey) && item[Models.Internal.Machine.ReleaseKey] is Models.Internal.Release[] releases)
+            {
+                var releaseItems = new List<Models.Logiqx.Release>();
+                foreach (var release in releases)
+                {
+                    releaseItems.Add(ConvertToLogiqx(release));
+                }
+                gameBase.Release = releaseItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.BiosSetKey) && item[Models.Internal.Machine.BiosSetKey] is Models.Internal.BiosSet[] biosSets)
+            {
+                var biosSetItems = new List<Models.Logiqx.BiosSet>();
+                foreach (var biosSet in biosSets)
+                {
+                    biosSetItems.Add(ConvertToLogiqx(biosSet));
+                }
+                gameBase.BiosSet = biosSetItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
+            {
+                var romItems = new List<Models.Logiqx.Rom>();
+                foreach (var rom in roms)
+                {
+                    romItems.Add(ConvertToLogiqx(rom));
+                }
+                gameBase.Rom = romItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
+            {
+                var diskItems = new List<Models.Logiqx.Disk>();
+                foreach (var disk in disks)
+                {
+                    diskItems.Add(ConvertToLogiqx(disk));
+                }
+                gameBase.Disk = diskItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.MediaKey) && item[Models.Internal.Machine.MediaKey] is Models.Internal.Media[] medias)
+            {
+                var mediaItems = new List<Models.Logiqx.Media>();
+                foreach (var media in medias)
+                {
+                    mediaItems.Add(ConvertToLogiqx(media));
+                }
+                gameBase.Media = mediaItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DeviceRefKey) && item[Models.Internal.Machine.DeviceRefKey] is Models.Internal.DeviceRef[] deviceRefs)
+            {
+                var deviceRefItems = new List<Models.Logiqx.DeviceRef>();
+                foreach (var deviceRef in deviceRefs)
+                {
+                    deviceRefItems.Add(ConvertToLogiqx(deviceRef));
+                }
+                gameBase.DeviceRef = deviceRefItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SampleKey) && item[Models.Internal.Machine.SampleKey] is Models.Internal.Sample[] samples)
+            {
+                var sampleItems = new List<Models.Logiqx.Sample>();
+                foreach (var sample in samples)
+                {
+                    sampleItems.Add(ConvertToLogiqx(sample));
+                }
+                gameBase.Sample = sampleItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.ArchiveKey) && item[Models.Internal.Machine.ArchiveKey] is Models.Internal.Archive[] archives)
+            {
+                var archiveItems = new List<Models.Logiqx.Archive>();
+                foreach (var archive in archives)
+                {
+                    archiveItems.Add(ConvertToLogiqx(archive));
+                }
+                gameBase.Archive = archiveItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DriverKey) && item[Models.Internal.Machine.DriverKey] is Models.Internal.Driver[] drivers)
+            {
+                var driverItems = new List<Models.Logiqx.Driver>();
+                foreach (var chip in drivers)
+                {
+                    driverItems.Add(ConvertToLogiqx(chip));
+                }
+                gameBase.Driver = driverItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SoftwareListKey) && item[Models.Internal.Machine.SoftwareListKey] is Models.Internal.SoftwareList[] softwareLists)
+            {
+                var softwareListItems = new List<Models.Logiqx.SoftwareList>();
+                foreach (var softwareList in softwareLists)
+                {
+                    softwareListItems.Add(ConvertToLogiqx(softwareList));
+                }
+                gameBase.SoftwareList = softwareListItems.ToArray();
+            }
+
+            return gameBase;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>

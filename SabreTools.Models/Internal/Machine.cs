@@ -228,6 +228,7 @@ namespace SabreTools.Models.Internal
         /// <remarks>string</remarks>
         public const string TagsKey = "tags";
 
+        /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>Trurip</remarks>
         public const string TruripKey = "trurip";
 
@@ -287,6 +288,18 @@ namespace SabreTools.Models.Internal
             if (!ContainsKey(key))
                 return null;
             return this[key] as string;
+        }
+    
+        /// <summary>
+        /// Read a key as a string[], returning null on error
+        /// </summary>
+        public string[]? ReadStringArray(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return null;
+            if (!ContainsKey(key))
+                return null;
+            return this[key] as string[];
         }
     
         #endregion

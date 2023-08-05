@@ -118,12 +118,12 @@ namespace SabreTools.Serialization
 
             if (item.DipSwitch != null && item.DipSwitch.Any())
             {
-                var dipSwitchs = new List<Models.Internal.DipSwitch>();
+                var dipSwitches = new List<Models.Internal.DipSwitch>();
                 foreach (var dipSwitch in item.DipSwitch)
                 {
-                    dipSwitchs.Add(ConvertFromClrMamePro(dipSwitch));
+                    dipSwitches.Add(ConvertFromClrMamePro(dipSwitch));
                 }
-                machine[Models.Internal.Machine.DipSwitchKey] = dipSwitchs.ToArray();
+                machine[Models.Internal.Machine.DipSwitchKey] = dipSwitches.ToArray();
             }
 
             if (item.Driver != null)
@@ -452,10 +452,10 @@ namespace SabreTools.Serialization
             if (item.ContainsKey(Models.Internal.Machine.InputKey) && item[Models.Internal.Machine.InputKey] is Models.Internal.Input input)
                 gameBase.Input = ConvertToClrMamePro(input);
 
-            if (item.ContainsKey(Models.Internal.Machine.DipSwitchKey) && item[Models.Internal.Machine.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitchs)
+            if (item.ContainsKey(Models.Internal.Machine.DipSwitchKey) && item[Models.Internal.Machine.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitches)
             {
                 var dipSwitchItems = new List<Models.ClrMamePro.DipSwitch>();
-                foreach (var dipSwitch in dipSwitchs)
+                foreach (var dipSwitch in dipSwitches)
                 {
                     dipSwitchItems.Add(ConvertToClrMamePro(dipSwitch));
                 }

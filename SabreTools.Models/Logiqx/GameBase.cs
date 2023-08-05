@@ -102,6 +102,7 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("archive")]
         public Archive[]? Archive { get; set; }
 
+        /// TODO: Validate multiple can exist
         /// <remarks>MAME extension</remarks>
         [XmlElement("driver")]
         public Driver[]? Driver { get; set; }
