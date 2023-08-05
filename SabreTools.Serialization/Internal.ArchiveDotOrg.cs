@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +8,18 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromArchiveDotOrg(Models.ArchiveDotOrg.File item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.RomKey] = ConvertFromArchiveDotOrg(item),
+            };
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Internal.Rom"/>
@@ -84,6 +98,22 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.ArchiveDotOrg.File"/>
+        /// </summary>
+        public static Models.ArchiveDotOrg.File[]? ConvertMachineToArchiveDotOrg(Models.Internal.Machine item)
+        {
+            if (!item.ContainsKey(Models.Internal.Machine.RomKey) || item[Models.Internal.Machine.RomKey] is not Models.Internal.Rom[] roms)
+                return null;
+
+            var fileItems = new List<Models.ArchiveDotOrg.File>();
+            foreach (var rom in roms)
+            {
+                fileItems.Add(ConvertToArchiveDotOrg(rom));
+            }
+            return fileItems.ToArray();
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ArchiveDotOrg.File"/>
