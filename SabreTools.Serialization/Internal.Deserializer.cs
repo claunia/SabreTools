@@ -1279,19 +1279,6 @@ namespace SabreTools.Serialization
         }
         
         /// <summary>
-        /// Convert from <cref="Models.Internal.Original"/> to <cref="Models.OpenMSX.Original"/>
-        /// </summary>
-        public static Models.OpenMSX.Original ConvertToOpenMSX(Models.Internal.Original item)
-        {
-            var original = new Models.OpenMSX.Original
-            {
-                Value = item.ReadString(Models.Internal.Original.ValueKey),
-                Content = item.ReadString(Models.Internal.Original.ContentKey),
-            };
-            return original;
-        }
-
-        /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.MegaRom"/>
         /// </summary>
         public static Models.OpenMSX.MegaRom ConvertToOpenMSXMegaRom(Models.Internal.Rom item)
@@ -1304,6 +1291,19 @@ namespace SabreTools.Serialization
                 Remark = item.ReadString(Models.Internal.Rom.RemarkKey),
             };
             return megaRom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Original"/> to <cref="Models.OpenMSX.Original"/>
+        /// </summary>
+        public static Models.OpenMSX.Original ConvertToOpenMSX(Models.Internal.Original item)
+        {
+            var original = new Models.OpenMSX.Original
+            {
+                Value = item.ReadString(Models.Internal.Original.ValueKey),
+                Content = item.ReadString(Models.Internal.Original.ContentKey),
+            };
+            return original;
         }
 
         /// <summary>
@@ -1351,6 +1351,65 @@ namespace SabreTools.Serialization
                 RomCRC = item.ReadString(Models.Internal.Rom.CRCKey),
                 RomSize = item.ReadString(Models.Internal.Rom.SizeKey),
                 MergeName = item.ReadString(Models.Internal.Rom.MergeKey),
+            };
+            return row;
+        }
+
+        #endregion
+    
+        #region SeparatedValue
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        public static Models.SeparatedValue.Row ConvertToSeparatedValue(Models.Internal.Disk item)
+        {
+            var row = new Models.SeparatedValue.Row
+            {
+                Type = "disk",
+                DiskName = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Status = item.ReadString(Models.Internal.Disk.StatusKey),
+            };
+            return row;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        public static Models.SeparatedValue.Row ConvertToSeparatedValue(Models.Internal.Media item)
+        {
+            var row = new Models.SeparatedValue.Row
+            {
+                Type = "media",
+                DiskName = item.ReadString(Models.Internal.Media.NameKey),
+                MD5 = item.ReadString(Models.Internal.Media.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Media.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Media.SHA256Key),
+                SpamSum = item.ReadString(Models.Internal.Media.SpamSumKey),
+            };
+            return row;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        public static Models.SeparatedValue.Row ConvertToSeparatedValue(Models.Internal.Rom item)
+        {
+            var row = new Models.SeparatedValue.Row
+            {
+                Type = "rom",
+                RomName = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
+                SHA384 = item.ReadString(Models.Internal.Rom.SHA384Key),
+                SHA512 = item.ReadString(Models.Internal.Rom.SHA512Key),
+                SpamSum = item.ReadString(Models.Internal.Rom.SpamSumKey),
+                Status = item.ReadString(Models.Internal.Rom.StatusKey),
             };
             return row;
         }

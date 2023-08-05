@@ -457,7 +457,7 @@ namespace SabreTools.Serialization
         #region Listrom
 
         /// <summary>
-        /// Convert from <cref="Models.Listrom.Row"/> to <cref="Models.Internal.Disk"/> or <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Listrom.Row"/> to <cref="Models.Internal.DatItem"/>
         /// </summary>
         public static Models.Internal.DatItem ConvertFromListrom(Models.Listrom.Row item)
         {
@@ -1259,7 +1259,7 @@ namespace SabreTools.Serialization
         public static Models.Internal.Dump ConvertFromOpenMSX(Models.OpenMSX.Dump item)
         {
             var dump = new Models.Internal.Dump();
-            
+
             if (item.Original != null)
                 dump[Models.Internal.Dump.OriginalKey] = ConvertFromOpenMSX(item.Original);
 
@@ -1310,7 +1310,7 @@ namespace SabreTools.Serialization
         }
 
         #endregion
-        
+
         #region RomCenter
 
         /// <summary>
@@ -1326,6 +1326,49 @@ namespace SabreTools.Serialization
                 [Models.Internal.Rom.MergeKey] = item.MergeName,
             };
             return rom;
+        }
+
+        #endregion
+
+        #region SeparatedValue
+
+        /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.DatItem"/>
+        /// </summary>
+        public static Models.Internal.DatItem? ConvertFromSeparatedValue(Models.SeparatedValue.Row item)
+        {
+            return item.Type switch
+            {
+                "disk" => new Models.Internal.Disk
+                {
+                    [Models.Internal.Disk.NameKey] = item.DiskName,
+                    [Models.Internal.Disk.MD5Key] = item.MD5,
+                    [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                    [Models.Internal.Disk.StatusKey] = item.Status,
+                },
+                "media" => new Models.Internal.Media
+                {
+                    [Models.Internal.Media.NameKey] = item.DiskName,
+                    [Models.Internal.Media.MD5Key] = item.MD5,
+                    [Models.Internal.Media.SHA1Key] = item.SHA1,
+                    [Models.Internal.Media.SHA256Key] = item.SHA256,
+                    [Models.Internal.Media.SpamSumKey] = item.SpamSum,
+                },
+                "rom" => new Models.Internal.Rom
+                {
+                    [Models.Internal.Rom.NameKey] = item.RomName,
+                    [Models.Internal.Rom.SizeKey] = item.Size,
+                    [Models.Internal.Rom.CRCKey] = item.CRC,
+                    [Models.Internal.Rom.MD5Key] = item.MD5,
+                    [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                    [Models.Internal.Rom.SHA256Key] = item.SHA256,
+                    [Models.Internal.Rom.SHA384Key] = item.SHA384,
+                    [Models.Internal.Rom.SHA512Key] = item.SHA512,
+                    [Models.Internal.Rom.SpamSumKey] = item.SpamSum,
+                    [Models.Internal.Rom.StatusKey] = item.Status,
+                },
+                _ => null,
+            };
         }
 
         #endregion
