@@ -1415,5 +1415,226 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+        
+        #region SoftwareList
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.DataArea"/> to <cref="Models.SoftwareList.DataArea"/>
+        /// </summary>
+        public static Models.SoftwareList.DataArea ConvertToSoftwareList(Models.Internal.DataArea item)
+        {
+            var dataArea = new Models.SoftwareList.DataArea
+            {
+                Name = item.ReadString(Models.Internal.DataArea.NameKey),
+                Size = item.ReadString(Models.Internal.DataArea.SizeKey),
+                Width = item.ReadString(Models.Internal.DataArea.WidthKey),
+                Endianness = item.ReadString(Models.Internal.DataArea.EndiannessKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.DataArea.RomKey) && item[Models.Internal.DataArea.RomKey] is Models.Internal.Rom[] roms)
+            {
+                var romItems = new List<Models.SoftwareList.Rom>();
+                foreach (var rom in roms)
+                {
+                    romItems.Add(ConvertToSoftwareList(rom));
+                }
+                dataArea.Rom = romItems.ToArray();
+            }
+
+            return dataArea;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.SoftwareList.DipSwitch"/>
+        /// </summary>
+        public static Models.SoftwareList.DipSwitch ConvertToSoftwareList(Models.Internal.DipSwitch item)
+        {
+            var dipSwitch = new Models.SoftwareList.DipSwitch
+            {
+                Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
+                Tag = item.ReadString(Models.Internal.DipSwitch.TagKey),
+                Mask = item.ReadString(Models.Internal.DipSwitch.MaskKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.DipSwitch.DipValueKey) && item[Models.Internal.DipSwitch.DipValueKey] is Models.Internal.DipValue[] dipValues)
+            {
+                var dipValueItems = new List<Models.SoftwareList.DipValue>();
+                foreach (var rom in dipValues)
+                {
+                    dipValueItems.Add(ConvertToSoftwareList(rom));
+                }
+                dipSwitch.DipValue = dipValueItems.ToArray();
+            }
+
+            return dipSwitch;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.SoftwareList.DipValue"/>
+        /// </summary>
+        public static Models.SoftwareList.DipValue ConvertToSoftwareList(Models.Internal.DipValue item)
+        {
+            var dipValue = new Models.SoftwareList.DipValue
+            {
+                Name = item.ReadString(Models.Internal.DipValue.NameKey),
+                Value = item.ReadString(Models.Internal.DipValue.ValueKey),
+                Default = item.ReadString(Models.Internal.DipValue.DefaultKey),
+            };
+            return dipValue;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SoftwareList.Disk"/>
+        /// </summary>
+        public static Models.SoftwareList.Disk ConvertToSoftwareList(Models.Internal.Disk item)
+        {
+            var disk = new Models.SoftwareList.Disk
+            {
+                Name = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Status = item.ReadString(Models.Internal.Disk.StatusKey),
+                Writeable = item.ReadString(Models.Internal.Disk.WritableKey),
+            };
+            return disk;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.DiskArea"/> to <cref="Models.SoftwareList.DiskArea"/>
+        /// </summary>
+        public static Models.SoftwareList.DiskArea ConvertToSoftwareList(Models.Internal.DiskArea item)
+        {
+            var diskArea = new Models.SoftwareList.DiskArea
+            {
+                Name = item.ReadString(Models.Internal.DiskArea.NameKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.DiskArea.DiskKey) && item[Models.Internal.DiskArea.DiskKey] is Models.Internal.Disk[] disks)
+            {
+                var diskItems = new List<Models.SoftwareList.Disk>();
+                foreach (var disk in disks)
+                {
+                    diskItems.Add(ConvertToSoftwareList(disk));
+                }
+                diskArea.Disk = diskItems.ToArray();
+            }
+
+            return diskArea;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.SoftwareList.Feature"/>
+        /// </summary>
+        public static Models.SoftwareList.Feature ConvertToSoftwareList(Models.Internal.Feature item)
+        {
+            var feature = new Models.SoftwareList.Feature
+            {
+                Name = item.ReadString(Models.Internal.Feature.NameKey),
+                Value = item.ReadString(Models.Internal.Feature.ValueKey),
+            };
+            return feature;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Info"/> to <cref="Models.SoftwareList.Info"/>
+        /// </summary>
+        public static Models.SoftwareList.Info ConvertToSoftwareList(Models.Internal.Info item)
+        {
+            var info = new Models.SoftwareList.Info
+            {
+                Name = item.ReadString(Models.Internal.Info.NameKey),
+                Value = item.ReadString(Models.Internal.Info.ValueKey),
+            };
+            return info;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Part"/> to <cref="Models.SoftwareList.Part"/>
+        /// </summary>
+        public static Models.SoftwareList.Part ConvertToSoftwareList(Models.Internal.Part item)
+        {
+            var part = new Models.SoftwareList.Part
+            {
+                Name = item.ReadString(Models.Internal.Part.NameKey),
+                Interface = item.ReadString(Models.Internal.Part.InterfaceKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Part.FeatureKey) && item[Models.Internal.Part.FeatureKey] is Models.Internal.Feature[] features)
+            {
+                var featureItems = new List<Models.SoftwareList.Feature>();
+                foreach (var feature in features)
+                {
+                    featureItems.Add(ConvertToSoftwareList(feature));
+                }
+                part.Feature = featureItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Part.DataAreaKey) && item[Models.Internal.Part.DataAreaKey] is Models.Internal.DataArea[] dataAreas)
+            {
+                var dataAreaItems = new List<Models.SoftwareList.DataArea>();
+                foreach (var dataArea in dataAreas)
+                {
+                    dataAreaItems.Add(ConvertToSoftwareList(dataArea));
+                }
+                part.DataArea = dataAreaItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Part.DiskAreaKey) && item[Models.Internal.Part.DiskAreaKey] is Models.Internal.DiskArea[] diskAreas)
+            {
+                var diskAreaItems = new List<Models.SoftwareList.DiskArea>();
+                foreach (var diskArea in diskAreas)
+                {
+                    diskAreaItems.Add(ConvertToSoftwareList(diskArea));
+                }
+                part.DiskArea = diskAreaItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Part.DipSwitchKey) && item[Models.Internal.Part.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitches)
+            {
+                var dipSwitchItems = new List<Models.SoftwareList.DipSwitch>();
+                foreach (var rom in dipSwitches)
+                {
+                    dipSwitchItems.Add(ConvertToSoftwareList(rom));
+                }
+                part.DipSwitch = dipSwitchItems.ToArray();
+            }
+
+            return part;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SoftwareList.Rom"/>
+        /// </summary>
+        public static Models.SoftwareList.Rom ConvertToSoftwareList(Models.Internal.Rom item)
+        {
+            var rom = new Models.SoftwareList.Rom
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                Length = item.ReadString(Models.Internal.Rom.LengthKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                Offset = item.ReadString(Models.Internal.Rom.OffsetKey),
+                Value = item.ReadString(Models.Internal.Rom.ValueKey),
+                Status = item.ReadString(Models.Internal.Rom.StatusKey),
+                LoadFlag = item.ReadString(Models.Internal.Rom.LoadFlagKey),
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.SharedFeat"/> to <cref="Models.SoftwareList.SharedFeat"/>
+        /// </summary>
+        public static Models.SoftwareList.SharedFeat ConvertToSoftwareList(Models.Internal.SharedFeat item)
+        {
+            var sharedFeat = new Models.SoftwareList.SharedFeat
+            {
+                Name = item.ReadString(Models.Internal.SharedFeat.NameKey),
+                Value = item.ReadString(Models.Internal.SharedFeat.ValueKey),
+            };
+            return sharedFeat;
+        }
+
+        #endregion
     }
 }
