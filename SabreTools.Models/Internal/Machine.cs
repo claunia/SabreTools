@@ -54,6 +54,9 @@ namespace SabreTools.Models.Internal
         /// <remarks>string</remarks>
         public const string DescriptionKey = "description";
 
+        /// <remarks>Device[]</remarks>
+        public const string DeviceKey = "device";
+
         /// <remarks>DeviceRef[]</remarks>
         public const string DeviceRefKey = "device_ref";
 
@@ -89,6 +92,9 @@ namespace SabreTools.Models.Internal
 
         /// <remarks>string</remarks>
         public const string FavoriteKey = "favorite";
+
+        /// <remarks>Feature[]</remarks>
+        public const string FeatureKey = "feature";
 
         /// <remarks>string</remarks>
         public const string GenMSXIDKey = "genmsxid";

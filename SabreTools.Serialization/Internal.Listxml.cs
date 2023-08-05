@@ -11,6 +11,210 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Listxml.GameBase"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromListxml(Models.Listxml.GameBase item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Internal.Machine.SourceFileKey] = item.SourceFile,
+                [Models.Internal.Machine.IsBiosKey] = item.IsBios,
+                [Models.Internal.Machine.IsDeviceKey] = item.IsDevice,
+                [Models.Internal.Machine.IsMechanicalKey] = item.IsMechanical,
+                [Models.Internal.Machine.RunnableKey] = item.Runnable,
+                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Internal.Machine.RomOfKey] = item.RomOf,
+                [Models.Internal.Machine.SampleOfKey] = item.SampleOf,
+                [Models.Internal.Machine.DescriptionKey] = item.Description,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Internal.Machine.HistoryKey] = item.History,
+            };
+
+            if (item.BiosSet != null && item.BiosSet.Any())
+            {
+                var biosSets = new List<Models.Internal.BiosSet>();
+                foreach (var biosSet in item.BiosSet)
+                {
+                    biosSets.Add(ConvertFromListxml(biosSet));
+                }
+                machine[Models.Internal.Machine.BiosSetKey] = biosSets.ToArray();
+            }
+
+            if (item.Rom != null && item.Rom.Any())
+            {
+                var roms = new List<Models.Internal.Rom>();
+                foreach (var rom in item.Rom)
+                {
+                    roms.Add(ConvertFromListxml(rom));
+                }
+                machine[Models.Internal.Machine.RomKey] = roms.ToArray();
+            }
+
+            if (item.Disk != null && item.Disk.Any())
+            {
+                var disks = new List<Models.Internal.Disk>();
+                foreach (var disk in item.Disk)
+                {
+                    disks.Add(ConvertFromListxml(disk));
+                }
+                machine[Models.Internal.Machine.DiskKey] = disks.ToArray();
+            }
+
+            if (item.DeviceRef != null && item.DeviceRef.Any())
+            {
+                var deviceRefs = new List<Models.Internal.DeviceRef>();
+                foreach (var deviceRef in item.DeviceRef)
+                {
+                    deviceRefs.Add(ConvertFromListxml(deviceRef));
+                }
+                machine[Models.Internal.Machine.DeviceRefKey] = deviceRefs.ToArray();
+            }
+
+            if (item.Sample != null && item.Sample.Any())
+            {
+                var samples = new List<Models.Internal.Sample>();
+                foreach (var sample in item.Sample)
+                {
+                    samples.Add(ConvertFromListxml(sample));
+                }
+                machine[Models.Internal.Machine.SampleKey] = samples.ToArray();
+            }
+
+            if (item.Chip != null && item.Chip.Any())
+            {
+                var chips = new List<Models.Internal.Chip>();
+                foreach (var chip in item.Chip)
+                {
+                    chips.Add(ConvertFromListxml(chip));
+                }
+                machine[Models.Internal.Machine.ChipKey] = chips.ToArray();
+            }
+
+            if (item.Display != null && item.Display.Any())
+            {
+                var displays = new List<Models.Internal.Display>();
+                foreach (var display in item.Display)
+                {
+                    displays.Add(ConvertFromListxml(display));
+                }
+                machine[Models.Internal.Machine.DisplayKey] = displays.ToArray();
+            }
+
+            if (item.Video != null && item.Video.Any())
+            {
+                var videos = new List<Models.Internal.Video>();
+                foreach (var video in item.Video)
+                {
+                    videos.Add(ConvertFromListxml(video));
+                }
+                machine[Models.Internal.Machine.VideoKey] = videos.ToArray();
+            }
+
+            if (item.Sound != null)
+                machine[Models.Internal.Machine.SoundKey] = ConvertFromListxml(item.Sound);
+
+            if (item.Input != null)
+                machine[Models.Internal.Machine.InputKey] = ConvertFromListxml(item.Input);
+
+            if (item.DipSwitch != null && item.DipSwitch.Any())
+            {
+                var dipSwitches = new List<Models.Internal.DipSwitch>();
+                foreach (var dipSwitch in item.DipSwitch)
+                {
+                    dipSwitches.Add(ConvertFromListxml(dipSwitch));
+                }
+                machine[Models.Internal.Machine.DipSwitchKey] = dipSwitches.ToArray();
+            }
+
+            if (item.Configuration != null && item.Configuration.Any())
+            {
+                var configurations = new List<Models.Internal.Configuration>();
+                foreach (var configuration in item.Configuration)
+                {
+                    configurations.Add(ConvertFromListxml(configuration));
+                }
+                machine[Models.Internal.Machine.ConfigurationKey] = configurations.ToArray();
+            }
+
+            if (item.Port != null && item.Port.Any())
+            {
+                var ports = new List<Models.Internal.Port>();
+                foreach (var port in item.Port)
+                {
+                    ports.Add(ConvertFromListxml(port));
+                }
+                machine[Models.Internal.Machine.PortKey] = ports.ToArray();
+            }
+
+            if (item.Adjuster != null && item.Adjuster.Any())
+            {
+                var adjusters = new List<Models.Internal.Adjuster>();
+                foreach (var adjuster in item.Adjuster)
+                {
+                    adjusters.Add(ConvertFromListxml(adjuster));
+                }
+                machine[Models.Internal.Machine.AdjusterKey] = adjusters.ToArray();
+            }
+
+            if (item.Driver != null)
+                machine[Models.Internal.Machine.DriverKey] = ConvertFromListxml(item.Driver);
+
+            if (item.Feature != null && item.Feature.Any())
+            {
+                var features = new List<Models.Internal.Feature>();
+                foreach (var feature in item.Feature)
+                {
+                    features.Add(ConvertFromListxml(feature));
+                }
+                machine[Models.Internal.Machine.FeatureKey] = features.ToArray();
+            }
+
+            if (item.Device != null && item.Device.Any())
+            {
+                var devices = new List<Models.Internal.Device>();
+                foreach (var device in item.Device)
+                {
+                    devices.Add(ConvertFromListxml(device));
+                }
+                machine[Models.Internal.Machine.DeviceKey] = devices.ToArray();
+            }
+
+            if (item.Slot != null && item.Slot.Any())
+            {
+                var slots = new List<Models.Internal.Slot>();
+                foreach (var slot in item.Slot)
+                {
+                    slots.Add(ConvertFromListxml(slot));
+                }
+                machine[Models.Internal.Machine.SlotKey] = slots.ToArray();
+            }
+
+            if (item.SoftwareList != null && item.SoftwareList.Any())
+            {
+                var softwareLists = new List<Models.Internal.SoftwareList>();
+                foreach (var softwareList in item.SoftwareList)
+                {
+                    softwareLists.Add(ConvertFromListxml(softwareList));
+                }
+                machine[Models.Internal.Machine.SoftwareListKey] = softwareLists.ToArray();
+            }
+
+            if (item.RamOption != null && item.RamOption.Any())
+            {
+                var ramOptions = new List<Models.Internal.RamOption>();
+                foreach (var ramOption in item.RamOption)
+                {
+                    ramOptions.Add(ConvertFromListxml(ramOption));
+                }
+                machine[Models.Internal.Machine.RamOptionKey] = ramOptions.ToArray();
+            }
+
+            return machine;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Listxml.Adjuster"/> to <cref="Models.Internal.Adjuster"/>
         /// </summary>
         public static Models.Internal.Adjuster ConvertFromListxml(Models.Listxml.Adjuster item)
@@ -579,6 +783,210 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listxml.GameBase"/>
+        /// </summary>
+        public static Models.Listxml.GameBase ConvertMachineToListxml(Models.Internal.Machine item)
+        {
+            var machine = new Models.Listxml.Machine
+            {
+                Name = item.ReadString(Models.Internal.Machine.NameKey),
+                SourceFile = item.ReadString(Models.Internal.Machine.SourceFileKey),
+                IsBios = item.ReadString(Models.Internal.Machine.IsBiosKey),
+                IsDevice = item.ReadString(Models.Internal.Machine.IsDeviceKey),
+                IsMechanical = item.ReadString(Models.Internal.Machine.IsMechanicalKey),
+                Runnable = item.ReadString(Models.Internal.Machine.RunnableKey),
+                CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey),
+                RomOf = item.ReadString(Models.Internal.Machine.RomOfKey),
+                SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey),
+                Description = item.ReadString(Models.Internal.Machine.DescriptionKey),
+                Year = item.ReadString(Models.Internal.Machine.YearKey),
+                Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey),
+                History = item.ReadString(Models.Internal.Machine.HistoryKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Machine.BiosSetKey) && item[Models.Internal.Machine.BiosSetKey] is Models.Internal.BiosSet[] biosSets)
+            {
+                var biosSetItems = new List<Models.Listxml.BiosSet>();
+                foreach (var biosSet in biosSets)
+                {
+                    biosSetItems.Add(ConvertToListxml(biosSet));
+                }
+                machine.BiosSet = biosSetItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
+            {
+                var romItems = new List<Models.Listxml.Rom>();
+                foreach (var rom in roms)
+                {
+                    romItems.Add(ConvertToListxml(rom));
+                }
+                machine.Rom = romItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
+            {
+                var diskItems = new List<Models.Listxml.Disk>();
+                foreach (var disk in disks)
+                {
+                    diskItems.Add(ConvertToListxml(disk));
+                }
+                machine.Disk = diskItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DeviceRefKey) && item[Models.Internal.Machine.DeviceRefKey] is Models.Internal.DeviceRef[] deviceRefs)
+            {
+                var deviceRefItems = new List<Models.Listxml.DeviceRef>();
+                foreach (var deviceRef in deviceRefs)
+                {
+                    deviceRefItems.Add(ConvertToListxml(deviceRef));
+                }
+                machine.DeviceRef = deviceRefItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SampleKey) && item[Models.Internal.Machine.SampleKey] is Models.Internal.Sample[] samples)
+            {
+                var sampleItems = new List<Models.Listxml.Sample>();
+                foreach (var sample in samples)
+                {
+                    sampleItems.Add(ConvertToListxml(sample));
+                }
+                machine.Sample = sampleItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.ChipKey) && item[Models.Internal.Machine.ChipKey] is Models.Internal.Chip[] chips)
+            {
+                var chipItems = new List<Models.Listxml.Chip>();
+                foreach (var chip in chips)
+                {
+                    chipItems.Add(ConvertToListxml(chip));
+                }
+                machine.Chip = chipItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DisplayKey) && item[Models.Internal.Machine.DisplayKey] is Models.Internal.Display[] displays)
+            {
+                var displayItems = new List<Models.Listxml.Display>();
+                foreach (var display in displays)
+                {
+                    displayItems.Add(ConvertToListxml(display));
+                }
+                machine.Display = displayItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.VideoKey) && item[Models.Internal.Machine.VideoKey] is Models.Internal.Video[] videos)
+            {
+                var videoItems = new List<Models.Listxml.Video>();
+                foreach (var video in videos)
+                {
+                    videoItems.Add(ConvertToListxml(video));
+                }
+                machine.Video = videoItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SoundKey) && item[Models.Internal.Machine.SoundKey] is Models.Internal.Sound sound)
+                machine.Sound = ConvertToListxml(sound);
+
+            if (item.ContainsKey(Models.Internal.Machine.InputKey) && item[Models.Internal.Machine.InputKey] is Models.Internal.Input input)
+                machine.Input = ConvertToListxml(input);
+
+            if (item.ContainsKey(Models.Internal.Machine.DipSwitchKey) && item[Models.Internal.Machine.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitches)
+            {
+                var dipSwitchItems = new List<Models.Listxml.DipSwitch>();
+                foreach (var dipSwitch in dipSwitches)
+                {
+                    dipSwitchItems.Add(ConvertToListxml(dipSwitch));
+                }
+                machine.DipSwitch = dipSwitchItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.ConfigurationKey) && item[Models.Internal.Machine.ConfigurationKey] is Models.Internal.Configuration[] configurations)
+            {
+                var configurationItems = new List<Models.Listxml.Configuration>();
+                foreach (var configuration in configurations)
+                {
+                    configurationItems.Add(ConvertToListxml(configuration));
+                }
+                machine.Configuration = configurationItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.PortKey) && item[Models.Internal.Machine.PortKey] is Models.Internal.Port[] ports)
+            {
+                var portItems = new List<Models.Listxml.Port>();
+                foreach (var port in ports)
+                {
+                    portItems.Add(ConvertToListxml(port));
+                }
+                machine.Port = portItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.AdjusterKey) && item[Models.Internal.Machine.AdjusterKey] is Models.Internal.Adjuster[] adjusters)
+            {
+                var adjusterItems = new List<Models.Listxml.Adjuster>();
+                foreach (var adjuster in adjusters)
+                {
+                    adjusterItems.Add(ConvertToListxml(adjuster));
+                }
+                machine.Adjuster = adjusterItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DriverKey) && item[Models.Internal.Machine.DriverKey] is Models.Internal.Driver driver)
+                machine.Driver = ConvertToListxml(driver);
+
+            if (item.ContainsKey(Models.Internal.Machine.FeatureKey) && item[Models.Internal.Machine.FeatureKey] is Models.Internal.Feature[] features)
+            {
+                var featureItems = new List<Models.Listxml.Feature>();
+                foreach (var feature in features)
+                {
+                    featureItems.Add(ConvertToListxml(feature));
+                }
+                machine.Feature = featureItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DeviceKey) && item[Models.Internal.Machine.DeviceKey] is Models.Internal.Device[] devices)
+            {
+                var deviceItems = new List<Models.Listxml.Device>();
+                foreach (var device in devices)
+                {
+                    deviceItems.Add(ConvertToListxml(device));
+                }
+                machine.Device = deviceItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SlotKey) && item[Models.Internal.Machine.SlotKey] is Models.Internal.Slot[] slots)
+            {
+                var slotItems = new List<Models.Listxml.Slot>();
+                foreach (var slot in slots)
+                {
+                    slotItems.Add(ConvertToListxml(slot));
+                }
+                machine.Slot = slotItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SoftwareListKey) && item[Models.Internal.Machine.SoftwareListKey] is Models.Internal.SoftwareList[] softwareLists)
+            {
+                var softwareListItems = new List<Models.Listxml.SoftwareList>();
+                foreach (var softwareList in softwareLists)
+                {
+                    softwareListItems.Add(ConvertToListxml(softwareList));
+                }
+                machine.SoftwareList = softwareListItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.RamOptionKey) && item[Models.Internal.Machine.RamOptionKey] is Models.Internal.RamOption[] ramOptions)
+            {
+                var ramOptionItems = new List<Models.Listxml.RamOption>();
+                foreach (var ramOption in ramOptions)
+                {
+                    ramOptionItems.Add(ConvertToListxml(ramOption));
+                }
+                machine.RamOption = ramOptionItems.ToArray();
+            }
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Adjuster"/> to <cref="Models.Listxml.Adjuster"/>
