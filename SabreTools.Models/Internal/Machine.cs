@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace SabreTools.Models.Internal
 {
     /// <summary>
-    /// Format-agnostic representation of item data
+    /// Format-agnostic representation of game, machine, and set data
     /// </summary>
     public class Machine : Dictionary<string, object?>
     {
