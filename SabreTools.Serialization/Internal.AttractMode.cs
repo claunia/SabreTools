@@ -17,6 +17,7 @@ namespace SabreTools.Serialization
                 [Models.Internal.Rom.NameKey] = item.Title,
                 [Models.Internal.Rom.AltRomnameKey] = item.AltRomname,
                 [Models.Internal.Rom.AltTitleKey] = item.AltTitle,
+                [Models.Internal.Rom.FileIsAvailableKey] = item.FileIsAvailable,
             };
             return rom;
         }
@@ -35,6 +36,7 @@ namespace SabreTools.Serialization
                 Title = item.ReadString(Models.Internal.Rom.NameKey),
                 AltRomname = item.ReadString(Models.Internal.Rom.AltRomnameKey),
                 AltTitle = item.ReadString(Models.Internal.Rom.AltTitleKey),
+                FileIsAvailable = item.ReadString(Models.Internal.Rom.FileIsAvailableKey),
             };
             return row;
         }

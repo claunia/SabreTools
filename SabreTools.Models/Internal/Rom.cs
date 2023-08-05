@@ -66,7 +66,7 @@ namespace SabreTools.Models.Internal
         public const string FileCountKey = "filecount";
 
         /// <remarks>bool; AttractMode.Row</remarks>
-        public const string FileIsAvailable = "file_is_available";
+        public const string FileIsAvailableKey = "file_is_available";
 
         /// <remarks>string</remarks>
         public const string FlagsKey = "flags";
