@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +9,36 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.GameName,
+                [Models.Internal.Machine.DescriptionKey] = item.GameDescription,
+            };
+
+            var datItem = ConvertFromSeparatedValue(item);
+            switch (datItem)
+            {
+                case Models.Internal.Disk disk:
+                    machine[Models.Internal.Machine.DiskKey] = new Models.Internal.Disk[] { disk };
+                    break;
+
+                case Models.Internal.Media media:
+                    machine[Models.Internal.Machine.MediaKey] = new Models.Internal.Media[] { media };
+                    break;
+                    
+                case Models.Internal.Rom rom:
+                    machine[Models.Internal.Machine.RomKey] = new Models.Internal.Rom[] { rom };
+                    break;
+            }
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.DatItem"/>
@@ -49,6 +82,49 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        public static Models.SeparatedValue.Row[] ConvertMachineToSeparatedValue(Models.Internal.Machine item)
+        {
+            var rowItems = new List<Models.SeparatedValue.Row>();
+
+            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
+            {
+                foreach (var disk in disks)
+                {
+                    var rowItem = ConvertToSeparatedValue(disk);
+                    rowItem.GameName = item.ReadString(Models.Internal.Machine.NameKey);
+                    rowItem.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
+                    rowItems.Add(rowItem);
+                }
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.MediaKey) && item[Models.Internal.Machine.MediaKey] is Models.Internal.Media[] media)
+            {
+                foreach (var medium in media)
+                {
+                    var rowItem = ConvertToSeparatedValue(medium);
+                    rowItem.GameName = item.ReadString(Models.Internal.Machine.NameKey);
+                    rowItem.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
+                    rowItems.Add(rowItem);
+                }
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
+            {
+                foreach (var rom in roms)
+                {
+                    var rowItem = ConvertToSeparatedValue(rom);
+                    rowItem.GameName = item.ReadString(Models.Internal.Machine.NameKey);
+                    rowItem.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
+                    rowItems.Add(rowItem);
+                }
+            }
+
+            return rowItems.ToArray();
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SeparatedValue.Row"/>
