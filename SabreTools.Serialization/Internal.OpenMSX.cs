@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +9,34 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.OpenMSX.Software"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromOpenMSX(Models.OpenMSX.Software item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Title,
+                [Models.Internal.Machine.GenMSXIDKey] = item.GenMSXID,
+                [Models.Internal.Machine.SystemKey] = item.System,
+                [Models.Internal.Machine.CompanyKey] = item.Company,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.CountryKey] = item.Country,
+            };
+
+            if (item.Dump != null && item.Dump.Any())
+            {
+                var dumps = new List<Models.Internal.Dump>();
+                foreach (var dump in item.Dump)
+                {
+                    dumps.Add(ConvertFromOpenMSX(dump));
+                }
+                machine[Models.Internal.Machine.DumpKey] = dumps.ToArray();
+            }
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.Dump"/> to <cref="Models.Internal.Dump"/>
@@ -66,6 +97,34 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OpenMSX.Software"/>
+        /// </summary>
+        public static Models.OpenMSX.Software ConvertMachineToOpenMSX(Models.Internal.Machine item)
+        {
+            var game = new Models.OpenMSX.Software
+            {
+                Title = item.ReadString(Models.Internal.Machine.NameKey),
+                GenMSXID = item.ReadString(Models.Internal.Machine.GenMSXIDKey),
+                System = item.ReadString(Models.Internal.Machine.SystemKey),
+                Company = item.ReadString(Models.Internal.Machine.CompanyKey),
+                Year = item.ReadString(Models.Internal.Machine.YearKey),
+                Country = item.ReadString(Models.Internal.Machine.CountryKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Machine.DumpKey) && item[Models.Internal.Machine.DumpKey] is Models.Internal.Dump[] dumps)
+            {
+                var dumpItems = new List<Models.OpenMSX.Dump>();
+                foreach (var dump in dumps)
+                {
+                    dumpItems.Add(ConvertToOpenMSX(dump));
+                }
+                game.Dump = dumpItems.ToArray();
+            }
+
+            return game;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Dump"/> to <cref="Models.OpenMSX.Dump"/>
