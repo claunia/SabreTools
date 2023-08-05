@@ -1337,5 +1337,24 @@ namespace SabreTools.Serialization
         }
 
         #endregion
+        
+        #region RomCenter
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.RomCenter.Rom"/>
+        /// </summary>
+        public static Models.RomCenter.Rom ConvertToRomCenter(Models.Internal.Rom item)
+        {
+            var row = new Models.RomCenter.Rom
+            {
+                RomName = item.ReadString(Models.Internal.Rom.NameKey),
+                RomCRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                RomSize = item.ReadString(Models.Internal.Rom.SizeKey),
+                MergeName = item.ReadString(Models.Internal.Rom.MergeKey),
+            };
+            return row;
+        }
+
+        #endregion
     }
 }
