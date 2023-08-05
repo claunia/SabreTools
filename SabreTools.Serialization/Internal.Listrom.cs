@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +9,37 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Listrom.Set"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromListrom(Models.Listrom.Set item)
+        {
+            var machine = new Models.Internal.Machine();
+            if (!string.IsNullOrWhiteSpace(item.Device))
+            {
+                machine[Models.Internal.Machine.NameKey] = item.Device;
+                machine[Models.Internal.Machine.IsDeviceKey] = "yes";
+            }
+            else
+            {
+                machine[Models.Internal.Machine.NameKey] = item.Driver;
+            }
+
+            if (item.Row != null && item.Row.Any())
+            {
+                var datItems = new List<Models.Internal.DatItem>();
+                foreach (var file in item.Row)
+                {
+                    datItems.Add(ConvertFromListrom(file));
+                }
+
+                machine[Models.Internal.Machine.DiskKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "disk").ToArray();
+                machine[Models.Internal.Machine.RomKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "rom").ToArray();
+            }
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Listrom.Row"/> to <cref="Models.Internal.DatItem"/>
@@ -50,6 +84,41 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listrom.Set"/>
+        /// </summary>
+        public static Models.Listrom.Set ConvertMachineToListrom(Models.Internal.Machine item)
+        {
+            var set = new Models.Listrom.Set();
+            if (item.ReadString(Models.Internal.Machine.IsDeviceKey) == "yes")
+                set.Device = item.ReadString(Models.Internal.Machine.NameKey);
+            else
+                set.Driver = item.ReadString(Models.Internal.Machine.NameKey);
+
+            var rowItems = new List<Models.Listrom.Row>();
+
+            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
+            {
+                foreach (var rom in roms)
+                {
+                    rowItems.Add(ConvertToListrom(rom));
+                }
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
+            {
+                foreach (var disk in disks)
+                {
+                    rowItems.Add(ConvertToListrom(disk));
+                }
+            }
+
+            if (rowItems.Any())
+                set.Row = rowItems.ToArray();
+
+            return set;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
