@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +9,29 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.DosCenter.Game"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromDosCenter(Models.DosCenter.Game item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+            };
+
+            if (item.File != null && item.File.Any())
+            {
+                var roms = new List<Models.Internal.Rom>();
+                foreach (var file in item.File)
+                {
+                    roms.Add(ConvertFromDosCenter(file));
+                }
+                machine[Models.Internal.Machine.RomKey] = roms.ToArray();
+            }
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.DosCenter.File"/> to <cref="Models.Internal.Rom"/>
@@ -25,6 +51,29 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.DosCenter.Game"/>
+        /// </summary>
+        public static Models.DosCenter.Game ConvertMachineToDosCenter(Models.Internal.Machine item)
+        {
+            var game = new Models.DosCenter.Game
+            {
+                Name = item.ReadString(Models.Internal.Machine.NameKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
+            {
+                var fileItems = new List<Models.DosCenter.File>();
+                foreach (var rom in roms)
+                {
+                    fileItems.Add(ConvertToDosCenter(rom));
+                }
+                game.File = fileItems.ToArray();
+            }
+
+            return game;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.DosCenter.File"/>
