@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -6,6 +9,128 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.GameBase"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        public static Models.Internal.Machine ConvertMachineFromClrMamePro(Models.ClrMamePro.GameBase item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Internal.Machine.DescriptionKey] = item.Description,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Internal.Machine.CategoryKey] = item.Category,
+                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Internal.Machine.RomOfKey] = item.RomOf,
+                [Models.Internal.Machine.SampleOfKey] = item.SampleOf,
+            };
+
+            if (item.Release != null && item.Release.Any())
+            {
+                var releases = new List<Models.Internal.Release>();
+                foreach (var release in item.Release)
+                {
+                    releases.Add(ConvertFromClrMamePro(release));
+                }
+                machine[Models.Internal.Machine.ReleaseKey] = releases.ToArray();
+            }
+
+            if (item.BiosSet != null && item.BiosSet.Any())
+            {
+                var biosSets = new List<Models.Internal.BiosSet>();
+                foreach (var biosSet in item.BiosSet)
+                {
+                    biosSets.Add(ConvertFromClrMamePro(biosSet));
+                }
+                machine[Models.Internal.Machine.BiosSetKey] = biosSets.ToArray();
+            }
+
+            if (item.Rom != null && item.Rom.Any())
+            {
+                var roms = new List<Models.Internal.Rom>();
+                foreach (var rom in item.Rom)
+                {
+                    roms.Add(ConvertFromClrMamePro(rom));
+                }
+                machine[Models.Internal.Machine.RomKey] = roms.ToArray();
+            }
+
+            if (item.Disk != null && item.Disk.Any())
+            {
+                var disks = new List<Models.Internal.Disk>();
+                foreach (var disk in item.Disk)
+                {
+                    disks.Add(ConvertFromClrMamePro(disk));
+                }
+                machine[Models.Internal.Machine.DiskKey] = disks.ToArray();
+            }
+
+            if (item.Media != null && item.Media.Any())
+            {
+                var medias = new List<Models.Internal.Media>();
+                foreach (var media in item.Media)
+                {
+                    medias.Add(ConvertFromClrMamePro(media));
+                }
+                machine[Models.Internal.Machine.MediaKey] = medias.ToArray();
+            }
+
+            if (item.Sample != null && item.Sample.Any())
+            {
+                var samples = new List<Models.Internal.Sample>();
+                foreach (var sample in item.Sample)
+                {
+                    samples.Add(ConvertFromClrMamePro(sample));
+                }
+                machine[Models.Internal.Machine.SampleKey] = samples.ToArray();
+            }
+
+            if (item.Archive != null && item.Archive.Any())
+            {
+                var archives = new List<Models.Internal.Archive>();
+                foreach (var archive in item.Archive)
+                {
+                    archives.Add(ConvertFromClrMamePro(archive));
+                }
+                machine[Models.Internal.Machine.ArchiveKey] = archives.ToArray();
+            }
+
+            if (item.Chip != null && item.Chip.Any())
+            {
+                var chips = new List<Models.Internal.Chip>();
+                foreach (var chip in item.Chip)
+                {
+                    chips.Add(ConvertFromClrMamePro(chip));
+                }
+                machine[Models.Internal.Machine.ChipKey] = chips.ToArray();
+            }
+
+            if (item.Video != null)
+                machine[Models.Internal.Machine.VideoKey] = ConvertFromClrMamePro(item.Video);
+
+            if (item.Sound != null)
+                machine[Models.Internal.Machine.SoundKey] = ConvertFromClrMamePro(item.Sound);
+
+            if (item.Input != null)
+                machine[Models.Internal.Machine.InputKey] = ConvertFromClrMamePro(item.Input);
+
+            if (item.DipSwitch != null && item.DipSwitch.Any())
+            {
+                var dipSwitchs = new List<Models.Internal.DipSwitch>();
+                foreach (var dipSwitch in item.DipSwitch)
+                {
+                    dipSwitchs.Add(ConvertFromClrMamePro(dipSwitch));
+                }
+                machine[Models.Internal.Machine.DipSwitchKey] = dipSwitchs.ToArray();
+            }
+
+            if (item.Driver != null)
+                machine[Models.Internal.Machine.DriverKey] = ConvertFromClrMamePro(item.Driver);
+
+            return machine;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Archive"/> to <cref="Models.Internal.Archive"/>
@@ -221,6 +346,127 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
+        /// </summary>
+        public static Models.ClrMamePro.GameBase ConvertMachineToClrMamePro(Models.Internal.Machine item, bool game = false)
+        {
+            Models.ClrMamePro.GameBase gameBase = game ? new Models.ClrMamePro.Game() : new Models.ClrMamePro.Machine();
+
+            gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
+            gameBase.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
+            gameBase.Year = item.ReadString(Models.Internal.Machine.YearKey);
+            gameBase.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
+            gameBase.Category = item.ReadString(Models.Internal.Machine.CategoryKey);
+            gameBase.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
+            gameBase.RomOf = item.ReadString(Models.Internal.Machine.RomOfKey);
+            gameBase.SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey);
+
+            if (item.ContainsKey(Models.Internal.Machine.ReleaseKey) && item[Models.Internal.Machine.ReleaseKey] is Models.Internal.Release[] releases)
+            {
+                var releaseItems = new List<Models.ClrMamePro.Release>();
+                foreach (var release in releases)
+                {
+                    releaseItems.Add(ConvertToClrMamePro(release));
+                }
+                gameBase.Release = releaseItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.BiosSetKey) && item[Models.Internal.Machine.BiosSetKey] is Models.Internal.BiosSet[] biosSets)
+            {
+                var biosSetItems = new List<Models.ClrMamePro.BiosSet>();
+                foreach (var biosSet in biosSets)
+                {
+                    biosSetItems.Add(ConvertToClrMamePro(biosSet));
+                }
+                gameBase.BiosSet = biosSetItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
+            {
+                var romItems = new List<Models.ClrMamePro.Rom>();
+                foreach (var rom in roms)
+                {
+                    romItems.Add(ConvertToClrMamePro(rom));
+                }
+                gameBase.Rom = romItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
+            {
+                var diskItems = new List<Models.ClrMamePro.Disk>();
+                foreach (var disk in disks)
+                {
+                    diskItems.Add(ConvertToClrMamePro(disk));
+                }
+                gameBase.Disk = diskItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.MediaKey) && item[Models.Internal.Machine.MediaKey] is Models.Internal.Media[] medias)
+            {
+                var mediaItems = new List<Models.ClrMamePro.Media>();
+                foreach (var media in medias)
+                {
+                    mediaItems.Add(ConvertToClrMamePro(media));
+                }
+                gameBase.Media = mediaItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.SampleKey) && item[Models.Internal.Machine.SampleKey] is Models.Internal.Sample[] samples)
+            {
+                var sampleItems = new List<Models.ClrMamePro.Sample>();
+                foreach (var sample in samples)
+                {
+                    sampleItems.Add(ConvertToClrMamePro(sample));
+                }
+                gameBase.Sample = sampleItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.ArchiveKey) && item[Models.Internal.Machine.ArchiveKey] is Models.Internal.Archive[] archives)
+            {
+                var archiveItems = new List<Models.ClrMamePro.Archive>();
+                foreach (var archive in archives)
+                {
+                    archiveItems.Add(ConvertToClrMamePro(archive));
+                }
+                gameBase.Archive = archiveItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.ChipKey) && item[Models.Internal.Machine.ChipKey] is Models.Internal.Chip[] chips)
+            {
+                var chipItems = new List<Models.ClrMamePro.Chip>();
+                foreach (var chip in chips)
+                {
+                    chipItems.Add(ConvertToClrMamePro(chip));
+                }
+                gameBase.Chip = chipItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.VideoKey) && item[Models.Internal.Machine.VideoKey] is Models.Internal.Video video)
+                gameBase.Video = ConvertToClrMamePro(video);
+
+            if (item.ContainsKey(Models.Internal.Machine.SoundKey) && item[Models.Internal.Machine.SoundKey] is Models.Internal.Sound sound)
+                gameBase.Sound = ConvertToClrMamePro(sound);
+
+            if (item.ContainsKey(Models.Internal.Machine.InputKey) && item[Models.Internal.Machine.InputKey] is Models.Internal.Input input)
+                gameBase.Input = ConvertToClrMamePro(input);
+
+            if (item.ContainsKey(Models.Internal.Machine.DipSwitchKey) && item[Models.Internal.Machine.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitchs)
+            {
+                var dipSwitchItems = new List<Models.ClrMamePro.DipSwitch>();
+                foreach (var dipSwitch in dipSwitchs)
+                {
+                    dipSwitchItems.Add(ConvertToClrMamePro(dipSwitch));
+                }
+                gameBase.DipSwitch = dipSwitchItems.ToArray();
+            }
+
+            if (item.ContainsKey(Models.Internal.Machine.DriverKey) && item[Models.Internal.Machine.DriverKey] is Models.Internal.Driver driver)
+                gameBase.Driver = ConvertToClrMamePro(driver);
+
+            return gameBase;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
