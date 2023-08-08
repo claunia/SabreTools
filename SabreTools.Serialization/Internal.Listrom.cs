@@ -34,8 +34,8 @@ namespace SabreTools.Serialization
                     datItems.Add(ConvertFromListrom(file));
                 }
 
-                machine[Models.Internal.Machine.DiskKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "disk").ToArray();
-                machine[Models.Internal.Machine.RomKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "rom").ToArray();
+                machine[Models.Internal.Machine.DiskKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "disk")?.ToArray();
+                machine[Models.Internal.Machine.RomKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "rom")?.ToArray();
             }
 
             return machine;
@@ -88,8 +88,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listrom.Set"/>
         /// </summary>
-        public static Models.Listrom.Set ConvertMachineToListrom(Models.Internal.Machine item)
+        public static Models.Listrom.Set? ConvertMachineToListrom(Models.Internal.Machine? item)
         {
+            if (item == null)
+                return null;
+
             var set = new Models.Listrom.Set();
             if (item.ReadString(Models.Internal.Machine.IsDeviceKey) == "yes")
                 set.Device = item.ReadString(Models.Internal.Machine.NameKey);
@@ -98,33 +101,26 @@ namespace SabreTools.Serialization
 
             var rowItems = new List<Models.Listrom.Row>();
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                foreach (var rom in roms)
-                {
-                    rowItems.Add(ConvertToListrom(rom));
-                }
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            if (roms != null)
+                rowItems.AddRange(roms.Select(ConvertToListrom));
 
-            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
-            {
-                foreach (var disk in disks)
-                {
-                    rowItems.Add(ConvertToListrom(disk));
-                }
-            }
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            if (disks != null)
+                rowItems.AddRange(disks.Select(ConvertToListrom));
 
-            if (rowItems.Any())
-                set.Row = rowItems.ToArray();
-
+            set.Row = rowItems.ToArray();
             return set;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        public static Models.Listrom.Row ConvertToListrom(Models.Internal.Disk item)
+        public static Models.Listrom.Row? ConvertToListrom(Models.Internal.Disk? item)
         {
+            if (item == null)
+                return null;
+            
             var row = new Models.Listrom.Row
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -143,8 +139,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        public static Models.Listrom.Row ConvertToListrom(Models.Internal.Rom item)
+        public static Models.Listrom.Row? ConvertToListrom(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+            
             var row = new Models.Listrom.Row
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),

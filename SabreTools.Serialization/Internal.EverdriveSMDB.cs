@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SabreTools.Serialization
 {
@@ -47,22 +48,21 @@ namespace SabreTools.Serialization
         /// </summary>
         public static Models.EverdriveSMDB.Row[]? ConvertMachineToEverdriveSMDB(Models.Internal.Machine item)
         {
-            if (!item.ContainsKey(Models.Internal.Machine.RomKey) || item[Models.Internal.Machine.RomKey] is not Models.Internal.Rom[] roms)
+            if (item == null)
                 return null;
 
-            var fileItems = new List<Models.EverdriveSMDB.Row>();
-            foreach (var rom in roms)
-            {
-                fileItems.Add(ConvertToEverdriveSMDB(rom));
-            }
-            return fileItems.ToArray();
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(ConvertToEverdriveSMDB)?.ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        public static Models.EverdriveSMDB.Row ConvertToEverdriveSMDB(Models.Internal.Rom item)
+        public static Models.EverdriveSMDB.Row? ConvertToEverdriveSMDB(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var row = new Models.EverdriveSMDB.Row
             {
                 SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),

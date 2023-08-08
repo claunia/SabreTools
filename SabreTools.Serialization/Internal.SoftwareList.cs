@@ -283,8 +283,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.SoftwareList.Software"/>
         /// </summary>
-        public static Models.SoftwareList.Software ConvertMachineToSoftwareList(Models.Internal.Machine item)
+        public static Models.SoftwareList.Software? ConvertMachineToSoftwareList(Models.Internal.Machine? item)
         {
+            if (item == null)
+                return null;
+            
             var software = new Models.SoftwareList.Software
             {
                 Name = item.ReadString(Models.Internal.Machine.NameKey),
@@ -296,35 +299,14 @@ namespace SabreTools.Serialization
                 Notes = item.ReadString(Models.Internal.Machine.NotesKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Machine.InfoKey) && item[Models.Internal.Machine.InfoKey] is Models.Internal.Info[] infos)
-            {
-                var infoItems = new List<Models.SoftwareList.Info>();
-                foreach (var info in infos)
-                {
-                    infoItems.Add(ConvertToSoftwareList(info));
-                }
-                software.Info = infoItems.ToArray();
-            }
+            var infos = item.Read<Models.Internal.Info[]>(Models.Internal.Machine.InfoKey);
+            software.Info = infos?.Select(ConvertToSoftwareList)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SharedFeatKey) && item[Models.Internal.Machine.SharedFeatKey] is Models.Internal.SharedFeat[] sharedFeats)
-            {
-                var sharedFeatItems = new List<Models.SoftwareList.SharedFeat>();
-                foreach (var sharedFeat in sharedFeats)
-                {
-                    sharedFeatItems.Add(ConvertToSoftwareList(sharedFeat));
-                }
-                software.SharedFeat = sharedFeatItems.ToArray();
-            }
+            var sharedFeats = item.Read<Models.Internal.SharedFeat[]>(Models.Internal.Machine.SharedFeatKey);
+            software.SharedFeat = sharedFeats?.Select(ConvertToSoftwareList)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.PartKey) && item[Models.Internal.Machine.PartKey] is Models.Internal.Part[] parts)
-            {
-                var partItems = new List<Models.SoftwareList.Part>();
-                foreach (var part in parts)
-                {
-                    partItems.Add(ConvertToSoftwareList(part));
-                }
-                software.Part = partItems.ToArray();
-            }
+            var parts = item.Read<Models.Internal.Part[]>(Models.Internal.Machine.PartKey);
+            software.Part = parts?.Select(ConvertToSoftwareList)?.ToArray();
 
             return software;
         }
@@ -332,8 +314,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DataArea"/> to <cref="Models.SoftwareList.DataArea"/>
         /// </summary>
-        public static Models.SoftwareList.DataArea ConvertToSoftwareList(Models.Internal.DataArea item)
+        public static Models.SoftwareList.DataArea? ConvertToSoftwareList(Models.Internal.DataArea? item)
         {
+            if (item == null)
+                return null;
+            
             var dataArea = new Models.SoftwareList.DataArea
             {
                 Name = item.ReadString(Models.Internal.DataArea.NameKey),
@@ -342,15 +327,8 @@ namespace SabreTools.Serialization
                 Endianness = item.ReadString(Models.Internal.DataArea.EndiannessKey),
             };
 
-            if (item.ContainsKey(Models.Internal.DataArea.RomKey) && item[Models.Internal.DataArea.RomKey] is Models.Internal.Rom[] roms)
-            {
-                var romItems = new List<Models.SoftwareList.Rom>();
-                foreach (var rom in roms)
-                {
-                    romItems.Add(ConvertToSoftwareList(rom));
-                }
-                dataArea.Rom = romItems.ToArray();
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.DataArea.RomKey);
+            dataArea.Rom = roms?.Select(ConvertToSoftwareList)?.ToArray();
 
             return dataArea;
         }
@@ -358,8 +336,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.SoftwareList.DipSwitch"/>
         /// </summary>
-        public static Models.SoftwareList.DipSwitch ConvertToSoftwareList(Models.Internal.DipSwitch item)
+        public static Models.SoftwareList.DipSwitch? ConvertToSoftwareList(Models.Internal.DipSwitch? item)
         {
+            if (item == null)
+                return null;
+            
             var dipSwitch = new Models.SoftwareList.DipSwitch
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -367,15 +348,8 @@ namespace SabreTools.Serialization
                 Mask = item.ReadString(Models.Internal.DipSwitch.MaskKey),
             };
 
-            if (item.ContainsKey(Models.Internal.DipSwitch.DipValueKey) && item[Models.Internal.DipSwitch.DipValueKey] is Models.Internal.DipValue[] dipValues)
-            {
-                var dipValueItems = new List<Models.SoftwareList.DipValue>();
-                foreach (var rom in dipValues)
-                {
-                    dipValueItems.Add(ConvertToSoftwareList(rom));
-                }
-                dipSwitch.DipValue = dipValueItems.ToArray();
-            }
+            var dipValues = item.Read<Models.Internal.DipValue[]>(Models.Internal.DipSwitch.DipValueKey);
+            dipSwitch.DipValue = dipValues?.Select(ConvertToSoftwareList)?.ToArray();
 
             return dipSwitch;
         }
@@ -383,8 +357,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.SoftwareList.DipValue"/>
         /// </summary>
-        public static Models.SoftwareList.DipValue ConvertToSoftwareList(Models.Internal.DipValue item)
+        public static Models.SoftwareList.DipValue? ConvertToSoftwareList(Models.Internal.DipValue? item)
         {
+            if (item == null)
+                return null;
+            
             var dipValue = new Models.SoftwareList.DipValue
             {
                 Name = item.ReadString(Models.Internal.DipValue.NameKey),
@@ -397,8 +374,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SoftwareList.Disk"/>
         /// </summary>
-        public static Models.SoftwareList.Disk ConvertToSoftwareList(Models.Internal.Disk item)
+        public static Models.SoftwareList.Disk? ConvertToSoftwareList(Models.Internal.Disk? item)
         {
+            if (item == null)
+                return null;
+            
             var disk = new Models.SoftwareList.Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -413,22 +393,18 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DiskArea"/> to <cref="Models.SoftwareList.DiskArea"/>
         /// </summary>
-        public static Models.SoftwareList.DiskArea ConvertToSoftwareList(Models.Internal.DiskArea item)
+        public static Models.SoftwareList.DiskArea? ConvertToSoftwareList(Models.Internal.DiskArea? item)
         {
+            if (item == null)
+                return null;
+            
             var diskArea = new Models.SoftwareList.DiskArea
             {
                 Name = item.ReadString(Models.Internal.DiskArea.NameKey),
             };
 
-            if (item.ContainsKey(Models.Internal.DiskArea.DiskKey) && item[Models.Internal.DiskArea.DiskKey] is Models.Internal.Disk[] disks)
-            {
-                var diskItems = new List<Models.SoftwareList.Disk>();
-                foreach (var disk in disks)
-                {
-                    diskItems.Add(ConvertToSoftwareList(disk));
-                }
-                diskArea.Disk = diskItems.ToArray();
-            }
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.DiskArea.DiskKey);
+            diskArea.Disk = disks?.Select(ConvertToSoftwareList)?.ToArray();
 
             return diskArea;
         }
@@ -436,8 +412,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.SoftwareList.Feature"/>
         /// </summary>
-        public static Models.SoftwareList.Feature ConvertToSoftwareList(Models.Internal.Feature item)
+        public static Models.SoftwareList.Feature? ConvertToSoftwareList(Models.Internal.Feature? item)
         {
+            if (item == null)
+                return null;
+            
             var feature = new Models.SoftwareList.Feature
             {
                 Name = item.ReadString(Models.Internal.Feature.NameKey),
@@ -449,8 +428,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Info"/> to <cref="Models.SoftwareList.Info"/>
         /// </summary>
-        public static Models.SoftwareList.Info ConvertToSoftwareList(Models.Internal.Info item)
+        public static Models.SoftwareList.Info? ConvertToSoftwareList(Models.Internal.Info? item)
         {
+            if (item == null)
+                return null;
+            
             var info = new Models.SoftwareList.Info
             {
                 Name = item.ReadString(Models.Internal.Info.NameKey),
@@ -462,53 +444,28 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Part"/> to <cref="Models.SoftwareList.Part"/>
         /// </summary>
-        public static Models.SoftwareList.Part ConvertToSoftwareList(Models.Internal.Part item)
+        public static Models.SoftwareList.Part? ConvertToSoftwareList(Models.Internal.Part? item)
         {
+            if (item == null)
+                return null;
+            
             var part = new Models.SoftwareList.Part
             {
                 Name = item.ReadString(Models.Internal.Part.NameKey),
                 Interface = item.ReadString(Models.Internal.Part.InterfaceKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Part.FeatureKey) && item[Models.Internal.Part.FeatureKey] is Models.Internal.Feature[] features)
-            {
-                var featureItems = new List<Models.SoftwareList.Feature>();
-                foreach (var feature in features)
-                {
-                    featureItems.Add(ConvertToSoftwareList(feature));
-                }
-                part.Feature = featureItems.ToArray();
-            }
+            var features = item.Read<Models.Internal.Feature[]>(Models.Internal.Part.FeatureKey);
+            part.Feature = features?.Select(ConvertToSoftwareList)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Part.DataAreaKey) && item[Models.Internal.Part.DataAreaKey] is Models.Internal.DataArea[] dataAreas)
-            {
-                var dataAreaItems = new List<Models.SoftwareList.DataArea>();
-                foreach (var dataArea in dataAreas)
-                {
-                    dataAreaItems.Add(ConvertToSoftwareList(dataArea));
-                }
-                part.DataArea = dataAreaItems.ToArray();
-            }
+            var dataAreas = item.Read<Models.Internal.DataArea[]>(Models.Internal.Part.DataAreaKey);
+            part.DataArea = dataAreas?.Select(ConvertToSoftwareList)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Part.DiskAreaKey) && item[Models.Internal.Part.DiskAreaKey] is Models.Internal.DiskArea[] diskAreas)
-            {
-                var diskAreaItems = new List<Models.SoftwareList.DiskArea>();
-                foreach (var diskArea in diskAreas)
-                {
-                    diskAreaItems.Add(ConvertToSoftwareList(diskArea));
-                }
-                part.DiskArea = diskAreaItems.ToArray();
-            }
+            var diskAreas = item.Read<Models.Internal.DiskArea[]>(Models.Internal.Part.DiskAreaKey);
+            part.DiskArea = diskAreas?.Select(ConvertToSoftwareList)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Part.DipSwitchKey) && item[Models.Internal.Part.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitches)
-            {
-                var dipSwitchItems = new List<Models.SoftwareList.DipSwitch>();
-                foreach (var rom in dipSwitches)
-                {
-                    dipSwitchItems.Add(ConvertToSoftwareList(rom));
-                }
-                part.DipSwitch = dipSwitchItems.ToArray();
-            }
+            var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Part.DipSwitchKey);
+            part.DipSwitch = dipSwitches?.Select(ConvertToSoftwareList)?.ToArray();
 
             return part;
         }
@@ -516,8 +473,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SoftwareList.Rom"/>
         /// </summary>
-        public static Models.SoftwareList.Rom ConvertToSoftwareList(Models.Internal.Rom item)
+        public static Models.SoftwareList.Rom? ConvertToSoftwareList(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+            
             var rom = new Models.SoftwareList.Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -536,8 +496,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SharedFeat"/> to <cref="Models.SoftwareList.SharedFeat"/>
         /// </summary>
-        public static Models.SoftwareList.SharedFeat ConvertToSoftwareList(Models.Internal.SharedFeat item)
+        public static Models.SoftwareList.SharedFeat? ConvertToSoftwareList(Models.Internal.SharedFeat? item)
         {
+            if (item == null)
+                return null;
+            
             var sharedFeat = new Models.SoftwareList.SharedFeat
             {
                 Name = item.ReadString(Models.Internal.SharedFeat.NameKey),

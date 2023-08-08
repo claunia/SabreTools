@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Linq;
 
 namespace SabreTools.Serialization
 {
@@ -102,24 +102,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.ArchiveDotOrg.File"/>
         /// </summary>
-        public static Models.ArchiveDotOrg.File[]? ConvertMachineToArchiveDotOrg(Models.Internal.Machine item)
+        public static Models.ArchiveDotOrg.File?[]? ConvertMachineToArchiveDotOrg(Models.Internal.Machine? item)
         {
-            if (!item.ContainsKey(Models.Internal.Machine.RomKey) || item[Models.Internal.Machine.RomKey] is not Models.Internal.Rom[] roms)
+            if (item == null)
                 return null;
 
-            var fileItems = new List<Models.ArchiveDotOrg.File>();
-            foreach (var rom in roms)
-            {
-                fileItems.Add(ConvertToArchiveDotOrg(rom));
-            }
-            return fileItems.ToArray();
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(ConvertToArchiveDotOrg)?.ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ArchiveDotOrg.File"/>
         /// </summary>
-        public static Models.ArchiveDotOrg.File ConvertToArchiveDotOrg(Models.Internal.Rom item)
+        public static Models.ArchiveDotOrg.File? ConvertToArchiveDotOrg(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var file = new Models.ArchiveDotOrg.File
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),

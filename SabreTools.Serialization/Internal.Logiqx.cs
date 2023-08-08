@@ -311,8 +311,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
-        public static Models.Logiqx.GameBase ConvertMachineToLogiqx(Models.Internal.Machine item, bool game = false)
+        public static Models.Logiqx.GameBase? ConvertMachineToLogiqx(Models.Internal.Machine? item, bool game = false)
         {
+            if (item == null)
+                return null;
+
             Models.Logiqx.GameBase gameBase = game ? new Models.Logiqx.Game() : new Models.Logiqx.Machine();
 
             gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
@@ -335,108 +338,38 @@ namespace SabreTools.Serialization
             gameBase.Publisher = item.ReadString(Models.Internal.Machine.PublisherKey);
             gameBase.Category = item.ReadStringArray(Models.Internal.Machine.CategoryKey);
 
-            if (item.ContainsKey(Models.Internal.Machine.TruripKey) && item[Models.Internal.Machine.TruripKey] is Models.Logiqx.Trurip trurip)
-                gameBase.Trurip = trurip;
+            var trurip = item.Read<Models.Logiqx.Trurip>(Models.Internal.Machine.TruripKey);
+            gameBase.Trurip = trurip;
 
-            if (item.ContainsKey(Models.Internal.Machine.ReleaseKey) && item[Models.Internal.Machine.ReleaseKey] is Models.Internal.Release[] releases)
-            {
-                var releaseItems = new List<Models.Logiqx.Release>();
-                foreach (var release in releases)
-                {
-                    releaseItems.Add(ConvertToLogiqx(release));
-                }
-                gameBase.Release = releaseItems.ToArray();
-            }
+            var releases = item.Read<Models.Internal.Release[]>(Models.Internal.Machine.ReleaseKey);
+            gameBase.Release = releases?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.BiosSetKey) && item[Models.Internal.Machine.BiosSetKey] is Models.Internal.BiosSet[] biosSets)
-            {
-                var biosSetItems = new List<Models.Logiqx.BiosSet>();
-                foreach (var biosSet in biosSets)
-                {
-                    biosSetItems.Add(ConvertToLogiqx(biosSet));
-                }
-                gameBase.BiosSet = biosSetItems.ToArray();
-            }
+            var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
+            gameBase.BiosSet = biosSets?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                var romItems = new List<Models.Logiqx.Rom>();
-                foreach (var rom in roms)
-                {
-                    romItems.Add(ConvertToLogiqx(rom));
-                }
-                gameBase.Rom = romItems.ToArray();
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            gameBase.Rom = roms?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
-            {
-                var diskItems = new List<Models.Logiqx.Disk>();
-                foreach (var disk in disks)
-                {
-                    diskItems.Add(ConvertToLogiqx(disk));
-                }
-                gameBase.Disk = diskItems.ToArray();
-            }
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            gameBase.Disk = disks?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.MediaKey) && item[Models.Internal.Machine.MediaKey] is Models.Internal.Media[] medias)
-            {
-                var mediaItems = new List<Models.Logiqx.Media>();
-                foreach (var media in medias)
-                {
-                    mediaItems.Add(ConvertToLogiqx(media));
-                }
-                gameBase.Media = mediaItems.ToArray();
-            }
+            var medias = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
+            gameBase.Media = medias?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DeviceRefKey) && item[Models.Internal.Machine.DeviceRefKey] is Models.Internal.DeviceRef[] deviceRefs)
-            {
-                var deviceRefItems = new List<Models.Logiqx.DeviceRef>();
-                foreach (var deviceRef in deviceRefs)
-                {
-                    deviceRefItems.Add(ConvertToLogiqx(deviceRef));
-                }
-                gameBase.DeviceRef = deviceRefItems.ToArray();
-            }
+            var deviceRefs = item.Read<Models.Internal.DeviceRef[]>(Models.Internal.Machine.DeviceRefKey);
+            gameBase.DeviceRef = deviceRefs?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SampleKey) && item[Models.Internal.Machine.SampleKey] is Models.Internal.Sample[] samples)
-            {
-                var sampleItems = new List<Models.Logiqx.Sample>();
-                foreach (var sample in samples)
-                {
-                    sampleItems.Add(ConvertToLogiqx(sample));
-                }
-                gameBase.Sample = sampleItems.ToArray();
-            }
+            var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
+            gameBase.Sample = samples?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.ArchiveKey) && item[Models.Internal.Machine.ArchiveKey] is Models.Internal.Archive[] archives)
-            {
-                var archiveItems = new List<Models.Logiqx.Archive>();
-                foreach (var archive in archives)
-                {
-                    archiveItems.Add(ConvertToLogiqx(archive));
-                }
-                gameBase.Archive = archiveItems.ToArray();
-            }
+            var archives = item.Read<Models.Internal.Archive[]>(Models.Internal.Machine.ArchiveKey);
+            gameBase.Archive = archives?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DriverKey) && item[Models.Internal.Machine.DriverKey] is Models.Internal.Driver[] drivers)
-            {
-                var driverItems = new List<Models.Logiqx.Driver>();
-                foreach (var chip in drivers)
-                {
-                    driverItems.Add(ConvertToLogiqx(chip));
-                }
-                gameBase.Driver = driverItems.ToArray();
-            }
+            var drivers = item.Read<Models.Internal.Driver[]>(Models.Internal.Machine.DriverKey);
+            gameBase.Driver = drivers?.Select(ConvertToLogiqx)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SoftwareListKey) && item[Models.Internal.Machine.SoftwareListKey] is Models.Internal.SoftwareList[] softwareLists)
-            {
-                var softwareListItems = new List<Models.Logiqx.SoftwareList>();
-                foreach (var softwareList in softwareLists)
-                {
-                    softwareListItems.Add(ConvertToLogiqx(softwareList));
-                }
-                gameBase.SoftwareList = softwareListItems.ToArray();
-            }
+            var softwareLists = item.Read<Models.Internal.SoftwareList[]>(Models.Internal.Machine.SoftwareListKey);
+            gameBase.SoftwareList = softwareLists?.Select(ConvertToLogiqx)?.ToArray();
 
             return gameBase;
         }
@@ -444,8 +377,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
-        public static Models.Logiqx.Archive ConvertToLogiqx(Models.Internal.Archive item)
+        public static Models.Logiqx.Archive? ConvertToLogiqx(Models.Internal.Archive? item)
         {
+            if (item == null)
+                return null;
+
             var archive = new Models.Logiqx.Archive
             {
                 Name = item.ReadString(Models.Internal.Archive.NameKey),
@@ -456,8 +392,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Logiqx.BiosSet"/>
         /// </summary>
-        public static Models.Logiqx.BiosSet ConvertToLogiqx(Models.Internal.BiosSet item)
+        public static Models.Logiqx.BiosSet? ConvertToLogiqx(Models.Internal.BiosSet? item)
         {
+            if (item == null)
+                return null;
+
             var biosset = new Models.Logiqx.BiosSet
             {
                 Name = item.ReadString(Models.Internal.BiosSet.NameKey),
@@ -470,8 +409,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Logiqx.DeviceRef"/>
         /// </summary>
-        public static Models.Logiqx.DeviceRef ConvertToLogiqx(Models.Internal.DeviceRef item)
+        public static Models.Logiqx.DeviceRef? ConvertToLogiqx(Models.Internal.DeviceRef? item)
         {
+            if (item == null)
+                return null;
+
             var deviceRef = new Models.Logiqx.DeviceRef
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -482,8 +424,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Logiqx.Disk"/>
         /// </summary>
-        public static Models.Logiqx.Disk ConvertToLogiqx(Models.Internal.Disk item)
+        public static Models.Logiqx.Disk? ConvertToLogiqx(Models.Internal.Disk? item)
         {
+            if (item == null)
+                return null;
+
             var disk = new Models.Logiqx.Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -499,8 +444,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Logiqx.Driver"/>
         /// </summary>
-        public static Models.Logiqx.Driver ConvertToLogiqx(Models.Internal.Driver item)
+        public static Models.Logiqx.Driver? ConvertToLogiqx(Models.Internal.Driver? item)
         {
+            if (item == null)
+                return null;
+
             var driver = new Models.Logiqx.Driver
             {
                 Status = item.ReadString(Models.Internal.Driver.StatusKey),
@@ -518,8 +466,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.Logiqx.Media"/>
         /// </summary>
-        public static Models.Logiqx.Media ConvertToLogiqx(Models.Internal.Media item)
+        public static Models.Logiqx.Media? ConvertToLogiqx(Models.Internal.Media? item)
         {
+            if (item == null)
+                return null;
+
             var media = new Models.Logiqx.Media
             {
                 Name = item.ReadString(Models.Internal.Media.NameKey),
@@ -534,8 +485,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.Logiqx.Release"/>
         /// </summary>
-        public static Models.Logiqx.Release ConvertToLogiqx(Models.Internal.Release item)
+        public static Models.Logiqx.Release? ConvertToLogiqx(Models.Internal.Release? item)
         {
+            if (item == null)
+                return null;
+
             var release = new Models.Logiqx.Release
             {
                 Name = item.ReadString(Models.Internal.Release.NameKey),
@@ -550,8 +504,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Logiqx.Rom"/>
         /// </summary>
-        public static Models.Logiqx.Rom ConvertToLogiqx(Models.Internal.Rom item)
+        public static Models.Logiqx.Rom? ConvertToLogiqx(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var rom = new Models.Logiqx.Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -579,8 +536,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Logiqx.Sample"/>
         /// </summary>
-        public static Models.Logiqx.Sample ConvertToLogiqx(Models.Internal.Sample item)
+        public static Models.Logiqx.Sample? ConvertToLogiqx(Models.Internal.Sample? item)
         {
+            if (item == null)
+                return null;
+
             var sample = new Models.Logiqx.Sample
             {
                 Name = item.ReadString(Models.Internal.Sample.NameKey),
@@ -591,8 +551,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Logiqx.SoftwareList"/>
         /// </summary>
-        public static Models.Logiqx.SoftwareList ConvertToLogiqx(Models.Internal.SoftwareList item)
+        public static Models.Logiqx.SoftwareList? ConvertToLogiqx(Models.Internal.SoftwareList? item)
         {
+            if (item == null)
+                return null;
+
             var softwareList = new Models.Logiqx.SoftwareList
             {
                 Tag = item.ReadString(Models.Internal.SoftwareList.TagKey),

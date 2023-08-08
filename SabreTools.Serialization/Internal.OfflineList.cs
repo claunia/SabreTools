@@ -79,8 +79,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OfflineList.Game"/>
         /// </summary>
-        public static Models.OfflineList.Game ConvertMachineToOfflineList(Models.Internal.Machine item)
+        public static Models.OfflineList.Game? ConvertMachineToOfflineList(Models.Internal.Machine? item)
         {
+            if (item == null)
+                return null;
+
             var game = new Models.OfflineList.Game
             {
                 ImageNumber = item.ReadString(Models.Internal.Machine.ImageNumberKey),
@@ -97,16 +100,12 @@ namespace SabreTools.Serialization
                 DuplicateID = item.ReadString(Models.Internal.Machine.DuplicateIDKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                var romCRCItems = new List<Models.OfflineList.FileRomCRC>();
-                foreach (var rom in roms)
-                {
-                    game.RomSize ??= rom.ReadString(Models.Internal.Rom.SizeKey);
-                    romCRCItems.Add(ConvertToOfflineList(rom));
-                }
-                game.Files = new Models.OfflineList.Files { RomCRC = romCRCItems.ToArray() };
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            game.RomSize = roms?
+                .Select(rom => rom.ReadString(Models.Internal.Rom.SizeKey))?
+                .FirstOrDefault(s => s != null);
+            var romCRCs = roms?.Select(ConvertToOfflineList).ToArray();
+            game.Files = new Models.OfflineList.Files { RomCRC = romCRCs };
 
             return game;
         }
@@ -114,8 +113,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from an array of <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
         /// </summary>
-        public static Models.OfflineList.Files ConvertToOfflineList(Models.Internal.Rom[] items)
+        public static Models.OfflineList.Files? ConvertToOfflineList(Models.Internal.Rom[]? items)
         {
+            if (items == null)
+                return null;
+
             var romCRCs = new List<Models.OfflineList.FileRomCRC>();
             foreach (var item in items)
             {
@@ -127,8 +129,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
         /// </summary>
-        public static Models.OfflineList.FileRomCRC ConvertToOfflineList(Models.Internal.Rom item)
+        public static Models.OfflineList.FileRomCRC? ConvertToOfflineList(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var fileRomCRC = new Models.OfflineList.FileRomCRC
             {
                 Extension = item.ReadString(Models.Internal.Rom.ExtensionKey),

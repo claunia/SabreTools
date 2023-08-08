@@ -55,22 +55,18 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.DosCenter.Game"/>
         /// </summary>
-        public static Models.DosCenter.Game ConvertMachineToDosCenter(Models.Internal.Machine item)
+        public static Models.DosCenter.Game? ConvertMachineToDosCenter(Models.Internal.Machine? item)
         {
+            if (item == null)
+                return null;
+
             var game = new Models.DosCenter.Game
             {
                 Name = item.ReadString(Models.Internal.Machine.NameKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                var fileItems = new List<Models.DosCenter.File>();
-                foreach (var rom in roms)
-                {
-                    fileItems.Add(ConvertToDosCenter(rom));
-                }
-                game.File = fileItems.ToArray();
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            game.File = roms?.Select(ConvertToDosCenter)?.ToArray();
 
             return game;
         }
@@ -78,8 +74,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.DosCenter.File"/>
         /// </summary>
-        public static Models.DosCenter.File ConvertToDosCenter(Models.Internal.Rom item)
+        public static Models.DosCenter.File? ConvertToDosCenter(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var file = new Models.DosCenter.File
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),

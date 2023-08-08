@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SabreTools.Serialization
 {
@@ -62,14 +63,17 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
         /// </summary>
-        public static Models.AttractMode.Row[]? ConvertMachineToAttractMode(Models.Internal.Machine item)
+        public static Models.AttractMode.Row?[]? ConvertMachineToAttractMode(Models.Internal.Machine? item)
         {
-            if (!item.ContainsKey(Models.Internal.Machine.RomKey) || item[Models.Internal.Machine.RomKey] is not Models.Internal.Rom[] roms)
+            if (item == null)
                 return null;
 
-            var rowItems = new List<Models.AttractMode.Row>();
-            foreach (var rom in roms)
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(rom =>
             {
+                if (rom == null)
+                    return null;
+
                 var rowItem = ConvertToAttractMode(rom);
 
                 rowItem.Name = item.ReadString(Models.Internal.Machine.NameKey);
@@ -91,16 +95,18 @@ namespace SabreTools.Serialization
                 rowItem.PlayedCount = item.ReadString(Models.Internal.Machine.PlayedCountKey);
                 rowItem.PlayedTime = item.ReadString(Models.Internal.Machine.PlayedTimeKey);
 
-                rowItems.Add(rowItem);
-            }
-            return rowItems.ToArray();
+                return rowItem;
+            })?.ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
         /// </summary>
-        public static Models.AttractMode.Row ConvertToAttractMode(Models.Internal.Rom item)
+        public static Models.AttractMode.Row? ConvertToAttractMode(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var row = new Models.AttractMode.Row
             {
                 Title = item.ReadString(Models.Internal.Rom.NameKey),

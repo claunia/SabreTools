@@ -787,8 +787,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listxml.GameBase"/>
         /// </summary>
-        public static Models.Listxml.GameBase ConvertMachineToListxml(Models.Internal.Machine item)
+        public static Models.Listxml.GameBase? ConvertMachineToListxml(Models.Internal.Machine? item)
         {
+            if (item == null)
+                return null;
+
             var machine = new Models.Listxml.Machine
             {
                 Name = item.ReadString(Models.Internal.Machine.NameKey),
@@ -806,184 +809,65 @@ namespace SabreTools.Serialization
                 History = item.ReadString(Models.Internal.Machine.HistoryKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Machine.BiosSetKey) && item[Models.Internal.Machine.BiosSetKey] is Models.Internal.BiosSet[] biosSets)
-            {
-                var biosSetItems = new List<Models.Listxml.BiosSet>();
-                foreach (var biosSet in biosSets)
-                {
-                    biosSetItems.Add(ConvertToListxml(biosSet));
-                }
-                machine.BiosSet = biosSetItems.ToArray();
-            }
+            var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
+            machine.BiosSet = biosSets?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                var romItems = new List<Models.Listxml.Rom>();
-                foreach (var rom in roms)
-                {
-                    romItems.Add(ConvertToListxml(rom));
-                }
-                machine.Rom = romItems.ToArray();
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            machine.Rom = roms?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
-            {
-                var diskItems = new List<Models.Listxml.Disk>();
-                foreach (var disk in disks)
-                {
-                    diskItems.Add(ConvertToListxml(disk));
-                }
-                machine.Disk = diskItems.ToArray();
-            }
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            machine.Disk = disks?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DeviceRefKey) && item[Models.Internal.Machine.DeviceRefKey] is Models.Internal.DeviceRef[] deviceRefs)
-            {
-                var deviceRefItems = new List<Models.Listxml.DeviceRef>();
-                foreach (var deviceRef in deviceRefs)
-                {
-                    deviceRefItems.Add(ConvertToListxml(deviceRef));
-                }
-                machine.DeviceRef = deviceRefItems.ToArray();
-            }
+            var deviceRefs = item.Read<Models.Internal.DeviceRef[]>(Models.Internal.Machine.DeviceRefKey);
+            machine.DeviceRef = deviceRefs?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SampleKey) && item[Models.Internal.Machine.SampleKey] is Models.Internal.Sample[] samples)
-            {
-                var sampleItems = new List<Models.Listxml.Sample>();
-                foreach (var sample in samples)
-                {
-                    sampleItems.Add(ConvertToListxml(sample));
-                }
-                machine.Sample = sampleItems.ToArray();
-            }
+            var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
+            machine.Sample = samples?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.ChipKey) && item[Models.Internal.Machine.ChipKey] is Models.Internal.Chip[] chips)
-            {
-                var chipItems = new List<Models.Listxml.Chip>();
-                foreach (var chip in chips)
-                {
-                    chipItems.Add(ConvertToListxml(chip));
-                }
-                machine.Chip = chipItems.ToArray();
-            }
+            var chips = item.Read<Models.Internal.Chip[]>(Models.Internal.Machine.ChipKey);
+            machine.Chip = chips?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DisplayKey) && item[Models.Internal.Machine.DisplayKey] is Models.Internal.Display[] displays)
-            {
-                var displayItems = new List<Models.Listxml.Display>();
-                foreach (var display in displays)
-                {
-                    displayItems.Add(ConvertToListxml(display));
-                }
-                machine.Display = displayItems.ToArray();
-            }
+            var displays = item.Read<Models.Internal.Display[]>(Models.Internal.Machine.DisplayKey);
+            machine.Display = displays?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.VideoKey) && item[Models.Internal.Machine.VideoKey] is Models.Internal.Video[] videos)
-            {
-                var videoItems = new List<Models.Listxml.Video>();
-                foreach (var video in videos)
-                {
-                    videoItems.Add(ConvertToListxml(video));
-                }
-                machine.Video = videoItems.ToArray();
-            }
+            var videos = item.Read<Models.Internal.Video[]>(Models.Internal.Machine.VideoKey);
+            machine.Video = videos?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SoundKey) && item[Models.Internal.Machine.SoundKey] is Models.Internal.Sound sound)
-                machine.Sound = ConvertToListxml(sound);
+            var sound = item.Read<Models.Internal.Sound>(Models.Internal.Machine.SoundKey);
+            machine.Sound = ConvertToListxml(sound);
 
-            if (item.ContainsKey(Models.Internal.Machine.InputKey) && item[Models.Internal.Machine.InputKey] is Models.Internal.Input input)
-                machine.Input = ConvertToListxml(input);
+            var input = item.Read<Models.Internal.Input>(Models.Internal.Machine.InputKey);
+            machine.Input = ConvertToListxml(input);
 
-            if (item.ContainsKey(Models.Internal.Machine.DipSwitchKey) && item[Models.Internal.Machine.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitches)
-            {
-                var dipSwitchItems = new List<Models.Listxml.DipSwitch>();
-                foreach (var dipSwitch in dipSwitches)
-                {
-                    dipSwitchItems.Add(ConvertToListxml(dipSwitch));
-                }
-                machine.DipSwitch = dipSwitchItems.ToArray();
-            }
+            var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Machine.DipSwitchKey);
+            machine.DipSwitch = dipSwitches?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.ConfigurationKey) && item[Models.Internal.Machine.ConfigurationKey] is Models.Internal.Configuration[] configurations)
-            {
-                var configurationItems = new List<Models.Listxml.Configuration>();
-                foreach (var configuration in configurations)
-                {
-                    configurationItems.Add(ConvertToListxml(configuration));
-                }
-                machine.Configuration = configurationItems.ToArray();
-            }
+            var configurations = item.Read<Models.Internal.Configuration[]>(Models.Internal.Machine.ConfigurationKey);
+            machine.Configuration = configurations?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.PortKey) && item[Models.Internal.Machine.PortKey] is Models.Internal.Port[] ports)
-            {
-                var portItems = new List<Models.Listxml.Port>();
-                foreach (var port in ports)
-                {
-                    portItems.Add(ConvertToListxml(port));
-                }
-                machine.Port = portItems.ToArray();
-            }
+            var ports = item.Read<Models.Internal.Port[]>(Models.Internal.Machine.PortKey);
+            machine.Port = ports?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.AdjusterKey) && item[Models.Internal.Machine.AdjusterKey] is Models.Internal.Adjuster[] adjusters)
-            {
-                var adjusterItems = new List<Models.Listxml.Adjuster>();
-                foreach (var adjuster in adjusters)
-                {
-                    adjusterItems.Add(ConvertToListxml(adjuster));
-                }
-                machine.Adjuster = adjusterItems.ToArray();
-            }
+            var adjusters = item.Read<Models.Internal.Adjuster[]>(Models.Internal.Machine.AdjusterKey);
+            machine.Adjuster = adjusters?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DriverKey) && item[Models.Internal.Machine.DriverKey] is Models.Internal.Driver driver)
-                machine.Driver = ConvertToListxml(driver);
+            var driver = item.Read<Models.Internal.Driver>(Models.Internal.Machine.DriverKey);
+            machine.Driver = ConvertToListxml(driver);
 
-            if (item.ContainsKey(Models.Internal.Machine.FeatureKey) && item[Models.Internal.Machine.FeatureKey] is Models.Internal.Feature[] features)
-            {
-                var featureItems = new List<Models.Listxml.Feature>();
-                foreach (var feature in features)
-                {
-                    featureItems.Add(ConvertToListxml(feature));
-                }
-                machine.Feature = featureItems.ToArray();
-            }
+            var features = item.Read<Models.Internal.Feature[]>(Models.Internal.Machine.FeatureKey);
+            machine.Feature = features?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DeviceKey) && item[Models.Internal.Machine.DeviceKey] is Models.Internal.Device[] devices)
-            {
-                var deviceItems = new List<Models.Listxml.Device>();
-                foreach (var device in devices)
-                {
-                    deviceItems.Add(ConvertToListxml(device));
-                }
-                machine.Device = deviceItems.ToArray();
-            }
+            var devices = item.Read<Models.Internal.Device[]>(Models.Internal.Machine.DeviceKey);
+            machine.Device = devices?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SlotKey) && item[Models.Internal.Machine.SlotKey] is Models.Internal.Slot[] slots)
-            {
-                var slotItems = new List<Models.Listxml.Slot>();
-                foreach (var slot in slots)
-                {
-                    slotItems.Add(ConvertToListxml(slot));
-                }
-                machine.Slot = slotItems.ToArray();
-            }
+            var slots = item.Read<Models.Internal.Slot[]>(Models.Internal.Machine.SlotKey);
+            machine.Slot = slots?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SoftwareListKey) && item[Models.Internal.Machine.SoftwareListKey] is Models.Internal.SoftwareList[] softwareLists)
-            {
-                var softwareListItems = new List<Models.Listxml.SoftwareList>();
-                foreach (var softwareList in softwareLists)
-                {
-                    softwareListItems.Add(ConvertToListxml(softwareList));
-                }
-                machine.SoftwareList = softwareListItems.ToArray();
-            }
+            var softwareLists = item.Read<Models.Internal.SoftwareList[]>(Models.Internal.Machine.SoftwareListKey);
+            machine.SoftwareList = softwareLists?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.RamOptionKey) && item[Models.Internal.Machine.RamOptionKey] is Models.Internal.RamOption[] ramOptions)
-            {
-                var ramOptionItems = new List<Models.Listxml.RamOption>();
-                foreach (var ramOption in ramOptions)
-                {
-                    ramOptionItems.Add(ConvertToListxml(ramOption));
-                }
-                machine.RamOption = ramOptionItems.ToArray();
-            }
+            var ramOptions = item.Read<Models.Internal.RamOption[]>(Models.Internal.Machine.RamOptionKey);
+            machine.RamOption = ramOptions?.Select(ConvertToListxml)?.ToArray();
 
             return machine;
         }
@@ -991,16 +875,19 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Adjuster"/> to <cref="Models.Listxml.Adjuster"/>
         /// </summary>
-        public static Models.Listxml.Adjuster ConvertToListxml(Models.Internal.Adjuster item)
+        public static Models.Listxml.Adjuster? ConvertToListxml(Models.Internal.Adjuster? item)
         {
+            if (item == null)
+                return null;
+
             var adjuster = new Models.Listxml.Adjuster
             {
                 Name = item.ReadString(Models.Internal.Adjuster.NameKey),
                 Default = item.ReadString(Models.Internal.Adjuster.DefaultKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Adjuster.ConditionKey) && item[Models.Internal.Adjuster.ConditionKey] is Models.Internal.Condition condition)
-                adjuster.Condition = ConvertToListxml(condition);
+            var condition = item.Read<Models.Internal.Condition>(Models.Internal.Adjuster.ConditionKey);
+            adjuster.Condition = ConvertToListxml(condition);
 
             return adjuster;
         }
@@ -1008,8 +895,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Analog"/> to <cref="Models.Listxml.Analog"/>
         /// </summary>
-        public static Models.Listxml.Analog ConvertToListxml(Models.Internal.Analog item)
+        public static Models.Listxml.Analog? ConvertToListxml(Models.Internal.Analog? item)
         {
+            if (item == null)
+                return null;
+
             var analog = new Models.Listxml.Analog
             {
                 Mask = item.ReadString(Models.Internal.Analog.MaskKey),
@@ -1020,8 +910,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Listxml.BiosSet"/>
         /// </summary>
-        public static Models.Listxml.BiosSet ConvertToListxml(Models.Internal.BiosSet item)
+        public static Models.Listxml.BiosSet? ConvertToListxml(Models.Internal.BiosSet? item)
         {
+            if (item == null)
+                return null;
+
             var biosset = new Models.Listxml.BiosSet
             {
                 Name = item.ReadString(Models.Internal.BiosSet.NameKey),
@@ -1034,8 +927,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.Listxml.Chip"/>
         /// </summary>
-        public static Models.Listxml.Chip ConvertToListxml(Models.Internal.Chip item)
+        public static Models.Listxml.Chip? ConvertToListxml(Models.Internal.Chip? item)
         {
+            if (item == null)
+                return null;
+
             var chip = new Models.Listxml.Chip
             {
                 Name = item.ReadString(Models.Internal.Chip.NameKey),
@@ -1050,8 +946,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Condition"/> to <cref="Models.Listxml.Condition"/>
         /// </summary>
-        public static Models.Listxml.Condition ConvertToListxml(Models.Internal.Condition item)
+        public static Models.Listxml.Condition? ConvertToListxml(Models.Internal.Condition? item)
         {
+            if (item == null)
+                return null;
+
             var condition = new Models.Listxml.Condition
             {
                 Tag = item.ReadString(Models.Internal.Condition.TagKey),
@@ -1065,8 +964,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Configuration"/> to <cref="Models.Listxml.Configuration"/>
         /// </summary>
-        public static Models.Listxml.Configuration ConvertToListxml(Models.Internal.Configuration item)
+        public static Models.Listxml.Configuration? ConvertToListxml(Models.Internal.Configuration? item)
         {
+            if (item == null)
+                return null;
+
             var configuration = new Models.Listxml.Configuration
             {
                 Name = item.ReadString(Models.Internal.Configuration.NameKey),
@@ -1074,28 +976,14 @@ namespace SabreTools.Serialization
                 Mask = item.ReadString(Models.Internal.Configuration.MaskKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Configuration.ConditionKey) && item[Models.Internal.Configuration.ConditionKey] is Models.Internal.Condition condition)
-                configuration.Condition = ConvertToListxml(condition);
+            var condition = item.Read<Models.Internal.Condition>(Models.Internal.Configuration.ConditionKey);
+            configuration.Condition = ConvertToListxml(condition);
 
-            if (item.ContainsKey(Models.Internal.Configuration.ConfLocationKey) && item[Models.Internal.Configuration.ConfLocationKey] is Models.Internal.ConfLocation[] confLocations)
-            {
-                var confLocationItems = new List<Models.Listxml.ConfLocation>();
-                foreach (var confLocation in confLocations)
-                {
-                    confLocationItems.Add(ConvertToListxml(confLocation));
-                }
-                configuration.ConfLocation = confLocationItems.ToArray();
-            }
+            var confLocations = item.Read<Models.Internal.ConfLocation[]>(Models.Internal.Configuration.ConfLocationKey);
+            configuration.ConfLocation = confLocations?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Configuration.ConfSettingKey) && item[Models.Internal.Configuration.ConfSettingKey] is Models.Internal.ConfSetting[] confSettings)
-            {
-                var confSettingItems = new List<Models.Listxml.ConfSetting>();
-                foreach (var confSetting in confSettings)
-                {
-                    confSettingItems.Add(ConvertToListxml(confSetting));
-                }
-                configuration.ConfSetting = confSettingItems.ToArray();
-            }
+            var confSettings = item.Read<Models.Internal.ConfSetting[]>(Models.Internal.Configuration.ConfSettingKey);
+            configuration.ConfSetting = confSettings?.Select(ConvertToListxml)?.ToArray();
 
             return configuration;
         }
@@ -1103,8 +991,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.ConfLocation"/> to <cref="Models.Listxml.ConfLocation"/>
         /// </summary>
-        public static Models.Listxml.ConfLocation ConvertToListxml(Models.Internal.ConfLocation item)
+        public static Models.Listxml.ConfLocation? ConvertToListxml(Models.Internal.ConfLocation? item)
         {
+            if (item == null)
+                return null;
+
             var confLocation = new Models.Listxml.ConfLocation
             {
                 Name = item.ReadString(Models.Internal.ConfLocation.NameKey),
@@ -1117,8 +1008,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.ConfSetting"/> to <cref="Models.Listxml.ConfSetting"/>
         /// </summary>
-        public static Models.Listxml.ConfSetting ConvertToListxml(Models.Internal.ConfSetting item)
+        public static Models.Listxml.ConfSetting? ConvertToListxml(Models.Internal.ConfSetting? item)
         {
+            if (item == null)
+                return null;
+
             var confSetting = new Models.Listxml.ConfSetting
             {
                 Name = item.ReadString(Models.Internal.ConfSetting.NameKey),
@@ -1126,8 +1020,8 @@ namespace SabreTools.Serialization
                 Default = item.ReadString(Models.Internal.ConfSetting.DefaultKey),
             };
 
-            if (item.ContainsKey(Models.Internal.ConfSetting.ConditionKey) && item[Models.Internal.ConfSetting.ConditionKey] is Models.Internal.Condition condition)
-                confSetting.Condition = ConvertToListxml(condition);
+            var condition = item.Read<Models.Internal.Condition>(Models.Internal.ConfSetting.ConditionKey);
+            confSetting.Condition = ConvertToListxml(condition);
 
             return confSetting;
         }
@@ -1135,8 +1029,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Control"/> to <cref="Models.Listxml.Control"/>
         /// </summary>
-        public static Models.Listxml.Control ConvertToListxml(Models.Internal.Control item)
+        public static Models.Listxml.Control? ConvertToListxml(Models.Internal.Control? item)
         {
+            if (item == null)
+                return null;
+
             var control = new Models.Listxml.Control
             {
                 Type = item.ReadString(Models.Internal.Control.TypeKey),
@@ -1160,6 +1057,9 @@ namespace SabreTools.Serialization
         /// </summary>
         public static Models.Listxml.Device ConvertToListxml(Models.Internal.Device item)
         {
+            if (item == null)
+                return null;
+
             var device = new Models.Listxml.Device
             {
                 Type = item.ReadString(Models.Internal.Device.TypeKey),
@@ -1169,18 +1069,11 @@ namespace SabreTools.Serialization
                 Interface = item.ReadString(Models.Internal.Device.InterfaceKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Device.InstanceKey) && item[Models.Internal.Device.InstanceKey] is Models.Internal.Instance instance)
-                device.Instance = ConvertToListxml(instance);
+            var instance = item.Read<Models.Internal.Instance>(Models.Internal.Device.InstanceKey);
+            device.Instance = ConvertToListxml(instance);
 
-            if (item.ContainsKey(Models.Internal.Device.ExtensionKey) && item[Models.Internal.Device.ExtensionKey] is Models.Internal.Extension[] extensions)
-            {
-                var extensionItems = new List<Models.Listxml.Extension>();
-                foreach (var extension in extensions)
-                {
-                    extensionItems.Add(ConvertToListxml(extension));
-                }
-                device.Extension = extensionItems.ToArray();
-            }
+            var extensions = item.Read<Models.Internal.Extension[]>(Models.Internal.Device.ExtensionKey);
+            device.Extension = extensions?.Select(ConvertToListxml)?.ToArray();
 
             return device;
         }
@@ -1188,8 +1081,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Listxml.DeviceRef"/>
         /// </summary>
-        public static Models.Listxml.DeviceRef ConvertToListxml(Models.Internal.DeviceRef item)
+        public static Models.Listxml.DeviceRef? ConvertToListxml(Models.Internal.DeviceRef? item)
         {
+            if (item == null)
+                return null;
+
             var deviceRef = new Models.Listxml.DeviceRef
             {
                 Name = item.ReadString(Models.Internal.DeviceRef.NameKey),
@@ -1200,8 +1096,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipLocation"/> to <cref="Models.Listxml.DipLocation"/>
         /// </summary>
-        public static Models.Listxml.DipLocation ConvertToListxml(Models.Internal.DipLocation item)
+        public static Models.Listxml.DipLocation? ConvertToListxml(Models.Internal.DipLocation? item)
         {
+            if (item == null)
+                return null;
+
             var dipLocation = new Models.Listxml.DipLocation
             {
                 Name = item.ReadString(Models.Internal.DipLocation.NameKey),
@@ -1214,8 +1113,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.Listxml.DipSwitch"/>
         /// </summary>
-        public static Models.Listxml.DipSwitch ConvertToListxml(Models.Internal.DipSwitch item)
+        public static Models.Listxml.DipSwitch? ConvertToListxml(Models.Internal.DipSwitch? item)
         {
+            if (item == null)
+                return null;
+
             var dipSwitch = new Models.Listxml.DipSwitch
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -1223,28 +1125,14 @@ namespace SabreTools.Serialization
                 Mask = item.ReadString(Models.Internal.DipSwitch.MaskKey),
             };
 
-            if (item.ContainsKey(Models.Internal.DipSwitch.ConditionKey) && item[Models.Internal.DipSwitch.ConditionKey] is Models.Internal.Condition condition)
-                dipSwitch.Condition = ConvertToListxml(condition);
+            var condition = item.Read<Models.Internal.Condition>(Models.Internal.DipSwitch.ConditionKey);
+            dipSwitch.Condition = ConvertToListxml(condition);
 
-            if (item.ContainsKey(Models.Internal.DipSwitch.DipLocationKey) && item[Models.Internal.DipSwitch.DipLocationKey] is Models.Internal.DipLocation[] dipLocations)
-            {
-                var dipLocationItems = new List<Models.Listxml.DipLocation>();
-                foreach (var dipLocation in dipLocations)
-                {
-                    dipLocationItems.Add(ConvertToListxml(dipLocation));
-                }
-                dipSwitch.DipLocation = dipLocationItems.ToArray();
-            }
+            var dipLocations = item.Read<Models.Internal.DipLocation[]>(Models.Internal.DipSwitch.DipLocationKey);
+            dipSwitch.DipLocation = dipLocations?.Select(ConvertToListxml)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.DipSwitch.DipValueKey) && item[Models.Internal.DipSwitch.DipValueKey] is Models.Internal.DipValue[] dipValues)
-            {
-                var dipValueItems = new List<Models.Listxml.DipValue>();
-                foreach (var dipValue in dipValues)
-                {
-                    dipValueItems.Add(ConvertToListxml(dipValue));
-                }
-                dipSwitch.DipValue = dipValueItems.ToArray();
-            }
+            var dipValues = item.Read<Models.Internal.DipValue[]>(Models.Internal.DipSwitch.DipValueKey);
+            dipSwitch.DipValue = dipValues?.Select(ConvertToListxml)?.ToArray();
 
             return dipSwitch;
         }
@@ -1252,8 +1140,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.Listxml.DipValue"/>
         /// </summary>
-        public static Models.Listxml.DipValue ConvertToListxml(Models.Internal.DipValue item)
+        public static Models.Listxml.DipValue? ConvertToListxml(Models.Internal.DipValue? item)
         {
+            if (item == null)
+                return null;
+
             var dipValue = new Models.Listxml.DipValue
             {
                 Name = item.ReadString(Models.Internal.DipValue.NameKey),
@@ -1261,8 +1152,8 @@ namespace SabreTools.Serialization
                 Default = item.ReadString(Models.Internal.DipValue.DefaultKey),
             };
 
-            if (item.ContainsKey(Models.Internal.DipValue.ConditionKey) && item[Models.Internal.DipValue.ConditionKey] is Models.Internal.Condition condition)
-                dipValue.Condition = ConvertToListxml(condition);
+            var condition = item.Read<Models.Internal.Condition>(Models.Internal.DipValue.ConditionKey);
+            dipValue.Condition = ConvertToListxml(condition);
 
             return dipValue;
         }
@@ -1270,8 +1161,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listxml.Disk"/>
         /// </summary>
-        public static Models.Listxml.Disk ConvertToListxml(Models.Internal.Disk item)
+        public static Models.Listxml.Disk? ConvertToListxml(Models.Internal.Disk? item)
         {
+            if (item == null)
+                return null;
+
             var disk = new Models.Listxml.Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -1290,8 +1184,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Display"/> to <cref="Models.Listxml.Display"/>
         /// </summary>
-        public static Models.Listxml.Display ConvertToListxml(Models.Internal.Display item)
+        public static Models.Listxml.Display? ConvertToListxml(Models.Internal.Display? item)
         {
+            if (item == null)
+                return null;
+
             var display = new Models.Listxml.Display
             {
                 Tag = item.ReadString(Models.Internal.Display.TagKey),
@@ -1315,8 +1212,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Listxml.Driver"/>
         /// </summary>
-        public static Models.Listxml.Driver ConvertToListxml(Models.Internal.Driver item)
+        public static Models.Listxml.Driver? ConvertToListxml(Models.Internal.Driver? item)
         {
+            if (item == null)
+                return null;
+
             var driver = new Models.Listxml.Driver
             {
                 Status = item.ReadString(Models.Internal.Driver.StatusKey),
@@ -1337,8 +1237,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Extension"/> to <cref="Models.Listxml.Extension"/>
         /// </summary>
-        public static Models.Listxml.Extension ConvertToListxml(Models.Internal.Extension item)
+        public static Models.Listxml.Extension? ConvertToListxml(Models.Internal.Extension? item)
         {
+            if (item == null)
+                return null;
+
             var extension = new Models.Listxml.Extension
             {
                 Name = item.ReadString(Models.Internal.Extension.NameKey),
@@ -1349,8 +1252,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.Listxml.Feature"/>
         /// </summary>
-        public static Models.Listxml.Feature ConvertToListxml(Models.Internal.Feature item)
+        public static Models.Listxml.Feature? ConvertToListxml(Models.Internal.Feature? item)
         {
+            if (item == null)
+                return null;
+
             var feature = new Models.Listxml.Feature
             {
                 Type = item.ReadString(Models.Internal.Feature.TypeKey),
@@ -1363,8 +1269,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.Listxml.Input"/>
         /// </summary>
-        public static Models.Listxml.Input ConvertToListxml(Models.Internal.Input item)
+        public static Models.Listxml.Input? ConvertToListxml(Models.Internal.Input? item)
         {
+            if (item == null)
+                return null;
+
             var input = new Models.Listxml.Input
             {
                 Service = item.ReadString(Models.Internal.Input.ServiceKey),
@@ -1375,15 +1284,8 @@ namespace SabreTools.Serialization
                 Coins = item.ReadString(Models.Internal.Input.CoinsKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Input.ControlKey) && item[Models.Internal.Input.ControlKey] is Models.Internal.Control[] controls)
-            {
-                var controlItems = new List<Models.Listxml.Control>();
-                foreach (var control in controls)
-                {
-                    controlItems.Add(ConvertToListxml(control));
-                }
-                input.Control = controlItems.ToArray();
-            }
+            var controls = item.Read<Models.Internal.Control[]>(Models.Internal.Input.ControlKey);
+            input.Control = controls?.Select(ConvertToListxml)?.ToArray();
 
             return input;
         }
@@ -1391,8 +1293,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Instance"/> to <cref="Models.Listxml.Instance"/>
         /// </summary>
-        public static Models.Listxml.Instance ConvertToListxml(Models.Internal.Instance item)
+        public static Models.Listxml.Instance? ConvertToListxml(Models.Internal.Instance? item)
         {
+            if (item == null)
+                return null;
+
             var instance = new Models.Listxml.Instance
             {
                 Name = item.ReadString(Models.Internal.Instance.NameKey),
@@ -1404,31 +1309,30 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Port"/> to <cref="Models.Listxml.Port"/>
         /// </summary>
-        public static Models.Listxml.Port ConvertToListxml(Models.Internal.Port item)
+        public static Models.Listxml.Port? ConvertToListxml(Models.Internal.Port? item)
         {
-            var input = new Models.Listxml.Port
+            if (item == null)
+                return null;
+
+            var port = new Models.Listxml.Port
             {
                 Tag = item.ReadString(Models.Internal.Port.TagKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Port.AnalogKey) && item[Models.Internal.Port.AnalogKey] is Models.Internal.Analog[] analogs)
-            {
-                var analogItems = new List<Models.Listxml.Analog>();
-                foreach (var analog in analogs)
-                {
-                    analogItems.Add(ConvertToListxml(analog));
-                }
-                input.Analog = analogItems.ToArray();
-            }
+            var analogs = item.Read<Models.Internal.Analog[]>(Models.Internal.Port.AnalogKey);
+            port.Analog = analogs?.Select(ConvertToListxml)?.ToArray();
 
-            return input;
+            return port;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.RamOption"/> to <cref="Models.Listxml.RamOption"/>
         /// </summary>
-        public static Models.Listxml.RamOption ConvertToListxml(Models.Internal.RamOption item)
+        public static Models.Listxml.RamOption? ConvertToListxml(Models.Internal.RamOption? item)
         {
+            if (item == null)
+                return null;
+
             var ramOption = new Models.Listxml.RamOption
             {
                 Name = item.ReadString(Models.Internal.RamOption.NameKey),
@@ -1440,8 +1344,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listxml.Rom"/>
         /// </summary>
-        public static Models.Listxml.Rom ConvertToListxml(Models.Internal.Rom item)
+        public static Models.Listxml.Rom? ConvertToListxml(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var rom = new Models.Listxml.Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -1463,8 +1370,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Listxml.Sample"/>
         /// </summary>
-        public static Models.Listxml.Sample ConvertToListxml(Models.Internal.Sample item)
+        public static Models.Listxml.Sample? ConvertToListxml(Models.Internal.Sample? item)
         {
+            if (item == null)
+                return null;
+
             var sample = new Models.Listxml.Sample
             {
                 Name = item.ReadString(Models.Internal.Sample.NameKey),
@@ -1475,22 +1385,18 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Slot"/> to <cref="Models.Listxml.Slot"/>
         /// </summary>
-        public static Models.Listxml.Slot ConvertToListxml(Models.Internal.Slot item)
+        public static Models.Listxml.Slot? ConvertToListxml(Models.Internal.Slot? item)
         {
+            if (item == null)
+                return null;
+
             var slot = new Models.Listxml.Slot
             {
                 Name = item.ReadString(Models.Internal.Slot.NameKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Slot.SlotOptionKey) && item[Models.Internal.Slot.SlotOptionKey] is Models.Internal.SlotOption[] slotOptions)
-            {
-                var slotOptionItems = new List<Models.Listxml.SlotOption>();
-                foreach (var slotOption in slotOptions)
-                {
-                    slotOptionItems.Add(ConvertToListxml(slotOption));
-                }
-                slot.SlotOption = slotOptionItems.ToArray();
-            }
+            var slotOptions = item.Read<Models.Internal.SlotOption[]>(Models.Internal.Slot.SlotOptionKey);
+            slot.SlotOption = slotOptions?.Select(ConvertToListxml)?.ToArray();
 
             return slot;
         }
@@ -1498,8 +1404,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SlotOption"/> to <cref="Models.Listxml.SlotOption"/>
         /// </summary>
-        public static Models.Listxml.SlotOption ConvertToListxml(Models.Internal.SlotOption item)
+        public static Models.Listxml.SlotOption? ConvertToListxml(Models.Internal.SlotOption? item)
         {
+            if (item == null)
+                return null;
+
             var slotOption = new Models.Listxml.SlotOption
             {
                 Name = item.ReadString(Models.Internal.SlotOption.NameKey),
@@ -1512,8 +1421,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Listxml.SoftwareList"/>
         /// </summary>
-        public static Models.Listxml.SoftwareList ConvertToListxml(Models.Internal.SoftwareList item)
+        public static Models.Listxml.SoftwareList? ConvertToListxml(Models.Internal.SoftwareList? item)
         {
+            if (item == null)
+                return null;
+
             var softwareList = new Models.Listxml.SoftwareList
             {
                 Tag = item.ReadString(Models.Internal.SoftwareList.TagKey),
@@ -1527,8 +1439,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.Listxml.Sound"/>
         /// </summary>
-        public static Models.Listxml.Sound ConvertToListxml(Models.Internal.Sound item)
+        public static Models.Listxml.Sound? ConvertToListxml(Models.Internal.Sound? item)
         {
+            if (item == null)
+                return null;
+
             var sound = new Models.Listxml.Sound
             {
                 Channels = item.ReadString(Models.Internal.Sound.ChannelsKey),
@@ -1539,8 +1454,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.Listxml.Video"/>
         /// </summary>
-        public static Models.Listxml.Video ConvertToListxml(Models.Internal.Video item)
+        public static Models.Listxml.Video? ConvertToListxml(Models.Internal.Video? item)
         {
+            if (item == null)
+                return null;
+
             var video = new Models.Listxml.Video
             {
                 Screen = item.ReadString(Models.Internal.Video.ScreenKey),

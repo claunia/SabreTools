@@ -101,8 +101,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OpenMSX.Software"/>
         /// </summary>
-        public static Models.OpenMSX.Software ConvertMachineToOpenMSX(Models.Internal.Machine item)
+        public static Models.OpenMSX.Software? ConvertMachineToOpenMSX(Models.Internal.Machine? item)
         {
+            if (item == null)
+                return null;
+            
             var game = new Models.OpenMSX.Software
             {
                 Title = item.ReadString(Models.Internal.Machine.NameKey),
@@ -113,15 +116,8 @@ namespace SabreTools.Serialization
                 Country = item.ReadString(Models.Internal.Machine.CountryKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Machine.DumpKey) && item[Models.Internal.Machine.DumpKey] is Models.Internal.Dump[] dumps)
-            {
-                var dumpItems = new List<Models.OpenMSX.Dump>();
-                foreach (var dump in dumps)
-                {
-                    dumpItems.Add(ConvertToOpenMSX(dump));
-                }
-                game.Dump = dumpItems.ToArray();
-            }
+            var dumps = item.Read<Models.Internal.Dump[]>(Models.Internal.Machine.DumpKey);
+            game.Dump = dumps?.Select(ConvertToOpenMSX)?.ToArray();
 
             return game;
         }
@@ -129,25 +125,24 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Dump"/> to <cref="Models.OpenMSX.Dump"/>
         /// </summary>
-        public static Models.OpenMSX.Dump ConvertToOpenMSX(Models.Internal.Dump item)
+        public static Models.OpenMSX.Dump? ConvertToOpenMSX(Models.Internal.Dump? item)
         {
+            if (item == null)
+                return null;
+            
             var dump = new Models.OpenMSX.Dump();
 
-            if (item.ContainsKey(Models.Internal.Dump.OriginalKey) && item[Models.Internal.Dump.OriginalKey] is Models.Internal.Original original)
-                dump.Original = ConvertToOpenMSX(original);
+            var original = item.Read<Models.Internal.Original>(Models.Internal.Dump.OriginalKey);
+            dump.Original = ConvertToOpenMSX(original);
 
-            if (item.ContainsKey(Models.Internal.Dump.RomKey) && item[Models.Internal.Dump.RomKey] is Models.Internal.Rom rom)
-            {
-                dump.Rom = ConvertToOpenMSXRom(rom);
-            }
-            else if (item.ContainsKey(Models.Internal.Dump.MegaRomKey) && item[Models.Internal.Dump.MegaRomKey] is Models.Internal.Rom megaRom)
-            {
-                dump.Rom = ConvertToOpenMSXMegaRom(megaRom);
-            }
-            else if (item.ContainsKey(Models.Internal.Dump.SCCPlusCartKey) && item[Models.Internal.Dump.SCCPlusCartKey] is Models.Internal.Rom sccPlusCart)
-            {
-                dump.Rom = ConvertToOpenMSXSCCPlusCart(sccPlusCart);
-            }
+            var rom = item.Read<Models.Internal.Rom>(Models.Internal.Dump.RomKey);
+            dump.Rom = ConvertToOpenMSXRom(rom);
+
+            var megaRom = item.Read<Models.Internal.Rom>(Models.Internal.Dump.MegaRomKey);
+            dump.Rom = ConvertToOpenMSXRom(megaRom);
+
+            var sccPlusCart = item.Read<Models.Internal.Rom>(Models.Internal.Dump.SCCPlusCartKey);
+            dump.Rom = ConvertToOpenMSXRom(sccPlusCart);
 
             return dump;
         }
@@ -155,8 +150,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.MegaRom"/>
         /// </summary>
-        public static Models.OpenMSX.MegaRom ConvertToOpenMSXMegaRom(Models.Internal.Rom item)
+        public static Models.OpenMSX.MegaRom? ConvertToOpenMSXMegaRom(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+            
             var megaRom = new Models.OpenMSX.MegaRom
             {
                 Start = item.ReadString(Models.Internal.Rom.StartKey),
@@ -170,8 +168,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Original"/> to <cref="Models.OpenMSX.Original"/>
         /// </summary>
-        public static Models.OpenMSX.Original ConvertToOpenMSX(Models.Internal.Original item)
+        public static Models.OpenMSX.Original? ConvertToOpenMSX(Models.Internal.Original? item)
         {
+            if (item == null)
+                return null;
+            
             var original = new Models.OpenMSX.Original
             {
                 Value = item.ReadString(Models.Internal.Original.ValueKey),
@@ -183,8 +184,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.Rom"/>
         /// </summary>
-        public static Models.OpenMSX.Rom ConvertToOpenMSXRom(Models.Internal.Rom item)
+        public static Models.OpenMSX.Rom? ConvertToOpenMSXRom(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+            
             var rom = new Models.OpenMSX.Rom
             {
                 Start = item.ReadString(Models.Internal.Rom.StartKey),
@@ -198,8 +202,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.SCCPlusCart"/>
         /// </summary>
-        public static Models.OpenMSX.SCCPlusCart ConvertToOpenMSXSCCPlusCart(Models.Internal.Rom item)
+        public static Models.OpenMSX.SCCPlusCart? ConvertToOpenMSXSCCPlusCart(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+            
             var sccPlusCart = new Models.OpenMSX.SCCPlusCart
             {
                 Start = item.ReadString(Models.Internal.Rom.StartKey),

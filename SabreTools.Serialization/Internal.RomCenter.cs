@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SabreTools.Serialization
@@ -49,39 +48,34 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.RomCenter.Rom"/>
         /// </summary>
-        public static Models.RomCenter.Rom[] ConvertMachineToRomCenter(Models.Internal.Machine item)
+        public static Models.RomCenter.Rom?[]? ConvertMachineToRomCenter(Models.Internal.Machine? item)
         {
-            var romItems = new List<Models.RomCenter.Rom>();
+            if (item == null)
+                return null;
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                foreach (var rom in roms)
-                {
-                    var romItem = ConvertToRomCenter(rom);
-
-                    romItem.ParentName = rom.ReadString(Models.Internal.Machine.RomOfKey);
-                    //romItem.ParentDescription = rom.ReadString(Models.Internal.Machine.RomOfKey); // This is unmappable
-                    romItem.GameName = rom.ReadString(Models.Internal.Machine.NameKey);
-                    romItem.GameDescription = rom.ReadString(Models.Internal.Machine.DescriptionKey);
-
-                    romItems.Add(romItem);
-                }
-            }
-
-            return romItems.ToArray();
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(rom => ConvertToRomCenter(rom, item))?.ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.RomCenter.Rom"/>
         /// </summary>
-        public static Models.RomCenter.Rom ConvertToRomCenter(Models.Internal.Rom item)
+        public static Models.RomCenter.Rom? ConvertToRomCenter(Models.Internal.Rom? item, Models.Internal.Machine? parent)
         {
+            if (item == null)
+                return null;
+
             var row = new Models.RomCenter.Rom
             {
                 RomName = item.ReadString(Models.Internal.Rom.NameKey),
                 RomCRC = item.ReadString(Models.Internal.Rom.CRCKey),
                 RomSize = item.ReadString(Models.Internal.Rom.SizeKey),
                 MergeName = item.ReadString(Models.Internal.Rom.MergeKey),
+
+                ParentName = parent?.ReadString(Models.Internal.Machine.RomOfKey),
+                //ParentDescription = parent?.ReadString(Models.Internal.Machine.ParentDescriptionKey), // This is unmappable
+                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
+                GameDescription = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
             };
             return row;
         }

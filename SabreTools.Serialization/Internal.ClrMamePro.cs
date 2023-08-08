@@ -350,8 +350,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
         /// </summary>
-        public static Models.ClrMamePro.GameBase ConvertMachineToClrMamePro(Models.Internal.Machine item, bool game = false)
+        public static Models.ClrMamePro.GameBase? ConvertMachineToClrMamePro(Models.Internal.Machine? item, bool game = false)
         {
+            if (item == null)
+                return null;
+
             Models.ClrMamePro.GameBase gameBase = game ? new Models.ClrMamePro.Game() : new Models.ClrMamePro.Machine();
 
             gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
@@ -363,107 +366,44 @@ namespace SabreTools.Serialization
             gameBase.RomOf = item.ReadString(Models.Internal.Machine.RomOfKey);
             gameBase.SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey);
 
-            if (item.ContainsKey(Models.Internal.Machine.ReleaseKey) && item[Models.Internal.Machine.ReleaseKey] is Models.Internal.Release[] releases)
-            {
-                var releaseItems = new List<Models.ClrMamePro.Release>();
-                foreach (var release in releases)
-                {
-                    releaseItems.Add(ConvertToClrMamePro(release));
-                }
-                gameBase.Release = releaseItems.ToArray();
-            }
+            var releases = item.Read<Models.Internal.Release[]>(Models.Internal.Machine.ReleaseKey);
+            gameBase.Release = releases?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.BiosSetKey) && item[Models.Internal.Machine.BiosSetKey] is Models.Internal.BiosSet[] biosSets)
-            {
-                var biosSetItems = new List<Models.ClrMamePro.BiosSet>();
-                foreach (var biosSet in biosSets)
-                {
-                    biosSetItems.Add(ConvertToClrMamePro(biosSet));
-                }
-                gameBase.BiosSet = biosSetItems.ToArray();
-            }
+            var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
+            gameBase.BiosSet = biosSets?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.RomKey) && item[Models.Internal.Machine.RomKey] is Models.Internal.Rom[] roms)
-            {
-                var romItems = new List<Models.ClrMamePro.Rom>();
-                foreach (var rom in roms)
-                {
-                    romItems.Add(ConvertToClrMamePro(rom));
-                }
-                gameBase.Rom = romItems.ToArray();
-            }
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            gameBase.Rom = roms?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DiskKey) && item[Models.Internal.Machine.DiskKey] is Models.Internal.Disk[] disks)
-            {
-                var diskItems = new List<Models.ClrMamePro.Disk>();
-                foreach (var disk in disks)
-                {
-                    diskItems.Add(ConvertToClrMamePro(disk));
-                }
-                gameBase.Disk = diskItems.ToArray();
-            }
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            gameBase.Disk = disks?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.MediaKey) && item[Models.Internal.Machine.MediaKey] is Models.Internal.Media[] medias)
-            {
-                var mediaItems = new List<Models.ClrMamePro.Media>();
-                foreach (var media in medias)
-                {
-                    mediaItems.Add(ConvertToClrMamePro(media));
-                }
-                gameBase.Media = mediaItems.ToArray();
-            }
+            var medias = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
+            gameBase.Media = medias?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.SampleKey) && item[Models.Internal.Machine.SampleKey] is Models.Internal.Sample[] samples)
-            {
-                var sampleItems = new List<Models.ClrMamePro.Sample>();
-                foreach (var sample in samples)
-                {
-                    sampleItems.Add(ConvertToClrMamePro(sample));
-                }
-                gameBase.Sample = sampleItems.ToArray();
-            }
+            var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
+            gameBase.Sample = samples?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.ArchiveKey) && item[Models.Internal.Machine.ArchiveKey] is Models.Internal.Archive[] archives)
-            {
-                var archiveItems = new List<Models.ClrMamePro.Archive>();
-                foreach (var archive in archives)
-                {
-                    archiveItems.Add(ConvertToClrMamePro(archive));
-                }
-                gameBase.Archive = archiveItems.ToArray();
-            }
+            var archives = item.Read<Models.Internal.Archive[]>(Models.Internal.Machine.ArchiveKey);
+            gameBase.Archive = archives?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.ChipKey) && item[Models.Internal.Machine.ChipKey] is Models.Internal.Chip[] chips)
-            {
-                var chipItems = new List<Models.ClrMamePro.Chip>();
-                foreach (var chip in chips)
-                {
-                    chipItems.Add(ConvertToClrMamePro(chip));
-                }
-                gameBase.Chip = chipItems.ToArray();
-            }
+            var chips = item.Read<Models.Internal.Chip[]>(Models.Internal.Machine.ChipKey);
+            gameBase.Chip = chips?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.VideoKey) && item[Models.Internal.Machine.VideoKey] is Models.Internal.Video video)
-                gameBase.Video = ConvertToClrMamePro(video);
+            var video = item.Read<Models.Internal.Video>(Models.Internal.Machine.VideoKey);
+            gameBase.Video = ConvertToClrMamePro(video);
 
-            if (item.ContainsKey(Models.Internal.Machine.SoundKey) && item[Models.Internal.Machine.SoundKey] is Models.Internal.Sound sound)
-                gameBase.Sound = ConvertToClrMamePro(sound);
+            var sound = item.Read<Models.Internal.Sound>(Models.Internal.Machine.SoundKey);
+            gameBase.Sound = ConvertToClrMamePro(sound);
 
-            if (item.ContainsKey(Models.Internal.Machine.InputKey) && item[Models.Internal.Machine.InputKey] is Models.Internal.Input input)
-                gameBase.Input = ConvertToClrMamePro(input);
+            var input = item.Read<Models.Internal.Input>(Models.Internal.Machine.InputKey);
+            gameBase.Input = ConvertToClrMamePro(input);
 
-            if (item.ContainsKey(Models.Internal.Machine.DipSwitchKey) && item[Models.Internal.Machine.DipSwitchKey] is Models.Internal.DipSwitch[] dipSwitches)
-            {
-                var dipSwitchItems = new List<Models.ClrMamePro.DipSwitch>();
-                foreach (var dipSwitch in dipSwitches)
-                {
-                    dipSwitchItems.Add(ConvertToClrMamePro(dipSwitch));
-                }
-                gameBase.DipSwitch = dipSwitchItems.ToArray();
-            }
+            var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Machine.DipSwitchKey);
+            gameBase.DipSwitch = dipSwitches?.Select(ConvertToClrMamePro)?.ToArray();
 
-            if (item.ContainsKey(Models.Internal.Machine.DriverKey) && item[Models.Internal.Machine.DriverKey] is Models.Internal.Driver driver)
-                gameBase.Driver = ConvertToClrMamePro(driver);
+            var driver = item.Read<Models.Internal.Driver>(Models.Internal.Machine.DriverKey);
+            gameBase.Driver = ConvertToClrMamePro(driver);
 
             return gameBase;
         }
@@ -471,8 +411,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
         /// </summary>
-        public static Models.ClrMamePro.Archive ConvertToClrMamePro(Models.Internal.Archive item)
+        public static Models.ClrMamePro.Archive? ConvertToClrMamePro(Models.Internal.Archive? item)
         {
+            if (item == null)
+                return null;
+
             var archive = new Models.ClrMamePro.Archive
             {
                 Name = item.ReadString(Models.Internal.Archive.NameKey),
@@ -483,8 +426,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.ClrMamePro.BiosSet"/>
         /// </summary>
-        public static Models.ClrMamePro.BiosSet ConvertToClrMamePro(Models.Internal.BiosSet item)
+        public static Models.ClrMamePro.BiosSet? ConvertToClrMamePro(Models.Internal.BiosSet? item)
         {
+            if (item == null)
+                return null;
+
             var biosset = new Models.ClrMamePro.BiosSet
             {
                 Name = item.ReadString(Models.Internal.BiosSet.NameKey),
@@ -497,8 +443,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.ClrMamePro.Chip"/>
         /// </summary>
-        public static Models.ClrMamePro.Chip ConvertToClrMamePro(Models.Internal.Chip item)
+        public static Models.ClrMamePro.Chip? ConvertToClrMamePro(Models.Internal.Chip? item)
         {
+            if (item == null)
+                return null;
+
             var chip = new Models.ClrMamePro.Chip
             {
                 Type = item.ReadString(Models.Internal.Chip.ChipTypeKey),
@@ -512,8 +461,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.ClrMamePro.DipSwitch"/>
         /// </summary>
-        public static Models.ClrMamePro.DipSwitch ConvertToClrMamePro(Models.Internal.DipSwitch item)
+        public static Models.ClrMamePro.DipSwitch? ConvertToClrMamePro(Models.Internal.DipSwitch? item)
         {
+            if (item == null)
+                return null;
+
             var dipswitch = new Models.ClrMamePro.DipSwitch
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -526,8 +478,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.ClrMamePro.Disk"/>
         /// </summary>
-        public static Models.ClrMamePro.Disk ConvertToClrMamePro(Models.Internal.Disk item)
+        public static Models.ClrMamePro.Disk? ConvertToClrMamePro(Models.Internal.Disk? item)
         {
+            if (item == null)
+                return null;
+
             var disk = new Models.ClrMamePro.Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -543,8 +498,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.ClrMamePro.Driver"/>
         /// </summary>
-        public static Models.ClrMamePro.Driver ConvertToClrMamePro(Models.Internal.Driver item)
+        public static Models.ClrMamePro.Driver? ConvertToClrMamePro(Models.Internal.Driver? item)
         {
+            if (item == null)
+                return null;
+
             var driver = new Models.ClrMamePro.Driver
             {
                 Status = item.ReadString(Models.Internal.Driver.StatusKey),
@@ -559,8 +517,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.ClrMamePro.Input"/>
         /// </summary>
-        public static Models.ClrMamePro.Input ConvertToClrMamePro(Models.Internal.Input item)
+        public static Models.ClrMamePro.Input? ConvertToClrMamePro(Models.Internal.Input? item)
         {
+            if (item == null)
+                return null;
+
             var input = new Models.ClrMamePro.Input
             {
                 Players = item.ReadString(Models.Internal.Input.PlayersKey),
@@ -576,8 +537,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.ClrMamePro.Media"/>
         /// </summary>
-        public static Models.ClrMamePro.Media ConvertToClrMamePro(Models.Internal.Media item)
+        public static Models.ClrMamePro.Media? ConvertToClrMamePro(Models.Internal.Media? item)
         {
+            if (item == null)
+                return null;
+
             var media = new Models.ClrMamePro.Media
             {
                 Name = item.ReadString(Models.Internal.Media.NameKey),
@@ -592,8 +556,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.ClrMamePro.Release"/>
         /// </summary>
-        public static Models.ClrMamePro.Release ConvertToClrMamePro(Models.Internal.Release item)
+        public static Models.ClrMamePro.Release? ConvertToClrMamePro(Models.Internal.Release? item)
         {
+            if (item == null)
+                return null;
+
             var release = new Models.ClrMamePro.Release
             {
                 Name = item.ReadString(Models.Internal.Release.NameKey),
@@ -608,8 +575,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ClrMamePro.Rom"/>
         /// </summary>
-        public static Models.ClrMamePro.Rom ConvertToClrMamePro(Models.Internal.Rom item)
+        public static Models.ClrMamePro.Rom? ConvertToClrMamePro(Models.Internal.Rom? item)
         {
+            if (item == null)
+                return null;
+
             var rom = new Models.ClrMamePro.Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -640,8 +610,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.ClrMamePro.Sample"/>
         /// </summary>
-        public static Models.ClrMamePro.Sample ConvertToClrMamePro(Models.Internal.Sample item)
+        public static Models.ClrMamePro.Sample? ConvertToClrMamePro(Models.Internal.Sample? item)
         {
+            if (item == null)
+                return null;
+
             var sample = new Models.ClrMamePro.Sample
             {
                 Name = item.ReadString(Models.Internal.Sample.NameKey),
@@ -652,8 +625,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.ClrMamePro.Sound"/>
         /// </summary>
-        public static Models.ClrMamePro.Sound ConvertToClrMamePro(Models.Internal.Sound item)
+        public static Models.ClrMamePro.Sound? ConvertToClrMamePro(Models.Internal.Sound? item)
         {
+            if (item == null)
+                return null;
+
             var sound = new Models.ClrMamePro.Sound
             {
                 Channels = item.ReadString(Models.Internal.Sound.ChannelsKey),
@@ -664,8 +640,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.ClrMamePro.Video"/>
         /// </summary>
-        public static Models.ClrMamePro.Video ConvertToClrMamePro(Models.Internal.Video item)
+        public static Models.ClrMamePro.Video? ConvertToClrMamePro(Models.Internal.Video? item)
         {
+            if (item == null)
+                return null;
+
             var video = new Models.ClrMamePro.Video
             {
                 Screen = item.ReadString(Models.Internal.Video.ScreenKey),
