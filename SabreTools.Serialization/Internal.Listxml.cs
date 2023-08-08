@@ -11,6 +11,32 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Listxml.M1"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromListxml(Models.Listxml.M1 item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.VersionKey] = item.Version,
+            };
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromListxml(Models.Listxml.Mame item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.BuildKey] = item.Build,
+                [Models.Internal.Header.DebugKey] = item.Debug,
+                [Models.Internal.Header.MameConfigKey] = item.MameConfig,
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Listxml.GameBase"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromListxml(Models.Listxml.GameBase item)

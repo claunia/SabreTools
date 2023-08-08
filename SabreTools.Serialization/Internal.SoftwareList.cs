@@ -11,6 +11,20 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.SoftwareList.SoftwareList"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromSoftwareList(Models.SoftwareList.SoftwareList item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = item.Name,
+                [Models.Internal.Header.DescriptionKey] = item.Description,
+                [Models.Internal.Header.NotesKey] = item.Notes,
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.SoftwareList.Software"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromSoftwareList(Models.SoftwareList.Software item)

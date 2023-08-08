@@ -11,6 +11,32 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.ClrMamePro"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromClrMamePro(Models.ClrMamePro.ClrMamePro item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = item.Name,
+                [Models.Internal.Header.DescriptionKey] = item.Description,
+                [Models.Internal.Header.RootDirKey] = item.RootDir,
+                [Models.Internal.Header.CategoryKey] = item.Category,
+                [Models.Internal.Header.VersionKey] = item.Version,
+                [Models.Internal.Header.DateKey] = item.Date,
+                [Models.Internal.Header.AuthorKey] = item.Author,
+                [Models.Internal.Header.HomepageKey] = item.Homepage,
+                [Models.Internal.Header.UrlKey] = item.Url,
+                [Models.Internal.Header.CommentKey] = item.Comment,
+                [Models.Internal.Header.HeaderKey] = item.Header,
+                [Models.Internal.Header.TypeKey] = item.Type,
+                [Models.Internal.Header.ForceMergingKey] = item.ForceMerging,
+                [Models.Internal.Header.ForceZippingKey] = item.ForceZipping,
+                [Models.Internal.Header.ForcePackingKey] = item.ForcePacking,
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.ClrMamePro.GameBase"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromClrMamePro(Models.ClrMamePro.GameBase item)

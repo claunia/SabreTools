@@ -11,6 +11,18 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromListrom(Models.Listrom.MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = "MAME Listrom",
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Listrom.Set"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromListrom(Models.Listrom.Set item)

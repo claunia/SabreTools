@@ -11,6 +11,50 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Logiqx.Header"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromLogiqx(Models.Logiqx.Header item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.IdKey] = item.Id,
+                [Models.Internal.Header.NameKey] = item.Name,
+                [Models.Internal.Header.DescriptionKey] = item.Description,
+                [Models.Internal.Header.RootDirKey] = item.RootDir,
+                [Models.Internal.Header.CategoryKey] = item.Category,
+                [Models.Internal.Header.VersionKey] = item.Version,
+                [Models.Internal.Header.DateKey] = item.Date,
+                [Models.Internal.Header.AuthorKey] = item.Author,
+                [Models.Internal.Header.EmailKey] = item.Email,
+                [Models.Internal.Header.HomepageKey] = item.Homepage,
+                [Models.Internal.Header.UrlKey] = item.Url,
+                [Models.Internal.Header.CommentKey] = item.Comment,
+                [Models.Internal.Header.TypeKey] = item.Type,
+            };
+
+            if (item.ClrMamePro != null)
+            {
+                header[Models.Internal.Header.HeaderKey] = item.ClrMamePro.Header;
+                header[Models.Internal.Header.ForceMergingKey] = item.ClrMamePro.ForceMerging;
+                header[Models.Internal.Header.ForceNodumpKey] = item.ClrMamePro.ForceNodump;
+                header[Models.Internal.Header.ForcePackingKey] = item.ClrMamePro.ForcePacking;
+            }
+
+            if (item.RomCenter != null)
+            {
+                header[Models.Internal.Header.PluginKey] = item.RomCenter.Plugin;
+                header[Models.Internal.Header.RomModeKey] = item.RomCenter.RomMode;
+                header[Models.Internal.Header.BiosModeKey] = item.RomCenter.BiosMode;
+                header[Models.Internal.Header.SampleModeKey] = item.RomCenter.SampleMode;
+                header[Models.Internal.Header.LockRomModeKey] = item.RomCenter.LockRomMode;
+                header[Models.Internal.Header.LockBiosModeKey] = item.RomCenter.LockBiosMode;
+                header[Models.Internal.Header.LockSampleModeKey] = item.RomCenter.LockSampleMode;
+            }
+
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromLogiqx(Models.Logiqx.GameBase item)

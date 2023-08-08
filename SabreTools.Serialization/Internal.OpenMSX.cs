@@ -11,6 +11,18 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromOpenMSX(Models.OpenMSX.SoftwareDb item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.TimestampKey] = item.Timestamp,
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.OpenMSX.Software"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromOpenMSX(Models.OpenMSX.Software item)

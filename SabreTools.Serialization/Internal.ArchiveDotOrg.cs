@@ -10,6 +10,18 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromArchiveDotOrg(Models.ArchiveDotOrg.Files item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = "archive.org",
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromArchiveDotOrg(Models.ArchiveDotOrg.File item)

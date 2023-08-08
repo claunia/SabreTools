@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SabreTools.Serialization
@@ -9,6 +8,18 @@ namespace SabreTools.Serialization
     public partial class Internal
     {
         #region Serialize
+
+        /// <summary>
+        /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromEverdriveSMDB(Models.EverdriveSMDB.MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = "Everdrive SMDB",
+            };
+            return header;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.EverdriveSMDB.Row"/> to <cref="Models.Internal.Machine"/>

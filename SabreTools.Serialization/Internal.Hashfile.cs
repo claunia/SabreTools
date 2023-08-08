@@ -12,6 +12,18 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromHashfile(Models.Hashfile.Hashfile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = "Hashfile",
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromHashfile(Models.Hashfile.Hashfile item)

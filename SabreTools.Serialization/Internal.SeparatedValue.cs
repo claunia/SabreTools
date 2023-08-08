@@ -11,6 +11,27 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromArchiveDotOrg(Models.SeparatedValue.MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.HeaderKey] = item.Header,
+            };
+
+            if (item.Row != null && item.Row.Any())
+            {
+                var first = item.Row[0];
+                //header[Models.Internal.Header.FileNameKey] = first.FileName; // Not possible to map
+                header[Models.Internal.Header.NameKey] = first.FileName;
+                header[Models.Internal.Header.DescriptionKey] = first.Description;
+            }
+
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)

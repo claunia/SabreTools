@@ -10,6 +10,18 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.AttractMode.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromAttractMode(Models.AttractMode.MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.HeaderKey] = item.Header,
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromAttractMode(Models.AttractMode.Row item)

@@ -11,6 +11,39 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.OfflineList.Dat"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromOfflineList(Models.OfflineList.Dat item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NoNamespaceSchemaLocationKey] = item.NoNamespaceSchemaLocation,
+            };
+
+            if (item.Configuration != null)
+            {
+                header[Models.Internal.Header.NameKey] = item.Configuration.DatName;
+                header[Models.Internal.Header.ImFolderKey] = item.Configuration.ImFolder;
+                header[Models.Internal.Header.DatVersionKey] = item.Configuration.DatVersion;
+                header[Models.Internal.Header.SystemKey] = item.Configuration.System;
+                header[Models.Internal.Header.ScreenshotsWidthKey] = item.Configuration.ScreenshotsWidth;
+                header[Models.Internal.Header.ScreenshotsHeightKey] = item.Configuration.ScreenshotsHeight;
+                header[Models.Internal.Header.InfosKey] = item.Configuration.Infos;
+                header[Models.Internal.Header.CanOpenKey] = item.Configuration.CanOpen;
+                header[Models.Internal.Header.NewDatKey] = item.Configuration.NewDat;
+                header[Models.Internal.Header.SearchKey] = item.Configuration.Search;
+                header[Models.Internal.Header.RomTitleKey] = item.Configuration.RomTitle;
+            }
+
+            if (item.GUI != null)
+            {
+                header[Models.Internal.Header.ImagesKey] = item.GUI.Images;
+            }
+
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.OfflineList.Game"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromOfflineList(Models.OfflineList.Game item)

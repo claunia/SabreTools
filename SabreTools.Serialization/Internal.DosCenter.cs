@@ -11,6 +11,24 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.DosCenter.DosCenter"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        public static Models.Internal.Header ConvertHeaderFromArchiveDotOrg(Models.DosCenter.DosCenter item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = item.Name,
+                [Models.Internal.Header.DescriptionKey] = item.Description,
+                [Models.Internal.Header.VersionKey] = item.Version,
+                [Models.Internal.Header.DateKey] = item.Date,
+                [Models.Internal.Header.AuthorKey] = item.Author,
+                [Models.Internal.Header.HomepageKey] = item.Homepage,
+                [Models.Internal.Header.CommentKey] = item.Comment,
+            };
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.DosCenter.Game"/> to <cref="Models.Internal.Machine"/>
         /// </summary>
         public static Models.Internal.Machine ConvertMachineFromDosCenter(Models.DosCenter.Game item)
