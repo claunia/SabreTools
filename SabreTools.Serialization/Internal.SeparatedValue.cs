@@ -111,7 +111,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        public static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Disk? item, Models.Internal.Machine? parent)
+        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Disk? item, Models.Internal.Machine? parent)
         {
             if (item == null)
                 return null;
@@ -132,7 +132,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        public static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Media? item, Models.Internal.Machine? parent)
+        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Media? item, Models.Internal.Machine? parent)
         {
             if (item == null)
                 return null;
@@ -154,7 +154,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        public static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Rom? item, Models.Internal.Machine? parent)
         {
             if (item == null)
                 return null;

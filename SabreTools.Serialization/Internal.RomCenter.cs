@@ -60,7 +60,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.RomCenter.Rom"/>
         /// </summary>
-        public static Models.RomCenter.Rom? ConvertToRomCenter(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        private static Models.RomCenter.Rom? ConvertToRomCenter(Models.Internal.Rom? item, Models.Internal.Machine? parent)
         {
             if (item == null)
                 return null;

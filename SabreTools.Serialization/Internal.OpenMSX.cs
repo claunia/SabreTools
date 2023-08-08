@@ -125,7 +125,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Dump"/> to <cref="Models.OpenMSX.Dump"/>
         /// </summary>
-        public static Models.OpenMSX.Dump? ConvertToOpenMSX(Models.Internal.Dump? item)
+        private static Models.OpenMSX.Dump? ConvertToOpenMSX(Models.Internal.Dump? item)
         {
             if (item == null)
                 return null;
@@ -139,10 +139,10 @@ namespace SabreTools.Serialization
             dump.Rom = ConvertToOpenMSXRom(rom);
 
             var megaRom = item.Read<Models.Internal.Rom>(Models.Internal.Dump.MegaRomKey);
-            dump.Rom = ConvertToOpenMSXRom(megaRom);
+            dump.Rom = ConvertToOpenMSXMegaRom(megaRom);
 
             var sccPlusCart = item.Read<Models.Internal.Rom>(Models.Internal.Dump.SCCPlusCartKey);
-            dump.Rom = ConvertToOpenMSXRom(sccPlusCart);
+            dump.Rom = ConvertToOpenMSXSCCPlusCart(sccPlusCart);
 
             return dump;
         }
@@ -150,7 +150,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.MegaRom"/>
         /// </summary>
-        public static Models.OpenMSX.MegaRom? ConvertToOpenMSXMegaRom(Models.Internal.Rom? item)
+        private static Models.OpenMSX.MegaRom? ConvertToOpenMSXMegaRom(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -168,7 +168,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Original"/> to <cref="Models.OpenMSX.Original"/>
         /// </summary>
-        public static Models.OpenMSX.Original? ConvertToOpenMSX(Models.Internal.Original? item)
+        private static Models.OpenMSX.Original? ConvertToOpenMSX(Models.Internal.Original? item)
         {
             if (item == null)
                 return null;
@@ -184,7 +184,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.Rom"/>
         /// </summary>
-        public static Models.OpenMSX.Rom? ConvertToOpenMSXRom(Models.Internal.Rom? item)
+        private static Models.OpenMSX.Rom? ConvertToOpenMSXRom(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -202,7 +202,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OpenMSX.SCCPlusCart"/>
         /// </summary>
-        public static Models.OpenMSX.SCCPlusCart? ConvertToOpenMSXSCCPlusCart(Models.Internal.Rom? item)
+        private static Models.OpenMSX.SCCPlusCart? ConvertToOpenMSXSCCPlusCart(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

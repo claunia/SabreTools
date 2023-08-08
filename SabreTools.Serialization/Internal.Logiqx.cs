@@ -377,7 +377,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
-        public static Models.Logiqx.Archive? ConvertToLogiqx(Models.Internal.Archive? item)
+        private static Models.Logiqx.Archive? ConvertToLogiqx(Models.Internal.Archive? item)
         {
             if (item == null)
                 return null;
@@ -392,7 +392,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Logiqx.BiosSet"/>
         /// </summary>
-        public static Models.Logiqx.BiosSet? ConvertToLogiqx(Models.Internal.BiosSet? item)
+        private static Models.Logiqx.BiosSet? ConvertToLogiqx(Models.Internal.BiosSet? item)
         {
             if (item == null)
                 return null;
@@ -409,7 +409,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Logiqx.DeviceRef"/>
         /// </summary>
-        public static Models.Logiqx.DeviceRef? ConvertToLogiqx(Models.Internal.DeviceRef? item)
+        private static Models.Logiqx.DeviceRef? ConvertToLogiqx(Models.Internal.DeviceRef? item)
         {
             if (item == null)
                 return null;
@@ -424,7 +424,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Logiqx.Disk"/>
         /// </summary>
-        public static Models.Logiqx.Disk? ConvertToLogiqx(Models.Internal.Disk? item)
+        private static Models.Logiqx.Disk? ConvertToLogiqx(Models.Internal.Disk? item)
         {
             if (item == null)
                 return null;
@@ -444,7 +444,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Logiqx.Driver"/>
         /// </summary>
-        public static Models.Logiqx.Driver? ConvertToLogiqx(Models.Internal.Driver? item)
+        private static Models.Logiqx.Driver? ConvertToLogiqx(Models.Internal.Driver? item)
         {
             if (item == null)
                 return null;
@@ -466,7 +466,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.Logiqx.Media"/>
         /// </summary>
-        public static Models.Logiqx.Media? ConvertToLogiqx(Models.Internal.Media? item)
+        private static Models.Logiqx.Media? ConvertToLogiqx(Models.Internal.Media? item)
         {
             if (item == null)
                 return null;
@@ -485,7 +485,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.Logiqx.Release"/>
         /// </summary>
-        public static Models.Logiqx.Release? ConvertToLogiqx(Models.Internal.Release? item)
+        private static Models.Logiqx.Release? ConvertToLogiqx(Models.Internal.Release? item)
         {
             if (item == null)
                 return null;
@@ -504,7 +504,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Logiqx.Rom"/>
         /// </summary>
-        public static Models.Logiqx.Rom? ConvertToLogiqx(Models.Internal.Rom? item)
+        private static Models.Logiqx.Rom? ConvertToLogiqx(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -536,7 +536,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Logiqx.Sample"/>
         /// </summary>
-        public static Models.Logiqx.Sample? ConvertToLogiqx(Models.Internal.Sample? item)
+        private static Models.Logiqx.Sample? ConvertToLogiqx(Models.Internal.Sample? item)
         {
             if (item == null)
                 return null;
@@ -551,7 +551,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Logiqx.SoftwareList"/>
         /// </summary>
-        public static Models.Logiqx.SoftwareList? ConvertToLogiqx(Models.Internal.SoftwareList? item)
+        private static Models.Logiqx.SoftwareList? ConvertToLogiqx(Models.Internal.SoftwareList? item)
         {
             if (item == null)
                 return null;

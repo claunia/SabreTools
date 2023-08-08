@@ -111,25 +111,9 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from an array of <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
-        /// </summary>
-        public static Models.OfflineList.Files? ConvertToOfflineList(Models.Internal.Rom[]? items)
-        {
-            if (items == null)
-                return null;
-
-            var romCRCs = new List<Models.OfflineList.FileRomCRC>();
-            foreach (var item in items)
-            {
-                romCRCs.Add(ConvertToOfflineList(item));
-            }
-            return new Models.OfflineList.Files() { RomCRC = romCRCs.ToArray() };
-        }
-
-        /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
         /// </summary>
-        public static Models.OfflineList.FileRomCRC? ConvertToOfflineList(Models.Internal.Rom? item)
+        private static Models.OfflineList.FileRomCRC? ConvertToOfflineList(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

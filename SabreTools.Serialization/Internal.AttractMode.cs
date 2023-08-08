@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SabreTools.Serialization
@@ -102,7 +101,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
         /// </summary>
-        public static Models.AttractMode.Row? ConvertToAttractMode(Models.Internal.Rom? item)
+        private static Models.AttractMode.Row? ConvertToAttractMode(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

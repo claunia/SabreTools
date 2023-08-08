@@ -116,7 +116,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        public static Models.Listrom.Row? ConvertToListrom(Models.Internal.Disk? item)
+        private static Models.Listrom.Row? ConvertToListrom(Models.Internal.Disk? item)
         {
             if (item == null)
                 return null;
@@ -139,7 +139,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        public static Models.Listrom.Row? ConvertToListrom(Models.Internal.Rom? item)
+        private static Models.Listrom.Row? ConvertToListrom(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

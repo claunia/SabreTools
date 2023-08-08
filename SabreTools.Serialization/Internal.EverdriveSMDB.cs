@@ -58,7 +58,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        public static Models.EverdriveSMDB.Row? ConvertToEverdriveSMDB(Models.Internal.Rom? item)
+        private static Models.EverdriveSMDB.Row? ConvertToEverdriveSMDB(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

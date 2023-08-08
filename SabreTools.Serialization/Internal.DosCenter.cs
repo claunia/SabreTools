@@ -74,7 +74,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.DosCenter.File"/>
         /// </summary>
-        public static Models.DosCenter.File? ConvertToDosCenter(Models.Internal.Rom? item)
+        private static Models.DosCenter.File? ConvertToDosCenter(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

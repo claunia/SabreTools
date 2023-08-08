@@ -210,7 +210,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.MD5"/>
         /// </summary>
-        public static Models.Hashfile.MD5? ConvertToMD5(Models.Internal.Rom? item)
+        private static Models.Hashfile.MD5? ConvertToMD5(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -226,7 +226,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SFV"/>
         /// </summary>
-        public static Models.Hashfile.SFV? ConvertToSFV(Models.Internal.Rom? item)
+        private static Models.Hashfile.SFV? ConvertToSFV(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -242,7 +242,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA1"/>
         /// </summary>
-        public static Models.Hashfile.SHA1? ConvertToSHA1(Models.Internal.Rom? item)
+        private static Models.Hashfile.SHA1? ConvertToSHA1(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -258,7 +258,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA256"/>
         /// </summary>
-        public static Models.Hashfile.SHA256? ConvertToSHA256(Models.Internal.Rom? item)
+        private static Models.Hashfile.SHA256? ConvertToSHA256(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -274,7 +274,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA384"/>
         /// </summary>
-        public static Models.Hashfile.SHA384? ConvertToSHA384(Models.Internal.Rom? item)
+        private static Models.Hashfile.SHA384? ConvertToSHA384(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -290,7 +290,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA512"/>
         /// </summary>
-        public static Models.Hashfile.SHA512? ConvertToSHA512(Models.Internal.Rom? item)
+        private static Models.Hashfile.SHA512? ConvertToSHA512(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -306,7 +306,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SpamSum"/>
         /// </summary>
-        public static Models.Hashfile.SpamSum? ConvertToSpamSum(Models.Internal.Rom? item)
+        private static Models.Hashfile.SpamSum? ConvertToSpamSum(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

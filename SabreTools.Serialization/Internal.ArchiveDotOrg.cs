@@ -114,7 +114,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ArchiveDotOrg.File"/>
         /// </summary>
-        public static Models.ArchiveDotOrg.File? ConvertToArchiveDotOrg(Models.Internal.Rom? item)
+        private static Models.ArchiveDotOrg.File? ConvertToArchiveDotOrg(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

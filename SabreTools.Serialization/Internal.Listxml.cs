@@ -875,7 +875,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Adjuster"/> to <cref="Models.Listxml.Adjuster"/>
         /// </summary>
-        public static Models.Listxml.Adjuster? ConvertToListxml(Models.Internal.Adjuster? item)
+        private static Models.Listxml.Adjuster? ConvertToListxml(Models.Internal.Adjuster? item)
         {
             if (item == null)
                 return null;
@@ -895,7 +895,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Analog"/> to <cref="Models.Listxml.Analog"/>
         /// </summary>
-        public static Models.Listxml.Analog? ConvertToListxml(Models.Internal.Analog? item)
+        private static Models.Listxml.Analog? ConvertToListxml(Models.Internal.Analog? item)
         {
             if (item == null)
                 return null;
@@ -910,7 +910,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Listxml.BiosSet"/>
         /// </summary>
-        public static Models.Listxml.BiosSet? ConvertToListxml(Models.Internal.BiosSet? item)
+        private static Models.Listxml.BiosSet? ConvertToListxml(Models.Internal.BiosSet? item)
         {
             if (item == null)
                 return null;
@@ -927,7 +927,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.Listxml.Chip"/>
         /// </summary>
-        public static Models.Listxml.Chip? ConvertToListxml(Models.Internal.Chip? item)
+        private static Models.Listxml.Chip? ConvertToListxml(Models.Internal.Chip? item)
         {
             if (item == null)
                 return null;
@@ -946,7 +946,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Condition"/> to <cref="Models.Listxml.Condition"/>
         /// </summary>
-        public static Models.Listxml.Condition? ConvertToListxml(Models.Internal.Condition? item)
+        private static Models.Listxml.Condition? ConvertToListxml(Models.Internal.Condition? item)
         {
             if (item == null)
                 return null;
@@ -964,7 +964,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Configuration"/> to <cref="Models.Listxml.Configuration"/>
         /// </summary>
-        public static Models.Listxml.Configuration? ConvertToListxml(Models.Internal.Configuration? item)
+        private static Models.Listxml.Configuration? ConvertToListxml(Models.Internal.Configuration? item)
         {
             if (item == null)
                 return null;
@@ -991,7 +991,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.ConfLocation"/> to <cref="Models.Listxml.ConfLocation"/>
         /// </summary>
-        public static Models.Listxml.ConfLocation? ConvertToListxml(Models.Internal.ConfLocation? item)
+        private static Models.Listxml.ConfLocation? ConvertToListxml(Models.Internal.ConfLocation? item)
         {
             if (item == null)
                 return null;
@@ -1008,7 +1008,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.ConfSetting"/> to <cref="Models.Listxml.ConfSetting"/>
         /// </summary>
-        public static Models.Listxml.ConfSetting? ConvertToListxml(Models.Internal.ConfSetting? item)
+        private static Models.Listxml.ConfSetting? ConvertToListxml(Models.Internal.ConfSetting? item)
         {
             if (item == null)
                 return null;
@@ -1029,7 +1029,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Control"/> to <cref="Models.Listxml.Control"/>
         /// </summary>
-        public static Models.Listxml.Control? ConvertToListxml(Models.Internal.Control? item)
+        private static Models.Listxml.Control? ConvertToListxml(Models.Internal.Control? item)
         {
             if (item == null)
                 return null;
@@ -1055,7 +1055,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Device"/> to <cref="Models.Listxml.Device"/>
         /// </summary>
-        public static Models.Listxml.Device ConvertToListxml(Models.Internal.Device item)
+        private static Models.Listxml.Device ConvertToListxml(Models.Internal.Device item)
         {
             if (item == null)
                 return null;
@@ -1081,7 +1081,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Listxml.DeviceRef"/>
         /// </summary>
-        public static Models.Listxml.DeviceRef? ConvertToListxml(Models.Internal.DeviceRef? item)
+        private static Models.Listxml.DeviceRef? ConvertToListxml(Models.Internal.DeviceRef? item)
         {
             if (item == null)
                 return null;
@@ -1096,7 +1096,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipLocation"/> to <cref="Models.Listxml.DipLocation"/>
         /// </summary>
-        public static Models.Listxml.DipLocation? ConvertToListxml(Models.Internal.DipLocation? item)
+        private static Models.Listxml.DipLocation? ConvertToListxml(Models.Internal.DipLocation? item)
         {
             if (item == null)
                 return null;
@@ -1113,7 +1113,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.Listxml.DipSwitch"/>
         /// </summary>
-        public static Models.Listxml.DipSwitch? ConvertToListxml(Models.Internal.DipSwitch? item)
+        private static Models.Listxml.DipSwitch? ConvertToListxml(Models.Internal.DipSwitch? item)
         {
             if (item == null)
                 return null;
@@ -1140,7 +1140,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.Listxml.DipValue"/>
         /// </summary>
-        public static Models.Listxml.DipValue? ConvertToListxml(Models.Internal.DipValue? item)
+        private static Models.Listxml.DipValue? ConvertToListxml(Models.Internal.DipValue? item)
         {
             if (item == null)
                 return null;
@@ -1161,7 +1161,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listxml.Disk"/>
         /// </summary>
-        public static Models.Listxml.Disk? ConvertToListxml(Models.Internal.Disk? item)
+        private static Models.Listxml.Disk? ConvertToListxml(Models.Internal.Disk? item)
         {
             if (item == null)
                 return null;
@@ -1184,7 +1184,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Display"/> to <cref="Models.Listxml.Display"/>
         /// </summary>
-        public static Models.Listxml.Display? ConvertToListxml(Models.Internal.Display? item)
+        private static Models.Listxml.Display? ConvertToListxml(Models.Internal.Display? item)
         {
             if (item == null)
                 return null;
@@ -1212,7 +1212,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Listxml.Driver"/>
         /// </summary>
-        public static Models.Listxml.Driver? ConvertToListxml(Models.Internal.Driver? item)
+        private static Models.Listxml.Driver? ConvertToListxml(Models.Internal.Driver? item)
         {
             if (item == null)
                 return null;
@@ -1237,7 +1237,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Extension"/> to <cref="Models.Listxml.Extension"/>
         /// </summary>
-        public static Models.Listxml.Extension? ConvertToListxml(Models.Internal.Extension? item)
+        private static Models.Listxml.Extension? ConvertToListxml(Models.Internal.Extension? item)
         {
             if (item == null)
                 return null;
@@ -1252,7 +1252,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.Listxml.Feature"/>
         /// </summary>
-        public static Models.Listxml.Feature? ConvertToListxml(Models.Internal.Feature? item)
+        private static Models.Listxml.Feature? ConvertToListxml(Models.Internal.Feature? item)
         {
             if (item == null)
                 return null;
@@ -1269,7 +1269,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.Listxml.Input"/>
         /// </summary>
-        public static Models.Listxml.Input? ConvertToListxml(Models.Internal.Input? item)
+        private static Models.Listxml.Input? ConvertToListxml(Models.Internal.Input? item)
         {
             if (item == null)
                 return null;
@@ -1293,7 +1293,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Instance"/> to <cref="Models.Listxml.Instance"/>
         /// </summary>
-        public static Models.Listxml.Instance? ConvertToListxml(Models.Internal.Instance? item)
+        private static Models.Listxml.Instance? ConvertToListxml(Models.Internal.Instance? item)
         {
             if (item == null)
                 return null;
@@ -1309,7 +1309,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Port"/> to <cref="Models.Listxml.Port"/>
         /// </summary>
-        public static Models.Listxml.Port? ConvertToListxml(Models.Internal.Port? item)
+        private static Models.Listxml.Port? ConvertToListxml(Models.Internal.Port? item)
         {
             if (item == null)
                 return null;
@@ -1328,7 +1328,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.RamOption"/> to <cref="Models.Listxml.RamOption"/>
         /// </summary>
-        public static Models.Listxml.RamOption? ConvertToListxml(Models.Internal.RamOption? item)
+        private static Models.Listxml.RamOption? ConvertToListxml(Models.Internal.RamOption? item)
         {
             if (item == null)
                 return null;
@@ -1344,7 +1344,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listxml.Rom"/>
         /// </summary>
-        public static Models.Listxml.Rom? ConvertToListxml(Models.Internal.Rom? item)
+        private static Models.Listxml.Rom? ConvertToListxml(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -1370,7 +1370,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Listxml.Sample"/>
         /// </summary>
-        public static Models.Listxml.Sample? ConvertToListxml(Models.Internal.Sample? item)
+        private static Models.Listxml.Sample? ConvertToListxml(Models.Internal.Sample? item)
         {
             if (item == null)
                 return null;
@@ -1385,7 +1385,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Slot"/> to <cref="Models.Listxml.Slot"/>
         /// </summary>
-        public static Models.Listxml.Slot? ConvertToListxml(Models.Internal.Slot? item)
+        private static Models.Listxml.Slot? ConvertToListxml(Models.Internal.Slot? item)
         {
             if (item == null)
                 return null;
@@ -1404,7 +1404,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SlotOption"/> to <cref="Models.Listxml.SlotOption"/>
         /// </summary>
-        public static Models.Listxml.SlotOption? ConvertToListxml(Models.Internal.SlotOption? item)
+        private static Models.Listxml.SlotOption? ConvertToListxml(Models.Internal.SlotOption? item)
         {
             if (item == null)
                 return null;
@@ -1421,7 +1421,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Listxml.SoftwareList"/>
         /// </summary>
-        public static Models.Listxml.SoftwareList? ConvertToListxml(Models.Internal.SoftwareList? item)
+        private static Models.Listxml.SoftwareList? ConvertToListxml(Models.Internal.SoftwareList? item)
         {
             if (item == null)
                 return null;
@@ -1439,7 +1439,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.Listxml.Sound"/>
         /// </summary>
-        public static Models.Listxml.Sound? ConvertToListxml(Models.Internal.Sound? item)
+        private static Models.Listxml.Sound? ConvertToListxml(Models.Internal.Sound? item)
         {
             if (item == null)
                 return null;
@@ -1454,7 +1454,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.Listxml.Video"/>
         /// </summary>
-        public static Models.Listxml.Video? ConvertToListxml(Models.Internal.Video? item)
+        private static Models.Listxml.Video? ConvertToListxml(Models.Internal.Video? item)
         {
             if (item == null)
                 return null;

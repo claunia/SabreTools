@@ -314,7 +314,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DataArea"/> to <cref="Models.SoftwareList.DataArea"/>
         /// </summary>
-        public static Models.SoftwareList.DataArea? ConvertToSoftwareList(Models.Internal.DataArea? item)
+        private static Models.SoftwareList.DataArea? ConvertToSoftwareList(Models.Internal.DataArea? item)
         {
             if (item == null)
                 return null;
@@ -336,7 +336,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.SoftwareList.DipSwitch"/>
         /// </summary>
-        public static Models.SoftwareList.DipSwitch? ConvertToSoftwareList(Models.Internal.DipSwitch? item)
+        private static Models.SoftwareList.DipSwitch? ConvertToSoftwareList(Models.Internal.DipSwitch? item)
         {
             if (item == null)
                 return null;
@@ -357,7 +357,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.SoftwareList.DipValue"/>
         /// </summary>
-        public static Models.SoftwareList.DipValue? ConvertToSoftwareList(Models.Internal.DipValue? item)
+        private static Models.SoftwareList.DipValue? ConvertToSoftwareList(Models.Internal.DipValue? item)
         {
             if (item == null)
                 return null;
@@ -374,7 +374,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SoftwareList.Disk"/>
         /// </summary>
-        public static Models.SoftwareList.Disk? ConvertToSoftwareList(Models.Internal.Disk? item)
+        private static Models.SoftwareList.Disk? ConvertToSoftwareList(Models.Internal.Disk? item)
         {
             if (item == null)
                 return null;
@@ -393,7 +393,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DiskArea"/> to <cref="Models.SoftwareList.DiskArea"/>
         /// </summary>
-        public static Models.SoftwareList.DiskArea? ConvertToSoftwareList(Models.Internal.DiskArea? item)
+        private static Models.SoftwareList.DiskArea? ConvertToSoftwareList(Models.Internal.DiskArea? item)
         {
             if (item == null)
                 return null;
@@ -412,7 +412,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.SoftwareList.Feature"/>
         /// </summary>
-        public static Models.SoftwareList.Feature? ConvertToSoftwareList(Models.Internal.Feature? item)
+        private static Models.SoftwareList.Feature? ConvertToSoftwareList(Models.Internal.Feature? item)
         {
             if (item == null)
                 return null;
@@ -428,7 +428,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Info"/> to <cref="Models.SoftwareList.Info"/>
         /// </summary>
-        public static Models.SoftwareList.Info? ConvertToSoftwareList(Models.Internal.Info? item)
+        private static Models.SoftwareList.Info? ConvertToSoftwareList(Models.Internal.Info? item)
         {
             if (item == null)
                 return null;
@@ -444,7 +444,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Part"/> to <cref="Models.SoftwareList.Part"/>
         /// </summary>
-        public static Models.SoftwareList.Part? ConvertToSoftwareList(Models.Internal.Part? item)
+        private static Models.SoftwareList.Part? ConvertToSoftwareList(Models.Internal.Part? item)
         {
             if (item == null)
                 return null;
@@ -473,7 +473,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SoftwareList.Rom"/>
         /// </summary>
-        public static Models.SoftwareList.Rom? ConvertToSoftwareList(Models.Internal.Rom? item)
+        private static Models.SoftwareList.Rom? ConvertToSoftwareList(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -496,7 +496,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SharedFeat"/> to <cref="Models.SoftwareList.SharedFeat"/>
         /// </summary>
-        public static Models.SoftwareList.SharedFeat? ConvertToSoftwareList(Models.Internal.SharedFeat? item)
+        private static Models.SoftwareList.SharedFeat? ConvertToSoftwareList(Models.Internal.SharedFeat? item)
         {
             if (item == null)
                 return null;

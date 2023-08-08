@@ -411,7 +411,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
         /// </summary>
-        public static Models.ClrMamePro.Archive? ConvertToClrMamePro(Models.Internal.Archive? item)
+        private static Models.ClrMamePro.Archive? ConvertToClrMamePro(Models.Internal.Archive? item)
         {
             if (item == null)
                 return null;
@@ -426,7 +426,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.ClrMamePro.BiosSet"/>
         /// </summary>
-        public static Models.ClrMamePro.BiosSet? ConvertToClrMamePro(Models.Internal.BiosSet? item)
+        private static Models.ClrMamePro.BiosSet? ConvertToClrMamePro(Models.Internal.BiosSet? item)
         {
             if (item == null)
                 return null;
@@ -443,7 +443,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.ClrMamePro.Chip"/>
         /// </summary>
-        public static Models.ClrMamePro.Chip? ConvertToClrMamePro(Models.Internal.Chip? item)
+        private static Models.ClrMamePro.Chip? ConvertToClrMamePro(Models.Internal.Chip? item)
         {
             if (item == null)
                 return null;
@@ -461,7 +461,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.ClrMamePro.DipSwitch"/>
         /// </summary>
-        public static Models.ClrMamePro.DipSwitch? ConvertToClrMamePro(Models.Internal.DipSwitch? item)
+        private static Models.ClrMamePro.DipSwitch? ConvertToClrMamePro(Models.Internal.DipSwitch? item)
         {
             if (item == null)
                 return null;
@@ -478,7 +478,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.ClrMamePro.Disk"/>
         /// </summary>
-        public static Models.ClrMamePro.Disk? ConvertToClrMamePro(Models.Internal.Disk? item)
+        private static Models.ClrMamePro.Disk? ConvertToClrMamePro(Models.Internal.Disk? item)
         {
             if (item == null)
                 return null;
@@ -498,7 +498,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.ClrMamePro.Driver"/>
         /// </summary>
-        public static Models.ClrMamePro.Driver? ConvertToClrMamePro(Models.Internal.Driver? item)
+        private static Models.ClrMamePro.Driver? ConvertToClrMamePro(Models.Internal.Driver? item)
         {
             if (item == null)
                 return null;
@@ -517,7 +517,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.ClrMamePro.Input"/>
         /// </summary>
-        public static Models.ClrMamePro.Input? ConvertToClrMamePro(Models.Internal.Input? item)
+        private static Models.ClrMamePro.Input? ConvertToClrMamePro(Models.Internal.Input? item)
         {
             if (item == null)
                 return null;
@@ -537,7 +537,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.ClrMamePro.Media"/>
         /// </summary>
-        public static Models.ClrMamePro.Media? ConvertToClrMamePro(Models.Internal.Media? item)
+        private static Models.ClrMamePro.Media? ConvertToClrMamePro(Models.Internal.Media? item)
         {
             if (item == null)
                 return null;
@@ -556,7 +556,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.ClrMamePro.Release"/>
         /// </summary>
-        public static Models.ClrMamePro.Release? ConvertToClrMamePro(Models.Internal.Release? item)
+        private static Models.ClrMamePro.Release? ConvertToClrMamePro(Models.Internal.Release? item)
         {
             if (item == null)
                 return null;
@@ -575,7 +575,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ClrMamePro.Rom"/>
         /// </summary>
-        public static Models.ClrMamePro.Rom? ConvertToClrMamePro(Models.Internal.Rom? item)
+        private static Models.ClrMamePro.Rom? ConvertToClrMamePro(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
@@ -610,7 +610,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.ClrMamePro.Sample"/>
         /// </summary>
-        public static Models.ClrMamePro.Sample? ConvertToClrMamePro(Models.Internal.Sample? item)
+        private static Models.ClrMamePro.Sample? ConvertToClrMamePro(Models.Internal.Sample? item)
         {
             if (item == null)
                 return null;
@@ -625,7 +625,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.ClrMamePro.Sound"/>
         /// </summary>
-        public static Models.ClrMamePro.Sound? ConvertToClrMamePro(Models.Internal.Sound? item)
+        private static Models.ClrMamePro.Sound? ConvertToClrMamePro(Models.Internal.Sound? item)
         {
             if (item == null)
                 return null;
@@ -640,7 +640,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.ClrMamePro.Video"/>
         /// </summary>
-        public static Models.ClrMamePro.Video? ConvertToClrMamePro(Models.Internal.Video? item)
+        private static Models.ClrMamePro.Video? ConvertToClrMamePro(Models.Internal.Video? item)
         {
             if (item == null)
                 return null;
