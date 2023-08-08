@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
 namespace SabreTools.Models.Internal
 {
     /// <summary>
     /// Format-agnostic representation of game, machine, and set data
     /// </summary>
-    public class Machine : Dictionary<string, object?>
+    public class Machine : DictionaryBase
     {
         #region Keys
 
@@ -238,70 +236,6 @@ namespace SabreTools.Models.Internal
         /// <remarks>string</remarks>
         public const string YearKey = "year";
 
-        #endregion
-
-        #region Reading Helpers
-
-        /// <summary>
-        /// Read a key as a bool, returning null on error
-        /// </summary>
-        public bool? ReadBool(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                return null;
-            if (!ContainsKey(key))
-                return null;
-            return this[key] as bool?;
-        }
-
-        /// <summary>
-        /// Read a key as a double, returning null on error
-        /// </summary>
-        public double? ReadDouble(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                return null;
-            if (!ContainsKey(key))
-                return null;
-            return this[key] as double?;
-        }
-
-        /// <summary>
-        /// Read a key as a long, returning null on error
-        /// </summary>
-        public long? ReadLong(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                return null;
-            if (!ContainsKey(key))
-                return null;
-            return this[key] as long?;
-        }
-
-        /// <summary>
-        /// Read a key as a string, returning null on error
-        /// </summary>
-        public string? ReadString(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                return null;
-            if (!ContainsKey(key))
-                return null;
-            return this[key] as string;
-        }
-    
-        /// <summary>
-        /// Read a key as a string[], returning null on error
-        /// </summary>
-        public string[]? ReadStringArray(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-                return null;
-            if (!ContainsKey(key))
-                return null;
-            return this[key] as string[];
-        }
-    
         #endregion
     }
 }
