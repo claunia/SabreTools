@@ -6,8 +6,9 @@ namespace SabreTools.Models.Logiqx
     [XmlRoot("media")]
     public class Media
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("md5")]
         public string? MD5 { get; set; }

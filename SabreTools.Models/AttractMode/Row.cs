@@ -3,7 +3,8 @@ namespace SabreTools.Models.AttractMode
     public class Row
     {
         /// <remarks>Also called Romname</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         public string? Title { get; set; }
 

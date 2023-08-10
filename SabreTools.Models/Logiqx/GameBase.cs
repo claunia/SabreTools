@@ -8,8 +8,9 @@ namespace SabreTools.Models.Logiqx
     /// </summary>
     public abstract class GameBase
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("sourcefile")]
         public string? SourceFile { get; set; }
@@ -56,8 +57,9 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("comment")]
         public string[]? Comment { get; set; }
 
+        [Required]
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [XmlElement("year")]
         public string? Year { get; set; }

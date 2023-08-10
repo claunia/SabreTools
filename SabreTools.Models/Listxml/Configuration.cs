@@ -6,11 +6,13 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("configuration")]
     public class Configuration
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Required]
         [XmlAttribute("tag")]
-        public string Tag { get; set; }
+        public string? Tag { get; set; }
 
         [XmlAttribute("mask")]
         public string? Mask { get; set; }

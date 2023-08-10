@@ -6,8 +6,9 @@ namespace SabreTools.Models.SoftwareList
     [XmlRoot("diskarea")]
     public class DiskArea
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlElement("disk")]
         public Disk[]? Disk { get; set; }

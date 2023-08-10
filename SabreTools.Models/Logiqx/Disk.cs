@@ -6,8 +6,9 @@ namespace SabreTools.Models.Logiqx
     [XmlRoot("disk")]
     public class Disk
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("md5")]
         public string? MD5 { get; set; }

@@ -6,8 +6,9 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("extension")]
     public class Extension
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

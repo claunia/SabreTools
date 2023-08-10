@@ -4,6 +4,7 @@ namespace SabreTools.Models.DosCenter
     public class Game
     {
         /// <remarks>name</remarks>
+        [Required]
         public string? Name { get; set; }
 
         /// <remarks>file</remarks>

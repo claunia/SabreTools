@@ -4,7 +4,8 @@ namespace SabreTools.Models.ClrMamePro
     public class DipSwitch
     {
         /// <remarks>name</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         /// <remarks>entry</remarks>
         public string[]? Entry { get; set; }

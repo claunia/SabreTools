@@ -4,10 +4,12 @@ namespace SabreTools.Models.ClrMamePro
     public class BiosSet
     {
         /// <remarks>name</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         /// <remarks>description</remarks>
-        public string Description { get; set; }
+        [Required]
+        public string? Description { get; set; }
 
         /// <remarks>default</remarks>
         public string? Default { get; set; }

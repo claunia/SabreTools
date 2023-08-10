@@ -4,7 +4,8 @@ namespace SabreTools.Models.ClrMamePro
     public class Disk
     {
         /// <remarks>name</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         /// <remarks>md5</remarks>
         public string? MD5 { get; set; }

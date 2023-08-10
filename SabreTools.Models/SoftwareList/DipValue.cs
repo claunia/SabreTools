@@ -6,11 +6,13 @@ namespace SabreTools.Models.SoftwareList
     [XmlRoot("dipvalue")]
     public class DipValue
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Required]
         [XmlAttribute("value")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         /// <remarks>(yes|no) "no"</remarks>
         [XmlAttribute("default")]

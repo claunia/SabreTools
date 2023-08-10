@@ -4,10 +4,12 @@ namespace SabreTools.Models.ClrMamePro
     public class Video
     {
         /// <remarks>screen, (raster|vector)</remarks>
-        public string Screen { get; set; }
+        [Required]
+        public string? Screen { get; set; }
 
         /// <remarks>orientation, (vertical|horizontal)</remarks>
-        public string Orientation { get; set; }
+        [Required]
+        public string? Orientation { get; set; }
 
         /// <remarks>x, Numeric?</remarks>
         public string? X { get; set; }

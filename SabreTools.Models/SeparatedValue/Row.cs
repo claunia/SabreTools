@@ -15,13 +15,15 @@ namespace SabreTools.Models.SeparatedValue
         public string? Description { get; set; }
 
         /// <remarks>Game Name</remarks>
-        public string GameName { get; set; }
+        [Required]
+        public string? GameName { get; set; }
 
         /// <remarks>Game Description</remarks>
         public string? GameDescription { get; set; }
 
         /// <remarks>Type</remarks>
-        public string Type { get; set; }
+        [Required]
+        public string? Type { get; set; }
 
         /// <remarks>Rom Name</remarks>
         public string? RomName { get; set; }

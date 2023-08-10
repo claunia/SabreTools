@@ -6,11 +6,13 @@ namespace SabreTools.Models.SoftwareList
     [XmlRoot("part")]
     public class Part
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Required]
         [XmlAttribute("interface")]
-        public string Interface { get; set; }
+        public string? Interface { get; set; }
 
         [XmlElement("feature")]
         public Feature[]? Feature { get; set; }

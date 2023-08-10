@@ -6,8 +6,9 @@ namespace SabreTools.Models.Logiqx
     [XmlRoot("archive")]
     public class Archive
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         
         #region DO NOT USE IN PRODUCTION
 

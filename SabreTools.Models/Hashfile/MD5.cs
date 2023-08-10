@@ -5,8 +5,10 @@ namespace SabreTools.Models.Hashfile
     /// </summary>
     public class MD5
     {
-        public string Hash { get; set; }
+        [Required]
+        public string? Hash { get; set; }
 
-        public string File { get; set; }
+        [Required]
+        public string? File { get; set; }
     }
 }

@@ -13,12 +13,13 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("debug")]
         public string? Debug { get; set; }
 
+        [Required]
         [XmlAttribute("mameconfig")]
-        public string MameConfig { get; set; }
+        public string? MameConfig { get; set; }
 
         [XmlElement("machine", typeof(Machine))]
         [XmlElement("game", typeof(Game))]
-        public GameBase[] Game { get; set; }
+        public GameBase[]? Game { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

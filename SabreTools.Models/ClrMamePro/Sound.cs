@@ -4,7 +4,8 @@ namespace SabreTools.Models.ClrMamePro
     public class Sound
     {
         /// <remarks>channels, Numeric?</remarks>
-        public string Channels { get; set; }
+        [Required]
+        public string? Channels { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

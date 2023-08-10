@@ -6,11 +6,13 @@ namespace SabreTools.Models.SoftwareList
     [XmlRoot("dataarea")]
     public class DataArea
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Required]
         [XmlAttribute("size")]
-        public string Size { get; set; }
+        public string? Size { get; set; }
         
         /// <remarks>(8|16|32|64) "8"</remarks>
         [XmlAttribute("width")]

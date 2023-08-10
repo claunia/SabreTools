@@ -4,10 +4,12 @@ namespace SabreTools.Models.ClrMamePro
     public class Release
     {
         /// <remarks>name</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         /// <remarks>region</remarks>
-        public string Region { get; set; }
+        [Required]
+        public string? Region { get; set; }
 
         /// <remarks>language</remarks>
         public string? Language { get; set; }

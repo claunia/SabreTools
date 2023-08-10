@@ -4,10 +4,12 @@ namespace SabreTools.Models.ClrMamePro
     public class Chip
     {
         /// <remarks>type, (cpu|audio)</remarks>
-        public string Type { get; set; }
+        [Required]
+        public string? Type { get; set; }
 
         /// <remarks>name</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         /// <remarks>flags</remarks>
         public string? Flags { get; set; }

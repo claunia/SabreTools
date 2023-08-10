@@ -4,7 +4,8 @@ namespace SabreTools.Models.ClrMamePro
     public class Archive
     {
         /// <remarks>name</remarks>
-        public string Name { get; set; }
+        [Required]
+        public string? Name { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

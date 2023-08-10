@@ -6,8 +6,9 @@ namespace SabreTools.Models.SoftwareList
     [XmlRoot("rom")]
     public class Rom
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("size")]
         public string? Size { get; set; }

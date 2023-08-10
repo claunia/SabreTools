@@ -4,7 +4,8 @@ namespace SabreTools.Models.ClrMamePro
     public class Driver
     {
         /// <remarks>status, (good|imperfect|preliminary)</remarks>
-        public string Status { get; set; }
+        [Required]
+        public string? Status { get; set; }
 
         /// <remarks>color, (good|imperfect|preliminary)</remarks>
         public string? Color { get; set; }

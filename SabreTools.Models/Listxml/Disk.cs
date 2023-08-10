@@ -6,8 +6,9 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("disk")]
     public class Disk
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <remarks>Only present in older versions</remarks>
         [XmlAttribute("md5")]

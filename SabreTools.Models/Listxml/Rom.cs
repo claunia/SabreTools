@@ -6,15 +6,17 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("rom")]
     public class Rom
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("bios")]
         public string? Bios { get; set; }
 
         /// <remarks>Numeric</remarks>
+        [Required]
         [XmlAttribute("size")]
-        public string Size { get; set; }
+        public string? Size { get; set; }
 
         [XmlAttribute("crc")]
         public string? CRC { get; set; }

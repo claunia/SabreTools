@@ -10,11 +10,13 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("id")]
         public string? Id { get; set; }
 
+        [Required]
         [XmlElement("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Required]
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <remarks>Trurip extension</remarks>
         [XmlElement("rootdir")]
@@ -23,14 +25,16 @@ namespace SabreTools.Models.Logiqx
         [XmlElement("category")]
         public string? Category { get; set; }
 
+        [Required]
         [XmlElement("version")]
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         [XmlElement("date")]
         public string? Date { get; set; }
 
+        [Required]
         [XmlElement("author")]
-        public string Author { get; set; }
+        public string? Author { get; set; }
 
         [XmlElement("email")]
         public string? Email { get; set; }

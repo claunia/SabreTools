@@ -15,8 +15,9 @@ namespace SabreTools.Models.Listxml
         public string? Tilt { get; set; }
 
         /// <remarks>Numeric</remarks>
+        [Required]
         [XmlAttribute("players")]
-        public string Players { get; set; }
+        public string? Players { get; set; }
 
         /// <remarks>Only present in older versions</remarks>
         [XmlAttribute("control")]

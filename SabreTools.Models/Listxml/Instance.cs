@@ -6,11 +6,13 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("instance")]
     public class Instance
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
+        [Required]
         [XmlAttribute("briefname")]
-        public string BriefName { get; set; }
+        public string? BriefName { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

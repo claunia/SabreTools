@@ -6,15 +6,17 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("chip")]
     public class Chip
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("tag")]
         public string? Tag { get; set; }
 
         /// <remarks>(cpu|audio)</remarks>
+        [Required]
         [XmlAttribute("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         /// <remarks>Only present in older versions</remarks>
         [XmlAttribute("soundonly")]

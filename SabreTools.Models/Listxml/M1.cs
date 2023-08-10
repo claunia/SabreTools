@@ -11,7 +11,7 @@ namespace SabreTools.Models.Listxml
 
         [XmlElement("machine", typeof(Machine))]
         [XmlElement("game", typeof(Game))]
-        public GameBase[] Game { get; set; }
+        public GameBase[]? Game { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

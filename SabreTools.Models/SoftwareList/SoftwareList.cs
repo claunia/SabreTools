@@ -6,8 +6,9 @@ namespace SabreTools.Models.SoftwareList
     [XmlRoot("softwarelist")]
     public class SoftwareList
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlAttribute("description")]
         public string? Description { get; set; }
@@ -16,7 +17,7 @@ namespace SabreTools.Models.SoftwareList
         public string? Notes { get; set; }
 
         [XmlElement("software")]
-        public Software[] Software { get; set; }
+        public Software[]? Software { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

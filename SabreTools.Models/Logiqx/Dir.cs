@@ -6,8 +6,9 @@ namespace SabreTools.Models.Logiqx
     [XmlRoot("dir")]
     public class Dir
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [XmlElement("game", typeof(Game))]
         [XmlElement("machine", typeof(Machine))]

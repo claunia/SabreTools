@@ -7,8 +7,9 @@ namespace SabreTools.Models.Listxml
     public class Control
     {
         /// <remarks>(joy|stick|paddle|pedal|lightgun|positional|dial|trackball|mouse|only_buttons|keypad|keyboard|mahjong|hanafuda|gambling)</remarks>
+        [Required]
         [XmlAttribute("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         /// <remarks>Numeric</remarks>
         [XmlAttribute("player")]

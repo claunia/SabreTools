@@ -6,8 +6,9 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("device")]
     public class Device
     {
+        [Required]
         [XmlAttribute("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         [XmlAttribute("tag")]
         public string? Tag { get; set; }

@@ -6,8 +6,9 @@ namespace SabreTools.Models.Logiqx
     [XmlRoot("sample")]
     public class Sample
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         
         #region DO NOT USE IN PRODUCTION
 

@@ -10,8 +10,9 @@ namespace SabreTools.Models.Listxml
         public string? Tag { get; set; }
 
         /// <remarks>(raster|vector|lcd|svg|unknown)</remarks>
+        [Required]
         [XmlAttribute("type")]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         /// <remarks>(0|90|180|270)</remarks>
         [XmlAttribute("rotate")]
@@ -30,8 +31,9 @@ namespace SabreTools.Models.Listxml
         public string? Height { get; set; }
 
         /// <remarks>Numeric</remarks>
+        [Required]
         [XmlAttribute("refresh")]
-        public string Refresh { get; set; }
+        public string? Refresh { get; set; }
 
         /// <remarks>Numeric</remarks>
         [XmlAttribute("pixclock")]

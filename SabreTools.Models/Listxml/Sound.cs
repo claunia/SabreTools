@@ -7,8 +7,9 @@ namespace SabreTools.Models.Listxml
     public class Sound
     {
         /// <remarks>Numeric</remarks>
+        [Required]
         [XmlAttribute("channels")]
-        public string Channels { get; set; }
+        public string? Channels { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

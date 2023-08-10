@@ -6,8 +6,9 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("analog")]
     public class Analog
     {
+        [Required]
         [XmlAttribute("mask")]
-        public string Mask { get; set; }
+        public string? Mask { get; set; }
 
         #region DO NOT USE IN PRODUCTION
 

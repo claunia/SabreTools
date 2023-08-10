@@ -8,8 +8,9 @@ namespace SabreTools.Models.Listxml
     /// </summary>
     public abstract class GameBase
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <remarks>Machine only</remarks>
         [XmlAttribute("sourcefile")]
@@ -40,8 +41,9 @@ namespace SabreTools.Models.Listxml
         [XmlAttribute("sampleof")]
         public string? SampleOf { get; set; }
 
+        [Required]
         [XmlElement("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [XmlElement("year")]
         public string? Year { get; set; }

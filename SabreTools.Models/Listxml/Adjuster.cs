@@ -6,8 +6,9 @@ namespace SabreTools.Models.Listxml
     [XmlRoot("adjuster")]
     public class Adjuster
     {
+        [Required]
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <remarks>(yes|no) "no"</remarks>
         [XmlAttribute("default")]
