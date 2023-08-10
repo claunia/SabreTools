@@ -15,14 +15,14 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromHashfile(Models.Hashfile.Hashfile item)
+        public static MetadataFile ConvertToInternalModel(Models.Hashfile.Hashfile item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromHashfile(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
-            var machine = ConvertMachineFromHashfile(item);
+            var machine = ConvertMachineToInternalModel(item);
             metadataFile[MetadataFile.MachineKey] = new Machine[] { machine };
 
             return metadataFile;
@@ -31,7 +31,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromHashfile(Models.Hashfile.Hashfile item)
+        private static Header ConvertHeaderToInternalModel(Models.Hashfile.Hashfile item)
         {
             var header = new Header
             {
@@ -43,7 +43,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromHashfile(Models.Hashfile.Hashfile item)
+        private static Machine ConvertMachineToInternalModel(Models.Hashfile.Hashfile item)
         {
             var machine = new Machine();
 
@@ -52,7 +52,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var sfv in item.SFV)
                 {
-                    roms.Add(ConvertFromSFV(sfv));
+                    roms.Add(ConvertToInternalModel(sfv));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -62,7 +62,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var md5 in item.MD5)
                 {
-                    roms.Add(ConvertFromMD5(md5));
+                    roms.Add(ConvertToInternalModel(md5));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -72,7 +72,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var sha1 in item.SHA1)
                 {
-                    roms.Add(ConvertFromSHA1(sha1));
+                    roms.Add(ConvertToInternalModel(sha1));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -82,7 +82,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var sha256 in item.SHA256)
                 {
-                    roms.Add(ConvertFromSHA256(sha256));
+                    roms.Add(ConvertToInternalModel(sha256));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -92,7 +92,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var sha384 in item.SHA384)
                 {
-                    roms.Add(ConvertFromSHA384(sha384));
+                    roms.Add(ConvertToInternalModel(sha384));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -102,7 +102,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var sha512 in item.SHA512)
                 {
-                    roms.Add(ConvertFromSHA512(sha512));
+                    roms.Add(ConvertToInternalModel(sha512));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -112,7 +112,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var spamSum in item.SpamSum)
                 {
-                    roms.Add(ConvertFromSpamSum(spamSum));
+                    roms.Add(ConvertToInternalModel(spamSum));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -123,7 +123,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.MD5"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromMD5(Models.Hashfile.MD5 item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.MD5 item)
         {
             var rom = new Rom
             {
@@ -136,7 +136,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SFV"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSFV(Models.Hashfile.SFV item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.SFV item)
         {
             var rom = new Rom
             {
@@ -149,7 +149,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA1"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSHA1(Models.Hashfile.SHA1 item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.SHA1 item)
         {
             var rom = new Rom
             {
@@ -162,7 +162,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA256"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSHA256(Models.Hashfile.SHA256 item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.SHA256 item)
         {
             var rom = new Rom
             {
@@ -175,7 +175,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA384"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSHA384(Models.Hashfile.SHA384 item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.SHA384 item)
         {
             var rom = new Rom
             {
@@ -188,7 +188,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA512"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSHA512(Models.Hashfile.SHA512 item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.SHA512 item)
         {
             var rom = new Rom
             {
@@ -201,7 +201,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SpamSum"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSpamSum(Models.Hashfile.SpamSum item)
+        private static Rom ConvertToInternalModel(Models.Hashfile.SpamSum item)
         {
             var rom = new Rom
             {

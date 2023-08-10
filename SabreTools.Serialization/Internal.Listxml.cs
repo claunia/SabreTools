@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.M1"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromListxml(Models.Listxml.M1 item)
+        public static MetadataFile ConvertToInternalModel(Models.Listxml.M1 item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromListxml(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromListxml).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,15 +30,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Mame"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromListxml(Models.Listxml.Mame item)
+        public static MetadataFile ConvertToInternalModel(Models.Listxml.Mame item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromListxml(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromListxml).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -46,7 +46,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.M1"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromListxml(Models.Listxml.M1 item)
+        private static Header ConvertHeaderToInternalModel(Models.Listxml.M1 item)
         {
             var header = new Header
             {
@@ -58,7 +58,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromListxml(Models.Listxml.Mame item)
+        private static Header ConvertHeaderToInternalModel(Models.Listxml.Mame item)
         {
             var header = new Header
             {
@@ -72,7 +72,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.GameBase"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromListxml(Models.Listxml.GameBase item)
+        private static Machine ConvertMachineToInternalModel(Models.Listxml.GameBase item)
         {
             var machine = new Machine
             {
@@ -96,7 +96,7 @@ namespace SabreTools.Serialization
                 var biosSets = new List<BiosSet>();
                 foreach (var biosSet in item.BiosSet)
                 {
-                    biosSets.Add(ConvertFromListxml(biosSet));
+                    biosSets.Add(ConvertToInternalModel(biosSet));
                 }
                 machine[Machine.BiosSetKey] = biosSets.ToArray();
             }
@@ -106,7 +106,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var rom in item.Rom)
                 {
-                    roms.Add(ConvertFromListxml(rom));
+                    roms.Add(ConvertToInternalModel(rom));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -116,7 +116,7 @@ namespace SabreTools.Serialization
                 var disks = new List<Disk>();
                 foreach (var disk in item.Disk)
                 {
-                    disks.Add(ConvertFromListxml(disk));
+                    disks.Add(ConvertToInternalModel(disk));
                 }
                 machine[Machine.DiskKey] = disks.ToArray();
             }
@@ -126,7 +126,7 @@ namespace SabreTools.Serialization
                 var deviceRefs = new List<DeviceRef>();
                 foreach (var deviceRef in item.DeviceRef)
                 {
-                    deviceRefs.Add(ConvertFromListxml(deviceRef));
+                    deviceRefs.Add(ConvertToInternalModel(deviceRef));
                 }
                 machine[Machine.DeviceRefKey] = deviceRefs.ToArray();
             }
@@ -136,7 +136,7 @@ namespace SabreTools.Serialization
                 var samples = new List<Sample>();
                 foreach (var sample in item.Sample)
                 {
-                    samples.Add(ConvertFromListxml(sample));
+                    samples.Add(ConvertToInternalModel(sample));
                 }
                 machine[Machine.SampleKey] = samples.ToArray();
             }
@@ -146,7 +146,7 @@ namespace SabreTools.Serialization
                 var chips = new List<Chip>();
                 foreach (var chip in item.Chip)
                 {
-                    chips.Add(ConvertFromListxml(chip));
+                    chips.Add(ConvertToInternalModel(chip));
                 }
                 machine[Machine.ChipKey] = chips.ToArray();
             }
@@ -156,7 +156,7 @@ namespace SabreTools.Serialization
                 var displays = new List<Display>();
                 foreach (var display in item.Display)
                 {
-                    displays.Add(ConvertFromListxml(display));
+                    displays.Add(ConvertToInternalModel(display));
                 }
                 machine[Machine.DisplayKey] = displays.ToArray();
             }
@@ -166,23 +166,23 @@ namespace SabreTools.Serialization
                 var videos = new List<Video>();
                 foreach (var video in item.Video)
                 {
-                    videos.Add(ConvertFromListxml(video));
+                    videos.Add(ConvertToInternalModel(video));
                 }
                 machine[Machine.VideoKey] = videos.ToArray();
             }
 
             if (item.Sound != null)
-                machine[Machine.SoundKey] = ConvertFromListxml(item.Sound);
+                machine[Machine.SoundKey] = ConvertToInternalModel(item.Sound);
 
             if (item.Input != null)
-                machine[Machine.InputKey] = ConvertFromListxml(item.Input);
+                machine[Machine.InputKey] = ConvertToInternalModel(item.Input);
 
             if (item.DipSwitch != null && item.DipSwitch.Any())
             {
                 var dipSwitches = new List<DipSwitch>();
                 foreach (var dipSwitch in item.DipSwitch)
                 {
-                    dipSwitches.Add(ConvertFromListxml(dipSwitch));
+                    dipSwitches.Add(ConvertToInternalModel(dipSwitch));
                 }
                 machine[Machine.DipSwitchKey] = dipSwitches.ToArray();
             }
@@ -192,7 +192,7 @@ namespace SabreTools.Serialization
                 var configurations = new List<Configuration>();
                 foreach (var configuration in item.Configuration)
                 {
-                    configurations.Add(ConvertFromListxml(configuration));
+                    configurations.Add(ConvertToInternalModel(configuration));
                 }
                 machine[Machine.ConfigurationKey] = configurations.ToArray();
             }
@@ -202,7 +202,7 @@ namespace SabreTools.Serialization
                 var ports = new List<Port>();
                 foreach (var port in item.Port)
                 {
-                    ports.Add(ConvertFromListxml(port));
+                    ports.Add(ConvertToInternalModel(port));
                 }
                 machine[Machine.PortKey] = ports.ToArray();
             }
@@ -212,20 +212,20 @@ namespace SabreTools.Serialization
                 var adjusters = new List<Adjuster>();
                 foreach (var adjuster in item.Adjuster)
                 {
-                    adjusters.Add(ConvertFromListxml(adjuster));
+                    adjusters.Add(ConvertToInternalModel(adjuster));
                 }
                 machine[Machine.AdjusterKey] = adjusters.ToArray();
             }
 
             if (item.Driver != null)
-                machine[Machine.DriverKey] = ConvertFromListxml(item.Driver);
+                machine[Machine.DriverKey] = ConvertToInternalModel(item.Driver);
 
             if (item.Feature != null && item.Feature.Any())
             {
                 var features = new List<Feature>();
                 foreach (var feature in item.Feature)
                 {
-                    features.Add(ConvertFromListxml(feature));
+                    features.Add(ConvertToInternalModel(feature));
                 }
                 machine[Machine.FeatureKey] = features.ToArray();
             }
@@ -235,7 +235,7 @@ namespace SabreTools.Serialization
                 var devices = new List<Device>();
                 foreach (var device in item.Device)
                 {
-                    devices.Add(ConvertFromListxml(device));
+                    devices.Add(ConvertToInternalModel(device));
                 }
                 machine[Machine.DeviceKey] = devices.ToArray();
             }
@@ -245,7 +245,7 @@ namespace SabreTools.Serialization
                 var slots = new List<Slot>();
                 foreach (var slot in item.Slot)
                 {
-                    slots.Add(ConvertFromListxml(slot));
+                    slots.Add(ConvertToInternalModel(slot));
                 }
                 machine[Machine.SlotKey] = slots.ToArray();
             }
@@ -255,7 +255,7 @@ namespace SabreTools.Serialization
                 var softwareLists = new List<SoftwareList>();
                 foreach (var softwareList in item.SoftwareList)
                 {
-                    softwareLists.Add(ConvertFromListxml(softwareList));
+                    softwareLists.Add(ConvertToInternalModel(softwareList));
                 }
                 machine[Machine.SoftwareListKey] = softwareLists.ToArray();
             }
@@ -265,7 +265,7 @@ namespace SabreTools.Serialization
                 var ramOptions = new List<RamOption>();
                 foreach (var ramOption in item.RamOption)
                 {
-                    ramOptions.Add(ConvertFromListxml(ramOption));
+                    ramOptions.Add(ConvertToInternalModel(ramOption));
                 }
                 machine[Machine.RamOptionKey] = ramOptions.ToArray();
             }
@@ -276,7 +276,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Adjuster"/> to <cref="Adjuster"/>
         /// </summary>
-        private static Adjuster ConvertFromListxml(Models.Listxml.Adjuster item)
+        private static Adjuster ConvertToInternalModel(Models.Listxml.Adjuster item)
         {
             var adjuster = new Adjuster
             {
@@ -285,7 +285,7 @@ namespace SabreTools.Serialization
             };
 
             if (item.Condition != null)
-                adjuster[Adjuster.ConditionKey] = ConvertFromListxml(item.Condition);
+                adjuster[Adjuster.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             return adjuster;
         }
@@ -293,7 +293,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Analog"/> to <cref="Analog"/>
         /// </summary>
-        private static Analog ConvertFromListxml(Models.Listxml.Analog item)
+        private static Analog ConvertToInternalModel(Models.Listxml.Analog item)
         {
             var analog = new Analog
             {
@@ -305,7 +305,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.BiosSet"/> to <cref="BiosSet"/>
         /// </summary>
-        private static BiosSet ConvertFromListxml(Models.Listxml.BiosSet item)
+        private static BiosSet ConvertToInternalModel(Models.Listxml.BiosSet item)
         {
             var biosset = new BiosSet
             {
@@ -319,7 +319,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Chip"/> to <cref="Chip"/>
         /// </summary>
-        private static Chip ConvertFromListxml(Models.Listxml.Chip item)
+        private static Chip ConvertToInternalModel(Models.Listxml.Chip item)
         {
             var chip = new Chip
             {
@@ -335,7 +335,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Condition"/> to <cref="Condition"/>
         /// </summary>
-        private static Condition ConvertFromListxml(Models.Listxml.Condition item)
+        private static Condition ConvertToInternalModel(Models.Listxml.Condition item)
         {
             var condition = new Condition
             {
@@ -350,7 +350,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Configuration"/> to <cref="Configuration"/>
         /// </summary>
-        private static Configuration ConvertFromListxml(Models.Listxml.Configuration item)
+        private static Configuration ConvertToInternalModel(Models.Listxml.Configuration item)
         {
             var configuration = new Configuration
             {
@@ -360,14 +360,14 @@ namespace SabreTools.Serialization
             };
 
             if (item.Condition != null)
-                configuration[Configuration.ConditionKey] = ConvertFromListxml(item.Condition);
+                configuration[Configuration.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             if (item.ConfLocation != null && item.ConfLocation.Any())
             {
                 var confLocations = new List<ConfLocation>();
                 foreach (var confLocation in item.ConfLocation)
                 {
-                    confLocations.Add(ConvertFromListxml(confLocation));
+                    confLocations.Add(ConvertToInternalModel(confLocation));
                 }
                 configuration[Configuration.ConfLocationKey] = confLocations.ToArray();
             }
@@ -377,7 +377,7 @@ namespace SabreTools.Serialization
                 var confSettings = new List<ConfSetting>();
                 foreach (var confSetting in item.ConfSetting)
                 {
-                    confSettings.Add(ConvertFromListxml(confSetting));
+                    confSettings.Add(ConvertToInternalModel(confSetting));
                 }
                 configuration[Configuration.ConfSettingKey] = confSettings.ToArray();
             }
@@ -388,7 +388,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.ConfLocation"/> to <cref="ConfLocation"/>
         /// </summary>
-        private static ConfLocation ConvertFromListxml(Models.Listxml.ConfLocation item)
+        private static ConfLocation ConvertToInternalModel(Models.Listxml.ConfLocation item)
         {
             var confLocation = new ConfLocation
             {
@@ -402,7 +402,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.ConfSetting"/> to <cref="ConfSetting"/>
         /// </summary>
-        private static ConfSetting ConvertFromListxml(Models.Listxml.ConfSetting item)
+        private static ConfSetting ConvertToInternalModel(Models.Listxml.ConfSetting item)
         {
             var confSetting = new ConfSetting
             {
@@ -412,7 +412,7 @@ namespace SabreTools.Serialization
             };
 
             if (item.Condition != null)
-                confSetting[ConfSetting.ConditionKey] = ConvertFromListxml(item.Condition);
+                confSetting[ConfSetting.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             return confSetting;
         }
@@ -420,7 +420,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Control"/> to <cref="Control"/>
         /// </summary>
-        private static Control ConvertFromListxml(Models.Listxml.Control item)
+        private static Control ConvertToInternalModel(Models.Listxml.Control item)
         {
             var control = new Control
             {
@@ -443,7 +443,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Device"/> to <cref="Device"/>
         /// </summary>
-        private static Device ConvertFromListxml(Models.Listxml.Device item)
+        private static Device ConvertToInternalModel(Models.Listxml.Device item)
         {
             var device = new Device
             {
@@ -455,14 +455,14 @@ namespace SabreTools.Serialization
             };
 
             if (item.Instance != null)
-                device[Device.InstanceKey] = ConvertFromListxml(item.Instance);
+                device[Device.InstanceKey] = ConvertToInternalModel(item.Instance);
 
             if (item.Extension != null && item.Extension.Any())
             {
                 var extensions = new List<Extension>();
                 foreach (var extension in item.Extension)
                 {
-                    extensions.Add(ConvertFromListxml(extension));
+                    extensions.Add(ConvertToInternalModel(extension));
                 }
                 device[Device.ExtensionKey] = extensions.ToArray();
             }
@@ -473,7 +473,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DeviceRef"/> to <cref="DeviceRef"/>
         /// </summary>
-        private static DeviceRef ConvertFromListxml(Models.Listxml.DeviceRef item)
+        private static DeviceRef ConvertToInternalModel(Models.Listxml.DeviceRef item)
         {
             var deviceRef = new DeviceRef
             {
@@ -485,7 +485,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DipLocation"/> to <cref="DipLocation"/>
         /// </summary>
-        private static DipLocation ConvertFromListxml(Models.Listxml.DipLocation item)
+        private static DipLocation ConvertToInternalModel(Models.Listxml.DipLocation item)
         {
             var dipLocation = new DipLocation
             {
@@ -499,7 +499,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DipSwitch"/> to <cref="DipSwitch"/>
         /// </summary>
-        private static DipSwitch ConvertFromListxml(Models.Listxml.DipSwitch item)
+        private static DipSwitch ConvertToInternalModel(Models.Listxml.DipSwitch item)
         {
             var dipSwitch = new DipSwitch
             {
@@ -509,14 +509,14 @@ namespace SabreTools.Serialization
             };
 
             if (item.Condition != null)
-                dipSwitch[DipSwitch.ConditionKey] = ConvertFromListxml(item.Condition);
+                dipSwitch[DipSwitch.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             if (item.DipLocation != null && item.DipLocation.Any())
             {
                 var dipLocations = new List<DipLocation>();
                 foreach (var dipLocation in item.DipLocation)
                 {
-                    dipLocations.Add(ConvertFromListxml(dipLocation));
+                    dipLocations.Add(ConvertToInternalModel(dipLocation));
                 }
                 dipSwitch[DipSwitch.DipLocationKey] = dipLocations.ToArray();
             }
@@ -526,7 +526,7 @@ namespace SabreTools.Serialization
                 var dipValues = new List<DipValue>();
                 foreach (var dipValue in item.DipValue)
                 {
-                    dipValues.Add(ConvertFromListxml(dipValue));
+                    dipValues.Add(ConvertToInternalModel(dipValue));
                 }
                 dipSwitch[DipSwitch.DipValueKey] = dipValues.ToArray();
             }
@@ -537,7 +537,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DipValue"/> to <cref="DipValue"/>
         /// </summary>
-        private static DipValue ConvertFromListxml(Models.Listxml.DipValue item)
+        private static DipValue ConvertToInternalModel(Models.Listxml.DipValue item)
         {
             var dipValue = new DipValue
             {
@@ -547,7 +547,7 @@ namespace SabreTools.Serialization
             };
 
             if (item.Condition != null)
-                dipValue[DipValue.ConditionKey] = ConvertFromListxml(item.Condition);
+                dipValue[DipValue.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             return dipValue;
         }
@@ -555,7 +555,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Disk"/> to <cref="Disk"/>
         /// </summary>
-        private static Disk ConvertFromListxml(Models.Listxml.Disk item)
+        private static Disk ConvertToInternalModel(Models.Listxml.Disk item)
         {
             var disk = new Disk
             {
@@ -575,7 +575,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Display"/> to <cref="Display"/>
         /// </summary>
-        private static Display ConvertFromListxml(Models.Listxml.Display item)
+        private static Display ConvertToInternalModel(Models.Listxml.Display item)
         {
             var display = new Display
             {
@@ -600,7 +600,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Driver"/> to <cref="Driver"/>
         /// </summary>
-        private static Driver ConvertFromListxml(Models.Listxml.Driver item)
+        private static Driver ConvertToInternalModel(Models.Listxml.Driver item)
         {
             var driver = new Driver
             {
@@ -622,7 +622,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Extension"/> to <cref="Extension"/>
         /// </summary>
-        private static Extension ConvertFromListxml(Models.Listxml.Extension item)
+        private static Extension ConvertToInternalModel(Models.Listxml.Extension item)
         {
             var extension = new Extension
             {
@@ -634,7 +634,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Feature"/> to <cref="Feature"/>
         /// </summary>
-        private static Feature ConvertFromListxml(Models.Listxml.Feature item)
+        private static Feature ConvertToInternalModel(Models.Listxml.Feature item)
         {
             var feature = new Feature
             {
@@ -648,7 +648,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Input"/> to <cref="Input"/>
         /// </summary>
-        private static Input ConvertFromListxml(Models.Listxml.Input item)
+        private static Input ConvertToInternalModel(Models.Listxml.Input item)
         {
             var input = new Input
             {
@@ -665,7 +665,7 @@ namespace SabreTools.Serialization
                 var controls = new List<Control>();
                 foreach (var control in item.Control)
                 {
-                    controls.Add(ConvertFromListxml(control));
+                    controls.Add(ConvertToInternalModel(control));
                 }
                 input[Input.ControlKey] = controls.ToArray();
             }
@@ -676,7 +676,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Instance"/> to <cref="Instance"/>
         /// </summary>
-        private static Instance ConvertFromListxml(Models.Listxml.Instance item)
+        private static Instance ConvertToInternalModel(Models.Listxml.Instance item)
         {
             var instance = new Instance
             {
@@ -689,7 +689,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Port"/> to <cref="Port"/>
         /// </summary>
-        private static Port ConvertFromListxml(Models.Listxml.Port item)
+        private static Port ConvertToInternalModel(Models.Listxml.Port item)
         {
             var port = new Port
             {
@@ -701,7 +701,7 @@ namespace SabreTools.Serialization
                 var analogs = new List<Analog>();
                 foreach (var analog in item.Analog)
                 {
-                    analogs.Add(ConvertFromListxml(analog));
+                    analogs.Add(ConvertToInternalModel(analog));
                 }
                 port[Port.AnalogKey] = analogs.ToArray();
             }
@@ -712,7 +712,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.RamOption"/> to <cref="RamOption"/>
         /// </summary>
-        private static RamOption ConvertFromListxml(Models.Listxml.RamOption item)
+        private static RamOption ConvertToInternalModel(Models.Listxml.RamOption item)
         {
             var ramOption = new RamOption
             {
@@ -725,7 +725,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Rom"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromListxml(Models.Listxml.Rom item)
+        private static Rom ConvertToInternalModel(Models.Listxml.Rom item)
         {
             var rom = new Rom
             {
@@ -748,7 +748,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Sample"/> to <cref="Sample"/>
         /// </summary>
-        private static Sample ConvertFromListxml(Models.Listxml.Sample item)
+        private static Sample ConvertToInternalModel(Models.Listxml.Sample item)
         {
             var sample = new Sample
             {
@@ -760,7 +760,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Slot"/> to <cref="Slot"/>
         /// </summary>
-        private static Slot ConvertFromListxml(Models.Listxml.Slot item)
+        private static Slot ConvertToInternalModel(Models.Listxml.Slot item)
         {
             var slot = new Slot
             {
@@ -772,7 +772,7 @@ namespace SabreTools.Serialization
                 var slotOptions = new List<SlotOption>();
                 foreach (var slotOption in item.SlotOption)
                 {
-                    slotOptions.Add(ConvertFromListxml(slotOption));
+                    slotOptions.Add(ConvertToInternalModel(slotOption));
                 }
                 slot[Slot.SlotOptionKey] = slotOptions.ToArray();
             }
@@ -783,7 +783,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.SlotOption"/> to <cref="SlotOption"/>
         /// </summary>
-        private static SlotOption ConvertFromListxml(Models.Listxml.SlotOption item)
+        private static SlotOption ConvertToInternalModel(Models.Listxml.SlotOption item)
         {
             var slotOption = new SlotOption
             {
@@ -797,7 +797,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.SoftwareList"/> to <cref="SoftwareList"/>
         /// </summary>
-        private static SoftwareList ConvertFromListxml(Models.Listxml.SoftwareList item)
+        private static SoftwareList ConvertToInternalModel(Models.Listxml.SoftwareList item)
         {
             var softwareList = new SoftwareList
             {
@@ -812,7 +812,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Sound"/> to <cref="Sound"/>
         /// </summary>
-        private static Sound ConvertFromListxml(Models.Listxml.Sound item)
+        private static Sound ConvertToInternalModel(Models.Listxml.Sound item)
         {
             var sound = new Sound
             {
@@ -824,7 +824,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Video"/> to <cref="Video"/>
         /// </summary>
-        private static Video ConvertFromListxml(Models.Listxml.Video item)
+        private static Video ConvertToInternalModel(Models.Listxml.Video item)
         {
             var video = new Video
             {

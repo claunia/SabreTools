@@ -13,15 +13,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.AttractMode.MetadataFile"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromAttractMode(Models.AttractMode.MetadataFile item)
+        public static MetadataFile ConvertToInternalModel(Models.AttractMode.MetadataFile item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromAttractMode(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Row != null && item.Row.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Row.Select(ConvertMachineFromAttractMode).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Row.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -29,7 +29,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.AttractMode.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromAttractMode(Models.AttractMode.MetadataFile item)
+        private static Header ConvertHeaderToInternalModel(Models.AttractMode.MetadataFile item)
         {
             var header = new Header
             {
@@ -41,7 +41,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromAttractMode(Models.AttractMode.Row item)
+        private static Machine ConvertMachineToInternalModel(Models.AttractMode.Row item)
         {
             var machine = new Machine
             {
@@ -64,7 +64,7 @@ namespace SabreTools.Serialization
                 [Machine.PlayedCountKey] = item.PlayedCount,
                 [Machine.PlayedTimeKey] = item.PlayedTime,
                 [Machine.PlayedTimeKey] = item.PlayedTime,
-                [Machine.RomKey] = ConvertFromAttractMode(item),
+                [Machine.RomKey] = ConvertToInternalModel(item),
             };
             return machine;
         }
@@ -72,7 +72,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromAttractMode(Models.AttractMode.Row item)
+        private static Rom ConvertToInternalModel(Models.AttractMode.Row item)
         {
             var rom = new Rom
             {

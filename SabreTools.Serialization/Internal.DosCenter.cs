@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.DosCenter.MetadataFile"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromDosCenter(Models.DosCenter.MetadataFile item)
+        public static MetadataFile ConvertToInternalModel(Models.DosCenter.MetadataFile item)
         {
             var metadataFile = new MetadataFile();
 
             if (item?.DosCenter != null)
-                metadataFile[MetadataFile.HeaderKey] = ConvertHeaderFromDosCenter(item.DosCenter);
+                metadataFile[MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item.DosCenter);
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromDosCenter).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,7 +30,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.DosCenter.DosCenter"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromDosCenter(Models.DosCenter.DosCenter item)
+        private static Header ConvertHeaderToInternalModel(Models.DosCenter.DosCenter item)
         {
             var header = new Header
             {
@@ -48,7 +48,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.DosCenter.Game"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromDosCenter(Models.DosCenter.Game item)
+        private static Machine ConvertMachineToInternalModel(Models.DosCenter.Game item)
         {
             var machine = new Machine
             {
@@ -60,7 +60,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var file in item.File)
                 {
-                    roms.Add(ConvertFromDosCenter(file));
+                    roms.Add(ConvertToInternalModel(file));
                 }
                 machine[Machine.RomKey] = roms.ToArray();
             }
@@ -71,7 +71,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.DosCenter.File"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromDosCenter(Models.DosCenter.File item)
+        private static Rom ConvertToInternalModel(Models.DosCenter.File item)
         {
             var rom = new Rom
             {

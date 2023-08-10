@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromOpenMSX(Models.OpenMSX.SoftwareDb item)
+        public static MetadataFile ConvertToInternalModel(Models.OpenMSX.SoftwareDb item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromOpenMSX(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Software != null && item.Software.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Software.Select(ConvertMachineFromOpenMSX).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Software.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,7 +30,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromOpenMSX(Models.OpenMSX.SoftwareDb item)
+        public static Header ConvertHeaderToInternalModel(Models.OpenMSX.SoftwareDb item)
         {
             var header = new Header
             {
@@ -42,7 +42,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.Software"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromOpenMSX(Models.OpenMSX.Software item)
+        public static Machine ConvertMachineToInternalModel(Models.OpenMSX.Software item)
         {
             var machine = new Machine
             {
@@ -59,7 +59,7 @@ namespace SabreTools.Serialization
                 var dumps = new List<Dump>();
                 foreach (var dump in item.Dump)
                 {
-                    dumps.Add(ConvertFromOpenMSX(dump));
+                    dumps.Add(ConvertToInternalModel(dump));
                 }
                 machine[Machine.DumpKey] = dumps.ToArray();
             }
@@ -70,25 +70,25 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.Dump"/> to <cref="Dump"/>
         /// </summary>
-        public static Dump ConvertFromOpenMSX(Models.OpenMSX.Dump item)
+        public static Dump ConvertToInternalModel(Models.OpenMSX.Dump item)
         {
             var dump = new Dump();
 
             if (item.Original != null)
-                dump[Dump.OriginalKey] = ConvertFromOpenMSX(item.Original);
+                dump[Dump.OriginalKey] = ConvertToInternalModel(item.Original);
 
             switch (item.Rom)
             {
                 case Models.OpenMSX.Rom rom:
-                    dump[Dump.RomKey] = ConvertFromOpenMSX(rom);
+                    dump[Dump.RomKey] = ConvertToInternalModel(rom);
                     break;
 
                 case Models.OpenMSX.MegaRom megaRom:
-                    dump[Dump.MegaRomKey] = ConvertFromOpenMSX(megaRom);
+                    dump[Dump.MegaRomKey] = ConvertToInternalModel(megaRom);
                     break;
 
                 case Models.OpenMSX.SCCPlusCart sccPlusCart:
-                    dump[Dump.SCCPlusCartKey] = ConvertFromOpenMSX(sccPlusCart);
+                    dump[Dump.SCCPlusCartKey] = ConvertToInternalModel(sccPlusCart);
                     break;
             }
 
@@ -98,7 +98,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.Original"/> to <cref="Rom"/>
         /// </summary>
-        public static Original ConvertFromOpenMSX(Models.OpenMSX.Original item)
+        public static Original ConvertToInternalModel(Models.OpenMSX.Original item)
         {
             var original = new Original
             {
@@ -111,7 +111,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.RomBase"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromOpenMSX(Models.OpenMSX.RomBase item)
+        public static Rom ConvertToInternalModel(Models.OpenMSX.RomBase item)
         {
             var rom = new Rom
             {

@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OfflineList.Dat"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromOfflineList(Models.OfflineList.Dat item)
+        public static MetadataFile ConvertToInternalModel(Models.OfflineList.Dat item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromOfflineList(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Games?.Game != null && item.Games.Game.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Games.Game.Select(ConvertMachineFromOfflineList).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Games.Game.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,7 +30,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OfflineList.Dat"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromOfflineList(Models.OfflineList.Dat item)
+        private static Header ConvertHeaderToInternalModel(Models.OfflineList.Dat item)
         {
             var header = new Header
             {
@@ -63,7 +63,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OfflineList.Game"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromOfflineList(Models.OfflineList.Game item)
+        private static Machine ConvertMachineToInternalModel(Models.OfflineList.Game item)
         {
             var machine = new Machine
             {
@@ -86,7 +86,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var file in item.Files.RomCRC)
                 {
-                    var rom = ConvertFromOfflineList(file);
+                    var rom = ConvertToInternalModel(file);
                     rom[Rom.SizeKey] = item.RomSize;
                     roms.Add(rom);
                 }
@@ -99,7 +99,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OfflineList.FileRomCRC"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromOfflineList(Models.OfflineList.FileRomCRC item)
+        private static Rom ConvertToInternalModel(Models.OfflineList.FileRomCRC item)
         {
             var rom = new Rom
             {

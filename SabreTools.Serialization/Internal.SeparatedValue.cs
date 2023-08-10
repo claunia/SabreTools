@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromClrMamePro(Models.SeparatedValue.MetadataFile item)
+        public static MetadataFile ConvertToInternalModel(Models.SeparatedValue.MetadataFile item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromSeparatedValue(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Row != null && item.Row.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Row.Select(ConvertMachineFromSeparatedValue).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Row.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,7 +30,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromSeparatedValue(Models.SeparatedValue.MetadataFile item)
+        private static Header ConvertHeaderToInternalModel(Models.SeparatedValue.MetadataFile item)
         {
             var header = new Header
             {
@@ -51,7 +51,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)
+        private static Machine ConvertMachineToInternalModel(Models.SeparatedValue.Row item)
         {
             var machine = new Machine
             {
@@ -59,7 +59,7 @@ namespace SabreTools.Serialization
                 [Machine.DescriptionKey] = item.GameDescription,
             };
 
-            var datItem = ConvertFromSeparatedValue(item);
+            var datItem = ConvertToInternalModel(item);
             switch (datItem)
             {
                 case Disk disk:
@@ -81,7 +81,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="DatItem"/>
         /// </summary>
-        private static DatItem? ConvertFromSeparatedValue(Models.SeparatedValue.Row item)
+        private static DatItem? ConvertToInternalModel(Models.SeparatedValue.Row item)
         {
             return item.Type switch
             {

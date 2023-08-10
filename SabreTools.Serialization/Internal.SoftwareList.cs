@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.SoftwareList"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromSoftwareList(Models.SoftwareList.SoftwareList item)
+        public static MetadataFile ConvertToInternalModel(Models.SoftwareList.SoftwareList item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromSoftwareList(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Software != null && item.Software.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Software.Select(ConvertMachineFromSoftwareList).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Software.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,7 +30,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.SoftwareList"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromSoftwareList(Models.SoftwareList.SoftwareList item)
+        private static Header ConvertHeaderToInternalModel(Models.SoftwareList.SoftwareList item)
         {
             var header = new Header
             {
@@ -44,7 +44,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Software"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromSoftwareList(Models.SoftwareList.Software item)
+        private static Machine ConvertMachineToInternalModel(Models.SoftwareList.Software item)
         {
             var machine = new Machine
             {
@@ -62,7 +62,7 @@ namespace SabreTools.Serialization
                 var infos = new List<Info>();
                 foreach (var info in item.Info)
                 {
-                    infos.Add(ConvertFromSoftwareList(info));
+                    infos.Add(ConvertToInternalModel(info));
                 }
                 machine[Machine.InfoKey] = infos.ToArray();
             }
@@ -72,7 +72,7 @@ namespace SabreTools.Serialization
                 var sharedFeats = new List<SharedFeat>();
                 foreach (var sharedFeat in item.SharedFeat)
                 {
-                    sharedFeats.Add(ConvertFromSoftwareList(sharedFeat));
+                    sharedFeats.Add(ConvertToInternalModel(sharedFeat));
                 }
                 machine[Machine.SharedFeatKey] = sharedFeats.ToArray();
             }
@@ -82,7 +82,7 @@ namespace SabreTools.Serialization
                 var parts = new List<Part>();
                 foreach (var part in item.Part)
                 {
-                    parts.Add(ConvertFromSoftwareList(part));
+                    parts.Add(ConvertToInternalModel(part));
                 }
                 machine[Machine.PartKey] = parts.ToArray();
             }
@@ -93,7 +93,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DataArea"/> to <cref="DataArea"/>
         /// </summary>
-        private static DataArea ConvertFromSoftwareList(Models.SoftwareList.DataArea item)
+        private static DataArea ConvertToInternalModel(Models.SoftwareList.DataArea item)
         {
             var dataArea = new DataArea
             {
@@ -108,7 +108,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Rom>();
                 foreach (var rom in item.Rom)
                 {
-                    roms.Add(ConvertFromSoftwareList(rom));
+                    roms.Add(ConvertToInternalModel(rom));
                 }
                 dataArea[DataArea.RomKey] = roms.ToArray();
             }
@@ -119,7 +119,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DipSwitch"/> to <cref="DipSwitch"/>
         /// </summary>
-        private static DipSwitch ConvertFromSoftwareList(Models.SoftwareList.DipSwitch item)
+        private static DipSwitch ConvertToInternalModel(Models.SoftwareList.DipSwitch item)
         {
             var dipSwitch = new DipSwitch
             {
@@ -133,7 +133,7 @@ namespace SabreTools.Serialization
                 var dipValues = new List<DipValue>();
                 foreach (var dipValue in item.DipValue)
                 {
-                    dipValues.Add(ConvertFromSoftwareList(dipValue));
+                    dipValues.Add(ConvertToInternalModel(dipValue));
                 }
                 dipSwitch[DipSwitch.DipValueKey] = dipValues.ToArray();
             }
@@ -144,7 +144,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DipValue"/> to <cref="DipValue"/>
         /// </summary>
-        private static DipValue ConvertFromSoftwareList(Models.SoftwareList.DipValue item)
+        private static DipValue ConvertToInternalModel(Models.SoftwareList.DipValue item)
         {
             var dipValue = new DipValue
             {
@@ -158,7 +158,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Disk"/> to <cref="Disk"/>
         /// </summary>
-        private static Disk ConvertFromSoftwareList(Models.SoftwareList.Disk item)
+        private static Disk ConvertToInternalModel(Models.SoftwareList.Disk item)
         {
             var disk = new Disk
             {
@@ -174,7 +174,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DiskArea"/> to <cref="DiskArea"/>
         /// </summary>
-        private static DiskArea ConvertFromSoftwareList(Models.SoftwareList.DiskArea item)
+        private static DiskArea ConvertToInternalModel(Models.SoftwareList.DiskArea item)
         {
             var diskArea = new DiskArea
             {
@@ -186,7 +186,7 @@ namespace SabreTools.Serialization
                 var roms = new List<Disk>();
                 foreach (var disk in item.Disk)
                 {
-                    roms.Add(ConvertFromSoftwareList(disk));
+                    roms.Add(ConvertToInternalModel(disk));
                 }
                 diskArea[DiskArea.DiskKey] = roms.ToArray();
             }
@@ -197,7 +197,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Feature"/> to <cref="Feature"/>
         /// </summary>
-        private static Feature ConvertFromSoftwareList(Models.SoftwareList.Feature item)
+        private static Feature ConvertToInternalModel(Models.SoftwareList.Feature item)
         {
             var feature = new Feature
             {
@@ -210,7 +210,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Info"/> to <cref="Info"/>
         /// </summary>
-        private static Info ConvertFromSoftwareList(Models.SoftwareList.Info item)
+        private static Info ConvertToInternalModel(Models.SoftwareList.Info item)
         {
             var info = new Info
             {
@@ -223,7 +223,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Part"/> to <cref="Part"/>
         /// </summary>
-        private static Part ConvertFromSoftwareList(Models.SoftwareList.Part item)
+        private static Part ConvertToInternalModel(Models.SoftwareList.Part item)
         {
             var part = new Part
             {
@@ -236,7 +236,7 @@ namespace SabreTools.Serialization
                 var features = new List<Feature>();
                 foreach (var feature in item.Feature)
                 {
-                    features.Add(ConvertFromSoftwareList(feature));
+                    features.Add(ConvertToInternalModel(feature));
                 }
                 part[Part.FeatureKey] = features.ToArray();
             }
@@ -246,7 +246,7 @@ namespace SabreTools.Serialization
                 var dataAreas = new List<DataArea>();
                 foreach (var dataArea in item.DataArea)
                 {
-                    dataAreas.Add(ConvertFromSoftwareList(dataArea));
+                    dataAreas.Add(ConvertToInternalModel(dataArea));
                 }
                 part[Part.DataAreaKey] = dataAreas.ToArray();
             }
@@ -256,7 +256,7 @@ namespace SabreTools.Serialization
                 var diskAreas = new List<DiskArea>();
                 foreach (var diskArea in item.DiskArea)
                 {
-                    diskAreas.Add(ConvertFromSoftwareList(diskArea));
+                    diskAreas.Add(ConvertToInternalModel(diskArea));
                 }
                 part[Part.DiskAreaKey] = diskAreas.ToArray();
             }
@@ -266,7 +266,7 @@ namespace SabreTools.Serialization
                 var dipSwitches = new List<DipSwitch>();
                 foreach (var rom in item.DipSwitch)
                 {
-                    dipSwitches.Add(ConvertFromSoftwareList(rom));
+                    dipSwitches.Add(ConvertToInternalModel(rom));
                 }
                 part[Part.DipSwitchKey] = dipSwitches.ToArray();
             }
@@ -277,7 +277,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Rom"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromSoftwareList(Models.SoftwareList.Rom item)
+        private static Rom ConvertToInternalModel(Models.SoftwareList.Rom item)
         {
             var rom = new Rom
             {
@@ -297,7 +297,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.SharedFeat"/> to <cref="SharedFeat"/>
         /// </summary>
-        private static SharedFeat ConvertFromSoftwareList(Models.SoftwareList.SharedFeat item)
+        private static SharedFeat ConvertToInternalModel(Models.SoftwareList.SharedFeat item)
         {
             var sharedFeat = new SharedFeat
             {

@@ -13,15 +13,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromRomCenter(Models.RomCenter.MetadataFile item)
+        public static MetadataFile ConvertToInternalModel(Models.RomCenter.MetadataFile item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromRomCenter(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Games?.Rom != null && item.Games.Rom.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Games.Rom.Select(ConvertMachineFromRomCenter).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Games.Rom.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -29,7 +29,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromRomCenter(Models.RomCenter.MetadataFile item)
+        private static Header ConvertHeaderToInternalModel(Models.RomCenter.MetadataFile item)
         {
             var header = new Header();
 
@@ -67,7 +67,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.RomCenter.Game"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromRomCenter(Models.RomCenter.Rom item)
+        private static Machine ConvertMachineToInternalModel(Models.RomCenter.Rom item)
         {
             var machine = new Machine
             {
@@ -75,7 +75,7 @@ namespace SabreTools.Serialization
                 //[Machine.ParentDescriptionKey] = item.ParentDescription, // This is unmappable
                 [Machine.NameKey] = item.GameName,
                 [Machine.DescriptionKey] = item.GameDescription,
-                [Machine.RomKey] = new Rom[] { ConvertFromRomCenter(item) },
+                [Machine.RomKey] = new Rom[] { ConvertToInternalModel(item) },
             };
 
             return machine;
@@ -84,7 +84,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.RomCenter.Rom"/> to <cref="Rom"/>
         /// </summary>
-        private static Rom ConvertFromRomCenter(Models.RomCenter.Rom item)
+        private static Rom ConvertToInternalModel(Models.RomCenter.Rom item)
         {
             var rom = new Rom
             {

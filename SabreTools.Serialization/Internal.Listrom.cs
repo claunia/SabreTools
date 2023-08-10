@@ -14,15 +14,15 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="MetadataFile"/>
         /// </summary>
-        public static MetadataFile ConvertFromListrom(Models.Listrom.MetadataFile item)
+        public static MetadataFile ConvertToInternalModel(Models.Listrom.MetadataFile item)
         {
             var metadataFile = new MetadataFile
             {
-                [MetadataFile.HeaderKey] = ConvertHeaderFromListrom(item),
+                [MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Set != null && item.Set.Any())
-                metadataFile[MetadataFile.MachineKey] = item.Set.Select(ConvertMachineFromListrom).ToArray();
+                metadataFile[MetadataFile.MachineKey] = item.Set.Select(ConvertMachineToInternalModel).ToArray();
 
             return metadataFile;
         }
@@ -30,7 +30,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        private static Header ConvertHeaderFromListrom(Models.Listrom.MetadataFile item)
+        private static Header ConvertHeaderToInternalModel(Models.Listrom.MetadataFile item)
         {
             var header = new Header
             {
@@ -42,7 +42,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.Set"/> to <cref="Machine"/>
         /// </summary>
-        private static Machine ConvertMachineFromListrom(Models.Listrom.Set item)
+        private static Machine ConvertMachineToInternalModel(Models.Listrom.Set item)
         {
             var machine = new Machine();
             if (!string.IsNullOrWhiteSpace(item.Device))
@@ -60,7 +60,7 @@ namespace SabreTools.Serialization
                 var datItems = new List<DatItem>();
                 foreach (var file in item.Row)
                 {
-                    datItems.Add(ConvertFromListrom(file));
+                    datItems.Add(ConvertToInternalModel(file));
                 }
 
                 machine[Machine.DiskKey] = datItems.Where(i => i.ReadString(DatItem.TypeKey) == "disk")?.ToArray();
@@ -73,7 +73,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.Row"/> to <cref="DatItem"/>
         /// </summary>
-        private static DatItem ConvertFromListrom(Models.Listrom.Row item)
+        private static DatItem ConvertToInternalModel(Models.Listrom.Row item)
         {
             if (item.Size == null)
             {
