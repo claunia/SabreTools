@@ -23,19 +23,24 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                dat.Games = new Games { Game = machines.Select(ConvertMachineFromInternalModel).ToArray() };
-            
+            {
+                dat.Games = new Games
+                {
+                    Game = machines
+                        .Where(m => m != null)
+                        .Select(ConvertMachineFromInternalModel)
+                        .ToArray()
+                };
+            }
+
             return dat;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.OfflineList.Dat"/>
         /// </summary>
-        private static Dat? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static Dat ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var dat = new Dat
             {
                 NoNamespaceSchemaLocation = item.ReadString(Models.Internal.Header.SchemaLocationKey),
@@ -83,11 +88,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OfflineList.Game"/>
         /// </summary>
-        private static Game? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Game ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var game = new Game
             {
                 ImageNumber = item.ReadString(Models.Internal.Machine.ImageNumberKey),
@@ -105,11 +107,19 @@ namespace SabreTools.Serialization
             };
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            game.RomSize = roms?
-                .Select(rom => rom.ReadString(Models.Internal.Rom.SizeKey))?
-                .FirstOrDefault(s => s != null);
-            var romCRCs = roms?.Select(ConvertFromInternalModel).ToArray();
-            game.Files = new Files { RomCRC = romCRCs };
+            if (roms != null && roms.Any())
+            {
+                game.RomSize = roms
+                    .Select(rom => rom.ReadString(Models.Internal.Rom.SizeKey))
+                    .FirstOrDefault(s => s != null);
+
+                var romCRCs = roms
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+
+                game.Files = new Files { RomCRC = romCRCs };
+            }
 
             return game;
         }
@@ -117,11 +127,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.OfflineList.FileRomCRC"/>
         /// </summary>
-        private static FileRomCRC? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static FileRomCRC ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var fileRomCRC = new FileRomCRC
             {
                 Extension = item.ReadString(Models.Internal.Rom.ExtensionKey),

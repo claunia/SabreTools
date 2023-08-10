@@ -13,15 +13,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(Files item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(Files? item)
         {
+            if (item == null)
+                return null;
+            
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.File != null && item.File.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.File.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.File
+                    .Where(f => f != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }

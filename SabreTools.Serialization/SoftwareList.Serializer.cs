@@ -22,15 +22,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.SoftwareList"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(SoftwareList item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(SoftwareList? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Software != null && item.Software.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Software.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Software
+                    .Where(s => s != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }

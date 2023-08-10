@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SabreTools.Models.Logiqx;
@@ -22,16 +24,34 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(Datafile item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(Datafile? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
-            // TODO: Handle Dir items
-            if (item?.Game != null && item.Game.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
+            var machines = new List<Models.Internal.Machine>();
+
+            if (item.Game != null && item.Game.Any())
+            {
+               machines.AddRange(item.Game
+                    .Where(g => g != null)
+                    .Select(ConvertMachineToInternalModel));
+            }
+
+            if (item.Dir != null && item.Dir.Any())
+            {
+                machines.AddRange(item.Dir
+                    .Where(d => d != null)
+                    .SelectMany(ConvertDirToInternalModel));
+            }
+
+            if (machines.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = machines.ToArray();
 
             return metadataFile;
         }
@@ -41,7 +61,7 @@ namespace SabreTools.Serialization
         /// </summary>
         private static Models.Internal.Header ConvertHeaderToInternalModel(Datafile item)
         {
-            var header = ConvertHeaderToInternalModel(item.Header);
+            var header = item.Header != null ? ConvertHeaderToInternalModel(item.Header) : new Models.Internal.Header();
 
             header[Models.Internal.Header.BuildKey] = item.Build;
             header[Models.Internal.Header.DebugKey] = item.Debug;
@@ -92,6 +112,25 @@ namespace SabreTools.Serialization
             }
 
             return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Logiqx.Dir"/> to an array of <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine[] ConvertDirToInternalModel(Dir item)
+        {
+            if (item.Game == null || !item.Game.Any())
+                return Array.Empty<Models.Internal.Machine>();
+
+            return item.Game
+                .Where(g => g != null)
+                .Select(game =>
+                {
+                    var machine = ConvertMachineToInternalModel(game);
+                    machine[Models.Internal.Machine.DirNameKey] = item.Name;
+                    return machine;
+                })
+                .ToArray();
         }
 
         /// <summary>
@@ -147,8 +186,8 @@ namespace SabreTools.Serialization
             if (item.Archive != null && item.Archive.Any())
                 machine[Models.Internal.Machine.ArchiveKey] = item.Archive.Select(ConvertToInternalModel).ToArray();
 
-            if (item.Driver != null && item.Driver.Any())
-                machine[Models.Internal.Machine.DriverKey] = item.Driver.Select(ConvertToInternalModel).ToArray();
+            if (item.Driver != null)
+                machine[Models.Internal.Machine.DriverKey] = ConvertToInternalModel(item.Driver);
 
             if (item.SoftwareList != null && item.SoftwareList.Any())
                 machine[Models.Internal.Machine.SoftwareListKey] = item.SoftwareList.Select(ConvertToInternalModel).ToArray();

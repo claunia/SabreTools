@@ -53,6 +53,7 @@ namespace SabreTools.Serialization
             var samples = new List<Sample>();
             var archives = new List<Archive>();
             var chips = new List<Chip>();
+            var videos = new List<Video>();
             var dipSwitches = new List<DipSwitch>();
 
             var additional = new List<string>();
@@ -89,6 +90,7 @@ namespace SabreTools.Serialization
                                 game.Sample = samples.ToArray();
                                 game.Archive = archives.ToArray();
                                 game.Chip = chips.ToArray();
+                                game.Video = videos.ToArray();
                                 game.DipSwitch = dipSwitches.ToArray();
                                 game.ADDITIONAL_ELEMENTS = gameAdditional.ToArray();
 
@@ -103,6 +105,7 @@ namespace SabreTools.Serialization
                                 samples.Clear();
                                 archives.Clear();
                                 chips.Clear();
+                                videos.Clear();
                                 dipSwitches.Clear();
                                 gameAdditional.Clear();
                                 break;
@@ -293,7 +296,7 @@ namespace SabreTools.Serialization
                             chips.Add(CreateChip(reader));
                             break;
                         case "video":
-                            game.Video = CreateVideo(reader);
+                            videos.Add(CreateVideo(reader));
                             break;
                         case "sound":
                             game.Sound = CreateSound(reader);
@@ -848,7 +851,12 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Game = machines.Select(machine => ConvertMachineFromInternalModel(machine, game)).ToArray();
+            {
+                metadataFile.Game = machines
+                    .Where(m => m != null)
+                    .Select(machine => ConvertMachineFromInternalModel(machine, game))
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -856,11 +864,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.ClrMamePro.ClrMamePro"/>
         /// </summary>
-        private static Models.ClrMamePro.ClrMamePro? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static Models.ClrMamePro.ClrMamePro ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var clrMamePro = new Models.ClrMamePro.ClrMamePro
             {
                 Name = item.ReadString(Models.Internal.Header.NameKey),
@@ -885,11 +890,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Machine"/>
         /// </summary>
-        private static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
+        private static GameBase ConvertMachineFromInternalModel(Models.Internal.Machine item, bool game = false)
         {
-            if (item == null)
-                return null;
-
             GameBase gameBase = game ? new Models.ClrMamePro.Game() : new Models.ClrMamePro.Machine();
 
             gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
@@ -902,43 +904,106 @@ namespace SabreTools.Serialization
             gameBase.SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey);
 
             var releases = item.Read<Models.Internal.Release[]>(Models.Internal.Machine.ReleaseKey);
-            gameBase.Release = releases?.Select(ConvertFromInternalModel)?.ToArray();
+            if (releases != null && releases.Any())
+            {
+                gameBase.Release = releases
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
-            gameBase.BiosSet = biosSets?.Select(ConvertFromInternalModel)?.ToArray();
+            if (biosSets != null && biosSets.Any())
+            {
+                gameBase.BiosSet = biosSets
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            gameBase.Rom = roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms != null && roms.Any())
+            {
+                gameBase.Rom = roms
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
-            gameBase.Disk = disks?.Select(ConvertFromInternalModel)?.ToArray();
+            if (disks != null && disks.Any())
+            {
+                gameBase.Disk = disks
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var medias = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
-            gameBase.Media = medias?.Select(ConvertFromInternalModel)?.ToArray();
+            if (medias != null && medias.Any())
+            {
+                gameBase.Media = medias
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
-            gameBase.Sample = samples?.Select(ConvertFromInternalModel)?.ToArray();
+            if (samples != null && samples.Any())
+            {
+                gameBase.Sample = samples
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var archives = item.Read<Models.Internal.Archive[]>(Models.Internal.Machine.ArchiveKey);
-            gameBase.Archive = archives?.Select(ConvertFromInternalModel)?.ToArray();
+            if (archives != null && archives.Any())
+            {
+                gameBase.Archive = archives
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var chips = item.Read<Models.Internal.Chip[]>(Models.Internal.Machine.ChipKey);
-            gameBase.Chip = chips?.Select(ConvertFromInternalModel)?.ToArray();
+            if (chips != null && chips.Any())
+            {
+                gameBase.Chip = chips
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
-            var video = item.Read<Models.Internal.Video>(Models.Internal.Machine.VideoKey);
-            gameBase.Video = ConvertFromInternalModel(video);
+            var videos = item.Read<Models.Internal.Video[]>(Models.Internal.Machine.VideoKey);
+            if (videos != null && videos.Any())
+            {
+                gameBase.Video = videos
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var sound = item.Read<Models.Internal.Sound>(Models.Internal.Machine.SoundKey);
-            gameBase.Sound = ConvertFromInternalModel(sound);
+            if (sound != null)
+                gameBase.Sound = ConvertFromInternalModel(sound);
 
             var input = item.Read<Models.Internal.Input>(Models.Internal.Machine.InputKey);
-            gameBase.Input = ConvertFromInternalModel(input);
+            if (input != null)
+                gameBase.Input = ConvertFromInternalModel(input);
 
             var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Machine.DipSwitchKey);
-            gameBase.DipSwitch = dipSwitches?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dipSwitches != null && dipSwitches.Any())
+            {
+                gameBase.DipSwitch = dipSwitches
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var driver = item.Read<Models.Internal.Driver>(Models.Internal.Machine.DriverKey);
-            gameBase.Driver = ConvertFromInternalModel(driver);
+            if (driver != null)
+                gameBase.Driver = ConvertFromInternalModel(driver);
 
             return gameBase;
         }
@@ -946,11 +1011,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
         /// </summary>
-        private static Archive? ConvertFromInternalModel(Models.Internal.Archive? item)
+        private static Archive ConvertFromInternalModel(Models.Internal.Archive item)
         {
-            if (item == null)
-                return null;
-
             var archive = new Archive
             {
                 Name = item.ReadString(Models.Internal.Archive.NameKey),
@@ -961,11 +1023,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.ClrMamePro.BiosSet"/>
         /// </summary>
-        private static BiosSet? ConvertFromInternalModel(Models.Internal.BiosSet? item)
+        private static BiosSet ConvertFromInternalModel(Models.Internal.BiosSet item)
         {
-            if (item == null)
-                return null;
-
             var biosset = new BiosSet
             {
                 Name = item.ReadString(Models.Internal.BiosSet.NameKey),
@@ -978,11 +1037,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.ClrMamePro.Chip"/>
         /// </summary>
-        private static Chip? ConvertFromInternalModel(Models.Internal.Chip? item)
+        private static Chip ConvertFromInternalModel(Models.Internal.Chip item)
         {
-            if (item == null)
-                return null;
-
             var chip = new Chip
             {
                 Type = item.ReadString(Models.Internal.Chip.ChipTypeKey),
@@ -996,11 +1052,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.ClrMamePro.DipSwitch"/>
         /// </summary>
-        private static DipSwitch? ConvertFromInternalModel(Models.Internal.DipSwitch? item)
+        private static DipSwitch ConvertFromInternalModel(Models.Internal.DipSwitch item)
         {
-            if (item == null)
-                return null;
-
             var dipswitch = new DipSwitch
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -1013,11 +1066,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.ClrMamePro.Disk"/>
         /// </summary>
-        private static Disk? ConvertFromInternalModel(Models.Internal.Disk? item)
+        private static Disk ConvertFromInternalModel(Models.Internal.Disk item)
         {
-            if (item == null)
-                return null;
-
             var disk = new Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -1033,11 +1083,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.ClrMamePro.Driver"/>
         /// </summary>
-        private static Driver? ConvertFromInternalModel(Models.Internal.Driver? item)
+        private static Driver ConvertFromInternalModel(Models.Internal.Driver item)
         {
-            if (item == null)
-                return null;
-
             var driver = new Driver
             {
                 Status = item.ReadString(Models.Internal.Driver.StatusKey),
@@ -1052,11 +1099,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.ClrMamePro.Input"/>
         /// </summary>
-        private static Input? ConvertFromInternalModel(Models.Internal.Input? item)
+        private static Input ConvertFromInternalModel(Models.Internal.Input item)
         {
-            if (item == null)
-                return null;
-
             var input = new Input
             {
                 Players = item.ReadString(Models.Internal.Input.PlayersKey),
@@ -1072,11 +1116,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.ClrMamePro.Media"/>
         /// </summary>
-        private static Media? ConvertFromInternalModel(Models.Internal.Media? item)
+        private static Media ConvertFromInternalModel(Models.Internal.Media item)
         {
-            if (item == null)
-                return null;
-
             var media = new Media
             {
                 Name = item.ReadString(Models.Internal.Media.NameKey),
@@ -1091,11 +1132,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.ClrMamePro.Release"/>
         /// </summary>
-        private static Release? ConvertFromInternalModel(Models.Internal.Release? item)
+        private static Release ConvertFromInternalModel(Models.Internal.Release item)
         {
-            if (item == null)
-                return null;
-
             var release = new Release
             {
                 Name = item.ReadString(Models.Internal.Release.NameKey),
@@ -1110,11 +1148,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ClrMamePro.Rom"/>
         /// </summary>
-        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Rom ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var rom = new Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -1145,11 +1180,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.ClrMamePro.Sample"/>
         /// </summary>
-        private static Sample? ConvertFromInternalModel(Models.Internal.Sample? item)
+        private static Sample ConvertFromInternalModel(Models.Internal.Sample item)
         {
-            if (item == null)
-                return null;
-
             var sample = new Sample
             {
                 Name = item.ReadString(Models.Internal.Sample.NameKey),
@@ -1160,11 +1192,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.ClrMamePro.Sound"/>
         /// </summary>
-        private static Sound? ConvertFromInternalModel(Models.Internal.Sound? item)
+        private static Sound ConvertFromInternalModel(Models.Internal.Sound item)
         {
-            if (item == null)
-                return null;
-
             var sound = new Sound
             {
                 Channels = item.ReadString(Models.Internal.Sound.ChannelsKey),
@@ -1175,11 +1204,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.ClrMamePro.Video"/>
         /// </summary>
-        private static Video? ConvertFromInternalModel(Models.Internal.Video? item)
+        private static Video ConvertFromInternalModel(Models.Internal.Video item)
         {
-            if (item == null)
-                return null;
-
             var video = new Video
             {
                 Screen = item.ReadString(Models.Internal.Video.ScreenKey),

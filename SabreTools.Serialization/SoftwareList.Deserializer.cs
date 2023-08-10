@@ -23,19 +23,21 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Software = machines.Select(ConvertMachineFromInternalModel).ToArray();
-            
+            {
+                metadataFile.Software = machines
+                    .Where(m => m != null)
+                    .Select(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
+
             return metadataFile;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SoftwareList.SoftwareList"/>
         /// </summary>
-        private static SoftwareList? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static SoftwareList ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var softwareList = new SoftwareList
             {
                 Name = item.ReadString(Models.Internal.Header.NameKey),
@@ -48,11 +50,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.SoftwareList.Software"/>
         /// </summary>
-        private static Software? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Software ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-            
             var software = new Software
             {
                 Name = item.ReadString(Models.Internal.Machine.NameKey),
@@ -65,13 +64,31 @@ namespace SabreTools.Serialization
             };
 
             var infos = item.Read<Models.Internal.Info[]>(Models.Internal.Machine.InfoKey);
-            software.Info = infos?.Select(ConvertFromInternalModel)?.ToArray();
+            if (infos != null && infos.Any())
+            {
+                software.Info = infos
+                    .Where(i => i != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var sharedFeats = item.Read<Models.Internal.SharedFeat[]>(Models.Internal.Machine.SharedFeatKey);
-            software.SharedFeat = sharedFeats?.Select(ConvertFromInternalModel)?.ToArray();
+            if (sharedFeats != null && sharedFeats.Any())
+            {
+                software.SharedFeat = sharedFeats
+                    .Where(s => s != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var parts = item.Read<Models.Internal.Part[]>(Models.Internal.Machine.PartKey);
-            software.Part = parts?.Select(ConvertFromInternalModel)?.ToArray();
+            if (parts != null && parts.Any())
+            {
+                software.Part = parts
+                    .Where(p => p != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return software;
         }
@@ -79,11 +96,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DataArea"/> to <cref="Models.SoftwareList.DataArea"/>
         /// </summary>
-        private static DataArea? ConvertFromInternalModel(Models.Internal.DataArea? item)
+        private static DataArea ConvertFromInternalModel(Models.Internal.DataArea item)
         {
-            if (item == null)
-                return null;
-            
             var dataArea = new DataArea
             {
                 Name = item.ReadString(Models.Internal.DataArea.NameKey),
@@ -93,7 +107,13 @@ namespace SabreTools.Serialization
             };
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.DataArea.RomKey);
-            dataArea.Rom = roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms != null && roms.Any())
+            {
+                dataArea.Rom = roms
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return dataArea;
         }
@@ -101,11 +121,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.SoftwareList.DipSwitch"/>
         /// </summary>
-        private static DipSwitch? ConvertFromInternalModel(Models.Internal.DipSwitch? item)
+        private static DipSwitch ConvertFromInternalModel(Models.Internal.DipSwitch item)
         {
-            if (item == null)
-                return null;
-            
             var dipSwitch = new DipSwitch
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -114,7 +131,13 @@ namespace SabreTools.Serialization
             };
 
             var dipValues = item.Read<Models.Internal.DipValue[]>(Models.Internal.DipSwitch.DipValueKey);
-            dipSwitch.DipValue = dipValues?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dipValues != null && dipValues.Any())
+            {
+                dipSwitch.DipValue = dipValues
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return dipSwitch;
         }
@@ -122,11 +145,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.SoftwareList.DipValue"/>
         /// </summary>
-        private static DipValue? ConvertFromInternalModel(Models.Internal.DipValue? item)
+        private static DipValue ConvertFromInternalModel(Models.Internal.DipValue item)
         {
-            if (item == null)
-                return null;
-            
             var dipValue = new DipValue
             {
                 Name = item.ReadString(Models.Internal.DipValue.NameKey),
@@ -139,11 +159,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SoftwareList.Disk"/>
         /// </summary>
-        private static Disk? ConvertFromInternalModel(Models.Internal.Disk? item)
+        private static Disk ConvertFromInternalModel(Models.Internal.Disk item)
         {
-            if (item == null)
-                return null;
-            
             var disk = new Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -158,18 +175,21 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DiskArea"/> to <cref="Models.SoftwareList.DiskArea"/>
         /// </summary>
-        private static DiskArea? ConvertFromInternalModel(Models.Internal.DiskArea? item)
+        private static DiskArea ConvertFromInternalModel(Models.Internal.DiskArea item)
         {
-            if (item == null)
-                return null;
-            
             var diskArea = new DiskArea
             {
                 Name = item.ReadString(Models.Internal.DiskArea.NameKey),
             };
 
             var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.DiskArea.DiskKey);
-            diskArea.Disk = disks?.Select(ConvertFromInternalModel)?.ToArray();
+            if (disks != null && disks.Any())
+            {
+                diskArea.Disk = disks
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return diskArea;
         }
@@ -177,11 +197,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.SoftwareList.Feature"/>
         /// </summary>
-        private static Feature? ConvertFromInternalModel(Models.Internal.Feature? item)
+        private static Feature ConvertFromInternalModel(Models.Internal.Feature item)
         {
-            if (item == null)
-                return null;
-            
             var feature = new Feature
             {
                 Name = item.ReadString(Models.Internal.Feature.NameKey),
@@ -193,11 +210,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Info"/> to <cref="Models.SoftwareList.Info"/>
         /// </summary>
-        private static Info? ConvertFromInternalModel(Models.Internal.Info? item)
+        private static Info ConvertFromInternalModel(Models.Internal.Info item)
         {
-            if (item == null)
-                return null;
-            
             var info = new Info
             {
                 Name = item.ReadString(Models.Internal.Info.NameKey),
@@ -209,11 +223,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Part"/> to <cref="Models.SoftwareList.Part"/>
         /// </summary>
-        private static Part? ConvertFromInternalModel(Models.Internal.Part? item)
+        private static Part ConvertFromInternalModel(Models.Internal.Part item)
         {
-            if (item == null)
-                return null;
-            
             var part = new Part
             {
                 Name = item.ReadString(Models.Internal.Part.NameKey),
@@ -221,16 +232,40 @@ namespace SabreTools.Serialization
             };
 
             var features = item.Read<Models.Internal.Feature[]>(Models.Internal.Part.FeatureKey);
-            part.Feature = features?.Select(ConvertFromInternalModel)?.ToArray();
+            if (features != null && features.Any())
+            {
+                part.Feature = features
+                    .Where(f => f != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var dataAreas = item.Read<Models.Internal.DataArea[]>(Models.Internal.Part.DataAreaKey);
-            part.DataArea = dataAreas?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dataAreas != null && dataAreas.Any())
+            {
+                part.DataArea = dataAreas
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var diskAreas = item.Read<Models.Internal.DiskArea[]>(Models.Internal.Part.DiskAreaKey);
-            part.DiskArea = diskAreas?.Select(ConvertFromInternalModel)?.ToArray();
+            if (diskAreas != null && diskAreas.Any())
+            {
+                part.DiskArea = diskAreas
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Part.DipSwitchKey);
-            part.DipSwitch = dipSwitches?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dipSwitches != null && dipSwitches.Any())
+            {
+                part.DipSwitch = dipSwitches
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return part;
         }
@@ -238,11 +273,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SoftwareList.Rom"/>
         /// </summary>
-        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Rom ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-            
             var rom = new Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -261,11 +293,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SharedFeat"/> to <cref="Models.SoftwareList.SharedFeat"/>
         /// </summary>
-        private static SharedFeat? ConvertFromInternalModel(Models.Internal.SharedFeat? item)
+        private static SharedFeat ConvertFromInternalModel(Models.Internal.SharedFeat item)
         {
-            if (item == null)
-                return null;
-            
             var sharedFeat = new SharedFeat
             {
                 Name = item.ReadString(Models.Internal.SharedFeat.NameKey),

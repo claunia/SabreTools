@@ -13,15 +13,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OfflineList.Dat"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(Dat item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(Dat? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Games?.Game != null && item.Games.Game.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Games.Game.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Games.Game
+                    .Where(g => g != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -82,12 +90,15 @@ namespace SabreTools.Serialization
 
             if (item.Files?.RomCRC != null && item.Files.RomCRC.Any())
             {
-                machine[Models.Internal.Machine.RomKey] = item.Files.RomCRC.Select(romCRC =>
-                {
-                    var rom = ConvertToInternalModel(romCRC);
-                    rom[Models.Internal.Rom.SizeKey] = item.RomSize;
-                    return rom;
-                }).ToArray();
+                machine[Models.Internal.Machine.RomKey] = item.Files.RomCRC
+                    .Where(r => r != null)
+                    .Select(romCRC =>
+                    {
+                        var rom = ConvertToInternalModel(romCRC);
+                        rom[Models.Internal.Rom.SizeKey] = item.RomSize;
+                        return rom;
+                    })
+                    .ToArray();
             }
 
             return machine;

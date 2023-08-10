@@ -13,15 +13,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.M1"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(M1 item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(M1? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                    .Where(g => g != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -29,15 +37,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(Mame item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(Mame? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                    .Where(g => g != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -91,28 +107,68 @@ namespace SabreTools.Serialization
             };
 
             if (item.BiosSet != null && item.BiosSet.Any())
-                machine[Models.Internal.Machine.BiosSetKey] = item.BiosSet.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.BiosSetKey] = item.BiosSet
+                    .Where(b => b != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Rom != null && item.Rom.Any())
-                machine[Models.Internal.Machine.RomKey] = item.Rom.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.RomKey] = item.Rom
+                    .Where(r => r != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Disk != null && item.Disk.Any())
-                machine[Models.Internal.Machine.DiskKey] = item.Disk.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.DiskKey] = item.Disk
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.DeviceRef != null && item.DeviceRef.Any())
-                machine[Models.Internal.Machine.DeviceRefKey] = item.DeviceRef.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.DeviceRefKey] = item.DeviceRef
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Sample != null && item.Sample.Any())
-                machine[Models.Internal.Machine.SampleKey] = item.Sample.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.SampleKey] = item.Sample
+                    .Where(s => s != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Chip != null && item.Chip.Any())
-                machine[Models.Internal.Machine.ChipKey] = item.Chip.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.ChipKey] = item.Chip
+                    .Where(c => c != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Display != null && item.Display.Any())
-                machine[Models.Internal.Machine.DisplayKey] = item.Display.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.DisplayKey] = item.Display
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Video != null && item.Video.Any())
-                machine[Models.Internal.Machine.VideoKey] = item.Video.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.VideoKey] = item.Video
+                    .Where(v => v != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Sound != null)
                 machine[Models.Internal.Machine.SoundKey] = ConvertToInternalModel(item.Sound);
@@ -121,34 +177,79 @@ namespace SabreTools.Serialization
                 machine[Models.Internal.Machine.InputKey] = ConvertToInternalModel(item.Input);
 
             if (item.DipSwitch != null && item.DipSwitch.Any())
-                machine[Models.Internal.Machine.DipSwitchKey] = item.DipSwitch.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.DipSwitchKey] = item.DipSwitch
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Configuration != null && item.Configuration.Any())
-                machine[Models.Internal.Machine.ConfigurationKey] = item.Configuration.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.ConfigurationKey] = item.Configuration
+                    .Where(c => c != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Port != null && item.Port.Any())
-                machine[Models.Internal.Machine.PortKey] = item.Port.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.PortKey] = item.Port
+                    .Where(p => p != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Adjuster != null && item.Adjuster.Any())
-                machine[Models.Internal.Machine.AdjusterKey] = item.Adjuster.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.AdjusterKey] = item.Adjuster
+                    .Where(a => a != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Driver != null)
                 machine[Models.Internal.Machine.DriverKey] = ConvertToInternalModel(item.Driver);
 
             if (item.Feature != null && item.Feature.Any())
-                machine[Models.Internal.Machine.FeatureKey] = item.Feature.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.FeatureKey] = item.Feature
+                    .Where(f => f != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Device != null && item.Device.Any())
-                machine[Models.Internal.Machine.DeviceKey] = item.Device.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.DeviceKey] = item.Device
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Slot != null && item.Slot.Any())
-                machine[Models.Internal.Machine.SlotKey] = item.Slot.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.SlotKey] = item.Slot
+                    .Where(s => s != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.SoftwareList != null && item.SoftwareList.Any())
-                machine[Models.Internal.Machine.SoftwareListKey] = item.SoftwareList.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.SoftwareListKey] = item.SoftwareList
+                    .Where(s => s != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.RamOption != null && item.RamOption.Any())
-                machine[Models.Internal.Machine.RamOptionKey] = item.RamOption.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.RamOptionKey] = item.RamOption
+                    .Where(r => r != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return machine;
         }
@@ -243,10 +344,20 @@ namespace SabreTools.Serialization
                 configuration[Models.Internal.Configuration.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             if (item.ConfLocation != null && item.ConfLocation.Any())
-                configuration[Models.Internal.Configuration.ConfLocationKey] = item.ConfLocation.Select(ConvertToInternalModel).ToArray();
+            {
+                configuration[Models.Internal.Configuration.ConfLocationKey] = item.ConfLocation
+                    .Where(c => c != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.ConfSetting != null && item.ConfSetting.Any())
-                configuration[Models.Internal.Configuration.ConfSettingKey] = item.ConfSetting.Select(ConvertToInternalModel).ToArray();
+            {
+                configuration[Models.Internal.Configuration.ConfSettingKey] = item.ConfSetting
+                    .Where(c => c != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return configuration;
         }
@@ -324,7 +435,12 @@ namespace SabreTools.Serialization
                 device[Models.Internal.Device.InstanceKey] = ConvertToInternalModel(item.Instance);
 
             if (item.Extension != null && item.Extension.Any())
-                device[Models.Internal.Device.ExtensionKey] = item.Extension.Select(ConvertToInternalModel).ToArray();
+            {
+                device[Models.Internal.Device.ExtensionKey] = item.Extension
+                    .Where(e => e != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return device;
         }
@@ -371,10 +487,20 @@ namespace SabreTools.Serialization
                 dipSwitch[Models.Internal.DipSwitch.ConditionKey] = ConvertToInternalModel(item.Condition);
 
             if (item.DipLocation != null && item.DipLocation.Any())
-                dipSwitch[Models.Internal.DipSwitch.DipLocationKey] = item.DipLocation.Select(ConvertToInternalModel).ToArray();
+            {
+                dipSwitch[Models.Internal.DipSwitch.DipLocationKey] = item.DipLocation
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.DipValue != null && item.DipValue.Any())
-                dipSwitch[Models.Internal.DipSwitch.DipValueKey] = item.DipValue.Select(ConvertToInternalModel).ToArray();
+            {
+                dipSwitch[Models.Internal.DipSwitch.DipValueKey] = item.DipValue
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return dipSwitch;
         }
@@ -506,7 +632,12 @@ namespace SabreTools.Serialization
             };
 
             if (item.Control != null && item.Control.Any())
-                input[Models.Internal.Input.ControlKey] = item.Control.Select(ConvertToInternalModel).ToArray();
+            {
+                input[Models.Internal.Input.ControlKey] = item.Control
+                    .Where(c => c != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return input;
         }
@@ -535,7 +666,12 @@ namespace SabreTools.Serialization
             };
 
             if (item.Analog != null && item.Analog.Any())
-                port[Models.Internal.Port.AnalogKey] = item.Analog.Select(ConvertToInternalModel).ToArray();
+            {
+                port[Models.Internal.Port.AnalogKey] = item.Analog
+                    .Where(a => a != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return port;
         }
@@ -599,7 +735,12 @@ namespace SabreTools.Serialization
             };
 
             if (item.SlotOption != null && item.SlotOption.Any())
-                slot[Models.Internal.Slot.SlotOptionKey] = item.SlotOption.Select(ConvertToInternalModel).ToArray();
+            {
+                slot[Models.Internal.Slot.SlotOptionKey] = item.SlotOption
+                    .Where(s => s != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return slot;
         }
@@ -664,6 +805,6 @@ namespace SabreTools.Serialization
         }
 
         #endregion
-    
+
     }
 }

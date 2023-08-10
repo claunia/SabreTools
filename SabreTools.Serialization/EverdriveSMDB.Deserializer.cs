@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -91,7 +92,12 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Row = machines.SelectMany(ConvertMachineFromInternalModel).ToArray();
+            {
+                metadataFile.Row = machines
+                    .Where(m => m != null)
+                    .SelectMany(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -99,23 +105,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        private static Row[]? ConvertMachineFromInternalModel(Models.Internal.Machine item)
+        private static Row[] ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            return roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms == null || !roms.Any())
+                return Array.Empty<Row>();
+
+            return roms
+                .Where(r => r != null)
+                .Select(ConvertFromInternalModel)
+                .ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Row ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var row = new Row
             {
                 SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),

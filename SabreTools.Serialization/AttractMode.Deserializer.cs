@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -136,19 +137,21 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Row = machines.SelectMany(ConvertMachineFromInternalModel).ToArray();
-            
+            {
+                metadataFile.Row = machines
+                    .Where(m => m != null)
+                    .SelectMany(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
+
             return metadataFile;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.AttractMode.MetadataFile"/>
         /// </summary>
-        private static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static MetadataFile ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var metadataFile = new MetadataFile
             {
                 Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
@@ -159,55 +162,46 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
         /// </summary>
-        private static Row?[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Row[] ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            return roms?.Select(rom =>
-            {
-                if (rom == null)
-                    return null;
+            if (roms == null || !roms.Any())
+                return Array.Empty<Row>();
 
-                var rowItem = ConvertFromInternalModel(rom);
-
-                rowItem.Name = item.ReadString(Models.Internal.Machine.NameKey);
-                rowItem.Emulator = item.ReadString(Models.Internal.Machine.EmulatorKey);
-                rowItem.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
-                rowItem.Year = item.ReadString(Models.Internal.Machine.YearKey);
-                rowItem.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
-                rowItem.Category = item.ReadString(Models.Internal.Machine.CategoryKey);
-                rowItem.Players = item.ReadString(Models.Internal.Machine.PlayersKey);
-                rowItem.Rotation = item.ReadString(Models.Internal.Machine.RotationKey);
-                rowItem.Control = item.ReadString(Models.Internal.Machine.ControlKey);
-                rowItem.Status = item.ReadString(Models.Internal.Machine.StatusKey);
-                rowItem.DisplayCount = item.ReadString(Models.Internal.Machine.DisplayCountKey);
-                rowItem.DisplayType = item.ReadString(Models.Internal.Machine.DisplayTypeKey);
-                rowItem.Extra = item.ReadString(Models.Internal.Machine.ExtraKey);
-                rowItem.Buttons = item.ReadString(Models.Internal.Machine.ButtonsKey);
-                rowItem.Favorite = item.ReadString(Models.Internal.Machine.FavoriteKey);
-                rowItem.Tags = item.ReadString(Models.Internal.Machine.TagsKey);
-                rowItem.PlayedCount = item.ReadString(Models.Internal.Machine.PlayedCountKey);
-                rowItem.PlayedTime = item.ReadString(Models.Internal.Machine.PlayedTimeKey);
-
-                return rowItem;
-            })?.ToArray();
+            return roms
+                .Where(r => r != null)
+                .Select(rom => ConvertFromInternalModel(rom, item))
+                .ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Row ConvertFromInternalModel(Models.Internal.Rom item, Models.Internal.Machine parent)
         {
-            if (item == null)
-                return null;
-
             var row = new Row
             {
+                Name = parent.ReadString(Models.Internal.Machine.NameKey),
                 Title = item.ReadString(Models.Internal.Rom.NameKey),
+                Emulator = parent.ReadString(Models.Internal.Machine.EmulatorKey),
+                CloneOf = parent.ReadString(Models.Internal.Machine.CloneOfKey),
+                Year = parent.ReadString(Models.Internal.Machine.YearKey),
+                Manufacturer = parent.ReadString(Models.Internal.Machine.ManufacturerKey),
+                Category = parent.ReadString(Models.Internal.Machine.CategoryKey),
+                Players = parent.ReadString(Models.Internal.Machine.PlayersKey),
+                Rotation = parent.ReadString(Models.Internal.Machine.RotationKey),
+                Control = parent.ReadString(Models.Internal.Machine.ControlKey),
+                Status = parent.ReadString(Models.Internal.Machine.StatusKey),
+                DisplayCount = parent.ReadString(Models.Internal.Machine.DisplayCountKey),
+                DisplayType = parent.ReadString(Models.Internal.Machine.DisplayTypeKey),
                 AltRomname = item.ReadString(Models.Internal.Rom.AltRomnameKey),
                 AltTitle = item.ReadString(Models.Internal.Rom.AltTitleKey),
+                Extra = parent.ReadString(Models.Internal.Machine.ExtraKey),
+                Buttons = parent.ReadString(Models.Internal.Machine.ButtonsKey),
+                Favorite = parent.ReadString(Models.Internal.Machine.FavoriteKey),
+                Tags = parent.ReadString(Models.Internal.Machine.TagsKey),
+                PlayedCount = parent.ReadString(Models.Internal.Machine.PlayedCountKey),
+                PlayedTime = parent.ReadString(Models.Internal.Machine.PlayedTimeKey),
                 FileIsAvailable = item.ReadString(Models.Internal.Rom.FileIsAvailableKey),
             };
             return row;

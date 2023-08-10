@@ -314,7 +314,6 @@ namespace SabreTools.DatFiles.Formats
                 var samples = new List<Models.Logiqx.Sample>();
                 var archives = new List<Models.Logiqx.Archive>();
                 var devicerefs = new List<Models.Logiqx.DeviceRef>();
-                var drivers = new List<Models.Logiqx.Driver>();
                 var softwarelists = new List<Models.Logiqx.SoftwareList>();
 
                 // Loop through and convert the items to respective lists
@@ -357,7 +356,7 @@ namespace SabreTools.DatFiles.Formats
                             devicerefs.Add(CreateDeviceRef(deviceref));
                             break;
                         case Driver driver:
-                            drivers.Add(CreateDriver(driver));
+                            game.Driver = CreateDriver(driver);
                             break;
                         case DatItems.Formats.SoftwareList softwarelist:
                             softwarelists.Add(CreateSoftwareList(softwarelist));
@@ -374,7 +373,6 @@ namespace SabreTools.DatFiles.Formats
                 game.Sample = samples.ToArray();
                 game.Archive = archives.ToArray();
                 game.DeviceRef = devicerefs.ToArray();
-                game.Driver = drivers.ToArray();
                 game.SoftwareList = softwarelists.ToArray();
 
                 // Add the game to the list

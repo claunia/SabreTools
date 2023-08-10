@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -236,19 +237,24 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Games = new Games { Rom = machines.SelectMany(ConvertMachineFromInternalModel).ToArray() };
-            
+            {
+                metadataFile.Games = new Games
+                {
+                    Rom = machines
+                        .Where(m => m != null)
+                        .SelectMany(ConvertMachineFromInternalModel)
+                        .ToArray()
+                };
+            }
+
             return metadataFile;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.RomCenter.MetadataFile"/>
         /// </summary>
-        private static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static MetadataFile ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var metadataFile = new MetadataFile();
 
             if (item.ContainsKey(Models.Internal.Header.AuthorKey)
@@ -300,23 +306,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.RomCenter.Rom"/>
         /// </summary>
-        private static Rom?[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Rom[] ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            return roms?.Select(rom => ConvertFromInternalModel(rom, item))?.ToArray();
+            if (roms == null)
+                return Array.Empty<Rom>();
+
+            return roms
+                .Where(r => r != null)
+                .Select(rom => ConvertFromInternalModel(rom, item))
+                .ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.RomCenter.Rom"/>
         /// </summary>
-        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        private static Rom ConvertFromInternalModel(Models.Internal.Rom item, Models.Internal.Machine parent)
         {
-            if (item == null)
-                return null;
-
             var row = new Rom
             {
                 RomName = item.ReadString(Models.Internal.Rom.NameKey),
@@ -324,10 +330,10 @@ namespace SabreTools.Serialization
                 RomSize = item.ReadString(Models.Internal.Rom.SizeKey),
                 MergeName = item.ReadString(Models.Internal.Rom.MergeKey),
 
-                ParentName = parent?.ReadString(Models.Internal.Machine.RomOfKey),
-                //ParentDescription = parent?.ReadString(Models.Internal.Machine.ParentDescriptionKey), // This is unmappable
-                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
-                GameDescription = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                ParentName = parent.ReadString(Models.Internal.Machine.RomOfKey),
+                //ParentDescription = parent.ReadString(Models.Internal.Machine.ParentDescriptionKey), // This is unmappable
+                GameName = parent.ReadString(Models.Internal.Machine.NameKey),
+                GameDescription = parent.ReadString(Models.Internal.Machine.DescriptionKey),
             };
             return row;
         }

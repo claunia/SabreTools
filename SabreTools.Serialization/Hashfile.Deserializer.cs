@@ -147,47 +147,147 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
         /// </summary>
-        public static Models.Hashfile.Hashfile[]? ConvertFromInternalModel(Models.Internal.MetadataFile? item, Hash hash)
+        /// <remarks>TODO: Add machine name prefixes to all items</remarks>
+        public static Models.Hashfile.Hashfile? ConvertFromInternalModel(Models.Internal.MetadataFile? item, Hash hash)
+        {
+            if (item == null)
+                return null;
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines == null || !machines.Any())
+                return null;
+
+            var hashfiles = machines
+                .Where(m => m != null)
+                .Select(machine => ConvertMachineFromInternalModel(machine, hash));
+
+            var sfvs = new List<SFV>();
+            var md5s = new List<MD5>();
+            var sha1s = new List<SHA1>();
+            var sha256s = new List<SHA256>();
+            var sha384s = new List<SHA384>();
+            var sha512s = new List<SHA512>();
+            var spamsums = new List<SpamSum>();
+
+            foreach (var hashfile in hashfiles)
+            {
+                if (hashfile.SFV != null && hashfile.SFV.Any())
+                    sfvs.AddRange(hashfile.SFV);
+                if (hashfile.MD5 != null && hashfile.MD5.Any())
+                    md5s.AddRange(hashfile.MD5);
+                if (hashfile.SHA1 != null && hashfile.SHA1.Any())
+                    sha1s.AddRange(hashfile.SHA1);
+                if (hashfile.SHA256 != null && hashfile.SHA256.Any())
+                    sha256s.AddRange(hashfile.SHA256);
+                if (hashfile.SHA384 != null && hashfile.SHA384.Any())
+                    sha384s.AddRange(hashfile.SHA384);
+                if (hashfile.SHA512 != null && hashfile.SHA512.Any())
+                    sha512s.AddRange(hashfile.SHA512);
+                if (hashfile.SpamSum != null && hashfile.SpamSum.Any())
+                    spamsums.AddRange(hashfile.SpamSum);
+            }
+
+            var hashfileItem = new Models.Hashfile.Hashfile();
+
+            if (sfvs.Any())
+                hashfileItem.SFV = sfvs.ToArray();
+            if (md5s.Any())
+                hashfileItem.MD5 = md5s.ToArray();
+            if (sha1s.Any())
+                hashfileItem.SHA1 = sha1s.ToArray();
+            if (sha256s.Any())
+                hashfileItem.SHA256 = sha256s.ToArray();
+            if (sha384s.Any())
+                hashfileItem.SHA384 = sha384s.ToArray();
+            if (sha512s.Any())
+                hashfileItem.SHA512 = sha512s.ToArray();
+            if (spamsums.Any())
+                hashfileItem.SpamSum = spamsums.ToArray();
+
+            return hashfileItem;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
+        /// </summary>
+        public static Models.Hashfile.Hashfile[]? ConvertArrayFromInternalModel(Models.Internal.MetadataFile? item, Hash hash)
         {
             if (item == null)
                 return null;
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                return machines.Select(machine => ConvertMachineFromInternalModel(machine, hash)).ToArray();
-            
+            {
+                return machines
+                    .Where(m => m != null)
+                    .Select(machine => ConvertMachineFromInternalModel(machine, hash))
+                    .ToArray();
+            }
+
             return null;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Hashfile.Hashfile"/>
         /// </summary>
-        private static Models.Hashfile.Hashfile? ConvertMachineFromInternalModel(Models.Internal.Machine? item, Hash hash)
+        private static Models.Hashfile.Hashfile ConvertMachineFromInternalModel(Models.Internal.Machine item, Hash hash)
         {
-            if (item == null)
-                return null;
-
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            if (roms == null)
+                return new Models.Hashfile.Hashfile();
+
             return new Models.Hashfile.Hashfile
             {
-                SFV = hash == Hash.CRC ? roms?.Select(ConvertToSFV)?.ToArray() : null,
-                MD5 = hash == Hash.MD5 ? roms?.Select(ConvertToMD5)?.ToArray() : null,
-                SHA1 = hash == Hash.SHA1 ? roms?.Select(ConvertToSHA1)?.ToArray() : null,
-                SHA256 = hash == Hash.SHA256 ? roms?.Select(ConvertToSHA256)?.ToArray() : null,
-                SHA384 = hash == Hash.SHA384 ? roms?.Select(ConvertToSHA384)?.ToArray() : null,
-                SHA512 = hash == Hash.SHA512 ? roms?.Select(ConvertToSHA512)?.ToArray() : null,
-                SpamSum = hash == Hash.SpamSum ? roms?.Select(ConvertToSpamSum)?.ToArray() : null,
+                SFV = hash == Hash.CRC
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToSFV)
+                        .ToArray()
+                    : null,
+                MD5 = hash == Hash.MD5
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToMD5)
+                        .ToArray()
+                    : null,
+                SHA1 = hash == Hash.SHA1
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToSHA1)
+                        .ToArray()
+                    : null,
+                SHA256 = hash == Hash.SHA256
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToSHA256)
+                        .ToArray()
+                    : null,
+                SHA384 = hash == Hash.SHA384
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToSHA384)
+                        .ToArray()
+                    : null,
+                SHA512 = hash == Hash.SHA512
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToSHA512)
+                        .ToArray()
+                    : null,
+                SpamSum = hash == Hash.SpamSum
+                    ? roms
+                        .Where(r => r != null)
+                        .Select(ConvertToSpamSum)
+                        .ToArray()
+                    : null,
             };
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.MD5"/>
         /// </summary>
-        private static MD5? ConvertToMD5(Models.Internal.Rom? item)
+        private static MD5 ConvertToMD5(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var md5 = new MD5
             {
                 Hash = item.ReadString(Models.Internal.Rom.MD5Key),
@@ -199,11 +299,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SFV"/>
         /// </summary>
-        private static SFV? ConvertToSFV(Models.Internal.Rom? item)
+        private static SFV ConvertToSFV(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var sfv = new SFV
             {
                 File = item.ReadString(Models.Internal.Rom.NameKey),
@@ -215,11 +312,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA1"/>
         /// </summary>
-        private static SHA1? ConvertToSHA1(Models.Internal.Rom? item)
+        private static SHA1 ConvertToSHA1(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var sha1 = new SHA1
             {
                 Hash = item.ReadString(Models.Internal.Rom.SHA1Key),
@@ -231,11 +325,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA256"/>
         /// </summary>
-        private static SHA256? ConvertToSHA256(Models.Internal.Rom? item)
+        private static SHA256 ConvertToSHA256(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var sha256 = new SHA256
             {
                 Hash = item.ReadString(Models.Internal.Rom.SHA256Key),
@@ -247,11 +338,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA384"/>
         /// </summary>
-        private static SHA384? ConvertToSHA384(Models.Internal.Rom? item)
+        private static SHA384 ConvertToSHA384(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var sha384 = new SHA384
             {
                 Hash = item.ReadString(Models.Internal.Rom.SHA384Key),
@@ -263,11 +351,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SHA512"/>
         /// </summary>
-        private static SHA512? ConvertToSHA512(Models.Internal.Rom? item)
+        private static SHA512 ConvertToSHA512(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var sha512 = new SHA512
             {
                 Hash = item.ReadString(Models.Internal.Rom.SHA512Key),
@@ -279,11 +364,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Hashfile.SpamSum"/>
         /// </summary>
-        private static SpamSum? ConvertToSpamSum(Models.Internal.Rom? item)
+        private static SpamSum ConvertToSpamSum(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var spamsum = new SpamSum
             {
                 Hash = item.ReadString(Models.Internal.Rom.SpamSumKey),

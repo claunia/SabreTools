@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SabreTools.IO.Writers;
 using SabreTools.Models.ClrMamePro;
+
 namespace SabreTools.Serialization
 {
     /// <summary>
@@ -154,7 +155,7 @@ namespace SabreTools.Serialization
             WriteSamples(game.Sample, writer);
             WriteArchives(game.Archive, writer);
             WriteChips(game.Chip, writer);
-            WriteVideo(game.Video, writer);
+            WriteVideos(game.Video, writer);
             WriteSound(game.Sound, writer);
             WriteInput(game.Input, writer);
             WriteDipSwitches(game.DipSwitch, writer);
@@ -356,23 +357,26 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Write video information to the current writer
         /// </summary>
-        /// <param name="video">Video object to write</param>
+        /// <param name="videos">Array of Video objects to write</param>
         /// <param name="writer">ClrMameProWriter representing the output</param>
-        private static void WriteVideo(Video? video, ClrMameProWriter writer)
+        private static void WriteVideos(Video[]? videos, ClrMameProWriter writer)
         {
             // If the item is missing, we can't do anything
-            if (video == null)
+            if (videos == null)
                 return;
 
-            writer.WriteStartElement("video");
-            writer.WriteRequiredAttributeString("screen", video.Screen, throwOnError: true);
-            writer.WriteRequiredAttributeString("orientation", video.Orientation, throwOnError: true);
-            writer.WriteOptionalAttributeString("x", video.X);
-            writer.WriteOptionalAttributeString("y", video.Y);
-            writer.WriteOptionalAttributeString("aspectx", video.AspectX);
-            writer.WriteOptionalAttributeString("aspecty", video.AspectY);
-            writer.WriteOptionalAttributeString("freq", video.Freq);
-            writer.WriteEndElement(); // video
+            foreach (var video in videos)
+            {
+                writer.WriteStartElement("video");
+                writer.WriteRequiredAttributeString("screen", video.Screen, throwOnError: true);
+                writer.WriteRequiredAttributeString("orientation", video.Orientation, throwOnError: true);
+                writer.WriteOptionalAttributeString("x", video.X);
+                writer.WriteOptionalAttributeString("y", video.Y);
+                writer.WriteOptionalAttributeString("aspectx", video.AspectX);
+                writer.WriteOptionalAttributeString("aspecty", video.AspectY);
+                writer.WriteOptionalAttributeString("freq", video.Freq);
+                writer.WriteEndElement(); // video
+            }
         }
 
         /// <summary>
@@ -461,15 +465,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(MetadataFile? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile();
 
             if (item?.ClrMamePro != null)
                 metadataFile[Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item.ClrMamePro);
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                    .Where(g => g != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -518,31 +530,76 @@ namespace SabreTools.Serialization
             };
 
             if (item.Release != null && item.Release.Any())
-                machine[Models.Internal.Machine.ReleaseKey] = item.Release?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.ReleaseKey] = item.Release
+                    .Where(r => r != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.BiosSet != null && item.BiosSet.Any())
-                machine[Models.Internal.Machine.BiosSetKey] = item.BiosSet?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.BiosSetKey] = item.BiosSet
+                    .Where(b => b != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Rom != null && item.Rom.Any())
-                machine[Models.Internal.Machine.RomKey] = item.Rom?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.RomKey] = item.Rom
+                    .Where(r => r != null)
+                .Select(ConvertToInternalModel)
+                .ToArray();
+            }
 
             if (item.Disk != null && item.Disk.Any())
-                machine[Models.Internal.Machine.DiskKey] = item.Disk?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.DiskKey] = item.Disk
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Media != null && item.Media.Any())
-                machine[Models.Internal.Machine.MediaKey] = item.Media?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.MediaKey] = item.Media
+                    .Where(m => m != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Sample != null && item.Sample.Any())
-                machine[Models.Internal.Machine.SampleKey] = item.Sample?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.SampleKey] = item.Sample
+                    .Where(s => s != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Archive != null && item.Archive.Any())
-                machine[Models.Internal.Machine.ArchiveKey] = item.Archive?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.ArchiveKey] = item.Archive
+                    .Where(a => a != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Chip != null && item.Chip.Any())
-                machine[Models.Internal.Machine.ChipKey] = item.Chip?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.ChipKey] = item.Chip
+                    .Where(c => c != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Video != null)
-                machine[Models.Internal.Machine.VideoKey] = ConvertToInternalModel(item.Video);
+            {
+                machine[Models.Internal.Machine.VideoKey] = item.Video
+                    .Where(v => v != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Sound != null)
                 machine[Models.Internal.Machine.SoundKey] = ConvertToInternalModel(item.Sound);
@@ -551,7 +608,12 @@ namespace SabreTools.Serialization
                 machine[Models.Internal.Machine.InputKey] = ConvertToInternalModel(item.Input);
 
             if (item.DipSwitch != null && item.DipSwitch.Any())
-                machine[Models.Internal.Machine.DipSwitchKey] = item.DipSwitch?.Select(ConvertToInternalModel)?.ToArray();
+            {
+                machine[Models.Internal.Machine.DipSwitchKey] = item.DipSwitch
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             if (item.Driver != null)
                 machine[Models.Internal.Machine.DriverKey] = ConvertToInternalModel(item.Driver);

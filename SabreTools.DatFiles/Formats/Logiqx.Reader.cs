@@ -273,7 +273,7 @@ namespace SabreTools.DatFiles.Formats
             ConvertDeviceRefs(game.DeviceRef, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertSamples(game.Sample, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertArchives(game.Archive, machine, filename, indexId, statsOnly, ref containsItems);
-            ConvertDrivers(game.Driver, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertDriver(game.Driver, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertSoftwareLists(game.SoftwareList, machine, filename, indexId, statsOnly, ref containsItems);
 
             // If we had no items, create a Blank placeholder
@@ -599,42 +599,39 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Convert Driver information
         /// </summary>
-        /// <param name="drivers">Array of deserialized models to convert</param>
+        /// <param name="driver">Deserialized model to convert</param>
         /// <param name="machine">Prefilled machine to use</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
-        private void ConvertDrivers(Models.Logiqx.Driver[]? drivers, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        private void ConvertDriver(Models.Logiqx.Driver? driver, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
         {
-            // If the drivers array is missing, we can't do anything
-            if (drivers == null || !drivers.Any())
+            // If the driver is missing, we can't do anything
+            if (driver == null)
                 return;
 
             containsItems = true;
-            foreach (var driver in drivers)
+            var item = new Driver
             {
-                var item = new Driver
+                Status = driver.Status?.AsSupportStatus() ?? SupportStatus.NULL,
+                Emulation = driver.Emulation?.AsSupportStatus() ?? SupportStatus.NULL,
+                Cocktail = driver.Cocktail?.AsSupportStatus() ?? SupportStatus.NULL,
+                SaveState = driver.SaveState?.AsSupported() ?? Supported.NULL,
+                RequiresArtwork = driver.RequiresArtwork?.AsYesNo(),
+                Unofficial = driver.Unofficial?.AsYesNo(),
+                NoSoundHardware = driver.NoSoundHardware?.AsYesNo(),
+                Incomplete = driver.Incomplete?.AsYesNo(),
+
+                Source = new Source
                 {
-                    Status = driver.Status?.AsSupportStatus() ?? SupportStatus.NULL,
-                    Emulation = driver.Emulation?.AsSupportStatus() ?? SupportStatus.NULL,
-                    Cocktail = driver.Cocktail?.AsSupportStatus() ?? SupportStatus.NULL,
-                    SaveState = driver.SaveState?.AsSupported() ?? Supported.NULL,
-                    RequiresArtwork = driver.RequiresArtwork?.AsYesNo(),
-                    Unofficial = driver.Unofficial?.AsYesNo(),
-                    NoSoundHardware = driver.NoSoundHardware?.AsYesNo(),
-                    Incomplete = driver.Incomplete?.AsYesNo(),
+                    Index = indexId,
+                    Name = filename,
+                },
+            };
 
-                    Source = new Source
-                    {
-                        Index = indexId,
-                        Name = filename,
-                    },
-                };
-
-                item.CopyMachineInformation(machine);
-                ParseAddHelper(item, statsOnly);
-            }
+            item.CopyMachineInformation(machine);
+            ParseAddHelper(item, statsOnly);
         }
 
         /// <summary>

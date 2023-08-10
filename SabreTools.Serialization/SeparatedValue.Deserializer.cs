@@ -135,19 +135,21 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Row = machines.SelectMany(ConvertMachineFromInternalModel).ToArray();
-            
+            {
+                metadataFile.Row = machines
+                    .Where(m => m != null)
+                    .SelectMany(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
+
             return metadataFile;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SeparatedValue.MetadataFile"/>
         /// </summary>
-        private static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static MetadataFile ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var metadataFile = new MetadataFile
             {
                 Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
@@ -158,24 +160,33 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Row[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Row[] ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var rowItems = new List<Row>();
 
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            if (roms != null && roms.Any())
+            {
+                rowItems.AddRange(roms
+                    .Where(r => r != null)
+                    .Select(rom => ConvertFromInternalModel(rom, item)));
+            }
+
             var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
-            if (disks != null)
-                rowItems.AddRange(disks.Select(disk => ConvertFromInternalModel(disk, item)));
+            if (disks != null && disks.Any())
+            {
+                rowItems.AddRange(disks
+                    .Where(d => d != null)
+                    .Select(disk => ConvertFromInternalModel(disk, item)));
+            }
 
             var media = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
-            if (media != null)
-                rowItems.AddRange(media.Select(medium => ConvertFromInternalModel(medium, item)));
-
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            if (roms != null)
-                rowItems.AddRange(roms.Select(rom => ConvertFromInternalModel(rom, item)));
+            if (media != null && media.Any())
+            {
+                rowItems.AddRange(media
+                    .Where(m => m != null)
+                    .Select(medium => ConvertFromInternalModel(medium, item)));
+            }
 
             return rowItems.ToArray();
         }
@@ -183,15 +194,12 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Disk? item, Models.Internal.Machine? parent)
+        private static Row ConvertFromInternalModel(Models.Internal.Disk item, Models.Internal.Machine parent)
         {
-            if (item == null)
-                return null;
-
             var row = new Row
             {
-                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
-                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                GameName = parent.ReadString(Models.Internal.Machine.NameKey),
+                Description = parent.ReadString(Models.Internal.Machine.DescriptionKey),
                 Type = "disk",
                 DiskName = item.ReadString(Models.Internal.Disk.NameKey),
                 MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
@@ -204,15 +212,12 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Media? item, Models.Internal.Machine? parent)
+        private static Row ConvertFromInternalModel(Models.Internal.Media item, Models.Internal.Machine parent)
         {
-            if (item == null)
-                return null;
-
             var row = new Row
             {
-                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
-                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                GameName = parent.ReadString(Models.Internal.Machine.NameKey),
+                Description = parent.ReadString(Models.Internal.Machine.DescriptionKey),
                 Type = "media",
                 DiskName = item.ReadString(Models.Internal.Media.NameKey),
                 MD5 = item.ReadString(Models.Internal.Media.MD5Key),
@@ -226,11 +231,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        private static Row ConvertFromInternalModel(Models.Internal.Rom item, Models.Internal.Machine parent)
         {
-            if (item == null)
-                return null;
-
             var row = new Row
             {
                 GameName = parent?.ReadString(Models.Internal.Machine.NameKey),

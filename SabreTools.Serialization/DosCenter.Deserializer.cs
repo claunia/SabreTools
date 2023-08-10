@@ -234,7 +234,12 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Game = machines.Select(ConvertMachineFromInternalModel).ToArray();
+            {
+                metadataFile.Game = machines
+                    .Where(m => m != null)
+                    .Select(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -242,11 +247,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.DosCenter.DosCenter"/>
         /// </summary>
-        private static Models.DosCenter.DosCenter? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static Models.DosCenter.DosCenter ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var dosCenter = new Models.DosCenter.DosCenter
             {
                 Name = item.ReadString(Models.Internal.Header.NameKey),
@@ -263,18 +265,21 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.DosCenter.Game"/>
         /// </summary>
-        private static Game? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Game ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var game = new Game
             {
                 Name = item.ReadString(Models.Internal.Machine.NameKey),
             };
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            game.File = roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms != null && roms.Any())
+            {
+                game.File = roms
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return game;
         }
@@ -282,11 +287,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.DosCenter.File"/>
         /// </summary>
-        private static Models.DosCenter.File? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Models.DosCenter.File ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var file = new Models.DosCenter.File
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),

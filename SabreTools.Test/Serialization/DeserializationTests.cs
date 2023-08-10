@@ -589,10 +589,10 @@ namespace SabreTools.Test.Parser
                     Assert.Null(item.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var item in game.Driver ?? Array.Empty<Models.Logiqx.Driver>())
+                if (game.Driver != null)
                 {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    Assert.Null(game.Driver.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(game.Driver.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var item in game.SoftwareList ?? Array.Empty<Models.Logiqx.SoftwareList>())
@@ -664,10 +664,10 @@ namespace SabreTools.Test.Parser
                     Assert.Null(item.ADDITIONAL_ELEMENTS);
                 }
 
-                foreach (var item in game.Driver ?? Array.Empty<Models.Logiqx.Driver>())
+                if (game.Driver != null)
                 {
-                    Assert.Null(item.ADDITIONAL_ATTRIBUTES);
-                    Assert.Null(item.ADDITIONAL_ELEMENTS);
+                    Assert.Null(game.Driver.ADDITIONAL_ATTRIBUTES);
+                    Assert.Null(game.Driver.ADDITIONAL_ELEMENTS);
                 }
 
                 foreach (var item in game.SoftwareList ?? Array.Empty<Models.Logiqx.SoftwareList>())

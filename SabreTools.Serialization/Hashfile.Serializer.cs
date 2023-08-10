@@ -223,8 +223,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(Models.Hashfile.Hashfile item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(Models.Hashfile.Hashfile? item)
         {
+            if (item == null)
+                return null;
+            
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),

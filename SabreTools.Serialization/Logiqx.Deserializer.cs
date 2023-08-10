@@ -29,11 +29,16 @@ namespace SabreTools.Serialization
             if (header != null)
                 datafile.Header = ConvertHeaderFromInternalModel(header);
 
-            // TODO: Handle Dir items
+            // TODO: Handle Dir items - Currently need to be generated from the machines
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                datafile.Game = machines.Select(machine => ConvertMachineFromInternalModel(machine, game)).ToArray();
-            
+            {
+                datafile.Game = machines
+                    .Where(m => m != null)
+                    .Select(machine => ConvertMachineFromInternalModel(machine, game))
+                    .ToArray();
+            }
+
             return datafile;
         }
 
@@ -102,11 +107,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Logiqx.GameBase"/>
         /// </summary>
-        private static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
+        private static GameBase ConvertMachineFromInternalModel(Models.Internal.Machine item, bool game = false)
         {
-            if (item == null)
-                return null;
-
             GameBase gameBase = game ? new Game() : new Machine();
 
             gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
@@ -130,37 +132,93 @@ namespace SabreTools.Serialization
             gameBase.Category = item.ReadStringArray(Models.Internal.Machine.CategoryKey);
 
             var trurip = item.Read<Trurip>(Models.Internal.Machine.TruripKey);
-            gameBase.Trurip = trurip;
+            if (trurip != null)
+                gameBase.Trurip = trurip;
 
             var releases = item.Read<Models.Internal.Release[]>(Models.Internal.Machine.ReleaseKey);
-            gameBase.Release = releases?.Select(ConvertFromInternalModel)?.ToArray();
+            if (releases != null && releases.Any())
+            {
+                gameBase.Release = releases
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
-            gameBase.BiosSet = biosSets?.Select(ConvertFromInternalModel)?.ToArray();
+            if (biosSets != null && biosSets.Any())
+            {
+                gameBase.BiosSet = biosSets
+                    .Where(b => b != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            gameBase.Rom = roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms != null && roms.Any())
+            {
+                gameBase.Rom = roms
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
-            gameBase.Disk = disks?.Select(ConvertFromInternalModel)?.ToArray();
+            if (disks != null && disks.Any())
+            {
+                gameBase.Disk = disks
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var medias = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
-            gameBase.Media = medias?.Select(ConvertFromInternalModel)?.ToArray();
+            if (medias != null && medias.Any())
+            {
+                gameBase.Media = medias
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var deviceRefs = item.Read<Models.Internal.DeviceRef[]>(Models.Internal.Machine.DeviceRefKey);
-            gameBase.DeviceRef = deviceRefs?.Select(ConvertFromInternalModel)?.ToArray();
+            if (deviceRefs != null && deviceRefs.Any())
+            {
+                gameBase.DeviceRef = deviceRefs
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
-            gameBase.Sample = samples?.Select(ConvertFromInternalModel)?.ToArray();
+            if (samples != null && samples.Any())
+            {
+                gameBase.Sample = samples
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var archives = item.Read<Models.Internal.Archive[]>(Models.Internal.Machine.ArchiveKey);
-            gameBase.Archive = archives?.Select(ConvertFromInternalModel)?.ToArray();
+            if (archives != null && archives.Any())
+            {
+                gameBase.Archive = archives
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
-            var drivers = item.Read<Models.Internal.Driver[]>(Models.Internal.Machine.DriverKey);
-            gameBase.Driver = drivers?.Select(ConvertFromInternalModel)?.ToArray();
+            var driver = item.Read<Models.Internal.Driver>(Models.Internal.Machine.DriverKey);
+            if (driver != null)
+                gameBase.Driver = ConvertFromInternalModel(driver);
 
             var softwareLists = item.Read<Models.Internal.SoftwareList[]>(Models.Internal.Machine.SoftwareListKey);
-            gameBase.SoftwareList = softwareLists?.Select(ConvertFromInternalModel)?.ToArray();
+            if (softwareLists != null && softwareLists.Any())
+            {
+                gameBase.SoftwareList = softwareLists
+                    .Where(m => m != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return gameBase;
         }
@@ -168,11 +226,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
-        private static Archive? ConvertFromInternalModel(Models.Internal.Archive? item)
+        private static Archive ConvertFromInternalModel(Models.Internal.Archive item)
         {
-            if (item == null)
-                return null;
-
             var archive = new Archive
             {
                 Name = item.ReadString(Models.Internal.Archive.NameKey),
@@ -183,11 +238,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Logiqx.BiosSet"/>
         /// </summary>
-        private static BiosSet? ConvertFromInternalModel(Models.Internal.BiosSet? item)
+        private static BiosSet ConvertFromInternalModel(Models.Internal.BiosSet item)
         {
-            if (item == null)
-                return null;
-
             var biosset = new BiosSet
             {
                 Name = item.ReadString(Models.Internal.BiosSet.NameKey),
@@ -200,11 +252,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Logiqx.DeviceRef"/>
         /// </summary>
-        private static DeviceRef? ConvertFromInternalModel(Models.Internal.DeviceRef? item)
+        private static DeviceRef ConvertFromInternalModel(Models.Internal.DeviceRef item)
         {
-            if (item == null)
-                return null;
-
             var deviceRef = new DeviceRef
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -215,11 +264,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Logiqx.Disk"/>
         /// </summary>
-        private static Disk? ConvertFromInternalModel(Models.Internal.Disk? item)
+        private static Disk ConvertFromInternalModel(Models.Internal.Disk item)
         {
-            if (item == null)
-                return null;
-
             var disk = new Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -235,11 +281,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Logiqx.Driver"/>
         /// </summary>
-        private static Driver? ConvertFromInternalModel(Models.Internal.Driver? item)
+        private static Driver ConvertFromInternalModel(Models.Internal.Driver item)
         {
-            if (item == null)
-                return null;
-
             var driver = new Driver
             {
                 Status = item.ReadString(Models.Internal.Driver.StatusKey),
@@ -257,11 +300,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.Logiqx.Media"/>
         /// </summary>
-        private static Media? ConvertFromInternalModel(Models.Internal.Media? item)
+        private static Media ConvertFromInternalModel(Models.Internal.Media item)
         {
-            if (item == null)
-                return null;
-
             var media = new Media
             {
                 Name = item.ReadString(Models.Internal.Media.NameKey),
@@ -276,11 +316,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.Logiqx.Release"/>
         /// </summary>
-        private static Release? ConvertFromInternalModel(Models.Internal.Release? item)
+        private static Release ConvertFromInternalModel(Models.Internal.Release item)
         {
-            if (item == null)
-                return null;
-
             var release = new Release
             {
                 Name = item.ReadString(Models.Internal.Release.NameKey),
@@ -295,7 +332,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Logiqx.Rom"/>
         /// </summary>
-        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Rom ConvertFromInternalModel(Models.Internal.Rom item)
         {
             if (item == null)
                 return null;
@@ -327,11 +364,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Logiqx.Sample"/>
         /// </summary>
-        private static Sample? ConvertFromInternalModel(Models.Internal.Sample? item)
+        private static Sample ConvertFromInternalModel(Models.Internal.Sample item)
         {
-            if (item == null)
-                return null;
-
             var sample = new Sample
             {
                 Name = item.ReadString(Models.Internal.Sample.NameKey),
@@ -342,11 +376,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Logiqx.SoftwareList"/>
         /// </summary>
-        private static SoftwareList? ConvertFromInternalModel(Models.Internal.SoftwareList? item)
+        private static SoftwareList ConvertFromInternalModel(Models.Internal.SoftwareList item)
         {
-            if (item == null)
-                return null;
-
             var softwareList = new SoftwareList
             {
                 Tag = item.ReadString(Models.Internal.SoftwareList.TagKey),

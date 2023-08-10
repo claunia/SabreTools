@@ -151,15 +151,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.DosCenter.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(MetadataFile? item)
         {
+            if (item == null)
+                return null;
+            
             var metadataFile = new Models.Internal.MetadataFile();
 
             if (item?.DosCenter != null)
                 metadataFile[Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item.DosCenter);
 
             if (item?.Game != null && item.Game.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game
+                    .Where(g => g != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -193,7 +201,12 @@ namespace SabreTools.Serialization
             };
 
             if (item.File != null && item.File.Any())
-                machine[Models.Internal.Machine.RomKey] = item.File.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.RomKey] = item.File
+                    .Where(f => f != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return machine;
         }

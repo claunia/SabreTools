@@ -133,8 +133,11 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(MetadataFile? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),

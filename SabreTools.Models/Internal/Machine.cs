@@ -61,6 +61,9 @@ namespace SabreTools.Models.Internal
         /// <remarks>DipSwitch[]</remarks>
         public const string DipSwitchKey = "dipswitch";
 
+        /// <remarks>string</remarks>
+        public const string DirNameKey = "dirName";
+
         /// <remarks>Disk[]</remarks>
         public const string DiskKey = "disk";
 
@@ -73,7 +76,7 @@ namespace SabreTools.Models.Internal
         /// <remarks>string</remarks>
         public const string DisplayTypeKey = "displaytype";
 
-        /// <remarks>Driver, Driver[]</remarks>
+        /// <remarks>Driver</remarks>
         public const string DriverKey = "driver";
 
         /// <remarks>Dump[]</remarks>
@@ -230,7 +233,7 @@ namespace SabreTools.Models.Internal
         /// <remarks>Trurip</remarks>
         public const string TruripKey = "trurip";
 
-        /// <remarks>Video, Video[]</remarks>
+        /// <remarks>Video[]</remarks>
         public const string VideoKey = "video";
 
         /// <remarks>string</remarks>

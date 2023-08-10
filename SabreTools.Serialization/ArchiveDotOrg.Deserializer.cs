@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using SabreTools.Models.ArchiveDotOrg;
 
@@ -22,7 +23,12 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                files.File = machines.SelectMany(ConvertFromInternalModel).ToArray();
+            {
+                files.File = machines
+                .Where(m => m != null)
+                .SelectMany(ConvertFromInternalModel)
+                .ToArray();
+            }
 
             return files;
         }
@@ -30,23 +36,22 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.ArchiveDotOrg.File"/>
         /// </summary>
-        private static File[]? ConvertFromInternalModel(Models.Internal.Machine? item)
+        private static File[] ConvertFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            return roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms == null)
+                return Array.Empty<File>();
+
+            return roms
+                .Where(r => r != null)
+                .Select(ConvertFromInternalModel).ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ArchiveDotOrg.File"/>
         /// </summary>
-        private static File? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static File ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var file = new File
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),

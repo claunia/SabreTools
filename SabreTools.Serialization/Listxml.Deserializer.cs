@@ -11,7 +11,7 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.Listxml.M1"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.MetadataFile"/> to <cref="Models.Listxml.M1"/>
         /// </summary>
         public static M1? ConvertM1FromInternalModel(Models.Internal.MetadataFile? item)
         {
@@ -23,13 +23,18 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                m1.Game = machines.Select(ConvertMachineFromInternalModel).ToArray();
+            {
+                m1.Game = machines
+                    .Where(m => m != null)
+                    .Select(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
 
             return m1;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.Listxml.Mame"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.MetadataFile"/> to <cref="Models.Listxml.Mame"/>
         /// </summary>
         public static Mame? ConvertMameFromInternalModel(Models.Internal.MetadataFile? item)
         {
@@ -41,19 +46,21 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                mame.Game = machines.Select(ConvertMachineFromInternalModel).ToArray();
+            {
+                mame.Game = machines
+                    .Where(m => m != null)
+                    .Select(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
 
             return mame;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Listxml.M1"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Header"/> to <cref="Models.Listxml.M1"/>
         /// </summary>
-        private static M1? ConvertM1FromInternalModel(Models.Internal.Header? item)
+        private static M1 ConvertM1FromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var m1 = new M1
             {
                 Version = item.ReadString(Models.Internal.Header.VersionKey),
@@ -62,13 +69,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Listxml.Mame"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Header"/> to <cref="Models.Listxml.Mame"/>
         /// </summary>
-        private static Mame? ConvertMameFromInternalModel(Models.Internal.Header? item)
+        private static Mame ConvertMameFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var mame = new Mame
             {
                 Build = item.ReadString(Models.Internal.Header.BuildKey),
@@ -80,13 +84,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listxml.GameBase"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Machine"/> to <cref="Models.Listxml.GameBase"/>
         /// </summary>
-        private static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static GameBase ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var machine = new Machine
             {
                 Name = item.ReadString(Models.Internal.Machine.NameKey),
@@ -105,76 +106,178 @@ namespace SabreTools.Serialization
             };
 
             var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
-            machine.BiosSet = biosSets?.Select(ConvertFromInternalModel)?.ToArray();
+            if (biosSets != null && biosSets.Any())
+            {
+                machine.BiosSet = biosSets
+                    .Where(b => b != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            machine.Rom = roms?.Select(ConvertFromInternalModel)?.ToArray();
+            if (roms != null && roms.Any())
+            {
+                machine.Rom = roms
+                    .Where(r => r != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
-            machine.Disk = disks?.Select(ConvertFromInternalModel)?.ToArray();
+            if (disks != null && disks.Any())
+            {
+                machine.Disk = disks
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var deviceRefs = item.Read<Models.Internal.DeviceRef[]>(Models.Internal.Machine.DeviceRefKey);
-            machine.DeviceRef = deviceRefs?.Select(ConvertFromInternalModel)?.ToArray();
+            if (deviceRefs != null && deviceRefs.Any())
+            {
+                machine.DeviceRef = deviceRefs
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
-            machine.Sample = samples?.Select(ConvertFromInternalModel)?.ToArray();
+            if (samples != null && samples.Any())
+            {
+                machine.Sample = samples
+                    .Where(s => s != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var chips = item.Read<Models.Internal.Chip[]>(Models.Internal.Machine.ChipKey);
-            machine.Chip = chips?.Select(ConvertFromInternalModel)?.ToArray();
+            if (chips != null && chips.Any())
+            {
+                machine.Chip = chips
+                    .Where(c => c != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var displays = item.Read<Models.Internal.Display[]>(Models.Internal.Machine.DisplayKey);
-            machine.Display = displays?.Select(ConvertFromInternalModel)?.ToArray();
+            if (displays != null && displays.Any())
+            {
+                machine.Display = displays
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var videos = item.Read<Models.Internal.Video[]>(Models.Internal.Machine.VideoKey);
-            machine.Video = videos?.Select(ConvertFromInternalModel)?.ToArray();
+            if (videos != null && videos.Any())
+            {
+                machine.Video = videos
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var sound = item.Read<Models.Internal.Sound>(Models.Internal.Machine.SoundKey);
-            machine.Sound = ConvertFromInternalModel(sound);
+            if (sound != null)
+                machine.Sound = ConvertFromInternalModel(sound);
 
             var input = item.Read<Models.Internal.Input>(Models.Internal.Machine.InputKey);
-            machine.Input = ConvertFromInternalModel(input);
+            if (input != null)
+                machine.Input = ConvertFromInternalModel(input);
 
             var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Machine.DipSwitchKey);
-            machine.DipSwitch = dipSwitches?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dipSwitches != null && dipSwitches.Any())
+            {
+                machine.DipSwitch = dipSwitches
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var configurations = item.Read<Models.Internal.Configuration[]>(Models.Internal.Machine.ConfigurationKey);
-            machine.Configuration = configurations?.Select(ConvertFromInternalModel)?.ToArray();
+            if (configurations != null && configurations.Any())
+            {
+                machine.Configuration = configurations
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var ports = item.Read<Models.Internal.Port[]>(Models.Internal.Machine.PortKey);
-            machine.Port = ports?.Select(ConvertFromInternalModel)?.ToArray();
+            if (ports != null && ports.Any())
+            {
+                machine.Port = ports
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var adjusters = item.Read<Models.Internal.Adjuster[]>(Models.Internal.Machine.AdjusterKey);
-            machine.Adjuster = adjusters?.Select(ConvertFromInternalModel)?.ToArray();
+            if (adjusters != null && adjusters.Any())
+            {
+                machine.Adjuster = adjusters
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var driver = item.Read<Models.Internal.Driver>(Models.Internal.Machine.DriverKey);
-            machine.Driver = ConvertFromInternalModel(driver);
+            if (driver != null)
+                machine.Driver = ConvertFromInternalModel(driver);
 
             var features = item.Read<Models.Internal.Feature[]>(Models.Internal.Machine.FeatureKey);
-            machine.Feature = features?.Select(ConvertFromInternalModel)?.ToArray();
+            if (features != null && features.Any())
+            {
+                machine.Feature = features
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var devices = item.Read<Models.Internal.Device[]>(Models.Internal.Machine.DeviceKey);
-            machine.Device = devices?.Select(ConvertFromInternalModel)?.ToArray();
+            if (devices != null && devices.Any())
+            {
+                machine.Device = devices
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var slots = item.Read<Models.Internal.Slot[]>(Models.Internal.Machine.SlotKey);
-            machine.Slot = slots?.Select(ConvertFromInternalModel)?.ToArray();
+            if (slots != null && slots.Any())
+            {
+                machine.Slot = slots
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var softwareLists = item.Read<Models.Internal.SoftwareList[]>(Models.Internal.Machine.SoftwareListKey);
-            machine.SoftwareList = softwareLists?.Select(ConvertFromInternalModel)?.ToArray();
+            if (softwareLists != null && softwareLists.Any())
+            {
+                machine.SoftwareList = softwareLists
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var ramOptions = item.Read<Models.Internal.RamOption[]>(Models.Internal.Machine.RamOptionKey);
-            machine.RamOption = ramOptions?.Select(ConvertFromInternalModel)?.ToArray();
+            if (ramOptions != null && ramOptions.Any())
+            {
+                machine.RamOption = ramOptions
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Adjuster"/> to <cref="Models.Listxml.Adjuster"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Adjuster"/> to <cref="Models.Listxml.Adjuster"/>
         /// </summary>
-        private static Adjuster? ConvertFromInternalModel(Models.Internal.Adjuster? item)
+        private static Adjuster ConvertFromInternalModel(Models.Internal.Adjuster item)
         {
-            if (item == null)
-                return null;
-
             var adjuster = new Adjuster
             {
                 Name = item.ReadString(Models.Internal.Adjuster.NameKey),
@@ -182,19 +285,17 @@ namespace SabreTools.Serialization
             };
 
             var condition = item.Read<Models.Internal.Condition>(Models.Internal.Adjuster.ConditionKey);
-            adjuster.Condition = ConvertFromInternalModel(condition);
+            if (condition != null)
+                adjuster.Condition = ConvertFromInternalModel(condition);
 
             return adjuster;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Analog"/> to <cref="Models.Listxml.Analog"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Analog"/> to <cref="Models.Listxml.Analog"/>
         /// </summary>
-        private static Analog? ConvertFromInternalModel(Models.Internal.Analog? item)
+        private static Analog ConvertFromInternalModel(Models.Internal.Analog item)
         {
-            if (item == null)
-                return null;
-
             var analog = new Analog
             {
                 Mask = item.ReadString(Models.Internal.Analog.MaskKey),
@@ -203,13 +304,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Listxml.BiosSet"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.BiosSet"/> to <cref="Models.Listxml.BiosSet"/>
         /// </summary>
-        private static BiosSet? ConvertFromInternalModel(Models.Internal.BiosSet? item)
+        private static BiosSet ConvertFromInternalModel(Models.Internal.BiosSet item)
         {
-            if (item == null)
-                return null;
-
             var biosset = new BiosSet
             {
                 Name = item.ReadString(Models.Internal.BiosSet.NameKey),
@@ -220,13 +318,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.Listxml.Chip"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Chip"/> to <cref="Models.Listxml.Chip"/>
         /// </summary>
-        private static Chip? ConvertFromInternalModel(Models.Internal.Chip? item)
+        private static Chip ConvertFromInternalModel(Models.Internal.Chip item)
         {
-            if (item == null)
-                return null;
-
             var chip = new Chip
             {
                 Name = item.ReadString(Models.Internal.Chip.NameKey),
@@ -239,13 +334,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Condition"/> to <cref="Models.Listxml.Condition"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Condition"/> to <cref="Models.Listxml.Condition"/>
         /// </summary>
-        private static Condition? ConvertFromInternalModel(Models.Internal.Condition? item)
+        private static Condition ConvertFromInternalModel(Models.Internal.Condition item)
         {
-            if (item == null)
-                return null;
-
             var condition = new Condition
             {
                 Tag = item.ReadString(Models.Internal.Condition.TagKey),
@@ -257,13 +349,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Configuration"/> to <cref="Models.Listxml.Configuration"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Configuration"/> to <cref="Models.Listxml.Configuration"/>
         /// </summary>
-        private static Configuration? ConvertFromInternalModel(Models.Internal.Configuration? item)
+        private static Configuration ConvertFromInternalModel(Models.Internal.Configuration item)
         {
-            if (item == null)
-                return null;
-
             var configuration = new Configuration
             {
                 Name = item.ReadString(Models.Internal.Configuration.NameKey),
@@ -272,25 +361,35 @@ namespace SabreTools.Serialization
             };
 
             var condition = item.Read<Models.Internal.Condition>(Models.Internal.Configuration.ConditionKey);
-            configuration.Condition = ConvertFromInternalModel(condition);
+            if (condition != null)
+                configuration.Condition = ConvertFromInternalModel(condition);
 
             var confLocations = item.Read<Models.Internal.ConfLocation[]>(Models.Internal.Configuration.ConfLocationKey);
-            configuration.ConfLocation = confLocations?.Select(ConvertFromInternalModel)?.ToArray();
+            if (confLocations != null && confLocations.Any())
+            {
+                configuration.ConfLocation = confLocations
+                    .Where(c => c != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var confSettings = item.Read<Models.Internal.ConfSetting[]>(Models.Internal.Configuration.ConfSettingKey);
-            configuration.ConfSetting = confSettings?.Select(ConvertFromInternalModel)?.ToArray();
+            if (confSettings != null && confSettings.Any())
+            {
+                configuration.ConfSetting = confSettings
+                    .Where(c => c != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return configuration;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.ConfLocation"/> to <cref="Models.Listxml.ConfLocation"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.ConfLocation"/> to <cref="Models.Listxml.ConfLocation"/>
         /// </summary>
-        private static ConfLocation? ConvertFromInternalModel(Models.Internal.ConfLocation? item)
+        private static ConfLocation ConvertFromInternalModel(Models.Internal.ConfLocation item)
         {
-            if (item == null)
-                return null;
-
             var confLocation = new ConfLocation
             {
                 Name = item.ReadString(Models.Internal.ConfLocation.NameKey),
@@ -301,13 +400,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.ConfSetting"/> to <cref="Models.Listxml.ConfSetting"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.ConfSetting"/> to <cref="Models.Listxml.ConfSetting"/>
         /// </summary>
-        private static ConfSetting? ConvertFromInternalModel(Models.Internal.ConfSetting? item)
+        private static ConfSetting ConvertFromInternalModel(Models.Internal.ConfSetting item)
         {
-            if (item == null)
-                return null;
-
             var confSetting = new ConfSetting
             {
                 Name = item.ReadString(Models.Internal.ConfSetting.NameKey),
@@ -316,19 +412,17 @@ namespace SabreTools.Serialization
             };
 
             var condition = item.Read<Models.Internal.Condition>(Models.Internal.ConfSetting.ConditionKey);
-            confSetting.Condition = ConvertFromInternalModel(condition);
+            if (condition != null)
+                confSetting.Condition = ConvertFromInternalModel(condition);
 
             return confSetting;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Control"/> to <cref="Models.Listxml.Control"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Control"/> to <cref="Models.Listxml.Control"/>
         /// </summary>
-        private static Control? ConvertFromInternalModel(Models.Internal.Control? item)
+        private static Control ConvertFromInternalModel(Models.Internal.Control item)
         {
-            if (item == null)
-                return null;
-
             var control = new Control
             {
                 Type = item.ReadString(Models.Internal.Control.TypeKey),
@@ -348,13 +442,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Device"/> to <cref="Models.Listxml.Device"/>
+        /// Convert from <cref="Models.Internal.Models.Internal.Device"/> to <cref="Models.Listxml.Device"/>
         /// </summary>
-        private static Device? ConvertFromInternalModel(Models.Internal.Device? item)
+        private static Device ConvertFromInternalModel(Models.Internal.Device item)
         {
-            if (item == null)
-                return null;
-
             var device = new Device
             {
                 Type = item.ReadString(Models.Internal.Device.TypeKey),
@@ -365,22 +456,26 @@ namespace SabreTools.Serialization
             };
 
             var instance = item.Read<Models.Internal.Instance>(Models.Internal.Device.InstanceKey);
-            device.Instance = ConvertFromInternalModel(instance);
+            if (instance != null)
+                device.Instance = ConvertFromInternalModel(instance);
 
             var extensions = item.Read<Models.Internal.Extension[]>(Models.Internal.Device.ExtensionKey);
-            device.Extension = extensions?.Select(ConvertFromInternalModel)?.ToArray();
+            if (extensions != null && extensions.Any())
+            {
+                device.Extension = extensions
+                    .Where(e => e != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return device;
         }
 
         /// <summary>
-        /// Convert from <cref="DeviceRef"/> to <cref="Models.Listxml.DeviceRef"/>
+        /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Listxml.DeviceRef"/>
         /// </summary>
-        private static DeviceRef? ConvertFromInternalModel(Models.Internal.DeviceRef? item)
+        private static DeviceRef ConvertFromInternalModel(Models.Internal.DeviceRef item)
         {
-            if (item == null)
-                return null;
-
             var deviceRef = new DeviceRef
             {
                 Name = item.ReadString(Models.Internal.DeviceRef.NameKey),
@@ -389,13 +484,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="DipLocation"/> to <cref="Models.Listxml.DipLocation"/>
+        /// Convert from <cref="Models.Internal.DipLocation"/> to <cref="Models.Listxml.DipLocation"/>
         /// </summary>
-        private static DipLocation? ConvertFromInternalModel(Models.Internal.DipLocation? item)
+        private static DipLocation ConvertFromInternalModel(Models.Internal.DipLocation item)
         {
-            if (item == null)
-                return null;
-
             var dipLocation = new DipLocation
             {
                 Name = item.ReadString(Models.Internal.DipLocation.NameKey),
@@ -406,13 +498,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="DipSwitch"/> to <cref="Models.Listxml.DipSwitch"/>
+        /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.Listxml.DipSwitch"/>
         /// </summary>
-        private static DipSwitch? ConvertFromInternalModel(Models.Internal.DipSwitch? item)
+        private static DipSwitch ConvertFromInternalModel(Models.Internal.DipSwitch item)
         {
-            if (item == null)
-                return null;
-
             var dipSwitch = new DipSwitch
             {
                 Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
@@ -421,25 +510,35 @@ namespace SabreTools.Serialization
             };
 
             var condition = item.Read<Models.Internal.Condition>(Models.Internal.DipSwitch.ConditionKey);
-            dipSwitch.Condition = ConvertFromInternalModel(condition);
+            if (condition != null)
+                dipSwitch.Condition = ConvertFromInternalModel(condition);
 
             var dipLocations = item.Read<Models.Internal.DipLocation[]>(Models.Internal.DipSwitch.DipLocationKey);
-            dipSwitch.DipLocation = dipLocations?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dipLocations != null && dipLocations.Any())
+            {
+                dipSwitch.DipLocation = dipLocations
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             var dipValues = item.Read<Models.Internal.DipValue[]>(Models.Internal.DipSwitch.DipValueKey);
-            dipSwitch.DipValue = dipValues?.Select(ConvertFromInternalModel)?.ToArray();
+            if (dipValues != null && dipValues.Any())
+            {
+                dipSwitch.DipValue = dipValues
+                    .Where(d => d != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return dipSwitch;
         }
 
         /// <summary>
-        /// Convert from <cref="DipValue"/> to <cref="Models.Listxml.DipValue"/>
+        /// Convert from <cref="Models.Internal.DipValue"/> to <cref="Models.Listxml.DipValue"/>
         /// </summary>
-        private static DipValue? ConvertFromInternalModel(Models.Internal.DipValue? item)
+        private static DipValue ConvertFromInternalModel(Models.Internal.DipValue item)
         {
-            if (item == null)
-                return null;
-
             var dipValue = new DipValue
             {
                 Name = item.ReadString(Models.Internal.DipValue.NameKey),
@@ -448,19 +547,17 @@ namespace SabreTools.Serialization
             };
 
             var condition = item.Read<Models.Internal.Condition>(Models.Internal.DipValue.ConditionKey);
-            dipValue.Condition = ConvertFromInternalModel(condition);
+            if (condition != null)
+                dipValue.Condition = ConvertFromInternalModel(condition);
 
             return dipValue;
         }
 
         /// <summary>
-        /// Convert from <cref="Disk"/> to <cref="Models.Listxml.Disk"/>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listxml.Disk"/>
         /// </summary>
-        private static Disk? ConvertFromInternalModel(Models.Internal.Disk? item)
+        private static Disk ConvertFromInternalModel(Models.Internal.Disk item)
         {
-            if (item == null)
-                return null;
-
             var disk = new Disk
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -477,13 +574,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Display"/> to <cref="Models.Listxml.Display"/>
+        /// Convert from <cref="Models.Internal.Display"/> to <cref="Models.Listxml.Display"/>
         /// </summary>
-        private static Display? ConvertFromInternalModel(Models.Internal.Display? item)
+        private static Display ConvertFromInternalModel(Models.Internal.Display item)
         {
-            if (item == null)
-                return null;
-
             var display = new Display
             {
                 Tag = item.ReadString(Models.Internal.Display.TagKey),
@@ -505,13 +599,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Driver"/> to <cref="Models.Listxml.Driver"/>
+        /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Listxml.Driver"/>
         /// </summary>
-        private static Driver? ConvertFromInternalModel(Models.Internal.Driver? item)
+        private static Driver ConvertFromInternalModel(Models.Internal.Driver item)
         {
-            if (item == null)
-                return null;
-
             var driver = new Driver
             {
                 Status = item.ReadString(Models.Internal.Driver.StatusKey),
@@ -530,13 +621,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Extension"/> to <cref="Models.Listxml.Extension"/>
+        /// Convert from <cref="Models.Internal.Extension"/> to <cref="Models.Listxml.Extension"/>
         /// </summary>
-        private static Extension? ConvertFromInternalModel(Models.Internal.Extension? item)
+        private static Extension ConvertFromInternalModel(Models.Internal.Extension item)
         {
-            if (item == null)
-                return null;
-
             var extension = new Extension
             {
                 Name = item.ReadString(Models.Internal.Extension.NameKey),
@@ -545,13 +633,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Feature"/> to <cref="Models.Listxml.Feature"/>
+        /// Convert from <cref="Models.Internal.Feature"/> to <cref="Models.Listxml.Feature"/>
         /// </summary>
-        private static Feature? ConvertFromInternalModel(Models.Internal.Feature? item)
+        private static Feature ConvertFromInternalModel(Models.Internal.Feature item)
         {
-            if (item == null)
-                return null;
-
             var feature = new Feature
             {
                 Type = item.ReadString(Models.Internal.Feature.TypeKey),
@@ -562,13 +647,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Input"/> to <cref="Models.Listxml.Input"/>
+        /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.Listxml.Input"/>
         /// </summary>
-        private static Input? ConvertFromInternalModel(Models.Internal.Input? item)
+        private static Input ConvertFromInternalModel(Models.Internal.Input item)
         {
-            if (item == null)
-                return null;
-
             var input = new Input
             {
                 Service = item.ReadString(Models.Internal.Input.ServiceKey),
@@ -580,19 +662,22 @@ namespace SabreTools.Serialization
             };
 
             var controls = item.Read<Models.Internal.Control[]>(Models.Internal.Input.ControlKey);
-            input.Control = controls?.Select(ConvertFromInternalModel)?.ToArray();
+            if (controls != null && controls.Any())
+            {
+                input.Control = controls
+                    .Where(c => c != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return input;
         }
 
         /// <summary>
-        /// Convert from <cref="Instance"/> to <cref="Models.Listxml.Instance"/>
+        /// Convert from <cref="Models.Internal.Instance"/> to <cref="Models.Listxml.Instance"/>
         /// </summary>
-        private static Instance? ConvertFromInternalModel(Models.Internal.Instance? item)
+        private static Instance ConvertFromInternalModel(Models.Internal.Instance item)
         {
-            if (item == null)
-                return null;
-
             var instance = new Instance
             {
                 Name = item.ReadString(Models.Internal.Instance.NameKey),
@@ -602,32 +687,32 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Port"/> to <cref="Models.Listxml.Port"/>
+        /// Convert from <cref="Models.Internal.Port"/> to <cref="Models.Listxml.Port"/>
         /// </summary>
-        private static Port? ConvertFromInternalModel(Models.Internal.Port? item)
+        private static Port ConvertFromInternalModel(Models.Internal.Port item)
         {
-            if (item == null)
-                return null;
-
             var port = new Port
             {
                 Tag = item.ReadString(Models.Internal.Port.TagKey),
             };
 
             var analogs = item.Read<Models.Internal.Analog[]>(Models.Internal.Port.AnalogKey);
-            port.Analog = analogs?.Select(ConvertFromInternalModel)?.ToArray();
+            if (analogs != null && analogs.Any())
+            {
+                port.Analog = analogs
+                    .Where(a => a != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return port;
         }
 
         /// <summary>
-        /// Convert from <cref="RamOption"/> to <cref="Models.Listxml.RamOption"/>
+        /// Convert from <cref="Models.Internal.RamOption"/> to <cref="Models.Listxml.RamOption"/>
         /// </summary>
-        private static RamOption? ConvertFromInternalModel(Models.Internal.RamOption? item)
+        private static RamOption ConvertFromInternalModel(Models.Internal.RamOption item)
         {
-            if (item == null)
-                return null;
-
             var ramOption = new RamOption
             {
                 Name = item.ReadString(Models.Internal.RamOption.NameKey),
@@ -637,13 +722,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Rom"/> to <cref="Models.Listxml.Rom"/>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listxml.Rom"/>
         /// </summary>
-        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Rom ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var rom = new Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
@@ -663,13 +745,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Sample"/> to <cref="Models.Listxml.Sample"/>
+        /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Listxml.Sample"/>
         /// </summary>
-        private static Sample? ConvertFromInternalModel(Models.Internal.Sample? item)
+        private static Sample ConvertFromInternalModel(Models.Internal.Sample item)
         {
-            if (item == null)
-                return null;
-
             var sample = new Sample
             {
                 Name = item.ReadString(Models.Internal.Sample.NameKey),
@@ -678,32 +757,32 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Slot"/> to <cref="Models.Listxml.Slot"/>
+        /// Convert from <cref="Models.Internal.Slot"/> to <cref="Models.Listxml.Slot"/>
         /// </summary>
-        private static Slot? ConvertFromInternalModel(Models.Internal.Slot? item)
+        private static Slot ConvertFromInternalModel(Models.Internal.Slot item)
         {
-            if (item == null)
-                return null;
-
             var slot = new Slot
             {
                 Name = item.ReadString(Models.Internal.Slot.NameKey),
             };
 
             var slotOptions = item.Read<Models.Internal.SlotOption[]>(Models.Internal.Slot.SlotOptionKey);
-            slot.SlotOption = slotOptions?.Select(ConvertFromInternalModel)?.ToArray();
+            if (slotOptions != null && slotOptions.Any())
+            {
+                slot.SlotOption = slotOptions
+                    .Where(s => s != null)
+                    .Select(ConvertFromInternalModel)
+                    .ToArray();
+            }
 
             return slot;
         }
 
         /// <summary>
-        /// Convert from <cref="SlotOption"/> to <cref="Models.Listxml.SlotOption"/>
+        /// Convert from <cref="Models.Internal.SlotOption"/> to <cref="Models.Listxml.SlotOption"/>
         /// </summary>
-        private static SlotOption? ConvertFromInternalModel(Models.Internal.SlotOption? item)
+        private static SlotOption ConvertFromInternalModel(Models.Internal.SlotOption item)
         {
-            if (item == null)
-                return null;
-
             var slotOption = new SlotOption
             {
                 Name = item.ReadString(Models.Internal.SlotOption.NameKey),
@@ -714,13 +793,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="SoftwareList"/> to <cref="Models.Listxml.SoftwareList"/>
+        /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Listxml.SoftwareList"/>
         /// </summary>
-        private static SoftwareList? ConvertFromInternalModel(Models.Internal.SoftwareList? item)
+        private static SoftwareList ConvertFromInternalModel(Models.Internal.SoftwareList item)
         {
-            if (item == null)
-                return null;
-
             var softwareList = new SoftwareList
             {
                 Tag = item.ReadString(Models.Internal.SoftwareList.TagKey),
@@ -732,13 +808,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Sound"/> to <cref="Models.Listxml.Sound"/>
+        /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.Listxml.Sound"/>
         /// </summary>
-        private static Sound? ConvertFromInternalModel(Models.Internal.Sound? item)
+        private static Sound ConvertFromInternalModel(Models.Internal.Sound item)
         {
-            if (item == null)
-                return null;
-
             var sound = new Sound
             {
                 Channels = item.ReadString(Models.Internal.Sound.ChannelsKey),
@@ -747,13 +820,10 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Video"/> to <cref="Models.Listxml.Video"/>
+        /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.Listxml.Video"/>
         /// </summary>
-        private static Video? ConvertFromInternalModel(Models.Internal.Video? item)
+        private static Video ConvertFromInternalModel(Models.Internal.Video item)
         {
-            if (item == null)
-                return null;
-
             var video = new Video
             {
                 Screen = item.ReadString(Models.Internal.Video.ScreenKey),

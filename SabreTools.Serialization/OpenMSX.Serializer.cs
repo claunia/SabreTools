@@ -22,15 +22,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(SoftwareDb item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(SoftwareDb? item)
         {
+            if (item == null)
+                return null;
+
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Software != null && item.Software.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Software.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Software
+                    .Where(s => s != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
@@ -63,7 +71,12 @@ namespace SabreTools.Serialization
             };
 
             if (item.Dump != null && item.Dump.Any())
-                machine[Models.Internal.Machine.DumpKey] = item.Dump.Select(ConvertToInternalModel).ToArray();
+            {
+                machine[Models.Internal.Machine.DumpKey] = item.Dump
+                    .Where(d => d != null)
+                    .Select(ConvertToInternalModel)
+                    .ToArray();
+            }
 
             return machine;
         }
@@ -78,19 +91,22 @@ namespace SabreTools.Serialization
             if (item.Original != null)
                 dump[Models.Internal.Dump.OriginalKey] = ConvertToInternalModel(item.Original);
 
-            switch (item.Rom)
+            if (item.Rom != null)
             {
-                case Rom rom:
-                    dump[Models.Internal.Dump.RomKey] = ConvertToInternalModel(rom);
-                    break;
+                switch (item.Rom)
+                {
+                    case Rom rom:
+                        dump[Models.Internal.Dump.RomKey] = ConvertToInternalModel(rom);
+                        break;
 
-                case MegaRom megaRom:
-                    dump[Models.Internal.Dump.MegaRomKey] = ConvertToInternalModel(megaRom);
-                    break;
+                    case MegaRom megaRom:
+                        dump[Models.Internal.Dump.MegaRomKey] = ConvertToInternalModel(megaRom);
+                        break;
 
-                case SCCPlusCart sccPlusCart:
-                    dump[Models.Internal.Dump.SCCPlusCartKey] = ConvertToInternalModel(sccPlusCart);
-                    break;
+                    case SCCPlusCart sccPlusCart:
+                        dump[Models.Internal.Dump.SCCPlusCartKey] = ConvertToInternalModel(sccPlusCart);
+                        break;
+                }
             }
 
             return dump;

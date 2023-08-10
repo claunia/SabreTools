@@ -202,7 +202,12 @@ namespace SabreTools.Serialization
 
             var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
             if (machines != null && machines.Any())
-                metadataFile.Set = machines.Select(ConvertMachineFromInternalModel).ToArray();
+            {
+                metadataFile.Set = machines
+                    .Where(m => m != null)
+                    .Select(ConvertMachineFromInternalModel)
+                    .ToArray();
+            }
             
             return metadataFile;
         }
@@ -210,11 +215,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listrom.Set"/>
         /// </summary>
-        private static Set? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Set ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
-            if (item == null)
-                return null;
-
             var set = new Set();
             if (item.ReadString(Models.Internal.Machine.IsDeviceKey) == "yes")
                 set.Device = item.ReadString(Models.Internal.Machine.NameKey);
@@ -225,11 +227,13 @@ namespace SabreTools.Serialization
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
             if (roms != null)
-                rowItems.AddRange(roms.Select(ConvertFromInternalModel));
+            {
+                rowItems.AddRange(roms.Where(r => r != null).Select(ConvertFromInternalModel));
+            }
 
             var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
             if (disks != null)
-                rowItems.AddRange(disks.Select(ConvertFromInternalModel));
+                rowItems.AddRange(disks.Where(d => d != null).Select(ConvertFromInternalModel));
 
             set.Row = rowItems.ToArray();
             return set;
@@ -238,11 +242,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Disk? item)
+        private static Row ConvertFromInternalModel(Models.Internal.Disk item)
         {
-            if (item == null)
-                return null;
-            
             var row = new Row
             {
                 Name = item.ReadString(Models.Internal.Disk.NameKey),
@@ -261,11 +262,8 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item)
+        private static Row ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-            
             var row = new Row
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),

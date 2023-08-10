@@ -60,7 +60,7 @@ namespace SabreTools.Models.ClrMamePro
         public Chip[]? Chip { get; set; }
 
         /// <remarks>video, Appears after Chip</remarks>
-        public Video? Video { get; set; }
+        public Video[]? Video { get; set; }
 
         /// <remarks>sound, Appears after Video</remarks>
         public Sound? Sound { get; set; }

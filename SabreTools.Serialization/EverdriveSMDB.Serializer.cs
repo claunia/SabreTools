@@ -88,15 +88,23 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
         /// </summary>
-        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        public static Models.Internal.MetadataFile? ConvertToInternalModel(MetadataFile? item)
         {
+            if (item == null)
+                return null;
+            
             var metadataFile = new Models.Internal.MetadataFile
             {
                 [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
             };
 
             if (item?.Row != null && item.Row.Any())
-                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Row.Select(ConvertMachineToInternalModel).ToArray();
+            {
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Row
+                    .Where(r => r != null)
+                    .Select(ConvertMachineToInternalModel)
+                    .ToArray();
+            }
 
             return metadataFile;
         }
