@@ -145,5 +145,74 @@ namespace SabreTools.Serialization
                 writer.WriteEndElement(); // file
             }
         }
+
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.DosCenter.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// </summary>
+        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        {
+            var metadataFile = new Models.Internal.MetadataFile();
+
+            if (item?.DosCenter != null)
+                metadataFile[Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item.DosCenter);
+
+            if (item?.Game != null && item.Game.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Game.Select(ConvertMachineToInternalModel).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.DosCenter.DosCenter"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        private static Models.Internal.Header ConvertHeaderToInternalModel(Models.DosCenter.DosCenter item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = item.Name,
+                [Models.Internal.Header.DescriptionKey] = item.Description,
+                [Models.Internal.Header.VersionKey] = item.Version,
+                [Models.Internal.Header.DateKey] = item.Date,
+                [Models.Internal.Header.AuthorKey] = item.Author,
+                [Models.Internal.Header.HomepageKey] = item.Homepage,
+                [Models.Internal.Header.CommentKey] = item.Comment,
+            };
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.DosCenter.Game"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine ConvertMachineToInternalModel(Game item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+            };
+
+            if (item.File != null && item.File.Any())
+                machine[Models.Internal.Machine.RomKey] = item.File.Select(ConvertToInternalModel).ToArray();
+
+            return machine;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.DosCenter.File"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        private static Models.Internal.Rom ConvertToInternalModel(Models.DosCenter.File item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.Name,
+                [Models.Internal.Rom.SizeKey] = item.Size,
+                [Models.Internal.Rom.CRCKey] = item.CRC,
+                [Models.Internal.Rom.DateKey] = item.Date,
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }

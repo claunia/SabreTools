@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using SabreTools.IO.Readers;
 using SabreTools.Models.DosCenter;
@@ -230,5 +231,68 @@ namespace SabreTools.Serialization
             file.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
             return file;
         }
+    
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.DosCenter.DosCenter"/>
+        /// </summary>
+        public static Models.DosCenter.DosCenter? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var dosCenter = new Models.DosCenter.DosCenter
+            {
+                Name = item.ReadString(Models.Internal.Header.NameKey),
+                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
+                Version = item.ReadString(Models.Internal.Header.VersionKey),
+                Date = item.ReadString(Models.Internal.Header.DateKey),
+                Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                Comment = item.ReadString(Models.Internal.Header.CommentKey),
+            };
+            return dosCenter;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.DosCenter.Game"/>
+        /// </summary>
+        public static Game? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        {
+            if (item == null)
+                return null;
+
+            var game = new Game
+            {
+                Name = item.ReadString(Models.Internal.Machine.NameKey),
+            };
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            game.File = roms?.Select(ConvertFromInternalModel)?.ToArray();
+
+            return game;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.DosCenter.File"/>
+        /// </summary>
+        private static Models.DosCenter.File? ConvertFromInternalModel(Models.Internal.Rom? item)
+        {
+            if (item == null)
+                return null;
+
+            var file = new Models.DosCenter.File
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                Date = item.ReadString(Models.Internal.Rom.DateKey),
+            };
+            return file;
+        }
+
+        #endregion
     }
 }
