@@ -39,8 +39,8 @@ namespace SabreTools.Serialization
             var dat = new MetadataFile();
 
             Set? set = null;
-            var sets = new List<Set?>();
-            var rows = new List<Row?>();
+            var sets = new List<Set>();
+            var rows = new List<Row>();
 
             var additional = new List<string>();
             while (!reader.EndOfStream)
@@ -93,19 +93,21 @@ namespace SabreTools.Serialization
                 }
 
                 // Split the line for the name iteratively
-                string[]? lineParts = line?.Split("     ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (lineParts?.Length == 1)
-                    lineParts = line?.Split("    ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (lineParts?.Length == 1)
-                    lineParts = line?.Split("   ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (lineParts?.Length == 1)
-                    lineParts = line?.Split("  ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                string[] lineParts = line.Split("     ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (lineParts.Length == 1)
+                    lineParts = line.Split("    ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (lineParts.Length == 1)
+                    lineParts = line.Split("   ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                if (lineParts.Length == 1)
+                    lineParts = line.Split("  ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
                 // Read the name and set the rest of the line for processing
                 string name = lineParts[0];
                 string trimmedLine = line[name.Length..];
+                if (trimmedLine == null)
+                    continue;
 
-                lineParts = trimmedLine?.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                lineParts = trimmedLine.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
                 // The number of items in the row explains what type of row it is
                 var row = new Row();

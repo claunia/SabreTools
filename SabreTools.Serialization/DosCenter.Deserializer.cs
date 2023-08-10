@@ -42,8 +42,8 @@ namespace SabreTools.Serialization
             string lastTopLevel = reader.TopLevel;
 
             Game? game = null;
-            var games = new List<Game?>();
-            var files = new List<Models.DosCenter.File?>();
+            var games = new List<Game>();
+            var files = new List<Models.DosCenter.File>();
 
             var additional = new List<string>();
             var headerAdditional = new List<string>();
@@ -65,13 +65,18 @@ namespace SabreTools.Serialization
                         switch (lastTopLevel)
                         {
                             case "doscenter":
-                                dat.DosCenter.ADDITIONAL_ELEMENTS = headerAdditional.ToArray();
+                                if (dat.DosCenter != null)
+                                    dat.DosCenter.ADDITIONAL_ELEMENTS = headerAdditional.ToArray();
+
                                 headerAdditional.Clear();
                                 break;
                             case "game":
-                                game.File = files.ToArray();
-                                game.ADDITIONAL_ELEMENTS = gameAdditional.ToArray();
-                                games.Add(game);
+                                if (game != null)
+                                {
+                                    game.File = files.ToArray();
+                                    game.ADDITIONAL_ELEMENTS = gameAdditional.ToArray();
+                                    games.Add(game);
+                                }
 
                                 game = null;
                                 files.Clear();

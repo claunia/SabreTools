@@ -47,9 +47,6 @@ namespace SabreTools.Serialization
         /// </summary>
         private static Header ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
-            if (item == null)
-                return null;
-
             var header = new Header
             {
                 Id = item.ReadString(Models.Internal.Header.IdKey),
@@ -334,9 +331,6 @@ namespace SabreTools.Serialization
         /// </summary>
         private static Rom ConvertFromInternalModel(Models.Internal.Rom item)
         {
-            if (item == null)
-                return null;
-
             var rom = new Rom
             {
                 Name = item.ReadString(Models.Internal.Rom.NameKey),
