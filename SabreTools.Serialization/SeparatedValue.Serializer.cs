@@ -127,5 +127,115 @@ namespace SabreTools.Serialization
                 writer.Flush();
             }
         }
+
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// </summary>
+        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        {
+            var metadataFile = new Models.Internal.MetadataFile
+            {
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+            };
+
+            if (item?.Row != null && item.Row.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Row.Select(ConvertMachineToInternalModel).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.HeaderKey] = item.Header,
+            };
+
+            if (item.Row != null && item.Row.Any())
+            {
+                var first = item.Row[0];
+                //header[Models.Internal.Header.FileNameKey] = first.FileName; // Not possible to map
+                header[Models.Internal.Header.NameKey] = first.FileName;
+                header[Models.Internal.Header.DescriptionKey] = first.Description;
+            }
+
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine ConvertMachineToInternalModel(Row item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.GameName,
+                [Models.Internal.Machine.DescriptionKey] = item.GameDescription,
+            };
+
+            var datItem = ConvertToInternalModel(item);
+            switch (datItem)
+            {
+                case Models.Internal.Disk disk:
+                    machine[Models.Internal.Machine.DiskKey] = new Models.Internal.Disk[] { disk };
+                    break;
+
+                case Models.Internal.Media media:
+                    machine[Models.Internal.Machine.MediaKey] = new Models.Internal.Media[] { media };
+                    break;
+
+                case Models.Internal.Rom rom:
+                    machine[Models.Internal.Machine.RomKey] = new Models.Internal.Rom[] { rom };
+                    break;
+            }
+
+            return machine;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.DatItem"/>
+        /// </summary>
+        private static Models.Internal.DatItem? ConvertToInternalModel(Row item)
+        {
+            return item.Type switch
+            {
+                "disk" => new Models.Internal.Disk
+                {
+                    [Models.Internal.Disk.NameKey] = item.DiskName,
+                    [Models.Internal.Disk.MD5Key] = item.MD5,
+                    [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                    [Models.Internal.Disk.StatusKey] = item.Status,
+                },
+                "media" => new Models.Internal.Media
+                {
+                    [Models.Internal.Media.NameKey] = item.DiskName,
+                    [Models.Internal.Media.MD5Key] = item.MD5,
+                    [Models.Internal.Media.SHA1Key] = item.SHA1,
+                    [Models.Internal.Media.SHA256Key] = item.SHA256,
+                    [Models.Internal.Media.SpamSumKey] = item.SpamSum,
+                },
+                "rom" => new Models.Internal.Rom
+                {
+                    [Models.Internal.Rom.NameKey] = item.RomName,
+                    [Models.Internal.Rom.SizeKey] = item.Size,
+                    [Models.Internal.Rom.CRCKey] = item.CRC,
+                    [Models.Internal.Rom.MD5Key] = item.MD5,
+                    [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                    [Models.Internal.Rom.SHA256Key] = item.SHA256,
+                    [Models.Internal.Rom.SHA384Key] = item.SHA384,
+                    [Models.Internal.Rom.SHA512Key] = item.SHA512,
+                    [Models.Internal.Rom.SpamSumKey] = item.SpamSum,
+                    [Models.Internal.Rom.StatusKey] = item.Status,
+                },
+                _ => null,
+            };
+        }
+
+        #endregion
     }
 }

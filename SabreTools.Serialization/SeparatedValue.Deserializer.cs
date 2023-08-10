@@ -119,5 +119,120 @@ namespace SabreTools.Serialization
             dat.Row = rows.ToArray();
             return dat;
         }
+
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SeparatedValue.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new MetadataFile
+            {
+                Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
+            };
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        public static Row[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        {
+            if (item == null)
+                return null;
+
+            var rowItems = new List<Row>();
+
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            if (disks != null)
+                rowItems.AddRange(disks.Select(disk => ConvertFromInternalModel(disk, item)));
+
+            var media = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
+            if (media != null)
+                rowItems.AddRange(media.Select(medium => ConvertFromInternalModel(medium, item)));
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            if (roms != null)
+                rowItems.AddRange(roms.Select(rom => ConvertFromInternalModel(rom, item)));
+
+            return rowItems.ToArray();
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        private static Row? ConvertFromInternalModel(Models.Internal.Disk? item, Models.Internal.Machine? parent)
+        {
+            if (item == null)
+                return null;
+
+            var row = new Row
+            {
+                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
+                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                Type = "disk",
+                DiskName = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Status = item.ReadString(Models.Internal.Disk.StatusKey),
+            };
+            return row;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        private static Row? ConvertFromInternalModel(Models.Internal.Media? item, Models.Internal.Machine? parent)
+        {
+            if (item == null)
+                return null;
+
+            var row = new Row
+            {
+                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
+                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                Type = "media",
+                DiskName = item.ReadString(Models.Internal.Media.NameKey),
+                MD5 = item.ReadString(Models.Internal.Media.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Media.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Media.SHA256Key),
+                SpamSum = item.ReadString(Models.Internal.Media.SpamSumKey),
+            };
+            return row;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SeparatedValue.Row"/>
+        /// </summary>
+        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        {
+            if (item == null)
+                return null;
+
+            var row = new Row
+            {
+                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
+                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                Type = "rom",
+                RomName = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
+                SHA384 = item.ReadString(Models.Internal.Rom.SHA384Key),
+                SHA512 = item.ReadString(Models.Internal.Rom.SHA512Key),
+                SpamSum = item.ReadString(Models.Internal.Rom.SpamSumKey),
+                Status = item.ReadString(Models.Internal.Rom.StatusKey),
+            };
+            return row;
+        }
+
+        #endregion
     }
 }
