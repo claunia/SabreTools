@@ -9,7 +9,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Internal stream writer for outputting
         /// </summary>
-        private readonly StreamWriter sw;
+        private readonly StreamWriter? sw;
 
         /// <summary>
         /// Constructor for writing to a file
@@ -30,8 +30,11 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a section tag
         /// </summary>
-        public void WriteSection(string value)
+        public void WriteSection(string? value)
         {
+            if (sw?.BaseStream == null)
+                return;
+            
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Section tag cannot be null or empty", nameof(value));
 
@@ -41,8 +44,11 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a key value pair
         /// </summary>
-        public void WriteKeyValuePair(string key, string value)
+        public void WriteKeyValuePair(string key, string? value)
         {
+            if (sw?.BaseStream == null)
+                return;
+            
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentException("Key cannot be null or empty", nameof(key));
 
@@ -53,8 +59,11 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a comment
         /// </summary>
-        public void WriteComment(string value)
+        public void WriteComment(string? value)
         {
+            if (sw?.BaseStream == null)
+                return;
+            
             value ??= string.Empty;
             sw.WriteLine($";{value}");
         }
@@ -62,8 +71,11 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a generic string
         /// </summary>
-        public void WriteString(string value)
+        public void WriteString(string? value)
         {
+            if (sw?.BaseStream == null)
+                return;
+            
             value ??= string.Empty;
             sw.Write(value);
         }
@@ -73,6 +85,9 @@ namespace SabreTools.IO.Writers
         /// </summary>
         public void WriteLine()
         {
+            if (sw?.BaseStream == null)
+                return;
+            
             sw.WriteLine();
         }
 
@@ -81,7 +96,7 @@ namespace SabreTools.IO.Writers
         /// </summary>
         public void Flush()
         {
-            sw.Flush();
+            sw?.Flush();
         }
 
         /// <summary>
@@ -89,7 +104,7 @@ namespace SabreTools.IO.Writers
         /// </summary>
         public void Dispose()
         {
-            sw.Dispose();
+            sw?.Dispose();
         }
     }
 }

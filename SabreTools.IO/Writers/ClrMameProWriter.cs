@@ -44,11 +44,8 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Tag information for the stack
         /// </summary>
-        private struct TagInfo
+        private record struct TagInfo(string? Name, bool Mixed)
         {
-            public string Name;
-            public bool Mixed;
-
             public void Init()
             {
                 Name = null;
@@ -173,7 +170,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a complete element with content
         /// </summary>
-        public void WriteElementString(string name, string value)
+        public void WriteElementString(string name, string? value)
         {
             WriteStartElement(name);
             WriteString(value);
@@ -186,7 +183,7 @@ namespace SabreTools.IO.Writers
         /// <param name="name">Name of the element</param>
         /// <param name="value">Value to write in the element</param>
         /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
-        public void WriteRequiredElementString(string name, string value, bool throwOnError = false)
+        public void WriteRequiredElementString(string name, string? value, bool throwOnError = false)
         {
             // Throw an exception if we are configured to
             if (value == null && throwOnError)
@@ -200,7 +197,7 @@ namespace SabreTools.IO.Writers
         /// </summary>
         /// <param name="name">Name of the element</param>
         /// <param name="value">Value to write in the element</param>
-        public void WriteOptionalElementString(string name, string value)
+        public void WriteOptionalElementString(string name, string? value)
         {
             if (!string.IsNullOrEmpty(value))
                 WriteElementString(name, value);
@@ -253,7 +250,7 @@ namespace SabreTools.IO.Writers
         /// <param name="name">Name of the attribute</param>
         /// <param name="value">Value to write in the attribute</param>
         /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
-        public void WriteAttributeString(string name, string value, bool? quoteOverride = null)
+        public void WriteAttributeString(string name, string? value, bool? quoteOverride = null)
         {
             WriteStartAttribute(name, quoteOverride);
             WriteString(value);
@@ -267,7 +264,7 @@ namespace SabreTools.IO.Writers
         /// <param name="value">Value to write in the attribute</param>
         /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
         /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
-        public void WriteRequiredAttributeString(string name, string value, bool? quoteOverride = null, bool throwOnError = false)
+        public void WriteRequiredAttributeString(string name, string? value, bool? quoteOverride = null, bool throwOnError = false)
         {
             // Throw an exception if we are configured to
             if (value == null && throwOnError)
@@ -282,7 +279,7 @@ namespace SabreTools.IO.Writers
         /// <param name="name">Name of the attribute</param>
         /// <param name="value">Value to write in the attribute</param>
         /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
-        public void WriteOptionalAttributeString(string name, string value, bool? quoteOverride = null)
+        public void WriteOptionalAttributeString(string name, string? value, bool? quoteOverride = null)
         {
             if (!string.IsNullOrEmpty(value))
                 WriteAttributeString(name, value, quoteOverride);
@@ -294,7 +291,7 @@ namespace SabreTools.IO.Writers
         /// <param name="name">Name of the attribute</param>
         /// <param name="value">Value to write in the attribute</param>
         /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
-        public void WriteStandalone(string name, string value, bool? quoteOverride = null)
+        public void WriteStandalone(string name, string? value, bool? quoteOverride = null)
         {
             try
             {
@@ -306,7 +303,7 @@ namespace SabreTools.IO.Writers
                     || (quoteOverride == true))
                 {
                     name = name.Replace("\"", "''");
-                    value = value.Replace("\"", "''");
+                    value = value?.Replace("\"", "''");
                 }
 
                 AutoComplete(Token.Standalone);
@@ -338,7 +335,7 @@ namespace SabreTools.IO.Writers
         /// <param name="value">Value to write in the attribute</param>
         /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
         /// <param name="throwOnError">Indicates if an error should be thrown on a missing required value</param>
-        public void WriteRequiredStandalone(string name, string value, bool? quoteOverride = null, bool throwOnError = false)
+        public void WriteRequiredStandalone(string name, string? value, bool? quoteOverride = null, bool throwOnError = false)
         {
             // Throw an exception if we are configured to
             if (value == null && throwOnError)
@@ -353,7 +350,7 @@ namespace SabreTools.IO.Writers
         /// <param name="name">Name of the attribute</param>
         /// <param name="value">Value to write in the attribute</param>
         /// <param name="quoteOverride">Non-null to overwrite the writer setting, null otherwise</param>
-        public void WriteOptionalStandalone(string name, string value, bool? quoteOverride = null)
+        public void WriteOptionalStandalone(string name, string? value, bool? quoteOverride = null)
         {
             if (!string.IsNullOrEmpty(value))
                 WriteStandalone(name, value, quoteOverride);
@@ -362,7 +359,7 @@ namespace SabreTools.IO.Writers
         /// <summary>
         /// Write a string content value
         /// </summary>
-        public void WriteString(string value)
+        public void WriteString(string? value)
         {
             try
             {

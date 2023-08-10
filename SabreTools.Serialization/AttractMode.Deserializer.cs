@@ -44,7 +44,7 @@ namespace SabreTools.Serialization
             var dat = new MetadataFile();
 
             // Read the header values first
-            if (!reader.ReadHeader())
+            if (!reader.ReadHeader() || reader.HeaderValues == null)
                 return null;
 
             dat.Header = reader.HeaderValues.ToArray();
@@ -54,11 +54,11 @@ namespace SabreTools.Serialization
             while (!reader.EndOfStream)
             {
                 // If we have no next line
-                if (!reader.ReadNextLine())
+                if (!reader.ReadNextLine() || reader.Line == null)
                     break;
 
                 // Parse the line into a row
-                Row? row = null;
+                Row row;
                 if (reader.Line.Count < HeaderWithRomnameCount)
                 {
                     row = new Row

@@ -11,14 +11,14 @@ namespace SabreTools.IO
         /// <summary>
         /// Current full path represented
         /// </summary>
-        public string CurrentPath { get; private set; }
+        public string CurrentPath { get; init; }
 
         /// <summary>
         /// Possible parent path represented (may be null or empty)
         /// </summary>
-        public string ParentPath { get; private set; }
+        public string? ParentPath { get; init; }
 
-        public ParentablePath(string currentPath, string parentPath = null)
+        public ParentablePath(string currentPath, string? parentPath = null)
         {
             CurrentPath = currentPath;
             ParentPath = parentPath;
@@ -29,7 +29,7 @@ namespace SabreTools.IO
         /// </summary>
         /// <param name="sanitize">True if path separators should be converted to '-', false otherwise</param>
         /// <returns>Subpath for the file</returns>
-        public string GetNormalizedFileName(bool sanitize)
+        public string? GetNormalizedFileName(bool sanitize)
         {
             // If the current path is empty, we can't do anything
             if (string.IsNullOrWhiteSpace(CurrentPath))
@@ -55,7 +55,7 @@ namespace SabreTools.IO
         /// <param name="outDir">Output directory to use</param>
         /// <param name="inplace">True if the output file should go to the same input folder, false otherwise</param>
         /// <returns>Complete output path</returns>
-        public string GetOutputPath(string outDir, bool inplace)
+        public string? GetOutputPath(string outDir, bool inplace)
         {
             // If the current path is empty, we can't do anything
             if (string.IsNullOrWhiteSpace(CurrentPath))
@@ -73,21 +73,22 @@ namespace SabreTools.IO
                 return Path.GetDirectoryName(CurrentPath);
 
             // If the current and parent paths are the same, just use the output directory
-            if (!splitpath || CurrentPath.Length == ParentPath.Length)
+            if (!splitpath || CurrentPath.Length == (ParentPath?.Length ?? 0))
                 return outDir;
 
             // By default, the working parent directory is the parent path
-            string workingParent = ParentPath;
+            string workingParent = ParentPath ?? string.Empty;
 
             // TODO: Should this be the default? Always create a subfolder if a folder is found?
             // If we are processing a path that is coming from a directory and we are outputting to the current directory, we want to get the subfolder to write to
             if (outDir == Environment.CurrentDirectory)
-                workingParent = Path.GetDirectoryName(ParentPath);
+                workingParent = Path.GetDirectoryName(ParentPath ?? string.Empty) ?? string.Empty;
 
             // Determine the correct subfolder based on the working parent directory
             int extraLength = workingParent.EndsWith(':')
                 || workingParent.EndsWith(Path.DirectorySeparatorChar)
                 || workingParent.EndsWith(Path.AltDirectorySeparatorChar) ? 0 : 1;
+
             return Path.GetDirectoryName(Path.Combine(outDir, CurrentPath.Remove(0, workingParent.Length + extraLength)));
         }
     }

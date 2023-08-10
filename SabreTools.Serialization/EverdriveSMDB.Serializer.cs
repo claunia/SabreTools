@@ -66,7 +66,10 @@ namespace SabreTools.Serialization
             // Loop through and write out the rows
             foreach (var row in rows)
             {
-                var rowArray = new List<string>
+                if (row == null)
+                    continue;
+
+                var rowArray = new List<string?>
                 {
                     row.SHA256,
                     row.Name,

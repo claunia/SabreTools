@@ -127,9 +127,9 @@ namespace SabreTools.Test.Parser
                     Assert.Empty(chip.ADDITIONAL_ELEMENTS);
                 }
 
-                if (game.Video != null)
+                foreach (var video in game.Video ?? Array.Empty<Models.ClrMamePro.Video>())
                 {
-                    Assert.Empty(game.Video.ADDITIONAL_ELEMENTS);
+                    Assert.Empty(video.ADDITIONAL_ELEMENTS);
                 }
 
                 if (game.Sound != null)

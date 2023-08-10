@@ -23,12 +23,12 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
-        private readonly StreamReader sr;
+        private readonly StreamReader? sr;
 
         /// <summary>
         /// Contents of the current line, unprocessed
         /// </summary>
-        public string CurrentLine { get; private set; } = string.Empty;
+        public string? CurrentLine { get; private set; } = string.Empty;
 
         /// <summary>
         /// Get the current line number
@@ -49,12 +49,12 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Contents of the currently read line as an internal item
         /// </summary>
-        public Dictionary<string, string> Internal { get; private set; } = new Dictionary<string, string>();
+        public Dictionary<string, string>? Internal { get; private set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Current internal item name
         /// </summary>
-        public string InternalName { get; private set; } = null;
+        public string? InternalName { get; private set; }
 
         /// <summary>
         /// Get if we should be making DosCenter exceptions
@@ -85,7 +85,7 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Current top-level being read
         /// </summary>
-        public string TopLevel { get; private set; } = string.Empty;
+        public string? TopLevel { get; private set; } = string.Empty;
 
         /// <summary>
         /// Constructor for opening a write from a file
@@ -108,10 +108,13 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public bool ReadNextLine()
         {
-            if (!(sr.BaseStream?.CanRead ?? false) || sr.EndOfStream)
+            if (sr?.BaseStream == null)
                 return false;
 
-            CurrentLine = sr.ReadLine().Trim();
+            if (!sr.BaseStream.CanRead || sr.EndOfStream)
+                return false;
+
+            CurrentLine = sr.ReadLine()?.Trim();
             LineNumber++;
             ProcessLine();
             return true;
@@ -122,6 +125,9 @@ namespace SabreTools.IO.Readers
         /// </summary>
         private void ProcessLine()
         {
+            if (CurrentLine == null)
+                return;
+
             // Standalone (special case for DC dats)
             if (CurrentLine.StartsWith("Name:"))
             {
@@ -303,7 +309,7 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public void Dispose()
         {
-            sr.Dispose();
+            sr?.Dispose();
         }
     }
 }

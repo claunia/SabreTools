@@ -11,7 +11,7 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
-        private readonly StreamReader sr;
+        private readonly StreamReader? sr;
 
         /// <summary>
         /// Get if at end of stream
@@ -32,7 +32,7 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Contents of the current line, unprocessed
         /// </summary>
-        public string CurrentLine { get; private set; } = string.Empty;
+        public string? CurrentLine { get; private set; } = string.Empty;
 
         /// <summary>
         /// Get the current line number
@@ -47,7 +47,7 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Current section being read
         /// </summary>
-        public string Section { get; private set; } = string.Empty;
+        public string? Section { get; private set; } = string.Empty;
 
         /// <summary>
         /// Validate that rows are in key=value format
@@ -75,10 +75,13 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public bool ReadNextLine()
         {
-            if (!(sr.BaseStream?.CanRead ?? false) || sr.EndOfStream)
+            if (sr?.BaseStream == null)
                 return false;
 
-            CurrentLine = sr.ReadLine().Trim();
+            if (!sr.BaseStream.CanRead || sr.EndOfStream)
+                return false;
+
+            CurrentLine = sr.ReadLine()?.Trim();
             LineNumber++;
             ProcessLine();
             return true;
@@ -89,6 +92,9 @@ namespace SabreTools.IO.Readers
         /// </summary>
         private void ProcessLine()
         {
+            if (CurrentLine == null)
+                return;
+
             // Comment
             if (CurrentLine.StartsWith(";"))
             {
@@ -142,7 +148,7 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public void Dispose()
         {
-            sr.Dispose();
+            sr?.Dispose();
         }
     }
 }

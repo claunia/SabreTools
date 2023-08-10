@@ -12,7 +12,7 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Internal stream reader for inputting
         /// </summary>
-        private readonly StreamReader sr;
+        private readonly StreamReader? sr;
 
         /// <summary>
         /// Internal value to say how many fields should be written
@@ -33,7 +33,7 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Contents of the current line, unprocessed
         /// </summary>
-        public string CurrentLine { get; private set; } = string.Empty;
+        public string? CurrentLine { get; private set; } = string.Empty;
 
         /// <summary>
         /// Get the current line number
@@ -48,12 +48,12 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Header row values
         /// </summary>
-        public List<string> HeaderValues { get; set; } = null;
+        public List<string>? HeaderValues { get; set; } = null;
 
         /// <summary>
         /// Get the current line values
         /// </summary>
-        public List<string> Line { get; private set; } = null;
+        public List<string>? Line { get; private set; } = null;
 
         /// <summary>
         /// Assume that values are wrapped in quotes
@@ -105,12 +105,18 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public bool ReadNextLine()
         {
-            if (!(sr.BaseStream?.CanRead ?? false) || sr.EndOfStream)
+            if (sr?.BaseStream == null)
                 return false;
 
-            string fullLine = sr.ReadLine();
+            if (!sr.BaseStream.CanRead || sr.EndOfStream)
+                return false;
+
+            string? fullLine = sr.ReadLine();
             CurrentLine = fullLine;
             LineNumber++;
+
+            if (fullLine == null)
+                return false;
 
             // If we have quotes, we need to split specially
             if (Quotes)
@@ -155,17 +161,21 @@ namespace SabreTools.IO.Readers
         /// <summary>
         /// Get the value for the current line for the current key
         /// </summary>
-        public string GetValue(string key)
+        public string? GetValue(string key)
         {
             // No header means no key-based indexing
             if (!Header)
                 throw new ArgumentException("No header expected so no keys can be used");
 
-            // If we don't have the key, return null;
+            // If we don't have the key, return null
+            if (HeaderValues == null)
+                throw new ArgumentException($"Current line doesn't have key {key}");
             if (!HeaderValues.Contains(key))
                 return null;
 
             int index = HeaderValues.IndexOf(key);
+            if (Line == null)
+                throw new ArgumentException($"Current line doesn't have index {index}");
             if (Line.Count < index)
                 throw new ArgumentException($"Current line doesn't have index {index}");
 
@@ -177,6 +187,8 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public string GetValue(int index)
         {
+            if (Line == null)
+                throw new ArgumentException($"Current line doesn't have index {index}");
             if (Line.Count < index)
                 throw new ArgumentException($"Current line doesn't have index {index}");
 
@@ -188,7 +200,7 @@ namespace SabreTools.IO.Readers
         /// </summary>
         public void Dispose()
         {
-            sr.Dispose();
+            sr?.Dispose();
         }
     }
 }

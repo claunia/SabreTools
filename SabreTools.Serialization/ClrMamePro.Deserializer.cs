@@ -41,7 +41,7 @@ namespace SabreTools.Serialization
             var dat = new MetadataFile();
 
             // Loop through and parse out the values
-            string lastTopLevel = reader.TopLevel;
+            string? lastTopLevel = reader.TopLevel;
 
             GameBase? game = null;
             var games = new List<GameBase>();
@@ -75,27 +75,32 @@ namespace SabreTools.Serialization
                         switch (lastTopLevel)
                         {
                             case "doscenter":
-                                dat.ClrMamePro!.ADDITIONAL_ELEMENTS = headerAdditional.ToArray();
+                                if (dat.ClrMamePro != null)
+                                    dat.ClrMamePro.ADDITIONAL_ELEMENTS = headerAdditional.ToArray();
+
                                 headerAdditional.Clear();
                                 break;
                             case "game":
                             case "machine":
                             case "resource":
                             case "set":
-                                game!.Release = releases.ToArray();
-                                game.BiosSet = biosSets.ToArray();
-                                game.Rom = roms.ToArray();
-                                game.Disk = disks.ToArray();
-                                game.Media = medias.ToArray();
-                                game.Sample = samples.ToArray();
-                                game.Archive = archives.ToArray();
-                                game.Chip = chips.ToArray();
-                                game.Video = videos.ToArray();
-                                game.DipSwitch = dipSwitches.ToArray();
-                                game.ADDITIONAL_ELEMENTS = gameAdditional.ToArray();
+                                if (game != null)
+                                {
+                                    game.Release = releases.ToArray();
+                                    game.BiosSet = biosSets.ToArray();
+                                    game.Rom = roms.ToArray();
+                                    game.Disk = disks.ToArray();
+                                    game.Media = medias.ToArray();
+                                    game.Sample = samples.ToArray();
+                                    game.Archive = archives.ToArray();
+                                    game.Chip = chips.ToArray();
+                                    game.Video = videos.ToArray();
+                                    game.DipSwitch = dipSwitches.ToArray();
+                                    game.ADDITIONAL_ELEMENTS = gameAdditional.ToArray();
 
-                                games.Add(game);
-                                game = null;
+                                    games.Add(game);
+                                    game = null;
+                                }
 
                                 releases.Clear();
                                 biosSets.Clear();
@@ -138,7 +143,8 @@ namespace SabreTools.Serialization
                             game = new Set();
                             break;
                         default:
-                            additional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                additional.Add(reader.CurrentLine);
                             break;
                     }
                 }
@@ -198,7 +204,8 @@ namespace SabreTools.Serialization
                             dat.ClrMamePro.ForcePacking = reader.Standalone?.Value;
                             break;
                         default:
-                            headerAdditional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                headerAdditional.Add(reader.CurrentLine);
                             break;
                     }
                 }
@@ -255,7 +262,8 @@ namespace SabreTools.Serialization
                             samples.Add(sample);
                             break;
                         default:
-                            gameAdditional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                gameAdditional.Add(reader.CurrentLine);
                             break;
                     }
                 }
@@ -272,53 +280,81 @@ namespace SabreTools.Serialization
                     switch (reader.InternalName)
                     {
                         case "release":
-                            releases.Add(CreateRelease(reader));
+                            var release = CreateRelease(reader);
+                            if (release != null)
+                                releases.Add(release);
                             break;
                         case "biosset":
-                            biosSets.Add(CreateBiosSet(reader));
+                            var biosSet = CreateBiosSet(reader);
+                            if (biosSet != null)
+                                biosSets.Add(biosSet);
                             break;
                         case "rom":
-                            roms.Add(CreateRom(reader));
+                            var rom = CreateRom(reader);
+                            if (rom != null)
+                                roms.Add(rom);
                             break;
                         case "disk":
-                            disks.Add(CreateDisk(reader));
+                            var disk = CreateDisk(reader);
+                            if (disk != null)
+                                disks.Add(disk);
                             break;
                         case "media":
-                            medias.Add(CreateMedia(reader));
+                            var media = CreateMedia(reader);
+                            if (media != null)
+                                medias.Add(media);
                             break;
                         case "sample":
-                            samples.Add(CreateSample(reader));
+                            var sample = CreateSample(reader);
+                            if (sample != null)
+                                samples.Add(sample);
                             break;
                         case "archive":
-                            archives.Add(CreateArchive(reader));
+                            var archive = CreateArchive(reader);
+                            if (archive != null)
+                                archives.Add(archive);
                             break;
                         case "chip":
-                            chips.Add(CreateChip(reader));
+                            var chip = CreateChip(reader);
+                            if (chip != null)
+                                chips.Add(chip);
                             break;
                         case "video":
-                            videos.Add(CreateVideo(reader));
+                            var video = CreateVideo(reader);
+                            if (video != null)
+                                videos.Add(video);
                             break;
                         case "sound":
-                            game.Sound = CreateSound(reader);
+                            var sound = CreateSound(reader);
+                            if (sound != null)
+                                game.Sound = sound;
                             break;
                         case "input":
-                            game.Input = CreateInput(reader);
+                            var input = CreateInput(reader);
+                            if (input != null)
+                                game.Input = input;
                             break;
                         case "dipswitch":
-                            dipSwitches.Add(CreateDipSwitch(reader));
+                            var dipSwitch = CreateDipSwitch(reader);
+                            if (dipSwitch != null)
+                                dipSwitches.Add(dipSwitch);
                             break;
                         case "driver":
-                            game.Driver = CreateDriver(reader);
+                            var driver = CreateDriver(reader);
+                            if (driver != null)
+                                game.Driver = driver;
                             break;
                         default:
-                            gameAdditional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                gameAdditional.Add(reader.CurrentLine);
                             continue;
                     }
                 }
 
                 else
                 {
-                    additional.Add(reader.CurrentLine);
+                    if (reader.CurrentLine != null)
+                        additional.Add(reader.CurrentLine);
                 }
             }
 
@@ -333,8 +369,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Release object created from the reader context</returns>
-        private static Release CreateRelease(ClrMameProReader reader)
+        private static Release? CreateRelease(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var release = new Release();
             foreach (var kvp in reader.Internal)
@@ -371,8 +410,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>BiosSet object created from the reader context</returns>
-        private static BiosSet CreateBiosSet(ClrMameProReader reader)
+        private static BiosSet? CreateBiosSet(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var biosset = new BiosSet();
             foreach (var kvp in reader.Internal)
@@ -403,8 +445,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Rom object created from the reader context</returns>
-        private static Rom CreateRom(ClrMameProReader reader)
+        private static Rom? CreateRom(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var rom = new Rom();
             foreach (var kvp in reader.Internal)
@@ -489,8 +534,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Disk object created from the reader context</returns>
-        private static Disk CreateDisk(ClrMameProReader reader)
+        private static Disk? CreateDisk(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var disk = new Disk();
             foreach (var kvp in reader.Internal)
@@ -530,8 +578,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Media object created from the reader context</returns>
-        private static Media CreateMedia(ClrMameProReader reader)
+        private static Media? CreateMedia(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var media = new Media();
             foreach (var kvp in reader.Internal)
@@ -568,8 +619,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Sample object created from the reader context</returns>
-        private static Sample CreateSample(ClrMameProReader reader)
+        private static Sample? CreateSample(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var sample = new Sample();
             foreach (var kvp in reader.Internal)
@@ -594,8 +648,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Archive object created from the reader context</returns>
-        private static Archive CreateArchive(ClrMameProReader reader)
+        private static Archive? CreateArchive(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var archive = new Archive();
             foreach (var kvp in reader.Internal)
@@ -620,8 +677,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Chip object created from the reader context</returns>
-        private static Chip CreateChip(ClrMameProReader reader)
+        private static Chip? CreateChip(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var chip = new Chip();
             foreach (var kvp in reader.Internal)
@@ -655,8 +715,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Video object created from the reader context</returns>
-        private static Video CreateVideo(ClrMameProReader reader)
+        private static Video? CreateVideo(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var video = new Video();
             foreach (var kvp in reader.Internal)
@@ -699,8 +762,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Sound object created from the reader context</returns>
-        private static Sound CreateSound(ClrMameProReader reader)
+        private static Sound? CreateSound(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var sound = new Sound();
             foreach (var kvp in reader.Internal)
@@ -725,8 +791,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Input object created from the reader context</returns>
-        private static Input CreateInput(ClrMameProReader reader)
+        private static Input? CreateInput(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var input = new Input();
             foreach (var kvp in reader.Internal)
@@ -766,8 +835,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>DipSwitch object created from the reader context</returns>
-        private static DipSwitch CreateDipSwitch(ClrMameProReader reader)
+        private static DipSwitch? CreateDipSwitch(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var dipswitch = new DipSwitch();
             var entries = new List<string>();
@@ -800,8 +872,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>Driver object created from the reader context</returns>
-        private static Driver CreateDriver(ClrMameProReader reader)
+        private static Driver? CreateDriver(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var driver = new Driver();
             foreach (var kvp in reader.Internal)
@@ -832,7 +907,7 @@ namespace SabreTools.Serialization
             driver.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
             return driver;
         }
-    
+
         #region Internal
 
         /// <summary>
@@ -842,7 +917,7 @@ namespace SabreTools.Serialization
         {
             if (item == null)
                 return null;
-            
+
             var metadataFile = new MetadataFile();
 
             var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);

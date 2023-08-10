@@ -99,6 +99,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var sfv in sfvs)
             {
+                if (sfv == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(sfv.File) || string.IsNullOrWhiteSpace(sfv.Hash))
+                    continue;
+
                 writer.WriteValues(new string[] { sfv.File, sfv.Hash });
                 writer.Flush();
             }
@@ -118,6 +123,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var md5 in md5s)
             {
+                if (md5 == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(md5.Hash) || string.IsNullOrWhiteSpace(md5.File))
+                    continue;
+
                 writer.WriteValues(new string[] { md5.Hash, md5.File });
                 writer.Flush();
             }
@@ -137,6 +147,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var sha1 in sha1s)
             {
+                if (sha1 == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(sha1.Hash) || string.IsNullOrWhiteSpace(sha1.File))
+                    continue;
+
                 writer.WriteValues(new string[] { sha1.Hash, sha1.File });
                 writer.Flush();
             }
@@ -156,6 +171,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var sha256 in sha256s)
             {
+                if (sha256 == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(sha256.Hash) || string.IsNullOrWhiteSpace(sha256.File))
+                    continue;
+
                 writer.WriteValues(new string[] { sha256.Hash, sha256.File });
                 writer.Flush();
             }
@@ -175,6 +195,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var sha384 in sha384s)
             {
+                if (sha384 == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(sha384.Hash) || string.IsNullOrWhiteSpace(sha384.File))
+                    continue;
+
                 writer.WriteValues(new string[] { sha384.Hash, sha384.File });
                 writer.Flush();
             }
@@ -194,6 +219,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var sha512 in sha512s)
             {
+                if (sha512 == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(sha512.Hash) || string.IsNullOrWhiteSpace(sha512.File))
+                    continue;
+
                 writer.WriteValues(new string[] { sha512.Hash, sha512.File });
                 writer.Flush();
             }
@@ -213,6 +243,11 @@ namespace SabreTools.Serialization
             // Loop through and write out the items
             foreach (var spamsum in spamsums)
             {
+                if (spamsum == null)
+                    continue;
+                if (string.IsNullOrWhiteSpace(spamsum.Hash) || string.IsNullOrWhiteSpace(spamsum.File))
+                    continue;
+
                 writer.WriteValues(new string[] { spamsum.Hash, spamsum.File });
                 writer.Flush();
             }

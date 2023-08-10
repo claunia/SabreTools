@@ -140,7 +140,7 @@ namespace SabreTools.Serialization
                 writer.WriteRequiredAttributeString("name", file.Name, throwOnError: true);
                 writer.WriteRequiredAttributeString("size", file.Size, throwOnError: true);
                 writer.WriteOptionalAttributeString("date", file.Date);
-                writer.WriteRequiredAttributeString("crc", file.CRC.ToUpperInvariant(), throwOnError: true);
+                writer.WriteRequiredAttributeString("crc", file.CRC?.ToUpperInvariant(), throwOnError: true);
 
                 writer.WriteEndElement(); // file
             }

@@ -39,7 +39,7 @@ namespace SabreTools.Serialization
             var dat = new MetadataFile();
 
             // Loop through and parse out the values
-            string lastTopLevel = reader.TopLevel;
+            string? lastTopLevel = reader.TopLevel;
 
             Game? game = null;
             var games = new List<Game>();
@@ -48,7 +48,6 @@ namespace SabreTools.Serialization
             var additional = new List<string>();
             var headerAdditional = new List<string>();
             var gameAdditional = new List<string>();
-            var fileAdditional = new List<string>();
             while (!reader.EndOfStream)
             {
                 // If we have no next line
@@ -102,7 +101,8 @@ namespace SabreTools.Serialization
                             game = new Game();
                             break;
                         default:
-                            additional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                additional.Add(reader.CurrentLine);
                             break;
                     }
                 }
@@ -137,7 +137,8 @@ namespace SabreTools.Serialization
                             dat.DosCenter.Comment = reader.Standalone?.Value;
                             break;
                         default:
-                            headerAdditional.Add(item: reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                headerAdditional.Add(item: reader.CurrentLine);
                             break;
                     }
                 }
@@ -154,7 +155,8 @@ namespace SabreTools.Serialization
                             game.Name = reader.Standalone?.Value;
                             break;
                         default:
-                            gameAdditional.Add(item: reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                gameAdditional.Add(item: reader.CurrentLine);
                             break;
                     }
                 }
@@ -165,18 +167,21 @@ namespace SabreTools.Serialization
                     // If we have an unknown type, log it
                     if (reader.InternalName != "file")
                     {
-                        gameAdditional.Add(reader.CurrentLine);
+                        if (reader.CurrentLine != null)
+                            gameAdditional.Add(reader.CurrentLine);
                         continue;
                     }
 
                     // Create the file and add to the list
                     var file = CreateFile(reader);
-                    files.Add(file);
+                    if (file != null)
+                        files.Add(file);
                 }
 
                 else
                 {
-                    additional.Add(item: reader.CurrentLine);
+                    if (reader.CurrentLine != null)
+                        additional.Add(item: reader.CurrentLine);
                 }
             }
 
@@ -191,8 +196,11 @@ namespace SabreTools.Serialization
         /// </summary>
         /// <param name="reader">ClrMameProReader representing the metadata file</param>
         /// <returns>File object created from the reader context</returns>
-        private static Models.DosCenter.File CreateFile(ClrMameProReader reader)
+        private static Models.DosCenter.File? CreateFile(ClrMameProReader reader)
         {
+            if (reader.Internal == null)
+                return null;
+
             var itemAdditional = new List<string>();
             var file = new Models.DosCenter.File();
             foreach (var kvp in reader.Internal)
@@ -212,7 +220,8 @@ namespace SabreTools.Serialization
                         file.Date = kvp.Value;
                         break;
                     default:
-                        itemAdditional.Add(item: reader.CurrentLine);
+                        if (reader.CurrentLine != null)
+                            itemAdditional.Add(item: reader.CurrentLine);
                         break;
                 }
             }

@@ -136,6 +136,9 @@ namespace SabreTools.Serialization
 
             foreach (var row in rows)
             {
+                if (string.IsNullOrWhiteSpace(row.Name))
+                    continue;
+
                 var rowBuilder = new StringBuilder();
 
                 int padding = 40 - (row.Size?.Length ?? 0);

@@ -129,7 +129,7 @@ namespace SabreTools.DatFiles.Formats
             ConvertMedia(game.Media, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertArchives(game.Archive, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertChips(game.Chip, machine, filename, indexId, statsOnly, ref containsItems);
-            ConvertVideo(game.Video, machine, filename, indexId, statsOnly, ref containsItems);
+            ConvertVideos(game.Video, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertSound(game.Sound, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertInput(game.Input, machine, filename, indexId, statsOnly, ref containsItems);
             ConvertDipSwitches(game.DipSwitch, machine, filename, indexId, statsOnly, ref containsItems);
@@ -431,47 +431,50 @@ namespace SabreTools.DatFiles.Formats
         /// <summary>
         /// Convert Video information
         /// </summary>
-        /// <param name="video">Deserialized model to convert</param>
+        /// <param name="video">Array of deserialized models to convert</param>
         /// <param name="machine">Prefilled machine to use</param>
         /// <param name="filename">Name of the file to be parsed</param>
         /// <param name="indexId">Index ID for the DAT</param>
         /// <param name="statsOnly">True to only add item statistics while parsing, false otherwise</param>
         /// <param name="containsItems">True if there were any items in the array, false otherwise</param>
-        private void ConvertVideo(Models.ClrMamePro.Video? video, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
+        private void ConvertVideos(Models.ClrMamePro.Video[]? videos, Machine machine, string filename, int indexId, bool statsOnly, ref bool containsItems)
         {
-            // If the video is missing, we can't do anything
-            if (video == null)
+            // If the video array is missing, we can't do anything
+            if (videos == null || !videos.Any())
                 return;
 
             containsItems = true;
-            var item = new Display
+            foreach (var video in videos)
             {
-                DisplayType = video.Screen?.AsDisplayType() ?? DisplayType.NULL,
-                Width = Utilities.CleanLong(video.X),
-                Height = Utilities.CleanLong(video.Y),
-                //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
-                //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
-                Refresh = Utilities.CleanDouble(video.Freq),
-
-                Source = new Source
+                var item = new Display
                 {
-                    Index = indexId,
-                    Name = filename,
-                },
-            };
+                    DisplayType = video.Screen?.AsDisplayType() ?? DisplayType.NULL,
+                    Width = Utilities.CleanLong(video.X),
+                    Height = Utilities.CleanLong(video.Y),
+                    //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
+                    //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
+                    Refresh = Utilities.CleanDouble(video.Freq),
 
-            switch (video.Orientation)
-            {
-                case "horizontal":
-                    item.Rotate = 0;
-                    break;
-                case "vertical":
-                    item.Rotate = 90;
-                    break;
+                    Source = new Source
+                    {
+                        Index = indexId,
+                        Name = filename,
+                    },
+                };
+
+                switch (video.Orientation)
+                {
+                    case "horizontal":
+                        item.Rotate = 0;
+                        break;
+                    case "vertical":
+                        item.Rotate = 90;
+                        break;
+                }
+
+                item.CopyMachineInformation(machine);
+                ParseAddHelper(item, statsOnly);
             }
-
-            item.CopyMachineInformation(machine);
-            ParseAddHelper(item, statsOnly);
         }
 
         /// <summary>

@@ -59,6 +59,9 @@ namespace SabreTools.IO
                 file.Read(bom, 0, 4);
                 file.Dispose();
 
+                // Disable warning about UTF7 usage
+                #pragma warning disable SYSLIB0001
+
                 // Analyze the BOM
                 if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
                 if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
@@ -66,6 +69,8 @@ namespace SabreTools.IO
                 if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
                 if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return Encoding.UTF32;
                 return Encoding.Default;
+
+                #pragma warning restore SYSLIB0001
             }
             catch
             {
@@ -78,14 +83,14 @@ namespace SabreTools.IO
         /// </summary>
         /// <param name="path">Path to get extension from</param>
         /// <returns>Extension, if possible</returns>
-        public static string GetNormalizedExtension(this string path)
+        public static string? GetNormalizedExtension(this string? path)
         {
             // Check null or empty first
             if (string.IsNullOrWhiteSpace(path))
                 return null;
 
             // Get the extension from the path, if possible
-            string ext = Path.GetExtension(path)?.ToLowerInvariant();
+            string? ext = Path.GetExtension(path)?.ToLowerInvariant();
 
             // Check if the extension is null or empty
             if (string.IsNullOrWhiteSpace(ext))
@@ -96,13 +101,13 @@ namespace SabreTools.IO
 
             return ext;
         }
-    
+
         /// <summary>
         /// Get all empty folders within a root folder
         /// </summary>
         /// <param name="root">Root directory to parse</param>
         /// <returns>IEumerable containing all directories that are empty, an empty enumerable if the root is empty, null otherwise</returns>
-        public static List<string> ListEmpty(this string root)
+        public static List<string>? ListEmpty(this string? root)
         {
             // Check null or empty first
             if (string.IsNullOrEmpty(root))

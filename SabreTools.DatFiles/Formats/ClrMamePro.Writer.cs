@@ -251,6 +251,7 @@ namespace SabreTools.DatFiles.Formats
                 var samples = new List<Models.ClrMamePro.Sample>();
                 var archives = new List<Models.ClrMamePro.Archive>();
                 var chips = new List<Models.ClrMamePro.Chip>();
+                var videos = new List<Models.ClrMamePro.Video>();
                 var dipswitches = new List<Models.ClrMamePro.DipSwitch>();
 
                 // Loop through and convert the items to respective lists
@@ -293,7 +294,7 @@ namespace SabreTools.DatFiles.Formats
                             chips.Add(CreateChip(chip));
                             break;
                         case Display display:
-                            game.Video = CreateVideo(display);
+                            videos.Add(CreateVideo(display));
                             break;
                         case Sound sound:
                             game.Sound = CreateSound(sound);
@@ -318,6 +319,9 @@ namespace SabreTools.DatFiles.Formats
                 game.Media = medias.ToArray();
                 game.Sample = samples.ToArray();
                 game.Archive = archives.ToArray();
+                game.Chip = chips.ToArray();
+                game.Video = videos.ToArray();
+                game.DipSwitch = dipswitches.ToArray();
 
                 // Add the game to the list
                 games.Add(game);

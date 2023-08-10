@@ -62,7 +62,7 @@ namespace SabreTools.Serialization
                     case IniRowType.Comment:
                         continue;
                     case IniRowType.SectionHeader:
-                        switch (reader.Section.ToLowerInvariant())
+                        switch (reader.Section?.ToLowerInvariant())
                         {
                             case "credits":
                                 dat.Credits ??= new Credits();
@@ -77,14 +77,15 @@ namespace SabreTools.Serialization
                                 dat.Games ??= new Games();
                                 break;
                             default:
-                                additional.Add(reader.CurrentLine);
+                                if (reader.CurrentLine != null)
+                                    additional.Add(reader.CurrentLine);
                                 break;
                         }
                         continue;
                 }
 
                 // If we're in credits
-                if (reader.Section.ToLowerInvariant() == "credits")
+                if (reader.Section?.ToLowerInvariant() == "credits")
                 {
                     // Create the section if we haven't already
                     dat.Credits ??= new Credits();
@@ -113,13 +114,14 @@ namespace SabreTools.Serialization
                             dat.Credits.Comment = reader.KeyValuePair?.Value;
                             break;
                         default:
-                            creditsAdditional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                creditsAdditional.Add(reader.CurrentLine);
                             break;
                     }
                 }
 
                 // If we're in dat
-                else if (reader.Section.ToLowerInvariant() == "dat")
+                else if (reader.Section?.ToLowerInvariant() == "dat")
                 {
                     // Create the section if we haven't already
                     dat.Dat ??= new Dat();
@@ -139,13 +141,14 @@ namespace SabreTools.Serialization
                             dat.Dat.Merge = reader.KeyValuePair?.Value;
                             break;
                         default:
-                            datAdditional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                datAdditional.Add(reader.CurrentLine);
                             break;
                     }
                 }
 
                 // If we're in emulator
-                else if (reader.Section.ToLowerInvariant() == "emulator")
+                else if (reader.Section?.ToLowerInvariant() == "emulator")
                 {
                     // Create the section if we haven't already
                     dat.Emulator ??= new Emulator();
@@ -159,21 +162,24 @@ namespace SabreTools.Serialization
                             dat.Emulator.Version = reader.KeyValuePair?.Value;
                             break;
                         default:
-                            emulatorAdditional.Add(reader.CurrentLine);
+                            if (reader.CurrentLine != null)
+                                emulatorAdditional.Add(reader.CurrentLine);
                             break;
                     }
                 }
 
                 // If we're in games
-                else if (reader.Section.ToLowerInvariant() == "games")
+                else if (reader.Section?.ToLowerInvariant() == "games")
                 {
                     // Create the section if we haven't already
                     dat.Games ??= new Games();
 
                     // If the line doesn't contain the delimiter
-                    if (!reader.CurrentLine.Contains('¬'))
+                    if (!(reader.CurrentLine?.Contains('¬') ?? false))
                     {
-                        gamesAdditional.Add(reader.CurrentLine);
+                        if (reader.CurrentLine != null)
+                            gamesAdditional.Add(reader.CurrentLine);
+
                         continue;
                     }
 
@@ -202,22 +208,23 @@ namespace SabreTools.Serialization
 
                 else
                 {
-                    additional.Add(item: reader.CurrentLine);
+                    if (reader.CurrentLine != null)
+                        additional.Add(reader.CurrentLine);
                 }
             }
 
             // Add extra pieces and return
-            dat.ADDITIONAL_ELEMENTS = additional.ToArray();
+            dat.ADDITIONAL_ELEMENTS = additional.Where(s => s != null).ToArray();
             if (dat.Credits != null)
-                dat.Credits.ADDITIONAL_ELEMENTS = creditsAdditional.ToArray();
+                dat.Credits.ADDITIONAL_ELEMENTS = creditsAdditional.Where(s => s != null).ToArray();
             if (dat.Dat != null)
-                dat.Dat.ADDITIONAL_ELEMENTS = datAdditional.ToArray();
+                dat.Dat.ADDITIONAL_ELEMENTS = datAdditional.Where(s => s != null).ToArray();
             if (dat.Emulator != null)
-                dat.Emulator.ADDITIONAL_ELEMENTS = emulatorAdditional.ToArray();
+                dat.Emulator.ADDITIONAL_ELEMENTS = emulatorAdditional.Where(s => s != null).ToArray();
             if (dat.Games != null)
             {
                 dat.Games.Rom = roms.ToArray();
-                dat.Games.ADDITIONAL_ELEMENTS = gamesAdditional.ToArray();
+                dat.Games.ADDITIONAL_ELEMENTS = gamesAdditional.Where(s => s != null).Select(s => s).ToArray();
             }
             return dat;
         }
