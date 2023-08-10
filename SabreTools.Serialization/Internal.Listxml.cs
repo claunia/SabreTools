@@ -811,6 +811,38 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Listxml.M1"/>
+        /// </summary>
+        public static Models.Listxml.M1? ConvertHeaderToListxmlM1(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var m1 = new Models.Listxml.M1
+            {
+                Version = item.ReadString(Models.Internal.Header.VersionKey),
+            };
+            return m1;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Listxml.Mame"/>
+        /// </summary>
+        public static Models.Listxml.Mame? ConvertHeaderToListxmlMame(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var mame = new Models.Listxml.Mame
+            {
+                Build = item.ReadString(Models.Internal.Header.BuildKey),
+                Debug = item.ReadString(Models.Internal.Header.DebugKey),
+                MameConfig = item.ReadString(Models.Internal.Header.MameConfigKey),
+            };
+            return mame;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listxml.GameBase"/>
         /// </summary>
         public static Models.Listxml.GameBase? ConvertMachineToListxml(Models.Internal.Machine? item)
@@ -1081,7 +1113,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Device"/> to <cref="Models.Listxml.Device"/>
         /// </summary>
-        private static Models.Listxml.Device ConvertToListxml(Models.Internal.Device item)
+        private static Models.Listxml.Device? ConvertToListxml(Models.Internal.Device? item)
         {
             if (item == null)
                 return null;

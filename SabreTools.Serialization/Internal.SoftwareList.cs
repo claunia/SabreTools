@@ -295,6 +295,23 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SoftwareList.SoftwareList"/>
+        /// </summary>
+        public static Models.SoftwareList.SoftwareList? ConvertHeaderToSoftwareList(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var softwareList = new Models.SoftwareList.SoftwareList
+            {
+                Name = item.ReadString(Models.Internal.Header.NameKey),
+                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
+                Notes = item.ReadString(Models.Internal.Header.NotesKey),
+            };
+            return softwareList;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.SoftwareList.Software"/>
         /// </summary>
         public static Models.SoftwareList.Software? ConvertMachineToSoftwareList(Models.Internal.Machine? item)

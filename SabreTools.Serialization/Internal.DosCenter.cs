@@ -13,7 +13,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.DosCenter.DosCenter"/> to <cref="Models.Internal.Header"/>
         /// </summary>
-        public static Models.Internal.Header ConvertHeaderFromArchiveDotOrg(Models.DosCenter.DosCenter item)
+        public static Models.Internal.Header ConvertHeaderFromDosCenter(Models.DosCenter.DosCenter item)
         {
             var header = new Models.Internal.Header
             {
@@ -69,6 +69,27 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.DosCenter.DosCenter"/>
+        /// </summary>
+        public static Models.DosCenter.DosCenter? ConvertHeaderToDosCenter(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var dosCenter = new Models.DosCenter.DosCenter
+            {
+                Name = item.ReadString(Models.Internal.Header.NameKey),
+                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
+                Version = item.ReadString(Models.Internal.Header.VersionKey),
+                Date = item.ReadString(Models.Internal.Header.DateKey),
+                Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                Comment = item.ReadString(Models.Internal.Header.CommentKey),
+            };
+            return dosCenter;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.DosCenter.Game"/>

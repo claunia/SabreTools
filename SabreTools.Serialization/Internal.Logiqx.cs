@@ -353,6 +353,68 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Logiqx.Header"/>
+        /// </summary>
+        public static Models.Logiqx.Header? ConvertHeaderToLogiqx(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = new Models.Logiqx.Header
+            {
+                Id = item.ReadString(Models.Internal.Header.IdKey),
+                Name = item.ReadString(Models.Internal.Header.NameKey),
+                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
+                RootDir = item.ReadString(Models.Internal.Header.RootDirKey),
+                Category = item.ReadString(Models.Internal.Header.CategoryKey),
+                Version = item.ReadString(Models.Internal.Header.VersionKey),
+                Date = item.ReadString(Models.Internal.Header.DateKey),
+                Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                Email = item.ReadString(Models.Internal.Header.EmailKey),
+                Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                Url = item.ReadString(Models.Internal.Header.UrlKey),
+                Comment = item.ReadString(Models.Internal.Header.CommentKey),
+                Type = item.ReadString(Models.Internal.Header.TypeKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Header.HeaderKey)
+                || item.ContainsKey(Models.Internal.Header.ForceMergingKey)
+                || item.ContainsKey(Models.Internal.Header.ForceNodumpKey)
+                || item.ContainsKey(Models.Internal.Header.ForcePackingKey))
+            {
+                header.ClrMamePro = new Models.Logiqx.ClrMamePro
+                {
+                    Header = item.ReadString(Models.Internal.Header.HeaderKey),
+                    ForceMerging = item.ReadString(Models.Internal.Header.ForceMergingKey),
+                    ForceNodump = item.ReadString(Models.Internal.Header.ForceNodumpKey),
+                    ForcePacking = item.ReadString(Models.Internal.Header.ForcePackingKey),
+                };
+            }
+
+            if (item.ContainsKey(Models.Internal.Header.PluginKey)
+                || item.ContainsKey(Models.Internal.Header.RomModeKey)
+                || item.ContainsKey(Models.Internal.Header.BiosModeKey)
+                || item.ContainsKey(Models.Internal.Header.SampleModeKey)
+                || item.ContainsKey(Models.Internal.Header.LockRomModeKey)
+                || item.ContainsKey(Models.Internal.Header.LockBiosModeKey)
+                || item.ContainsKey(Models.Internal.Header.LockSampleModeKey))
+            {
+                header.RomCenter = new Models.Logiqx.RomCenter
+                {
+                    Plugin = item.ReadString(Models.Internal.Header.PluginKey),
+                    RomMode = item.ReadString(Models.Internal.Header.RomModeKey),
+                    BiosMode = item.ReadString(Models.Internal.Header.BiosModeKey),
+                    SampleMode = item.ReadString(Models.Internal.Header.SampleModeKey),
+                    LockRomMode = item.ReadString(Models.Internal.Header.LockRomModeKey),
+                    LockBiosMode = item.ReadString(Models.Internal.Header.LockBiosModeKey),
+                    LockSampleMode = item.ReadString(Models.Internal.Header.LockSampleModeKey),
+                };
+            }
+
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
         public static Models.Logiqx.GameBase? ConvertMachineToLogiqx(Models.Internal.Machine? item, bool game = false)

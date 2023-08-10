@@ -84,6 +84,62 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.RomCenter.MetadataFile"/>
+        /// </summary>
+        public static Models.RomCenter.MetadataFile? ConvertHeaderToRomCenter(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new Models.RomCenter.MetadataFile();
+
+            if (item.ContainsKey(Models.Internal.Header.AuthorKey)
+                || item.ContainsKey(Models.Internal.Header.VersionKey)
+                || item.ContainsKey(Models.Internal.Header.EmailKey)
+                || item.ContainsKey(Models.Internal.Header.HomepageKey)
+                || item.ContainsKey(Models.Internal.Header.UrlKey)
+                || item.ContainsKey(Models.Internal.Header.DateKey)
+                || item.ContainsKey(Models.Internal.Header.CommentKey))
+            {
+                metadataFile.Credits = new Models.RomCenter.Credits
+                {
+                    Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                    Version = item.ReadString(Models.Internal.Header.VersionKey),
+                    Email = item.ReadString(Models.Internal.Header.EmailKey),
+                    Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                    Url = item.ReadString(Models.Internal.Header.UrlKey),
+                    Date = item.ReadString(Models.Internal.Header.DateKey),
+                    Comment = item.ReadString(Models.Internal.Header.CommentKey),
+                };
+            }
+
+            if (item.ContainsKey(Models.Internal.Header.DatVersionKey)
+                || item.ContainsKey(Models.Internal.Header.PluginKey)
+                || item.ContainsKey(Models.Internal.Header.ForceMergingKey))
+            {
+                metadataFile.Dat = new Models.RomCenter.Dat
+                {
+                    Version = item.ReadString(Models.Internal.Header.DatVersionKey),
+                    Plugin = item.ReadString(Models.Internal.Header.PluginKey),
+                    Split = item.ReadString(Models.Internal.Header.ForceMergingKey) == "split" ? "yes" : "no",
+                    Merge = item.ReadString(Models.Internal.Header.ForceMergingKey) == "merge" ? "yes" : "no",
+                };
+            }
+
+            if (item.ContainsKey(Models.Internal.Header.RefNameKey)
+                || item.ContainsKey(Models.Internal.Header.EmulatorVersionKey))
+            {
+                metadataFile.Emulator = new Models.RomCenter.Emulator
+                {
+                    RefName = item.ReadString(Models.Internal.Header.RefNameKey),
+                    Version = item.ReadString(Models.Internal.Header.EmulatorVersionKey),
+                };
+            }
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.RomCenter.Rom"/>
         /// </summary>
         public static Models.RomCenter.Rom?[]? ConvertMachineToRomCenter(Models.Internal.Machine? item)

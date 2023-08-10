@@ -13,7 +13,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Models.Internal.Header"/>
         /// </summary>
-        public static Models.Internal.Header ConvertHeaderFromArchiveDotOrg(Models.SeparatedValue.MetadataFile item)
+        public static Models.Internal.Header ConvertHeaderFromSeparatedValue(Models.SeparatedValue.MetadataFile item)
         {
             var header = new Models.Internal.Header
             {
@@ -103,6 +103,21 @@ namespace SabreTools.Serialization
         #endregion
 
         #region Deserialize
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SeparatedValue.MetadataFile"/>
+        /// </summary>
+        public static Models.SeparatedValue.MetadataFile? ConvertHeaderToSeparatedValue(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new Models.SeparatedValue.MetadataFile
+            {
+                Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
+            };
+            return metadataFile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.SeparatedValue.Row"/>

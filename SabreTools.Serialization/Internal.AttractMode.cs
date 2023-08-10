@@ -72,6 +72,21 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.AttractMode.MetadataFile"/>
+        /// </summary>
+        public static Models.AttractMode.MetadataFile? ConvertHeaderToAttractMode(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new Models.AttractMode.MetadataFile
+            {
+                Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
+            };
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
         /// </summary>
         public static Models.AttractMode.Row?[]? ConvertMachineToAttractMode(Models.Internal.Machine? item)

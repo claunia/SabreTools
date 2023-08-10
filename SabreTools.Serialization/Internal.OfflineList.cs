@@ -110,6 +110,58 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.OfflineList.Dat"/>
+        /// </summary>
+        public static Models.OfflineList.Dat? ConvertHeaderToOfflineList(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var dat = new Models.OfflineList.Dat
+            {
+                NoNamespaceSchemaLocation = item.ReadString(Models.Internal.Header.NoNamespaceSchemaLocationKey),
+            };
+
+            if (item.ContainsKey(Models.Internal.Header.NameKey)
+                || item.ContainsKey(Models.Internal.Header.ImFolderKey)
+                || item.ContainsKey(Models.Internal.Header.DatVersionKey)
+                || item.ContainsKey(Models.Internal.Header.SystemKey)
+                || item.ContainsKey(Models.Internal.Header.ScreenshotsWidthKey)
+                || item.ContainsKey(Models.Internal.Header.ScreenshotsHeightKey)
+                || item.ContainsKey(Models.Internal.Header.InfosKey)
+                || item.ContainsKey(Models.Internal.Header.CanOpenKey)
+                || item.ContainsKey(Models.Internal.Header.NewDatKey)
+                || item.ContainsKey(Models.Internal.Header.SearchKey)
+                || item.ContainsKey(Models.Internal.Header.RomTitleKey))
+            {
+                dat.Configuration = new Models.OfflineList.Configuration
+                {
+                    DatName = item.ReadString(Models.Internal.Header.NameKey),
+                    ImFolder = item.ReadString(Models.Internal.Header.ImFolderKey),
+                    DatVersion = item.ReadString(Models.Internal.Header.DatVersionKey),
+                    System = item.ReadString(Models.Internal.Header.SystemKey),
+                    ScreenshotsWidth = item.ReadString(Models.Internal.Header.ScreenshotsWidthKey),
+                    ScreenshotsHeight = item.ReadString(Models.Internal.Header.ScreenshotsHeightKey),
+                    Infos = item.Read<Models.OfflineList.Infos>(Models.Internal.Header.InfosKey),
+                    CanOpen = item.Read<Models.OfflineList.CanOpen>(Models.Internal.Header.CanOpenKey),
+                    NewDat = item.Read<Models.OfflineList.NewDat>(Models.Internal.Header.NewDatKey),
+                    Search = item.Read<Models.OfflineList.Search>(Models.Internal.Header.SearchKey),
+                    RomTitle = item.ReadString(Models.Internal.Header.RomTitleKey),
+                };
+            }
+
+            if (item.ContainsKey(Models.Internal.Header.ImagesKey))
+            {
+                dat.GUI = new Models.OfflineList.GUI
+                {
+                    Images = item.Read<Models.OfflineList.Images>(Models.Internal.Header.ImagesKey),
+                };
+            }
+
+            return dat;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OfflineList.Game"/>
         /// </summary>
         public static Models.OfflineList.Game? ConvertMachineToOfflineList(Models.Internal.Machine? item)

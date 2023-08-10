@@ -26,10 +26,6 @@ namespace SabreTools.Models.Internal
         /// <remarks>string</remarks>
         public const string CommentKey = "comment";
 
-        /// TODO: This needs an internal model OR mapping to fields
-        /// <remarks>Configuration</remarks>
-        public const string ConfigurationKey = "configuration";
-
         /// <remarks>string</remarks>
         public const string DateKey = "date";
 

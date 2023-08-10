@@ -374,7 +374,36 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.ClrMamePro.ClrMamePro"/>
+        /// </summary>
+        public static Models.ClrMamePro.ClrMamePro? ConvertHeaderToClrMamePro(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var clrMamePro = new Models.ClrMamePro.ClrMamePro
+            {
+                Name = item.ReadString(Models.Internal.Header.NameKey),
+                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
+                RootDir = item.ReadString(Models.Internal.Header.RootDirKey),
+                Category = item.ReadString(Models.Internal.Header.CategoryKey),
+                Version = item.ReadString(Models.Internal.Header.VersionKey),
+                Date = item.ReadString(Models.Internal.Header.DateKey),
+                Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                Url = item.ReadString(Models.Internal.Header.UrlKey),
+                Comment = item.ReadString(Models.Internal.Header.CommentKey),
+                Header = item.ReadString(Models.Internal.Header.HeaderKey),
+                Type = item.ReadString(Models.Internal.Header.TypeKey),
+                ForceMerging = item.ReadString(Models.Internal.Header.ForceMergingKey),
+                ForceZipping = item.ReadString(Models.Internal.Header.ForceZippingKey),
+                ForcePacking = item.ReadString(Models.Internal.Header.ForcePackingKey),
+            };
+            return clrMamePro;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Machine"/>
         /// </summary>
         public static Models.ClrMamePro.GameBase? ConvertMachineToClrMamePro(Models.Internal.Machine? item, bool game = false)
         {
