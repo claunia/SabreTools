@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using SabreTools.IO.Readers;
 using SabreTools.Models.ClrMamePro;
@@ -828,5 +829,350 @@ namespace SabreTools.Serialization
             driver.ADDITIONAL_ELEMENTS = itemAdditional.ToArray();
             return driver;
         }
+    
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.ClrMamePro.ClrMamePro"/>
+        /// </summary>
+        public static Models.ClrMamePro.ClrMamePro? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var clrMamePro = new Models.ClrMamePro.ClrMamePro
+            {
+                Name = item.ReadString(Models.Internal.Header.NameKey),
+                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
+                RootDir = item.ReadString(Models.Internal.Header.RootDirKey),
+                Category = item.ReadString(Models.Internal.Header.CategoryKey),
+                Version = item.ReadString(Models.Internal.Header.VersionKey),
+                Date = item.ReadString(Models.Internal.Header.DateKey),
+                Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                Url = item.ReadString(Models.Internal.Header.UrlKey),
+                Comment = item.ReadString(Models.Internal.Header.CommentKey),
+                Header = item.ReadString(Models.Internal.Header.HeaderKey),
+                Type = item.ReadString(Models.Internal.Header.TypeKey),
+                ForceMerging = item.ReadString(Models.Internal.Header.ForceMergingKey),
+                ForceZipping = item.ReadString(Models.Internal.Header.ForceZippingKey),
+                ForcePacking = item.ReadString(Models.Internal.Header.ForcePackingKey),
+            };
+            return clrMamePro;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Machine"/>
+        /// </summary>
+        public static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
+        {
+            if (item == null)
+                return null;
+
+            GameBase gameBase = game ? new Models.ClrMamePro.Game() : new Models.ClrMamePro.Machine();
+
+            gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
+            gameBase.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
+            gameBase.Year = item.ReadString(Models.Internal.Machine.YearKey);
+            gameBase.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
+            gameBase.Category = item.ReadString(Models.Internal.Machine.CategoryKey);
+            gameBase.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
+            gameBase.RomOf = item.ReadString(Models.Internal.Machine.RomOfKey);
+            gameBase.SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey);
+
+            var releases = item.Read<Models.Internal.Release[]>(Models.Internal.Machine.ReleaseKey);
+            gameBase.Release = releases?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
+            gameBase.BiosSet = biosSets?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            gameBase.Rom = roms?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            gameBase.Disk = disks?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var medias = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
+            gameBase.Media = medias?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
+            gameBase.Sample = samples?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var archives = item.Read<Models.Internal.Archive[]>(Models.Internal.Machine.ArchiveKey);
+            gameBase.Archive = archives?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var chips = item.Read<Models.Internal.Chip[]>(Models.Internal.Machine.ChipKey);
+            gameBase.Chip = chips?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var video = item.Read<Models.Internal.Video>(Models.Internal.Machine.VideoKey);
+            gameBase.Video = ConvertFromInternalModel(video);
+
+            var sound = item.Read<Models.Internal.Sound>(Models.Internal.Machine.SoundKey);
+            gameBase.Sound = ConvertFromInternalModel(sound);
+
+            var input = item.Read<Models.Internal.Input>(Models.Internal.Machine.InputKey);
+            gameBase.Input = ConvertFromInternalModel(input);
+
+            var dipSwitches = item.Read<Models.Internal.DipSwitch[]>(Models.Internal.Machine.DipSwitchKey);
+            gameBase.DipSwitch = dipSwitches?.Select(ConvertFromInternalModel)?.ToArray();
+
+            var driver = item.Read<Models.Internal.Driver>(Models.Internal.Machine.DriverKey);
+            gameBase.Driver = ConvertFromInternalModel(driver);
+
+            return gameBase;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Archive"/>
+        /// </summary>
+        private static Archive? ConvertFromInternalModel(Models.Internal.Archive? item)
+        {
+            if (item == null)
+                return null;
+
+            var archive = new Archive
+            {
+                Name = item.ReadString(Models.Internal.Archive.NameKey),
+            };
+            return archive;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.ClrMamePro.BiosSet"/>
+        /// </summary>
+        private static BiosSet? ConvertFromInternalModel(Models.Internal.BiosSet? item)
+        {
+            if (item == null)
+                return null;
+
+            var biosset = new BiosSet
+            {
+                Name = item.ReadString(Models.Internal.BiosSet.NameKey),
+                Description = item.ReadString(Models.Internal.BiosSet.DescriptionKey),
+                Default = item.ReadString(Models.Internal.BiosSet.DefaultKey),
+            };
+            return biosset;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Chip"/> to <cref="Models.ClrMamePro.Chip"/>
+        /// </summary>
+        private static Chip? ConvertFromInternalModel(Models.Internal.Chip? item)
+        {
+            if (item == null)
+                return null;
+
+            var chip = new Chip
+            {
+                Type = item.ReadString(Models.Internal.Chip.ChipTypeKey),
+                Name = item.ReadString(Models.Internal.Chip.NameKey),
+                Flags = item.ReadString(Models.Internal.Chip.FlagsKey),
+                Clock = item.ReadString(Models.Internal.Chip.ClockKey),
+            };
+            return chip;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.DipSwitch"/> to <cref="Models.ClrMamePro.DipSwitch"/>
+        /// </summary>
+        private static DipSwitch? ConvertFromInternalModel(Models.Internal.DipSwitch? item)
+        {
+            if (item == null)
+                return null;
+
+            var dipswitch = new DipSwitch
+            {
+                Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
+                Entry = item[Models.Internal.DipSwitch.EntryKey] as string[],
+                Default = item.ReadString(Models.Internal.DipSwitch.DefaultKey),
+            };
+            return dipswitch;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.ClrMamePro.Disk"/>
+        /// </summary>
+        private static Disk? ConvertFromInternalModel(Models.Internal.Disk? item)
+        {
+            if (item == null)
+                return null;
+
+            var disk = new Disk
+            {
+                Name = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Merge = item.ReadString(Models.Internal.Disk.MergeKey),
+                Status = item.ReadString(Models.Internal.Disk.StatusKey),
+                Flags = item.ReadString(Models.Internal.Disk.FlagsKey),
+            };
+            return disk;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.ClrMamePro.Driver"/>
+        /// </summary>
+        private static Driver? ConvertFromInternalModel(Models.Internal.Driver? item)
+        {
+            if (item == null)
+                return null;
+
+            var driver = new Driver
+            {
+                Status = item.ReadString(Models.Internal.Driver.StatusKey),
+                Color = item.ReadString(Models.Internal.Driver.ColorKey),
+                Sound = item.ReadString(Models.Internal.Driver.SoundKey),
+                PaletteSize = item.ReadString(Models.Internal.Driver.PaletteSizeKey),
+                Blit = item.ReadString(Models.Internal.Driver.BlitKey),
+            };
+            return driver;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Input"/> to <cref="Models.ClrMamePro.Input"/>
+        /// </summary>
+        private static Input? ConvertFromInternalModel(Models.Internal.Input? item)
+        {
+            if (item == null)
+                return null;
+
+            var input = new Input
+            {
+                Players = item.ReadString(Models.Internal.Input.PlayersKey),
+                Control = item.ReadString(Models.Internal.Input.ControlKey),
+                Buttons = item.ReadString(Models.Internal.Input.ButtonsKey),
+                Coins = item.ReadString(Models.Internal.Input.CoinsKey),
+                Tilt = item.ReadString(Models.Internal.Input.TiltKey),
+                Service = item.ReadString(Models.Internal.Input.ServiceKey),
+            };
+            return input;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.ClrMamePro.Media"/>
+        /// </summary>
+        private static Media? ConvertFromInternalModel(Models.Internal.Media? item)
+        {
+            if (item == null)
+                return null;
+
+            var media = new Media
+            {
+                Name = item.ReadString(Models.Internal.Media.NameKey),
+                MD5 = item.ReadString(Models.Internal.Media.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Media.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Media.SHA256Key),
+                SpamSum = item.ReadString(Models.Internal.Media.SpamSumKey),
+            };
+            return media;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.ClrMamePro.Release"/>
+        /// </summary>
+        private static Release? ConvertFromInternalModel(Models.Internal.Release? item)
+        {
+            if (item == null)
+                return null;
+
+            var release = new Release
+            {
+                Name = item.ReadString(Models.Internal.Release.NameKey),
+                Region = item.ReadString(Models.Internal.Release.RegionKey),
+                Language = item.ReadString(Models.Internal.Release.LanguageKey),
+                Date = item.ReadString(Models.Internal.Release.DateKey),
+                Default = item.ReadString(Models.Internal.Release.DefaultKey),
+            };
+            return release;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.ClrMamePro.Rom"/>
+        /// </summary>
+        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item)
+        {
+            if (item == null)
+                return null;
+
+            var rom = new Rom
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
+                SHA384 = item.ReadString(Models.Internal.Rom.SHA384Key),
+                SHA512 = item.ReadString(Models.Internal.Rom.SHA512Key),
+                SpamSum = item.ReadString(Models.Internal.Rom.SpamSumKey),
+                xxHash364 = item.ReadString(Models.Internal.Rom.xxHash364Key),
+                xxHash3128 = item.ReadString(Models.Internal.Rom.xxHash3128Key),
+                Merge = item.ReadString(Models.Internal.Rom.MergeKey),
+                Status = item.ReadString(Models.Internal.Rom.StatusKey),
+                Region = item.ReadString(Models.Internal.Rom.RegionKey),
+                Flags = item.ReadString(Models.Internal.Rom.FlagsKey),
+                Offs = item.ReadString(Models.Internal.Rom.OffsetKey),
+                Serial = item.ReadString(Models.Internal.Rom.SerialKey),
+                Header = item.ReadString(Models.Internal.Rom.HeaderKey),
+                Date = item.ReadString(Models.Internal.Rom.DateKey),
+                Inverted = item.ReadString(Models.Internal.Rom.InvertedKey),
+                MIA = item.ReadString(Models.Internal.Rom.MIAKey),
+            };
+            return rom;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.ClrMamePro.Sample"/>
+        /// </summary>
+        private static Sample? ConvertFromInternalModel(Models.Internal.Sample? item)
+        {
+            if (item == null)
+                return null;
+
+            var sample = new Sample
+            {
+                Name = item.ReadString(Models.Internal.Sample.NameKey),
+            };
+            return sample;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Sound"/> to <cref="Models.ClrMamePro.Sound"/>
+        /// </summary>
+        private static Sound? ConvertFromInternalModel(Models.Internal.Sound? item)
+        {
+            if (item == null)
+                return null;
+
+            var sound = new Sound
+            {
+                Channels = item.ReadString(Models.Internal.Sound.ChannelsKey),
+            };
+            return sound;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Video"/> to <cref="Models.ClrMamePro.Video"/>
+        /// </summary>
+        private static Video? ConvertFromInternalModel(Models.Internal.Video? item)
+        {
+            if (item == null)
+                return null;
+
+            var video = new Video
+            {
+                Screen = item.ReadString(Models.Internal.Video.ScreenKey),
+                Orientation = item.ReadString(Models.Internal.Video.OrientationKey),
+                X = item.ReadString(Models.Internal.Video.WidthKey),
+                Y = item.ReadString(Models.Internal.Video.HeightKey),
+                AspectX = item.ReadString(Models.Internal.Video.AspectXKey),
+                AspectY = item.ReadString(Models.Internal.Video.AspectYKey),
+                Freq = item.ReadString(Models.Internal.Video.RefreshKey),
+            };
+            return video;
+        }
+
+        #endregion
     }
 }
