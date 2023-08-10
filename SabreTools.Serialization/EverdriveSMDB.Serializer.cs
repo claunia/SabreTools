@@ -82,5 +82,66 @@ namespace SabreTools.Serialization
                 writer.Flush();
             }
         }
+
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// </summary>
+        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        {
+            var metadataFile = new Models.Internal.MetadataFile
+            {
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+            };
+
+            if (item?.Row != null && item.Row.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Row.Select(ConvertMachineToInternalModel).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref=Models.Internal."Header"/>
+        /// </summary>
+        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = "Everdrive SMDB",
+            };
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.EverdriveSMDB.Row"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine ConvertMachineToInternalModel(Row item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.RomKey] = ConvertToInternalModel(item),
+            };
+            return machine;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.EverdriveSMDB.Row"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        private static Models.Internal.Rom ConvertToInternalModel(Row item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.SHA256Key] = item.SHA256,
+                [Models.Internal.Rom.NameKey] = item.Name,
+                [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                [Models.Internal.Rom.MD5Key] = item.MD5,
+                [Models.Internal.Rom.CRCKey] = item.CRC32,
+                [Models.Internal.Rom.SizeKey] = item.Size,
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }

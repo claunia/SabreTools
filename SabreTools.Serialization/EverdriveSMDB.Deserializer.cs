@@ -76,5 +76,42 @@ namespace SabreTools.Serialization
             dat.Row = rows.ToArray();
             return dat;
         }
+
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.EverdriveSMDB.Row"/>
+        /// </summary>
+        public static Row[]? ConvertMachineToEverdriveSMDB(Models.Internal.Machine item)
+        {
+            if (item == null)
+                return null;
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(ConvertToEverdriveSMDB)?.ToArray();
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
+        /// </summary>
+        private static Row? ConvertToEverdriveSMDB(Models.Internal.Rom? item)
+        {
+            if (item == null)
+                return null;
+
+            var row = new Row
+            {
+                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
+                CRC32 = item.ReadString(Models.Internal.Rom.CRCKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+            };
+            return row;
+        }
+
+        #endregion
     }
 }
