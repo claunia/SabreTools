@@ -11,9 +11,45 @@ namespace SabreTools.Serialization
         #region Internal
 
         /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.Listxml.M1"/>
+        /// </summary>
+        public static M1? ConvertM1FromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var m1 = header != null ? ConvertM1FromInternalModel(header) : new M1();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                m1.Game = machines.Select(ConvertMachineFromInternalModel).ToArray();
+
+            return m1;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.Listxml.Mame"/>
+        /// </summary>
+        public static Mame? ConvertMameFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var mame = header != null ? ConvertMameFromInternalModel(header) : new Mame();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                mame.Game = machines.Select(ConvertMachineFromInternalModel).ToArray();
+
+            return mame;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Listxml.M1"/>
         /// </summary>
-        public static M1? ConvertM1FromInternalModel(Models.Internal.Header? item)
+        private static M1? ConvertM1FromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -28,7 +64,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Listxml.Mame"/>
         /// </summary>
-        public static Mame? ConvertMameFromInternalModel(Models.Internal.Header? item)
+        private static Mame? ConvertMameFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -39,13 +75,14 @@ namespace SabreTools.Serialization
                 Debug = item.ReadString(Models.Internal.Header.DebugKey),
                 MameConfig = item.ReadString(Models.Internal.Header.MameConfigKey),
             };
+
             return mame;
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listxml.GameBase"/>
         /// </summary>
-        public static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;

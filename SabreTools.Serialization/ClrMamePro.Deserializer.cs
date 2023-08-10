@@ -830,13 +830,33 @@ namespace SabreTools.Serialization
             return driver;
         }
     
-        // TODO: Add deserialization of entire MetadataFile
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.ClrMamePro.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item, bool game = false)
+        {
+            if (item == null)
+                return null;
+            
+            var metadataFile = new MetadataFile();
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            if (header != null)
+                metadataFile.ClrMamePro = ConvertHeaderFromInternalModel(header);
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                metadataFile.Game = machines.Select(machine => ConvertMachineFromInternalModel(machine, game)).ToArray();
+
+            return metadataFile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.ClrMamePro.ClrMamePro"/>
         /// </summary>
-        public static Models.ClrMamePro.ClrMamePro? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static Models.ClrMamePro.ClrMamePro? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -865,7 +885,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.ClrMamePro.Machine"/>
         /// </summary>
-        public static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
+        private static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
         {
             if (item == null)
                 return null;

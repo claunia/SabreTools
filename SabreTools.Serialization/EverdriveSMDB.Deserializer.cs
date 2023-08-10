@@ -77,25 +77,41 @@ namespace SabreTools.Serialization
             return dat;
         }
 
-        // TODO: Add deserialization of entire MetadataFile
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.EverdriveSMDB.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new MetadataFile();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                metadataFile.Row = machines.SelectMany(ConvertMachineFromInternalModel).ToArray();
+
+            return metadataFile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        public static Row[]? ConvertMachineToEverdriveSMDB(Models.Internal.Machine item)
+        private static Row[]? ConvertMachineFromInternalModel(Models.Internal.Machine item)
         {
             if (item == null)
                 return null;
 
             var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
-            return roms?.Select(ConvertToEverdriveSMDB)?.ToArray();
+            return roms?.Select(ConvertFromInternalModel)?.ToArray();
         }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.EverdriveSMDB.Row"/>
         /// </summary>
-        private static Row? ConvertToEverdriveSMDB(Models.Internal.Rom? item)
+        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;

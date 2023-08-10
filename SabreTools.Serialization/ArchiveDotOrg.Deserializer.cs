@@ -8,13 +8,29 @@ namespace SabreTools.Serialization
     /// </summary>
     public partial class ArchiveDotOrg : XmlSerializer<Files>
     {
-        // TODO: Add deserialization of entire Files
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to an array of <cref="Models.ArchiveDotOrg.Files"/>
+        /// </summary>
+        public static Files? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var files = new Files();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                files.File = machines.SelectMany(ConvertFromInternalModel).ToArray();
+
+            return files;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.ArchiveDotOrg.File"/>
         /// </summary>
-        public static File[]? ConvertFromInternalModel(Models.Internal.Machine? item)
+        private static File[]? ConvertFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;

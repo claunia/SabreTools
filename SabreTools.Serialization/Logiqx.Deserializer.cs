@@ -8,13 +8,39 @@ namespace SabreTools.Serialization
     /// </summary>
     public partial class Logiqx : XmlSerializer<Datafile>
     {
-        // TODO: Add deserialization of entire Datafile
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.Logiqx.Datafile"/>
+        /// </summary>
+        public static Datafile? ConvertFromInternalModel(Models.Internal.MetadataFile? item, bool game = false)
+        {
+            if (item == null)
+                return null;
+
+            var datafile = new Datafile
+            {
+                Build = item.ReadString(Models.Internal.Header.BuildKey),
+                Debug = item.ReadString(Models.Internal.Header.DebugKey),
+                SchemaLocation = item.ReadString(Models.Internal.Header.SchemaLocationKey),
+            };
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            if (header != null)
+                datafile.Header = ConvertHeaderFromInternalModel(header);
+
+            // TODO: Handle Dir items
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                datafile.Game = machines.Select(machine => ConvertMachineFromInternalModel(machine, game)).ToArray();
+            
+            return datafile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Logiqx.Header"/>
         /// </summary>
-        public static Header? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static Header ConvertHeaderFromInternalModel(Models.Internal.Header item)
         {
             if (item == null)
                 return null;
@@ -76,7 +102,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Logiqx.GameBase"/>
         /// </summary>
-        public static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
+        private static GameBase? ConvertMachineFromInternalModel(Models.Internal.Machine? item, bool game = false)
         {
             if (item == null)
                 return null;

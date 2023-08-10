@@ -8,13 +8,30 @@ namespace SabreTools.Serialization
     /// </summary>
     public partial class OpenMSX : XmlSerializer<SoftwareDb>
     {
-        // TODO: Add deserialization of entire SoftwareDb
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.OpenMSX.SoftwareDb"/>
+        /// </summary>
+        public static SoftwareDb? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var softwareDb = header != null ? ConvertHeaderFromInternalModel(header) : new SoftwareDb();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                softwareDb.Software = machines.Select(ConvertMachineFromInternalModel).ToArray();
+            
+            return softwareDb;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.OpenMSX.SoftwareDb"/>
         /// </summary>
-        public static SoftwareDb? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static SoftwareDb? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -29,7 +46,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OpenMSX.Software"/>
         /// </summary>
-        public static Software? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Software? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;

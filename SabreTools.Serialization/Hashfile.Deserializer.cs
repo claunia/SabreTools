@@ -142,13 +142,27 @@ namespace SabreTools.Serialization
             return dat;
         }
 
-        // TODO: Add deserialization of entire Hashfile
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to an array of <cref="Models.Hashfile.Hashfile"/>
+        /// </summary>
+        public static Models.Hashfile.Hashfile[]? ConvertFromInternalModel(Models.Internal.MetadataFile? item, Hash hash)
+        {
+            if (item == null)
+                return null;
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                return machines.Select(machine => ConvertMachineFromInternalModel(machine, hash)).ToArray();
+            
+            return null;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Hashfile.Hashfile"/>
         /// </summary>
-        public static Models.Hashfile.Hashfile? ConvertMachineToInternalModel(Models.Internal.Machine? item, Hash hash)
+        private static Models.Hashfile.Hashfile? ConvertMachineFromInternalModel(Models.Internal.Machine? item, Hash hash)
         {
             if (item == null)
                 return null;

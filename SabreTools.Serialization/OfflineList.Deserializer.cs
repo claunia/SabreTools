@@ -8,13 +8,30 @@ namespace SabreTools.Serialization
     /// </summary>
     public partial class OfflineList : XmlSerializer<Dat>
     {
-        // TODO: Add deserialization of entire Dat
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.OfflineList.Dat"/>
+        /// </summary>
+        public static Dat? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var dat = header != null ? ConvertHeaderFromInternalModel(header) : new Dat();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                dat.Games = new Games { Game = machines.Select(ConvertMachineFromInternalModel).ToArray() };
+            
+            return dat;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.OfflineList.Dat"/>
         /// </summary>
-        public static Dat? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static Dat? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -66,7 +83,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.OfflineList.Game"/>
         /// </summary>
-        public static Game? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Game? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;

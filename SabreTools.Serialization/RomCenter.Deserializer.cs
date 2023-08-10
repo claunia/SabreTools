@@ -221,13 +221,30 @@ namespace SabreTools.Serialization
             return dat;
         }
 
-        // TODO: Add deserialization of entire MetadataFile
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.RomCenter.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var metadataFile = header != null ? ConvertHeaderFromInternalModel(header) : new MetadataFile();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                metadataFile.Games = new Games { Rom = machines.SelectMany(ConvertMachineFromInternalModel).ToArray() };
+            
+            return metadataFile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.RomCenter.MetadataFile"/>
         /// </summary>
-        public static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -283,7 +300,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.RomCenter.Rom"/>
         /// </summary>
-        public static Rom?[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Rom?[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;

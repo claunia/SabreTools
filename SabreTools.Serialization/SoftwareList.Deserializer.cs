@@ -8,13 +8,30 @@ namespace SabreTools.Serialization
     /// </summary>
     public partial class SoftawreList : XmlSerializer<SoftwareList>
     {
-        // TODO: Add deserialization of entire SoftwareList
-        #region Deserialize
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.SoftawreList.SoftwareList"/>
+        /// </summary>
+        public static SoftwareList? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var metadataFile = header != null ? ConvertHeaderFromInternalModel(header) : new SoftwareList();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                metadataFile.Software = machines.Select(ConvertMachineFromInternalModel).ToArray();
+            
+            return metadataFile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SoftwareList.SoftwareList"/>
         /// </summary>
-        public static SoftwareList? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        private static SoftwareList? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -31,7 +48,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.SoftwareList.Software"/>
         /// </summary>
-        public static Software? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        private static Software? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;

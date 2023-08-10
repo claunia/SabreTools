@@ -121,13 +121,30 @@ namespace SabreTools.Serialization
             return dat;
         }
 
-        // TODO: Add deserialization of entire MetadataFile
         #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.MetadataFile"/> to <cref="Models.AttractMode.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertFromInternalModel(Models.Internal.MetadataFile? item)
+        {
+            if (item == null)
+                return null;
+
+            var header = item.Read<Models.Internal.Header>(Models.Internal.MetadataFile.HeaderKey);
+            var metadataFile = header != null ? ConvertHeaderFromInternalModel(header) : new MetadataFile();
+
+            var machines = item.Read<Models.Internal.Machine[]>(Models.Internal.MetadataFile.MachineKey);
+            if (machines != null && machines.Any())
+                metadataFile.Row = machines.SelectMany(ConvertMachineFromInternalModel).ToArray();
+            
+            return metadataFile;
+        }
 
         /// <summary>
         /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.AttractMode.MetadataFile"/>
         /// </summary>
-        public static MetadataFile? ConvertHeaderToInternalModel(Models.Internal.Header? item)
+        private static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
         {
             if (item == null)
                 return null;
@@ -142,7 +159,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
         /// </summary>
-        public static Row?[]? ConvertMachineToInternalModel(Models.Internal.Machine? item)
+        private static Row?[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
         {
             if (item == null)
                 return null;
@@ -153,7 +170,7 @@ namespace SabreTools.Serialization
                 if (rom == null)
                     return null;
 
-                var rowItem = ConvertToInternalModel(rom);
+                var rowItem = ConvertFromInternalModel(rom);
 
                 rowItem.Name = item.ReadString(Models.Internal.Machine.NameKey);
                 rowItem.Emulator = item.ReadString(Models.Internal.Machine.EmulatorKey);
@@ -181,7 +198,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
         /// </summary>
-        private static Row? ConvertToInternalModel(Models.Internal.Rom? item)
+        private static Row? ConvertFromInternalModel(Models.Internal.Rom? item)
         {
             if (item == null)
                 return null;
