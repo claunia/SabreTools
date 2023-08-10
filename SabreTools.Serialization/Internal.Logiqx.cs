@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Models.Internal;
 
 namespace SabreTools.Serialization
 {
@@ -11,339 +12,339 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Header"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Logiqx.Header"/> to <cref="Header"/>
         /// </summary>
-        public static Models.Internal.Header ConvertHeaderFromLogiqx(Models.Logiqx.Header item)
+        public static Header ConvertHeaderFromLogiqx(Models.Logiqx.Header item)
         {
-            var header = new Models.Internal.Header
+            var header = new Header
             {
-                [Models.Internal.Header.IdKey] = item.Id,
-                [Models.Internal.Header.NameKey] = item.Name,
-                [Models.Internal.Header.DescriptionKey] = item.Description,
-                [Models.Internal.Header.RootDirKey] = item.RootDir,
-                [Models.Internal.Header.CategoryKey] = item.Category,
-                [Models.Internal.Header.VersionKey] = item.Version,
-                [Models.Internal.Header.DateKey] = item.Date,
-                [Models.Internal.Header.AuthorKey] = item.Author,
-                [Models.Internal.Header.EmailKey] = item.Email,
-                [Models.Internal.Header.HomepageKey] = item.Homepage,
-                [Models.Internal.Header.UrlKey] = item.Url,
-                [Models.Internal.Header.CommentKey] = item.Comment,
-                [Models.Internal.Header.TypeKey] = item.Type,
+                [Header.IdKey] = item.Id,
+                [Header.NameKey] = item.Name,
+                [Header.DescriptionKey] = item.Description,
+                [Header.RootDirKey] = item.RootDir,
+                [Header.CategoryKey] = item.Category,
+                [Header.VersionKey] = item.Version,
+                [Header.DateKey] = item.Date,
+                [Header.AuthorKey] = item.Author,
+                [Header.EmailKey] = item.Email,
+                [Header.HomepageKey] = item.Homepage,
+                [Header.UrlKey] = item.Url,
+                [Header.CommentKey] = item.Comment,
+                [Header.TypeKey] = item.Type,
             };
 
             if (item.ClrMamePro != null)
             {
-                header[Models.Internal.Header.HeaderKey] = item.ClrMamePro.Header;
-                header[Models.Internal.Header.ForceMergingKey] = item.ClrMamePro.ForceMerging;
-                header[Models.Internal.Header.ForceNodumpKey] = item.ClrMamePro.ForceNodump;
-                header[Models.Internal.Header.ForcePackingKey] = item.ClrMamePro.ForcePacking;
+                header[Header.HeaderKey] = item.ClrMamePro.Header;
+                header[Header.ForceMergingKey] = item.ClrMamePro.ForceMerging;
+                header[Header.ForceNodumpKey] = item.ClrMamePro.ForceNodump;
+                header[Header.ForcePackingKey] = item.ClrMamePro.ForcePacking;
             }
 
             if (item.RomCenter != null)
             {
-                header[Models.Internal.Header.PluginKey] = item.RomCenter.Plugin;
-                header[Models.Internal.Header.RomModeKey] = item.RomCenter.RomMode;
-                header[Models.Internal.Header.BiosModeKey] = item.RomCenter.BiosMode;
-                header[Models.Internal.Header.SampleModeKey] = item.RomCenter.SampleMode;
-                header[Models.Internal.Header.LockRomModeKey] = item.RomCenter.LockRomMode;
-                header[Models.Internal.Header.LockBiosModeKey] = item.RomCenter.LockBiosMode;
-                header[Models.Internal.Header.LockSampleModeKey] = item.RomCenter.LockSampleMode;
+                header[Header.PluginKey] = item.RomCenter.Plugin;
+                header[Header.RomModeKey] = item.RomCenter.RomMode;
+                header[Header.BiosModeKey] = item.RomCenter.BiosMode;
+                header[Header.SampleModeKey] = item.RomCenter.SampleMode;
+                header[Header.LockRomModeKey] = item.RomCenter.LockRomMode;
+                header[Header.LockBiosModeKey] = item.RomCenter.LockBiosMode;
+                header[Header.LockSampleModeKey] = item.RomCenter.LockSampleMode;
             }
 
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Machine"/>
         /// </summary>
-        public static Models.Internal.Machine ConvertMachineFromLogiqx(Models.Logiqx.GameBase item)
+        public static Machine ConvertMachineFromLogiqx(Models.Logiqx.GameBase item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Machine
             {
-                [Models.Internal.Machine.NameKey] = item.Name,
-                [Models.Internal.Machine.SourceFileKey] = item.SourceFile,
-                [Models.Internal.Machine.IsBiosKey] = item.IsBios,
-                [Models.Internal.Machine.IsDeviceKey] = item.IsDevice,
-                [Models.Internal.Machine.IsMechanicalKey] = item.IsMechanical,
-                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
-                [Models.Internal.Machine.RomOfKey] = item.RomOf,
-                [Models.Internal.Machine.SampleOfKey] = item.SampleOf,
-                [Models.Internal.Machine.BoardKey] = item.Board,
-                [Models.Internal.Machine.RebuildToKey] = item.RebuildTo,
-                [Models.Internal.Machine.IdKey] = item.Id,
-                [Models.Internal.Machine.CloneOfIdKey] = item.CloneOfId,
-                [Models.Internal.Machine.RunnableKey] = item.Runnable,
-                [Models.Internal.Machine.CommentKey] = item.Comment,
-                [Models.Internal.Machine.DescriptionKey] = item.Description,
-                [Models.Internal.Machine.YearKey] = item.Year,
-                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
-                [Models.Internal.Machine.PublisherKey] = item.Publisher,
-                [Models.Internal.Machine.CategoryKey] = item.Category,
-                [Models.Internal.Machine.TruripKey] = item.Trurip,
+                [Machine.NameKey] = item.Name,
+                [Machine.SourceFileKey] = item.SourceFile,
+                [Machine.IsBiosKey] = item.IsBios,
+                [Machine.IsDeviceKey] = item.IsDevice,
+                [Machine.IsMechanicalKey] = item.IsMechanical,
+                [Machine.CloneOfKey] = item.CloneOf,
+                [Machine.RomOfKey] = item.RomOf,
+                [Machine.SampleOfKey] = item.SampleOf,
+                [Machine.BoardKey] = item.Board,
+                [Machine.RebuildToKey] = item.RebuildTo,
+                [Machine.IdKey] = item.Id,
+                [Machine.CloneOfIdKey] = item.CloneOfId,
+                [Machine.RunnableKey] = item.Runnable,
+                [Machine.CommentKey] = item.Comment,
+                [Machine.DescriptionKey] = item.Description,
+                [Machine.YearKey] = item.Year,
+                [Machine.ManufacturerKey] = item.Manufacturer,
+                [Machine.PublisherKey] = item.Publisher,
+                [Machine.CategoryKey] = item.Category,
+                [Machine.TruripKey] = item.Trurip,
             };
 
             if (item.Release != null && item.Release.Any())
             {
-                var releases = new List<Models.Internal.Release>();
+                var releases = new List<Release>();
                 foreach (var release in item.Release)
                 {
                     releases.Add(ConvertFromLogiqx(release));
                 }
-                machine[Models.Internal.Machine.ReleaseKey] = releases.ToArray();
+                machine[Machine.ReleaseKey] = releases.ToArray();
             }
 
             if (item.BiosSet != null && item.BiosSet.Any())
             {
-                var biosSets = new List<Models.Internal.BiosSet>();
+                var biosSets = new List<BiosSet>();
                 foreach (var biosSet in item.BiosSet)
                 {
                     biosSets.Add(ConvertFromLogiqx(biosSet));
                 }
-                machine[Models.Internal.Machine.BiosSetKey] = biosSets.ToArray();
+                machine[Machine.BiosSetKey] = biosSets.ToArray();
             }
 
             if (item.Rom != null && item.Rom.Any())
             {
-                var roms = new List<Models.Internal.Rom>();
+                var roms = new List<Rom>();
                 foreach (var rom in item.Rom)
                 {
                     roms.Add(ConvertFromLogiqx(rom));
                 }
-                machine[Models.Internal.Machine.RomKey] = roms.ToArray();
+                machine[Machine.RomKey] = roms.ToArray();
             }
 
             if (item.Disk != null && item.Disk.Any())
             {
-                var disks = new List<Models.Internal.Disk>();
+                var disks = new List<Disk>();
                 foreach (var disk in item.Disk)
                 {
                     disks.Add(ConvertFromLogiqx(disk));
                 }
-                machine[Models.Internal.Machine.DiskKey] = disks.ToArray();
+                machine[Machine.DiskKey] = disks.ToArray();
             }
 
             if (item.Media != null && item.Media.Any())
             {
-                var medias = new List<Models.Internal.Media>();
+                var medias = new List<Media>();
                 foreach (var media in item.Media)
                 {
                     medias.Add(ConvertFromLogiqx(media));
                 }
-                machine[Models.Internal.Machine.MediaKey] = medias.ToArray();
+                machine[Machine.MediaKey] = medias.ToArray();
             }
 
             if (item.DeviceRef != null && item.DeviceRef.Any())
             {
-                var deviceRefs = new List<Models.Internal.DeviceRef>();
+                var deviceRefs = new List<DeviceRef>();
                 foreach (var deviceRef in item.DeviceRef)
                 {
                     deviceRefs.Add(ConvertFromLogiqx(deviceRef));
                 }
-                machine[Models.Internal.Machine.DeviceRefKey] = deviceRefs.ToArray();
+                machine[Machine.DeviceRefKey] = deviceRefs.ToArray();
             }
 
             if (item.Sample != null && item.Sample.Any())
             {
-                var samples = new List<Models.Internal.Sample>();
+                var samples = new List<Sample>();
                 foreach (var sample in item.Sample)
                 {
                     samples.Add(ConvertFromLogiqx(sample));
                 }
-                machine[Models.Internal.Machine.SampleKey] = samples.ToArray();
+                machine[Machine.SampleKey] = samples.ToArray();
             }
 
             if (item.Archive != null && item.Archive.Any())
             {
-                var archives = new List<Models.Internal.Archive>();
+                var archives = new List<Archive>();
                 foreach (var archive in item.Archive)
                 {
                     archives.Add(ConvertFromLogiqx(archive));
                 }
-                machine[Models.Internal.Machine.ArchiveKey] = archives.ToArray();
+                machine[Machine.ArchiveKey] = archives.ToArray();
             }
 
             if (item.Driver != null && item.Driver.Any())
             {
-                var drivers = new List<Models.Internal.Driver>();
+                var drivers = new List<Driver>();
                 foreach (var driver in item.Driver)
                 {
                     drivers.Add(ConvertFromLogiqx(driver));
                 }
-                machine[Models.Internal.Machine.DriverKey] = drivers.ToArray();
+                machine[Machine.DriverKey] = drivers.ToArray();
             }
 
             if (item.SoftwareList != null && item.SoftwareList.Any())
             {
-                var softwareLists = new List<Models.Internal.SoftwareList>();
+                var softwareLists = new List<SoftwareList>();
                 foreach (var softwareList in item.SoftwareList)
                 {
                     softwareLists.Add(ConvertFromLogiqx(softwareList));
                 }
-                machine[Models.Internal.Machine.SoftwareListKey] = softwareLists.ToArray();
+                machine[Machine.SoftwareListKey] = softwareLists.ToArray();
             }
 
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Archive"/> to <cref="Models.Internal.Archive"/>
+        /// Convert from <cref="Models.Logiqx.Archive"/> to <cref="Archive"/>
         /// </summary>
-        public static Models.Internal.Archive ConvertFromLogiqx(Models.Logiqx.Archive item)
+        public static Archive ConvertFromLogiqx(Models.Logiqx.Archive item)
         {
-            var archive = new Models.Internal.Archive
+            var archive = new Archive
             {
-                [Models.Internal.Archive.NameKey] = item.Name,
+                [Archive.NameKey] = item.Name,
             };
             return archive;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.BiosSet"/> to <cref="Models.Internal.BiosSet"/>
+        /// Convert from <cref="Models.Logiqx.BiosSet"/> to <cref="BiosSet"/>
         /// </summary>
-        public static Models.Internal.BiosSet ConvertFromLogiqx(Models.Logiqx.BiosSet item)
+        public static BiosSet ConvertFromLogiqx(Models.Logiqx.BiosSet item)
         {
-            var biosset = new Models.Internal.BiosSet
+            var biosset = new BiosSet
             {
-                [Models.Internal.BiosSet.NameKey] = item.Name,
-                [Models.Internal.BiosSet.DescriptionKey] = item.Description,
-                [Models.Internal.BiosSet.DefaultKey] = item.Default,
+                [BiosSet.NameKey] = item.Name,
+                [BiosSet.DescriptionKey] = item.Description,
+                [BiosSet.DefaultKey] = item.Default,
             };
             return biosset;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.DeviceRef"/> to <cref="Models.Internal.DeviceRef"/>
+        /// Convert from <cref="Models.Logiqx.DeviceRef"/> to <cref="DeviceRef"/>
         /// </summary>
-        public static Models.Internal.DeviceRef ConvertFromLogiqx(Models.Logiqx.DeviceRef item)
+        public static DeviceRef ConvertFromLogiqx(Models.Logiqx.DeviceRef item)
         {
-            var deviceRef = new Models.Internal.DeviceRef
+            var deviceRef = new DeviceRef
             {
-                [Models.Internal.DeviceRef.NameKey] = item.Name,
+                [DeviceRef.NameKey] = item.Name,
             };
             return deviceRef;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Disk"/> to <cref="Models.Internal.Disk"/>
+        /// Convert from <cref="Models.Logiqx.Disk"/> to <cref="Disk"/>
         /// </summary>
-        public static Models.Internal.Disk ConvertFromLogiqx(Models.Logiqx.Disk item)
+        public static Disk ConvertFromLogiqx(Models.Logiqx.Disk item)
         {
-            var disk = new Models.Internal.Disk
+            var disk = new Disk
             {
-                [Models.Internal.Disk.NameKey] = item.Name,
-                [Models.Internal.Disk.MD5Key] = item.MD5,
-                [Models.Internal.Disk.SHA1Key] = item.SHA1,
-                [Models.Internal.Disk.MergeKey] = item.Merge,
-                [Models.Internal.Disk.StatusKey] = item.Status,
-                [Models.Internal.Disk.RegionKey] = item.Region,
+                [Disk.NameKey] = item.Name,
+                [Disk.MD5Key] = item.MD5,
+                [Disk.SHA1Key] = item.SHA1,
+                [Disk.MergeKey] = item.Merge,
+                [Disk.StatusKey] = item.Status,
+                [Disk.RegionKey] = item.Region,
             };
             return disk;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Driver"/> to <cref="Models.Internal.Driver"/>
+        /// Convert from <cref="Models.Logiqx.Driver"/> to <cref="Driver"/>
         /// </summary>
-        public static Models.Internal.Driver ConvertFromLogiqx(Models.Logiqx.Driver item)
+        public static Driver ConvertFromLogiqx(Models.Logiqx.Driver item)
         {
-            var driver = new Models.Internal.Driver
+            var driver = new Driver
             {
-                [Models.Internal.Driver.StatusKey] = item.Status,
-                [Models.Internal.Driver.EmulationKey] = item.Emulation,
-                [Models.Internal.Driver.CocktailKey] = item.Cocktail,
-                [Models.Internal.Driver.SaveStateKey] = item.SaveState,
-                [Models.Internal.Driver.RequiresArtworkKey] = item.RequiresArtwork,
-                [Models.Internal.Driver.UnofficialKey] = item.Unofficial,
-                [Models.Internal.Driver.NoSoundHardwareKey] = item.NoSoundHardware,
-                [Models.Internal.Driver.IncompleteKey] = item.Incomplete,
+                [Driver.StatusKey] = item.Status,
+                [Driver.EmulationKey] = item.Emulation,
+                [Driver.CocktailKey] = item.Cocktail,
+                [Driver.SaveStateKey] = item.SaveState,
+                [Driver.RequiresArtworkKey] = item.RequiresArtwork,
+                [Driver.UnofficialKey] = item.Unofficial,
+                [Driver.NoSoundHardwareKey] = item.NoSoundHardware,
+                [Driver.IncompleteKey] = item.Incomplete,
             };
             return driver;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Media"/> to <cref="Models.Internal.Media"/>
+        /// Convert from <cref="Models.Logiqx.Media"/> to <cref="Media"/>
         /// </summary>
-        public static Models.Internal.Media ConvertFromLogiqx(Models.Logiqx.Media item)
+        public static Media ConvertFromLogiqx(Models.Logiqx.Media item)
         {
-            var media = new Models.Internal.Media
+            var media = new Media
             {
-                [Models.Internal.Media.NameKey] = item.Name,
-                [Models.Internal.Media.MD5Key] = item.MD5,
-                [Models.Internal.Media.SHA1Key] = item.SHA1,
-                [Models.Internal.Media.SHA256Key] = item.SHA256,
-                [Models.Internal.Media.SpamSumKey] = item.SpamSum,
+                [Media.NameKey] = item.Name,
+                [Media.MD5Key] = item.MD5,
+                [Media.SHA1Key] = item.SHA1,
+                [Media.SHA256Key] = item.SHA256,
+                [Media.SpamSumKey] = item.SpamSum,
             };
             return media;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Release"/> to <cref="Models.Internal.Release"/>
+        /// Convert from <cref="Models.Logiqx.Release"/> to <cref="Release"/>
         /// </summary>
-        public static Models.Internal.Release ConvertFromLogiqx(Models.Logiqx.Release item)
+        public static Release ConvertFromLogiqx(Models.Logiqx.Release item)
         {
-            var release = new Models.Internal.Release
+            var release = new Release
             {
-                [Models.Internal.Release.NameKey] = item.Name,
-                [Models.Internal.Release.RegionKey] = item.Region,
-                [Models.Internal.Release.LanguageKey] = item.Language,
-                [Models.Internal.Release.DateKey] = item.Date,
-                [Models.Internal.Release.DefaultKey] = item.Default,
+                [Release.NameKey] = item.Name,
+                [Release.RegionKey] = item.Region,
+                [Release.LanguageKey] = item.Language,
+                [Release.DateKey] = item.Date,
+                [Release.DefaultKey] = item.Default,
             };
             return release;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// Convert from <cref="Models.Logiqx.Rom"/> to <cref="Rom"/>
         /// </summary>
-        public static Models.Internal.Rom ConvertFromLogiqx(Models.Logiqx.Rom item)
+        public static Rom ConvertFromLogiqx(Models.Logiqx.Rom item)
         {
-            var rom = new Models.Internal.Rom
+            var rom = new Rom
             {
-                [Models.Internal.Rom.NameKey] = item.Name,
-                [Models.Internal.Rom.SizeKey] = item.Size,
-                [Models.Internal.Rom.CRCKey] = item.CRC,
-                [Models.Internal.Rom.MD5Key] = item.MD5,
-                [Models.Internal.Rom.SHA1Key] = item.SHA1,
-                [Models.Internal.Rom.SHA256Key] = item.SHA256,
-                [Models.Internal.Rom.SHA384Key] = item.SHA384,
-                [Models.Internal.Rom.SHA512Key] = item.SHA512,
-                [Models.Internal.Rom.SpamSumKey] = item.SpamSum,
-                [Models.Internal.Rom.xxHash364Key] = item.xxHash364,
-                [Models.Internal.Rom.xxHash3128Key] = item.xxHash3128,
-                [Models.Internal.Rom.MergeKey] = item.Merge,
-                [Models.Internal.Rom.StatusKey] = item.Status,
-                [Models.Internal.Rom.SerialKey] = item.Serial,
-                [Models.Internal.Rom.HeaderKey] = item.Header,
-                [Models.Internal.Rom.DateKey] = item.Date,
-                [Models.Internal.Rom.InvertedKey] = item.Inverted,
-                [Models.Internal.Rom.MIAKey] = item.MIA,
+                [Rom.NameKey] = item.Name,
+                [Rom.SizeKey] = item.Size,
+                [Rom.CRCKey] = item.CRC,
+                [Rom.MD5Key] = item.MD5,
+                [Rom.SHA1Key] = item.SHA1,
+                [Rom.SHA256Key] = item.SHA256,
+                [Rom.SHA384Key] = item.SHA384,
+                [Rom.SHA512Key] = item.SHA512,
+                [Rom.SpamSumKey] = item.SpamSum,
+                [Rom.xxHash364Key] = item.xxHash364,
+                [Rom.xxHash3128Key] = item.xxHash3128,
+                [Rom.MergeKey] = item.Merge,
+                [Rom.StatusKey] = item.Status,
+                [Rom.SerialKey] = item.Serial,
+                [Rom.HeaderKey] = item.Header,
+                [Rom.DateKey] = item.Date,
+                [Rom.InvertedKey] = item.Inverted,
+                [Rom.MIAKey] = item.MIA,
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.Sample"/> to <cref="Models.Internal.Sample"/>
+        /// Convert from <cref="Models.Logiqx.Sample"/> to <cref="Sample"/>
         /// </summary>
-        public static Models.Internal.Sample ConvertFromLogiqx(Models.Logiqx.Sample item)
+        public static Sample ConvertFromLogiqx(Models.Logiqx.Sample item)
         {
-            var sample = new Models.Internal.Sample
+            var sample = new Sample
             {
-                [Models.Internal.Sample.NameKey] = item.Name,
+                [Sample.NameKey] = item.Name,
             };
             return sample;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Logiqx.SoftwareList"/> to <cref="Models.Internal.SoftwareList"/>
+        /// Convert from <cref="Models.Logiqx.SoftwareList"/> to <cref="SoftwareList"/>
         /// </summary>
-        public static Models.Internal.SoftwareList ConvertFromLogiqx(Models.Logiqx.SoftwareList item)
+        public static SoftwareList ConvertFromLogiqx(Models.Logiqx.SoftwareList item)
         {
-            var softwareList = new Models.Internal.SoftwareList
+            var softwareList = new SoftwareList
             {
-                [Models.Internal.SoftwareList.TagKey] = item.Tag,
-                [Models.Internal.SoftwareList.NameKey] = item.Name,
-                [Models.Internal.SoftwareList.StatusKey] = item.Status,
-                [Models.Internal.SoftwareList.FilterKey] = item.Filter,
+                [SoftwareList.TagKey] = item.Tag,
+                [SoftwareList.NameKey] = item.Name,
+                [SoftwareList.StatusKey] = item.Status,
+                [SoftwareList.FilterKey] = item.Filter,
             };
             return softwareList;
         }
@@ -353,61 +354,61 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.Logiqx.Header"/>
+        /// Convert from <cref="Header"/> to <cref="Models.Logiqx.Header"/>
         /// </summary>
-        public static Models.Logiqx.Header? ConvertHeaderToLogiqx(Models.Internal.Header? item)
+        public static Models.Logiqx.Header? ConvertHeaderToLogiqx(Header? item)
         {
             if (item == null)
                 return null;
 
             var header = new Models.Logiqx.Header
             {
-                Id = item.ReadString(Models.Internal.Header.IdKey),
-                Name = item.ReadString(Models.Internal.Header.NameKey),
-                Description = item.ReadString(Models.Internal.Header.DescriptionKey),
-                RootDir = item.ReadString(Models.Internal.Header.RootDirKey),
-                Category = item.ReadString(Models.Internal.Header.CategoryKey),
-                Version = item.ReadString(Models.Internal.Header.VersionKey),
-                Date = item.ReadString(Models.Internal.Header.DateKey),
-                Author = item.ReadString(Models.Internal.Header.AuthorKey),
-                Email = item.ReadString(Models.Internal.Header.EmailKey),
-                Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
-                Url = item.ReadString(Models.Internal.Header.UrlKey),
-                Comment = item.ReadString(Models.Internal.Header.CommentKey),
-                Type = item.ReadString(Models.Internal.Header.TypeKey),
+                Id = item.ReadString(Header.IdKey),
+                Name = item.ReadString(Header.NameKey),
+                Description = item.ReadString(Header.DescriptionKey),
+                RootDir = item.ReadString(Header.RootDirKey),
+                Category = item.ReadString(Header.CategoryKey),
+                Version = item.ReadString(Header.VersionKey),
+                Date = item.ReadString(Header.DateKey),
+                Author = item.ReadString(Header.AuthorKey),
+                Email = item.ReadString(Header.EmailKey),
+                Homepage = item.ReadString(Header.HomepageKey),
+                Url = item.ReadString(Header.UrlKey),
+                Comment = item.ReadString(Header.CommentKey),
+                Type = item.ReadString(Header.TypeKey),
             };
 
-            if (item.ContainsKey(Models.Internal.Header.HeaderKey)
-                || item.ContainsKey(Models.Internal.Header.ForceMergingKey)
-                || item.ContainsKey(Models.Internal.Header.ForceNodumpKey)
-                || item.ContainsKey(Models.Internal.Header.ForcePackingKey))
+            if (item.ContainsKey(Header.HeaderKey)
+                || item.ContainsKey(Header.ForceMergingKey)
+                || item.ContainsKey(Header.ForceNodumpKey)
+                || item.ContainsKey(Header.ForcePackingKey))
             {
                 header.ClrMamePro = new Models.Logiqx.ClrMamePro
                 {
-                    Header = item.ReadString(Models.Internal.Header.HeaderKey),
-                    ForceMerging = item.ReadString(Models.Internal.Header.ForceMergingKey),
-                    ForceNodump = item.ReadString(Models.Internal.Header.ForceNodumpKey),
-                    ForcePacking = item.ReadString(Models.Internal.Header.ForcePackingKey),
+                    Header = item.ReadString(Header.HeaderKey),
+                    ForceMerging = item.ReadString(Header.ForceMergingKey),
+                    ForceNodump = item.ReadString(Header.ForceNodumpKey),
+                    ForcePacking = item.ReadString(Header.ForcePackingKey),
                 };
             }
 
-            if (item.ContainsKey(Models.Internal.Header.PluginKey)
-                || item.ContainsKey(Models.Internal.Header.RomModeKey)
-                || item.ContainsKey(Models.Internal.Header.BiosModeKey)
-                || item.ContainsKey(Models.Internal.Header.SampleModeKey)
-                || item.ContainsKey(Models.Internal.Header.LockRomModeKey)
-                || item.ContainsKey(Models.Internal.Header.LockBiosModeKey)
-                || item.ContainsKey(Models.Internal.Header.LockSampleModeKey))
+            if (item.ContainsKey(Header.PluginKey)
+                || item.ContainsKey(Header.RomModeKey)
+                || item.ContainsKey(Header.BiosModeKey)
+                || item.ContainsKey(Header.SampleModeKey)
+                || item.ContainsKey(Header.LockRomModeKey)
+                || item.ContainsKey(Header.LockBiosModeKey)
+                || item.ContainsKey(Header.LockSampleModeKey))
             {
                 header.RomCenter = new Models.Logiqx.RomCenter
                 {
-                    Plugin = item.ReadString(Models.Internal.Header.PluginKey),
-                    RomMode = item.ReadString(Models.Internal.Header.RomModeKey),
-                    BiosMode = item.ReadString(Models.Internal.Header.BiosModeKey),
-                    SampleMode = item.ReadString(Models.Internal.Header.SampleModeKey),
-                    LockRomMode = item.ReadString(Models.Internal.Header.LockRomModeKey),
-                    LockBiosMode = item.ReadString(Models.Internal.Header.LockBiosModeKey),
-                    LockSampleMode = item.ReadString(Models.Internal.Header.LockSampleModeKey),
+                    Plugin = item.ReadString(Header.PluginKey),
+                    RomMode = item.ReadString(Header.RomModeKey),
+                    BiosMode = item.ReadString(Header.BiosModeKey),
+                    SampleMode = item.ReadString(Header.SampleModeKey),
+                    LockRomMode = item.ReadString(Header.LockRomModeKey),
+                    LockBiosMode = item.ReadString(Header.LockBiosModeKey),
+                    LockSampleMode = item.ReadString(Header.LockSampleModeKey),
                 };
             }
 
@@ -415,259 +416,259 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
+        /// Convert from <cref="Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
-        public static Models.Logiqx.GameBase? ConvertMachineToLogiqx(Models.Internal.Machine? item, bool game = false)
+        public static Models.Logiqx.GameBase? ConvertMachineToLogiqx(Machine? item, bool game = false)
         {
             if (item == null)
                 return null;
 
             Models.Logiqx.GameBase gameBase = game ? new Models.Logiqx.Game() : new Models.Logiqx.Machine();
 
-            gameBase.Name = item.ReadString(Models.Internal.Machine.NameKey);
-            gameBase.SourceFile = item.ReadString(Models.Internal.Machine.SourceFileKey);
-            gameBase.IsBios = item.ReadString(Models.Internal.Machine.IsBiosKey);
-            gameBase.IsDevice = item.ReadString(Models.Internal.Machine.IsDeviceKey);
-            gameBase.IsMechanical = item.ReadString(Models.Internal.Machine.IsMechanicalKey);
-            gameBase.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
-            gameBase.RomOf = item.ReadString(Models.Internal.Machine.RomOfKey);
-            gameBase.SampleOf = item.ReadString(Models.Internal.Machine.SampleOfKey);
-            gameBase.Board = item.ReadString(Models.Internal.Machine.BoardKey);
-            gameBase.RebuildTo = item.ReadString(Models.Internal.Machine.RebuildToKey);
-            gameBase.Id = item.ReadString(Models.Internal.Machine.IdKey);
-            gameBase.CloneOfId = item.ReadString(Models.Internal.Machine.CloneOfIdKey);
-            gameBase.Runnable = item.ReadString(Models.Internal.Machine.RunnableKey);
-            gameBase.Comment = item.ReadStringArray(Models.Internal.Machine.CommentKey);
-            gameBase.Description = item.ReadString(Models.Internal.Machine.DescriptionKey);
-            gameBase.Year = item.ReadString(Models.Internal.Machine.YearKey);
-            gameBase.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
-            gameBase.Publisher = item.ReadString(Models.Internal.Machine.PublisherKey);
-            gameBase.Category = item.ReadStringArray(Models.Internal.Machine.CategoryKey);
+            gameBase.Name = item.ReadString(Machine.NameKey);
+            gameBase.SourceFile = item.ReadString(Machine.SourceFileKey);
+            gameBase.IsBios = item.ReadString(Machine.IsBiosKey);
+            gameBase.IsDevice = item.ReadString(Machine.IsDeviceKey);
+            gameBase.IsMechanical = item.ReadString(Machine.IsMechanicalKey);
+            gameBase.CloneOf = item.ReadString(Machine.CloneOfKey);
+            gameBase.RomOf = item.ReadString(Machine.RomOfKey);
+            gameBase.SampleOf = item.ReadString(Machine.SampleOfKey);
+            gameBase.Board = item.ReadString(Machine.BoardKey);
+            gameBase.RebuildTo = item.ReadString(Machine.RebuildToKey);
+            gameBase.Id = item.ReadString(Machine.IdKey);
+            gameBase.CloneOfId = item.ReadString(Machine.CloneOfIdKey);
+            gameBase.Runnable = item.ReadString(Machine.RunnableKey);
+            gameBase.Comment = item.ReadStringArray(Machine.CommentKey);
+            gameBase.Description = item.ReadString(Machine.DescriptionKey);
+            gameBase.Year = item.ReadString(Machine.YearKey);
+            gameBase.Manufacturer = item.ReadString(Machine.ManufacturerKey);
+            gameBase.Publisher = item.ReadString(Machine.PublisherKey);
+            gameBase.Category = item.ReadStringArray(Machine.CategoryKey);
 
-            var trurip = item.Read<Models.Logiqx.Trurip>(Models.Internal.Machine.TruripKey);
+            var trurip = item.Read<Models.Logiqx.Trurip>(Machine.TruripKey);
             gameBase.Trurip = trurip;
 
-            var releases = item.Read<Models.Internal.Release[]>(Models.Internal.Machine.ReleaseKey);
+            var releases = item.Read<Release[]>(Machine.ReleaseKey);
             gameBase.Release = releases?.Select(ConvertToLogiqx)?.ToArray();
 
-            var biosSets = item.Read<Models.Internal.BiosSet[]>(Models.Internal.Machine.BiosSetKey);
+            var biosSets = item.Read<BiosSet[]>(Machine.BiosSetKey);
             gameBase.BiosSet = biosSets?.Select(ConvertToLogiqx)?.ToArray();
 
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Rom[]>(Machine.RomKey);
             gameBase.Rom = roms?.Select(ConvertToLogiqx)?.ToArray();
 
-            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            var disks = item.Read<Disk[]>(Machine.DiskKey);
             gameBase.Disk = disks?.Select(ConvertToLogiqx)?.ToArray();
 
-            var medias = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
+            var medias = item.Read<Media[]>(Machine.MediaKey);
             gameBase.Media = medias?.Select(ConvertToLogiqx)?.ToArray();
 
-            var deviceRefs = item.Read<Models.Internal.DeviceRef[]>(Models.Internal.Machine.DeviceRefKey);
+            var deviceRefs = item.Read<DeviceRef[]>(Machine.DeviceRefKey);
             gameBase.DeviceRef = deviceRefs?.Select(ConvertToLogiqx)?.ToArray();
 
-            var samples = item.Read<Models.Internal.Sample[]>(Models.Internal.Machine.SampleKey);
+            var samples = item.Read<Sample[]>(Machine.SampleKey);
             gameBase.Sample = samples?.Select(ConvertToLogiqx)?.ToArray();
 
-            var archives = item.Read<Models.Internal.Archive[]>(Models.Internal.Machine.ArchiveKey);
+            var archives = item.Read<Archive[]>(Machine.ArchiveKey);
             gameBase.Archive = archives?.Select(ConvertToLogiqx)?.ToArray();
 
-            var drivers = item.Read<Models.Internal.Driver[]>(Models.Internal.Machine.DriverKey);
+            var drivers = item.Read<Driver[]>(Machine.DriverKey);
             gameBase.Driver = drivers?.Select(ConvertToLogiqx)?.ToArray();
 
-            var softwareLists = item.Read<Models.Internal.SoftwareList[]>(Models.Internal.Machine.SoftwareListKey);
+            var softwareLists = item.Read<SoftwareList[]>(Machine.SoftwareListKey);
             gameBase.SoftwareList = softwareLists?.Select(ConvertToLogiqx)?.ToArray();
 
             return gameBase;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Archive"/> to <cref="Models.Logiqx.Archive"/>
+        /// Convert from <cref="Archive"/> to <cref="Models.Logiqx.Archive"/>
         /// </summary>
-        private static Models.Logiqx.Archive? ConvertToLogiqx(Models.Internal.Archive? item)
+        private static Models.Logiqx.Archive? ConvertToLogiqx(Archive? item)
         {
             if (item == null)
                 return null;
 
             var archive = new Models.Logiqx.Archive
             {
-                Name = item.ReadString(Models.Internal.Archive.NameKey),
+                Name = item.ReadString(Archive.NameKey),
             };
             return archive;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.BiosSet"/> to <cref="Models.Logiqx.BiosSet"/>
+        /// Convert from <cref="BiosSet"/> to <cref="Models.Logiqx.BiosSet"/>
         /// </summary>
-        private static Models.Logiqx.BiosSet? ConvertToLogiqx(Models.Internal.BiosSet? item)
+        private static Models.Logiqx.BiosSet? ConvertToLogiqx(BiosSet? item)
         {
             if (item == null)
                 return null;
 
             var biosset = new Models.Logiqx.BiosSet
             {
-                Name = item.ReadString(Models.Internal.BiosSet.NameKey),
-                Description = item.ReadString(Models.Internal.BiosSet.DescriptionKey),
-                Default = item.ReadString(Models.Internal.BiosSet.DefaultKey),
+                Name = item.ReadString(BiosSet.NameKey),
+                Description = item.ReadString(BiosSet.DescriptionKey),
+                Default = item.ReadString(BiosSet.DefaultKey),
             };
             return biosset;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.DeviceRef"/> to <cref="Models.Logiqx.DeviceRef"/>
+        /// Convert from <cref="DeviceRef"/> to <cref="Models.Logiqx.DeviceRef"/>
         /// </summary>
-        private static Models.Logiqx.DeviceRef? ConvertToLogiqx(Models.Internal.DeviceRef? item)
+        private static Models.Logiqx.DeviceRef? ConvertToLogiqx(DeviceRef? item)
         {
             if (item == null)
                 return null;
 
             var deviceRef = new Models.Logiqx.DeviceRef
             {
-                Name = item.ReadString(Models.Internal.DipSwitch.NameKey),
+                Name = item.ReadString(DipSwitch.NameKey),
             };
             return deviceRef;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Logiqx.Disk"/>
+        /// Convert from <cref="Disk"/> to <cref="Models.Logiqx.Disk"/>
         /// </summary>
-        private static Models.Logiqx.Disk? ConvertToLogiqx(Models.Internal.Disk? item)
+        private static Models.Logiqx.Disk? ConvertToLogiqx(Disk? item)
         {
             if (item == null)
                 return null;
 
             var disk = new Models.Logiqx.Disk
             {
-                Name = item.ReadString(Models.Internal.Disk.NameKey),
-                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
-                Merge = item.ReadString(Models.Internal.Disk.MergeKey),
-                Status = item.ReadString(Models.Internal.Disk.StatusKey),
-                Region = item.ReadString(Models.Internal.Disk.RegionKey),
+                Name = item.ReadString(Disk.NameKey),
+                MD5 = item.ReadString(Disk.MD5Key),
+                SHA1 = item.ReadString(Disk.SHA1Key),
+                Merge = item.ReadString(Disk.MergeKey),
+                Status = item.ReadString(Disk.StatusKey),
+                Region = item.ReadString(Disk.RegionKey),
             };
             return disk;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Driver"/> to <cref="Models.Logiqx.Driver"/>
+        /// Convert from <cref="Driver"/> to <cref="Models.Logiqx.Driver"/>
         /// </summary>
-        private static Models.Logiqx.Driver? ConvertToLogiqx(Models.Internal.Driver? item)
+        private static Models.Logiqx.Driver? ConvertToLogiqx(Driver? item)
         {
             if (item == null)
                 return null;
 
             var driver = new Models.Logiqx.Driver
             {
-                Status = item.ReadString(Models.Internal.Driver.StatusKey),
-                Emulation = item.ReadString(Models.Internal.Driver.EmulationKey),
-                Cocktail = item.ReadString(Models.Internal.Driver.CocktailKey),
-                SaveState = item.ReadString(Models.Internal.Driver.SaveStateKey),
-                RequiresArtwork = item.ReadString(Models.Internal.Driver.RequiresArtworkKey),
-                Unofficial = item.ReadString(Models.Internal.Driver.UnofficialKey),
-                NoSoundHardware = item.ReadString(Models.Internal.Driver.NoSoundHardwareKey),
-                Incomplete = item.ReadString(Models.Internal.Driver.IncompleteKey),
+                Status = item.ReadString(Driver.StatusKey),
+                Emulation = item.ReadString(Driver.EmulationKey),
+                Cocktail = item.ReadString(Driver.CocktailKey),
+                SaveState = item.ReadString(Driver.SaveStateKey),
+                RequiresArtwork = item.ReadString(Driver.RequiresArtworkKey),
+                Unofficial = item.ReadString(Driver.UnofficialKey),
+                NoSoundHardware = item.ReadString(Driver.NoSoundHardwareKey),
+                Incomplete = item.ReadString(Driver.IncompleteKey),
             };
             return driver;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.Logiqx.Media"/>
+        /// Convert from <cref="Media"/> to <cref="Models.Logiqx.Media"/>
         /// </summary>
-        private static Models.Logiqx.Media? ConvertToLogiqx(Models.Internal.Media? item)
+        private static Models.Logiqx.Media? ConvertToLogiqx(Media? item)
         {
             if (item == null)
                 return null;
 
             var media = new Models.Logiqx.Media
             {
-                Name = item.ReadString(Models.Internal.Media.NameKey),
-                MD5 = item.ReadString(Models.Internal.Media.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Media.SHA1Key),
-                SHA256 = item.ReadString(Models.Internal.Media.SHA256Key),
-                SpamSum = item.ReadString(Models.Internal.Media.SpamSumKey),
+                Name = item.ReadString(Media.NameKey),
+                MD5 = item.ReadString(Media.MD5Key),
+                SHA1 = item.ReadString(Media.SHA1Key),
+                SHA256 = item.ReadString(Media.SHA256Key),
+                SpamSum = item.ReadString(Media.SpamSumKey),
             };
             return media;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Release"/> to <cref="Models.Logiqx.Release"/>
+        /// Convert from <cref="Release"/> to <cref="Models.Logiqx.Release"/>
         /// </summary>
-        private static Models.Logiqx.Release? ConvertToLogiqx(Models.Internal.Release? item)
+        private static Models.Logiqx.Release? ConvertToLogiqx(Release? item)
         {
             if (item == null)
                 return null;
 
             var release = new Models.Logiqx.Release
             {
-                Name = item.ReadString(Models.Internal.Release.NameKey),
-                Region = item.ReadString(Models.Internal.Release.RegionKey),
-                Language = item.ReadString(Models.Internal.Release.LanguageKey),
-                Date = item.ReadString(Models.Internal.Release.DateKey),
-                Default = item.ReadString(Models.Internal.Release.DefaultKey),
+                Name = item.ReadString(Release.NameKey),
+                Region = item.ReadString(Release.RegionKey),
+                Language = item.ReadString(Release.LanguageKey),
+                Date = item.ReadString(Release.DateKey),
+                Default = item.ReadString(Release.DefaultKey),
             };
             return release;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Logiqx.Rom"/>
+        /// Convert from <cref="Rom"/> to <cref="Models.Logiqx.Rom"/>
         /// </summary>
-        private static Models.Logiqx.Rom? ConvertToLogiqx(Models.Internal.Rom? item)
+        private static Models.Logiqx.Rom? ConvertToLogiqx(Rom? item)
         {
             if (item == null)
                 return null;
 
             var rom = new Models.Logiqx.Rom
             {
-                Name = item.ReadString(Models.Internal.Rom.NameKey),
-                Size = item.ReadString(Models.Internal.Rom.SizeKey),
-                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
-                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
-                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
-                SHA384 = item.ReadString(Models.Internal.Rom.SHA384Key),
-                SHA512 = item.ReadString(Models.Internal.Rom.SHA512Key),
-                SpamSum = item.ReadString(Models.Internal.Rom.SpamSumKey),
-                xxHash364 = item.ReadString(Models.Internal.Rom.xxHash364Key),
-                xxHash3128 = item.ReadString(Models.Internal.Rom.xxHash3128Key),
-                Merge = item.ReadString(Models.Internal.Rom.MergeKey),
-                Status = item.ReadString(Models.Internal.Rom.StatusKey),
-                Serial = item.ReadString(Models.Internal.Rom.SerialKey),
-                Header = item.ReadString(Models.Internal.Rom.HeaderKey),
-                Date = item.ReadString(Models.Internal.Rom.DateKey),
-                Inverted = item.ReadString(Models.Internal.Rom.InvertedKey),
-                MIA = item.ReadString(Models.Internal.Rom.MIAKey),
+                Name = item.ReadString(Rom.NameKey),
+                Size = item.ReadString(Rom.SizeKey),
+                CRC = item.ReadString(Rom.CRCKey),
+                MD5 = item.ReadString(Rom.MD5Key),
+                SHA1 = item.ReadString(Rom.SHA1Key),
+                SHA256 = item.ReadString(Rom.SHA256Key),
+                SHA384 = item.ReadString(Rom.SHA384Key),
+                SHA512 = item.ReadString(Rom.SHA512Key),
+                SpamSum = item.ReadString(Rom.SpamSumKey),
+                xxHash364 = item.ReadString(Rom.xxHash364Key),
+                xxHash3128 = item.ReadString(Rom.xxHash3128Key),
+                Merge = item.ReadString(Rom.MergeKey),
+                Status = item.ReadString(Rom.StatusKey),
+                Serial = item.ReadString(Rom.SerialKey),
+                Header = item.ReadString(Rom.HeaderKey),
+                Date = item.ReadString(Rom.DateKey),
+                Inverted = item.ReadString(Rom.InvertedKey),
+                MIA = item.ReadString(Rom.MIAKey),
             };
             return rom;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Sample"/> to <cref="Models.Logiqx.Sample"/>
+        /// Convert from <cref="Sample"/> to <cref="Models.Logiqx.Sample"/>
         /// </summary>
-        private static Models.Logiqx.Sample? ConvertToLogiqx(Models.Internal.Sample? item)
+        private static Models.Logiqx.Sample? ConvertToLogiqx(Sample? item)
         {
             if (item == null)
                 return null;
 
             var sample = new Models.Logiqx.Sample
             {
-                Name = item.ReadString(Models.Internal.Sample.NameKey),
+                Name = item.ReadString(Sample.NameKey),
             };
             return sample;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.SoftwareList"/> to <cref="Models.Logiqx.SoftwareList"/>
+        /// Convert from <cref="SoftwareList"/> to <cref="Models.Logiqx.SoftwareList"/>
         /// </summary>
-        private static Models.Logiqx.SoftwareList? ConvertToLogiqx(Models.Internal.SoftwareList? item)
+        private static Models.Logiqx.SoftwareList? ConvertToLogiqx(SoftwareList? item)
         {
             if (item == null)
                 return null;
 
             var softwareList = new Models.Logiqx.SoftwareList
             {
-                Tag = item.ReadString(Models.Internal.SoftwareList.TagKey),
-                Name = item.ReadString(Models.Internal.SoftwareList.NameKey),
-                Status = item.ReadString(Models.Internal.SoftwareList.StatusKey),
-                Filter = item.ReadString(Models.Internal.SoftwareList.FilterKey),
+                Tag = item.ReadString(SoftwareList.TagKey),
+                Name = item.ReadString(SoftwareList.NameKey),
+                Status = item.ReadString(SoftwareList.StatusKey),
+                Filter = item.ReadString(SoftwareList.FilterKey),
             };
             return softwareList;
         }

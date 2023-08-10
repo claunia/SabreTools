@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Models.Internal;
 
 namespace SabreTools.Serialization
 {
@@ -11,83 +12,83 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
-        /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        public static Models.Internal.Header ConvertHeaderFromListrom(Models.Listrom.MetadataFile item)
+        public static Header ConvertHeaderFromListrom(Models.Listrom.MetadataFile item)
         {
-            var header = new Models.Internal.Header
+            var header = new Header
             {
-                [Models.Internal.Header.NameKey] = "MAME Listrom",
+                [Header.NameKey] = "MAME Listrom",
             };
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listrom.Set"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.Listrom.Set"/> to <cref="Machine"/>
         /// </summary>
-        public static Models.Internal.Machine ConvertMachineFromListrom(Models.Listrom.Set item)
+        public static Machine ConvertMachineFromListrom(Models.Listrom.Set item)
         {
-            var machine = new Models.Internal.Machine();
+            var machine = new Machine();
             if (!string.IsNullOrWhiteSpace(item.Device))
             {
-                machine[Models.Internal.Machine.NameKey] = item.Device;
-                machine[Models.Internal.Machine.IsDeviceKey] = "yes";
+                machine[Machine.NameKey] = item.Device;
+                machine[Machine.IsDeviceKey] = "yes";
             }
             else
             {
-                machine[Models.Internal.Machine.NameKey] = item.Driver;
+                machine[Machine.NameKey] = item.Driver;
             }
 
             if (item.Row != null && item.Row.Any())
             {
-                var datItems = new List<Models.Internal.DatItem>();
+                var datItems = new List<DatItem>();
                 foreach (var file in item.Row)
                 {
                     datItems.Add(ConvertFromListrom(file));
                 }
 
-                machine[Models.Internal.Machine.DiskKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "disk")?.ToArray();
-                machine[Models.Internal.Machine.RomKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "rom")?.ToArray();
+                machine[Machine.DiskKey] = datItems.Where(i => i.ReadString(DatItem.TypeKey) == "disk")?.ToArray();
+                machine[Machine.RomKey] = datItems.Where(i => i.ReadString(DatItem.TypeKey) == "rom")?.ToArray();
             }
 
             return machine;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Listrom.Row"/> to <cref="Models.Internal.DatItem"/>
+        /// Convert from <cref="Models.Listrom.Row"/> to <cref="DatItem"/>
         /// </summary>
-        public static Models.Internal.DatItem ConvertFromListrom(Models.Listrom.Row item)
+        public static DatItem ConvertFromListrom(Models.Listrom.Row item)
         {
             if (item.Size == null)
             {
-                var disk = new Models.Internal.Disk
+                var disk = new Disk
                 {
-                    [Models.Internal.Disk.NameKey] = item.Name,
-                    [Models.Internal.Disk.MD5Key] = item.MD5,
-                    [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                    [Disk.NameKey] = item.Name,
+                    [Disk.MD5Key] = item.MD5,
+                    [Disk.SHA1Key] = item.SHA1,
                 };
 
                 if (item.NoGoodDumpKnown)
-                    disk[Models.Internal.Disk.StatusKey] = "nodump";
+                    disk[Disk.StatusKey] = "nodump";
                 else if (item.Bad)
-                    disk[Models.Internal.Disk.StatusKey] = "baddump";
+                    disk[Disk.StatusKey] = "baddump";
 
                 return disk;
             }
             else
             {
-                var rom = new Models.Internal.Rom
+                var rom = new Rom
                 {
-                    [Models.Internal.Rom.NameKey] = item.Name,
-                    [Models.Internal.Rom.SizeKey] = item.Size,
-                    [Models.Internal.Rom.CRCKey] = item.CRC,
-                    [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                    [Rom.NameKey] = item.Name,
+                    [Rom.SizeKey] = item.Size,
+                    [Rom.CRCKey] = item.CRC,
+                    [Rom.SHA1Key] = item.SHA1,
                 };
 
                 if (item.NoGoodDumpKnown)
-                    rom[Models.Internal.Rom.StatusKey] = "nodump";
+                    rom[Rom.StatusKey] = "nodump";
                 else if (item.Bad)
-                    rom[Models.Internal.Rom.StatusKey] = "baddump";
+                    rom[Rom.StatusKey] = "baddump";
 
                 return rom;
             }
@@ -98,26 +99,26 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listrom.Set"/>
+        /// Convert from <cref="Machine"/> to <cref="Models.Listrom.Set"/>
         /// </summary>
-        public static Models.Listrom.Set? ConvertMachineToListrom(Models.Internal.Machine? item)
+        public static Models.Listrom.Set? ConvertMachineToListrom(Machine? item)
         {
             if (item == null)
                 return null;
 
             var set = new Models.Listrom.Set();
-            if (item.ReadString(Models.Internal.Machine.IsDeviceKey) == "yes")
-                set.Device = item.ReadString(Models.Internal.Machine.NameKey);
+            if (item.ReadString(Machine.IsDeviceKey) == "yes")
+                set.Device = item.ReadString(Machine.NameKey);
             else
-                set.Driver = item.ReadString(Models.Internal.Machine.NameKey);
+                set.Driver = item.ReadString(Machine.NameKey);
 
             var rowItems = new List<Models.Listrom.Row>();
 
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Rom[]>(Machine.RomKey);
             if (roms != null)
                 rowItems.AddRange(roms.Select(ConvertToListrom));
 
-            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            var disks = item.Read<Disk[]>(Machine.DiskKey);
             if (disks != null)
                 rowItems.AddRange(disks.Select(ConvertToListrom));
 
@@ -126,47 +127,47 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
+        /// Convert from <cref="Disk"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        private static Models.Listrom.Row? ConvertToListrom(Models.Internal.Disk? item)
+        private static Models.Listrom.Row? ConvertToListrom(Disk? item)
         {
             if (item == null)
                 return null;
             
             var row = new Models.Listrom.Row
             {
-                Name = item.ReadString(Models.Internal.Disk.NameKey),
-                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+                Name = item.ReadString(Disk.NameKey),
+                MD5 = item.ReadString(Disk.MD5Key),
+                SHA1 = item.ReadString(Disk.SHA1Key),
             };
 
-            if (item[Models.Internal.Disk.StatusKey] as string == "nodump")
+            if (item[Disk.StatusKey] as string == "nodump")
                 row.NoGoodDumpKnown = true;
-            else if (item[Models.Internal.Disk.StatusKey] as string == "baddump")
+            else if (item[Disk.StatusKey] as string == "baddump")
                 row.Bad = true;
 
             return row;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
+        /// Convert from <cref="Rom"/> to <cref="Models.Listrom.Row"/>
         /// </summary>
-        private static Models.Listrom.Row? ConvertToListrom(Models.Internal.Rom? item)
+        private static Models.Listrom.Row? ConvertToListrom(Rom? item)
         {
             if (item == null)
                 return null;
             
             var row = new Models.Listrom.Row
             {
-                Name = item.ReadString(Models.Internal.Rom.NameKey),
-                Size = item.ReadString(Models.Internal.Rom.SizeKey),
-                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
-                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+                Name = item.ReadString(Rom.NameKey),
+                Size = item.ReadString(Rom.SizeKey),
+                CRC = item.ReadString(Rom.CRCKey),
+                SHA1 = item.ReadString(Rom.SHA1Key),
             };
 
-            if (item[Models.Internal.Rom.StatusKey] as string == "nodump")
+            if (item[Rom.StatusKey] as string == "nodump")
                 row.NoGoodDumpKnown = true;
-            else if (item[Models.Internal.Rom.StatusKey] as string == "baddump")
+            else if (item[Rom.StatusKey] as string == "baddump")
                 row.Bad = true;
 
             return row;

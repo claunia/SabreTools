@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using SabreTools.Models.Internal;
 
 namespace SabreTools.Serialization
 {
@@ -11,50 +12,50 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
-        /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        public static Models.Internal.Header ConvertHeaderFromSeparatedValue(Models.SeparatedValue.MetadataFile item)
+        public static Header ConvertHeaderFromSeparatedValue(Models.SeparatedValue.MetadataFile item)
         {
-            var header = new Models.Internal.Header
+            var header = new Header
             {
-                [Models.Internal.Header.HeaderKey] = item.Header,
+                [Header.HeaderKey] = item.Header,
             };
 
             if (item.Row != null && item.Row.Any())
             {
                 var first = item.Row[0];
-                //header[Models.Internal.Header.FileNameKey] = first.FileName; // Not possible to map
-                header[Models.Internal.Header.NameKey] = first.FileName;
-                header[Models.Internal.Header.DescriptionKey] = first.Description;
+                //header[Header.FileNameKey] = first.FileName; // Not possible to map
+                header[Header.NameKey] = first.FileName;
+                header[Header.DescriptionKey] = first.Description;
             }
 
             return header;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.Machine"/>
+        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Machine"/>
         /// </summary>
-        public static Models.Internal.Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)
+        public static Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)
         {
-            var machine = new Models.Internal.Machine
+            var machine = new Machine
             {
-                [Models.Internal.Machine.NameKey] = item.GameName,
-                [Models.Internal.Machine.DescriptionKey] = item.GameDescription,
+                [Machine.NameKey] = item.GameName,
+                [Machine.DescriptionKey] = item.GameDescription,
             };
 
             var datItem = ConvertFromSeparatedValue(item);
             switch (datItem)
             {
-                case Models.Internal.Disk disk:
-                    machine[Models.Internal.Machine.DiskKey] = new Models.Internal.Disk[] { disk };
+                case Disk disk:
+                    machine[Machine.DiskKey] = new Disk[] { disk };
                     break;
 
-                case Models.Internal.Media media:
-                    machine[Models.Internal.Machine.MediaKey] = new Models.Internal.Media[] { media };
+                case Media media:
+                    machine[Machine.MediaKey] = new Media[] { media };
                     break;
 
-                case Models.Internal.Rom rom:
-                    machine[Models.Internal.Machine.RomKey] = new Models.Internal.Rom[] { rom };
+                case Rom rom:
+                    machine[Machine.RomKey] = new Rom[] { rom };
                     break;
             }
 
@@ -62,39 +63,39 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Models.Internal.DatItem"/>
+        /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="DatItem"/>
         /// </summary>
-        public static Models.Internal.DatItem? ConvertFromSeparatedValue(Models.SeparatedValue.Row item)
+        public static DatItem? ConvertFromSeparatedValue(Models.SeparatedValue.Row item)
         {
             return item.Type switch
             {
-                "disk" => new Models.Internal.Disk
+                "disk" => new Disk
                 {
-                    [Models.Internal.Disk.NameKey] = item.DiskName,
-                    [Models.Internal.Disk.MD5Key] = item.MD5,
-                    [Models.Internal.Disk.SHA1Key] = item.SHA1,
-                    [Models.Internal.Disk.StatusKey] = item.Status,
+                    [Disk.NameKey] = item.DiskName,
+                    [Disk.MD5Key] = item.MD5,
+                    [Disk.SHA1Key] = item.SHA1,
+                    [Disk.StatusKey] = item.Status,
                 },
-                "media" => new Models.Internal.Media
+                "media" => new Media
                 {
-                    [Models.Internal.Media.NameKey] = item.DiskName,
-                    [Models.Internal.Media.MD5Key] = item.MD5,
-                    [Models.Internal.Media.SHA1Key] = item.SHA1,
-                    [Models.Internal.Media.SHA256Key] = item.SHA256,
-                    [Models.Internal.Media.SpamSumKey] = item.SpamSum,
+                    [Media.NameKey] = item.DiskName,
+                    [Media.MD5Key] = item.MD5,
+                    [Media.SHA1Key] = item.SHA1,
+                    [Media.SHA256Key] = item.SHA256,
+                    [Media.SpamSumKey] = item.SpamSum,
                 },
-                "rom" => new Models.Internal.Rom
+                "rom" => new Rom
                 {
-                    [Models.Internal.Rom.NameKey] = item.RomName,
-                    [Models.Internal.Rom.SizeKey] = item.Size,
-                    [Models.Internal.Rom.CRCKey] = item.CRC,
-                    [Models.Internal.Rom.MD5Key] = item.MD5,
-                    [Models.Internal.Rom.SHA1Key] = item.SHA1,
-                    [Models.Internal.Rom.SHA256Key] = item.SHA256,
-                    [Models.Internal.Rom.SHA384Key] = item.SHA384,
-                    [Models.Internal.Rom.SHA512Key] = item.SHA512,
-                    [Models.Internal.Rom.SpamSumKey] = item.SpamSum,
-                    [Models.Internal.Rom.StatusKey] = item.Status,
+                    [Rom.NameKey] = item.RomName,
+                    [Rom.SizeKey] = item.Size,
+                    [Rom.CRCKey] = item.CRC,
+                    [Rom.MD5Key] = item.MD5,
+                    [Rom.SHA1Key] = item.SHA1,
+                    [Rom.SHA256Key] = item.SHA256,
+                    [Rom.SHA384Key] = item.SHA384,
+                    [Rom.SHA512Key] = item.SHA512,
+                    [Rom.SpamSumKey] = item.SpamSum,
+                    [Rom.StatusKey] = item.Status,
                 },
                 _ => null,
             };
@@ -105,39 +106,39 @@ namespace SabreTools.Serialization
         #region Deserialize
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.SeparatedValue.MetadataFile"/>
+        /// Convert from <cref="Header"/> to <cref="Models.SeparatedValue.MetadataFile"/>
         /// </summary>
-        public static Models.SeparatedValue.MetadataFile? ConvertHeaderToSeparatedValue(Models.Internal.Header? item)
+        public static Models.SeparatedValue.MetadataFile? ConvertHeaderToSeparatedValue(Header? item)
         {
             if (item == null)
                 return null;
 
             var metadataFile = new Models.SeparatedValue.MetadataFile
             {
-                Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
+                Header = item.ReadStringArray(Header.HeaderKey),
             };
             return metadataFile;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.SeparatedValue.Row"/>
+        /// Convert from <cref="Machine"/> to an array of <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        public static Models.SeparatedValue.Row[]? ConvertMachineToSeparatedValue(Models.Internal.Machine? item)
+        public static Models.SeparatedValue.Row[]? ConvertMachineToSeparatedValue(Machine? item)
         {
             if (item == null)
                 return null;
 
             var rowItems = new List<Models.SeparatedValue.Row>();
 
-            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            var disks = item.Read<Disk[]>(Machine.DiskKey);
             if (disks != null)
                 rowItems.AddRange(disks.Select(disk => ConvertToSeparatedValue(disk, item)));
 
-            var media = item.Read<Models.Internal.Media[]>(Models.Internal.Machine.MediaKey);
+            var media = item.Read<Media[]>(Machine.MediaKey);
             if (media != null)
                 rowItems.AddRange(media.Select(medium => ConvertToSeparatedValue(medium, item)));
 
-            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            var roms = item.Read<Rom[]>(Machine.RomKey);
             if (roms != null)
                 rowItems.AddRange(roms.Select(rom => ConvertToSeparatedValue(rom, item)));
 
@@ -145,71 +146,71 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.SeparatedValue.Row"/>
+        /// Convert from <cref="Disk"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Disk? item, Models.Internal.Machine? parent)
+        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Disk? item, Machine? parent)
         {
             if (item == null)
                 return null;
 
             var row = new Models.SeparatedValue.Row
             {
-                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
-                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                GameName = parent?.ReadString(Machine.NameKey),
+                Description = parent?.ReadString(Machine.DescriptionKey),
                 Type = "disk",
-                DiskName = item.ReadString(Models.Internal.Disk.NameKey),
-                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
-                Status = item.ReadString(Models.Internal.Disk.StatusKey),
+                DiskName = item.ReadString(Disk.NameKey),
+                MD5 = item.ReadString(Disk.MD5Key),
+                SHA1 = item.ReadString(Disk.SHA1Key),
+                Status = item.ReadString(Disk.StatusKey),
             };
             return row;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Media"/> to <cref="Models.SeparatedValue.Row"/>
+        /// Convert from <cref="Media"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Media? item, Models.Internal.Machine? parent)
+        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Media? item, Machine? parent)
         {
             if (item == null)
                 return null;
 
             var row = new Models.SeparatedValue.Row
             {
-                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
-                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                GameName = parent?.ReadString(Machine.NameKey),
+                Description = parent?.ReadString(Machine.DescriptionKey),
                 Type = "media",
-                DiskName = item.ReadString(Models.Internal.Media.NameKey),
-                MD5 = item.ReadString(Models.Internal.Media.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Media.SHA1Key),
-                SHA256 = item.ReadString(Models.Internal.Media.SHA256Key),
-                SpamSum = item.ReadString(Models.Internal.Media.SpamSumKey),
+                DiskName = item.ReadString(Media.NameKey),
+                MD5 = item.ReadString(Media.MD5Key),
+                SHA1 = item.ReadString(Media.SHA1Key),
+                SHA256 = item.ReadString(Media.SHA256Key),
+                SpamSum = item.ReadString(Media.SpamSumKey),
             };
             return row;
         }
 
         /// <summary>
-        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.SeparatedValue.Row"/>
+        /// Convert from <cref="Rom"/> to <cref="Models.SeparatedValue.Row"/>
         /// </summary>
-        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        private static Models.SeparatedValue.Row? ConvertToSeparatedValue(Rom? item, Machine? parent)
         {
             if (item == null)
                 return null;
 
             var row = new Models.SeparatedValue.Row
             {
-                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
-                Description = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+                GameName = parent?.ReadString(Machine.NameKey),
+                Description = parent?.ReadString(Machine.DescriptionKey),
                 Type = "rom",
-                RomName = item.ReadString(Models.Internal.Rom.NameKey),
-                Size = item.ReadString(Models.Internal.Rom.SizeKey),
-                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
-                MD5 = item.ReadString(Models.Internal.Rom.MD5Key),
-                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
-                SHA256 = item.ReadString(Models.Internal.Rom.SHA256Key),
-                SHA384 = item.ReadString(Models.Internal.Rom.SHA384Key),
-                SHA512 = item.ReadString(Models.Internal.Rom.SHA512Key),
-                SpamSum = item.ReadString(Models.Internal.Rom.SpamSumKey),
-                Status = item.ReadString(Models.Internal.Rom.StatusKey),
+                RomName = item.ReadString(Rom.NameKey),
+                Size = item.ReadString(Rom.SizeKey),
+                CRC = item.ReadString(Rom.CRCKey),
+                MD5 = item.ReadString(Rom.MD5Key),
+                SHA1 = item.ReadString(Rom.SHA1Key),
+                SHA256 = item.ReadString(Rom.SHA256Key),
+                SHA384 = item.ReadString(Rom.SHA384Key),
+                SHA512 = item.ReadString(Rom.SHA512Key),
+                SpamSum = item.ReadString(Rom.SpamSumKey),
+                Status = item.ReadString(Rom.StatusKey),
             };
             return row;
         }
