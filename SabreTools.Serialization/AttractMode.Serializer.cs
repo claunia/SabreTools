@@ -99,5 +99,83 @@ namespace SabreTools.Serialization
                 writer.Flush();
             }
         }
+
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.AttractMode.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// </summary>
+        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        {
+            var metadataFile = new Models.Internal.MetadataFile
+            {
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+            };
+
+            if (item?.Row != null && item.Row.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Row.Select(ConvertMachineToInternalModel).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.AttractMode.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.HeaderKey] = item.Header,
+            };
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine ConvertMachineToInternalModel(Row item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.NameKey] = item.Name,
+                [Models.Internal.Machine.EmulatorKey] = item.Emulator,
+                [Models.Internal.Machine.CloneOfKey] = item.CloneOf,
+                [Models.Internal.Machine.YearKey] = item.Year,
+                [Models.Internal.Machine.ManufacturerKey] = item.Manufacturer,
+                [Models.Internal.Machine.CategoryKey] = item.Category,
+                [Models.Internal.Machine.PlayersKey] = item.Players,
+                [Models.Internal.Machine.RotationKey] = item.Rotation,
+                [Models.Internal.Machine.ControlKey] = item.Control,
+                [Models.Internal.Machine.StatusKey] = item.Status,
+                [Models.Internal.Machine.DisplayCountKey] = item.DisplayCount,
+                [Models.Internal.Machine.DisplayTypeKey] = item.DisplayType,
+                [Models.Internal.Machine.ExtraKey] = item.Extra,
+                [Models.Internal.Machine.ButtonsKey] = item.Buttons,
+                [Models.Internal.Machine.FavoriteKey] = item.Favorite,
+                [Models.Internal.Machine.TagsKey] = item.Tags,
+                [Models.Internal.Machine.PlayedCountKey] = item.PlayedCount,
+                [Models.Internal.Machine.PlayedTimeKey] = item.PlayedTime,
+                [Models.Internal.Machine.PlayedTimeKey] = item.PlayedTime,
+                [Models.Internal.Machine.RomKey] = ConvertToInternalModel(item),
+            };
+            return machine;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.AttractMode.Row"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        private static Models.Internal.Rom ConvertToInternalModel(Row item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.Title,
+                [Models.Internal.Rom.AltRomnameKey] = item.AltRomname,
+                [Models.Internal.Rom.AltTitleKey] = item.AltTitle,
+                [Models.Internal.Rom.FileIsAvailableKey] = item.FileIsAvailable,
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }

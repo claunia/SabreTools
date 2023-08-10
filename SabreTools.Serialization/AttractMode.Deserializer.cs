@@ -120,5 +120,82 @@ namespace SabreTools.Serialization
             dat.Row = rows.ToArray();
             return dat;
         }
+
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.AttractMode.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertHeaderToInternalModel(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new MetadataFile
+            {
+                Header = item.ReadStringArray(Models.Internal.Header.HeaderKey),
+            };
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.AttractMode.Row"/>
+        /// </summary>
+        public static Row?[]? ConvertMachineToInternalModel(Models.Internal.Machine? item)
+        {
+            if (item == null)
+                return null;
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(rom =>
+            {
+                if (rom == null)
+                    return null;
+
+                var rowItem = ConvertToInternalModel(rom);
+
+                rowItem.Name = item.ReadString(Models.Internal.Machine.NameKey);
+                rowItem.Emulator = item.ReadString(Models.Internal.Machine.EmulatorKey);
+                rowItem.CloneOf = item.ReadString(Models.Internal.Machine.CloneOfKey);
+                rowItem.Year = item.ReadString(Models.Internal.Machine.YearKey);
+                rowItem.Manufacturer = item.ReadString(Models.Internal.Machine.ManufacturerKey);
+                rowItem.Category = item.ReadString(Models.Internal.Machine.CategoryKey);
+                rowItem.Players = item.ReadString(Models.Internal.Machine.PlayersKey);
+                rowItem.Rotation = item.ReadString(Models.Internal.Machine.RotationKey);
+                rowItem.Control = item.ReadString(Models.Internal.Machine.ControlKey);
+                rowItem.Status = item.ReadString(Models.Internal.Machine.StatusKey);
+                rowItem.DisplayCount = item.ReadString(Models.Internal.Machine.DisplayCountKey);
+                rowItem.DisplayType = item.ReadString(Models.Internal.Machine.DisplayTypeKey);
+                rowItem.Extra = item.ReadString(Models.Internal.Machine.ExtraKey);
+                rowItem.Buttons = item.ReadString(Models.Internal.Machine.ButtonsKey);
+                rowItem.Favorite = item.ReadString(Models.Internal.Machine.FavoriteKey);
+                rowItem.Tags = item.ReadString(Models.Internal.Machine.TagsKey);
+                rowItem.PlayedCount = item.ReadString(Models.Internal.Machine.PlayedCountKey);
+                rowItem.PlayedTime = item.ReadString(Models.Internal.Machine.PlayedTimeKey);
+
+                return rowItem;
+            })?.ToArray();
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.AttractMode.Row"/>
+        /// </summary>
+        private static Row? ConvertToInternalModel(Models.Internal.Rom? item)
+        {
+            if (item == null)
+                return null;
+
+            var row = new Row
+            {
+                Title = item.ReadString(Models.Internal.Rom.NameKey),
+                AltRomname = item.ReadString(Models.Internal.Rom.AltRomnameKey),
+                AltTitle = item.ReadString(Models.Internal.Rom.AltTitleKey),
+                FileIsAvailable = item.ReadString(Models.Internal.Rom.FileIsAvailableKey),
+            };
+            return row;
+        }
+
+        #endregion
     }
 }
