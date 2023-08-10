@@ -220,5 +220,101 @@ namespace SabreTools.Serialization
             }
             return dat;
         }
+
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Header"/> to <cref="Models.RomCenter.MetadataFile"/>
+        /// </summary>
+        public static MetadataFile? ConvertHeaderFromInternalModel(Models.Internal.Header? item)
+        {
+            if (item == null)
+                return null;
+
+            var metadataFile = new MetadataFile();
+
+            if (item.ContainsKey(Models.Internal.Header.AuthorKey)
+                || item.ContainsKey(Models.Internal.Header.VersionKey)
+                || item.ContainsKey(Models.Internal.Header.EmailKey)
+                || item.ContainsKey(Models.Internal.Header.HomepageKey)
+                || item.ContainsKey(Models.Internal.Header.UrlKey)
+                || item.ContainsKey(Models.Internal.Header.DateKey)
+                || item.ContainsKey(Models.Internal.Header.CommentKey))
+            {
+                metadataFile.Credits = new Credits
+                {
+                    Author = item.ReadString(Models.Internal.Header.AuthorKey),
+                    Version = item.ReadString(Models.Internal.Header.VersionKey),
+                    Email = item.ReadString(Models.Internal.Header.EmailKey),
+                    Homepage = item.ReadString(Models.Internal.Header.HomepageKey),
+                    Url = item.ReadString(Models.Internal.Header.UrlKey),
+                    Date = item.ReadString(Models.Internal.Header.DateKey),
+                    Comment = item.ReadString(Models.Internal.Header.CommentKey),
+                };
+            }
+
+            if (item.ContainsKey(Models.Internal.Header.DatVersionKey)
+                || item.ContainsKey(Models.Internal.Header.PluginKey)
+                || item.ContainsKey(Models.Internal.Header.ForceMergingKey))
+            {
+                metadataFile.Dat = new Dat
+                {
+                    Version = item.ReadString(Models.Internal.Header.DatVersionKey),
+                    Plugin = item.ReadString(Models.Internal.Header.PluginKey),
+                    Split = item.ReadString(Models.Internal.Header.ForceMergingKey) == "split" ? "yes" : "no",
+                    Merge = item.ReadString(Models.Internal.Header.ForceMergingKey) == "merge" ? "yes" : "no",
+                };
+            }
+
+            if (item.ContainsKey(Models.Internal.Header.RefNameKey)
+                || item.ContainsKey(Models.Internal.Header.EmulatorVersionKey))
+            {
+                metadataFile.Emulator = new Emulator
+                {
+                    RefName = item.ReadString(Models.Internal.Header.RefNameKey),
+                    Version = item.ReadString(Models.Internal.Header.EmulatorVersionKey),
+                };
+            }
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to an array of <cref="Models.RomCenter.Rom"/>
+        /// </summary>
+        public static Rom?[]? ConvertMachineFromInternalModel(Models.Internal.Machine? item)
+        {
+            if (item == null)
+                return null;
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            return roms?.Select(rom => ConvertFromInternalModel(rom, item))?.ToArray();
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.RomCenter.Rom"/>
+        /// </summary>
+        private static Rom? ConvertFromInternalModel(Models.Internal.Rom? item, Models.Internal.Machine? parent)
+        {
+            if (item == null)
+                return null;
+
+            var row = new Rom
+            {
+                RomName = item.ReadString(Models.Internal.Rom.NameKey),
+                RomCRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                RomSize = item.ReadString(Models.Internal.Rom.SizeKey),
+                MergeName = item.ReadString(Models.Internal.Rom.MergeKey),
+
+                ParentName = parent?.ReadString(Models.Internal.Machine.RomOfKey),
+                //ParentDescription = parent?.ReadString(Models.Internal.Machine.ParentDescriptionKey), // This is unmappable
+                GameName = parent?.ReadString(Models.Internal.Machine.NameKey),
+                GameDescription = parent?.ReadString(Models.Internal.Machine.DescriptionKey),
+            };
+            return row;
+        }
+
+        #endregion
     }
 }

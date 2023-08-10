@@ -172,5 +172,95 @@ namespace SabreTools.Serialization
             writer.WriteLine();
             writer.Flush();
         }
+
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// </summary>
+        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        {
+            var metadataFile = new Models.Internal.MetadataFile
+            {
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+            };
+
+            if (item?.Games?.Rom != null && item.Games.Rom.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Games.Rom.Select(ConvertMachineToInternalModel).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Models.Internal.Header"/>
+        /// </summary>
+        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        {
+            var header = new Models.Internal.Header();
+
+            if (item.Credits != null)
+            {
+                header[Models.Internal.Header.AuthorKey] = item.Credits.Author;
+                header[Models.Internal.Header.VersionKey] = item.Credits.Version;
+                header[Models.Internal.Header.EmailKey] = item.Credits.Email;
+                header[Models.Internal.Header.HomepageKey] = item.Credits.Homepage;
+                header[Models.Internal.Header.UrlKey] = item.Credits.Url;
+                header[Models.Internal.Header.DateKey] = item.Credits.Date;
+                header[Models.Internal.Header.CommentKey] = item.Credits.Comment;
+            }
+
+            if (item.Dat != null)
+            {
+                header[Models.Internal.Header.DatVersionKey] = item.Dat.Version;
+                header[Models.Internal.Header.PluginKey] = item.Dat.Plugin;
+
+                if (item.Dat.Split == "yes" || item.Dat.Split == "1")
+                    header[Models.Internal.Header.ForceMergingKey] = "split";
+                else if (item.Dat.Merge == "yes" || item.Dat.Merge == "1")
+                    header[Models.Internal.Header.ForceMergingKey] = "merge";
+            }
+
+            if (item.Emulator != null)
+            {
+                header[Models.Internal.Header.RefNameKey] = item.Emulator.RefName;
+                header[Models.Internal.Header.EmulatorVersionKey] = item.Emulator.Version;
+            }
+
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.RomCenter.Game"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine ConvertMachineToInternalModel(Rom item)
+        {
+            var machine = new Models.Internal.Machine
+            {
+                [Models.Internal.Machine.RomOfKey] = item.ParentName,
+                //[Models.Internal.Machine.ParentDescriptionKey] = item.ParentDescription, // This is unmappable
+                [Models.Internal.Machine.NameKey] = item.GameName,
+                [Models.Internal.Machine.DescriptionKey] = item.GameDescription,
+                [Models.Internal.Machine.RomKey] = new Models.Internal.Rom[] { ConvertToInternalModel(item) },
+            };
+
+            return machine;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.RomCenter.Rom"/> to <cref="Models.Internal.Rom"/>
+        /// </summary>
+        private static Models.Internal.Rom ConvertToInternalModel(Rom item)
+        {
+            var rom = new Models.Internal.Rom
+            {
+                [Models.Internal.Rom.NameKey] = item.RomName,
+                [Models.Internal.Rom.CRCKey] = item.RomCRC,
+                [Models.Internal.Rom.SizeKey] = item.RomSize,
+                [Models.Internal.Rom.MergeKey] = item.MergeName,
+            };
+            return rom;
+        }
+
+        #endregion
     }
 }
