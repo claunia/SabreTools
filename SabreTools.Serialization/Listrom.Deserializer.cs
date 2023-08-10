@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using SabreTools.Models.Listrom;
 
@@ -186,5 +187,85 @@ namespace SabreTools.Serialization
             dat.ADDITIONAL_ELEMENTS = additional.ToArray();
             return dat;
         }
+    
+        // TODO: Add deserialization of entire MetadataFile
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Machine"/> to <cref="Models.Listrom.Set"/>
+        /// </summary>
+        public static Set? ConvertMachineToListrom(Models.Internal.Machine? item)
+        {
+            if (item == null)
+                return null;
+
+            var set = new Set();
+            if (item.ReadString(Models.Internal.Machine.IsDeviceKey) == "yes")
+                set.Device = item.ReadString(Models.Internal.Machine.NameKey);
+            else
+                set.Driver = item.ReadString(Models.Internal.Machine.NameKey);
+
+            var rowItems = new List<Row>();
+
+            var roms = item.Read<Models.Internal.Rom[]>(Models.Internal.Machine.RomKey);
+            if (roms != null)
+                rowItems.AddRange(roms.Select(ConvertToListrom));
+
+            var disks = item.Read<Models.Internal.Disk[]>(Models.Internal.Machine.DiskKey);
+            if (disks != null)
+                rowItems.AddRange(disks.Select(ConvertToListrom));
+
+            set.Row = rowItems.ToArray();
+            return set;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Disk"/> to <cref="Models.Listrom.Row"/>
+        /// </summary>
+        private static Row? ConvertToListrom(Models.Internal.Disk? item)
+        {
+            if (item == null)
+                return null;
+            
+            var row = new Row
+            {
+                Name = item.ReadString(Models.Internal.Disk.NameKey),
+                MD5 = item.ReadString(Models.Internal.Disk.MD5Key),
+                SHA1 = item.ReadString(Models.Internal.Disk.SHA1Key),
+            };
+
+            if (item[Models.Internal.Disk.StatusKey] as string == "nodump")
+                row.NoGoodDumpKnown = true;
+            else if (item[Models.Internal.Disk.StatusKey] as string == "baddump")
+                row.Bad = true;
+
+            return row;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Internal.Rom"/> to <cref="Models.Listrom.Row"/>
+        /// </summary>
+        private static Row? ConvertToListrom(Models.Internal.Rom? item)
+        {
+            if (item == null)
+                return null;
+            
+            var row = new Row
+            {
+                Name = item.ReadString(Models.Internal.Rom.NameKey),
+                Size = item.ReadString(Models.Internal.Rom.SizeKey),
+                CRC = item.ReadString(Models.Internal.Rom.CRCKey),
+                SHA1 = item.ReadString(Models.Internal.Rom.SHA1Key),
+            };
+
+            if (item[Models.Internal.Rom.StatusKey] as string == "nodump")
+                row.NoGoodDumpKnown = true;
+            else if (item[Models.Internal.Rom.StatusKey] as string == "baddump")
+                row.Bad = true;
+
+            return row;
+        }
+
+        #endregion
     }
 }

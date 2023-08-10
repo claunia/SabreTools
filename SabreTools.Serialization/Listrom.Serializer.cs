@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -175,5 +176,108 @@ namespace SabreTools.Serialization
                 writer.Flush();
             }
         }
+
+        #region Internal
+
+        /// <summary>
+        /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Models.Internal.MetadataFile"/>
+        /// </summary>
+        public static Models.Internal.MetadataFile ConvertToInternalModel(MetadataFile item)
+        {
+            var metadataFile = new Models.Internal.MetadataFile
+            {
+                [Models.Internal.MetadataFile.HeaderKey] = ConvertHeaderToInternalModel(item),
+            };
+
+            if (item?.Set != null && item.Set.Any())
+                metadataFile[Models.Internal.MetadataFile.MachineKey] = item.Set.Select(ConvertMachineToInternalModel).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Header"/>
+        /// </summary>
+        private static Models.Internal.Header ConvertHeaderToInternalModel(MetadataFile item)
+        {
+            var header = new Models.Internal.Header
+            {
+                [Models.Internal.Header.NameKey] = "MAME Listrom",
+            };
+            return header;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listrom.Set"/> to <cref="Models.Internal.Machine"/>
+        /// </summary>
+        private static Models.Internal.Machine ConvertMachineToInternalModel(Set item)
+        {
+            var machine = new Models.Internal.Machine();
+            if (!string.IsNullOrWhiteSpace(item.Device))
+            {
+                machine[Models.Internal.Machine.NameKey] = item.Device;
+                machine[Models.Internal.Machine.IsDeviceKey] = "yes";
+            }
+            else
+            {
+                machine[Models.Internal.Machine.NameKey] = item.Driver;
+            }
+
+            if (item.Row != null && item.Row.Any())
+            {
+                var datItems = new List<Models.Internal.DatItem>();
+                foreach (var file in item.Row)
+                {
+                    datItems.Add(ConvertToInternalModel(file));
+                }
+
+                machine[Models.Internal.Machine.DiskKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "disk")?.ToArray();
+                machine[Models.Internal.Machine.RomKey] = datItems.Where(i => i.ReadString(Models.Internal.DatItem.TypeKey) == "rom")?.ToArray();
+            }
+
+            return machine;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listrom.Row"/> to <cref="Models.Internal.DatItem"/>
+        /// </summary>
+        private static Models.Internal.DatItem ConvertToInternalModel(Row item)
+        {
+            if (item.Size == null)
+            {
+                var disk = new Models.Internal.Disk
+                {
+                    [Models.Internal.Disk.NameKey] = item.Name,
+                    [Models.Internal.Disk.MD5Key] = item.MD5,
+                    [Models.Internal.Disk.SHA1Key] = item.SHA1,
+                };
+
+                if (item.NoGoodDumpKnown)
+                    disk[Models.Internal.Disk.StatusKey] = "nodump";
+                else if (item.Bad)
+                    disk[Models.Internal.Disk.StatusKey] = "baddump";
+
+                return disk;
+            }
+            else
+            {
+                var rom = new Models.Internal.Rom
+                {
+                    [Models.Internal.Rom.NameKey] = item.Name,
+                    [Models.Internal.Rom.SizeKey] = item.Size,
+                    [Models.Internal.Rom.CRCKey] = item.CRC,
+                    [Models.Internal.Rom.SHA1Key] = item.SHA1,
+                };
+
+                if (item.NoGoodDumpKnown)
+                    rom[Models.Internal.Rom.StatusKey] = "nodump";
+                else if (item.Bad)
+                    rom[Models.Internal.Rom.StatusKey] = "baddump";
+
+                return rom;
+            }
+        }
+
+        #endregion
     }
 }
