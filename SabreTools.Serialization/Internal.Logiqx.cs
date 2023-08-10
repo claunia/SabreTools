@@ -12,9 +12,40 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromLogiqx(Models.Logiqx.Datafile item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromLogiqx(item),
+            };
+
+            // TODO: Handle Dir items
+            if (item?.Game != null && item.Game.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromLogiqx).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Logiqx.Datafile"/> to <cref="Header"/>
+        /// </summary>
+        private static Header ConvertHeaderFromLogiqx(Models.Logiqx.Datafile item)
+        {
+            var header = ConvertHeaderFromLogiqx(item.Header);
+
+            header[Header.BuildKey] = item.Build;
+            header[Header.DebugKey] = item.Debug;
+            header[Header.SchemaLocationKey] = item.SchemaLocation;
+
+            return header;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Logiqx.Header"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromLogiqx(Models.Logiqx.Header item)
+        private static Header ConvertHeaderFromLogiqx(Models.Logiqx.Header item)
         {
             var header = new Header
             {
@@ -58,7 +89,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.GameBase"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromLogiqx(Models.Logiqx.GameBase item)
+        private static Machine ConvertMachineFromLogiqx(Models.Logiqx.GameBase item)
         {
             var machine = new Machine
             {
@@ -190,7 +221,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Archive"/> to <cref="Archive"/>
         /// </summary>
-        public static Archive ConvertFromLogiqx(Models.Logiqx.Archive item)
+        private static Archive ConvertFromLogiqx(Models.Logiqx.Archive item)
         {
             var archive = new Archive
             {
@@ -202,7 +233,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.BiosSet"/> to <cref="BiosSet"/>
         /// </summary>
-        public static BiosSet ConvertFromLogiqx(Models.Logiqx.BiosSet item)
+        private static BiosSet ConvertFromLogiqx(Models.Logiqx.BiosSet item)
         {
             var biosset = new BiosSet
             {
@@ -216,7 +247,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.DeviceRef"/> to <cref="DeviceRef"/>
         /// </summary>
-        public static DeviceRef ConvertFromLogiqx(Models.Logiqx.DeviceRef item)
+        private static DeviceRef ConvertFromLogiqx(Models.Logiqx.DeviceRef item)
         {
             var deviceRef = new DeviceRef
             {
@@ -228,7 +259,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Disk"/> to <cref="Disk"/>
         /// </summary>
-        public static Disk ConvertFromLogiqx(Models.Logiqx.Disk item)
+        private static Disk ConvertFromLogiqx(Models.Logiqx.Disk item)
         {
             var disk = new Disk
             {
@@ -245,7 +276,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Driver"/> to <cref="Driver"/>
         /// </summary>
-        public static Driver ConvertFromLogiqx(Models.Logiqx.Driver item)
+        private static Driver ConvertFromLogiqx(Models.Logiqx.Driver item)
         {
             var driver = new Driver
             {
@@ -264,7 +295,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Media"/> to <cref="Media"/>
         /// </summary>
-        public static Media ConvertFromLogiqx(Models.Logiqx.Media item)
+        private static Media ConvertFromLogiqx(Models.Logiqx.Media item)
         {
             var media = new Media
             {
@@ -280,7 +311,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Release"/> to <cref="Release"/>
         /// </summary>
-        public static Release ConvertFromLogiqx(Models.Logiqx.Release item)
+        private static Release ConvertFromLogiqx(Models.Logiqx.Release item)
         {
             var release = new Release
             {
@@ -296,7 +327,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Rom"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromLogiqx(Models.Logiqx.Rom item)
+        private static Rom ConvertFromLogiqx(Models.Logiqx.Rom item)
         {
             var rom = new Rom
             {
@@ -325,7 +356,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.Sample"/> to <cref="Sample"/>
         /// </summary>
-        public static Sample ConvertFromLogiqx(Models.Logiqx.Sample item)
+        private static Sample ConvertFromLogiqx(Models.Logiqx.Sample item)
         {
             var sample = new Sample
             {
@@ -337,7 +368,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Logiqx.SoftwareList"/> to <cref="SoftwareList"/>
         /// </summary>
-        public static SoftwareList ConvertFromLogiqx(Models.Logiqx.SoftwareList item)
+        private static SoftwareList ConvertFromLogiqx(Models.Logiqx.SoftwareList item)
         {
             var softwareList = new SoftwareList
             {

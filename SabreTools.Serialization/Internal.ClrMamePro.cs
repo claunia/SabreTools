@@ -12,9 +12,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.ClrMamePro.MetadataFile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromClrMamePro(Models.ClrMamePro.MetadataFile item)
+        {
+            var metadataFile = new MetadataFile();
+
+            if (item?.ClrMamePro != null)
+                metadataFile[MetadataFile.HeaderKey] = ConvertHeaderFromClrMamePro(item.ClrMamePro);
+
+            if (item?.Game != null && item.Game.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromClrMamePro).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.ClrMamePro.ClrMamePro"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromClrMamePro(Models.ClrMamePro.ClrMamePro item)
+        private static Header ConvertHeaderFromClrMamePro(Models.ClrMamePro.ClrMamePro item)
         {
             var header = new Header
             {
@@ -40,7 +56,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.GameBase"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromClrMamePro(Models.ClrMamePro.GameBase item)
+        private static Machine ConvertMachineFromClrMamePro(Models.ClrMamePro.GameBase item)
         {
             var machine = new Machine
             {
@@ -162,7 +178,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Archive"/> to <cref="Archive"/>
         /// </summary>
-        public static Archive ConvertFromClrMamePro(Models.ClrMamePro.Archive item)
+        private static Archive ConvertFromClrMamePro(Models.ClrMamePro.Archive item)
         {
             var archive = new Archive
             {
@@ -174,7 +190,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.BiosSet"/> to <cref="BiosSet"/>
         /// </summary>
-        public static BiosSet ConvertFromClrMamePro(Models.ClrMamePro.BiosSet item)
+        private static BiosSet ConvertFromClrMamePro(Models.ClrMamePro.BiosSet item)
         {
             var biosset = new BiosSet
             {
@@ -188,7 +204,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Chip"/> to <cref="Chip"/>
         /// </summary>
-        public static Chip ConvertFromClrMamePro(Models.ClrMamePro.Chip item)
+        private static Chip ConvertFromClrMamePro(Models.ClrMamePro.Chip item)
         {
             var chip = new Chip
             {
@@ -203,7 +219,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.DipSwitch"/> to <cref="DipSwitch"/>
         /// </summary>
-        public static DipSwitch ConvertFromClrMamePro(Models.ClrMamePro.DipSwitch item)
+        private static DipSwitch ConvertFromClrMamePro(Models.ClrMamePro.DipSwitch item)
         {
             var dipswitch = new DipSwitch
             {
@@ -217,7 +233,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Disk"/> to <cref="Disk"/>
         /// </summary>
-        public static Disk ConvertFromClrMamePro(Models.ClrMamePro.Disk item)
+        private static Disk ConvertFromClrMamePro(Models.ClrMamePro.Disk item)
         {
             var disk = new Disk
             {
@@ -234,7 +250,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Driver"/> to <cref="Driver"/>
         /// </summary>
-        public static Driver ConvertFromClrMamePro(Models.ClrMamePro.Driver item)
+        private static Driver ConvertFromClrMamePro(Models.ClrMamePro.Driver item)
         {
             var driver = new Driver
             {
@@ -250,7 +266,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Input"/> to <cref="Input"/>
         /// </summary>
-        public static Input ConvertFromClrMamePro(Models.ClrMamePro.Input item)
+        private static Input ConvertFromClrMamePro(Models.ClrMamePro.Input item)
         {
             var input = new Input
             {
@@ -267,7 +283,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Media"/> to <cref="Media"/>
         /// </summary>
-        public static Media ConvertFromClrMamePro(Models.ClrMamePro.Media item)
+        private static Media ConvertFromClrMamePro(Models.ClrMamePro.Media item)
         {
             var media = new Media
             {
@@ -283,7 +299,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Release"/> to <cref="Release"/>
         /// </summary>
-        public static Release ConvertFromClrMamePro(Models.ClrMamePro.Release item)
+        private static Release ConvertFromClrMamePro(Models.ClrMamePro.Release item)
         {
             var release = new Release
             {
@@ -299,7 +315,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Rom"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromClrMamePro(Models.ClrMamePro.Rom item)
+        private static Rom ConvertFromClrMamePro(Models.ClrMamePro.Rom item)
         {
             var rom = new Rom
             {
@@ -331,7 +347,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Sample"/> to <cref="Sample"/>
         /// </summary>
-        public static Sample ConvertFromClrMamePro(Models.ClrMamePro.Sample item)
+        private static Sample ConvertFromClrMamePro(Models.ClrMamePro.Sample item)
         {
             var sample = new Sample
             {
@@ -343,7 +359,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Sound"/> to <cref="Sound"/>
         /// </summary>
-        public static Sound ConvertFromClrMamePro(Models.ClrMamePro.Sound item)
+        private static Sound ConvertFromClrMamePro(Models.ClrMamePro.Sound item)
         {
             var sound = new Sound
             {
@@ -355,7 +371,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ClrMamePro.Video"/> to <cref="Video"/>
         /// </summary>
-        public static Video ConvertFromClrMamePro(Models.ClrMamePro.Video item)
+        private static Video ConvertFromClrMamePro(Models.ClrMamePro.Video item)
         {
             var video = new Video
             {

@@ -12,9 +12,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.SoftwareList.SoftwareList"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromSoftwareList(Models.SoftwareList.SoftwareList item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromSoftwareList(item),
+            };
+
+            if (item?.Software != null && item.Software.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Software.Select(ConvertMachineFromSoftwareList).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.SoftwareList.SoftwareList"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromSoftwareList(Models.SoftwareList.SoftwareList item)
+        private static Header ConvertHeaderFromSoftwareList(Models.SoftwareList.SoftwareList item)
         {
             var header = new Header
             {
@@ -28,7 +44,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Software"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromSoftwareList(Models.SoftwareList.Software item)
+        private static Machine ConvertMachineFromSoftwareList(Models.SoftwareList.Software item)
         {
             var machine = new Machine
             {
@@ -77,7 +93,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DataArea"/> to <cref="DataArea"/>
         /// </summary>
-        public static DataArea ConvertFromSoftwareList(Models.SoftwareList.DataArea item)
+        private static DataArea ConvertFromSoftwareList(Models.SoftwareList.DataArea item)
         {
             var dataArea = new DataArea
             {
@@ -103,7 +119,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DipSwitch"/> to <cref="DipSwitch"/>
         /// </summary>
-        public static DipSwitch ConvertFromSoftwareList(Models.SoftwareList.DipSwitch item)
+        private static DipSwitch ConvertFromSoftwareList(Models.SoftwareList.DipSwitch item)
         {
             var dipSwitch = new DipSwitch
             {
@@ -128,7 +144,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DipValue"/> to <cref="DipValue"/>
         /// </summary>
-        public static DipValue ConvertFromSoftwareList(Models.SoftwareList.DipValue item)
+        private static DipValue ConvertFromSoftwareList(Models.SoftwareList.DipValue item)
         {
             var dipValue = new DipValue
             {
@@ -142,7 +158,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Disk"/> to <cref="Disk"/>
         /// </summary>
-        public static Disk ConvertFromSoftwareList(Models.SoftwareList.Disk item)
+        private static Disk ConvertFromSoftwareList(Models.SoftwareList.Disk item)
         {
             var disk = new Disk
             {
@@ -158,7 +174,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.DiskArea"/> to <cref="DiskArea"/>
         /// </summary>
-        public static DiskArea ConvertFromSoftwareList(Models.SoftwareList.DiskArea item)
+        private static DiskArea ConvertFromSoftwareList(Models.SoftwareList.DiskArea item)
         {
             var diskArea = new DiskArea
             {
@@ -181,7 +197,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Feature"/> to <cref="Feature"/>
         /// </summary>
-        public static Feature ConvertFromSoftwareList(Models.SoftwareList.Feature item)
+        private static Feature ConvertFromSoftwareList(Models.SoftwareList.Feature item)
         {
             var feature = new Feature
             {
@@ -194,7 +210,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Info"/> to <cref="Info"/>
         /// </summary>
-        public static Info ConvertFromSoftwareList(Models.SoftwareList.Info item)
+        private static Info ConvertFromSoftwareList(Models.SoftwareList.Info item)
         {
             var info = new Info
             {
@@ -207,7 +223,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Part"/> to <cref="Part"/>
         /// </summary>
-        public static Part ConvertFromSoftwareList(Models.SoftwareList.Part item)
+        private static Part ConvertFromSoftwareList(Models.SoftwareList.Part item)
         {
             var part = new Part
             {
@@ -261,7 +277,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.Rom"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSoftwareList(Models.SoftwareList.Rom item)
+        private static Rom ConvertFromSoftwareList(Models.SoftwareList.Rom item)
         {
             var rom = new Rom
             {
@@ -281,7 +297,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SoftwareList.SharedFeat"/> to <cref="SharedFeat"/>
         /// </summary>
-        public static SharedFeat ConvertFromSoftwareList(Models.SoftwareList.SharedFeat item)
+        private static SharedFeat ConvertFromSoftwareList(Models.SoftwareList.SharedFeat item)
         {
             var sharedFeat = new SharedFeat
             {

@@ -11,9 +11,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromEverdriveSMDB(Models.EverdriveSMDB.MetadataFile item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromEverdriveSMDB(item),
+            };
+
+            if (item?.Row != null && item.Row.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Row.Select(ConvertMachineFromEverdriveSMDB).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.EverdriveSMDB.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromEverdriveSMDB(Models.EverdriveSMDB.MetadataFile item)
+        private static Header ConvertHeaderFromEverdriveSMDB(Models.EverdriveSMDB.MetadataFile item)
         {
             var header = new Header
             {
@@ -25,7 +41,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.EverdriveSMDB.Row"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromEverdriveSMDB(Models.EverdriveSMDB.Row item)
+        private static Machine ConvertMachineFromEverdriveSMDB(Models.EverdriveSMDB.Row item)
         {
             var machine = new Machine
             {
@@ -37,7 +53,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.EverdriveSMDB.Row"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromEverdriveSMDB(Models.EverdriveSMDB.Row item)
+        private static Rom ConvertFromEverdriveSMDB(Models.EverdriveSMDB.Row item)
         {
             var rom = new Rom
             {

@@ -12,6 +12,22 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromOpenMSX(Models.OpenMSX.SoftwareDb item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromOpenMSX(item),
+            };
+
+            if (item?.Software != null && item.Software.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Software.Select(ConvertMachineFromOpenMSX).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.OpenMSX.SoftwareDb"/> to <cref="Header"/>
         /// </summary>
         public static Header ConvertHeaderFromOpenMSX(Models.OpenMSX.SoftwareDb item)

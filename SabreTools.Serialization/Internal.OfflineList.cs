@@ -12,13 +12,29 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.OfflineList.Dat"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromOfflineList(Models.OfflineList.Dat item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromOfflineList(item),
+            };
+
+            if (item?.Games?.Game != null && item.Games.Game.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Games.Game.Select(ConvertMachineFromOfflineList).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.OfflineList.Dat"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromOfflineList(Models.OfflineList.Dat item)
+        private static Header ConvertHeaderFromOfflineList(Models.OfflineList.Dat item)
         {
             var header = new Header
             {
-                [Header.NoNamespaceSchemaLocationKey] = item.NoNamespaceSchemaLocation,
+                [Header.SchemaLocationKey] = item.NoNamespaceSchemaLocation,
             };
 
             if (item.Configuration != null)
@@ -47,7 +63,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.OfflineList.Game"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromOfflineList(Models.OfflineList.Game item)
+        private static Machine ConvertMachineFromOfflineList(Models.OfflineList.Game item)
         {
             var machine = new Machine
             {
@@ -81,22 +97,9 @@ namespace SabreTools.Serialization
         }
 
         /// <summary>
-        /// Convert from <cref="Models.OfflineList.Files"/> to an array of <cref="Rom"/>
-        /// </summary>
-        public static Rom[] ConvertFromOfflineList(Models.OfflineList.Files item)
-        {
-            var roms = new List<Rom>();
-            foreach (var romCRC in item.RomCRC)
-            {
-                roms.Add(ConvertFromOfflineList(romCRC));
-            }
-            return roms.ToArray();
-        }
-
-        /// <summary>
         /// Convert from <cref="Models.OfflineList.FileRomCRC"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromOfflineList(Models.OfflineList.FileRomCRC item)
+        private static Rom ConvertFromOfflineList(Models.OfflineList.FileRomCRC item)
         {
             var rom = new Rom
             {
@@ -120,7 +123,7 @@ namespace SabreTools.Serialization
 
             var dat = new Models.OfflineList.Dat
             {
-                NoNamespaceSchemaLocation = item.ReadString(Header.NoNamespaceSchemaLocationKey),
+                NoNamespaceSchemaLocation = item.ReadString(Header.SchemaLocationKey),
             };
 
             if (item.ContainsKey(Header.NameKey)

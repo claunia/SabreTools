@@ -12,9 +12,41 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Listxml.M1"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromListxml(Models.Listxml.M1 item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromListxml(item),
+            };
+
+            if (item?.Game != null && item.Game.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromListxml).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
+        /// Convert from <cref="Models.Listxml.Mame"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromListxml(Models.Listxml.Mame item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromListxml(item),
+            };
+
+            if (item?.Game != null && item.Game.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Game.Select(ConvertMachineFromListxml).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Listxml.M1"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromListxml(Models.Listxml.M1 item)
+        private static Header ConvertHeaderFromListxml(Models.Listxml.M1 item)
         {
             var header = new Header
             {
@@ -26,7 +58,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Mame"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromListxml(Models.Listxml.Mame item)
+        private static Header ConvertHeaderFromListxml(Models.Listxml.Mame item)
         {
             var header = new Header
             {
@@ -40,7 +72,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.GameBase"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromListxml(Models.Listxml.GameBase item)
+        private static Machine ConvertMachineFromListxml(Models.Listxml.GameBase item)
         {
             var machine = new Machine
             {
@@ -244,7 +276,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Adjuster"/> to <cref="Adjuster"/>
         /// </summary>
-        public static Adjuster ConvertFromListxml(Models.Listxml.Adjuster item)
+        private static Adjuster ConvertFromListxml(Models.Listxml.Adjuster item)
         {
             var adjuster = new Adjuster
             {
@@ -261,7 +293,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Analog"/> to <cref="Analog"/>
         /// </summary>
-        public static Analog ConvertFromListxml(Models.Listxml.Analog item)
+        private static Analog ConvertFromListxml(Models.Listxml.Analog item)
         {
             var analog = new Analog
             {
@@ -273,7 +305,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.BiosSet"/> to <cref="BiosSet"/>
         /// </summary>
-        public static BiosSet ConvertFromListxml(Models.Listxml.BiosSet item)
+        private static BiosSet ConvertFromListxml(Models.Listxml.BiosSet item)
         {
             var biosset = new BiosSet
             {
@@ -287,7 +319,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Chip"/> to <cref="Chip"/>
         /// </summary>
-        public static Chip ConvertFromListxml(Models.Listxml.Chip item)
+        private static Chip ConvertFromListxml(Models.Listxml.Chip item)
         {
             var chip = new Chip
             {
@@ -303,7 +335,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Condition"/> to <cref="Condition"/>
         /// </summary>
-        public static Condition ConvertFromListxml(Models.Listxml.Condition item)
+        private static Condition ConvertFromListxml(Models.Listxml.Condition item)
         {
             var condition = new Condition
             {
@@ -318,7 +350,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Configuration"/> to <cref="Configuration"/>
         /// </summary>
-        public static Configuration ConvertFromListxml(Models.Listxml.Configuration item)
+        private static Configuration ConvertFromListxml(Models.Listxml.Configuration item)
         {
             var configuration = new Configuration
             {
@@ -356,7 +388,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.ConfLocation"/> to <cref="ConfLocation"/>
         /// </summary>
-        public static ConfLocation ConvertFromListxml(Models.Listxml.ConfLocation item)
+        private static ConfLocation ConvertFromListxml(Models.Listxml.ConfLocation item)
         {
             var confLocation = new ConfLocation
             {
@@ -370,7 +402,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.ConfSetting"/> to <cref="ConfSetting"/>
         /// </summary>
-        public static ConfSetting ConvertFromListxml(Models.Listxml.ConfSetting item)
+        private static ConfSetting ConvertFromListxml(Models.Listxml.ConfSetting item)
         {
             var confSetting = new ConfSetting
             {
@@ -388,7 +420,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Control"/> to <cref="Control"/>
         /// </summary>
-        public static Control ConvertFromListxml(Models.Listxml.Control item)
+        private static Control ConvertFromListxml(Models.Listxml.Control item)
         {
             var control = new Control
             {
@@ -411,7 +443,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Device"/> to <cref="Device"/>
         /// </summary>
-        public static Device ConvertFromListxml(Models.Listxml.Device item)
+        private static Device ConvertFromListxml(Models.Listxml.Device item)
         {
             var device = new Device
             {
@@ -441,7 +473,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DeviceRef"/> to <cref="DeviceRef"/>
         /// </summary>
-        public static DeviceRef ConvertFromListxml(Models.Listxml.DeviceRef item)
+        private static DeviceRef ConvertFromListxml(Models.Listxml.DeviceRef item)
         {
             var deviceRef = new DeviceRef
             {
@@ -453,7 +485,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DipLocation"/> to <cref="DipLocation"/>
         /// </summary>
-        public static DipLocation ConvertFromListxml(Models.Listxml.DipLocation item)
+        private static DipLocation ConvertFromListxml(Models.Listxml.DipLocation item)
         {
             var dipLocation = new DipLocation
             {
@@ -467,7 +499,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DipSwitch"/> to <cref="DipSwitch"/>
         /// </summary>
-        public static DipSwitch ConvertFromListxml(Models.Listxml.DipSwitch item)
+        private static DipSwitch ConvertFromListxml(Models.Listxml.DipSwitch item)
         {
             var dipSwitch = new DipSwitch
             {
@@ -505,7 +537,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.DipValue"/> to <cref="DipValue"/>
         /// </summary>
-        public static DipValue ConvertFromListxml(Models.Listxml.DipValue item)
+        private static DipValue ConvertFromListxml(Models.Listxml.DipValue item)
         {
             var dipValue = new DipValue
             {
@@ -523,7 +555,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Disk"/> to <cref="Disk"/>
         /// </summary>
-        public static Disk ConvertFromListxml(Models.Listxml.Disk item)
+        private static Disk ConvertFromListxml(Models.Listxml.Disk item)
         {
             var disk = new Disk
             {
@@ -543,7 +575,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Display"/> to <cref="Display"/>
         /// </summary>
-        public static Display ConvertFromListxml(Models.Listxml.Display item)
+        private static Display ConvertFromListxml(Models.Listxml.Display item)
         {
             var display = new Display
             {
@@ -568,7 +600,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Driver"/> to <cref="Driver"/>
         /// </summary>
-        public static Driver ConvertFromListxml(Models.Listxml.Driver item)
+        private static Driver ConvertFromListxml(Models.Listxml.Driver item)
         {
             var driver = new Driver
             {
@@ -590,7 +622,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Extension"/> to <cref="Extension"/>
         /// </summary>
-        public static Extension ConvertFromListxml(Models.Listxml.Extension item)
+        private static Extension ConvertFromListxml(Models.Listxml.Extension item)
         {
             var extension = new Extension
             {
@@ -602,7 +634,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Feature"/> to <cref="Feature"/>
         /// </summary>
-        public static Feature ConvertFromListxml(Models.Listxml.Feature item)
+        private static Feature ConvertFromListxml(Models.Listxml.Feature item)
         {
             var feature = new Feature
             {
@@ -616,7 +648,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Input"/> to <cref="Input"/>
         /// </summary>
-        public static Input ConvertFromListxml(Models.Listxml.Input item)
+        private static Input ConvertFromListxml(Models.Listxml.Input item)
         {
             var input = new Input
             {
@@ -644,7 +676,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Instance"/> to <cref="Instance"/>
         /// </summary>
-        public static Instance ConvertFromListxml(Models.Listxml.Instance item)
+        private static Instance ConvertFromListxml(Models.Listxml.Instance item)
         {
             var instance = new Instance
             {
@@ -657,7 +689,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Port"/> to <cref="Port"/>
         /// </summary>
-        public static Port ConvertFromListxml(Models.Listxml.Port item)
+        private static Port ConvertFromListxml(Models.Listxml.Port item)
         {
             var port = new Port
             {
@@ -680,7 +712,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.RamOption"/> to <cref="RamOption"/>
         /// </summary>
-        public static RamOption ConvertFromListxml(Models.Listxml.RamOption item)
+        private static RamOption ConvertFromListxml(Models.Listxml.RamOption item)
         {
             var ramOption = new RamOption
             {
@@ -693,7 +725,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Rom"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromListxml(Models.Listxml.Rom item)
+        private static Rom ConvertFromListxml(Models.Listxml.Rom item)
         {
             var rom = new Rom
             {
@@ -716,7 +748,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Sample"/> to <cref="Sample"/>
         /// </summary>
-        public static Sample ConvertFromListxml(Models.Listxml.Sample item)
+        private static Sample ConvertFromListxml(Models.Listxml.Sample item)
         {
             var sample = new Sample
             {
@@ -728,7 +760,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Slot"/> to <cref="Slot"/>
         /// </summary>
-        public static Slot ConvertFromListxml(Models.Listxml.Slot item)
+        private static Slot ConvertFromListxml(Models.Listxml.Slot item)
         {
             var slot = new Slot
             {
@@ -751,7 +783,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.SlotOption"/> to <cref="SlotOption"/>
         /// </summary>
-        public static SlotOption ConvertFromListxml(Models.Listxml.SlotOption item)
+        private static SlotOption ConvertFromListxml(Models.Listxml.SlotOption item)
         {
             var slotOption = new SlotOption
             {
@@ -765,7 +797,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.SoftwareList"/> to <cref="SoftwareList"/>
         /// </summary>
-        public static SoftwareList ConvertFromListxml(Models.Listxml.SoftwareList item)
+        private static SoftwareList ConvertFromListxml(Models.Listxml.SoftwareList item)
         {
             var softwareList = new SoftwareList
             {
@@ -780,7 +812,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Sound"/> to <cref="Sound"/>
         /// </summary>
-        public static Sound ConvertFromListxml(Models.Listxml.Sound item)
+        private static Sound ConvertFromListxml(Models.Listxml.Sound item)
         {
             var sound = new Sound
             {
@@ -792,7 +824,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listxml.Video"/> to <cref="Video"/>
         /// </summary>
-        public static Video ConvertFromListxml(Models.Listxml.Video item)
+        private static Video ConvertFromListxml(Models.Listxml.Video item)
         {
             var video = new Video
             {

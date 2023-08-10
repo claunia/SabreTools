@@ -12,9 +12,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromListrom(Models.Listrom.MetadataFile item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromListrom(item),
+            };
+
+            if (item?.Set != null && item.Set.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Set.Select(ConvertMachineFromListrom).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Listrom.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromListrom(Models.Listrom.MetadataFile item)
+        private static Header ConvertHeaderFromListrom(Models.Listrom.MetadataFile item)
         {
             var header = new Header
             {
@@ -26,7 +42,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.Set"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromListrom(Models.Listrom.Set item)
+        private static Machine ConvertMachineFromListrom(Models.Listrom.Set item)
         {
             var machine = new Machine();
             if (!string.IsNullOrWhiteSpace(item.Device))
@@ -57,7 +73,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Listrom.Row"/> to <cref="DatItem"/>
         /// </summary>
-        public static DatItem ConvertFromListrom(Models.Listrom.Row item)
+        private static DatItem ConvertFromListrom(Models.Listrom.Row item)
         {
             if (item.Size == null)
             {

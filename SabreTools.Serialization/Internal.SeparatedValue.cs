@@ -12,9 +12,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromClrMamePro(Models.SeparatedValue.MetadataFile item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromSeparatedValue(item),
+            };
+
+            if (item?.Row != null && item.Row.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Row.Select(ConvertMachineFromSeparatedValue).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.SeparatedValue.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromSeparatedValue(Models.SeparatedValue.MetadataFile item)
+        private static Header ConvertHeaderFromSeparatedValue(Models.SeparatedValue.MetadataFile item)
         {
             var header = new Header
             {
@@ -35,7 +51,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)
+        private static Machine ConvertMachineFromSeparatedValue(Models.SeparatedValue.Row item)
         {
             var machine = new Machine
             {
@@ -65,7 +81,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.SeparatedValue.Row"/> to <cref="DatItem"/>
         /// </summary>
-        public static DatItem? ConvertFromSeparatedValue(Models.SeparatedValue.Row item)
+        private static DatItem? ConvertFromSeparatedValue(Models.SeparatedValue.Row item)
         {
             return item.Type switch
             {

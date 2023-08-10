@@ -96,9 +96,6 @@ namespace SabreTools.Models.Internal
         public const string NewDatKey = "newDat";
 
         /// <remarks>string</remarks>
-        public const string NoNamespaceSchemaLocationKey = "noNamespaceSchemaLocation";
-
-        /// <remarks>string</remarks>
         public const string NotesKey = "notes";
 
         /// <remarks>string</remarks>
@@ -118,6 +115,9 @@ namespace SabreTools.Models.Internal
 
         /// <remarks>(none|split|merged|nonmerged|fullmerged|device|full) "split"</remarks>
         public const string SampleModeKey = "samplemode";
+
+        /// <remarks>string</remarks>
+        public const string SchemaLocationKey = "schemaLocation";
 
         /// <remarks>string</remarks>
         public const string ScreenshotsHeightKey = "screenshotsHeight";

@@ -11,9 +11,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromRomCenter(Models.RomCenter.MetadataFile item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromRomCenter(item),
+            };
+
+            if (item?.Games?.Rom != null && item.Games.Rom.Any())
+                metadataFile[MetadataFile.MachineKey] = item.Games.Rom.Select(ConvertMachineFromRomCenter).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.RomCenter.MetadataFile"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromRomCenter(Models.RomCenter.MetadataFile item)
+        private static Header ConvertHeaderFromRomCenter(Models.RomCenter.MetadataFile item)
         {
             var header = new Header();
 
@@ -51,7 +67,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.RomCenter.Game"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromRomCenter(Models.RomCenter.Rom item)
+        private static Machine ConvertMachineFromRomCenter(Models.RomCenter.Rom item)
         {
             var machine = new Machine
             {
@@ -68,7 +84,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.RomCenter.Rom"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromRomCenter(Models.RomCenter.Rom item)
+        private static Rom ConvertFromRomCenter(Models.RomCenter.Rom item)
         {
             var rom = new Rom
             {

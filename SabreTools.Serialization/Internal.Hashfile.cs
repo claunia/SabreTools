@@ -13,9 +13,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromHashfile(Models.Hashfile.Hashfile item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromHashfile(item),
+            };
+
+            var machine = ConvertMachineFromHashfile(item);
+            metadataFile[MetadataFile.MachineKey] = new Machine[] { machine };
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromHashfile(Models.Hashfile.Hashfile item)
+        private static Header ConvertHeaderFromHashfile(Models.Hashfile.Hashfile item)
         {
             var header = new Header
             {
@@ -27,7 +43,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.Hashfile"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromHashfile(Models.Hashfile.Hashfile item)
+        private static Machine ConvertMachineFromHashfile(Models.Hashfile.Hashfile item)
         {
             var machine = new Machine();
 
@@ -107,7 +123,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.MD5"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromMD5(Models.Hashfile.MD5 item)
+        private static Rom ConvertFromMD5(Models.Hashfile.MD5 item)
         {
             var rom = new Rom
             {
@@ -120,7 +136,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SFV"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSFV(Models.Hashfile.SFV item)
+        private static Rom ConvertFromSFV(Models.Hashfile.SFV item)
         {
             var rom = new Rom
             {
@@ -133,7 +149,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA1"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSHA1(Models.Hashfile.SHA1 item)
+        private static Rom ConvertFromSHA1(Models.Hashfile.SHA1 item)
         {
             var rom = new Rom
             {
@@ -146,7 +162,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA256"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSHA256(Models.Hashfile.SHA256 item)
+        private static Rom ConvertFromSHA256(Models.Hashfile.SHA256 item)
         {
             var rom = new Rom
             {
@@ -159,7 +175,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA384"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSHA384(Models.Hashfile.SHA384 item)
+        private static Rom ConvertFromSHA384(Models.Hashfile.SHA384 item)
         {
             var rom = new Rom
             {
@@ -172,7 +188,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SHA512"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSHA512(Models.Hashfile.SHA512 item)
+        private static Rom ConvertFromSHA512(Models.Hashfile.SHA512 item)
         {
             var rom = new Rom
             {
@@ -185,7 +201,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.Hashfile.SpamSum"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromSpamSum(Models.Hashfile.SpamSum item)
+        private static Rom ConvertFromSpamSum(Models.Hashfile.SpamSum item)
         {
             var rom = new Rom
             {

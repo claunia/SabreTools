@@ -11,9 +11,25 @@ namespace SabreTools.Serialization
         #region Serialize
 
         /// <summary>
+        /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="MetadataFile"/>
+        /// </summary>
+        public static MetadataFile ConvertFromArchiveDotOrg(Models.ArchiveDotOrg.Files item)
+        {
+            var metadataFile = new MetadataFile
+            {
+                [MetadataFile.HeaderKey] = ConvertHeaderFromArchiveDotOrg(item),
+            };
+
+            if (item?.File != null && item.File.Any())
+                metadataFile[MetadataFile.MachineKey] = item.File.Select(ConvertMachineFromArchiveDotOrg).ToArray();
+
+            return metadataFile;
+        }
+
+        /// <summary>
         /// Convert from <cref="Models.ArchiveDotOrg.Files"/> to <cref="Header"/>
         /// </summary>
-        public static Header ConvertHeaderFromArchiveDotOrg(Models.ArchiveDotOrg.Files item)
+        private static Header ConvertHeaderFromArchiveDotOrg(Models.ArchiveDotOrg.Files item)
         {
             var header = new Header
             {
@@ -25,7 +41,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Machine"/>
         /// </summary>
-        public static Machine ConvertMachineFromArchiveDotOrg(Models.ArchiveDotOrg.File item)
+        private static Machine ConvertMachineFromArchiveDotOrg(Models.ArchiveDotOrg.File item)
         {
             var machine = new Machine
             {
@@ -37,7 +53,7 @@ namespace SabreTools.Serialization
         /// <summary>
         /// Convert from <cref="Models.ArchiveDotOrg.File"/> to <cref="Rom"/>
         /// </summary>
-        public static Rom ConvertFromArchiveDotOrg(Models.ArchiveDotOrg.File item)
+        private static Rom ConvertFromArchiveDotOrg(Models.ArchiveDotOrg.File item)
         {
             var rom = new Rom
             {
