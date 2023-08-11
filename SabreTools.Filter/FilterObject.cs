@@ -8,6 +8,7 @@ namespace SabreTools.Filter
     /// <summary>
     /// Represents a single filtering object
     /// </summary>
+    /// <remarks>TODO: Add ability to have a set of values that are accepted</remarks>
     public class FilterObject
     {
         /// <summary>
