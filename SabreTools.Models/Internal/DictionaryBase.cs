@@ -12,9 +12,7 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public T? Read<T>(string key)
         {
-            if (string.IsNullOrWhiteSpace(key))
-                return default;
-            if (!ContainsKey(key))
+            if (!ValidateKey(key))
                 return default;
             return (T?)this[key];
         }
@@ -24,6 +22,9 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public bool? ReadBool(string key)
         {
+            if (!ValidateKey(key))
+                return null;
+
             bool? asBool = Read<bool>(key);
             if (asBool != null)
                 return asBool;
@@ -44,6 +45,9 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public double? ReadDouble(string key)
         {
+            if (!ValidateKey(key))
+                return null;
+
             double? asDouble = Read<double>(key);
             if (asDouble != null)
                 return asDouble;
@@ -60,6 +64,9 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public long? ReadLong(string key)
         {
+            if (!ValidateKey(key))
+                return null;
+
             long? asLong = Read<long>(key);
             if (asLong != null)
                 return asLong;
@@ -76,6 +83,9 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public string? ReadString(string key)
         {
+            if (!ValidateKey(key))
+                return null;
+
             string? asString = Read<string>(key);
             if (asString != null)
                 return asString;
@@ -84,7 +94,7 @@ namespace SabreTools.Models.Internal
             if (asArray != null)
                 return string.Join(',', asArray);
 
-            return null;
+            return this[key]!.ToString();
         }
 
         /// <summary>
@@ -92,6 +102,9 @@ namespace SabreTools.Models.Internal
         /// </summary>
         public string[]? ReadStringArray(string key)
         {
+            if (!ValidateKey(key))
+                return null;
+
             string[]? asArray = Read<string[]>(key);
             if (asArray != null)
                 return asArray;
@@ -100,7 +113,26 @@ namespace SabreTools.Models.Internal
             if (asString != null)
                 return new string[] { asString };
 
+            asString = this[key]!.ToString();
+            if (asString != null)
+                return new string[] { asString };
+
             return null;
+        }
+
+        /// <summary>
+        /// Check if a key is valid
+        /// </summary>
+        private bool ValidateKey(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return false;
+            else if (!ContainsKey(key))
+                return false;
+            else if (this[key] == null)
+                return false;
+
+            return true;
         }
     }
 }
