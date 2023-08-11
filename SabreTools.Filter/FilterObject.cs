@@ -76,9 +76,12 @@ namespace SabreTools.Filter
             {
                 "=" => Operation.Equals,
                 "==" => Operation.Equals,
+                ":" => Operation.Equals,
+                "::" => Operation.Equals,
 
                 "!" => Operation.NotEquals,
                 "!=" => Operation.NotEquals,
+                "!:" => Operation.NotEquals,
 
                 ">" => Operation.GreaterThan,
                 ">=" => Operation.GreaterThanOrEqual,
