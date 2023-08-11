@@ -107,7 +107,7 @@ namespace SabreTools.DatFiles.Formats
                 ArchiveDotOrgSource = file.Source,
                 //BitTorrentMagnetHash = file.BitTorrentMagnetHash, // TODO: Add to internal model
                 Date = file.LastModifiedTime?.ToString(),
-                Size = Utilities.CleanLong(file.Size),
+                Size = NumberHelper.ConvertToInt64(file.Size),
                 MD5 = file.MD5,
                 CRC = file.CRC32,
                 SHA1 = file.SHA1,

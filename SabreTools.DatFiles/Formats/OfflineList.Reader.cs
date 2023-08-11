@@ -316,7 +316,7 @@ namespace SabreTools.DatFiles.Formats
                 Comment = game.Comment,
             };
 
-            long? size = Utilities.CleanLong(game.RomSize);
+            long? size = NumberHelper.ConvertToInt64(game.RomSize);
             if (game.DuplicateID != "0")
                 machine.CloneOf = game.DuplicateID;
 

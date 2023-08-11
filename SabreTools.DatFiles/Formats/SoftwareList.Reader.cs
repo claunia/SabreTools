@@ -256,8 +256,8 @@ namespace SabreTools.DatFiles.Formats
                 var item = new DataArea
                 {
                     Name = dataarea.Name,
-                    Size = Utilities.CleanLong(dataarea.Size),
-                    Width = Utilities.CleanLong(dataarea.Width),
+                    Size = NumberHelper.ConvertToInt64(dataarea.Size),
+                    Width = NumberHelper.ConvertToInt64(dataarea.Width),
                     Endianness = dataarea.Endianness.AsEndianness(),
 
                     Source = new Source
@@ -295,7 +295,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Rom
                 {
                     Name = rom.Name,
-                    Size = Utilities.CleanLong(rom.Size ?? rom.Length),
+                    Size = NumberHelper.ConvertToInt64(rom.Size ?? rom.Length),
                     CRC = rom.CRC,
                     SHA1 = rom.SHA1,
                     Offset = rom.Offset,

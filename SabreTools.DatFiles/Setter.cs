@@ -472,7 +472,7 @@ namespace SabreTools.DatFiles
                 chip.ChipType = DatItemMappings[DatItemField.ChipType].AsChipType();
 
             if (DatItemMappings!.ContainsKey(DatItemField.Clock))
-                chip.Clock = Utilities.CleanLong(DatItemMappings[DatItemField.Clock]);
+                chip.Clock = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Clock]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Tag))
                 chip.Tag = DatItemMappings[DatItemField.Tag];
@@ -559,31 +559,31 @@ namespace SabreTools.DatFiles
         private void SetFields(Control control)
         {
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Buttons))
-                control.Buttons = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Buttons]);
+                control.Buttons = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_Buttons]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Type))
                 control.ControlType = DatItemMappings[DatItemField.Control_Type].AsControlType();
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_KeyDelta))
-                control.KeyDelta = Utilities.CleanLong(DatItemMappings[DatItemField.Control_KeyDelta]);
+                control.KeyDelta = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_KeyDelta]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Maximum))
-                control.Maximum = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Maximum]);
+                control.Maximum = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_Maximum]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Minimum))
-                control.Minimum = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Minimum]);
+                control.Minimum = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_Minimum]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Player))
-                control.Player = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Player]);
+                control.Player = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_Player]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_RequiredButtons))
-                control.RequiredButtons = Utilities.CleanLong(DatItemMappings[DatItemField.Control_RequiredButtons]);
+                control.RequiredButtons = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_RequiredButtons]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Reverse))
                 control.Reverse = DatItemMappings[DatItemField.Control_Reverse].AsYesNo();
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Sensitivity))
-                control.Sensitivity = Utilities.CleanLong(DatItemMappings[DatItemField.Control_Sensitivity]);
+                control.Sensitivity = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Control_Sensitivity]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Control_Ways))
                 control.Ways = DatItemMappings[DatItemField.Control_Ways];
@@ -608,10 +608,10 @@ namespace SabreTools.DatFiles
                 dataArea.Name = DatItemMappings[DatItemField.AreaName];
 
             if (DatItemMappings!.ContainsKey(DatItemField.AreaSize))
-                dataArea.Size = Utilities.CleanLong(DatItemMappings[DatItemField.AreaSize]);
+                dataArea.Size = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.AreaSize]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.AreaWidth))
-                dataArea.Width = Utilities.CleanLong(DatItemMappings[DatItemField.AreaWidth]);
+                dataArea.Width = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.AreaWidth]);
         }
 
         /// <summary>
@@ -630,7 +630,7 @@ namespace SabreTools.DatFiles
                 device.Interface = DatItemMappings[DatItemField.Interface];
 
             if (DatItemMappings!.ContainsKey(DatItemField.Mandatory))
-                device.Mandatory = Utilities.CleanLong(DatItemMappings[DatItemField.Mandatory]);
+                device.Mandatory = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Mandatory]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Tag))
                 device.Tag = DatItemMappings[DatItemField.Tag];
@@ -752,40 +752,40 @@ namespace SabreTools.DatFiles
                 display.FlipX = DatItemMappings[DatItemField.FlipX].AsYesNo();
 
             if (DatItemMappings!.ContainsKey(DatItemField.Height))
-                display.Height = Utilities.CleanLong(DatItemMappings[DatItemField.Height]);
+                display.Height = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Height]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.HBEnd))
-                display.HBEnd = Utilities.CleanLong(DatItemMappings[DatItemField.HBEnd]);
+                display.HBEnd = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.HBEnd]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.HBStart))
-                display.HBStart = Utilities.CleanLong(DatItemMappings[DatItemField.HBStart]);
+                display.HBStart = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.HBStart]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.HTotal))
-                display.HTotal = Utilities.CleanLong(DatItemMappings[DatItemField.HTotal]);
+                display.HTotal = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.HTotal]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.PixClock))
-                display.PixClock = Utilities.CleanLong(DatItemMappings[DatItemField.PixClock]);
+                display.PixClock = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.PixClock]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Refresh))
-                display.Refresh = Utilities.CleanDouble(DatItemMappings[DatItemField.Refresh]);
+                display.Refresh = NumberHelper.ConvertToDouble(DatItemMappings[DatItemField.Refresh]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Rotate))
-                display.Rotate = Utilities.CleanLong(DatItemMappings[DatItemField.Rotate]);
+                display.Rotate = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Rotate]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Tag))
                 display.Tag = DatItemMappings[DatItemField.Tag];
 
             if (DatItemMappings!.ContainsKey(DatItemField.VBEnd))
-                display.VBEnd = Utilities.CleanLong(DatItemMappings[DatItemField.VBEnd]);
+                display.VBEnd = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.VBEnd]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.VBStart))
-                display.VBStart = Utilities.CleanLong(DatItemMappings[DatItemField.VBStart]);
+                display.VBStart = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.VBStart]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.VTotal))
-                display.VTotal = Utilities.CleanLong(DatItemMappings[DatItemField.VTotal]);
+                display.VTotal = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.VTotal]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Width))
-                display.Width = Utilities.CleanLong(DatItemMappings[DatItemField.Width]);
+                display.Width = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Width]);
         }
 
         /// <summary>
@@ -862,10 +862,10 @@ namespace SabreTools.DatFiles
         private void SetFields(Input input)
         {
             if (DatItemMappings!.ContainsKey(DatItemField.Coins))
-                input.Coins = Utilities.CleanLong(DatItemMappings[DatItemField.Coins]);
+                input.Coins = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Coins]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Players))
-                input.Players = Utilities.CleanLong(DatItemMappings[DatItemField.Players]);
+                input.Players = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Players]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.Service))
                 input.Service = DatItemMappings[DatItemField.Service].AsYesNo();
@@ -908,7 +908,7 @@ namespace SabreTools.DatFiles
                 location.Name = DatItemMappings[DatItemField.Location_Name];
 
             if (DatItemMappings!.ContainsKey(DatItemField.Location_Number))
-                location.Number = Utilities.CleanLong(DatItemMappings[DatItemField.Location_Number]);
+                location.Number = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Location_Number]);
         }
 
         /// <summary>
@@ -1099,7 +1099,7 @@ namespace SabreTools.DatFiles
                 rom.SHA512 = DatItemMappings[DatItemField.SHA512];
 
             if (DatItemMappings!.ContainsKey(DatItemField.Size))
-                rom.Size = Utilities.CleanLong(DatItemMappings[DatItemField.Size]);
+                rom.Size = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Size]);
 
             if (DatItemMappings!.ContainsKey(DatItemField.SpamSum))
                 rom.SpamSum = DatItemMappings[DatItemField.SpamSum];
@@ -1208,7 +1208,7 @@ namespace SabreTools.DatFiles
         private void SetFields(Sound sound)
         {
             if (DatItemMappings!.ContainsKey(DatItemField.Channels))
-                sound.Channels = Utilities.CleanLong(DatItemMappings[DatItemField.Channels]);
+                sound.Channels = NumberHelper.ConvertToInt64(DatItemMappings[DatItemField.Channels]);
         }
     }
 }

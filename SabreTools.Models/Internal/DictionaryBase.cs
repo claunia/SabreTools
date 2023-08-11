@@ -62,6 +62,7 @@ namespace SabreTools.Models.Internal
         /// <summary>
         /// Read a key as a long, returning null on error
         /// </summary>
+        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         public long? ReadLong(string key)
         {
             if (!ValidateKey(key))

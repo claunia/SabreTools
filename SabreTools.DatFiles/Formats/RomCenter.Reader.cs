@@ -110,7 +110,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Rom
                 {
                     Name = rom.RomName,
-                    Size = Utilities.CleanLong(rom.RomSize),
+                    Size = NumberHelper.ConvertToInt64(rom.RomSize),
                     CRC = rom.RomCRC,
                     MergeTag = rom.MergeName,
                     ItemStatus = ItemStatus.None,

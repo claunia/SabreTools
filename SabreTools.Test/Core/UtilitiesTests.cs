@@ -16,7 +16,7 @@ namespace SabreTools.Test.Core
         [InlineData(" 12345 ", 12345L)]
         public void CleanLongTest(string input, long? expected)
         {
-            long? actual = Utilities.CleanLong(input);
+            long? actual = NumberHelper.ConvertToInt64(input);
             Assert.Equal(expected, actual);
         }
 

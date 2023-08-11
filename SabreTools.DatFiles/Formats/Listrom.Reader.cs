@@ -144,7 +144,7 @@ namespace SabreTools.DatFiles.Formats
                 var rom = new Rom
                 {
                     Name = row.Name,
-                    Size = Utilities.CleanLong(row.Size),
+                    Size = NumberHelper.ConvertToInt64(row.Size),
                     CRC = row.CRC,
                     SHA1 = row.SHA1,
                     ItemStatus = ItemStatus.None,
@@ -221,7 +221,7 @@ namespace SabreTools.DatFiles.Formats
                 var rom = new Rom
                 {
                     Name = row.Name,
-                    Size = Utilities.CleanLong(row.Size),
+                    Size = NumberHelper.ConvertToInt64(row.Size),
                     CRC = row.CRC,
                     SHA1 = row.SHA1,
                     ItemStatus = ItemStatus.BadDump,
@@ -245,7 +245,7 @@ namespace SabreTools.DatFiles.Formats
                 var rom = new Rom
                 {
                     Name = row.Name,
-                    Size = Utilities.CleanLong(row.Size),
+                    Size = NumberHelper.ConvertToInt64(row.Size),
                     CRC = null,
                     SHA1 = null,
                     ItemStatus = ItemStatus.Nodump,

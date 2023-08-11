@@ -247,7 +247,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Rom
                 {
                     Name = rom.Name,
-                    Size = Utilities.CleanLong(rom.Size),
+                    Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
                     MD5 = rom.MD5,
                     SHA1 = rom.SHA1,
@@ -414,7 +414,7 @@ namespace SabreTools.DatFiles.Formats
                     ChipType = chip.Type?.AsChipType() ?? ChipType.NULL,
                     Name = chip.Name,
                     //Flags = chip.Flags, // TODO: Add to internal model
-                    Clock = Utilities.CleanLong(chip.Clock),
+                    Clock = NumberHelper.ConvertToInt64(chip.Clock),
 
                     Source = new Source
                     {
@@ -449,11 +449,11 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Display
                 {
                     DisplayType = video.Screen?.AsDisplayType() ?? DisplayType.NULL,
-                    Width = Utilities.CleanLong(video.X),
-                    Height = Utilities.CleanLong(video.Y),
+                    Width = NumberHelper.ConvertToInt64(video.X),
+                    Height = NumberHelper.ConvertToInt64(video.Y),
                     //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
                     //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
-                    Refresh = Utilities.CleanDouble(video.Freq),
+                    Refresh = NumberHelper.ConvertToDouble(video.Freq),
 
                     Source = new Source
                     {
@@ -495,7 +495,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Sound
             {
-                Channels = Utilities.CleanLong(sound.Channels),
+                Channels = NumberHelper.ConvertToInt64(sound.Channels),
 
                 Source = new Source
                 {
@@ -526,16 +526,16 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Input
             {
-                Players = Utilities.CleanLong(input.Players),
+                Players = NumberHelper.ConvertToInt64(input.Players),
                 //Control = input.Control, // TODO: Add to internal model or find mapping
                 Controls = new List<Control>
                 {
                     new Control
                     {
-                        Buttons = Utilities.CleanLong(input.Buttons),
+                        Buttons = NumberHelper.ConvertToInt64(input.Buttons),
                     },
                 },
-                Coins = Utilities.CleanLong(input.Coins),
+                Coins = NumberHelper.ConvertToInt64(input.Coins),
                 Tilt = input.Tilt?.AsYesNo(),
                 Service = input.Service?.AsYesNo(),
 

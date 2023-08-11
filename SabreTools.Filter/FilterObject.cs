@@ -84,7 +84,10 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value matches exactly
         /// </summary>
-        /// <remarks>TODO: Add regex matching to this method</remarks>
+        /// <remarks>
+        /// TODO: Add regex matching to this method
+        /// TODO: Add logic to convert SI suffixes and hex
+        /// </remarks>
         private bool MatchesEqual(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -97,7 +100,10 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value does not match exactly
         /// </summary>
-        /// <remarks>TODO: Add regex matching to this method</remarks>
+        /// <remarks>
+        /// TODO: Add regex matching to this method
+        /// TODO: Add logic to convert SI suffixes and hex
+        /// </remarks>
         private bool MatchesNotEqual(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -110,6 +116,7 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is strictly greater than
         /// </summary>
+        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesGreaterThan(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -139,6 +146,7 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is greater than or equal
         /// </summary>
+        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesGreaterThanOrEqual(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -168,6 +176,7 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is strictly less than
         /// </summary>
+        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesLessThan(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))
@@ -197,6 +206,7 @@ namespace SabreTools.Filter
         /// <summary>
         /// Determines if a value is less than or equal
         /// </summary>
+        /// <remarks>TODO: Add logic to convert SI suffixes and hex</remarks>
         private bool MatchesLessThanOrEqual(DictionaryBase dictionaryBase)
         {
             if (!dictionaryBase.ContainsKey(this.Key[1]))

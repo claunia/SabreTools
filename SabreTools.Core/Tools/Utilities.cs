@@ -63,43 +63,6 @@ namespace SabreTools.Core.Tools
         }
 
         /// <summary>
-        /// Get a sanitized double from an input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>Value as a double?, if possible</returns>
-        public static double? CleanDouble(string input)
-        {
-            double? value = null;
-            if (input != null)
-            {
-                if (Double.TryParse(input, out double doubleValue))
-                    value = doubleValue;
-            }
-
-            return value;
-        }
-
-        /// <summary>
-        /// Get a sanitized size from an input string
-        /// </summary>
-        /// <param name="input">String to get value from</param>
-        /// <returns>Size as a long?, if possible</returns>
-        public static long? CleanLong(string input)
-        {
-            long? size = null;
-            if (input != null && input.Contains("0x"))
-                size = Convert.ToInt64(input, 16);
-
-            else if (input != null)
-            {
-                if (Int64.TryParse(input, out long longSize))
-                    size = longSize;
-            }
-
-            return size;
-        }
-
-        /// <summary>
         /// Convert .NET DateTime to MS-DOS date format
         /// </summary>
         /// <param name="dateTime">.NET DateTime object to convert</param>

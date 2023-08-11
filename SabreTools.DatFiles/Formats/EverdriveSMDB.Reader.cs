@@ -101,7 +101,7 @@ namespace SabreTools.DatFiles.Formats
             var rom = new Rom()
             {
                 Name = name,
-                Size = Utilities.CleanLong(row.Size),
+                Size = NumberHelper.ConvertToInt64(row.Size),
                 CRC = row.CRC32,
                 MD5 = row.MD5,
                 SHA1 = row.SHA1,

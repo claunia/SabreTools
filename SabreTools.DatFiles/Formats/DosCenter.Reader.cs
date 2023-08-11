@@ -142,7 +142,7 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Rom
                 {
                     Name = rom.Name,
-                    Size = Utilities.CleanLong(rom.Size),
+                    Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
                     Date = rom.Date,
 

@@ -214,7 +214,7 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Name = rom.Name,
                     Bios = rom.Bios,
-                    Size = Utilities.CleanLong(rom.Size),
+                    Size = NumberHelper.ConvertToInt64(rom.Size),
                     CRC = rom.CRC,
                     SHA1 = rom.SHA1,
                     MergeTag = rom.Merge,
@@ -371,7 +371,7 @@ namespace SabreTools.DatFiles.Formats
                     Tag = chip.Tag,
                     ChipType = chip.Type.AsChipType(),
                     //SoundOnly = chip.SoundOnly, // TODO: Add to internal model
-                    Clock = Utilities.CleanLong(chip.Clock),
+                    Clock = NumberHelper.ConvertToInt64(chip.Clock),
 
                     Source = new Source
                     {
@@ -407,18 +407,18 @@ namespace SabreTools.DatFiles.Formats
                 {
                     Tag = display.Tag,
                     DisplayType = display.Type.AsDisplayType(),
-                    Rotate = Utilities.CleanLong(display.Rotate),
+                    Rotate = NumberHelper.ConvertToInt64(display.Rotate),
                     FlipX = display.FlipX.AsYesNo(),
-                    Width = Utilities.CleanLong(display.Width),
-                    Height = Utilities.CleanLong(display.Height),
-                    Refresh = Utilities.CleanDouble(display.Refresh),
-                    PixClock = Utilities.CleanLong(display.PixClock),
-                    HTotal = Utilities.CleanLong(display.HTotal),
-                    HBEnd = Utilities.CleanLong(display.HBEnd),
-                    HBStart = Utilities.CleanLong(display.HBStart),
-                    VTotal = Utilities.CleanLong(display.VTotal),
-                    VBEnd = Utilities.CleanLong(display.VBEnd),
-                    VBStart = Utilities.CleanLong(display.VBStart),
+                    Width = NumberHelper.ConvertToInt64(display.Width),
+                    Height = NumberHelper.ConvertToInt64(display.Height),
+                    Refresh = NumberHelper.ConvertToDouble(display.Refresh),
+                    PixClock = NumberHelper.ConvertToInt64(display.PixClock),
+                    HTotal = NumberHelper.ConvertToInt64(display.HTotal),
+                    HBEnd = NumberHelper.ConvertToInt64(display.HBEnd),
+                    HBStart = NumberHelper.ConvertToInt64(display.HBStart),
+                    VTotal = NumberHelper.ConvertToInt64(display.VTotal),
+                    VBEnd = NumberHelper.ConvertToInt64(display.VBEnd),
+                    VBStart = NumberHelper.ConvertToInt64(display.VBStart),
 
                     Source = new Source
                     {
@@ -453,11 +453,11 @@ namespace SabreTools.DatFiles.Formats
                 var item = new Display
                 {
                     DisplayType = video.Screen?.AsDisplayType() ?? DisplayType.NULL,
-                    Width = Utilities.CleanLong(video.Width),
-                    Height = Utilities.CleanLong(video.Height),
+                    Width = NumberHelper.ConvertToInt64(video.Width),
+                    Height = NumberHelper.ConvertToInt64(video.Height),
                     //AspectX = video.AspectX, // TODO: Add to internal model or find mapping
                     //AspectY = video.AspectY, // TODO: Add to internal model or find mapping
-                    Refresh = Utilities.CleanDouble(video.Refresh),
+                    Refresh = NumberHelper.ConvertToDouble(video.Refresh),
 
                     Source = new Source
                     {
@@ -499,7 +499,7 @@ namespace SabreTools.DatFiles.Formats
             containsItems = true;
             var item = new Sound
             {
-                Channels = Utilities.CleanLong(sound.Channels),
+                Channels = NumberHelper.ConvertToInt64(sound.Channels),
 
                 Source = new Source
                 {
@@ -532,10 +532,10 @@ namespace SabreTools.DatFiles.Formats
             {
                 Service = input.Service.AsYesNo(),
                 Tilt = input.Tilt.AsYesNo(),
-                Players = Utilities.CleanLong(input.Players),
+                Players = NumberHelper.ConvertToInt64(input.Players),
                 //ControlAttr = input.ControlAttr, // TODO: Add to internal model
                 //Buttons = input.Buttons, // TODO: Add to internal model
-                Coins = Utilities.CleanLong(input.Coins),
+                Coins = NumberHelper.ConvertToInt64(input.Coins),
 
                 Source = new Source
                 {
@@ -550,13 +550,13 @@ namespace SabreTools.DatFiles.Formats
                 var controlItem = new Control
                 {
                     ControlType = control.Type.AsControlType(),
-                    Player = Utilities.CleanLong(control.Player),
-                    Buttons = Utilities.CleanLong(control.Buttons),
-                    RequiredButtons = Utilities.CleanLong(control.ReqButtons),
-                    Minimum = Utilities.CleanLong(control.Minimum),
-                    Maximum = Utilities.CleanLong(control.Maximum),
-                    Sensitivity = Utilities.CleanLong(control.Sensitivity),
-                    KeyDelta = Utilities.CleanLong(control.KeyDelta),
+                    Player = NumberHelper.ConvertToInt64(control.Player),
+                    Buttons = NumberHelper.ConvertToInt64(control.Buttons),
+                    RequiredButtons = NumberHelper.ConvertToInt64(control.ReqButtons),
+                    Minimum = NumberHelper.ConvertToInt64(control.Minimum),
+                    Maximum = NumberHelper.ConvertToInt64(control.Maximum),
+                    Sensitivity = NumberHelper.ConvertToInt64(control.Sensitivity),
+                    KeyDelta = NumberHelper.ConvertToInt64(control.KeyDelta),
                     Reverse = control.Reverse.AsYesNo(),
                     Ways = control.Ways,
                     Ways2 = control.Ways2,
@@ -621,7 +621,7 @@ namespace SabreTools.DatFiles.Formats
                     var locationItem = new Location
                     {
                         Name = diplocation.Name,
-                        Number = Utilities.CleanLong(diplocation.Number),
+                        Number = NumberHelper.ConvertToInt64(diplocation.Number),
                         Inverted = diplocation.Inverted.AsYesNo(),
                     };
                     locations.Add(locationItem);
@@ -712,7 +712,7 @@ namespace SabreTools.DatFiles.Formats
                     var locationItem = new Location
                     {
                         Name = confLocation.Name,
-                        Number = Utilities.CleanLong(confLocation.Number),
+                        Number = NumberHelper.ConvertToInt64(confLocation.Number),
                         Inverted = confLocation.Inverted.AsYesNo(),
                     };
                     locations.Add(locationItem);
@@ -869,7 +869,7 @@ namespace SabreTools.DatFiles.Formats
                 Status = driver.Status.AsSupportStatus(),
                 //Color = driver.Color.AsSupportStatus(), // TODO: Add to internal model
                 //Sound = driver.Sound.AsSupportStatus(), // TODO: Add to internal model
-                //PaletteSize = Utilities.CleanLong(driver.PaletteSize), // TODO: Add to internal model
+                //PaletteSize = NumberHelper.ConvertToInt64(driver.PaletteSize), // TODO: Add to internal model
                 Emulation = driver.Emulation.AsSupportStatus(),
                 Cocktail = driver.Cocktail.AsSupportStatus(),
                 SaveState = driver.SaveState.AsSupported(),
@@ -948,7 +948,7 @@ namespace SabreTools.DatFiles.Formats
                     DeviceType = device.Type.AsDeviceType(),
                     Tag = device.Tag,
                     FixedImage = device.FixedImage,
-                    Mandatory = Utilities.CleanLong(device.Mandatory),
+                    Mandatory = NumberHelper.ConvertToInt64(device.Mandatory),
                     Interface = device.Interface,
 
                     Source = new Source
