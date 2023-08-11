@@ -35,7 +35,7 @@ namespace SabreTools.Core.Tools
         #endregion
 
         /// <summary>
-        /// Convert a string to an Int64
+        /// Convert a string to a Double
         /// </summary>
         public static double? ConvertToDouble(string? numeric)
         {
