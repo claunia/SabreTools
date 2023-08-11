@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Xml.Serialization;
-using SabreTools.Models;
 using SabreTools.Models.Internal;
 
 namespace SabreTools.Filter
@@ -58,7 +55,7 @@ namespace SabreTools.Filter
         private static (string?, string?) ParseHeaderFilterId(string fieldName)
         {
             // Get the set of constants
-            var constants = GetConstants(typeof(Header));
+            var constants = TypeHelper.GetConstants(typeof(Header));
             if (constants == null)
                 return (null, null);
 
@@ -77,7 +74,7 @@ namespace SabreTools.Filter
         private static (string?, string?) ParseMachineFilterId(string fieldName)
         {
             // Get the set of constants
-            var constants = GetConstants(typeof(Machine));
+            var constants = TypeHelper.GetConstants(typeof(Machine));
             if (constants == null)
                 return (null, null);
 
@@ -96,12 +93,12 @@ namespace SabreTools.Filter
         private static (string?, string?) ParseDatItemFilterId(string itemName, string fieldName)
         {
             // Get the correct item type
-            var itemType = GetDatItemType(itemName.ToLowerInvariant());
+            var itemType = TypeHelper.GetDatItemType(itemName.ToLowerInvariant());
             if (itemType == null)
                 return (null, null);
 
             // Get the set of constants
-            var constants = GetConstants(itemType);
+            var constants = TypeHelper.GetConstants(itemType);
             if (constants == null)
                 return (null, null);
 
@@ -112,40 +109,6 @@ namespace SabreTools.Filter
 
             // Return the sanitized ID
             return (itemName.ToLowerInvariant(), constantMatch);
-        }
-
-        /// <summary>
-        /// Get constant values for the given type, if possible
-        /// </summary>
-        private static string[]? GetConstants(Type? type)
-        {
-            if (type == null)
-                return null;
-
-            var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-            if (fields == null)
-                return null;
-
-            return fields
-                .Where(f => f.IsLiteral && !f.IsInitOnly)
-                .Where(f => f.CustomAttributes.Any(a => a.AttributeType == typeof(NoFilterAttribute)))
-                .Select(f => f.GetRawConstantValue() as string)
-                .Where(v => v != null)
-                .ToArray()!;
-        }
-
-        /// <summary>
-        /// Attempt to get the DatItem type from the name
-        /// </summary>
-        private static Type? GetDatItemType(string? itemType)
-        {
-            if (string.IsNullOrWhiteSpace(itemType))
-                return null;
-
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .Where(t => t.IsAssignableFrom(typeof(DatItem)) && t.IsClass)
-                .FirstOrDefault(t => t.GetCustomAttribute<XmlRootAttribute>()?.ElementName == itemType);
         }
     }
 }
