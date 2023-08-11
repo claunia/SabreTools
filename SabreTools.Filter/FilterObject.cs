@@ -61,52 +61,6 @@ namespace SabreTools.Filter
             this.Operation = operation;
         }
 
-        /// <summary>
-        /// Derive an operation from the input string, if possible
-        /// </summary>
-        private static Operation GetOperation(string? operation)
-        {
-            return operation?.ToLowerInvariant() switch
-            {
-                "=" => Operation.Equals,
-                "==" => Operation.Equals,
-                ":" => Operation.Equals,
-                "::" => Operation.Equals,
-
-                "!" => Operation.NotEquals,
-                "!=" => Operation.NotEquals,
-                "!:" => Operation.NotEquals,
-
-                ">" => Operation.GreaterThan,
-                ">=" => Operation.GreaterThanOrEqual,
-
-                "<" => Operation.LessThan,
-                "<=" => Operation.LessThanOrEqual,
-
-                _ => Operation.NONE,
-            };
-        }
-
-        /// <summary>
-        /// Derive a key, operation, and value from the input string, if possible
-        /// </summary>
-        private static (string?, Operation, string?) SplitFilterString(string? filterString)
-        {
-            if (filterString == null)
-                return (null, Operation.NONE, null);
-
-            // Split the string using regex
-            var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z.]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
-            if (!match.Success)
-                return (null, Operation.NONE, null);
-
-            string itemField = match.Groups["itemField"].Value;
-            Operation operation = GetOperation(match.Groups["operation"].Value);
-            string value = match.Groups["value"].Value;
-
-            return (itemField, operation, value);
-        }
-
         #region Matching
 
         /// <summary>
@@ -267,6 +221,56 @@ namespace SabreTools.Filter
             }
 
             return false;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Derive an operation from the input string, if possible
+        /// </summary>
+        private static Operation GetOperation(string? operation)
+        {
+            return operation?.ToLowerInvariant() switch
+            {
+                "=" => Operation.Equals,
+                "==" => Operation.Equals,
+                ":" => Operation.Equals,
+                "::" => Operation.Equals,
+
+                "!" => Operation.NotEquals,
+                "!=" => Operation.NotEquals,
+                "!:" => Operation.NotEquals,
+
+                ">" => Operation.GreaterThan,
+                ">=" => Operation.GreaterThanOrEqual,
+
+                "<" => Operation.LessThan,
+                "<=" => Operation.LessThanOrEqual,
+
+                _ => Operation.NONE,
+            };
+        }
+
+        /// <summary>
+        /// Derive a key, operation, and value from the input string, if possible
+        /// </summary>
+        private static (string?, Operation, string?) SplitFilterString(string? filterString)
+        {
+            if (filterString == null)
+                return (null, Operation.NONE, null);
+
+            // Split the string using regex
+            var match = Regex.Match(filterString, @"^(?<itemField>[a-zA-Z.]+)(?<operation>[=!:><]{1,2})(?<value>.*)$");
+            if (!match.Success)
+                return (null, Operation.NONE, null);
+
+            string itemField = match.Groups["itemField"].Value;
+            Operation operation = GetOperation(match.Groups["operation"].Value);
+            string value = match.Groups["value"].Value;
+
+            return (itemField, operation, value);
         }
 
         #endregion
