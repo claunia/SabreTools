@@ -12,6 +12,7 @@ namespace SabreTools.Models.Internal
         public const string NameKey = "name";
 
         /// <remarks>SlotOption[]</remarks>
+        [NoFilter]
         public const string SlotOptionKey = "slotoption";
 
         #endregion

@@ -9,6 +9,7 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Disk[]</remarks>
+        [NoFilter]
         public const string DiskKey = "disk";
 
         /// <remarks>string</remarks>

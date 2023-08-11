@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using SabreTools.Models;
 using SabreTools.Models.Internal;
 
 namespace SabreTools.Filter
@@ -55,16 +56,8 @@ namespace SabreTools.Filter
             if (constantMatch == null)
                 return (null, null);
 
-            // Filter out fields that can't be matched on
-            return constantMatch switch
-            {
-                Header.CanOpenKey => (null, null),
-                Header.ImagesKey => (null, null),
-                Header.InfosKey => (null, null),
-                Header.NewDatKey => (null, null),
-                Header.SearchKey => (null, null),
-                _ => (MetadataFile.HeaderKey, constantMatch),
-            };
+            // Return the sanitized ID
+            return (MetadataFile.HeaderKey, constantMatch);
         }
 
         /// <summary>
@@ -82,46 +75,13 @@ namespace SabreTools.Filter
             if (constantMatch == null)
                 return (null, null);
 
-            // Filter out fields that can't be matched on
-            return constantMatch switch
-            {
-                Machine.AdjusterKey => (null, null),
-                Machine.ArchiveKey => (null, null),
-                Machine.BiosSetKey => (null, null),
-                Machine.ChipKey => (null, null),
-                Machine.ConfigurationKey => (null, null),
-                Machine.ControlKey => (null, null),
-                Machine.DeviceKey => (null, null),
-                Machine.DeviceRefKey => (null, null),
-                Machine.DipSwitchKey => (null, null),
-                Machine.DiskKey => (null, null),
-                Machine.DisplayKey => (null, null),
-                Machine.DriverKey => (null, null),
-                Machine.DumpKey => (null, null),
-                Machine.FeatureKey => (null, null),
-                Machine.InfoKey => (null, null),
-                Machine.InputKey => (null, null),
-                Machine.MediaKey => (null, null),
-                Machine.PartKey => (null, null),
-                Machine.PortKey => (null, null),
-                Machine.RamOptionKey => (null, null),
-                Machine.ReleaseKey => (null, null),
-                Machine.RomKey => (null, null),
-                Machine.SampleKey => (null, null),
-                Machine.SharedFeatKey => (null, null),
-                Machine.SlotKey => (null, null),
-                Machine.SoftwareListKey => (null, null),
-                Machine.SoundKey => (null, null),
-                Machine.TruripKey => (null, null),
-                Machine.VideoKey => (null, null),
-                _ => (MetadataFile.MachineKey, constantMatch),
-            };
+            // Return the sanitized ID
+            return (MetadataFile.MachineKey, constantMatch);
         }
 
         /// <summary>
         /// Get constant values for the given type, if possible
         /// </summary>
-        /// <remarks>TODO: Create a NoFilter attribute for non-mappable filter IDs</remarks>
         private static string[]? GetConstants(Type? type)
         {
             if (type == null)
@@ -133,6 +93,7 @@ namespace SabreTools.Filter
 
             return fields
                 .Where(f => f.IsLiteral && !f.IsInitOnly)
+                .Where(f => f.CustomAttributes.Any(a => a.AttributeType == typeof(NoFilterAttribute)))
                 .Select(f => f.GetRawConstantValue() as string)
                 .Where(v => v != null)
                 .ToArray()!;

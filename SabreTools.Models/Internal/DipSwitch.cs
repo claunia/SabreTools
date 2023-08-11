@@ -9,15 +9,18 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Condition</remarks>
+        [NoFilter]
         public const string ConditionKey = "condition";
 
         /// <remarks>(yes|no) "no"</remarks>
         public const string DefaultKey = "default";
 
         /// <remarks>DipLocation[]</remarks>
+        [NoFilter]
         public const string DipLocationKey = "diplocation";
 
         /// <remarks>DipValue[]</remarks>
+        [NoFilter]
         public const string DipValueKey = "dipvalue";
 
         /// <remarks>string[]</remarks>

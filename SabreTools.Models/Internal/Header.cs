@@ -18,6 +18,7 @@ namespace SabreTools.Models.Internal
 
         /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>CanOpen</remarks>
+        [NoFilter]
         public const string CanOpenKey = "canOpen";
 
         /// <remarks>string</remarks>
@@ -67,6 +68,7 @@ namespace SabreTools.Models.Internal
 
         /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>Search</remarks>
+        [NoFilter]
         public const string ImagesKey = "images";
 
         /// <remarks>string</remarks>
@@ -74,6 +76,7 @@ namespace SabreTools.Models.Internal
 
         /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>Infos</remarks>
+        [NoFilter]
         public const string InfosKey = "infos";
 
         /// <remarks>(yes|no) "no"</remarks>
@@ -93,6 +96,7 @@ namespace SabreTools.Models.Internal
 
         /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>NewDat</remarks>
+        [NoFilter]
         public const string NewDatKey = "newDat";
 
         /// <remarks>string</remarks>
@@ -127,6 +131,7 @@ namespace SabreTools.Models.Internal
 
         /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>Search</remarks>
+        [NoFilter]
         public const string SearchKey = "search";
 
         /// <remarks>string</remarks>

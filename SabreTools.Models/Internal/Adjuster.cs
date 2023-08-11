@@ -9,6 +9,7 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         // <remarks>Condition</remarks>
+        [NoFilter]
         public const string ConditionKey = "condition";
 
         /// <remarks>bool</remarks>

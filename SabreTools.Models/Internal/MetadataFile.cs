@@ -8,9 +8,11 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Machine[]</remarks>
+        [NoFilter]
         public const string MachineKey = "machine";
 
         /// <remarks>Header</remarks>
+        [NoFilter]
         public const string HeaderKey = "header";
 
         #endregion

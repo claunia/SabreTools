@@ -15,6 +15,7 @@ namespace SabreTools.Models.Internal
         public const string NameKey = "name";
 
         /// <remarks>Rom[]</remarks>
+        [NoFilter]
         public const string RomKey = "rom";
 
         /// <remarks>long</remarks>

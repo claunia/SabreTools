@@ -21,6 +21,7 @@ namespace SabreTools.Models.Internal
         public const string NotesKey = "notes";
 
         /// <remarks>Software[]</remarks>
+        [NoFilter]
         public const string SoftwareKey = "software";
 
         /// <remarks>(original|compatible)</remarks>

@@ -9,15 +9,19 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Rom</remarks>
+        [NoFilter]
         public const string MegaRomKey = "megarom";
 
         /// <remarks>Original</remarks>
+        [NoFilter]
         public const string OriginalKey = "original";
 
         /// <remarks>Rom</remarks>
+        [NoFilter]
         public const string RomKey = "rom";
 
         /// <remarks>Rom</remarks>
+        [NoFilter]
         public const string SCCPlusCartKey = "sccpluscart";
 
         #endregion

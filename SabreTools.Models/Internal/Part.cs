@@ -9,15 +9,19 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>DataArea[]</remarks>
+        [NoFilter]
         public const string DataAreaKey = "dataarea";
 
         /// <remarks>DiskArea[]</remarks>
+        [NoFilter]
         public const string DiskAreaKey = "diskarea";
 
         /// <remarks>DipSwitch[]</remarks>
+        [NoFilter]
         public const string DipSwitchKey = "dipswitch";
 
         /// <remarks>Feature[]</remarks>
+        [NoFilter]
         public const string FeatureKey = "feature";
 
         /// <remarks>string</remarks>

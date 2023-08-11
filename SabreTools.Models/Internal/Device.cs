@@ -9,12 +9,14 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Extension[]</remarks>
+        [NoFilter]
         public const string ExtensionKey = "extension";
 
         /// <remarks>string</remarks>
         public const string FixedImageKey = "fixed_image";
 
         /// <remarks>Instance</remarks>
+        [NoFilter]
         public const string InstanceKey = "instance";
 
         /// <remarks>string</remarks>

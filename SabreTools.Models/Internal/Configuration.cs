@@ -9,12 +9,15 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Condition</remarks>
+        [NoFilter]
         public const string ConditionKey = "condition";
 
         /// <remarks>ConfLocation[]</remarks>
+        [NoFilter]
         public const string ConfLocationKey = "conflocation";
 
         /// <remarks>ConfSetting[]</remarks>
+        [NoFilter]
         public const string ConfSettingKey = "confsetting";
 
         /// <remarks>string</remarks>

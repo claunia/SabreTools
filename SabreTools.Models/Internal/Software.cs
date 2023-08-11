@@ -15,6 +15,7 @@ namespace SabreTools.Models.Internal
         public const string DescriptionKey = "description";
 
         /// <remarks>Info[]</remarks>
+        [NoFilter]
         public const string InfoKey = "info";
 
         /// <remarks>string</remarks>
@@ -24,12 +25,14 @@ namespace SabreTools.Models.Internal
         public const string NotesKey = "notes";
 
         /// <remarks>Part[]</remarks>
+        [NoFilter]
         public const string PartKey = "part";
 
         /// <remarks>string</remarks>
         public const string PublisherKey = "publisher";
 
         /// <remarks>SharedFeat[]</remarks>
+        [NoFilter]
         public const string SharedFeatKey = "sharedfeat";
 
         /// <remarks>(yes|partial|no) "yes"</remarks>

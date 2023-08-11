@@ -9,6 +9,7 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Analog[]</remarks>
+        [NoFilter]
         public const string AnalogKey = "analog";
 
         /// <remarks>string</remarks>

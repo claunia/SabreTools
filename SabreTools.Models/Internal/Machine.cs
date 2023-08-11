@@ -8,12 +8,15 @@ namespace SabreTools.Models.Internal
         #region Keys
 
         /// <remarks>Adjuster[]</remarks>
+        [NoFilter]
         public const string AdjusterKey = "adjuster";
 
         /// <remarks>Archive[]</remarks>
+        [NoFilter]
         public const string ArchiveKey = "archive";
 
         /// <remarks>BiosSet[]</remarks>
+        [NoFilter]
         public const string BiosSetKey = "biosset";
 
         /// <remarks>string</remarks>
@@ -26,6 +29,7 @@ namespace SabreTools.Models.Internal
         public const string CategoryKey = "category";
 
         /// <remarks>Chip[]</remarks>
+        [NoFilter]
         public const string ChipKey = "chip";
 
         /// <remarks>string</remarks>
@@ -41,6 +45,7 @@ namespace SabreTools.Models.Internal
         public const string CompanyKey = "company";
 
         /// <remarks>Configuration[]</remarks>
+        [NoFilter]
         public const string ConfigurationKey = "configuration";
 
         /// <remarks>string</remarks>
@@ -53,33 +58,40 @@ namespace SabreTools.Models.Internal
         public const string DescriptionKey = "description";
 
         /// <remarks>Device[]</remarks>
+        [NoFilter]
         public const string DeviceKey = "device";
 
         /// <remarks>DeviceRef[]</remarks>
+        [NoFilter]
         public const string DeviceRefKey = "device_ref";
 
         /// <remarks>DipSwitch[]</remarks>
+        [NoFilter]
         public const string DipSwitchKey = "dipswitch";
 
         /// <remarks>string</remarks>
         public const string DirNameKey = "dirName";
 
         /// <remarks>Disk[]</remarks>
+        [NoFilter]
         public const string DiskKey = "disk";
 
         /// <remarks>string</remarks>
         public const string DisplayCountKey = "displaycount";
 
         /// <remarks>Display[]</remarks>
+        [NoFilter]
         public const string DisplayKey = "display";
 
         /// <remarks>string</remarks>
         public const string DisplayTypeKey = "displaytype";
 
         /// <remarks>Driver</remarks>
+        [NoFilter]
         public const string DriverKey = "driver";
 
         /// <remarks>Dump[]</remarks>
+        [NoFilter]
         public const string DumpKey = "dump";
 
         /// <remarks>string</remarks>
@@ -95,6 +107,7 @@ namespace SabreTools.Models.Internal
         public const string FavoriteKey = "favorite";
 
         /// <remarks>Feature[]</remarks>
+        [NoFilter]
         public const string FeatureKey = "feature";
 
         /// <remarks>string</remarks>
@@ -116,9 +129,11 @@ namespace SabreTools.Models.Internal
         public const string ImageNumberKey = "imageNumber";
 
         /// <remarks>Info[]</remarks>
+        [NoFilter]
         public const string InfoKey = "info";
 
         /// <remarks>Input</remarks>
+        [NoFilter]
         public const string InputKey = "input";
 
         /// <remarks>(yes|no) "no"</remarks>
@@ -140,6 +155,7 @@ namespace SabreTools.Models.Internal
         public const string ManufacturerKey = "manufacturer";
 
         /// <remarks>Media[]</remarks>
+        [NoFilter]
         public const string MediaKey = "media";
 
         /// <remarks>string</remarks>
@@ -149,6 +165,7 @@ namespace SabreTools.Models.Internal
         public const string NotesKey = "notes";
 
         /// <remarks>Part[]</remarks>
+        [NoFilter]
         public const string PartKey = "part";
 
         /// <remarks>string</remarks>
@@ -161,24 +178,28 @@ namespace SabreTools.Models.Internal
         public const string PlayersKey = "players";
 
         /// <remarks>Port[]</remarks>
+        [NoFilter]
         public const string PortKey = "port";
 
         /// <remarks>string</remarks>
         public const string PublisherKey = "publisher";
 
         /// <remarks>RamOption[]</remarks>
+        [NoFilter]
         public const string RamOptionKey = "ramoption";
 
         /// <remarks>string</remarks>
         public const string RebuildToKey = "rebuildto";
 
         /// <remarks>Release[]</remarks>
+        [NoFilter]
         public const string ReleaseKey = "release";
 
         /// <remarks>string</remarks>
         public const string ReleaseNumberKey = "releaseNumber";
 
         /// <remarks>Rom[]</remarks>
+        [NoFilter]
         public const string RomKey = "rom";
 
         /// <remarks>string</remarks>
@@ -191,6 +212,7 @@ namespace SabreTools.Models.Internal
         public const string RunnableKey = "runnable";
 
         /// <remarks>Sample[]</remarks>
+        [NoFilter]
         public const string SampleKey = "sample";
 
         /// <remarks>string</remarks>
@@ -200,15 +222,19 @@ namespace SabreTools.Models.Internal
         public const string SaveTypeKey = "saveType";
 
         /// <remarks>SharedFeat[]</remarks>
+        [NoFilter]
         public const string SharedFeatKey = "sharedfeat";
 
         /// <remarks>Slot[]</remarks>
+        [NoFilter]
         public const string SlotKey = "slot";
 
         /// <remarks>SoftwareList[]</remarks>
+        [NoFilter]
         public const string SoftwareListKey = "softwarelist";
 
         /// <remarks>Sound</remarks>
+        [NoFilter]
         public const string SoundKey = "sound";
 
         /// <remarks>string</remarks>
@@ -231,9 +257,11 @@ namespace SabreTools.Models.Internal
 
         /// TODO: This needs an internal model OR mapping to fields
         /// <remarks>Trurip</remarks>
+        [NoFilter]
         public const string TruripKey = "trurip";
 
         /// <remarks>Video[]</remarks>
+        [NoFilter]
         public const string VideoKey = "video";
 
         /// <remarks>string</remarks>
